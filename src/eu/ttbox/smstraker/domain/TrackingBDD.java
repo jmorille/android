@@ -1,6 +1,8 @@
 package eu.ttbox.smstraker.domain;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -52,17 +54,17 @@ public class TrackingBDD {
 	private TrackingBaseSQLite maBaseSQLite;
 
 	public TrackingBDD(Context context) {
-		// On créer la BDD et sa table
+		// On crï¿½er la BDD et sa table
 		maBaseSQLite = new TrackingBaseSQLite(context, NOM_BDD, null, VERSION_BDD);
 	}
 
 	public void open() {
-		// on ouvre la BDD en écriture
+		// on ouvre la BDD en ï¿½criture
 		bdd = maBaseSQLite.getWritableDatabase();
 	}
 
 	public void close() {
-		// on ferme l'accès à la BDD
+		// on ferme l'accï¿½s ï¿½ la BDD
 		bdd.close();
 	}
 
@@ -71,14 +73,14 @@ public class TrackingBDD {
 	}
 
 	public long insertTrackPoint(TrackPoint geoPoint) {
-		// Création d'un ContentValues (fonctionne comme une HashMap)
+		// Crï¿½ation d'un ContentValues (fonctionne comme une HashMap)
 		ContentValues values = convertAsContentValues(geoPoint);
-		// on insère l'objet dans la BDD via le ContentValues
+		// on insï¿½re l'objet dans la BDD via le ContentValues
 		return bdd.insert(TABLE_TRACK_POINT, null, values);
 	}
 
 	private ContentValues convertAsContentValues(TrackPoint point) {
-		// on lui ajoute une valeur associé à une clé (qui est le nom de la
+		// on lui ajoute une valeur associï¿½ ï¿½ une clï¿½ (qui est le nom de la
 		// colonne dans laquelle on veut mettre la valeur)
 		ContentValues values = new ContentValues();
 		values.put(COL_TIME, point.getTime());
@@ -94,43 +96,50 @@ public class TrackingBDD {
 	}
 
 	public int updateTrackPoint(int id, TrackPoint point) {
-		// La mise à jour d'un livre dans la BDD fonctionne plus ou moins comme
+		// La mise ï¿½ jour d'un livre dans la BDD fonctionne plus ou moins comme
 		// une insertion
-		// il faut simple préciser quelle livre on doit mettre à jour grâce à
+		// il faut simple prï¿½ciser quelle livre on doit mettre ï¿½ jour grï¿½ce ï¿½
 		// l'ID
 		ContentValues values = convertAsContentValues(point);
 		return bdd.update(TABLE_TRACK_POINT, values, COL_ID + " = " + id, null);
 	}
 
 	public int removeTrakPointWithID(int id) {
-		// Suppression d'un livre de la BDD grâce à l'ID
+		// Suppression d'un livre de la BDD grï¿½ce ï¿½ l'ID
 		return bdd.delete(TABLE_TRACK_POINT, COL_ID + " = " + id, null);
 	}
 
-	public List<TrackPoint> getTrakPointWithTitre(String userId) {
-		// Récupère dans un Cursor les valeur correspondant à un livre contenu
-		// dans la BDD (ici on sélectionne le livre grâce à son titre)
-		// String whereClause =COL_USERID + " = \"" + userId + "\"";
-//		String whereClause = String.format("%s=\"%s\"", COL_USERID, userId);
-//		Cursor c = bdd.query(TABLE_TRACK_POINT, ALL_COLS,whereClause, null , null, null, COL_TIME);
-		Cursor c = bdd.query(TABLE_TRACK_POINT, ALL_COLS, COL_USERID + " = ?", new String[] {userId} , null, null, COL_TIME);
-//		Cursor c = bdd.query(TABLE_TRACK_POINT, ALL_COLS, null, null, null, null, COL_TIME);
+	public List<TrackPoint> getTrakPointForToday(String userId ) { 
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear(Calendar.HOUR);
+		calendar.clear(Calendar.HOUR_OF_DAY);
+		calendar.clear(Calendar.MINUTE);
+		calendar.clear(Calendar.SECOND);
+		calendar.clear(Calendar.MILLISECOND);
+		long pointDate = calendar.getTimeInMillis();
+		String whereClause =  COL_USERID + " = ? and " + COL_TIME + '>' + pointDate;
+		Cursor c = bdd.query(TABLE_TRACK_POINT, ALL_COLS, whereClause, new String[] {userId } , null, null, COL_TIME);
 		return cursorToLivre(c);
 	}
 
-	// Cette méthode permet de convertir un cursor en un livre
+	public List<TrackPoint> getTrakPointWithTitre(String userId) {
+		Cursor c = bdd.query(TABLE_TRACK_POINT, ALL_COLS, COL_USERID + " = ?", new String[] {userId} , null, null, COL_TIME);
+		return cursorToLivre(c);
+	}
+
+	// Cette mï¿½thode permet de convertir un cursor en un livre
 	private List<TrackPoint> cursorToLivre(Cursor c) {
-		// si aucun élément n'a été retourné dans la requête, on renvoie null
+		// si aucun ï¿½lï¿½ment n'a ï¿½tï¿½ retournï¿½ dans la requï¿½te, on renvoie null
 		List<TrackPoint> points = new ArrayList<TrackPoint>(c.getCount());
 		if (c.getCount() == 0)
 			return points;
 
-		// Sinon on se place sur le premier élément
+		// Sinon on se place sur le premier ï¿½lï¿½ment
 		// c.moveToFirst();
 		while (c.moveToNext()) { 
-			// On créé un livre
+			// On crï¿½ï¿½ un livre
 			TrackPoint point = new TrackPoint();
-			// on lui affecte toutes les infos grâce aux infos contenues dans le
+			// on lui affecte toutes les infos grï¿½ce aux infos contenues dans le
 			// Cursor
 			point.setId(c.getInt(NUM_COL_ID));
 			point.setUserId(c.getString(NUM_COL_USERID));
