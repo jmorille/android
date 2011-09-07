@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="eu.ttbox.smstraker" android:versionCode="1"
+	android:versionName="1.0">
+	<uses-sdk android:minSdkVersion="10" />
+
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+
+	<uses-permission android:name="android.permission.INTERNET" />
+
+	<uses-permission android:name="android.permission.SEND_SMS" />
+
+	<uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="android.permission.READ_SMS" />
+
+
+	<application android:icon="@drawable/icon" android:label="@string/app_name">
+		<activity android:name=".SmsTrakerActivity" android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".ShowMapActivity"></activity>
+		<activity android:name=".GeoTrakerActivity"></activity>
+		<activity android:name=".AlbumsActivity"></activity> 
+		<activity android:name=".TrakingPrefActivity"></activity> 
+		
+		<receiver class="eu.ttbox.smstraker.adapter.SMSReceiver"
+			android:name="eu.ttbox.smstraker.adapter.SMSReceiver">
+			<intent-filter android:priority="100">
+				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
+			</intent-filter>
+		</receiver>
+		<uses-library android:required="true" android:name="com.google.android.maps" />
+
+		<service android:name=".GeoTrackingService" >
+<!-- 			 <intent-filter>  -->
+<!-- 		        <action android:name=".GeoTrackingService.ACTION" />  -->
+<!-- 		    </intent-filter>  --> 
+		</service> 
+		
+	</application>
+</manifest>

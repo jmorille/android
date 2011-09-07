@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+<CheckBoxPreference android:title="@string/prefs.localSave" android:key="localSave" android:summaryOn="@string/prefs.localSave.summaryOn" android:summaryOff="@string/prefs.localSave.summaryOff" android:defaultValue="false"/>
+ 
+<PreferenceCategory android:title="@string/prefs.smsCategory">
+	<CheckBoxPreference android:title="@string/prefs.smsUse" android:key="smsUse" android:summaryOn="@string/prefs.smsUse.summaryOn" android:summaryOff="@string/prefs.smsUse.summaryOff" android:defaultValue="false"/>
+	<EditTextPreference android:title="@string/prefs.smsPhoneNumber" android:key="smsPhoneNumber"  android:selectable="true"  />
+</PreferenceCategory>
+
+<PreferenceCategory android:title="SMS Monitor">
+	<CheckBoxPreference android:title="Delete SMS Monitor" android:key="smsMonitorDelete" android:summaryOn="Delete Geo tracking SMS" android:summaryOff="Off" android:defaultValue="false"/>
+</PreferenceCategory>
+
+</PreferenceScreen>
