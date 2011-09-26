@@ -2,7 +2,7 @@
 <menu  xmlns:android="http://schemas.android.com/apk/res/android">
 <item android:id="@+id/menuTypeMap" 
       android:title="Type Map"
-      android:icon="@drawable/options">
+      android:icon="@android:drawable/ic_menu_mapmode" >
      <menu android:id="@+id/menyTypeMap">
 		 <item android:title="Satelite" android:id="@+id/menuTypeMapSatelite"/>	
 	 

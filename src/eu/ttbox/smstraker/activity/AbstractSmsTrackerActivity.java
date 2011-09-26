@@ -13,17 +13,17 @@ import eu.ttbox.smstraker.TrakingPrefActivity;
 
 public class AbstractSmsTrackerActivity extends Activity {
 
-	// Méthode qui se déclenchera lorsque vous appuierez sur le bouton menu du
-	// téléphone
+	// Mï¿½thode qui se dï¿½clenchera lorsque vous appuierez sur le bouton menu du
+	// tï¿½lï¿½phone
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		// Création d'un MenuInflater qui va permettre d'instancier un Menu XML
+		// Crï¿½ation d'un MenuInflater qui va permettre d'instancier un Menu XML
 		// en un objet Menu
 		MenuInflater inflater = getMenuInflater();
-		// Instanciation du menu XML spécifier en un objet Menu
+		// Instanciation du menu XML spï¿½cifier en un objet Menu
 		inflater.inflate(R.menu.menu, menu);
 
-		// Il n'est pas possible de modifier l'icône d'entête du sous-menu via
+		// Il n'est pas possible de modifier l'icï¿½ne d'entï¿½te du sous-menu via
 		// le fichier XML on le fait donc en JAVA
 		// menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.option_white);
 
@@ -31,21 +31,15 @@ public class AbstractSmsTrackerActivity extends Activity {
 	}
 
 
-	// Méthode qui se déclenchera au clic sur un item
+	// Mï¿½thode qui se dï¿½clenchera au clic sur un item
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// On regarde quel item a été cliqué grâce à son id et on déclenche une
+		// On regarde quel item a ï¿½tï¿½ cliquï¿½ grï¿½ce ï¿½ son id et on dï¿½clenche une
 		// action
 		switch (item.getItemId()) {
 		case R.id.option:
 			Intent intentOption = new Intent(this, TrakingPrefActivity.class);
 			startActivity(intentOption);
-			return true;
-		case R.id.favoris:
-			Toast.makeText(this, "Favoris", Toast.LENGTH_SHORT).show();
-			return true;
-		case R.id.stats:
-			Toast.makeText(this, "Stats", Toast.LENGTH_SHORT).show();
-			return true;
+			return true; 
 		case R.id.menuGeotracker:
 			Intent intentGeoTraker = new Intent(this, GeoTrakerActivity.class);
 			startActivity(intentGeoTraker);
