@@ -12,8 +12,8 @@ public class TrackingBaseSQLite extends SQLiteOpenHelper {
 			.append(TrackingBDD.COL_USERID).append(" TEXT NOT NULL, ")// /
 			.append(TrackingBDD.COL_PROVIDER).append(" TEXT NOT NULL, ")// /
 			.append(TrackingBDD.COL_TIME).append(" INTEGER NOT NULL, ")// /
-			.append(TrackingBDD.COL_LATITUDE).append(" REAL NOT NULL, ")// /
-			.append(TrackingBDD.COL_LONGITUDE).append(" REAL NOT NULL, ")// /
+			.append(TrackingBDD.COL_LATITUDE_E6).append(" INTEGER NOT NULL, ")// /
+			.append(TrackingBDD.COL_LONGITUDE_E6).append(" INTEGER NOT NULL, ")// /
 			.append(TrackingBDD.COL_ACCURACY).append(" REAL NOT NULL, ")// /
 			.append(TrackingBDD.COL_ALTITUDE).append(" REAL, ")// /
 			.append(TrackingBDD.COL_BEARING).append(" REAL, ")// /

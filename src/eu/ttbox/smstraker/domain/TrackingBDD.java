@@ -29,11 +29,11 @@ public class TrackingBDD {
 	public static final String COL_PROVIDER = "PROVIDER";
 	private static final int NUM_COL_PROVIDER = 3;
 
-	public static final String COL_LATITUDE = "LAT";
-	private static final int NUM_COL_LATITUDE = 4;
+	public static final String COL_LATITUDE_E6 = "LAT_E6";
+	private static final int NUM_COL_LATITUDE_E6 = 4;
 
-	public static final String COL_LONGITUDE = "LNG";
-	private static final int NUM_COL_LONGITUDE = 5;
+	public static final String COL_LONGITUDE_E6 = "LNG_E6";
+	private static final int NUM_COL_LONGITUDE_E6 = 5;
 
 	public static final String COL_ACCURACY = "ACCURACY";
 	private static final int NUM_COL_ACCURACY = 6;
@@ -47,7 +47,7 @@ public class TrackingBDD {
 	public static final String COL_SPEED = "SPEED";
 	private static final int NUM_COL_SPEED = 9;
 
-	private static final String[] ALL_COLS = new String[] { COL_ID, COL_USERID, COL_TIME, COL_PROVIDER, COL_LATITUDE, COL_LONGITUDE, COL_ACCURACY, COL_ALTITUDE, COL_BEARING, COL_SPEED };
+	private static final String[] ALL_COLS = new String[] { COL_ID, COL_USERID, COL_TIME, COL_PROVIDER, COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_ACCURACY, COL_ALTITUDE, COL_BEARING, COL_SPEED };
 
 	private SQLiteDatabase bdd;
 
@@ -58,20 +58,49 @@ public class TrackingBDD {
 		maBaseSQLite = new TrackingBaseSQLite(context, NOM_BDD, null, VERSION_BDD);
 	}
 
+	@Deprecated
 	public void open() {
 		// on ouvre la BDD en �criture
 		bdd = maBaseSQLite.getWritableDatabase();
 	}
 
+	@Deprecated
 	public void close() {
 		// on ferme l'acc�s � la BDD
 		bdd.close();
 	}
 
+
+	@Deprecated
 	public SQLiteDatabase getBDD() {
 		return bdd;
 	}
 
+	
+	
+	private SQLiteDatabase getWritableDatabase() {
+		return maBaseSQLite.getWritableDatabase();
+	}
+
+	public SQLiteDatabase getReadableDatabase() {
+		return maBaseSQLite.getReadableDatabase();
+	}
+	
+	public SQLiteDatabase beginTransaction() {
+		SQLiteDatabase bdd = maBaseSQLite.getWritableDatabase();
+		bdd.beginTransaction();
+		return bdd;
+	}
+
+	public void commit(SQLiteDatabase bdd) {
+		bdd.setTransactionSuccessful();
+		bdd.endTransaction();
+	}
+
+	public void endTransaction(SQLiteDatabase bdd) {
+		bdd.endTransaction();
+	}
+	
 	public long insertTrackPoint(TrackPoint geoPoint) {
 		// Cr�ation d'un ContentValues (fonctionne comme une HashMap)
 		ContentValues values = convertAsContentValues(geoPoint);
@@ -86,8 +115,8 @@ public class TrackingBDD {
 		values.put(COL_TIME, point.getTime());
 		values.put(COL_USERID, point.getUserId());
 		values.put(COL_PROVIDER, point.getProvider());
-		values.put(COL_LATITUDE, point.getLatitude());
-		values.put(COL_LONGITUDE, point.getLongitude());
+		values.put(COL_LATITUDE_E6, point.getLatitudeE6());
+		values.put(COL_LONGITUDE_E6, point.getLongitudeE6());
 		values.put(COL_ACCURACY, point.getAccuracy());
 		values.put(COL_ALTITUDE, point.getAltitude());
 		values.put(COL_BEARING, point.getBearing());
@@ -145,8 +174,8 @@ public class TrackingBDD {
 			point.setUserId(c.getString(NUM_COL_USERID));
 			point.setTime(c.getLong(NUM_COL_TIME));
 			point.setProvider(c.getString(NUM_COL_PROVIDER));
-			point.setLatitude(c.getDouble(NUM_COL_LATITUDE));
-			point.setLongitude(c.getDouble(NUM_COL_LONGITUDE));
+			point.setLatitudeE6(c.getInt(NUM_COL_LATITUDE_E6));
+			point.setLongitudeE6(c.getInt(NUM_COL_LONGITUDE_E6));
 			point.setAccuracy(c.getFloat(NUM_COL_ACCURACY));
 			point.setAltitude(c.getDouble(NUM_COL_ALTITUDE));
 			point.setBearing(c.getFloat(NUM_COL_BEARING));

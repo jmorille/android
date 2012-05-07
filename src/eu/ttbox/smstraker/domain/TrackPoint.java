@@ -4,6 +4,8 @@ import java.util.Date;
 
 import com.google.android.maps.GeoPoint;
 
+import eu.ttbox.smstraker.core.AppConstant;
+
 import android.location.Location;
 
 public class TrackPoint {
@@ -12,8 +14,8 @@ public class TrackPoint {
 	private String userId;
 	private String provider;
 	private long time;
-	private double latitude;
-	private double longitude;
+	private int latitudeE6;
+	private int longitudeE6;
 
 	private double altitude;
 	private float accuracy;
@@ -31,8 +33,8 @@ public class TrackPoint {
 		this.userId = userId;
 		this.provider = loc.getProvider();
 		this.time = loc.getTime();
-		this.latitude = loc.getLatitude();
-		this.longitude = loc.getLongitude();
+		this.latitudeE6 = (int)(loc.getLatitude()/AppConstant.E6);
+		this.longitudeE6 = (int)(loc.getLongitude()/AppConstant.E6);
 		this.accuracy = loc.getAccuracy();
 		if (loc.hasAltitude()) {
 			this.altitude = loc.getAltitude();
@@ -48,8 +50,8 @@ public class TrackPoint {
 	public Location asLocation() {
 		Location loc = new Location(provider);
 		loc.setTime(time);
-		loc.setLatitude(latitude);
-		loc.setLongitude(longitude);
+		loc.setLatitude(latitudeE6*AppConstant.E6);
+		loc.setLongitude(longitudeE6*AppConstant.E6);
 		loc.setAccuracy(accuracy);
 
 		loc.setAltitude(altitude);
@@ -61,7 +63,7 @@ public class TrackPoint {
 
 	public GeoPoint asGeoPoint() {
 		if (cachedGeoPoint == null) {
-			GeoPoint point = new GeoPoint((int) (latitude * 1000000), (int) (longitude * 1000000));
+			GeoPoint point = new GeoPoint(latitudeE6,longitudeE6);
 			cachedGeoPoint = point;
 		}
 		return cachedGeoPoint;
@@ -97,20 +99,41 @@ public class TrackPoint {
 	}
 
 	public double getLatitude() {
-		return latitude;
+		return latitudeE6/AppConstant.E6;
 	}
 
 	public void setLatitude(double latitude) {
-		this.latitude = latitude;
+		this.latitudeE6 = (int)(latitude*AppConstant.E6);
+		cachedGeoPoint = null;
 	}
 
 	public double getLongitude() {
-		return longitude;
+		return longitudeE6/AppConstant.E6;
 	}
 
 	public void setLongitude(double longitude) {
-		this.longitude = longitude;
+		this.longitudeE6 = (int)(longitude*AppConstant.E6);
+		cachedGeoPoint = null;
+	} 
+	
+
+	public int getLatitudeE6() {
+		return latitudeE6;
 	}
+
+	public void setLatitudeE6(int latitudeE6) {
+		this.latitudeE6 = latitudeE6;
+		cachedGeoPoint = null;
+	}
+
+	public int getLongitudeE6() {
+		return longitudeE6;
+	}
+
+	public void setLongitudeE6(int longitudeE6) {
+		this.longitudeE6 = longitudeE6;
+		cachedGeoPoint = null;
+ 	}
 
 	public double getAltitude() {
 		return altitude;

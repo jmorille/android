@@ -4,12 +4,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import eu.ttbox.smstraker.adapter.SmsLocationHelper;
-import eu.ttbox.smstraker.adapter.TrackerLocationHelper;
-import eu.ttbox.smstraker.core.AppConstant;
-import eu.ttbox.smstraker.domain.TrackPoint;
-import eu.ttbox.smstraker.domain.TrackingBDD;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +16,11 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Toast;
+import eu.ttbox.smstraker.adapter.SmsLocationHelper;
+import eu.ttbox.smstraker.adapter.TrackerLocationHelper;
+import eu.ttbox.smstraker.core.AppConstant;
+import eu.ttbox.smstraker.domain.TrackPoint;
+import eu.ttbox.smstraker.domain.TrackingBDD;
 
 /**
  * @see http://blog.developpez.com/android23/p8571/android/creation-de-service/
@@ -54,6 +52,7 @@ public class GeoTrackingService extends Service implements LocationListener {
 	public void onCreate() {
 		super.onCreate();
 		timer = new Timer(); 
+		binder = new GeoTrackingServiceBinder(this);
 		// Timer
 		lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		appPreferences = PreferenceManager.getDefaultSharedPreferences(this);

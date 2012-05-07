@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import eu.ttbox.smstraker.core.AppConstant;
+
 import android.location.Location;
 import android.util.Log;
 
@@ -13,8 +15,8 @@ public class SmsLocationHelper {
 
 	private final static String MSGKEY_PROVIDER = "providersuperlongpourvoir";
 	private final static String MSGKEY_TIME = "t";
-	private final static String MSGKEY_LATITUDE = "la";
-	private final static String MSGKEY_LONGITUDE = "ln";
+	private final static String MSGKEY_LATITUDE_E6 = "la";
+	private final static String MSGKEY_LONGITUDE_E6 = "ln";
 	private final static String MSGKEY_ALTITUDE = "al";
 	private final static String MSGKEY_ACCURACY = "ac";
 	private final static String MSGKEY_BEARING = "b";
@@ -45,8 +47,12 @@ public class SmsLocationHelper {
 			JSONObject object = new JSONObject();
 			object.put(MSGKEY_PROVIDER, location.getProvider());
 			object.put(MSGKEY_TIME, location.getTime());
-			object.put(MSGKEY_LATITUDE, location.getLatitude());
-			object.put(MSGKEY_LONGITUDE, location.getLongitude());
+			// Lat Lng
+			int latE6 = (int)(location.getLatitude()*AppConstant.E6);
+			int lngE6 = (int)(location.getLongitude()*AppConstant.E6); 
+			object.put(MSGKEY_LATITUDE_E6, latE6);
+			object.put(MSGKEY_LONGITUDE_E6, lngE6);
+			// altitude
 			if (location.hasAltitude()) {
 				object.put(MSGKEY_ALTITUDE, location.getAltitude());
 			}
@@ -74,8 +80,12 @@ public class SmsLocationHelper {
 			Location loc = new Location(provider);
 			// Value
 			long time = object.getLong(MSGKEY_TIME);
-			double latitude = object.getDouble(MSGKEY_LATITUDE);
-			double longitude = object.getDouble(MSGKEY_LONGITUDE);
+			// LatLng
+			int latE6 =  object.getInt(MSGKEY_LATITUDE_E6);
+			int lngE6 = object.getInt(MSGKEY_LONGITUDE_E6);
+ 			double latitude =latE6 /AppConstant.E6;
+			double longitude = lngE6 / AppConstant.E6;
+			// Accuracy
 			float accuracy = Double.valueOf(object.getDouble(MSGKEY_ACCURACY)).floatValue();
 			loc.setTime(time);
 			loc.setLatitude(latitude);
