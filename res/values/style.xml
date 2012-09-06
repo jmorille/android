@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Entity List -->
+    <style name="entity_list_item_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
+        <item name="android:background">@drawable/entity_list_item_bg</item>
+    </style>
+
+    <style name="entity_list_item_container_header" parent="@style/entity_list_item_container">
+        <item name="android:background">@android:drawable/dark_header</item>
+    </style>
+
+    <style name="entity_list_item">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <style name="entity_edit">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="entity_view">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style> 
+
+</resources>
