@@ -25,10 +25,10 @@
 		</activity>
 		<activity android:name=".ShowMapActivity"></activity>
 		<activity android:name=".GeoTrakerActivity"></activity>
-		<activity android:name=".AlbumsActivity"></activity> 
-		<activity android:name=".TrakingPrefActivity"></activity> 
-		<activity android:name=".TGeoPingActivity"></activity> 
-		
+ 		<activity android:name=".ui.prefs.TrakingPrefActivity"></activity> 
+		<activity android:name=".ui.ping.GeoPingActivity"></activity> 
+		<activity android:name=".ui.ping.AddPersonActivity"></activity> 
+				
 		<receiver class="eu.ttbox.smstraker.adapter.SMSReceiver"
 			android:name="eu.ttbox.smstraker.adapter.SMSReceiver" android:exported="false">
 			<intent-filter android:priority="100">
@@ -37,7 +37,7 @@
 		</receiver>
 		<uses-library android:required="true" android:name="com.google.android.maps" />
 
-		<service android:name=".GeoTrackingService" >
+		<service android:name=".service.GeoTrackingService" >
 <!-- 			 <intent-filter>  -->
 <!-- 		        <action android:name=".GeoTrackingService.ACTION" />  -->
 <!-- 		    </intent-filter>  --> 

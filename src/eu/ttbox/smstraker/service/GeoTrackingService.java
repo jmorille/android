@@ -1,4 +1,4 @@
-package eu.ttbox.smstraker;
+package eu.ttbox.smstraker.service;
 
 import java.util.List;
 import java.util.Timer;
@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -35,8 +36,7 @@ public class GeoTrackingService extends Service implements LocationListener {
 	 
 	private Timer timer; 
 	
-	private GeoTrackingServiceBinder binder;
-	
+	 
 	private LocationManager lManager;
 	
 	private TrackingBDD trackingBDD;
@@ -47,12 +47,19 @@ public class GeoTrackingService extends Service implements LocationListener {
 	
 	private int minuteCount = 5;
 	
+	private final IBinder binder = new LocalBinder();
+	
+	public class LocalBinder extends Binder {
+        public GeoTrackingService getService() {
+            return GeoTrackingService.this;
+        }
+    }
+	
 	// initialisation des ressources 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		timer = new Timer(); 
-		binder = new GeoTrackingServiceBinder(this);
+		timer = new Timer();  
 		// Timer
 		lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -74,7 +81,7 @@ public class GeoTrackingService extends Service implements LocationListener {
 	} 
 	
 	private void doGeoFix() {
-		// Executer de votre tâche 
+		// Executer de votre tache 
     	List<String> providers = lManager.getProviders(true);
     	String choix_source = providers.get(0);
     	lManager.requestLocationUpdates(choix_source, 60000, 0, GeoTrackingService.this);

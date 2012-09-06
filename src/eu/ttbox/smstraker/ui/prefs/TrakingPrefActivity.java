@@ -1,5 +1,7 @@
-package eu.ttbox.smstraker;
+package eu.ttbox.smstraker.ui.prefs;
 
+import eu.ttbox.smstraker.R;
+import eu.ttbox.smstraker.R.xml;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;

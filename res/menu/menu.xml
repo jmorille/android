@@ -10,6 +10,10 @@
      android:title="@string/menu.map"
      android:icon="@android:drawable/ic_dialog_map" />
 
+<item android:id="@+id/menuGeoPing" 
+     android:title="@string/menu_geoping"
+     android:icon="@android:drawable/ic_menu_send" />
+
 <item android:id="@+id/menuGeotracker" 
      android:title="@string/menu.geoTracker"
      android:icon="@drawable/map" />

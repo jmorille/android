@@ -9,7 +9,7 @@ import android.widget.Toast;
 import eu.ttbox.smstraker.GeoTrakerActivity;
 import eu.ttbox.smstraker.R;
 import eu.ttbox.smstraker.ShowMapActivity;
-import eu.ttbox.smstraker.TrakingPrefActivity;
+import eu.ttbox.smstraker.ui.prefs.TrakingPrefActivity;
 
 public class AbstractSmsTrackerActivity extends Activity {
 
