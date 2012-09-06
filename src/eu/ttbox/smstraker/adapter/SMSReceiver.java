@@ -13,8 +13,8 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 import eu.ttbox.smstraker.core.AppConstant;
-import eu.ttbox.smstraker.domain.TrackPoint;
-import eu.ttbox.smstraker.domain.TrackingBDD;
+import eu.ttbox.smstraker.domain.GeoTrack;
+import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
 
 /**
  * @see http://www.tutos-android.com/broadcast-receiver-android
@@ -66,8 +66,8 @@ public class SMSReceiver extends BroadcastReceiver {
 
 	private void manangeNewLocation(Context context, String phoneNumber, Location loc) {
 		if (loc != null) {
-			TrackPoint geoPoint = new TrackPoint(phoneNumber, loc);
-			TrackingBDD trackingBDD = new TrackingBDD(context);
+			GeoTrack geoPoint = new GeoTrack(phoneNumber, loc);
+			GeoTrackDatabase trackingBDD = new GeoTrackDatabase(context);
 			trackingBDD.open();
 			trackingBDD.insertTrackPoint(geoPoint);
 			trackingBDD.close();

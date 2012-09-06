@@ -25,8 +25,8 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 
 import eu.ttbox.smstraker.core.AppConstant;
-import eu.ttbox.smstraker.domain.TrackPoint;
-import eu.ttbox.smstraker.domain.TrackingBDD;
+import eu.ttbox.smstraker.domain.GeoTrack;
+import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
 
 /**
  * @see http://mobiforge.com/developing/story/using-google-maps-android
@@ -38,7 +38,7 @@ public class ShowMapActivity extends MapActivity {
 	private MapController mapController;
 	private MapView mapView;
 	private LocationManager locationManager;
-	private TrackingBDD trackingBDD;
+	private GeoTrackDatabase trackingBDD;
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -60,15 +60,15 @@ public class ShowMapActivity extends MapActivity {
 
 	class TrackOverlay extends com.google.android.maps.Overlay {
 
-		List<TrackPoint> points;
+		List<GeoTrack> points;
 		Location location;
 		Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.marker);
 		
-		public TrackOverlay(List<TrackPoint> trackPoints) {
+		public TrackOverlay(List<GeoTrack> trackPoints) {
 			this.points = trackPoints;
 		}
 
-		public void addOverlay(TrackPoint point) {
+		public void addOverlay(GeoTrack point) {
 			points.add(point);
 		}
 
@@ -96,7 +96,7 @@ public class ShowMapActivity extends MapActivity {
 			paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		
 			int zoonLevel = mapView.getZoomLevel();
-			for (TrackPoint point : points) {
+			for (GeoTrack point : points) {
 				// Converts lat/lng-Point to OUR coordinates on the screen.
 				Point myScreenCoords = new Point();
 				mapView.getProjection().toPixels(point.asGeoPoint(), myScreenCoords);
@@ -132,7 +132,7 @@ public class ShowMapActivity extends MapActivity {
 
 	}
 
-	public void addOverlay(List<TrackPoint> points) {
+	public void addOverlay(List<GeoTrack> points) {
 		// Toast.makeText(this, "Add Overlay lat (" + loc .getLatitude() + ", "
 		// + loc.getLongitude() + ") " , Toast.LENGTH_SHORT).show();
 		TrackOverlay trakPoint = new TrackOverlay(points);
@@ -144,7 +144,7 @@ public class ShowMapActivity extends MapActivity {
 		super.onCreate(bundle);
 		setContentView(R.layout.map); // bind the layout to the activity
 		// Local DB
-		trackingBDD = new TrackingBDD(this);
+		trackingBDD = new GeoTrackDatabase(this);
 
 		// create a map view
 		// RelativeLayout linearLayout = (RelativeLayout)
@@ -160,7 +160,7 @@ public class ShowMapActivity extends MapActivity {
 
 		// Init Value
 		trackingBDD.open();
-		List<TrackPoint> points = trackingBDD.getTrakPointWithTitre(AppConstant.LOCAL_DB_KEY);
+		List<GeoTrack> points = trackingBDD.getTrakPointWithTitre(AppConstant.LOCAL_DB_KEY);
 		trackingBDD.close();
 		if (points != null && !points.isEmpty()) {
 			Toast.makeText(this, "Add Overlay size " + points.size(), Toast.LENGTH_SHORT).show();

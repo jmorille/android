@@ -20,8 +20,8 @@ import android.util.Log;
 import eu.ttbox.smstraker.adapter.SmsLocationHelper;
 import eu.ttbox.smstraker.adapter.TrackerLocationHelper;
 import eu.ttbox.smstraker.core.AppConstant;
-import eu.ttbox.smstraker.domain.TrackPoint;
-import eu.ttbox.smstraker.domain.TrackingBDD;
+import eu.ttbox.smstraker.domain.GeoTrack;
+import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
 
 /**
  * @see http://blog.developpez.com/android23/p8571/android/creation-de-service/
@@ -39,7 +39,7 @@ public class GeoTrackingService extends Service implements LocationListener {
 	 
 	private LocationManager lManager;
 	
-	private TrackingBDD trackingBDD;
+	private GeoTrackDatabase trackingBDD;
 	
 	private SharedPreferences appPreferences; 
 	
@@ -63,7 +63,7 @@ public class GeoTrackingService extends Service implements LocationListener {
 		// Timer
 		lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		trackingBDD = new TrackingBDD(this);
+		trackingBDD = new GeoTrackDatabase(this);
 		//
 	    Log.d(this.getClass().getName(), "onCreate"); 
 	}
@@ -136,7 +136,7 @@ public class GeoTrackingService extends Service implements LocationListener {
 		// Local Persist
 		boolean saveLocal = appPreferences.getBoolean(KEY_LOCAL_SAVE, false);
 		if (saveLocal) {
-			TrackPoint geoPoint = new TrackPoint(AppConstant.LOCAL_DB_KEY, location); 
+			GeoTrack geoPoint = new GeoTrack(AppConstant.LOCAL_DB_KEY, location); 
 			trackingBDD.open(); 
 			trackingBDD.insertTrackPoint(geoPoint);  
 			trackingBDD.close();

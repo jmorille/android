@@ -1,5 +1,6 @@
 package eu.ttbox.smstraker.domain;
 
+import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -13,7 +14,7 @@ public class GeoTrackerContentProvider extends ContentProvider {
 
 	private final static String TAG = "GeoTrackerContentProvider";
 	
-	private TrackingBDD database;
+	private GeoTrackDatabase database;
 	
 	private static final int GET_ALL_STATION = 0;
 	private static final int GET_STATION = 1;
@@ -56,7 +57,7 @@ public class GeoTrackerContentProvider extends ContentProvider {
 
 	@Override
 	public boolean onCreate() {
-		database = new TrackingBDD(getContext());
+		database = new GeoTrackDatabase(getContext());
 
 		return true;
 	}

@@ -25,8 +25,8 @@ import android.widget.Toast;
 import eu.ttbox.smstraker.activity.AbstractSmsTrackerActivity;
 import eu.ttbox.smstraker.adapter.SmsLocationHelper;
 import eu.ttbox.smstraker.core.AppConstant;
-import eu.ttbox.smstraker.domain.TrackPoint;
-import eu.ttbox.smstraker.domain.TrackingBDD;
+import eu.ttbox.smstraker.domain.GeoTrack;
+import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.smstraker.service.GeoTrackingService;
 
 public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnClickListener, LocationListener {
@@ -36,7 +36,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 	private Location location;
 	private String choix_source = "";
 
-	private TrackingBDD trackingBDD;
+	private GeoTrackDatabase trackingBDD;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -52,7 +52,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 		// On r�cup�re le service de localisation
 		lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		trackingBDD = new TrackingBDD(this);
+		trackingBDD = new GeoTrackDatabase(this);
 		
 		// Initialisation de l'�cran
 		reinitialisationEcran();
@@ -249,11 +249,11 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 		// Local Persist
 		boolean saveLocal = appPreferences.getBoolean(KEY_LOCAL_SAVE, false);
 		if (saveLocal) {
-			TrackPoint geoPoint = new TrackPoint(AppConstant.LOCAL_DB_KEY, location);
+			GeoTrack geoPoint = new GeoTrack(AppConstant.LOCAL_DB_KEY, location);
 			Log.i(getClass().getSimpleName(), "Open DB");
 			trackingBDD.open(); 
 			trackingBDD.insertTrackPoint(geoPoint); 
-			List<TrackPoint> points = trackingBDD.getTrakPointWithTitre(AppConstant.LOCAL_DB_KEY); 
+			List<GeoTrack> points = trackingBDD.getTrakPointWithTitre(AppConstant.LOCAL_DB_KEY); 
 			Toast.makeText(this, String.format("insertTrackPoint with id  \"%s\" ", ""+points.size ()), Toast.LENGTH_SHORT).show(); 
 			trackingBDD.close();
 		}

@@ -2,7 +2,7 @@ package eu.ttbox.smstraker.domain;
 
 public class Person {
  
-    public long id;
+    public long id = -1;
     public String name;
     public String phone;
     
