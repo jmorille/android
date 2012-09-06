@@ -27,9 +27,10 @@
 		<activity android:name=".GeoTrakerActivity"></activity>
 		<activity android:name=".AlbumsActivity"></activity> 
 		<activity android:name=".TrakingPrefActivity"></activity> 
+		<activity android:name=".TGeoPingActivity"></activity> 
 		
 		<receiver class="eu.ttbox.smstraker.adapter.SMSReceiver"
-			android:name="eu.ttbox.smstraker.adapter.SMSReceiver">
+			android:name="eu.ttbox.smstraker.adapter.SMSReceiver" android:exported="false">
 			<intent-filter android:priority="100">
 				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
 			</intent-filter>
