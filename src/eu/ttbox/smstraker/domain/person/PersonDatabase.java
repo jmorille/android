@@ -54,10 +54,10 @@ public class PersonDatabase {
         return map;
     }
     
-    public Cursor getUser(String rowId, String[] columns) {
+    public Cursor getPerson(String rowId, String[] columns) {
         String selection = "rowid = ?";
         String[] selectionArgs = new String[] { rowId };
-        return queryUser(selection, selectionArgs, columns, null);
+        return queryPerson(selection, selectionArgs, columns, null);
     }
 
     /**
@@ -69,15 +69,15 @@ public class PersonDatabase {
      *            The columns to include, if null then all are included
      * @return Cursor over all words that match, or null if none found.
      */
-    public Cursor getUserMatches(String query, String[] columns, String order) {
+    public Cursor getPersonMatches(String query, String[] columns, String order) {
         String selection = PersonColumns.KEY_NAME + " MATCH ?";
         String queryString = new StringBuilder(query).append("*").toString();
         String[] selectionArgs = new String[] { queryString };
-        return queryUser(selection, selectionArgs, columns, order);
+        return queryPerson(selection, selectionArgs, columns, order);
     }
     
     
-    public Cursor queryUser(String selection, String[] selectionArgs, String[] columns, String order) {
+    public Cursor queryPerson(String selection, String[] selectionArgs, String[] columns, String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_PERSON_FTS);
         builder.setProjectionMap(mPersonColumnMap);
@@ -92,7 +92,7 @@ public class PersonDatabase {
         return cursor;
     }
 
-    public long insertUser( ContentValues userValues) throws SQLException {
+    public long insertPerson( ContentValues userValues) throws SQLException {
         long result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {

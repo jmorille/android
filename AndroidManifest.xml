@@ -43,5 +43,16 @@
 <!-- 		    </intent-filter>  --> 
 		</service> 
 		
+		 <provider
+            android:name=".domain.PersonProvider"
+            android:authorities="eu.ttbox.smstraker.PersonProvider"
+            android:readPermission="eu.ttbox.smstraker.PERSON_READ"
+            android:writePermission="eu.ttbox.smstraker.PERSON_WRITE" />
+		 <provider
+            android:name=".domain.GeoTrackerProvider"
+            android:authorities="eu.ttbox.smstraker.GeoTrackerProvider"
+            android:readPermission="eu.ttbox.smstraker.GEO_TRACK_READ"
+            android:writePermission="eu.ttbox.smstraker.GEO_TRACK_WRITE" />
+		 		
 	</application>
 </manifest>

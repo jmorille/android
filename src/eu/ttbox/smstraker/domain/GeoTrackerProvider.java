@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-public class GeoTrackerContentProvider extends ContentProvider {
+public class GeoTrackerProvider extends ContentProvider {
 
 	private final static String TAG = "GeoTrackerContentProvider";
 	
@@ -24,21 +24,21 @@ public class GeoTrackerContentProvider extends ContentProvider {
 	private static final UriMatcher sURIMatcher;
 	
 	public static class Constants {
-		public static String AUTHORITY = "eu.ttbox.smstraker.domain.GeoTrackerContentProvider";
+		public static String AUTHORITY = "eu.ttbox.smstraker.GeoTrackerProvider";
 
 		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
 		// MIME types used for searching words or looking up a single definition
-		public static final String COLLECTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.trackPoint";
-		public static final String ITEM_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.trackPoint";
+		public static final String COLLECTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.geoTrackPoint";
+		public static final String ITEM_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.geoTrackPoint";
 
 	}
 	
 	static {
 		UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 		// to get definitions...
-		matcher.addURI(Constants.AUTHORITY, "stations", GET_ALL_STATION);
-		matcher.addURI(Constants.AUTHORITY, "station/#", GET_STATION);
+		matcher.addURI(Constants.AUTHORITY, "geoTrackPoints", GET_ALL_STATION);
+		matcher.addURI(Constants.AUTHORITY, "geoTrackPoint/#", GET_STATION);
 		// to get suggestions...
 		matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
 		matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
