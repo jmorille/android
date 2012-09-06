@@ -20,5 +20,9 @@
     <string name="prefs.localSave.summaryOn">Keep trace in local DB</string>
     <string name="prefs.localSave.summaryOff">Off</string>
     
+    <!-- Person model -->
+    <string name="person_name">Nom</string>
+    <string name="person_phone">N° Téléphone</string>
+    
 </resources>
  
