@@ -51,14 +51,10 @@ public class GeoPingActivity extends Activity {
 		// init
 		listAdapter = new PersonListAdapter(this, null, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 		listView.setAdapter(listAdapter);
-
+		Log.d(TAG, "Binding end");
 		// Intents
-		Intent intent = getIntent();
-		if (intent == null) {
-			getLoaderManager().initLoader(PERSON_LIST_LOADER, null, orderLoaderCallback);
-		} else {
-			handleIntent(getIntent());
-		}
+		getLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+		handleIntent(getIntent());
 	}
 
 	@Override
@@ -75,10 +71,11 @@ public class GeoPingActivity extends Activity {
 		}
 	}
 
-	private final LoaderManager.LoaderCallbacks<Cursor> orderLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+	private final LoaderManager.LoaderCallbacks<Cursor> personLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			Log.d(TAG, "onCreateLoader");
 			String sortOrder = PERSON_SORT_DEFAULT;
 			String selection = null;
 			String[] selectionArgs = null;
@@ -90,6 +87,7 @@ public class GeoPingActivity extends Activity {
 
 		@Override
 		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+			Log.d(TAG, "onLoadFinished");
 			// Display List
 			listAdapter.swapCursor(cursor);
 			// Display Counter

@@ -6,6 +6,10 @@
 	<string name="add_track_person">Ajouter une personne</string>    
     <string name="geoping">Geo Ping</string>
     
+    
+    <string name="save_button">Sauver</string>
+    <string name="cancel_button">Sauver</string>
+    
     <!-- Menu -->
     <string name="menu.options">Options</string>
     <string name="menu.geoTracker">Geo Tacker</string>

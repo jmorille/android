@@ -19,9 +19,16 @@
         <EditText
             android:id="@+id/person_phone"
             style="@style/entity_edit"
-            android:layout_toRightOf="@id/person_name"
+            android:layout_below="@id/person_name"
             android:hint="@string/person_phone" />
- 
+
+        <Button
+            android:id="@+id/save_button"
+            style="@style/entity_edit"
+            android:onClick="save"
+            android:layout_below="@id/person_phone"
+            android:hint="@string/save_button" />
+        
     </RelativeLayout>
 
 </LinearLayout>

@@ -27,7 +27,7 @@
 		<activity android:name=".GeoTrakerActivity"></activity>
  		<activity android:name=".ui.prefs.TrakingPrefActivity"></activity> 
 		<activity android:name=".ui.ping.GeoPingActivity"></activity> 
-		<activity android:name=".ui.ping.AddPersonActivity"></activity> 
+		<activity android:name=".ui.person.AddPersonActivity"></activity> 
 				
 		<receiver class="eu.ttbox.smstraker.adapter.SMSReceiver"
 			android:name="eu.ttbox.smstraker.adapter.SMSReceiver" android:exported="false">

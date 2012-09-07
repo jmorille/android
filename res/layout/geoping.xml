@@ -4,21 +4,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <ListView
+        android:id="@+id/track_person_list"
+        android:layout_width="wrap_content"
+        android:layout_height="427dp" >
+    </ListView>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <ListView
-            android:id="@+id/track_person_list"
-            android:layout_width="wrap_content"
-            android:layout_height="427dp" >
-        </ListView>
-
         <Button
             android:id="@+id/add_track_person_button"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="50dp"
             android:text="@string/add_track_person" />
     </LinearLayout>
 

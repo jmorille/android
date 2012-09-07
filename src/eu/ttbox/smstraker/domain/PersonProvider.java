@@ -23,7 +23,7 @@ public class PersonProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.smstraker.PersonProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/person");
-        public static final Uri CONTENT_URI_GET_PRODUCT = Uri.parse("content://" + AUTHORITY + "/person/");
+//        public static final Uri CONTENT_URI_GET_PRODUCT = Uri.parse("content://" + AUTHORITY + "/person/");
     }
 
     private PersonDatabase personDatabase;
@@ -76,7 +76,7 @@ public class PersonProvider extends ContentProvider {
      */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Log.i(TAG, "query for uri : " + uri);
+        Log.d(TAG, "query for uri : " + uri);
         // Use the UriMatcher to see what kind of query we have and format the
         // db query accordingly
         switch (sURIMatcher.match(uri)) {
