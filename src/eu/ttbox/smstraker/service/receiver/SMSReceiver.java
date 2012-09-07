@@ -16,7 +16,6 @@ import android.widget.Toast;
 import eu.ttbox.smstraker.domain.GeoTrack;
 import eu.ttbox.smstraker.domain.GeoTrackSmsMsg;
 import eu.ttbox.smstraker.domain.GeoTrackerProvider;
-import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.smstraker.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.smstraker.service.SmsMsgActionHelper;
 import eu.ttbox.smstraker.service.SmsMsgEncryptHelper;
@@ -74,7 +73,8 @@ public class SMSReceiver extends BroadcastReceiver {
         // Decrypt Msg
         GeoTrackSmsMsg clearMsg = SmsMsgEncryptHelper.decodeSmsMessage(phoneNumber, messageBody);
         if (clearMsg != null && clearMsg.action != null) {
-            if (SmsMsgEncryptHelper.ACTION_GEO_LOC.equals(clearMsg.action)) {
+            Log.w(TAG, "Receive SMS Geo Action : " + clearMsg.action);
+             if (SmsMsgEncryptHelper.ACTION_GEO_LOC.equals(clearMsg.action)) {
                 Location loc = SmsMsgActionHelper.fromSmsMessage(clearMsg.body);
                 if (loc != null) {
                     manangeNewLocation(context, phoneNumber, loc);

@@ -80,8 +80,7 @@ public class GeoPingActivity extends Activity {
 
         switch (reqCode) {
         case (SAVE_ENTITY):
-            if (resultCode == Activity.RESULT_OK) {
-                Uri contactData = data.getData();
+            if (resultCode == Activity.RESULT_OK) { 
                 getLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
             }
         }
