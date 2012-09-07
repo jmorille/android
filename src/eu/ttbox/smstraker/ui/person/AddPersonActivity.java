@@ -2,7 +2,7 @@ package eu.ttbox.smstraker.ui.person;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
 import eu.ttbox.smstraker.R;
 
@@ -22,4 +22,12 @@ public class AddPersonActivity extends Activity {
     }
     
     
+    public void onSaveClick(View v) {
+    	
+    }
+
+    public void onCancelClick(View v) {
+    	
+    }
+
 }

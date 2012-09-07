@@ -25,7 +25,7 @@
         <Button
             android:id="@+id/save_button"
             style="@style/entity_edit"
-            android:onClick="save"
+            android:onClick="onSaveClick"
             android:layout_below="@id/person_phone"
             android:hint="@string/save_button" />
         
