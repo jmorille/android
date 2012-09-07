@@ -10,7 +10,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "PersonOpenHelper";
 
-    public static final String DATABASE_NAME = "personDb";
+    public static final String DATABASE_NAME = "personDb.db";
     public static final int DATABASE_VERSION = 1;
 
     /*

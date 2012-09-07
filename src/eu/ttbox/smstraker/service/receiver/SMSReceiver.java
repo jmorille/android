@@ -3,6 +3,7 @@ package eu.ttbox.smstraker.service.receiver;
 import java.util.Date;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,7 +15,9 @@ import android.util.Log;
 import android.widget.Toast;
 import eu.ttbox.smstraker.domain.GeoTrack;
 import eu.ttbox.smstraker.domain.GeoTrackSmsMsg;
+import eu.ttbox.smstraker.domain.GeoTrackerProvider;
 import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.smstraker.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.smstraker.service.SmsMsgActionHelper;
 import eu.ttbox.smstraker.service.SmsMsgEncryptHelper;
 
@@ -87,10 +90,12 @@ public class SMSReceiver extends BroadcastReceiver {
     private void manangeNewLocation(Context context, String phoneNumber, Location loc) {
         if (loc != null) {
             GeoTrack geoPoint = new GeoTrack(phoneNumber, loc);
-            GeoTrackDatabase trackingBDD = new GeoTrackDatabase(context);
-            trackingBDD.open();
-            trackingBDD.insertTrackPoint(geoPoint);
-            trackingBDD.close();
+            ContentValues values =   GeoTrackHelper.getContentValues(geoPoint);
+            context.getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
+//            GeoTrackDatabase trackingBDD = new GeoTrackDatabase(context);
+//            trackingBDD.open();
+//            trackingBDD.insertTrackPoint(geoPoint);
+//            trackingBDD.close();
             Toast.makeText(context,
                     "Message : " + new Date(loc.getTime()).toLocaleString() + " (" + loc.getLatitude() + "," + loc.getLongitude() + " ~ " + loc.getAccuracy() + ") from " + phoneNumber,
                     Toast.LENGTH_LONG).show();

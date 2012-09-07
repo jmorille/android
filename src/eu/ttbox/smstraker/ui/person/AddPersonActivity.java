@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import eu.ttbox.smstraker.R;
@@ -15,6 +16,8 @@ import eu.ttbox.smstraker.domain.person.PersonDatabase.PersonColumns;
 
 public class AddPersonActivity extends Activity {
 
+    private static final String TAG = "AddPersonActivity";
+    
     // Constant
     private static final int PICK_CONTACT = 0;
 
@@ -31,6 +34,29 @@ public class AddPersonActivity extends Activity {
         phoneEditText = (EditText) findViewById(R.id.person_phone);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    protected void handleIntent(Intent intent) {
+        if (intent == null) {
+            return;
+        }
+        String action  =  intent.getAction();
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "handleIntent for action : " +action);
+        }
+        if (Intent.ACTION_EDIT.equals(action)) {
+            // TODO
+         } else  if (Intent.ACTION_DELETE.equals(action)) {
+            // TODO
+        } else  if (Intent.ACTION_INSERT.equals(action)) {
+             // TODO
+        }
+        
+    }
+    
     public void onSaveClick(View v) {
         String name = nameEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
@@ -63,6 +89,7 @@ public class AddPersonActivity extends Activity {
             if (resultCode == Activity.RESULT_OK) {
                 Uri contactData = data.getData();
                 saveContactData(contactData);
+                finish();
             }
         }
     }

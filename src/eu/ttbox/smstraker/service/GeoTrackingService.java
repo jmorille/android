@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +21,9 @@ import android.util.Log;
 import eu.ttbox.smstraker.core.AppConstant;
 import eu.ttbox.smstraker.domain.GeoTrack;
 import eu.ttbox.smstraker.domain.GeoTrackSmsMsg;
+import eu.ttbox.smstraker.domain.GeoTrackerProvider;
 import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.smstraker.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.smstraker.service.receiver.TrackerLocationHelper;
 
 /**
@@ -137,9 +140,12 @@ public class GeoTrackingService extends Service implements LocationListener {
 		boolean saveLocal = appPreferences.getBoolean(KEY_LOCAL_SAVE, false);
 		if (saveLocal) {
 			GeoTrack geoPoint = new GeoTrack(AppConstant.LOCAL_DB_KEY, location); 
-			trackingBDD.open(); 
-			trackingBDD.insertTrackPoint(geoPoint);  
-			trackingBDD.close();
+			 ContentValues values =   GeoTrackHelper.getContentValues(geoPoint);
+	            getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
+//	            
+//			trackingBDD.open(); 
+//			trackingBDD.insertTrackPoint(geoPoint);  
+//			trackingBDD.close();
 		}
 		// Sms
 		boolean useSms = appPreferences.getBoolean(KEY_SMS_USE, false);

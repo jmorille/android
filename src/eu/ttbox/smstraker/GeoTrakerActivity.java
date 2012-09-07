@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,14 +27,18 @@ import eu.ttbox.smstraker.activity.AbstractSmsTrackerActivity;
 import eu.ttbox.smstraker.core.AppConstant;
 import eu.ttbox.smstraker.domain.GeoTrack;
 import eu.ttbox.smstraker.domain.GeoTrackSmsMsg;
+import eu.ttbox.smstraker.domain.GeoTrackerProvider;
 import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.smstraker.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.smstraker.service.GeoTrackingService;
 import eu.ttbox.smstraker.service.SmsMsgActionHelper;
 import eu.ttbox.smstraker.service.SmsMsgEncryptHelper;
 
 public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnClickListener, LocationListener {
 
-	private SharedPreferences appPreferences; 
+    private static final String TAG ="GeoTrakerActivity";
+
+    private SharedPreferences appPreferences; 
 	private LocationManager lManager;
 	private Location location;
 	private String choix_source = "";
@@ -251,10 +256,15 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 		// Local Persist
 		boolean saveLocal = appPreferences.getBoolean(KEY_LOCAL_SAVE, false);
 		if (saveLocal) {
+		    // Inser Local
 			GeoTrack geoPoint = new GeoTrack(AppConstant.LOCAL_DB_KEY, location);
-			Log.i(getClass().getSimpleName(), "Open DB");
+            ContentValues values =   GeoTrackHelper.getContentValues(geoPoint);
+            getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
+            // Read all points
+			
+			Log.i(TAG, "Open DB");
 			trackingBDD.open(); 
-			trackingBDD.insertTrackPoint(geoPoint); 
+//			trackingBDD.insertTrackPoint(geoPoint); 
 			List<GeoTrack> points = trackingBDD.getTrakPointWithTitre(AppConstant.LOCAL_DB_KEY); 
 			Toast.makeText(this, String.format("insertTrackPoint with id  \"%s\" ", ""+points.size ()), Toast.LENGTH_SHORT).show(); 
 			trackingBDD.close();
