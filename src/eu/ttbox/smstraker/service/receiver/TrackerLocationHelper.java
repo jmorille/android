@@ -1,4 +1,4 @@
-package eu.ttbox.smstraker.adapter;
+package eu.ttbox.smstraker.service.receiver;
 
 import android.location.Location;
 

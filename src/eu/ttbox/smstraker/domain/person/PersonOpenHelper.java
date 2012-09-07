@@ -39,7 +39,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         mDatabase = db;
         mDatabase.execSQL(FTS_TABLE_CREATE_USER); 
-        new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary(); 
+//        new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary(); 
     }
 
     @Override

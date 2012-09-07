@@ -25,9 +25,11 @@ import android.widget.Toast;
 import eu.ttbox.smstraker.activity.AbstractSmsTrackerActivity;
 import eu.ttbox.smstraker.core.AppConstant;
 import eu.ttbox.smstraker.domain.GeoTrack;
+import eu.ttbox.smstraker.domain.GeoTrackSmsMsg;
 import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.smstraker.service.GeoTrackingService;
-import eu.ttbox.smstraker.service.sender.SmsLocationHelper;
+import eu.ttbox.smstraker.service.SmsMsgActionHelper;
+import eu.ttbox.smstraker.service.SmsMsgEncryptHelper;
 
 public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnClickListener, LocationListener {
 
@@ -262,7 +264,8 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 		if (useSms) {
 			String destinationAddress = appPreferences.getString(KEY_SMS_PHONE_NUMBER, null);
 			if (destinationAddress != null && destinationAddress.length() > 0) {
-				String smsMsg = SmsLocationHelper.toSmsMessage(location);
+			    GeoTrackSmsMsg geoTrackMsg =   SmsMsgActionHelper.geoLocMessage(location);
+				String smsMsg = SmsMsgEncryptHelper.encodeSmsMessage(geoTrackMsg);
 				if (smsMsg!=null && smsMsg.length()>0) {
 					SmsManager.getDefault().sendTextMessage(destinationAddress, null, smsMsg, null, null);
 				}

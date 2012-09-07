@@ -30,7 +30,7 @@
 		<activity android:name=".ui.person.AddPersonActivity"></activity> 
 				
 		<receiver class="eu.ttbox.smstraker.adapter.SMSReceiver"
-			android:name="eu.ttbox.smstraker.adapter.SMSReceiver" android:exported="false">
+			android:name=".service.receiver.SMSReceiver" android:exported="false">
 			<intent-filter android:priority="100">
 				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
 			</intent-filter>

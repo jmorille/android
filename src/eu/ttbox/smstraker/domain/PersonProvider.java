@@ -10,11 +10,15 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 import eu.ttbox.smstraker.domain.person.PersonDatabase;
+import eu.ttbox.smstraker.domain.person.PersonDatabase.PersonColumns;
 
 public class PersonProvider extends ContentProvider {
 
     @SuppressWarnings("unused")
     private static final String TAG = "PersonProvider";
+
+    // Constante
+    private static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", PersonColumns.KEY_ID);
 
     // MIME types used for searching words or looking up a single definition
     public static final String PERSONS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/person";
@@ -23,7 +27,8 @@ public class PersonProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.smstraker.PersonProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/person");
-//        public static final Uri CONTENT_URI_GET_PRODUCT = Uri.parse("content://" + AUTHORITY + "/person/");
+        // public static final Uri CONTENT_URI_GET_PRODUCT =
+        // Uri.parse("content://" + AUTHORITY + "/person/");
     }
 
     private PersonDatabase personDatabase;
@@ -104,14 +109,14 @@ public class PersonProvider extends ContentProvider {
 
     private Cursor getSuggestions(String query) {
         query = query.toLowerCase();
-        String[] columns = new String[] { PersonDatabase.PersonColumns.KEY_ID,  //
+        String[] columns = new String[] { PersonDatabase.PersonColumns.KEY_ID, //
                 PersonDatabase.PersonColumns.KEY_NAME, PersonDatabase.PersonColumns.KEY_PHONE, //
-                SearchManager.SUGGEST_COLUMN_TEXT_1,  SearchManager.SUGGEST_COLUMN_TEXT_2, //
-        /*
-         * SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, (only if you want to
-         * refresh shortcuts)
-         */
-        SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID };
+                SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_TEXT_2, //
+                /*
+                 * SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, (only if you want
+                 * to refresh shortcuts)
+                 */
+                SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID };
 
         return personDatabase.getPersonMatches(query, columns, null);
     }
@@ -135,7 +140,8 @@ public class PersonProvider extends ContentProvider {
         String rowId = uri.getLastPathSegment();
         String[] columns = new String[] { PersonDatabase.PersonColumns.KEY_ID //
                 , BaseColumns._ID //
-//                , PersonDatabase.PersonColumns.KEY_LASTNAME, PersonDatabase.PersonColumns.KEY_FIRSTNAME //
+                // , PersonDatabase.PersonColumns.KEY_LASTNAME,
+                // PersonDatabase.PersonColumns.KEY_FIRSTNAME //
                 , SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_TEXT_2 //
         // , SearchManager.SUGGEST_COLUMN_SHORTCUT_ID,
         // SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
@@ -168,17 +174,26 @@ public class PersonProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        throw new UnsupportedOperationException();
+        long personId = personDatabase.insertPerson(values);
+        Uri personUri = null;
+        if (personId > -1) {
+            personUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + personId);
+        }
+        return personUri;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        throw new UnsupportedOperationException();
+        String entityId = uri.getLastPathSegment();
+        String[] args = new String[] { entityId };
+        int count = personDatabase.delete(SELECT_BY_ENTITY_ID, args);
+        return count;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        throw new UnsupportedOperationException();
+        int count = personDatabase.update(values, selection, selectionArgs);
+        return count;
     }
 
 }

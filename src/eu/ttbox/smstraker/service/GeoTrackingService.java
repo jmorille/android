@@ -17,11 +17,11 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.util.Log;
-import eu.ttbox.smstraker.adapter.TrackerLocationHelper;
 import eu.ttbox.smstraker.core.AppConstant;
 import eu.ttbox.smstraker.domain.GeoTrack;
+import eu.ttbox.smstraker.domain.GeoTrackSmsMsg;
 import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
-import eu.ttbox.smstraker.service.sender.SmsLocationHelper;
+import eu.ttbox.smstraker.service.receiver.TrackerLocationHelper;
 
 /**
  * @see http://blog.developpez.com/android23/p8571/android/creation-de-service/
@@ -146,7 +146,8 @@ public class GeoTrackingService extends Service implements LocationListener {
 		if (useSms) {
 			String destinationAddress = appPreferences.getString(KEY_SMS_PHONE_NUMBER, null);
 			if (destinationAddress != null && destinationAddress.length() > 0) {
-				String smsMsg = SmsLocationHelper.toSmsMessage(location);
+			    GeoTrackSmsMsg geoTrackMsg =   SmsMsgActionHelper.geoLocMessage(location);
+				String smsMsg = SmsMsgEncryptHelper.encodeSmsMessage(geoTrackMsg);
 				if (smsMsg!=null && smsMsg.length()>0) {
 					SmsManager.getDefault().sendTextMessage(destinationAddress, null, smsMsg, null, null);
 				}

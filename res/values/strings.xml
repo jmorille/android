@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, SmsTrakerActivity!</string>
-    <string name="app_name">SmsTraker</string>
+
     
 	<string name="add_track_person">Ajouter une personne</string>    
     <string name="geoping">Geo Ping</string>
     
     
+    <string name="select_contact_button">Contacts</string>
     <string name="save_button">Sauver</string>
-    <string name="cancel_button">Sauver</string>
+    <string name="cancel_button">Cancel</string>
     
     <!-- Menu -->
     <string name="menu.options">Options</string>
