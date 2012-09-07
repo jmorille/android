@@ -1,19 +1,18 @@
-package eu.ttbox.smstraker.adapter;
+package eu.ttbox.smstraker.service.sender;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import eu.ttbox.smstraker.core.AppConstant;
-
 import android.location.Location;
 import android.util.Log;
+import eu.ttbox.smstraker.core.AppConstant;
 
 public class SmsLocationHelper {
 
 	private final static String MSGID = "smsTracker#";
 
-	private final static String MSGKEY_PROVIDER = "providersuperlongpourvoir";
+	private final static String MSGKEY_PROVIDER = "p";
 	private final static String MSGKEY_TIME = "t";
 	private final static String MSGKEY_LATITUDE_E6 = "la";
 	private final static String MSGKEY_LONGITUDE_E6 = "ln";
@@ -25,7 +24,7 @@ public class SmsLocationHelper {
 	public static String toSmsMessage(Location location) {
 		if (location != null) {
 			String body = convertLocationAsJsonString(location);
-			String msg = MSGID + body;
+			String msg = new StringBuffer(255).append( MSGID).append( body).toString();
 			return msg;
 		}
 		return null;
@@ -54,14 +53,17 @@ public class SmsLocationHelper {
 			object.put(MSGKEY_LONGITUDE_E6, lngE6);
 			// altitude
 			if (location.hasAltitude()) {
-				object.put(MSGKEY_ALTITUDE, location.getAltitude());
+				int alt = (int) location.getAltitude();
+				object.put(MSGKEY_ALTITUDE,alt);
 			}
 			object.put(MSGKEY_ACCURACY, location.getAccuracy());
 			if (location.hasBearing()) {
-				object.put(MSGKEY_BEARING, location.getBearing());
+				int bearing = (int) location.getBearing();
+				object.put(MSGKEY_BEARING, bearing);
 			}
 			if (location.hasSpeed()) {
-				object.put(MSGKEY_SPEAD, location.getSpeed());
+				int speed = (int) location.getSpeed();
+				object.put(MSGKEY_SPEAD, speed);
 			}
 			return object.toString();
 		} catch (JSONException e) {

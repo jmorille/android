@@ -13,25 +13,17 @@ import eu.ttbox.smstraker.ui.prefs.TrakingPrefActivity;
 
 public class AbstractSmsTrackerActivity extends Activity {
 
-	// M�thode qui se d�clenchera lorsque vous appuierez sur le bouton menu du
-	// t�l�phone
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Cr�ation d'un MenuInflater qui va permettre d'instancier un Menu XML
-		// en un objet Menu
-		MenuInflater inflater = getMenuInflater();
-		// Instanciation du menu XML sp�cifier en un objet Menu
-		inflater.inflate(R.menu.menu, menu);
-
+ 
+	public boolean onCreateOptionsMenu(Menu menu) { 
+		MenuInflater inflater = getMenuInflater(); 
+		inflater.inflate(R.menu.menu, menu); 
 		// Il n'est pas possible de modifier l'ic�ne d'ent�te du sous-menu via
 		// le fichier XML on le fait donc en JAVA
 		// menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.option_white);
 
 		return true;
 	}
-
-
-	// M�thode qui se d�clenchera au clic sur un item
+ 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// On regarde quel item a �t� cliqu� gr�ce � son id et on d�clenche une
 		// action

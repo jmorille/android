@@ -23,11 +23,11 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 import eu.ttbox.smstraker.activity.AbstractSmsTrackerActivity;
-import eu.ttbox.smstraker.adapter.SmsLocationHelper;
 import eu.ttbox.smstraker.core.AppConstant;
 import eu.ttbox.smstraker.domain.GeoTrack;
 import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.smstraker.service.GeoTrackingService;
+import eu.ttbox.smstraker.service.sender.SmsLocationHelper;
 
 public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnClickListener, LocationListener {
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import eu.ttbox.smstraker.core.AppConstant;
 import eu.ttbox.smstraker.domain.GeoTrack;
 import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.smstraker.service.sender.SmsLocationHelper;
 
 /**
  * @see http://www.tutos-android.com/broadcast-receiver-android

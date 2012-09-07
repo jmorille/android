@@ -17,11 +17,11 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.util.Log;
-import eu.ttbox.smstraker.adapter.SmsLocationHelper;
 import eu.ttbox.smstraker.adapter.TrackerLocationHelper;
 import eu.ttbox.smstraker.core.AppConstant;
 import eu.ttbox.smstraker.domain.GeoTrack;
 import eu.ttbox.smstraker.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.smstraker.service.sender.SmsLocationHelper;
 
 /**
  * @see http://blog.developpez.com/android23/p8571/android/creation-de-service/
