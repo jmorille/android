@@ -3,14 +3,17 @@
     <string name="hello">Hello World, SmsTrakerActivity!</string>
     <string name="app_name">SmsTraker</string>
     
+	<string name="add_track_person">Ajouter une personne</string>    
+    <string name="geoping">Geo Ping</string>
+    
+    <!-- Menu -->
     <string name="menu.options">Options</string>
     <string name="menu.geoTracker">Geo Tacker</string>
     <string name="menu.map">Map</string>
     <string name="menu_geoping">GeoPing</string>
     <string name="menu.quit">Quit</string>
-
-	<string name="add_track_person">Ajouter une personne</string>    
     
+    <!-- Prefs -->
     <string name="prefs.smsCategory">SMS Tracker</string>
     <string name="prefs.smsUse">SMS Send</string>
     <string name="prefs.smsUse.summaryOn">Send all Geo Fix By SMS</string>

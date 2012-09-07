@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="eu.ttbox.smstraker" android:versionCode="1"
 	android:versionName="1.0">
-	<uses-sdk android:minSdkVersion="10" />
+	<uses-sdk android:minSdkVersion="11" />
 
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -43,7 +43,9 @@
 <!-- 		    </intent-filter>  --> 
 		</service> 
 		
-		 <provider
+		<service android:name=".service.sender.GeoPingSmsSenderService"></service>
+		
+		<provider
             android:name=".domain.PersonProvider"
             android:authorities="eu.ttbox.smstraker.PersonProvider"
             android:readPermission="eu.ttbox.smstraker.PERSON_READ"

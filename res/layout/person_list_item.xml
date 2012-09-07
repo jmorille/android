@@ -14,5 +14,12 @@
         android:id="@+id/person_list_item_phone"
         style="@style/entity_list_item"
         android:layout_weight="1" />
- 
+
+    
+    <Button
+        android:id="@+id/person_list_item_geoping_button"
+        style="@style/entity_list_item"
+        android:text="@string/geoping"
+        android:layout_weight="1" />
+    
 </LinearLayout>

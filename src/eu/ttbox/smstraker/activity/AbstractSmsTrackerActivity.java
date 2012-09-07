@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 import eu.ttbox.smstraker.GeoTrakerActivity;
 import eu.ttbox.smstraker.R;
 import eu.ttbox.smstraker.ShowMapActivity;
+import eu.ttbox.smstraker.ui.ping.GeoPingActivity;
 import eu.ttbox.smstraker.ui.prefs.TrakingPrefActivity;
 
 public class AbstractSmsTrackerActivity extends Activity {
@@ -24,9 +24,7 @@ public class AbstractSmsTrackerActivity extends Activity {
 		return true;
 	}
  
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// On regarde quel item a �t� cliqu� gr�ce � son id et on d�clenche une
-		// action
+	public boolean onOptionsItemSelected(MenuItem item) { 
 		switch (item.getItemId()) {
 		case R.id.option:
 			Intent intentOption = new Intent(this, TrakingPrefActivity.class);
@@ -39,6 +37,10 @@ public class AbstractSmsTrackerActivity extends Activity {
 		case R.id.menuMap:
 			Intent intentMap = new Intent(this, ShowMapActivity.class);
 			startActivity(intentMap);
+			return true; 
+		case R.id.menuGeoPing:
+			Intent intentGeoPing = new Intent(this, GeoPingActivity.class);
+			startActivity(intentGeoPing);
 			return true; 
 		case R.id.menuQuitter:
 			// Pour fermer l'application il suffit de faire finish()
