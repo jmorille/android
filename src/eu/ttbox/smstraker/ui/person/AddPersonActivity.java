@@ -65,6 +65,7 @@ public class AddPersonActivity extends Activity {
     }
 
     public void onCancelClick(View v) {
+        setResult(Activity.RESULT_CANCELED);
         finish();
     }
 
@@ -120,6 +121,7 @@ public class AddPersonActivity extends Activity {
         values.put(PersonColumns.KEY_PHONE, phone);
         // Content
         Uri uri = getContentResolver().insert(PersonProvider.Constants.CONTENT_URI, values);
+        setResult(Activity.RESULT_OK);
         return uri;
     }
 
