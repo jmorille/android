@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import eu.ttbox.smstraker.domain.bootstrap.PersonDbBootstrap;
 
 public class PersonOpenHelper extends SQLiteOpenHelper {
 
@@ -38,7 +39,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         mDatabase = db;
         mDatabase.execSQL(FTS_TABLE_CREATE_USER); 
-//        new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary(); 
+        new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary(); 
     }
 
     @Override
