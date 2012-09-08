@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, SmsTrakerActivity!</string>
+    <string name="hello">Hello World, GeoPing!</string>
 
     
 	<string name="add_track_person">Ajouter une personne</string>    

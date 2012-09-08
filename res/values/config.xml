@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SmsTraker</string>
+    <string name="app_name">GeoPing</string>
  
     <!-- Release 67:BA:EF:23:0F:CA:87:24:23:0B:51:20:13:2C:C2:83 -->
     <!-- <string name="map_apiKey">0y6tr0VPcaTbOfp-tmd-cOq2NLpewl6dzMA9IuA</string> -->

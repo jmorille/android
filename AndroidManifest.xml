@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="eu.ttbox.smstraker" android:versionCode="1"
+	package="eu.ttbox.geoping" android:versionCode="1"
 	android:versionName="1.0">
 	<uses-sdk android:minSdkVersion="11" />
 
@@ -46,15 +46,15 @@
 		
 		<provider
             android:name=".domain.PersonProvider"
-            android:authorities="eu.ttbox.smstraker.PersonProvider"
-            android:readPermission="eu.ttbox.smstraker.PERSON_READ"
-            android:writePermission="eu.ttbox.smstraker.PERSON_WRITE" />
+            android:authorities="eu.ttbox.geoping.PersonProvider"
+            android:readPermission="eu.ttbox.geoping.PERSON_READ"
+            android:writePermission="eu.ttbox.geoping.PERSON_WRITE" />
 		 <provider
             android:name=".domain.GeoTrackerProvider"
              android:multiprocess="true"
-            android:authorities="eu.ttbox.smstraker.GeoTrackerProvider"
-            android:readPermission="eu.ttbox.smstraker.GEO_TRACK_READ"
-            android:writePermission="eu.ttbox.smstraker.GEO_TRACK_WRITE" />
+            android:authorities="eu.ttbox.geoping.GeoTrackerProvider"
+            android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ"
+            android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE" />
 
 		<uses-library android:required="true" android:name="com.google.android.maps" />
 		 		 		

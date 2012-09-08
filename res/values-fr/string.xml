@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Bienvenu sur SmsTrakerActivity!</string>
-    <string name="app_name">SmsTraker</string>
-
+    <string name="hello">Bienvenu sur GeoPing!</string>
+ 
     <string name="menu.options">Options</string>
     <string name="menu.geoTracker">Geo Tacker</string>
     <string name="menu.map">Carte</string>
