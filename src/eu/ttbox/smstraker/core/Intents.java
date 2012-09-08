@@ -9,7 +9,8 @@ public class Intents {
 
 	public static final String ACTION_ADD_TRACKER_PERSON = "eu.ttbox.smstraker.ACTION_ADD_TRACKER_PERSON";
 
-	public static final String ACTION_SMS_GEOPING = "eu.ttbox.smstraker.ACTION_SMS_GEOPING";
+	public static final String ACTION_SMS_GEOPING_REQUEST = "eu.ttbox.smstraker.ACTION_SMS_GEOPING_REQUEST";
+    public static final String ACTION_SMS_GEOPING_RESPONSE = "eu.ttbox.smstraker.ACTION_SMS_GEOPING_RESPONSE";
 
 	public static final String EXTRA_SMS_PHONE_NUMBER = "SMS_PHONE_NUMBER";
 
@@ -18,10 +19,16 @@ public class Intents {
 				.setAction(ACTION_ADD_TRACKER_PERSON);
 	}
 
-	public static Intent sensGeoPing(Context context, String phoneNumber) {
+	public static Intent sendGeoPingRequest(Context context, String phoneNumber) {
 		return new Intent(context, GeoPingSmsSenderService.class) //
-				.setAction(ACTION_SMS_GEOPING)//
+				.setAction(ACTION_SMS_GEOPING_REQUEST)//
 				.putExtra(EXTRA_SMS_PHONE_NUMBER, phoneNumber);
 	}
+
+	   public static Intent sendGeoPingResponse(Context context, String phoneNumber) {
+	        return new Intent(context, GeoPingSmsSenderService.class) //
+	                .setAction(ACTION_SMS_GEOPING_RESPONSE)//
+	                .putExtra(EXTRA_SMS_PHONE_NUMBER, phoneNumber);
+	    }
 
 }

@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
+import eu.ttbox.smstraker.core.Intents;
 import eu.ttbox.smstraker.domain.GeoTrack;
 import eu.ttbox.smstraker.domain.GeoTrackSmsMsg;
 import eu.ttbox.smstraker.domain.GeoTrackerProvider;
@@ -87,8 +88,9 @@ public class SMSReceiver extends BroadcastReceiver {
 //                isConsume = true;
                 Log.d(TAG, "Receive SMS GeoPing request");
                 Toast.makeText(context, "Geo Ping from : " + phoneNumber, Toast.LENGTH_LONG).show();
-                
-            } 
+                Intent intent = Intents.sendGeoPingResponse(context, phoneNumber);
+                context.startService(intent);
+             } 
         }
         return isConsume;
     }

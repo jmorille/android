@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
- 
-<item android:id="@+id/option" 
-      android:title="@string/menu.options"
-      android:icon="@android:drawable/ic_menu_mapmode"> 
-</item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-<item android:id="@+id/menuMap" 
-     android:title="@string/menu.map"
-     android:icon="@android:drawable/ic_dialog_map" />
+    <item
+        android:id="@+id/menuMap"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu.map"/>
+    <item
+        android:id="@+id/menuGeoPing"
+        android:icon="@android:drawable/ic_menu_send"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_geoping"/>
+    <item
+        android:id="@+id/menuGeotracker"
+        android:icon="@drawable/map"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu.geoTracker"/>
+    <item
+        android:id="@+id/option"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:showAsAction="never"
+        android:title="@string/menu.options"/>
+     <item
+        android:id="@+id/menuQuitter"
+        android:icon="@android:drawable/ic_lock_power_off"
+        android:showAsAction="never"
+        android:title="@string/menu.quit"/>
 
-<item android:id="@+id/menuGeoPing" 
-     android:title="@string/menu_geoping"
-     android:icon="@android:drawable/ic_menu_send" />
-
-<item android:id="@+id/menuGeotracker" 
-     android:title="@string/menu.geoTracker"
-     android:icon="@drawable/map" />
- 
-<item android:id="@+id/menuQuitter" 
-     android:title="@string/menu.quit"
-     android:icon="@android:drawable/ic_lock_power_off" />
 </menu>

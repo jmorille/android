@@ -44,7 +44,7 @@ public class PersonListAdapter extends ResourceCursorAdapter {
         holder.pingButton.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View v) {
-				context.startService(Intents.sensGeoPing(context, phoneNumber)); 
+				context.startService(Intents.sendGeoPingRequest(context, phoneNumber)); 
 			}
 		});
 

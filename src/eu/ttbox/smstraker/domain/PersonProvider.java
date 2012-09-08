@@ -34,8 +34,8 @@ public class PersonProvider extends ContentProvider {
     private PersonDatabase personDatabase;
 
     // UriMatcher stuff
-    private static final int SEARCH_PERSONS = 0;
-    private static final int GET_PERSON = 1;
+    private static final int PERSONS = 0;
+    private static final int PERSON_ID = 1;
     private static final int SEARCH_SUGGEST = 2;
     private static final int REFRESH_SHORTCUT = 3;
     private static final UriMatcher sURIMatcher = buildUriMatcher();
@@ -47,8 +47,8 @@ public class PersonProvider extends ContentProvider {
     private static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         // to get definitions...
-        matcher.addURI(Constants.AUTHORITY, "person", SEARCH_PERSONS);
-        matcher.addURI(Constants.AUTHORITY, "person/#", GET_PERSON);
+        matcher.addURI(Constants.AUTHORITY, "person", PERSONS);
+        matcher.addURI(Constants.AUTHORITY, "person/#", PERSON_ID);
         // to get suggestions...
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
@@ -90,7 +90,7 @@ public class PersonProvider extends ContentProvider {
                 throw new IllegalArgumentException("selectionArgs must be provided for the Uri: " + uri);
             }
             return getSuggestions(selectionArgs[0]);
-        case SEARCH_PERSONS:
+        case PERSONS:
             return search(projection, selection, selectionArgs, sortOrder);
             // if (selectionArgs == null) {
             // throw new
@@ -98,7 +98,7 @@ public class PersonProvider extends ContentProvider {
             // + uri);
             // }
             // return search(selectionArgs[0]);
-        case GET_PERSON:
+        case PERSON_ID:
             return getPerson(uri);
         case REFRESH_SHORTCUT:
             return refreshShortcut(uri);
@@ -157,9 +157,9 @@ public class PersonProvider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         switch (sURIMatcher.match(uri)) {
-        case SEARCH_PERSONS:
+        case PERSONS:
             return PERSONS_LIST_MIME_TYPE;
-        case GET_PERSON:
+        case PERSON_ID:
             return PERSON_MIME_TYPE;
         case SEARCH_SUGGEST:
             return SearchManager.SUGGEST_MIME_TYPE;

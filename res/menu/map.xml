@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu  xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@+id/menuTypeMap" 
-      android:title="Type Map"
-      android:icon="@android:drawable/ic_menu_mapmode" >
-     <menu android:id="@+id/menyTypeMap">
-		 <item android:title="Satelite" android:id="@+id/menuTypeMapSatelite"/>	
-	 
-		 <item android:id="@+id/menuTypeMapTraffic" android:title="Traffic"/>
-     </menu>
- </item>    
-         
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menuTypeMap"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:showAsAction="ifRoom"
+        android:title="Type Map">
+        <menu android:id="@+id/menyTypeMap" >
+            <item
+                android:id="@+id/menuTypeMapSatelite"
+                android:title="Satelite"/>
+            <item
+                android:id="@+id/menuTypeMapTraffic"
+                android:title="Traffic"/>
+        </menu>
+    </item>
+
 </menu>

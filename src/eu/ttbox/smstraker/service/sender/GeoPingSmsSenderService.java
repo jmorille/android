@@ -32,7 +32,11 @@ public class GeoPingSmsSenderService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
-        if (Intents.ACTION_SMS_GEOPING.equals(action)) {
+        if (Intents.ACTION_SMS_GEOPING_RESPONSE.equals(action)) {
+            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE_NUMBER);
+            GeoPingSmsLocationListener locationListener = new GeoPingSmsLocationListener(phone);
+            enableMyLocation(locationListener);
+        } else if (Intents.ACTION_SMS_GEOPING_REQUEST.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE_NUMBER);
             sendSmsPing(phone);
             // GeoPingSmsLocationListener locationListener = new
@@ -70,7 +74,7 @@ public class GeoPingSmsSenderService extends IntentService {
     }
 
     private void sendSmsPing(String phone) {
-        GeoTrackSmsMsg clearMsg = SmsMsgActionHelper.geoPingMessage(); 
+        GeoTrackSmsMsg clearMsg = SmsMsgActionHelper.geoPingMessage();
         sendSms(phone, clearMsg);
         Log.d(TAG, String.format("Send SMS GeoPing %s : %s", phone, clearMsg));
     }

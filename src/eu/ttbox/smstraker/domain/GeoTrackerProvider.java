@@ -21,8 +21,8 @@ public class GeoTrackerProvider extends ContentProvider {
     // Instance
     private GeoTrackDatabase database;
 
-    private static final int GET_ALL_STATION = 0;
-    private static final int GET_STATION = 1;
+    private static final int GEO_TRACKS = 0;
+    private static final int GEOTRACK_ID = 1;
     private static final int SEARCH_SUGGEST = 2;
     private static final int REFRESH_SHORTCUT = 3;
 
@@ -42,8 +42,8 @@ public class GeoTrackerProvider extends ContentProvider {
     static {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         // to get definitions...
-        matcher.addURI(Constants.AUTHORITY, "geoTrackPoints", GET_ALL_STATION);
-        matcher.addURI(Constants.AUTHORITY, "geoTrackPoint/#", GET_STATION);
+        matcher.addURI(Constants.AUTHORITY, "geoTrackPoints", GEO_TRACKS);
+        matcher.addURI(Constants.AUTHORITY, "geoTrackPoint/#", GEOTRACK_ID);
         // to get suggestions...
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
@@ -74,9 +74,9 @@ public class GeoTrackerProvider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         switch (sURIMatcher.match(uri)) {
-        case GET_ALL_STATION:
+        case GEO_TRACKS:
             return Constants.COLLECTION_MIME_TYPE;
-        case GET_STATION:
+        case GEOTRACK_ID:
             return Constants.ITEM_MIME_TYPE;
         case SEARCH_SUGGEST:
             return SearchManager.SUGGEST_MIME_TYPE;
@@ -90,7 +90,12 @@ public class GeoTrackerProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Log.d(TAG, "query for uri : " + uri);
-        return null;
+        switch (sURIMatcher.match(uri)) {
+
+        default:
+            throw new IllegalArgumentException("Unknown Uri: " + uri);
+        }
+        // return null;
     }
 
     @Override
@@ -99,6 +104,7 @@ public class GeoTrackerProvider extends ContentProvider {
         Uri personUri = null;
         if (personId > -1) {
             personUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + personId);
+            getContext().getContentResolver().notifyChange(personUri, null);
             Log.d(TAG, "insert geoTrack Uri : " + uri);
         }
         return personUri;
@@ -106,18 +112,42 @@ public class GeoTrackerProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        String entityId = uri.getLastPathSegment();
-        String[] args = new String[] { entityId };
-        int count = database.delete(SELECT_BY_ENTITY_ID, args);
-        Log.d(TAG, String.format("delete %s geoTrack Uri : ", count, uri));
-        return count;
+        int rowsAffected = 0;
+        int uriType = sURIMatcher.match(uri);
+        switch (uriType) {
+        case GEOTRACK_ID:
+            String entityId = uri.getLastPathSegment();
+            rowsAffected = database.delete(SELECT_BY_ENTITY_ID, new String[] { entityId });
+            Log.d(TAG, String.format("delete %s geoTrack Uri : ", rowsAffected, uri));
+            break;
+        case GEO_TRACKS:
+            rowsAffected = database.delete(selection, selectionArgs);
+            break;
+        default:
+            throw new IllegalArgumentException("Unknown or Invalid URI " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return rowsAffected;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        int count = database.update(values, selection, selectionArgs);
-        Log.d(TAG, String.format("update %s geoTrack Uri : ", count, uri)); 
-        return count;
+        int rowsAffected = 0;
+        switch (sURIMatcher.match(uri)) {
+        case GEOTRACK_ID:
+            String entityId = uri.getLastPathSegment();
+            rowsAffected = database.update(values, SELECT_BY_ENTITY_ID, new String[] { entityId });
+            break;
+        case GEO_TRACKS:
+            rowsAffected = database.update(values, selection, selectionArgs);
+            Log.d(TAG, String.format("update %s geoTrack Uri : ", rowsAffected, uri));
+            break;
+        default:
+            throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return rowsAffected;
     }
 
 }
