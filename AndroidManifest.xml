@@ -29,13 +29,12 @@
 		<activity android:name=".ui.ping.GeoPingActivity"></activity> 
 		<activity android:name=".ui.person.AddPersonActivity"></activity> 
 				
-		<receiver class="eu.ttbox.smstraker.adapter.SMSReceiver"
-			android:name=".service.receiver.SMSReceiver" android:exported="false">
+		<receiver android:name=".service.receiver.SMSReceiver" >
 			<intent-filter android:priority="100">
 				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
 			</intent-filter>
 		</receiver>
-		<uses-library android:required="true" android:name="com.google.android.maps" />
+		
 
 		<service android:name=".service.GeoTrackingService" >
 <!-- 			 <intent-filter>  -->
@@ -55,6 +54,8 @@
             android:authorities="eu.ttbox.smstraker.GeoTrackerProvider"
             android:readPermission="eu.ttbox.smstraker.GEO_TRACK_READ"
             android:writePermission="eu.ttbox.smstraker.GEO_TRACK_WRITE" />
-		 		
+
+		<uses-library android:required="true" android:name="com.google.android.maps" />
+		 		 		
 	</application>
 </manifest>

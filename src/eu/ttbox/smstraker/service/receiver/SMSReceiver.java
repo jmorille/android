@@ -22,6 +22,7 @@ import eu.ttbox.smstraker.service.SmsMsgEncryptHelper;
 
 /**
  * @see http://www.tutos-android.com/broadcast-receiver-android
+ * {link http://mobiforge.com/developing/story/sms-messaging-android}
  * @author deostem
  * 
  */
@@ -33,8 +34,9 @@ public class SMSReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        
         if (intent.getAction().equals(ACTION_RECEIVE_SMS)) {
+            Log.d(TAG, "SMSReceiver : " + intent);
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
                 Object[] pdus = (Object[]) bundle.get("pdus");
@@ -70,6 +72,7 @@ public class SMSReceiver extends BroadcastReceiver {
         boolean isConsume = false;
         final String messageBody = message.getMessageBody();
         final String phoneNumber = message.getDisplayOriginatingAddress();
+        Log.w(TAG, "Consume SMS Geo Action : " + phoneNumber +  " / " + messageBody);
         // Decrypt Msg
         GeoTrackSmsMsg clearMsg = SmsMsgEncryptHelper.decodeSmsMessage(phoneNumber, messageBody);
         if (clearMsg != null && clearMsg.action != null) {
@@ -82,6 +85,9 @@ public class SMSReceiver extends BroadcastReceiver {
                 }
             } else if (SmsMsgEncryptHelper.ACTION_GEO_PING.equals(clearMsg.action)) {
 //                isConsume = true;
+                Log.d(TAG, "Receive SMS GeoPing request");
+                Toast.makeText(context, "Geo Ping from : " + phoneNumber, Toast.LENGTH_LONG).show();
+                
             } 
         }
         return isConsume;

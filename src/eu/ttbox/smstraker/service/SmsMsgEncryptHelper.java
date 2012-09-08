@@ -11,8 +11,8 @@ public class SmsMsgEncryptHelper {
     // Action
     public static String ACTION_END = "!";
 
-    public final static String ACTION_GEO_PING = "GEO_PING" + ACTION_END;
-    public final static String ACTION_GEO_LOC = "GEO_LOC" + ACTION_END;
+    public final static String ACTION_GEO_PING = "GEO_PING" ;
+    public final static String ACTION_GEO_LOC = "GEO_LOC" ;
 
     // Constante
     public final static String MSGID = "smsTracker#";
@@ -43,6 +43,7 @@ public class SmsMsgEncryptHelper {
     public static String encodeSmsMessage(GeoTrackSmsMsg msg) {
         StringBuilder sb = new StringBuilder(255);
         sb.append(msg.action);
+        sb.append(ACTION_END);
         if (msg.body != null) {
             sb.append(msg.body);
         }

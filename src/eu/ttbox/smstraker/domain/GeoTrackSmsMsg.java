@@ -17,4 +17,11 @@ public class GeoTrackSmsMsg {
         this.body = body;
     }
 
+    @Override
+    public String toString() {
+        return "GeoTrackSmsMsg [smsNumber=" + smsNumber + ", action=" + action + ", body=" + body + "]";
+    }
+    
+    
+
 }
