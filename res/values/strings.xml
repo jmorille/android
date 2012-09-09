@@ -32,5 +32,10 @@
     <string name="person_name">Nom</string>
     <string name="person_phone">N° Téléphone</string>
     
+       <!-- Map My Location Dialog -->
+    <string name="accuracy_separator">+/-</string> <!-- +/- &#8723; -->
+    <string name="altitude">Altitude</string> 
+    
+    
 </resources>
  

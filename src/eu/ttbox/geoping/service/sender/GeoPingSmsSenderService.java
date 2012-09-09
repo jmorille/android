@@ -1,8 +1,12 @@
 package eu.ttbox.geoping.service.sender;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -15,34 +19,24 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 import eu.ttbox.geoping.service.SmsMsgActionHelper;
 import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
-import eu.ttbox.geoping.service.receiver.TrackerLocationHelper;
+import eu.ttbox.geoping.service.core.WorkerService;
+import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
-public class GeoPingSmsSenderService extends IntentService {
+public class GeoPingSmsSenderService extends WorkerService {
 
     private static final String TAG = "GeoPingSmsSenderService";
 
     private LocationManager locationManager;
 
-    private Location lastLocation;
+    private MyLocationListenerProxy myLocation;
+
+    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
+    private List<GeoPingRequest> geoPingRequestList;
+    private MultiGeoRequestLocationListener multiGeoRequestListener;
 
     public GeoPingSmsSenderService() {
         super(TAG);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        String action = intent.getAction();
-        if (Intents.ACTION_SMS_GEOPING_RESPONSE.equals(action)) {
-            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE_NUMBER);
-            GeoPingSmsLocationListener locationListener = new GeoPingSmsLocationListener(phone);
-            enableMyLocation(locationListener);
-        } else if (Intents.ACTION_SMS_GEOPING_REQUEST.equals(action)) {
-            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE_NUMBER);
-            sendSmsPing(phone);
-            // GeoPingSmsLocationListener locationListener = new
-            // GeoPingSmsLocationListener(phone);
-            // enableMyLocation(locationListener);
-        }
     }
 
     @Override
@@ -50,27 +44,65 @@ public class GeoPingSmsSenderService extends IntentService {
         super.onCreate();
         // service
         this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Log.d(TAG, "Service Started.");
+        this.myLocation = new MyLocationListenerProxy(locationManager);
+        this.geoPingRequestList = new ArrayList<GeoPingRequest>();
+        this.multiGeoRequestListener = new MultiGeoRequestLocationListener(geoPingRequestList);
+
+        Log.d(TAG, "#################################");
+        Log.d(TAG, "### GeoPing Service Started.");
+        Log.d(TAG, "#################################");
     }
 
     @Override
     public void onDestroy() {
+        this.myLocation.stopListening();
+        geoPingRequestList.clear();
         super.onDestroy();
-        Log.d(TAG, "Service Destroyed.");
+        Log.d(TAG, "#################################");
+        Log.d(TAG, "### GeoPing Service Destroyed.");
+        Log.d(TAG, "#################################");
     }
 
-    public boolean enableMyLocation(LocationListener locationListener) {
-        List<String> providers = locationManager.getAllProviders();
-        boolean locProviderEnabled = false;
-        for (String provider : providers) {
-            locationManager.requestLocationUpdates(provider, 0L, 0L, locationListener);
-            locProviderEnabled = true;
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        String action = intent.getAction();
+        if (Intents.ACTION_SMS_GEOPING_RESPONSE.equals(action)) {
+            String phoneNumber = intent.getStringExtra(Intents.EXTRA_SMS_PHONE_NUMBER);
+            // String accuracyExpected =
+            // intent.getStringExtra(Intents.EXTRA_EXPECTED_ACCURACY);
+            // Request
+            int timeOutInSeconde = 30;
+            GeoPingRequest request = new GeoPingRequest(phoneNumber);
+            // schedule it
+            registerGeoPingRequest(request);
+            executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
+        } else if (Intents.ACTION_SMS_GEOPING_REQUEST.equals(action)) {
+            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE_NUMBER);
+            sendSmsPing(phone);
         }
+    }
+
+    public boolean registerGeoPingRequest(GeoPingRequest request) {
+        Location initLastLoc = myLocation.getLastKnownLocation();
+        geoPingRequestList.add(request);
+        // TODO Bad for multi request
+        boolean locProviderEnabled = myLocation.startListening(multiGeoRequestListener);
         return locProviderEnabled;
     }
 
-    public void disableMyLocation(LocationListener locationListener) {
-        this.locationManager.removeUpdates(locationListener);
+    public void unregisterGeoPingRequest(GeoPingRequest request) {
+        boolean isRemove = geoPingRequestList.remove(request);
+        if (isRemove) {
+
+        } else {
+            Log.e(TAG, "Could not remove expected GeoPingRequest. !! Stop Service !!");
+            geoPingRequestList.clear();
+        }
+        if (geoPingRequestList.isEmpty()) {
+            Log.e(TAG, "Ne GeoPing Request in list, Stop Service");
+            myLocation.stopListening();
+            stopSelf();
+        }
     }
 
     private void sendSmsPing(String phone) {
@@ -91,22 +123,32 @@ public class GeoPingSmsSenderService extends IntentService {
         sendSms(phone, smsMsg);
     }
 
-    public class GeoPingSmsLocationListener implements LocationListener {
+    public class GeoPingRequest implements Callable<Boolean>, LocationListener {
 
-        private String smsPhoneNumber;
+        public String smsPhoneNumber;
 
-        public GeoPingSmsLocationListener(String smsPhoneNumber) {
+        public GeoPingRequest() {
             super();
-            this.smsPhoneNumber = smsPhoneNumber;
+        }
+
+        public GeoPingRequest(String phoneNumber) {
+            super();
+            this.smsPhoneNumber = phoneNumber;
+        }
+
+        @Override
+        public Boolean call() throws Exception {
+            Location lastLocation = myLocation.getLastFix();
+            if (lastLocation != null) {
+                sendSmsLocation(smsPhoneNumber, lastLocation);
+                return Boolean.TRUE;
+            }
+            return Boolean.FALSE;
         }
 
         @Override
         public void onLocationChanged(Location location) {
-            if (TrackerLocationHelper.isBetterLocation(location, lastLocation)) {
-                lastLocation = location;
-            }
-            sendSmsLocation(smsPhoneNumber, lastLocation);
-            disableMyLocation(this);
+            // TODO check expected accuracy
         }
 
         @Override
@@ -121,6 +163,6 @@ public class GeoPingSmsSenderService extends IntentService {
         public void onProviderDisabled(String provider) {
         }
 
-    };
+    }
 
 }

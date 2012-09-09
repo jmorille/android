@@ -23,7 +23,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
-import eu.ttbox.geoping.activity.AbstractSmsTrackerActivity;
 import eu.ttbox.geoping.core.AppConstant;
 import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
@@ -33,6 +32,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.service.GeoTrackingService;
 import eu.ttbox.geoping.service.SmsMsgActionHelper;
 import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
+import eu.ttbox.geoping.ui.AbstractSmsTrackerActivity;
 
 public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnClickListener, LocationListener {
 

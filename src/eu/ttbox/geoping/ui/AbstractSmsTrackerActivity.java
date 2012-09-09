@@ -1,17 +1,17 @@
-package eu.ttbox.geoping.activity;
+package eu.ttbox.geoping.ui;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.ShowMapActivity;
+import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.ping.GeoPingActivity;
 import eu.ttbox.geoping.ui.prefs.TrakingPrefActivity;
 
-public class AbstractSmsTrackerActivity extends Activity {
+public class AbstractSmsTrackerActivity extends FragmentActivity {
 
  
 	public boolean onCreateOptionsMenu(Menu menu) { 

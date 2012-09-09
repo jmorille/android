@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -14,7 +15,7 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
-public class AddPersonActivity extends Activity {
+public class AddPersonActivity extends FragmentActivity {
 
     private static final String TAG = "AddPersonActivity";
     
@@ -97,7 +98,7 @@ public class AddPersonActivity extends Activity {
 
     private void saveContactData(Uri contactData) {
         Cursor c = getContentResolver().query(contactData, new String[] { //
-                ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, //
+                ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, // TODO Check for V10 compatibility
                         ContactsContract.CommonDataKinds.Phone.NUMBER, //
                         ContactsContract.CommonDataKinds.Phone.TYPE }, null, null, null);
         try {

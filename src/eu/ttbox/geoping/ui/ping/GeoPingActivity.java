@@ -1,13 +1,13 @@
 package eu.ttbox.geoping.ui.ping;
 
 import android.app.Activity;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +19,7 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
-public class GeoPingActivity extends Activity {
+public class GeoPingActivity extends FragmentActivity {
 
     private static final String TAG = "GeoPingActivity";
 
@@ -52,11 +52,11 @@ public class GeoPingActivity extends Activity {
             }
         });
         // init
-        listAdapter = new PersonListAdapter(this, null, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        listAdapter = new PersonListAdapter(this, null, android.support.v4.widget.SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         listView.setAdapter(listAdapter);
         Log.d(TAG, "Binding end");
         // Intents
-        getLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+        getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
         handleIntent(getIntent());
     }
 
@@ -80,8 +80,8 @@ public class GeoPingActivity extends Activity {
 
         switch (reqCode) {
         case (SAVE_ENTITY):
-            if (resultCode == Activity.RESULT_OK) { 
-                getLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+            if (resultCode == Activity.RESULT_OK) {
+                getSupportLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
             }
         }
     }

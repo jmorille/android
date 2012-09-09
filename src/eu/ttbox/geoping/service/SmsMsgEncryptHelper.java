@@ -11,11 +11,11 @@ public class SmsMsgEncryptHelper {
     // Action
     public static String ACTION_END = "!";
 
-    public final static String ACTION_GEO_PING = "GEO_PING" ;
-    public final static String ACTION_GEO_LOC = "GEO_LOC" ;
+    public final static String ACTION_GEO_PING = "WRY" ;
+    public final static String ACTION_GEO_LOC = "LOC" ;
 
     // Constante
-    public final static String MSGID = "smsTracker#";
+    public final static String MSGID = "geoPing#";
     public final static String SEED = "pass";
 
     // Config

@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.service.receiver;
 
 import android.location.Location;
+import android.util.Log;
 
 /**
  * 
@@ -9,7 +10,10 @@ import android.location.Location;
  *
  */
 public class TrackerLocationHelper {
-	private static final int TWO_MINUTES = 1000 * 60 * 2;
+	
+    private static final String TAG = "TrackerLocationHelper";
+    
+    private static final int TWO_MINUTES = 1000 * 60 * 2;
 	
 	
 	/** Determines whether one Location reading is better than the current Location fix
@@ -21,6 +25,10 @@ public class TrackerLocationHelper {
 	        // A new location is always better than no location
 	        return true;
 	    }
+	    if (location==null) {
+	        // no location could not be better to anything
+	        return false;
+	    }
 
 	    // Check whether the new location fix is newer or older
 	    long timeDelta = location.getTime() - currentBestLocation.getTime();
@@ -31,10 +39,12 @@ public class TrackerLocationHelper {
 	    // If it's been more than two minutes since the current location, use the new location
 	    // because the user has likely moved
 	    if (isSignificantlyNewer) {
+	        Log.d(TAG, "YES Location is Significantly Newer (more than two minutes since the current location)");
 	        return true;
 	    // If the new location is more than two minutes older, it must be worse
 	    } else if (isSignificantlyOlder) {
-	        return false;
+	           Log.d(TAG, "NO Location is Significantly Older (the new location is more than two minutes older, it must be worse)");
+ 	        return false;
 	    }
 
 	    // Check whether the new location fix is more or less accurate
@@ -49,10 +59,13 @@ public class TrackerLocationHelper {
 
 	    // Determine location quality using a combination of timeliness and accuracy
 	    if (isMoreAccurate) {
+            Log.d(TAG, "YES is More Accurate");
 	        return true;
 	    } else if (isNewer && !isLessAccurate) {
+            Log.d(TAG, "YES is Newer and Not Less Accurate");
 	        return true;
 	    } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+            Log.d(TAG, "YES is Newer and NotSignificantlyLess Accurate from the Same Provider");
 	        return true;
 	    }
 	    return false;

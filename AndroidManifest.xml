@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="eu.ttbox.geoping" android:versionCode="1"
 	android:versionName="1.0">
-	<uses-sdk android:minSdkVersion="11" />
+	<uses-sdk android:minSdkVersion="10" />
 
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -23,7 +23,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".ShowMapActivity"></activity>
+		<activity android:name=".ui.map.ShowMapActivity"></activity>
 		<activity android:name=".GeoTrakerActivity"></activity>
  		<activity android:name=".ui.prefs.TrakingPrefActivity"></activity> 
 		<activity android:name=".ui.ping.GeoPingActivity"></activity> 

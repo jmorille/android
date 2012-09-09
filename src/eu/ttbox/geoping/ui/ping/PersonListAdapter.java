@@ -12,7 +12,7 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 
-public class PersonListAdapter extends ResourceCursorAdapter {
+public class PersonListAdapter extends android.support.v4.widget.ResourceCursorAdapter {
 
     private PersonHelper helper;
 

@@ -12,7 +12,11 @@ public class Intents {
 	public static final String ACTION_SMS_GEOPING_REQUEST = "eu.ttbox.geoping.ACTION_SMS_GEOPING_REQUEST";
     public static final String ACTION_SMS_GEOPING_RESPONSE = "eu.ttbox.geoping.ACTION_SMS_GEOPING_RESPONSE";
 
+    public static final String ACTION_NEW_GEOTRACK = "eu.ttbox.geoping.ACTION_GEOTRACK";
+
+    
 	public static final String EXTRA_SMS_PHONE_NUMBER = "SMS_PHONE_NUMBER";
+    public static final String EXTRA_EXPECTED_ACCURACY = "EXPECTED_ACCURACY";
 
 	public static Intent addTrackerPerson(Context context) {
 		return new Intent(context, AddPersonActivity.class) //
