@@ -11,6 +11,8 @@ import java.security.spec.RSAKeyGenParameterSpec;
 
 import javax.crypto.Cipher;
 
+import android.util.Base64;
+
 /**
  * {link http://stackoverflow.com/questions/6069369/rsa-encryption-difference-
  * between-java-and-android}
@@ -38,6 +40,13 @@ public class RsaEncrypter {
         return keyPair;
 
     }
+    
+    public static String encrypt(PublicKey pubKey, String str) throws Exception {
+         byte[] data = str.getBytes("UTF-8");
+         byte[] cipherData =  encrypt(pubKey, data);
+         String encrypted =  Base64.encodeToString(cipherData, Base64.NO_WRAP);
+         return encrypted;
+    }
 
     public static byte[] encrypt(PublicKey pubKey, byte[] data) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding"); // Cipher.getInstance("RSA/ECB/NoPadding");
@@ -46,6 +55,12 @@ public class RsaEncrypter {
         return cipherData;
     }
 
+    public static String decrypt(PrivateKey privateKey, String str) throws Exception {
+        byte[] dec =   Base64.decode(str, Base64.NO_WRAP);
+        byte[] data = decrypt(privateKey, dec);
+        return new String(data, "UTF-8");
+    }
+    
     public static byte[] decrypt(PrivateKey privateKey, byte[] data) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding"); // Cipher.getInstance("RSA/ECB/NoPadding");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
