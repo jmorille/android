@@ -3,7 +3,9 @@ package eu.ttbox.geoping.test.service.sender;
 import android.location.Location;
 import android.test.AndroidTestCase;
 import android.util.Log;
-import eu.ttbox.geoping.service.sender.SmsLocationHelper;
+import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
+import eu.ttbox.geoping.service.SmsMsgActionHelper;
+import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
 
 public class SmsLocationHelperTest extends AndroidTestCase {
 
@@ -20,12 +22,13 @@ public class SmsLocationHelperTest extends AndroidTestCase {
 		loc.setBearing(257.16416464646446464646413f);
 		loc.setSpeed(125.1464646464468946444646f);
 		// Convertion 2 String
-		String msg = SmsLocationHelper.toSmsMessage(loc);
+		GeoTrackSmsMsg geoTrackMsg =  SmsMsgActionHelper.geoLocMessage(loc);
+		String msg = SmsMsgEncryptHelper.encodeSmsMessage(geoTrackMsg);
 		assertTrue("SMS should be <= 255 chars", msg.length() < 255);
 		Log.i(TAG, "SMS Message Size : " + msg.length());
 		Log.i(TAG, msg);
 		// 2 Lat
-		Location locun = SmsLocationHelper.fromSmsMessage(msg);
+		GeoTrackSmsMsg locun = SmsMsgEncryptHelper.decodeSmsMessage("0612345678", msg);
 		assertNotNull(locun);
 	}
 }
