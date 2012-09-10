@@ -6,6 +6,14 @@ import org.json.JSONTokener;
 
 import android.location.Location;
 import android.util.Log;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import eu.ttbox.geoping.core.AppConstant;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 
@@ -47,6 +55,7 @@ public class SmsMsgActionHelper {
             return null;
         }
         try {
+            //jackson  http://www.cowtowncoder.com/blog/archives/2009/08/entry_310.html
             JSONObject object = new JSONObject();
             object.put(MSGKEY_PROVIDER, location.getProvider());
             object.put(MSGKEY_TIME, location.getTime());
@@ -76,6 +85,48 @@ public class SmsMsgActionHelper {
         return null;
     }
 
+    /**
+     * {link http://www.cowtowncoder.com/blog/archives/2009/08/entry_310.html}
+     * @param location
+     * @return
+     */
+    public static String convertLocationAsJacksonString(Location location) {
+        if (location == null) {
+            return null;
+        }
+//        JsonFactory jsonFactory =  new JsonFactory();
+//        jsonFactory.disable(JsonGenerator.Feature.QUOTE_FIELD_NAMES);
+         
+        ObjectMapper mapper = new ObjectMapper();  
+        mapper.configure( JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        mapper.configure(JsonGenerator.Feature.QUOTE_FIELD_NAMES, false);
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
+        
+        ObjectNode object =  mapper.createObjectNode();
+        object.put(MSGKEY_PROVIDER, location.getProvider());
+        object.put(MSGKEY_TIME, location.getTime());
+        // Lat Lng
+        int latE6 = (int) (location.getLatitude() * AppConstant.E6);
+        int lngE6 = (int) (location.getLongitude() * AppConstant.E6);
+        object.put(MSGKEY_LATITUDE_E6, latE6);
+        object.put(MSGKEY_LONGITUDE_E6, lngE6);
+        // altitude
+        if (location.hasAltitude()) {
+            int alt = (int) location.getAltitude();
+            object.put(MSGKEY_ALTITUDE, alt);
+        }
+        object.put(MSGKEY_ACCURACY, location.getAccuracy());
+        if (location.hasBearing()) {
+            int bearing = (int) location.getBearing();
+            object.put(MSGKEY_BEARING, bearing);
+        }
+        if (location.hasSpeed()) {
+            int speed = (int) location.getSpeed();
+            object.put(MSGKEY_SPEAD, speed);
+        }
+        return object.toString();
+    }
+        
     public static Location convertJsonLocAsLocation(String jsonLocation) {
         if (jsonLocation == null || jsonLocation.length() < 1) {
             return null;

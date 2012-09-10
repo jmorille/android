@@ -1,9 +1,13 @@
 package eu.ttbox.geoping.core.crypto;
 
+import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.RSAKeyGenParameterSpec;
 
 import javax.crypto.Cipher;
 
@@ -14,11 +18,22 @@ import javax.crypto.Cipher;
  */
 public class RsaEncrypter {
 
-    Cipher ecipher;
-
-    public static KeyPair generateKey() throws NoSuchAlgorithmException {
+    
+    /**
+     * {link http://www.java2s.com/Code/Android/Security/
+     * RSAencryptdecryptfunctionRSAECBPKCS1Padding.htm} generates RSA key pair
+     * 
+     * @param keySize
+     * @param publicExponent
+     *            public exponent value (can be RSAKeyGenParameterSpec.F0 or F4)
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidAlgorithmParameterException 
+     */
+    public static KeyPair generateKey(int keySize, BigInteger publicExponent) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-        keyGen.initialize(1024);
+        RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(keySize, publicExponent);
+        keyGen.initialize(spec);
         KeyPair keyPair = keyGen.genKeyPair();
         return keyPair;
 
@@ -30,7 +45,12 @@ public class RsaEncrypter {
         byte[] cipherData = cipher.doFinal(data);
         return cipherData;
     }
-    
-    
-    
+
+    public static byte[] decrypt(PrivateKey privateKey, byte[] data) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding"); // Cipher.getInstance("RSA/ECB/NoPadding");
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        byte[] dectyptedText = cipher.doFinal(data);
+        return dectyptedText;
+    }
+
 }

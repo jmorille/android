@@ -38,27 +38,28 @@ public class DesEncrypterTest extends AndroidTestCase {
 
     public void testEncrypt() throws Exception {
         String clearText = getMessage();
-        Log.d(TAG, "clearText Size : " + clearText.length() + " / for msg : " + clearText);
-        // encrypt
-        SecretKey key = DesEncrypter.generateKey();
-        DesEncrypter encrypter = new DesEncrypter(key);
-
-        String encryped = encrypter.encrypt(clearText);
-        Log.d(TAG, "encryped Size : " + encryped.length() + " / for msg : " + encryped);
-
-    }
+        doEncryptDecryptTest(clearText);
+     }
 
 
 
     public void testEncryptMessageLoc() throws Exception {
         String clearText = getMessageLoc();
+        doEncryptDecryptTest(clearText);
+    }
+    
+    private void doEncryptDecryptTest(String clearText) throws Exception {
         Log.d(TAG, "clearText Size : " + clearText.length() + " / for msg : " + clearText);
         // encrypt
-        SecretKey key = DesEncrypter.generateKey();
+        SecretKey key = DesEncrypter.generateKey(); 
+        assertNotNull(key); 
         DesEncrypter encrypter = new DesEncrypter(key);
-
-        String encryped = encrypter.encrypt(clearText);
-        Log.d(TAG, "encryped Size : " + encryped.length() + " / for msg : " + encryped);
-
+        // Encrypt 
+        String encrypted =  encrypter.encrypt(clearText);
+        Log.d(TAG, "DES encryped Size : " + encrypted.length() + " / for msg : " + encrypted);
+        // Decrypt 
+        String clearResp = encrypter.decrypt(encrypted);
+        Log.d(TAG, "DES response Clear Size : " + clearResp.length() + " / for msg : " + clearResp);
+        assertEquals(clearText, clearResp);
     }
 }
