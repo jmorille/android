@@ -11,6 +11,10 @@
     <string name="save_button">Sauver</string>
     <string name="cancel_button">Cancel</string>
     
+    <!-- Encryption -->
+     <string name="no_geoping_description">\n\nPlease install \'GeoPing\' from the Market\n\n</string>
+  <string name="geoping_encrypted_message">Parandroid encrypted message</string>
+     
     <!-- Menu -->
     <string name="menu.options">Options</string>
     <string name="menu.geoTracker">Geo Tacker</string>

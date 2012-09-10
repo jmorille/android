@@ -55,6 +55,7 @@ public class DesEncrypter {
             byte[] enc = ecipher.doFinal(utf8);
 
             // Encode bytes to base64 to get a string
+//            return new String(enc);
             return Base64.encodeToString(enc, Base64.DEFAULT);
         } catch (javax.crypto.BadPaddingException e) {
         } catch (IllegalBlockSizeException e) {
