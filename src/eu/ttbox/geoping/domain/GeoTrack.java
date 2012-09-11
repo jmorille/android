@@ -2,10 +2,9 @@ package eu.ttbox.geoping.domain;
 
 import java.util.Date;
 
+import org.osmdroid.util.GeoPoint;
+
 import android.location.Location;
-
-import com.google.android.maps.GeoPoint;
-
 import eu.ttbox.geoping.core.AppConstants;
 
 public class GeoTrack {
@@ -63,7 +62,7 @@ public class GeoTrack {
 
     public GeoPoint asGeoPoint() {
         if (cachedGeoPoint == null) {
-            GeoPoint point = new GeoPoint(latitudeE6, longitudeE6);
+            GeoPoint point = new GeoPoint(latitudeE6, longitudeE6, altitude);
             cachedGeoPoint = point;
         }
         return cachedGeoPoint;

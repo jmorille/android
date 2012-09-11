@@ -105,9 +105,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 	protected Paint mCirclePaint;
 	protected Paint mCirclePaintBorder;
 
-	protected Bitmap PERSON_ICON;
-	protected PointF PERSON_HOTSPOT;
-
+	 
 	protected Bitmap DIRECTION_ARROW;
 	protected Bitmap DIRECTION_ARROW_ON;
 	protected Bitmap DIRECTION_ARROW_SELECTED;
@@ -237,10 +235,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 
 		// For Blink bitmap
 		this.DIRECTION_ARROW_ON = BitmapFactory.decodeResource(context.getResources(), R.drawable.vm_chevron_obscured_on);
-
-		// Calculate position of person icon's feet, scaled to screen density
-		this.PERSON_ICON = mResourceProxy.getBitmap(ResourceProxy.bitmap.person);
-		this.PERSON_HOTSPOT = new PointF(24.0f * mScale + 0.5f, 39.0f * mScale + 0.5f);
+ 
 	}
 
 	// ===========================================================

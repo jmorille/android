@@ -9,7 +9,7 @@
     
     <string name="select_contact_button">Contacts</string>
     <string name="save_button">Sauver</string>
-    <string name="cancel_button">Cancel</string>
+    <string name="cancel_button">Annuler</string>
     
     <!-- Encryption -->
     <string name="no_geoping_description">\n\nPlease install \'GeoPing\' from the Market\n\n</string>
@@ -17,6 +17,7 @@
      
     <!-- Menu -->
     <string name="menu_map_mypositioncenter">Ma position</string>
+    <string name="map_mode">Type de Carte</string>
     <string name="menu.options">Options</string>
     <string name="menu.geoTracker">Geo Tacker</string>
     <string name="menu.map">Map</string>
@@ -37,10 +38,7 @@
     <string name="person_name">Nom</string>
     <string name="person_phone">N° Téléphone</string>
     
-       <!-- Map My Location Dialog -->
-    <string name="accuracy_separator">+/-</string> <!-- +/- &#8723; -->
-    <string name="altitude">Altitude</string> 
-    
+        
     
 </resources>
  

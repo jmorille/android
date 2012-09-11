@@ -8,4 +8,6 @@ public class AppConstants {
 
 	// TODO in  prefs
     public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = "MYLOCATION_DISPLAY_GEOLOC";
+
+	public static final String PREFS_KEY_TILE_SOURCE = "KEY_TILE_SOURCE";
 }
