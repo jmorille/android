@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.Window;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
@@ -62,8 +63,9 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 
     @Override
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+        super.onCreate(bundle); 
         setContentView(R.layout.map);
+ 
         // Prefs
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);

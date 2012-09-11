@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class GeoTrackerProvider extends ContentProvider {
@@ -91,11 +92,13 @@ public class GeoTrackerProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Log.d(TAG, "query for uri : " + uri);
         switch (sURIMatcher.match(uri)) {
-
+        case GEO_TRACKS:
+            String[] columns = projection == null ? GeoTrackColumns.ALL_COLS : projection;
+            String order = String.format("%s ASC", GeoTrackColumns.COL_TIME);
+            return database.queryGeoTrack(selection, selectionArgs, columns, order);
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
-        // return null;
     }
 
     @Override
@@ -105,10 +108,10 @@ public class GeoTrackerProvider extends ContentProvider {
         if (personId > -1) {
             personUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + personId);
             getContext().getContentResolver().notifyChange(personUri, null);
-             Log.d(TAG, "insert geoTrack Uri : " + uri);
-             // Notify in broadcast
-// TODO sendBroadcast
-             
+            Log.d(TAG, "insert geoTrack Uri : " + uri);
+            // Notify in broadcast
+            // TODO sendBroadcast
+
         }
         return personUri;
     }
