@@ -1,0 +1,36 @@
+package eu.ttbox.geoping.ui;
+
+import android.content.Context;
+import android.content.Intent;
+import android.view.MenuItem;
+import eu.ttbox.geoping.GeoTrakerActivity;
+import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.ui.map.ShowMapActivity;
+import eu.ttbox.geoping.ui.ping.GeoPingActivity;
+import eu.ttbox.geoping.ui.prefs.TrakingPrefActivity;
+
+public class MenuOptionsItemSelectionHelper {
+
+	
+	public boolean onOptionsItemSelected(Context context, MenuItem item) { 
+		switch (item.getItemId()) {
+		case R.id.option:
+			Intent intentOption = new Intent(context, TrakingPrefActivity.class);
+			context.startActivity(intentOption);
+			return true; 
+		case R.id.menuGeotracker:
+			Intent intentGeoTraker = new Intent(context, GeoTrakerActivity.class);
+			context.startActivity(intentGeoTraker);
+			return true;
+		case R.id.menuMap:
+			Intent intentMap = new Intent(context, ShowMapActivity.class);
+			context.startActivity(intentMap);
+			return true; 
+		case R.id.menuGeoPing:
+			Intent intentGeoPing = new Intent(context, GeoPingActivity.class);
+			context.startActivity(intentGeoPing);
+			return true;  
+		}
+		return false;
+	}
+}

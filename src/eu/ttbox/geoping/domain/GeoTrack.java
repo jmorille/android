@@ -6,7 +6,7 @@ import android.location.Location;
 
 import com.google.android.maps.GeoPoint;
 
-import eu.ttbox.geoping.core.AppConstant;
+import eu.ttbox.geoping.core.AppConstants;
 
 public class GeoTrack {
 
@@ -33,8 +33,8 @@ public class GeoTrack {
         this.userId = userId;
         this.provider = loc.getProvider();
         this.time = loc.getTime();
-        this.latitudeE6 = (int) (loc.getLatitude() / AppConstant.E6);
-        this.longitudeE6 = (int) (loc.getLongitude() / AppConstant.E6);
+        this.latitudeE6 = (int) (loc.getLatitude() / AppConstants.E6);
+        this.longitudeE6 = (int) (loc.getLongitude() / AppConstants.E6);
         this.accuracy = loc.getAccuracy();
         if (loc.hasAltitude()) {
             this.altitude = loc.getAltitude();
@@ -50,8 +50,8 @@ public class GeoTrack {
     public Location asLocation() {
         Location loc = new Location(provider);
         loc.setTime(time);
-        loc.setLatitude(latitudeE6 * AppConstant.E6);
-        loc.setLongitude(longitudeE6 * AppConstant.E6);
+        loc.setLatitude(latitudeE6 * AppConstants.E6);
+        loc.setLongitude(longitudeE6 * AppConstants.E6);
         loc.setAccuracy(accuracy);
 
         loc.setAltitude(altitude);
@@ -102,21 +102,21 @@ public class GeoTrack {
     }
 
     public double getLatitude() {
-        return latitudeE6 / AppConstant.E6;
+        return latitudeE6 / AppConstants.E6;
     }
 
     public GeoTrack setLatitude(double latitude) {
-        this.latitudeE6 = (int) (latitude * AppConstant.E6);
+        this.latitudeE6 = (int) (latitude * AppConstants.E6);
         cachedGeoPoint = null;
         return this;
     }
 
     public double getLongitude() {
-        return longitudeE6 / AppConstant.E6;
+        return longitudeE6 / AppConstants.E6;
     }
 
     public GeoTrack setLongitude(double longitude) {
-        this.longitudeE6 = (int) (longitude * AppConstant.E6);
+        this.longitudeE6 = (int) (longitude * AppConstants.E6);
         cachedGeoPoint = null;
         return this;
     }

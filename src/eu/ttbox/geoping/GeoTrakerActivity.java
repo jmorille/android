@@ -23,7 +23,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
-import eu.ttbox.geoping.core.AppConstant;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
@@ -257,7 +257,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 		boolean saveLocal = appPreferences.getBoolean(KEY_LOCAL_SAVE, false);
 		if (saveLocal) {
 		    // Inser Local
-			GeoTrack geoPoint = new GeoTrack(AppConstant.LOCAL_DB_KEY, location);
+			GeoTrack geoPoint = new GeoTrack(AppConstants.LOCAL_DB_KEY, location);
             ContentValues values =   GeoTrackHelper.getContentValues(geoPoint);
             getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
             // Read all points
@@ -265,7 +265,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 			Log.i(TAG, "Open DB");
 			trackingBDD.open(); 
 //			trackingBDD.insertTrackPoint(geoPoint); 
-			List<GeoTrack> points = trackingBDD.getTrakPointWithTitre(AppConstant.LOCAL_DB_KEY); 
+			List<GeoTrack> points = trackingBDD.getTrakPointWithTitre(AppConstants.LOCAL_DB_KEY); 
 			Toast.makeText(this, String.format("insertTrackPoint with id  \"%s\" ", ""+points.size ()), Toast.LENGTH_SHORT).show(); 
 			trackingBDD.close();
 		}

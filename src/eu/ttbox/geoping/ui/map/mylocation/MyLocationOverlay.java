@@ -5,14 +5,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import microsoft.mappoint.TileSystem;
 
-import org.osmdroid.tileprovider.MapTileProviderBase;
+import org.osmdroid.DefaultResourceProxyImpl;
+import org.osmdroid.ResourceProxy;
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.tileprovider.modules.ConfigurablePriorityThreadFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.MapView.Projection;
+import org.osmdroid.views.overlay.Overlay;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -24,6 +30,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -44,22 +51,13 @@ import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
-
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.Projection;
-
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.AppConstant;
-import eu.ttbox.geoping.ui.map.MapOverlay;
-import eu.ttbox.geoping.ui.map.core.GeoLocHelper;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.ui.map.mylocation.bubble.MyLocationBubble;
 import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
 import eu.ttbox.geoping.ui.map.mylocation.sensor.OrientationSensorEventListenerProxy;
- 
-public class MyLocationOverlay extends MapOverlay implements   SensorEventListener, LocationListener, 
-SharedPreferences.OnSharedPreferenceChangeListener {
+
+public class MyLocationOverlay extends Overlay implements SensorEventListener, LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
 	private static final String TAG = "MyLocationOverlay";
 
@@ -92,7 +90,6 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 	protected boolean mDrawCompassEnabled = false;
 
 	// Compass Config
-	protected final float mScale;
 	private final int mCompassCenterX = 35;
 	private final int mCompassCenterY = 35;
 	private final int mCompassRadius = 20;
@@ -108,8 +105,8 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 	protected Paint mCirclePaint;
 	protected Paint mCirclePaintBorder;
 
-//	protected Bitmap PERSON_ICON;
-//	protected PointF PERSON_HOTSPOT;
+	protected Bitmap PERSON_ICON;
+	protected PointF PERSON_HOTSPOT;
 
 	protected Bitmap DIRECTION_ARROW;
 	protected Bitmap DIRECTION_ARROW_ON;
@@ -153,14 +150,12 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 	// Constructors
 	// ===========================================================
 
-//	public MyLocationOverlay(final Context ctx, final MapView mapView) {
-//		this(ctx, mapView, new DefaultResourceProxyImpl(ctx));
-//	}
+	public MyLocationOverlay(final Context ctx, final MapView mapView) {
+		this(ctx, mapView, new DefaultResourceProxyImpl(ctx));
+	}
 
-	public MyLocationOverlay(final Context ctx, final MapView mapView, MapTileProviderBase mTileProvider) { // , final ResourceProxy pResourceProxy
-	    super(mTileProvider, ctx);
-	    mScale = ctx.getResources().getDisplayMetrics().density;
-//		super(pResourceProxy);
+	public MyLocationOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy) {
+		super(pResourceProxy);
 		this.context = ctx;
 		this.mMapView = mapView;
 		this.mMapController = mapView.getController();
@@ -185,8 +180,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 		mLocationListener = new MyLocationListenerProxy(locationManager);
 		mOrientationListener = new OrientationSensorEventListenerProxy(mSensorManager);
 		// Threads Executor ?? Executors.newSingleThreadScheduledExecutor( ); ??
-		ThreadFactory mylocationThreadFactory  =Executors.defaultThreadFactory(); 
-		runOnFirstFixExecutor = new ScheduledThreadPoolExecutor(1, mylocationThreadFactory);
+		runOnFirstFixExecutor = new ScheduledThreadPoolExecutor(1, new ConfigurablePriorityThreadFactory(Thread.NORM_PRIORITY, "mylocationThread"));
 		// Run On first Fix
 		runOnFirstFix.add(new Runnable() {
 
@@ -245,8 +239,8 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 		this.DIRECTION_ARROW_ON = BitmapFactory.decodeResource(context.getResources(), R.drawable.vm_chevron_obscured_on);
 
 		// Calculate position of person icon's feet, scaled to screen density
-//		this.PERSON_ICON = mResourceProxy.getBitmap(ResourceProxy.bitmap.person);
-//		this.PERSON_HOTSPOT = new PointF(24.0f * mScale + 0.5f, 39.0f * mScale + 0.5f);
+		this.PERSON_ICON = mResourceProxy.getBitmap(ResourceProxy.bitmap.person);
+		this.PERSON_HOTSPOT = new PointF(24.0f * mScale + 0.5f, 39.0f * mScale + 0.5f);
 	}
 
 	// ===========================================================
@@ -255,8 +249,8 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (AppConstant.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC.equals(key)) {
-			boolean displayGeoLoc = sharedPreferences.getBoolean(AppConstant.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, false);
+		if (AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC.equals(key)) {
+			boolean displayGeoLoc = sharedPreferences.getBoolean(AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, false);
 			if (balloonView != null) {
 				balloonView.setDisplayGeoLoc(displayGeoLoc);
 			}
@@ -289,9 +283,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 	public void onLocationChanged(final Location location) {
 
 		if (mFollow) {
-//			mMapController.animateTo(location.getLatitude(), location.getLongitude()); // OSM
-           mMapController.animateTo(GeoLocHelper.convertLocationAsGeoPoint(location )); // GMap
- 		    
+			mMapController.animateTo(location.getLatitude(), location.getLongitude());
 		} else {
 			mMapView.postInvalidate(); // redraw the my location icon
 		}
@@ -415,7 +407,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 		if (isMyLocationEnabled()) {
 			GeoPoint lastGeoPoint = mLocationListener.getLastFixAsGeoPoint();
 			if (lastGeoPoint != null) {
-				mMapController.animateTo(lastGeoPoint);
+				mMapController.animateTo(new GeoPoint(lastGeoPoint));
 			}
 		}
 
@@ -489,7 +481,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 	// ===========================================================
 
 	@Override
-    public void draw(Canvas canvas, MapView mapView, boolean shadow) { 
+	protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		if (shadow) {
 			return;
 		}
@@ -507,7 +499,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 	protected void drawMyLocation(final Canvas canvas, final MapView mapView, final Location lastFix, final GeoPoint myLocation) {
 
 		final Projection pj = mapView.getProjection();
-		pj.toPixels(myLocation, mMapCoords); // OSM toMapPixels / GMap toPixels
+		pj.toMapPixels(myLocation, mMapCoords);
 
 		// Draw Accuracy
 		if (mDrawAccuracyEnabled) {
@@ -558,27 +550,27 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 
 	protected void drawCompass(final Canvas canvas, final MapView mapView, final float bearing) {
 		// Screen Limit
-//		final Projection projection = mapView.getProjection();
-//		Rect screenRect = projection.getScreenRect();
-//
-//		// Position of COmpass
-//		final int centerX = screenRect.left + mCompassCenterX;
-//		final int centerY = screenRect.top + mCompassCenterY;
-//
-//		// Rotate Bitmap
-//		mCompassMatrix.setRotate(-bearing, COMPASS_ROSE_CENTER_X, COMPASS_ROSE_CENTER_Y);
-//		mCompassMatrix.postTranslate(-COMPASS_ROSE_CENTER_X, -COMPASS_ROSE_CENTER_Y);
-//		mCompassMatrix.postTranslate(centerX, centerY);
-//
-//		canvas.drawBitmap(mCompassRose, mCompassMatrix, mPaint);
-//
-//		// Debug
-//		if (DEBUGMODE) {
-//			Rect hitTestRecr = new Rect();
-//			hitTestRecr.set(-COMPASS_ROSE_CENTER_X, -COMPASS_ROSE_CENTER_Y, COMPASS_ROSE_CENTER_X, COMPASS_ROSE_CENTER_Y);
-//			hitTestRecr.offset(centerX, centerY);
-//			canvas.drawRect(hitTestRecr, mPaint);
-//		}
+		final Projection projection = mapView.getProjection();
+		Rect screenRect = projection.getScreenRect();
+
+		// Position of COmpass
+		final int centerX = screenRect.left + mCompassCenterX;
+		final int centerY = screenRect.top + mCompassCenterY;
+
+		// Rotate Bitmap
+		mCompassMatrix.setRotate(-bearing, COMPASS_ROSE_CENTER_X, COMPASS_ROSE_CENTER_Y);
+		mCompassMatrix.postTranslate(-COMPASS_ROSE_CENTER_X, -COMPASS_ROSE_CENTER_Y);
+		mCompassMatrix.postTranslate(centerX, centerY);
+
+		canvas.drawBitmap(mCompassRose, mCompassMatrix, mPaint);
+
+		// Debug
+		if (DEBUGMODE) {
+			Rect hitTestRecr = new Rect();
+			hitTestRecr.set(-COMPASS_ROSE_CENTER_X, -COMPASS_ROSE_CENTER_Y, COMPASS_ROSE_CENTER_X, COMPASS_ROSE_CENTER_Y);
+			hitTestRecr.offset(centerX, centerY);
+			canvas.drawRect(hitTestRecr, mPaint);
+		}
 	}
 
 	// ===========================================================
@@ -605,7 +597,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 				if (balloonView == null) {
 					balloonView = new MyLocationBubble(mapView.getContext());
 					balloonView.setVisibility(View.GONE);
-					balloonView.setDisplayGeoLoc(sharedPreferences.getBoolean(AppConstant.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, false));
+					balloonView.setDisplayGeoLoc(sharedPreferences.getBoolean(AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, false));
 					isRecycled = false;
 					// Todo add click listener
 				}
@@ -676,13 +668,13 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 			// Test for hit point in MyLocation
 			Projection pj = mapView.getProjection();
 			// LastFix Location to Screen Coords
-			pj.toPixels(lastFixAsGeoPoint, tapPointScreenCoords); // OSM toMapPixels / GMap toPixels
+			pj.toMapPixels(lastFixAsGeoPoint, tapPointScreenCoords);
 			// Tested Box for LastFix
 			tapPointHitTestRect.set(-DIRECTION_ARROW_CENTER_X, -DIRECTION_ARROW_CENTER_Y, DIRECTION_ARROW_CENTER_X, DIRECTION_ARROW_CENTER_Y);
 			tapPointHitTestRect.offset(tapPointScreenCoords.x, tapPointScreenCoords.y);
 			// Tap Point
-			GeoPoint tapPoint = pj.fromPixels((int)event.getX(), (int)event.getY());
-			pj.toPixels(tapPoint, tapPointScreenCoords); // OSM toMapPixels / GMap toPixels
+			IGeoPoint tapPoint = pj.fromPixels(event.getX(), event.getY());
+			pj.toMapPixels(tapPoint, tapPointScreenCoords);
 			// Test If On Containt the other
 			return tapPointHitTestRect.contains(tapPointScreenCoords.x, tapPointScreenCoords.y);
 		}

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import eu.ttbox.geoping.core.AppConstant;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 
 public class SmsMsgActionHelper {
@@ -60,8 +60,8 @@ public class SmsMsgActionHelper {
             object.put(MSGKEY_PROVIDER, location.getProvider());
             object.put(MSGKEY_TIME, location.getTime());
             // Lat Lng
-            int latE6 = (int) (location.getLatitude() * AppConstant.E6);
-            int lngE6 = (int) (location.getLongitude() * AppConstant.E6);
+            int latE6 = (int) (location.getLatitude() * AppConstants.E6);
+            int lngE6 = (int) (location.getLongitude() * AppConstants.E6);
             object.put(MSGKEY_LATITUDE_E6, latE6);
             object.put(MSGKEY_LONGITUDE_E6, lngE6);
             // altitude
@@ -106,8 +106,8 @@ public class SmsMsgActionHelper {
         object.put(MSGKEY_PROVIDER, location.getProvider());
         object.put(MSGKEY_TIME, location.getTime());
         // Lat Lng
-        int latE6 = (int) (location.getLatitude() * AppConstant.E6);
-        int lngE6 = (int) (location.getLongitude() * AppConstant.E6);
+        int latE6 = (int) (location.getLatitude() * AppConstants.E6);
+        int lngE6 = (int) (location.getLongitude() * AppConstants.E6);
         object.put(MSGKEY_LATITUDE_E6, latE6);
         object.put(MSGKEY_LONGITUDE_E6, lngE6);
         // altitude
@@ -140,8 +140,8 @@ public class SmsMsgActionHelper {
             // LatLng
             int latE6 = object.getInt(MSGKEY_LATITUDE_E6);
             int lngE6 = object.getInt(MSGKEY_LONGITUDE_E6);
-            double latitude = latE6 / AppConstant.E6;
-            double longitude = lngE6 / AppConstant.E6;
+            double latitude = latE6 / AppConstants.E6;
+            double longitude = lngE6 / AppConstants.E6;
             // Accuracy
             float accuracy = Double.valueOf(object.getDouble(MSGKEY_ACCURACY)).floatValue();
             loc.setTime(time);

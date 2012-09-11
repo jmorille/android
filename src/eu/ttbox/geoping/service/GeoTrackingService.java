@@ -18,7 +18,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.util.Log;
-import eu.ttbox.geoping.core.AppConstant;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
@@ -139,7 +139,7 @@ public class GeoTrackingService extends Service implements LocationListener {
 		// Local Persist
 		boolean saveLocal = appPreferences.getBoolean(KEY_LOCAL_SAVE, false);
 		if (saveLocal) {
-			GeoTrack geoPoint = new GeoTrack(AppConstant.LOCAL_DB_KEY, location); 
+			GeoTrack geoPoint = new GeoTrack(AppConstants.LOCAL_DB_KEY, location); 
 			 ContentValues values =   GeoTrackHelper.getContentValues(geoPoint);
 	            getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
 //	            

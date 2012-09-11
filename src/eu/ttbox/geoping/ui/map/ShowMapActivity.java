@@ -9,43 +9,61 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 
-import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.GeoTrack;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.ui.map.mylocation.MyLocationOverlay;
+import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 
 /**
  * @see http://mobiforge.com/developing/story/using-google-maps-android
  * @author deostem
  * 
  */
-public class ShowMapActivity extends MapActivity {
+public class ShowMapActivity extends FragmentActivity {
 
     private MapController mapController;
     private MapView mapView;
-    private LocationManager locationManager;
-    private GeoTrackDatabase trackingBDD;
-
+  
     // Overlay
     private MyLocationOverlay myLocation;
+    private GeoTrackOverlay geoTrackOverlay;
+    
+    
 
+    @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        setContentView(R.layout.map);
+        // bind the layout to the activity
+        mapView = (MapView) findViewById(R.id.mapview);
+         mapController = mapView.getController();
+        mapController.setZoom(17); // Zoon 1 is world view
+        // Overlay
+        // this.myLocation = new MyLocationOverlay(this.getBaseContext(),
+        // this.mapView, mResourceProxy);
+        geoTrackOverlay = new GeoTrackOverlay(this, "+33637474392");
+        mapView.getOverlays().add(geoTrackOverlay);
+    }
+ 
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.map, menu);
+        inflater.inflate(R.menu.menu_map, menu);
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.menuTypeMapSatelite:
@@ -132,35 +150,5 @@ public class ShowMapActivity extends MapActivity {
 
     }
 
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        setContentView(R.layout.map); // bind the layout to the activity
-        // Local DB
-        trackingBDD = new GeoTrackDatabase(this);
-
-        // create a map view
-        // RelativeLayout linearLayout = (RelativeLayout)
-        // findViewById(R.id.maplayout);
-        mapView = (MapView) findViewById(R.id.mapview);
-        // mapView.setBuiltInZoomControls(true);
-        // mapView.setSatellite(true);
-        // mapView.setStreetView(true);
-        mapController = mapView.getController();
-        mapController.setZoom(17); // Zoon 1 is world view
-        // Overlay
-        // this.myLocation = new MyLocationOverlay(this.getBaseContext(),
-        // this.mapView, mResourceProxy);
-
-    }
-
-    @Override
-    protected boolean isRouteDisplayed() {
-        return false;
-    }
-
-    @Override
-    protected boolean isLocationDisplayed() {
-        return true;
-    }
 
 }

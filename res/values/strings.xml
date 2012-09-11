@@ -12,10 +12,11 @@
     <string name="cancel_button">Cancel</string>
     
     <!-- Encryption -->
-     <string name="no_geoping_description">\n\nPlease install \'GeoPing\' from the Market\n\n</string>
-  <string name="geoping_encrypted_message">Parandroid encrypted message</string>
+    <string name="no_geoping_description">\n\nPlease install \'GeoPing\' from the Market\n\n</string>
+    <string name="geoping_encrypted_message">GeoPing encrypted message</string>
      
     <!-- Menu -->
+    <string name="menu_map_mypositioncenter">Ma position</string>
     <string name="menu.options">Options</string>
     <string name="menu.geoTracker">Geo Tacker</string>
     <string name="menu.map">Map</string>

@@ -3,12 +3,11 @@ package eu.ttbox.geoping.ui.map.mylocation.sensor;
 import java.util.Date;
 import java.util.List;
 
+import org.osmdroid.util.GeoPoint;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
-
-import com.google.android.maps.GeoPoint;
-
 import eu.ttbox.geoping.ui.map.core.GeoLocHelper;
 
 public class LocationUtils {

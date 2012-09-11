@@ -1,6 +1,6 @@
 package eu.ttbox.geoping.core;
 
-public class AppConstant {
+public class AppConstants {
 	
 	public final static double E6=1000000d;
 	

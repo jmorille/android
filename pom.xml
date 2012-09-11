@@ -20,7 +20,10 @@
 		<!-- Osm -->
 		<osmdroid.version>3.0.8</osmdroid.version>
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
+		<!-- Frameworks -->
+		<jackson.version>2.0.5</jackson.version>
 		<!-- Release -->
+		<android-maven-plugin.version>3.3.0</android-maven-plugin.version>
 		<sign.alias>android</sign.alias>
 	</properties>
 
@@ -70,12 +73,12 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.0.6</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.0.6</version>
+			<version>${jackson.version}</version>
 		</dependency>
 
 		<!-- Open Street Map -->
@@ -111,7 +114,7 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.3.0</version> <!-- 2.8.4, 3.0.0-alpha-11 -->
+				<version>${android-maven-plugin.version}</version>  
 				<configuration>
 					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
@@ -202,6 +205,7 @@
 					<plugin>
 						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 						<artifactId>android-maven-plugin</artifactId>
+						<version>${android-maven-plugin.version}</version>  
 						<inherited>true</inherited>
 						<configuration>
 							<sign>

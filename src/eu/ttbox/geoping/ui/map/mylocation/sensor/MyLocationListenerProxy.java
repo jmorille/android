@@ -1,21 +1,16 @@
 package eu.ttbox.geoping.ui.map.mylocation.sensor;
 
-import java.util.Date;
 import java.util.List;
+
+import org.osmdroid.util.GeoPoint;
 
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-
-import com.google.android.maps.GeoPoint;
-
 import eu.ttbox.geoping.ui.map.core.GeoLocHelper;
-/**
- * Location strategy {link http://developer.android.com/guide/topics/location/strategies.html}
-  *
- */
+
 public class MyLocationListenerProxy implements LocationListener {
 
 	private static final String TAG = "LocationListenerProxy";
@@ -57,7 +52,7 @@ public class MyLocationListenerProxy implements LocationListener {
 		}
 		return result;
 	}
- 
+
 	public void stopListening() {
 		mListener = null;
 		locationManager.removeUpdates(this);
@@ -70,7 +65,7 @@ public class MyLocationListenerProxy implements LocationListener {
 	@Override
 	public void onLocationChanged(final Location location) {
 		if (Log.isLoggable(TAG, Log.DEBUG))
-			Log.d(TAG, String.format("onLocationChanged [%s] (+/- %sm) : %s", location.getProvider(), (int)location.getAccuracy(),  location));
+			Log.d(TAG, String.format("onLocationChanged  [%s] : %s", location.getProvider(), location));
 
 		// ??? ignore temporary non-gps fix ???
 		// if (mIgnorer.shouldIgnore(location.getProvider(),
@@ -130,7 +125,7 @@ public class MyLocationListenerProxy implements LocationListener {
 
 	private void defineLocation(Location location) {
 		this.lastFix = location;
-		this.lastFixAsGeoPoint = GeoLocHelper.convertLocationAsGeoPoint(location );
+		this.lastFixAsGeoPoint = GeoLocHelper.convertLocationAsGeoPoint(location, this.lastFixAsGeoPoint);
 	}
 
 	// ===========================================================
@@ -158,20 +153,7 @@ public class MyLocationListenerProxy implements LocationListener {
  
 
 	public Location getLastKnownLocation() {
-	    Location lastKnownLocation = null;
-	    // Get the last Known Location
-	    List<String> providers = locationManager.getAllProviders();
-        if (providers != null && !providers.isEmpty()) {
-            for (final String provider : providers) {
-                Location providerLoc = locationManager.getLastKnownLocation(provider);
-                if (Log.isLoggable(TAG, Log.DEBUG))
-                    Log.d(TAG, String.format("Test LastKnownLocation of provider [%s] : %s - %s", provider, new Date(providerLoc.getTime()), providerLoc));
-                if (LocationUtils.isBetterLocation(providerLoc, lastKnownLocation)) {
-                    lastKnownLocation = providerLoc;
-                }
-            }
-        }
-        // Manage the last Known Location 
+		Location lastKnownLocation = LocationUtils.getLastKnownLocation(locationManager); 
 		if (lastKnownLocation != null) {
 			if (Log.isLoggable(TAG, Log.DEBUG))
 				Log.d(TAG, String.format("Use LastKnownLocation with provider [%s] : %s", lastKnownLocation.getProvider(), lastKnownLocation));
