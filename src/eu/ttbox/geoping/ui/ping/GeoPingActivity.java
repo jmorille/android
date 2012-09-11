@@ -23,7 +23,7 @@ public class GeoPingActivity extends FragmentActivity {
 
     private static final String TAG = "GeoPingActivity";
 
-    private static final int PERSON_LIST_LOADER = R.id.config_id_person_list_loader_started;
+    private static final int PERSON_LIST_LOADER = R.id.config_id_person_list_loader;
 
     // Constant
     private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.KEY_NAME, PersonColumns.KEY_PHONE);

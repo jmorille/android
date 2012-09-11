@@ -8,18 +8,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
+import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class AddPersonActivity extends FragmentActivity {
 
     private static final String TAG = "AddPersonActivity";
-    
+
     // Constant
+    private static final int PERSON_EDIT_LOADER = R.id.config_id_person_edit_loader;
+
     private static final int PICK_CONTACT = 0;
 
     // Bindings
@@ -44,20 +51,25 @@ public class AddPersonActivity extends FragmentActivity {
         if (intent == null) {
             return;
         }
-        String action  =  intent.getAction();
+        String action = intent.getAction();
         if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "handleIntent for action : " +action);
+            Log.d(TAG, "handleIntent for action : " + action);
         }
         if (Intent.ACTION_EDIT.equals(action)) {
+            // TODO Set id
+            Uri data = intent.getData();
+            String entityId = data.getLastPathSegment();
+            Bundle bundle = new Bundle();
+            bundle.putString(Intents.EXTRA_USERID, entityId);
+            getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER, bundle, personLoaderCallback);
+        } else if (Intent.ACTION_DELETE.equals(action)) {
             // TODO
-         } else  if (Intent.ACTION_DELETE.equals(action)) {
+        } else if (Intent.ACTION_INSERT.equals(action)) {
             // TODO
-        } else  if (Intent.ACTION_INSERT.equals(action)) {
-             // TODO
         }
-        
+
     }
-    
+
     public void onSaveClick(View v) {
         String name = nameEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
@@ -74,7 +86,8 @@ public class AddPersonActivity extends FragmentActivity {
         // Intent intent = new Intent(Intent.ACTION_PICK,
         // ContactsContract.Contacts.CONTENT_URI);
         //
-//        Intent intent = new Intent(Intent.ACTION_PICK, Contacts.Phones.CONTENT_URI);
+        // Intent intent = new Intent(Intent.ACTION_PICK,
+        // Contacts.Phones.CONTENT_URI);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
         // run
@@ -98,7 +111,7 @@ public class AddPersonActivity extends FragmentActivity {
 
     private void saveContactData(Uri contactData) {
         Cursor c = getContentResolver().query(contactData, new String[] { //
-                ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, // TODO Check for V10 compatibility
+                ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, // TODO  Check  for  V10 compatibility
                         ContactsContract.CommonDataKinds.Phone.NUMBER, //
                         ContactsContract.CommonDataKinds.Phone.TYPE }, null, null, null);
         try {
@@ -114,9 +127,10 @@ public class AddPersonActivity extends FragmentActivity {
             c.close();
         }
     }
-    
 
     private Uri savePerson(String name, String phone) {
+        setPerson(name, phone);
+        // Prepare db insert
         ContentValues values = new ContentValues();
         values.put(PersonColumns.KEY_NAME, name);
         values.put(PersonColumns.KEY_PHONE, phone);
@@ -125,5 +139,38 @@ public class AddPersonActivity extends FragmentActivity {
         setResult(Activity.RESULT_OK);
         return uri;
     }
+    
+    private void setPerson(String name, String phone) {
+        nameEditText.setText(name);
+        phoneEditText.setText(phone);
+    }
+    
+    private final LoaderManager.LoaderCallbacks<Cursor> personLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            Log.d(TAG, "onCreateLoader"); 
+            String entityId = args.getCharSequence(Intents.EXTRA_USERID ).toString(); 
+            Uri entityUri =  Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, String.format("/%s", entityId));
+            // Loader
+            CursorLoader cursorLoader = new CursorLoader(AddPersonActivity.this, entityUri, null, null, null, null);
+            return cursorLoader;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+            Log.d(TAG, "onLoadFinished");
+            // Display List
+            if (cursor.moveToFirst()) {
+                PersonHelper helper = new PersonHelper().initWrapper(cursor);
+                helper.setTextPersonName(nameEditText, cursor).setTextPersonPhone(phoneEditText, cursor);
+             }
+         }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            setPerson(null, null);
+        }
+
+    };
 }

@@ -105,7 +105,10 @@ public class GeoTrackerProvider extends ContentProvider {
         if (personId > -1) {
             personUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + personId);
             getContext().getContentResolver().notifyChange(personUri, null);
-            Log.d(TAG, "insert geoTrack Uri : " + uri);
+             Log.d(TAG, "insert geoTrack Uri : " + uri);
+             // Notify in broadcast
+// TODO sendBroadcast
+             
         }
         return personUri;
     }
