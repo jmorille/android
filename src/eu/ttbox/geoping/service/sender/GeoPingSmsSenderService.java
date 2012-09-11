@@ -123,6 +123,30 @@ public class GeoPingSmsSenderService extends WorkerService {
         sendSms(phone, smsMsg);
     }
 
+	
+	/**
+* Computes the battery level by registering a receiver to the intent triggered
+* by a battery status/level change.
+{link http://mobile.dzone.com/news/getting-battery-level-android}
+*/
+private void batteryLevel() {
+BroadcastReceiver batteryLevelReceiver = new BroadcastReceiver() {
+ public void onReceive(Context context, Intent intent) {
+ context.unregisterReceiver(this);
+ int rawlevel = intent.getIntExtra("level", -1);
+ int scale = intent.getIntExtra("scale", -1);
+ int level = -1;
+ if (rawlevel >= 0 && scale > 0) {
+ level = (rawlevel * 100) / scale;
+}
+batterLevel.setText("Battery Level Remaining: " + level + "%");
+}
+};
+
+
+IntentFilter batteryLevelFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+registerReceiver(batteryLevelReceiver, batteryLevelFilter);
+}
     public class GeoPingRequest implements Callable<Boolean>, LocationListener {
 
         public String smsPhoneNumber;
