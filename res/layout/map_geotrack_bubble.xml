@@ -13,7 +13,7 @@
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/map_mylocation_dialogView_coord"
+            android:id="@+id/map_geotrack_bubbleView_coord"
             style="@style/mylocation_dialog_text"
             android:text="Wsg84" />
 
@@ -22,13 +22,13 @@
             android:text="@string/accuracy_separator" />
 
         <TextView
-            android:id="@+id/map_mylocation_dialogView_accuracy"
+            android:id="@+id/map_geotrack_bubbleView_accuracy"
             style="@style/mylocation_dialog_text"
             android:text="accuracy" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/map_mylocation_dialogView_block_altitude"
+        android:id="@+id/map_geotrack_bubbleView_block_altitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -38,18 +38,18 @@
             android:text="@string/altitude" />
 
         <TextView
-            android:id="@+id/map_mylocation_dialogView_altitude"
+            android:id="@+id/map_geotrack_bubbleView_altitude"
             style="@style/mylocation_dialog_text"
             android:text="00m" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/map_mylocation_dialogView_speed"
+        android:id="@+id/map_geotrack_bubbleView_speed"
         style="@style/mylocation_dialog_text"
         android:text="speed" />
 
     <TextView
-        android:id="@+id/map_mylocation_dialogView_address"
+        android:id="@+id/map_geotrack_bubbleView_address"
         style="@style/mylocation_dialog_text"
         android:text="address" />
 
