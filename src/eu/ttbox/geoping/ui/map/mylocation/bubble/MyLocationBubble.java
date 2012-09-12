@@ -17,6 +17,9 @@ public class MyLocationBubble extends FrameLayout  {
 
 	private final static String TAG = "MyLocationBubble";
 
+	// Config
+	private int DEFAULT_BUBBLE_WIDTH = 300; 
+	
 	// Datas
 	private Location location;
 
@@ -30,14 +33,13 @@ public class MyLocationBubble extends FrameLayout  {
 
 	private TextView addressTextView;
 
-	
-	private boolean displayGeoLoc = false; 
+ 	private boolean displayGeoLoc = false; 
 	
 	public MyLocationBubble(Context context) {
 		super(context);
 		layout = new LinearLayout(context);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = inflater.inflate(R.layout.map_mylocation_dialog, layout);
+		View v = inflater.inflate(R.layout.map_mylocation_bubble, layout);
 		
 		
 		// Init fields
@@ -50,7 +52,7 @@ public class MyLocationBubble extends FrameLayout  {
 		// Frame
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params.gravity = Gravity.NO_GRAVITY;
-		params.width = 300;
+		params.width = DEFAULT_BUBBLE_WIDTH;
 		addView(layout, params);
 	}
 
