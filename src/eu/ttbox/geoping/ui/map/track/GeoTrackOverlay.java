@@ -114,20 +114,25 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         this.context = ctx;
         this.userId = userId;
         setDateRange(timeInMs);
+        // Service
+        this.loaderManager = loaderManager;
+        // Init
         initDirectionPaint();
     }
 
     public void onResume() {
-        context.getContentResolver().registerContentObserver(GeoTrackerProvider.Constants.CONTENT_URI, true, new MyContentObserver(uiHandler));
+    	Log.w(TAG, "##### onResume ####");
+//        context.getContentResolver().registerContentObserver(GeoTrackerProvider.Constants.CONTENT_URI, true, new MyContentObserver(uiHandler));
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intents.ACTION_NEW_GEOTRACK_INSERTED);
-        context.registerReceiver(mStatusReceiver, filter);
+//        context.registerReceiver(mStatusReceiver, filter);
         // Load Data
         loaderManager.initLoader(GEOTRACK_LIST_LOADER, null, geoTrackLoaderCallback);
     }
 
     public void onPause() {
-        context.unregisterReceiver(mStatusReceiver);
+    	Log.w(TAG, "##### onResume ####");
+//        context.unregisterReceiver(mStatusReceiver);
     }
 
     private void initDirectionPaint() {
@@ -176,18 +181,20 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
             String sortOrder = SQL_SORT_DEFAULT;
-            String selection = String.format("%s = ? and %s >= %s", GeoTrackColumns.COL_USERID, GeoTrackColumns.COL_TIME);
+            String selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_USERID, GeoTrackColumns.COL_TIME);
             String[] selectionArgs = new String[] { userId, timeBeginInMs, timeEndInMs };
+            Log.w(TAG,String.format( "Prepare Sql Selection : %s / for param : %s",selection, selectionArgs));
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(context, GeoTrackerProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(context, GeoTrackerProvider.Constants.CONTENT_URI_GEOTRACKS, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            Log.d(TAG, "onLoadFinished");
+        	int resultCount = cursor.getCount();
+            Log.d(TAG, String.format("onLoadFinished with %s results", resultCount));
             GeoTrackHelper helper = new GeoTrackHelper().initWrapper(cursor);
-            List<GeoTrack> points = new ArrayList<GeoTrack>();
+            List<GeoTrack> points = new ArrayList<GeoTrack>(resultCount);
             if (cursor.moveToFirst()) {
                 do {
                     GeoTrack geoTrack = helper.getEntity(cursor);
@@ -233,6 +240,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                 String userId = extras.getString(GeoTrackColumns.COL_USERID);
             }
         }
+        
+        
     };
 
 }

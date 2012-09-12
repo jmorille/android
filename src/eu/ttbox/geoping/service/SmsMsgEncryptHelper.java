@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.service;
 
 import android.util.Log;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.crypto.SimpleCrypto;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 
@@ -52,7 +53,7 @@ public class SmsMsgEncryptHelper {
 	}
 
 	public static String encodeSmsMessage(GeoTrackSmsMsg msg) {
-		StringBuilder sb = new StringBuilder(255);
+		StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE);
 		sb.append(msg.action);
 		sb.append(ACTION_END);
 		if (msg.body != null) {
@@ -63,7 +64,7 @@ public class SmsMsgEncryptHelper {
 	}
 
 	private static String encryptSmsMsg(String msg) {
-		StringBuilder sb = new StringBuilder(255);
+		StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE);
 		sb.append(MSGID);
 		sb.append(encrypt(msg));
 		return sb.toString();

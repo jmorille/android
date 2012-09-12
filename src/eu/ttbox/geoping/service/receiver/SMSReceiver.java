@@ -99,11 +99,7 @@ public class SMSReceiver extends BroadcastReceiver {
         if (loc != null) {
             GeoTrack geoPoint = new GeoTrack(phoneNumber, loc);
             ContentValues values =   GeoTrackHelper.getContentValues(geoPoint);
-            context.getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
-//            GeoTrackDatabase trackingBDD = new GeoTrackDatabase(context);
-//            trackingBDD.open();
-//            trackingBDD.insertTrackPoint(geoPoint);
-//            trackingBDD.close();
+            context.getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values); 
             Toast.makeText(context,
                     "Message : " + new Date(loc.getTime()).toLocaleString() + " (" + loc.getLatitude() + "," + loc.getLongitude() + " ~ " + loc.getAccuracy() + ") from " + phoneNumber,
                     Toast.LENGTH_LONG).show();

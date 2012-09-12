@@ -33,6 +33,7 @@ public class GeoTrackerProvider extends ContentProvider {
         public static String AUTHORITY = "eu.ttbox.geoping.GeoTrackerProvider";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+        public static final Uri CONTENT_URI_GEOTRACKS = Uri.parse("content://" + AUTHORITY+"/geoTrackPoints");
 
         // MIME types used for searching words or looking up a single definition
         public static final String COLLECTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.geoTrackPoint";
@@ -108,7 +109,8 @@ public class GeoTrackerProvider extends ContentProvider {
         if (personId > -1) {
             personUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + personId);
             getContext().getContentResolver().notifyChange(personUri, null);
-            Log.d(TAG, "insert geoTrack Uri : " + uri);
+            String userId = values.getAsString(GeoTrackColumns.COL_USERID);
+            Log.d(TAG, String.format( "insert geoTrack UserId [%s] with Uri : %s" ,userId,  uri));
             // Notify in broadcast
             // TODO sendBroadcast
 

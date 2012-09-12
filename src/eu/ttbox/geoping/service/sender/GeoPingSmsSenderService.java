@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 import eu.ttbox.geoping.service.SmsMsgActionHelper;
@@ -125,7 +126,7 @@ public class GeoPingSmsSenderService extends WorkerService {
 	private void sendSms(String phone, GeoTrackSmsMsg smsMsg) {
 		String encrypedMsg = SmsMsgEncryptHelper.encodeSmsMessage(smsMsg);
 		if (smsMsg != null && !encrypedMsg.isEmpty()
-				&& encrypedMsg.length() <= 255) {
+				&& encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
 			SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg,
 					null, null);
 		}

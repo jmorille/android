@@ -47,26 +47,27 @@ public class GeoTrackDatabase {
     private static final int NUM_COL_SPEED = 9;
 
     private static final String CRITERIA_BY_ENTITY_ID = String.format("%s = ?", GeoTrackColumns.COL_ID);
+    private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoTrackColumns.COL_USERID);
     
     private SQLiteDatabase bdd;
 
     private GeoTrackOpenHelper mDatabaseOpenHelper;
 
-    private static final HashMap<String, String> mPersonColumnMap = buildUserColumnMap();
+    private static final HashMap<String, String> mGeoTrackColumnMap = buildGeoTrackColumnMap();
 
     public GeoTrackDatabase(Context context) {
         mDatabaseOpenHelper = new GeoTrackOpenHelper(context);
     }
 
-    private static HashMap<String, String> buildUserColumnMap() {
+    private static HashMap<String, String> buildGeoTrackColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Id
-        map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
+//        map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
         // Add Identity Column
-        for (String col : PersonColumns.ALL_KEYS) {
-            if (!col.equals(PersonColumns.KEY_ID)) {
+        for (String col : GeoTrackColumns.ALL_COLS) {
+//            if (!col.equals(GeoTrackColumns.COL_ID)) {
                 map.put(col, col);
-            }
+//            }
         }
         // Add Suggest Aliases
         map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", GeoTrackColumns.COL_LATITUDE_E6, SearchManager.SUGGEST_COLUMN_TEXT_1));
@@ -87,7 +88,7 @@ public class GeoTrackDatabase {
     public Cursor queryGeoTrack(String selection, String[] selectionArgs, String[] columns, String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_TRACK_POINT);
-        builder.setProjectionMap(mPersonColumnMap);
+        builder.setProjectionMap(mGeoTrackColumnMap);
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), columns, selection, selectionArgs, null, null, order);
         // Manage Cursor
         if (cursor == null) {
@@ -244,7 +245,7 @@ public class GeoTrackDatabase {
     }
 
     public List<GeoTrack> getTrakPointWithTitre(String userId) {
-        Cursor c = bdd.query(TABLE_TRACK_POINT, GeoTrackColumns.ALL_COLS, GeoTrackColumns.COL_USERID + " = ?", new String[] { userId }, null, null, GeoTrackColumns.COL_TIME);
+        Cursor c = bdd.query(TABLE_TRACK_POINT, GeoTrackColumns.ALL_COLS, CRITERIA_BY_USER_ID, new String[] { userId }, null, null, GeoTrackColumns.COL_TIME);
         return cursorToLivre(c);
     }
 

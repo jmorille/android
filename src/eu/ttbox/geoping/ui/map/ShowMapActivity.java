@@ -84,7 +84,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         // Overlay
         this.myLocation = new MyLocationOverlay(this.getBaseContext(), this.mapView);
         mapView.getOverlays().add(myLocation);
-        geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(),"+33777048649", System.currentTimeMillis());
+        geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(),"+33637474392", System.currentTimeMillis());
         mapView.getOverlays().add(geoTrackOverlay);
     }
 
@@ -122,10 +122,16 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         localEdit.putBoolean(MapConstants.PREFS_SHOW_COMPASS, myLocation.isCompassEnabled());
         localEdit.commit();
 
+        // Overlay May Location
         myLocation.disableCompass();
         myLocation.disableMyLocation();
         myLocation.disableThreadExecutors();
 
+        // Overlay GeoTrack
+        if (geoTrackOverlay!=null) {
+        	geoTrackOverlay.onPause();
+        }
+        
         super.onPause();
         // timer.cancel();
         if (Log.isLoggable(TAG, Log.INFO)) {
@@ -161,10 +167,17 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         // mapView.scrollTo(privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X,
         // 0), privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, 0));
 
+        // Overlay MyLocation
         myLocation.enableMyLocation();
         myLocation.enableCompass();
         myLocation.enableThreadExecutors();
 
+        // Overlay GeoTrack
+        if (geoTrackOverlay!=null) {
+        	geoTrackOverlay.onResume();
+        }
+
+        
         handleIntent(getIntent());
 
         if (Log.isLoggable(TAG, Log.INFO)) {
