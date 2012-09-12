@@ -180,6 +180,7 @@ public class GeoPingSmsSenderService extends WorkerService {
 			Location lastLocation = myLocation.getLastFix();
 			if (lastLocation != null) {
 				sendSmsLocation(smsPhoneNumber, lastLocation);
+				unregisterGeoPingRequest(this);
 				return Boolean.TRUE;
 			}
 			return Boolean.FALSE;

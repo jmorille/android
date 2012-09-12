@@ -48,7 +48,7 @@ public class GeoTrackDatabase {
 
     private static final String CRITERIA_BY_ENTITY_ID = String.format("%s = ?", GeoTrackColumns.COL_ID);
     private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoTrackColumns.COL_USERID);
-    
+
     private SQLiteDatabase bdd;
 
     private GeoTrackOpenHelper mDatabaseOpenHelper;
@@ -62,12 +62,12 @@ public class GeoTrackDatabase {
     private static HashMap<String, String> buildGeoTrackColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Id
-//        map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
+        // map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
         // Add Identity Column
         for (String col : GeoTrackColumns.ALL_COLS) {
-//            if (!col.equals(GeoTrackColumns.COL_ID)) {
-                map.put(col, col);
-//            }
+            // if (!col.equals(GeoTrackColumns.COL_ID)) {
+            map.put(col, col);
+            // }
         }
         // Add Suggest Aliases
         map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", GeoTrackColumns.COL_LATITUDE_E6, SearchManager.SUGGEST_COLUMN_TEXT_1));
@@ -78,9 +78,7 @@ public class GeoTrackDatabase {
         return map;
     }
 
-    
-
-    public Cursor getGeoTrack(String rowId, String[] columns) { 
+    public Cursor getGeoTrack(String rowId, String[] columns) {
         String[] selectionArgs = new String[] { rowId };
         return queryGeoTrack(CRITERIA_BY_ENTITY_ID, selectionArgs, columns, null);
     }
@@ -91,23 +89,22 @@ public class GeoTrackDatabase {
         builder.setProjectionMap(mGeoTrackColumnMap);
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), columns, selection, selectionArgs, null, null, order);
         // Manage Cursor
-        if (cursor == null) {
-            return null;
-        } else if (!cursor.moveToFirst()) {
-            cursor.close();
-            return null;
-        }
+//        if (cursor == null) {
+//            return null;
+//        } else if (!cursor.moveToFirst()) {
+//            cursor.close();
+//            return null;
+//        }
         return cursor;
     }
-    
 
-    public long insert( ContentValues userValues) throws SQLException {
+    public long insert(ContentValues userValues) throws SQLException {
         long result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
             db.beginTransaction();
             try {
-         result = db.insertOrThrow(TABLE_TRACK_POINT, null, userValues);
+                result = db.insertOrThrow(TABLE_TRACK_POINT, null, userValues);
                 // commit
                 db.setTransactionSuccessful();
             } finally {
@@ -152,8 +149,7 @@ public class GeoTrackDatabase {
         }
         return result;
     }
-    
-    
+
     @Deprecated
     public void open() {
         // on ouvre la BDD en �criture
@@ -165,72 +161,75 @@ public class GeoTrackDatabase {
         // on ferme l'acc�s � la BDD
         bdd.close();
     }
-//
-//    @Deprecated
-//    public SQLiteDatabase getBDD() {
-//        return bdd;
-//    }
-//
-//    private SQLiteDatabase getWritableDatabase() {
-//        return mDatabaseOpenHelper.getWritableDatabase();
-//    }
-//
-//    public SQLiteDatabase getReadableDatabase() {
-//        return mDatabaseOpenHelper.getReadableDatabase();
-//    }
-//
-//    public SQLiteDatabase beginTransaction() {
-//        SQLiteDatabase bdd = mDatabaseOpenHelper.getWritableDatabase();
-//        bdd.beginTransaction();
-//        return bdd;
-//    }
-//
-//    public void commit(SQLiteDatabase bdd) {
-//        bdd.setTransactionSuccessful();
-//        bdd.endTransaction();
-//    }
-//
-//    public void endTransaction(SQLiteDatabase bdd) {
-//        bdd.endTransaction();
-//    }
-//
-//    public long insertTrackPoint(GeoTrack geoPoint) {
-//        // Cr�ation d'un ContentValues (fonctionne comme une HashMap)
-//        ContentValues values = convertAsContentValues(geoPoint);
-//        // on ins�re l'objet dans la BDD via le ContentValues
-//        return bdd.insert(TABLE_TRACK_POINT, null, values);
-//    }
-//
-//    private ContentValues convertAsContentValues(GeoTrack point) {
-//        // on lui ajoute une valeur associ� � une cl� (qui est le nom de la
-//        // colonne dans laquelle on veut mettre la valeur)
-//        ContentValues values = new ContentValues();
-//        values.put(GeoTrackColumns.COL_TIME, point.getTime());
-//        values.put(GeoTrackColumns.COL_USERID, point.getUserId());
-//        values.put(GeoTrackColumns.COL_PROVIDER, point.getProvider());
-//        values.put(GeoTrackColumns.COL_LATITUDE_E6, point.getLatitudeE6());
-//        values.put(GeoTrackColumns.COL_LONGITUDE_E6, point.getLongitudeE6());
-//        values.put(GeoTrackColumns.COL_ACCURACY, point.getAccuracy());
-//        values.put(GeoTrackColumns.COL_ALTITUDE, point.getAltitude());
-//        values.put(GeoTrackColumns.COL_BEARING, point.getBearing());
-//        values.put(GeoTrackColumns.COL_SPEED, point.getSpeed());
-//        return values;
-//    }
-//
-//    public int updateTrackPoint(int id, GeoTrack point) {
-//        // La mise � jour d'un livre dans la BDD fonctionne plus ou moins comme
-//        // une insertion
-//        // il faut simple pr�ciser quelle livre on doit mettre � jour gr�ce �
-//        // l'ID
-//        ContentValues values = convertAsContentValues(point);
-//        return bdd.update(TABLE_TRACK_POINT, values, GeoTrackColumns.COL_ID + " = " + id, null);
-//    }
-//
-//    public int removeTrakPointWithID(int id) {
-//        // Suppression d'un livre de la BDD gr�ce � l'ID
-//        return bdd.delete(TABLE_TRACK_POINT, GeoTrackColumns.COL_ID + " = " + id, null);
-//    }
-//
+
+    //
+    // @Deprecated
+    // public SQLiteDatabase getBDD() {
+    // return bdd;
+    // }
+    //
+    // private SQLiteDatabase getWritableDatabase() {
+    // return mDatabaseOpenHelper.getWritableDatabase();
+    // }
+    //
+    // public SQLiteDatabase getReadableDatabase() {
+    // return mDatabaseOpenHelper.getReadableDatabase();
+    // }
+    //
+    // public SQLiteDatabase beginTransaction() {
+    // SQLiteDatabase bdd = mDatabaseOpenHelper.getWritableDatabase();
+    // bdd.beginTransaction();
+    // return bdd;
+    // }
+    //
+    // public void commit(SQLiteDatabase bdd) {
+    // bdd.setTransactionSuccessful();
+    // bdd.endTransaction();
+    // }
+    //
+    // public void endTransaction(SQLiteDatabase bdd) {
+    // bdd.endTransaction();
+    // }
+    //
+    // public long insertTrackPoint(GeoTrack geoPoint) {
+    // // Cr�ation d'un ContentValues (fonctionne comme une HashMap)
+    // ContentValues values = convertAsContentValues(geoPoint);
+    // // on ins�re l'objet dans la BDD via le ContentValues
+    // return bdd.insert(TABLE_TRACK_POINT, null, values);
+    // }
+    //
+    // private ContentValues convertAsContentValues(GeoTrack point) {
+    // // on lui ajoute une valeur associ� � une cl� (qui est le nom de la
+    // // colonne dans laquelle on veut mettre la valeur)
+    // ContentValues values = new ContentValues();
+    // values.put(GeoTrackColumns.COL_TIME, point.getTime());
+    // values.put(GeoTrackColumns.COL_USERID, point.getUserId());
+    // values.put(GeoTrackColumns.COL_PROVIDER, point.getProvider());
+    // values.put(GeoTrackColumns.COL_LATITUDE_E6, point.getLatitudeE6());
+    // values.put(GeoTrackColumns.COL_LONGITUDE_E6, point.getLongitudeE6());
+    // values.put(GeoTrackColumns.COL_ACCURACY, point.getAccuracy());
+    // values.put(GeoTrackColumns.COL_ALTITUDE, point.getAltitude());
+    // values.put(GeoTrackColumns.COL_BEARING, point.getBearing());
+    // values.put(GeoTrackColumns.COL_SPEED, point.getSpeed());
+    // return values;
+    // }
+    //
+    // public int updateTrackPoint(int id, GeoTrack point) {
+    // // La mise � jour d'un livre dans la BDD fonctionne plus ou moins comme
+    // // une insertion
+    // // il faut simple pr�ciser quelle livre on doit mettre � jour gr�ce �
+    // // l'ID
+    // ContentValues values = convertAsContentValues(point);
+    // return bdd.update(TABLE_TRACK_POINT, values, GeoTrackColumns.COL_ID +
+    // " = " + id, null);
+    // }
+    //
+    // public int removeTrakPointWithID(int id) {
+    // // Suppression d'un livre de la BDD gr�ce � l'ID
+    // return bdd.delete(TABLE_TRACK_POINT, GeoTrackColumns.COL_ID + " = " + id,
+    // null);
+    // }
+    //
     public List<GeoTrack> getTrakPointForToday(String userId) {
         Calendar calendar = Calendar.getInstance();
         calendar.clear(Calendar.HOUR);
@@ -249,31 +248,19 @@ public class GeoTrackDatabase {
         return cursorToLivre(c);
     }
 
-//    // Cette m�thode permet de convertir un cursor en un livre
     private List<GeoTrack> cursorToLivre(Cursor c) {
-        // si aucun �l�ment n'a �t� retourn� dans la requ�te, on renvoie null
         List<GeoTrack> points = new ArrayList<GeoTrack>(c.getCount());
         if (c.getCount() == 0)
             return points;
 
-        // Sinon on se place sur le premier �l�ment
-        // c.moveToFirst();
-        while (c.moveToNext()) {
-            // On cr�� un livre
-            GeoTrack point = new GeoTrack();
-            // on lui affecte toutes les infos gr�ce aux infos contenues dans le
-            // Cursor
-            point.setId(c.getInt(NUM_COL_ID));
-            point.setUserId(c.getString(NUM_COL_USERID));
-            point.setTime(c.getLong(NUM_COL_TIME));
-            point.setProvider(c.getString(NUM_COL_PROVIDER));
-            point.setLatitudeE6(c.getInt(NUM_COL_LATITUDE_E6));
-            point.setLongitudeE6(c.getInt(NUM_COL_LONGITUDE_E6));
-            point.setAccuracy(c.getFloat(NUM_COL_ACCURACY));
-            point.setAltitude(c.getDouble(NUM_COL_ALTITUDE));
-            point.setBearing(c.getFloat(NUM_COL_BEARING));
-            point.setSpeed(c.getFloat(NUM_COL_SPEED));
-            points.add(point);
+        if (c.moveToFirst()) {
+            ;
+            GeoTrackHelper helper = new GeoTrackHelper().initWrapper(c);
+            while (c.moveToNext()) {
+                // On cr�� un livre
+                GeoTrack point = helper.getEntity(c); 
+                points.add(point);
+            }
         }
 
         // On ferme le cursor

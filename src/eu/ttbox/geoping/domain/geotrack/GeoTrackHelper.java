@@ -54,7 +54,7 @@ public class GeoTrackHelper {
 
         geoTrack.setLatitudeE6(latitudeE6Idx > -1 ? cursor.getInt(latitudeE6Idx) : null);
         geoTrack.setLongitudeE6(longitudeE6Idx > -1 ? cursor.getInt(longitudeE6Idx) : null);
-        geoTrack.setAccuracy(accuracyIdx > -1 ? cursor.getFloat(accuracyIdx) : null);
+        geoTrack.setAccuracy(accuracyIdx > -1 ? cursor.getInt(accuracyIdx) : null);
         geoTrack.setAltitude(altitudeIdx > -1 ? cursor.getDouble(altitudeIdx) : null);
 
         geoTrack.setBearing(bearingIdx > -1 ? cursor.getFloat(bearingIdx) : null);

@@ -17,7 +17,7 @@ public class GeoTrack {
 	private int longitudeE6;
 
 	public int altitude;
-	public float accuracy;
+	public int accuracy;
 	public float bearing;
 	public float speed;
 
@@ -34,7 +34,7 @@ public class GeoTrack {
 		this.time = loc.getTime();
 		this.latitudeE6 = (int) (loc.getLatitude() * AppConstants.E6);
 		this.longitudeE6 = (int) (loc.getLongitude() * AppConstants.E6);
-		this.accuracy = loc.getAccuracy();
+		this.accuracy = (int)loc.getAccuracy();
 		if (loc.hasAltitude()) {
 			this.altitude = (int)loc.getAltitude();
 		}
@@ -139,7 +139,11 @@ public class GeoTrack {
 		return this;
 	}
 
-	public double getAltitude() {
+    public boolean hasAltitude() { 
+        return this.altitude != -1;
+    }
+    
+	public int getAltitude() {
 		return altitude;
 	}
 
@@ -148,14 +152,19 @@ public class GeoTrack {
 		return this;
 	}
 
-	public float getAccuracy() {
+    public boolean hasAccuracy() { 
+        return this.accuracy != -1;
+    }
+    
+	public int getAccuracy() {
 		return accuracy;
 	}
 
-	public GeoTrack setAccuracy(float accuracy) {
+	public GeoTrack setAccuracy(int accuracy) {
 		this.accuracy = accuracy;
 		return this;
 	}
+
 
 	public float getBearing() {
 		return bearing;
@@ -174,7 +183,10 @@ public class GeoTrack {
 		this.speed = speed;
 		return this;
 	}
-
+    public boolean hasSpeed() { 
+        return this.speed != -1;
+    }
+    
 	public String getTitre() {
 		return titre;
 	}
@@ -207,5 +219,6 @@ public class GeoTrack {
 		sb.append("]");
 		return sb.toString();
 	}
+
 
 }

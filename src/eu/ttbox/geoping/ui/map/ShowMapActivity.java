@@ -123,9 +123,9 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         localEdit.commit();
 
         // Overlay May Location
-        myLocation.disableCompass();
-        myLocation.disableMyLocation();
-        myLocation.disableThreadExecutors();
+        if (myLocation!=null) {
+            myLocation.onPause();
+         } 
 
         // Overlay GeoTrack
         if (geoTrackOverlay!=null) {
@@ -168,9 +168,9 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         // 0), privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, 0));
 
         // Overlay MyLocation
-        myLocation.enableMyLocation();
-        myLocation.enableCompass();
-        myLocation.enableThreadExecutors();
+        if (myLocation!=null) {
+            myLocation.onResume();
+         } 
 
         // Overlay GeoTrack
         if (geoTrackOverlay!=null) {
