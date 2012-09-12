@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import microsoft.mappoint.TileSystem;
+
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.Overlay;
 
 import android.content.BroadcastReceiver;
@@ -21,9 +25,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.Path.Direction;
 import android.graphics.Path;
+import android.graphics.Path.Direction;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +37,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.MotionEvent;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrack;
@@ -61,12 +67,16 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
 	// Cached
 	private Point myScreenCoords = new Point();
-
 	// Paint
 	private Paint mPaint;
+	private Paint mPointPaint;
+	private Paint mCirclePaint;
+	private Paint mCirclePaintBorder;
 
 	// instance
 	private List<GeoTrack> geoTracks = new ArrayList<GeoTrack>();;
+	private Path geoTracksPath;
+	private GeoTrack selectedGeoTrack;
 
 	// ===========================================================
 	// Ui Handler
@@ -142,11 +152,26 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	}
 
 	private void initDirectionPaint() {
-		// D
+		// Text
 		this.mPaint = new Paint();
-		this.mPaint.setColor(Color.RED);
+		this.mPaint.setColor(Color.BLACK);
 		this.mPaint.setStyle(Style.FILL_AND_STROKE);
 
+		// Point 
+		this.mPointPaint= new Paint();
+		this.mPointPaint.setColor(Color.RED);
+		this.mPointPaint.setStyle(Style.FILL_AND_STROKE);
+
+		// Localisation
+		this.mCirclePaint = new Paint();
+		this.mCirclePaint.setARGB(0, 255, 100, 100);
+		this.mCirclePaint.setAntiAlias(true);
+		this.mCirclePaint.setAlpha(50);
+		this.mCirclePaint.setStyle(Style.FILL);
+
+		this.mCirclePaintBorder = new Paint(mCirclePaint);
+		this.mCirclePaintBorder.setAlpha(150);
+		this.mCirclePaintBorder.setStyle(Style.STROKE);
 	}
 
 	// ===========================================================
@@ -158,7 +183,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	}
 
 	// ===========================================================
-	// Drawing On Map
+	// Map Drawing
 	// ===========================================================
 
 	@Override
@@ -167,19 +192,136 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 			return;
 		}
 		MapView.Projection p = mapView.getProjection();
-		Path path = new Path();
+		// Draw Geo Tracks
+		Path geoTracksPath = computePath(mapView, geoTracks);
+		if (geoTracksPath != null) {
+			canvas.drawPath(geoTracksPath, mPaint);
+		}
+		// Temp Point
 		for (GeoTrack geoTrack : geoTracks) {
 			GeoPoint geoPoint = geoTrack.asGeoPoint();
 			p.toMapPixels(geoPoint, myScreenCoords);
-			// path.addCircle(myScreenCoords.x, myScreenCoords.y, 8,
-			// Direction.CCW);
-			canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8, mPaint);
+			 canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8, mPointPaint);
 			// Log.d(TAG, "--------------------------");
 			// Log.d(TAG, "geoTrack " + geoTrack);
 			// Log.d(TAG, "geoPoint " + geoPoint);
-			path.lineTo(myScreenCoords.x, myScreenCoords.y);
 		}
-		canvas.drawPath(path, mPaint);
+
+		// Draw Selected
+		if (selectedGeoTrack != null) {
+			// Select Point
+			GeoTrack lastFix = selectedGeoTrack;
+			GeoPoint geoPoint = lastFix.asGeoPoint();
+			p.toMapPixels(geoPoint, myScreenCoords);
+			// Compute Radius
+			final float groundResolutionInM = (float) TileSystem.GroundResolution(lastFix.getLatitude(), mapView.getZoomLevel());
+			final float radius = lastFix.getAccuracy() / groundResolutionInM;
+			canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, radius, mCirclePaint);
+			canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, radius, mCirclePaintBorder);
+		}
+	}
+
+	private Path computePath(MapView mapView, List<GeoTrack> geoTracks) {
+		if (geoTracksPath == null) {
+			MapView.Projection p = mapView.getProjection();
+			Path path = new Path();
+			int geoTrackSize = geoTracks.size();
+			int idx = 0;
+			for (GeoTrack geoTrack : geoTracks) {
+				// Compute coord
+				GeoPoint geoPoint = geoTrack.asGeoPoint();
+				p.toMapPixels(geoPoint, myScreenCoords);
+				// Start Path
+				if (idx > 0) {
+					path.moveTo(myScreenCoords.x, myScreenCoords.y);
+				}
+				path.lineTo(myScreenCoords.x, myScreenCoords.y);
+
+				// Draw Point
+				path.addCircle(myScreenCoords.x, myScreenCoords.y, 8, Direction.CCW);
+				// canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8,
+				// mPaint);
+				// Log.d(TAG, "--------------------------");
+				// Log.d(TAG, "geoTrack " + geoTrack);
+				// Log.d(TAG, "geoPoint " + geoPoint);
+
+				idx++;
+			}
+			this.geoTracksPath = path;
+		}
+
+		return geoTracksPath;
+	}
+
+	// ===========================================================
+	// Map Motion Event Management
+	// ===========================================================
+
+	@Override
+	public boolean onTouchEvent(final MotionEvent event, final MapView mapView) {
+		// if (event.getAction() == MotionEvent.ACTION_MOVE) {
+		// }
+
+		return super.onTouchEvent(event, mapView);
+	}
+
+	@Override
+	public boolean onSingleTapUp(final MotionEvent event, final MapView mapView) {
+		Projection pj = mapView.getProjection();
+		IGeoPoint p = pj.fromPixels(event.getX(), event.getY());
+
+		// Store whether prior popup was displayed so we can call invalidate() &
+		// remove it if necessary.
+		boolean onHandleEvent = false;
+		boolean isRemovePriorPopup = selectedGeoTrack != null;
+		long idPriorStation = -1;
+		if (isRemovePriorPopup) {
+			idPriorStation = selectedGeoTrack.getId();
+		}
+		// Next test whether a new popup should be displayed
+		selectedGeoTrack = getHitMapLocation(mapView, p);
+		if (isRemovePriorPopup && selectedGeoTrack != null && idPriorStation == selectedGeoTrack.getId()) {
+			selectedGeoTrack = null;
+			onHandleEvent = true;
+		}
+		if (isRemovePriorPopup || selectedGeoTrack != null) {
+			// TODO hideBubble();
+			mapView.invalidate();
+			onHandleEvent = true;
+		}
+
+		return onHandleEvent;
+	}
+
+	private GeoTrack getHitMapLocation(MapView mapView, IGeoPoint tapPoint) {
+		// Track which MapLocation was hit...if any
+		GeoTrack hitMapLocation = null;
+		RectF tapPointHitTestRect = new RectF();
+		Point tapPointTestScreenCoords = new Point();
+		int zoonLevel = mapView.getZoomLevel();
+		int selectRadius = zoonLevel + 6;
+		Projection pj = mapView.getProjection();
+		for (GeoTrack testLocation : geoTracks) {
+			// Translate the MapLocation's lat/long coordinates to screen
+			// coordinates
+			pj.toPixels(testLocation.asGeoPoint(), tapPointTestScreenCoords);
+
+			// Create a 'hit' testing Rectangle w/size and coordinates of our
+			// icon
+			// Set the 'hit' testing Rectangle with the size and coordinates of
+			// our on screen icon
+			tapPointHitTestRect.set(-selectRadius, -selectRadius, selectRadius, selectRadius);
+			tapPointHitTestRect.offset(tapPointTestScreenCoords.x, tapPointTestScreenCoords.y);
+
+			// Finally test for a match between our 'hit' Rectangle and the
+			// location clicked by the user
+			pj.toPixels(tapPoint, tapPointTestScreenCoords);
+			if (tapPointHitTestRect.contains(tapPointTestScreenCoords.x, tapPointTestScreenCoords.y)) {
+				hitMapLocation = testLocation;
+				break;
+			}
+		}
+		return hitMapLocation;
 	}
 
 	// ===========================================================
@@ -216,12 +358,14 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 					points.add(geoTrack);
 				} while (cursor.moveToNext());
 			}
+
 			geoTracks = points;
 		}
 
 		@Override
 		public void onLoaderReset(Loader<Cursor> loader) {
 			geoTracks.clear();
+			geoTracksPath = null;
 		}
 
 	};
@@ -251,7 +395,17 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 			Log.i(TAG, "onReceive Intent action : " + action);
 			if (Intents.ACTION_NEW_GEOTRACK_INSERTED.equals(action)) {
 				Bundle extras = intent.getExtras();
-				String userId = extras.getString(GeoTrackColumns.COL_USERID);
+				String userIdIntent = extras.getString(GeoTrackColumns.COL_USERID);
+				if (userId.equals(userIdIntent)) {
+					// TODO Load
+
+					GeoTrack addedGeoTrack = null;
+					// Add GeoTrack
+					geoTracks.add(addedGeoTrack);
+					geoTracksPath = null;
+				} else {
+					Log.d(TAG, "onReceive Intent action " + Intents.ACTION_NEW_GEOTRACK_INSERTED + " for another User than Mine");
+				}
 			}
 		}
 
