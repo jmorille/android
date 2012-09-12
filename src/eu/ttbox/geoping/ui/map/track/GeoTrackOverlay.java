@@ -80,6 +80,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
     // Cached
     private Point myScreenCoords = new Point();
+    private Path geoTracksPath = new Path();
+
     // Paint
     private Paint mPaint;
     private Paint mPointPaint;
@@ -92,7 +94,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
     // instance
     private List<GeoTrack> geoTracks = new ArrayList<GeoTrack>();;
-    private Path geoTracksPath;
+
     private GeoTrack selectedGeoTrack;
 
     // ===========================================================
@@ -166,25 +168,26 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
     private void initDirectionPaint() {
         // Text
-        this.mPaint = new Paint();
-        this.mPaint.setColor(Color.BLACK);
-        this.mPaint.setStyle(Style.FILL_AND_STROKE);
-
+        mPaint = new Paint();
+        mPaint.setColor(Color.BLACK);
+        mPaint.setStyle(Style.STROKE);
+        mPaint.setStrokeWidth(3);
         // Point
-        this.mPointPaint = new Paint();
-        this.mPointPaint.setColor(Color.RED);
-        this.mPointPaint.setStyle(Style.FILL_AND_STROKE);
+        mPointPaint = new Paint();
+        mPointPaint.setColor(Color.RED);
+        mPointPaint.setStyle(Style.FILL_AND_STROKE);
+        mPointPaint.setStrokeWidth(3);
 
         // Localisation
-        this.mCirclePaint = new Paint();
-        this.mCirclePaint.setARGB(0, 255, 100, 100);
-        this.mCirclePaint.setAntiAlias(true);
-        this.mCirclePaint.setAlpha(50);
-        this.mCirclePaint.setStyle(Style.FILL);
+        mCirclePaint = new Paint();
+        mCirclePaint.setARGB(0, 255, 100, 100);
+        mCirclePaint.setAntiAlias(true);
+        mCirclePaint.setAlpha(50);
+        mCirclePaint.setStyle(Style.FILL);
 
-        this.mCirclePaintBorder = new Paint(mCirclePaint);
-        this.mCirclePaintBorder.setAlpha(150);
-        this.mCirclePaintBorder.setStyle(Style.STROKE);
+        mCirclePaintBorder = new Paint(mCirclePaint);
+        mCirclePaintBorder.setAlpha(150);
+        mCirclePaintBorder.setStyle(Style.STROKE);
     }
 
     // ===========================================================
@@ -250,66 +253,53 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         }
         MapView.Projection p = mapView.getProjection();
         // Draw Geo Tracks
-        Path geoTracksPath = computePath(mapView, geoTracks);
-        if (geoTracksPath != null) {
-            canvas.drawPath(geoTracksPath, mPaint);
-        }
+        // Path geoTracksPath = computePath(mapView, geoTracks);
+        // if (geoTracksPath != null) {
+        //
+        // }
         // Temp Point
+        geoTracksPath.rewind();
+        int idx = 0;
         for (GeoTrack geoTrack : geoTracks) {
             GeoPoint geoPoint = geoTrack.asGeoPoint();
             p.toMapPixels(geoPoint, myScreenCoords);
-//            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8, mPointPaint);
-            // Log.d(TAG, "--------------------------");
-            // Log.d(TAG, "geoTrack " + geoTrack);
-            // Log.d(TAG, "geoPoint " + geoPoint);
+            // Line Path
+            if (idx == 0) {
+                geoTracksPath.moveTo(myScreenCoords.x, myScreenCoords.y);
+            } else {
+                geoTracksPath.lineTo(myScreenCoords.x, myScreenCoords.y);
+            }
+            // Point
+            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8, mPointPaint);
+            // Increment Counter
+            idx++;
         }
-
+        if (idx > 1) {
+            canvas.drawPath(geoTracksPath, mPaint);
+        }
         // Draw Selected
         if (selectedGeoTrack != null) {
             // Select Point
             GeoTrack lastFix = selectedGeoTrack;
             GeoPoint geoPoint = lastFix.asGeoPoint();
             p.toMapPixels(geoPoint, myScreenCoords);
-            // Compute Radius
-            final float groundResolutionInM = (float) TileSystem.GroundResolution(lastFix.getLatitude(), mapView.getZoomLevel());
-            final float radius = lastFix.getAccuracy() / groundResolutionInM;
+            // Compute Radius Accuracy
+            final float groundResolutionInM = lastFix.computeGroundResolutionInMForZoomLevel( mapView.getZoomLevel());
+            final float radius = ((float) lastFix.getAccuracy()) / groundResolutionInM;
             canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, radius, mCirclePaint);
             canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, radius, mCirclePaintBorder);
         }
     }
 
-    private Path computePath(MapView mapView, List<GeoTrack> geoTracks) {
-        if (geoTracksPath == null) {
-            MapView.Projection p = mapView.getProjection();
-            Path path = new Path();
-            int geoTrackSize = geoTracks.size();
-            int idx = 0;
-            for (GeoTrack geoTrack : geoTracks) {
-                // Compute coord
-                GeoPoint geoPoint = geoTrack.asGeoPoint();
-                p.toMapPixels(geoPoint, myScreenCoords);
-                // Start Path
-                if (idx > 0) {
-                    path.moveTo(myScreenCoords.x, myScreenCoords.y);
-                }
-                path.lineTo(myScreenCoords.x, myScreenCoords.y);
-
-                // Draw Point
-                path.addCircle(myScreenCoords.x, myScreenCoords.y, 8, Direction.CCW);
-                // canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8,
-                // mPaint);
-                // Log.d(TAG, "--------------------------");
-                // Log.d(TAG, "geoTrack " + geoTrack);
-                // Log.d(TAG, "geoPoint " + geoPoint);
-
-                idx++;
-            }
-            path.close();
-            this.geoTracksPath = path;
-        }
-
-        return geoTracksPath;
-    }
+//    private int cachedZoomLevel = -1;
+//    private float cachedZoomLevelGroundResolutionInM = -1;
+//
+//    private void computeCacheForZoomLevel(MapView mapView) {
+//        int zoomLevel = mapView.getZoomLevel();
+//        if (cachedZoomLevel != cachedZoomLevel) {
+//            cachedZoomLevelGroundResolutionInM = (float) TileSystem.GroundResolution(lastFix.getLatitude(), mapView.getZoomLevel());
+//         } 
+//    }
 
     // ===========================================================
     // Map Motion Event Management

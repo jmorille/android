@@ -25,7 +25,7 @@ public class SmsMsgEncryptHelper {
 	public final static String ACTION_GEO_LOC = "LOC";
 
 	// Constante
-	public final static String MSGID = "geoPing#";
+	public final static String MSGID = "geoPing?";
 	public final static String SEED = "pass";
 
 	// Config
@@ -43,7 +43,7 @@ public class SmsMsgEncryptHelper {
 				result.smsNumber = smsNumber;
 				result.action = clearMsg.substring(0, idxActEnd);
 				// Check Param
-				if (clearMsgSize > idxActEnd) {
+				if (clearMsgSize > idxActEnd+1) {
 					result.body = clearMsg.substring(idxActEnd + 1,
 							clearMsgSize);
 				}

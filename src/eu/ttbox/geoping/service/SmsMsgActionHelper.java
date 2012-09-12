@@ -5,15 +5,8 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.location.Location;
+import android.os.Bundle;
 import android.util.Log;
-
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 
@@ -41,8 +34,7 @@ public class SmsMsgActionHelper {
         }
         return msg;
     }
- 
-    
+
     public static Location fromSmsMessage(String smsMessage) {
         if (smsMessage != null) {
             return convertJsonLocAsLocation(smsMessage);
@@ -55,7 +47,8 @@ public class SmsMsgActionHelper {
             return null;
         }
         try {
-            //jackson  http://www.cowtowncoder.com/blog/archives/2009/08/entry_310.html
+            // jackson
+            // http://www.cowtowncoder.com/blog/archives/2009/08/entry_310.html
             JSONObject object = new JSONObject();
             object.put(MSGKEY_PROVIDER, location.getProvider());
             object.put(MSGKEY_TIME, location.getTime());
@@ -85,48 +78,55 @@ public class SmsMsgActionHelper {
         return null;
     }
 
-    /**
-     * {link http://www.cowtowncoder.com/blog/archives/2009/08/entry_310.html}
-     * @param location
-     * @return
-     */
+    public static Bundle convertLocationAsBundle(Location location) {
+        Bundle object = new Bundle();
+        object.putString(MSGKEY_PROVIDER, location.getProvider());
+        object.putLong(MSGKEY_TIME, location.getTime());
+        // Lat Lng
+        int latE6 = (int) (location.getLatitude() * AppConstants.E6);
+        int lngE6 = (int) (location.getLongitude() * AppConstants.E6);
+        object.putInt(MSGKEY_LATITUDE_E6, latE6);
+        object.putInt(MSGKEY_LONGITUDE_E6, lngE6);
+        object.putInt(MSGKEY_ACCURACY, (int) location.getAccuracy());
+        // altitude
+        if (location.hasAltitude()) {
+            int alt = (int) location.getAltitude();
+            object.putInt(MSGKEY_ALTITUDE, alt);
+        }
+        if (location.hasBearing()) {
+            int bearing = (int) location.getBearing();
+            object.putInt(MSGKEY_BEARING, bearing);
+        }
+        if (location.hasSpeed()) {
+            int speed = (int) location.getSpeed();
+            object.putInt(MSGKEY_SPEAD, speed);
+        }
+        return object;
+    }
+
     public static String convertLocationAsJacksonString(Location location) {
         if (location == null) {
             return null;
         }
-//        JsonFactory jsonFactory =  new JsonFactory();
-//        jsonFactory.disable(JsonGenerator.Feature.QUOTE_FIELD_NAMES);
-         
-        ObjectMapper mapper = new ObjectMapper();  
-        mapper.configure( JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        mapper.configure(JsonGenerator.Feature.QUOTE_FIELD_NAMES, false);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
-        
-        ObjectNode object =  mapper.createObjectNode();
-        object.put(MSGKEY_PROVIDER, location.getProvider());
-        object.put(MSGKEY_TIME, location.getTime());
-        // Lat Lng
-        int latE6 = (int) (location.getLatitude() * AppConstants.E6);
-        int lngE6 = (int) (location.getLongitude() * AppConstants.E6);
-        object.put(MSGKEY_LATITUDE_E6, latE6);
-        object.put(MSGKEY_LONGITUDE_E6, lngE6);
-        // altitude
-        if (location.hasAltitude()) {
-            int alt = (int) location.getAltitude();
-            object.put(MSGKEY_ALTITUDE, alt);
-        }
-        object.put(MSGKEY_ACCURACY, location.getAccuracy());
-        if (location.hasBearing()) {
-            int bearing = (int) location.getBearing();
-            object.put(MSGKEY_BEARING, bearing);
-        }
-        if (location.hasSpeed()) {
-            int speed = (int) location.getSpeed();
-            object.put(MSGKEY_SPEAD, speed);
-        }
-        return object.toString();
+        Bundle bundle = convertLocationAsBundle(location);
+        StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE);
+        if (!bundle.isEmpty()) {
+            sb.append("(");
+            boolean isFirst = true;
+            for (String key : bundle.keySet()) {
+                Object value = bundle.get(key);
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    sb.append(",");
+                }
+                sb.append(key).append(":").append(value);
+            }
+            sb.append(")");
+        } 
+        return sb.toString();
     }
-        
+
     public static Location convertJsonLocAsLocation(String jsonLocation) {
         if (jsonLocation == null || jsonLocation.length() < 1) {
             return null;
