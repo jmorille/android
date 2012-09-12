@@ -110,7 +110,9 @@ public class GeoTrackerProvider extends ContentProvider {
             personUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + personId);
             getContext().getContentResolver().notifyChange(personUri, null);
             String userId = values.getAsString(GeoTrackColumns.COL_USERID);
-            Log.d(TAG, String.format( "insert geoTrack UserId [%s] with Uri : %s" ,userId,  uri));
+            String latE6 = values.getAsString(GeoTrackColumns.COL_LATITUDE_E6);
+            String lngE6 = values.getAsString(GeoTrackColumns.COL_LONGITUDE_E6);
+            Log.d(TAG, String.format( "insert geoTrack UserId [%s] with Uri : %s with WSG84(%s, %s)" ,userId,  uri, latE6, lngE6));
             // Notify in broadcast
             // TODO sendBroadcast
 

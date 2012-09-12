@@ -161,12 +161,15 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             return;
         }
         MapView.Projection p = mapView.getProjection();
-        Path path = new Path();
-        Point point = new Point();
+        Path path = new Path(); 
         for (GeoTrack geoTrack : geoTracks) {
             GeoPoint geoPoint = geoTrack.asGeoPoint();
             p.toMapPixels(geoPoint, myScreenCoords);
-            path.lineTo(point.x, point.y);
+            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 20, mPaint);
+//            Log.d(TAG, "--------------------------");
+//            Log.d(TAG, "geoTrack " + geoTrack);
+//            Log.d(TAG, "geoPoint " + geoPoint);
+            path.lineTo(myScreenCoords.x, myScreenCoords.y);
         }
         canvas.drawPath(path, mPaint);
     }
@@ -184,6 +187,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             String selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_USERID, GeoTrackColumns.COL_TIME);
             String[] selectionArgs = new String[] { userId, timeBeginInMs, timeEndInMs };
             Log.w(TAG,String.format( "Prepare Sql Selection : %s / for param : %s",selection, selectionArgs));
+            selection = null;
+            selectionArgs = null;
             // Loader
             CursorLoader cursorLoader = new CursorLoader(context, GeoTrackerProvider.Constants.CONTENT_URI_GEOTRACKS, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
@@ -198,6 +203,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             if (cursor.moveToFirst()) {
                 do {
                     GeoTrack geoTrack = helper.getEntity(cursor);
+                    Log.d(TAG, String.format( "Cursor : %s", geoTrack));
                     // Adding to list
                     points.add(geoTrack);
                 } while (cursor.moveToNext());
