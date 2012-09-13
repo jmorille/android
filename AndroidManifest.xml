@@ -46,6 +46,8 @@
 				<action android:name="android.provider.Telephony.SMS_RECEIVED" 
 				<action android:name="android.intent.action.ACTION_SHUTDOWN" />
 				<action android:name="android.intent.action.QUICKBOOT_POWEROFF" />
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				
 			</intent-filter>
 		</receiver>
 		
