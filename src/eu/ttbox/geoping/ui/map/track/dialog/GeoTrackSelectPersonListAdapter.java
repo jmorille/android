@@ -40,12 +40,12 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
         // Button
         final String entityId = helper.getPersonIdAsString(cursor);
         final String phoneNumber = helper.getPersonPhone(cursor);
-        holder.pingButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startService(Intents.sendGeoPingRequest(context, phoneNumber));
-            }
-        });
+//        holder.pingButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                context.startService(Intents.sendGeoPingRequest(context, phoneNumber));
+//            }
+//        });
 //        view.setOnClickListener(new OnClickListener() {
 //
 //            @Override

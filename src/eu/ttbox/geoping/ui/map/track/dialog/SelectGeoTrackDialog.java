@@ -71,9 +71,11 @@ public class SelectGeoTrackDialog extends AlertDialog {
         ListView listView = (ListView) view;
         listAdapter = new GeoTrackSelectPersonListAdapter(themeContext, null, android.support.v4.widget.SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         listView.setAdapter(listAdapter);
+        // Listener
+        
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-
+                Log.d(TAG, String.format( "Select personId %s", id));
                 if (mCallBack != null) {
                     Cursor cursor = (Cursor) parent.getItemAtPosition(position);
                     PersonHelper helper = new PersonHelper().initWrapper(cursor);
