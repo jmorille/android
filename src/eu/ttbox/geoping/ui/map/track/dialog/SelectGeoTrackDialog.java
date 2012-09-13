@@ -17,6 +17,7 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
+import eu.ttbox.geoping.domain.person.PersonHelper;
 
 /**
  * @see http
@@ -67,14 +68,17 @@ public class SelectGeoTrackDialog extends AlertDialog {
         setView(view);
 
         // List Of icons
-        ListView gridview = (ListView) view;
+        ListView listView = (ListView) view;
         listAdapter = new GeoTrackSelectPersonListAdapter(themeContext, null, android.support.v4.widget.SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        gridview.setAdapter(listAdapter);
-        gridview.setOnItemClickListener(new OnItemClickListener() {
+        listView.setAdapter(listAdapter);
+        listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Person favicon = (Person) parent.getItemAtPosition(position);
+
                 if (mCallBack != null) {
-                    mCallBack.onSelectPerson(favicon);
+                    Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                    PersonHelper helper = new PersonHelper().initWrapper(cursor);
+                    Person person = helper.getEntity(cursor);
+                    mCallBack.onSelectPerson(person);
                 }
                 cancel();
             }

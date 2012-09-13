@@ -38,7 +38,7 @@ public class AbstractSmsTrackerActivity extends FragmentActivity {
 			Intent intentMap = new Intent(this, ShowMapActivity.class);
 			startActivity(intentMap);
 			return true; 
-		case R.id.menuGeoPing:
+		case R.id.menu_track_person:
 			Intent intentGeoPing = new Intent(this, GeoPingActivity.class);
 			startActivity(intentGeoPing);
 			return true; 

@@ -7,7 +7,7 @@
         android:showAsAction="ifRoom"
         android:title="@string/menu.map"/>
     <item
-        android:id="@+id/menuGeoPing"
+        android:id="@+id/menu_track_person"
         android:icon="@drawable/ic_action_user"
         android:showAsAction="ifRoom"
         android:title="@string/menu_geoping"/>

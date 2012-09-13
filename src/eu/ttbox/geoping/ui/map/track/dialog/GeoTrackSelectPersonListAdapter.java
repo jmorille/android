@@ -46,13 +46,13 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
                 context.startService(Intents.sendGeoPingRequest(context, phoneNumber));
             }
         });
-        view.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                context.startActivity(Intents.editPersone(context, entityId));
-            }
-        });
+//        view.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                context.startActivity(Intents.editPersone(context, entityId));
+//            }
+//        });
 
     }
 

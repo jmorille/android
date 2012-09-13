@@ -19,13 +19,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.view.Window;
+import android.widget.Toast;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
+import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
 import eu.ttbox.geoping.ui.map.core.MyAppTilesProviders;
 import eu.ttbox.geoping.ui.map.mylocation.MyLocationOverlay;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
+import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
+import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
 
 /**
  * @see http://mobiforge.com/developing/story/using-google-maps-android
@@ -63,9 +66,9 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 
     @Override
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle); 
+        super.onCreate(bundle);
         setContentView(R.layout.map);
- 
+
         // Prefs
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -84,7 +87,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         // Overlay
         this.myLocation = new MyLocationOverlay(this.getBaseContext(), this.mapView);
         mapView.getOverlays().add(myLocation);
-        geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(),"+33637474392", System.currentTimeMillis());
+        geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(), "+33637474392", System.currentTimeMillis());
         mapView.getOverlays().add(geoTrackOverlay);
     }
 
@@ -123,15 +126,15 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         localEdit.commit();
 
         // Overlay May Location
-        if (myLocation!=null) {
+        if (myLocation != null) {
             myLocation.onPause();
-         } 
+        }
 
         // Overlay GeoTrack
-        if (geoTrackOverlay!=null) {
-        	geoTrackOverlay.onPause();
+        if (geoTrackOverlay != null) {
+            geoTrackOverlay.onPause();
         }
-        
+
         super.onPause();
         // timer.cancel();
         if (Log.isLoggable(TAG, Log.INFO)) {
@@ -168,16 +171,15 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         // 0), privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, 0));
 
         // Overlay MyLocation
-        if (myLocation!=null) {
+        if (myLocation != null) {
             myLocation.onResume();
-         } 
-
-        // Overlay GeoTrack
-        if (geoTrackOverlay!=null) {
-        	geoTrackOverlay.onResume();
         }
 
-        
+        // Overlay GeoTrack
+        if (geoTrackOverlay != null) {
+            geoTrackOverlay.onResume();
+        }
+
         handleIntent(getIntent());
 
         if (Log.isLoggable(TAG, Log.INFO)) {
@@ -239,6 +241,18 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
                 }
             });
             return true;
+        }
+        case R.id.menuMap_track_person: {
+            SelectGeoTrackDialog personListDialod = new SelectGeoTrackDialog(this, getSupportLoaderManager(), new OnSelectPersonListener() {
+
+                @Override
+                public void onSelectPerson(Person person) {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(ShowMapActivity.this, String.format("Select Person %s", person), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            personListDialod.show();
         }
         default: {
             // Map click

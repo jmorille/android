@@ -2,10 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menuMap.mypositoncenter"
+        android:id="@+id/menuMap_mypositoncenter"
         android:icon="@drawable/ic_action_locate"
         android:showAsAction="ifRoom"
         android:title="@string/menu_map_mypositioncenter"/>
+    <item
+        android:id="@+id/menuMap_track_person"
+        android:icon="@drawable/ic_action_user"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_geoping"/>    
     <item
         android:id="@+id/menuMap_mapmode"
         android:icon="@android:drawable/ic_menu_mapmode"
