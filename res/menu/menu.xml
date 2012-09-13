@@ -8,7 +8,7 @@
         android:title="@string/menu.map"/>
     <item
         android:id="@+id/menuGeoPing"
-        android:icon="@android:drawable/ic_menu_send"
+        android:icon="@drawable/ic_action_user"
         android:showAsAction="ifRoom"
         android:title="@string/menu_geoping"/>
     <item

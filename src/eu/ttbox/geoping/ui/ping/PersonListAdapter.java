@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -19,7 +18,8 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
     private boolean isNotBinding = true;
 
     public PersonListAdapter(Context context, Cursor c, int flags) {
-        super(context, R.layout.person_list_item, c, flags); // if >10 add ", flags"
+        super(context, R.layout.track_person_list_item, c, flags); // if >10 add
+                                                                   // ", flags"
     }
 
     private void intViewBinding(View view, Context context, Cursor cursor) {

@@ -18,7 +18,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
     private boolean isNotBinding = true;
 
     public GeoTrackSelectPersonListAdapter(Context context, Cursor c, int flags) {
-        super(context, R.layout.person_list_item, c, flags); // if >10 add ", flags"
+        super(context, R.layout.track_person_list_item, c, flags); // if >10 add ", flags"
     }
 
     private void intViewBinding(View view, Context context, Cursor cursor) {

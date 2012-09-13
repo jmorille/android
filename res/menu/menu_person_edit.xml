@@ -8,18 +8,18 @@
         android:title="@string/menu_save"/>
     <item
         android:id="@+id/menu_save"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_menu_nav_accept"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_save"/>
-    <item
-        android:id="@+id/menu_delete"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_delete"/>
     <item
         android:id="@+id/menu_select_contact"
         android:icon="@android:drawable/ic_delete"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_select_contact"/>
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_delete"/>
 
 </menu>

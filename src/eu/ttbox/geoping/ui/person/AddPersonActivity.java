@@ -17,15 +17,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
-import eu.ttbox.geoping.ui.map.ShowMapActivity;
-import eu.ttbox.geoping.ui.ping.GeoPingActivity;
-import eu.ttbox.geoping.ui.prefs.TrakingPrefActivity;
 
 public class AddPersonActivity extends FragmentActivity {
 
@@ -40,10 +36,13 @@ public class AddPersonActivity extends FragmentActivity {
     private EditText nameEditText;
     private EditText phoneEditText;
 
+    // Instance 
+    private String entityId;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_person);
+        setContentView(R.layout.track_person_edit);
         // binding
         nameEditText = (EditText) findViewById(R.id.person_name);
         phoneEditText = (EditText) findViewById(R.id.person_phone);
@@ -51,34 +50,26 @@ public class AddPersonActivity extends FragmentActivity {
         handleIntent(getIntent());
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) { 
-        MenuInflater inflater = getMenuInflater(); 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_person_edit, menu); 
-        // Il n'est pas possible de modifier l'ic�ne d'ent�te du sous-menu via
-        // le fichier XML on le fait donc en JAVA
-        // menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.option_white);
-
         return true;
     }
- 
-    public boolean onOptionsItemSelected(MenuItem item) { 
+
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.menu_save:
-            Intent intentOption = new Intent(this, TrakingPrefActivity.class);
-            startActivity(intentOption);
-            return true; 
+            onSaveClick();
+            return true;
         case R.id.menu_delete:
-            Intent intentGeoTraker = new Intent(this, GeoTrakerActivity.class);
-            startActivity(intentGeoTraker);
+            onDeleteClick();
             return true;
         case R.id.menu_select_contact:
-            Intent intentMap = new Intent(this, ShowMapActivity.class);
-            startActivity(intentMap);
-            return true; 
-        case R.id.menuGeoPing:
-            Intent intentGeoPing = new Intent(this, GeoPingActivity.class);
-            startActivity(intentGeoPing);
-            return true; 
+            onSelectContactClick(null);
+            return true;
+        case R.id.menu_cancel:
+            onCancelClick();
+            return true;
         case R.id.menuQuitter:
             // Pour fermer l'application il suffit de faire finish()
             finish();
@@ -86,6 +77,7 @@ public class AddPersonActivity extends FragmentActivity {
         }
         return false;
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
@@ -99,38 +91,44 @@ public class AddPersonActivity extends FragmentActivity {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "handleIntent for action : " + action);
         }
-        if (Intent.ACTION_EDIT.equals(action)) {
-            // TODO Set id
+        if (Intent.ACTION_EDIT.equals(action)) { 
             Uri data = intent.getData();
-            String entityId = data.getLastPathSegment();
+            this.entityId = data.getLastPathSegment();
             Bundle bundle = new Bundle();
             bundle.putString(Intents.EXTRA_USERID, entityId);
             getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER, bundle, personLoaderCallback);
         } else if (Intent.ACTION_DELETE.equals(action)) {
             // TODO
         } else if (Intent.ACTION_INSERT.equals(action)) {
-            // TODO
+            this.entityId = null;
         }
 
     }
-
-    public void onSaveClick(View v) {
-        String name = nameEditText.getText().toString();
-        String phone = phoneEditText.getText().toString();
-        Uri uri = savePerson(name, phone);
+    
+    public void onDeleteClick() { 
+        Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, "/"+entityId);
+        getContentResolver().delete(entityUri, null, null);
+        setResult(Activity.RESULT_OK);
         finish();
     }
 
-    public void onCancelClick(View v) {
+    public void onSaveClick() {
+        String name = nameEditText.getText().toString();
+        String phone = phoneEditText.getText().toString();
+        Uri uri = savePerson(name, phone);
+        setResult(Activity.RESULT_OK);
+        finish();
+    }
+
+    public void onCancelClick() {
         setResult(Activity.RESULT_CANCELED);
         finish();
     }
 
-    public void onSelectContactClick(View v) { 
-        Intent intent = new Intent(android.provider.Contacts.Intents.UI.LIST_STARRED_ACTION);
-//        Intent intent = new Intent(ContactsContract.Intents.UI.LIST_STARRED_ACTION);
-
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+    public void onSelectContactClick(View v) {
+//        Intent intent = new Intent(android.provider.Contacts.Intents.UI.LIST_STARRED_ACTION);
+   
+         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
         // run
         startActivityForResult(intent, PICK_CONTACT);

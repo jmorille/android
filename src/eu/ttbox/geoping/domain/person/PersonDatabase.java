@@ -38,7 +38,7 @@ public class PersonDatabase {
     private static HashMap<String, String> buildUserColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Id
-        map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
+        map.put(PersonColumns.KEY_ID, "rowid AS " + BaseColumns._ID);
         // Add Identity Column
         for (String col : PersonColumns.ALL_KEYS) {
             if (!col.equals(PersonColumns.KEY_ID)) {
