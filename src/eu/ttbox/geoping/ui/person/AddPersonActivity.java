@@ -12,13 +12,20 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
+import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.ui.map.ShowMapActivity;
+import eu.ttbox.geoping.ui.ping.GeoPingActivity;
+import eu.ttbox.geoping.ui.prefs.TrakingPrefActivity;
 
 public class AddPersonActivity extends FragmentActivity {
 
@@ -40,8 +47,45 @@ public class AddPersonActivity extends FragmentActivity {
         // binding
         nameEditText = (EditText) findViewById(R.id.person_name);
         phoneEditText = (EditText) findViewById(R.id.person_phone);
+        // Intents
+        handleIntent(getIntent());
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) { 
+        MenuInflater inflater = getMenuInflater(); 
+        inflater.inflate(R.menu.menu_person_edit, menu); 
+        // Il n'est pas possible de modifier l'ic�ne d'ent�te du sous-menu via
+        // le fichier XML on le fait donc en JAVA
+        // menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.option_white);
+
+        return true;
+    }
+ 
+    public boolean onOptionsItemSelected(MenuItem item) { 
+        switch (item.getItemId()) {
+        case R.id.menu_save:
+            Intent intentOption = new Intent(this, TrakingPrefActivity.class);
+            startActivity(intentOption);
+            return true; 
+        case R.id.menu_delete:
+            Intent intentGeoTraker = new Intent(this, GeoTrakerActivity.class);
+            startActivity(intentGeoTraker);
+            return true;
+        case R.id.menu_select_contact:
+            Intent intentMap = new Intent(this, ShowMapActivity.class);
+            startActivity(intentMap);
+            return true; 
+        case R.id.menuGeoPing:
+            Intent intentGeoPing = new Intent(this, GeoPingActivity.class);
+            startActivity(intentGeoPing);
+            return true; 
+        case R.id.menuQuitter:
+            // Pour fermer l'application il suffit de faire finish()
+            finish();
+            return true;
+        }
+        return false;
+    }
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
@@ -82,16 +126,13 @@ public class AddPersonActivity extends FragmentActivity {
         finish();
     }
 
-    public void onSelectContactClick(View v) {
-        // Intent intent = new Intent(Intent.ACTION_PICK,
-        // ContactsContract.Contacts.CONTENT_URI);
-        //
-        // Intent intent = new Intent(Intent.ACTION_PICK,
-        // Contacts.Phones.CONTENT_URI);
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+    public void onSelectContactClick(View v) { 
+        Intent intent = new Intent(android.provider.Contacts.Intents.UI.LIST_STARRED_ACTION);
+//        Intent intent = new Intent(ContactsContract.Intents.UI.LIST_STARRED_ACTION);
+
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
         // run
-
         startActivityForResult(intent, PICK_CONTACT);
     }
 
@@ -111,7 +152,11 @@ public class AddPersonActivity extends FragmentActivity {
 
     private void saveContactData(Uri contactData) {
         Cursor c = getContentResolver().query(contactData, new String[] { //
-                ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, // TODO  Check  for  V10 compatibility
+                ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, // TODO
+                                                                        // Check
+                                                                        // for
+                                                                        // V10
+                                                                        // compatibility
                         ContactsContract.CommonDataKinds.Phone.NUMBER, //
                         ContactsContract.CommonDataKinds.Phone.TYPE }, null, null, null);
         try {
@@ -135,23 +180,23 @@ public class AddPersonActivity extends FragmentActivity {
         values.put(PersonColumns.KEY_NAME, name);
         values.put(PersonColumns.KEY_PHONE, phone);
         // Content
-        Uri uri = getContentResolver().insert(PersonProvider.Constants.CONTENT_URI, values);
+        Uri uri = getContentResolver().insert(PersonProvider.Constants.CONTENT_URI_PERSON, values);
         setResult(Activity.RESULT_OK);
         return uri;
     }
-    
+
     private void setPerson(String name, String phone) {
         nameEditText.setText(name);
         phoneEditText.setText(phone);
     }
-    
+
     private final LoaderManager.LoaderCallbacks<Cursor> personLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Log.d(TAG, "onCreateLoader"); 
-            String entityId = args.getCharSequence(Intents.EXTRA_USERID ).toString(); 
-            Uri entityUri =  Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, String.format("/%s", entityId));
+            Log.d(TAG, "onCreateLoader");
+            String entityId = args.getCharSequence(Intents.EXTRA_USERID).toString();
+            Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, String.format("/%s", entityId));
             // Loader
             CursorLoader cursorLoader = new CursorLoader(AddPersonActivity.this, entityUri, null, null, null, null);
             return cursorLoader;
@@ -159,13 +204,13 @@ public class AddPersonActivity extends FragmentActivity {
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            Log.d(TAG, "onLoadFinished");
+            Log.d(TAG, "onLoadFinished with cursor result count : " + cursor.getCount());
             // Display List
             if (cursor.moveToFirst()) {
                 PersonHelper helper = new PersonHelper().initWrapper(cursor);
                 helper.setTextPersonName(nameEditText, cursor).setTextPersonPhone(phoneEditText, cursor);
-             }
-         }
+            }
+        }
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {

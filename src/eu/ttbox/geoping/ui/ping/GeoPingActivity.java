@@ -96,7 +96,7 @@ public class GeoPingActivity extends FragmentActivity {
             String[] selectionArgs = null;
             String queryString = null;
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(GeoPingActivity.this, PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(GeoPingActivity.this, PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 

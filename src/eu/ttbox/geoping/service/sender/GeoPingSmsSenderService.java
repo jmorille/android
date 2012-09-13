@@ -107,11 +107,11 @@ public class GeoPingSmsSenderService extends WorkerService {
 
 		} else {
 			Log.e(TAG,
-					"Could not remove expected GeoPingRequest. !! Stop Service !!");
+					"Could not remove expected GeoPingRequest. /!\\ Emmergency Stop Service /!\\");
 			geoPingRequestList.clear();
 		}
 		if (geoPingRequestList.isEmpty()) {
-			Log.e(TAG, "Ne GeoPing Request in list, Stop Service");
+			Log.d(TAG, "No GeoPing Request in list, do Stop Service");
 			myLocation.stopListening();
 			stopSelf();
 		}

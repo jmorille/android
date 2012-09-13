@@ -26,7 +26,7 @@ public class PersonProvider extends ContentProvider {
 
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.PersonProvider";
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/person");
+        public static final Uri CONTENT_URI_PERSON = Uri.parse("content://" + AUTHORITY + "/person"); 
         // public static final Uri CONTENT_URI_GET_PRODUCT =
         // Uri.parse("content://" + AUTHORITY + "/person/");
     }
@@ -177,7 +177,7 @@ public class PersonProvider extends ContentProvider {
         long personId = personDatabase.insertPerson(values);
         Uri personUri = null;
         if (personId > -1) {
-            personUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + personId);
+            personUri = Uri.withAppendedPath(Constants.CONTENT_URI_PERSON, "/" + personId);
         }
         return personUri;
     }
