@@ -83,7 +83,7 @@ public class SmsLogDatabase {
         return cursor;
     }
 
-    public long insert(ContentValues userValues) throws SQLException {
+    public long insertEntity(ContentValues userValues) throws SQLException {
         long result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
@@ -101,7 +101,7 @@ public class SmsLogDatabase {
         return result;
     }
 
-    public int delete(String selection, String[] selectionArgs) {
+    public int deleteEntity(String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
@@ -118,7 +118,7 @@ public class SmsLogDatabase {
         return result;
     }
 
-    public int update(ContentValues values, String selection, String[] selectionArgs) {
+    public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {

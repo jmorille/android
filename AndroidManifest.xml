@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="eu.ttbox.geoping" android:versionCode="1"
-	android:versionName="1.0">
-	<uses-sdk android:minSdkVersion="10" />
+    package="eu.ttbox.geoping"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-sdk android:minSdkVersion="10" />
 
-	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	
-	<uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
-	<uses-permission android:name="android.permission.RECEIVE_SMS" />
-	<uses-permission android:name="android.permission.READ_SMS" />
+    <application
+        android:name="GeoPingApplication"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
 
-
-	<application android:name="GeoPingApplication" android:icon="@drawable/icon" android:label="@string/app_name"  android:theme="@style/AppTheme">
-	     <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
+        <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
         <meta-data
             android:name="CLOUDMADE_KEY"
             android:value="75b3a96b94c74eb0b7f1450ed5235a78" />
@@ -27,53 +30,70 @@
         <meta-data
             android:name="BING_KEY"
             android:value="Ao79Q93fhgMvZfbRgKd5xG708MsP2yhnRFedFeWVeFrjMgBOY36-HkQIYc4cQ-Ai" />
-	    
-        
-		<activity android:name=".SmsTrakerActivity" android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar" ></activity>
-		<activity android:name=".GeoTrakerActivity"></activity>
- 		<activity android:name=".ui.prefs.TrakingPrefActivity"></activity> 
-		<activity android:name=".ui.ping.GeoPingActivity"></activity> 
-		<activity android:name=".ui.person.AddPersonActivity"></activity> 
-				
-		<receiver android:name=".service.request.receiver.SMSReceiver" >
-			<intent-filter android:priority="100">
-				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
-				<action android:name="android.intent.action.ACTION_SHUTDOWN" />
-				<action android:name="android.intent.action.QUICKBOOT_POWEROFF" />
-				<action android:name="android.intent.action.BOOT_COMPLETED" />
-				
-			</intent-filter>
-		</receiver>
-		
 
-		<service android:name=".service.GeoTrackingService" >
-<!-- 			 <intent-filter>  -->
-<!-- 		        <action android:name=".GeoTrackingService.ACTION" />  -->
-<!-- 		    </intent-filter>  --> 
-		</service> 
-		
-		<service android:name=".service.request.GeoPingRequestHandlerService"></service>
-		<service android:name=".service.request.GeoPingResponseHandlerService"></service>
-				
-		<provider
+        <activity
+            android:name=".SmsTrakerActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.map.ShowMapActivity"
+            android:theme="@style/MapActionBar" >
+        </activity>
+        <activity android:name=".GeoTrakerActivity" >
+        </activity>
+        <activity android:name=".ui.prefs.TrakingPrefActivity" >
+        </activity>
+        <activity android:name=".ui.ping.GeoPingActivity" >
+        </activity>
+        <activity android:name=".ui.person.AddPersonActivity" >
+        </activity>
+
+        <receiver android:name=".service.request.receiver.SMSReceiver" >
+            <intent-filter android:priority="100" >
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="android.intent.action.QUICKBOOT_POWEROFF" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.GeoTrackingService" >
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name=".GeoTrackingService.ACTION" /> -->
+            <!-- </intent-filter> -->
+        </service>
+        <service android:name=".service.request.GeoPingRequestHandlerService" >
+        </service>
+        <service android:name=".service.request.GeoPingResponseHandlerService" >
+        </service>
+
+        <provider
             android:name=".domain.PersonProvider"
             android:authorities="eu.ttbox.geoping.PersonProvider"
             android:readPermission="eu.ttbox.geoping.PERSON_READ"
             android:writePermission="eu.ttbox.geoping.PERSON_WRITE" />
-		 <provider
+        <provider
             android:name=".domain.GeoTrackerProvider"
-             android:multiprocess="true"
             android:authorities="eu.ttbox.geoping.GeoTrackerProvider"
+            android:multiprocess="true"
             android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ"
             android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE" />
+        <provider
+            android:name=".domain.SmsLogProvider"
+            android:authorities="eu.ttbox.geoping.SmsLogProvider"
+            android:multiprocess="true"
+            android:readPermission="eu.ttbox.geoping.SMSLOG_READ"
+            android:writePermission="eu.ttbox.geoping.SMSLOG_WRITE" />
 
-		<uses-library android:required="true" android:name="com.google.android.maps" />
-		 		 		
-	</application>
+        <uses-library
+            android:name="com.google.android.maps"
+            android:required="true" />
+    </application>
+
 </manifest>

@@ -13,10 +13,10 @@ import eu.ttbox.geoping.domain.person.PersonDatabase;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PersonProvider extends ContentProvider {
- 
+
     private static final String TAG = "PersonProvider";
 
-    // Constante 
+    // Constante
     private static final String SELECT_BY_ENTITY_ID = String.format("rowid = ?", PersonColumns.COL_ID);
 
     // MIME types used for searching words or looking up a single definition
@@ -37,7 +37,7 @@ public class PersonProvider extends ContentProvider {
     private static final int PERSON_ID = 1;
     private static final int SEARCH_SUGGEST = 2;
     private static final int REFRESH_SHORTCUT = 3;
-    
+
     private static final UriMatcher sURIMatcher = buildUriMatcher();
 
     /**
@@ -174,12 +174,17 @@ public class PersonProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        long personId = personDatabase.insertEntity(values);
-        Uri personUri = null;
-        if (personId > -1) {
-            personUri = Uri.withAppendedPath(Constants.CONTENT_URI_PERSON, "/" + personId);
+        switch (sURIMatcher.match(uri)) {
+        case PERSONS:
+            long personId = personDatabase.insertEntity(values);
+            Uri personUri = null;
+            if (personId > -1) {
+                personUri = Uri.withAppendedPath(Constants.CONTENT_URI_PERSON, "/" + personId);
+            }
+            return personUri;
+        default:
+            throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
-        return personUri;
     }
 
     @Override
