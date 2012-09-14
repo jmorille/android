@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.ui.map.track.dialog;
 
+import java.util.HashMap;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +21,9 @@ import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
-
+import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 /**
+
  * @see http
  *      ://developer.android.com/resources/tutorials/views/hello-gridview.html
  * @author jmorille
@@ -27,97 +31,102 @@ import eu.ttbox.geoping.domain.person.PersonHelper;
  */
 public class SelectGeoTrackDialog extends AlertDialog {
 
-    private static final String TAG = "SelectGeoTrackDialog";
+	private static final String TAG = "SelectGeoTrackDialog";
 
-    private static final int GEOTRACK_SELECT_LOADER = R.id.config_id_geotrack_select_person_loader;
+	private static final int GEOTRACK_SELECT_LOADER = R.id.config_id_geotrack_select_person_loader;
 
-    private final OnSelectPersonListener mCallBack;
+	private final OnSelectPersonListener mCallBack;
 
-    // Service
-    private LoaderManager loaderManager;
-    private GeoTrackSelectPersonListAdapter listAdapter;
+	// Service
+	private LoaderManager loaderManager;
+	private GeoTrackSelectPersonListAdapter listAdapter;
 
-    /**
-     * The callback used to indicate the user is done selecting the favorite
-     * Icon.
-     */
-    public interface OnSelectPersonListener {
+	// Config
+	private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser;
 
-        void onSelectPerson(Person person);
-    }
+	/**
+	 * The callback used to indicate the user is done selecting the favorite
+	 * Icon.
+	 */
+	public interface OnSelectPersonListener {
 
-    public SelectGeoTrackDialog(Context context, LoaderManager loaderManager, OnSelectPersonListener callBack) {
-        this(context, 0, loaderManager, callBack);
-    }
+		void onSelectPerson(Person person);
+	}
 
-    public SelectGeoTrackDialog(Context context, int theme, LoaderManager loaderManager, OnSelectPersonListener callBack) {
-        super(context, theme);
-        this.loaderManager = loaderManager;
-        this.mCallBack = callBack;
-        // Init
-        Context themeContext = getContext();
-        // setTitle(R.string.dialog_custum_favorite_icon);
-        setCancelable(true);
-        setIcon(0);
-        setCanceledOnTouchOutside(true);
-        setButton(BUTTON_NEGATIVE, themeContext.getText(android.R.string.cancel), (OnClickListener) null);
+	public SelectGeoTrackDialog(Context context, LoaderManager loaderManager, OnSelectPersonListener callBack, HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser) {
+		this(context, 0, loaderManager, callBack, geoTrackOverlayByUser);
+	}
 
-        // View
-        LayoutInflater inflater = (LayoutInflater) themeContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.map_geotrack_select_dialog, null);
-        setView(view);
+	public SelectGeoTrackDialog(Context context, int theme, LoaderManager loaderManager, OnSelectPersonListener callBack, HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser) {
+		super(context, theme);
+		this.loaderManager = loaderManager;
+		this.mCallBack = callBack;
+		this.geoTrackOverlayByUser = geoTrackOverlayByUser;
+		// Init
+		Context themeContext = getContext();
+		// setTitle(R.string.dialog_custum_favorite_icon);
+		setCancelable(true);
+		setIcon(0);
+		setCanceledOnTouchOutside(true);
+		setButton(BUTTON_NEGATIVE, themeContext.getText(android.R.string.cancel), (OnClickListener) null);
 
-        // List Of icons
-        ListView listView = (ListView) view;
-        listAdapter = new GeoTrackSelectPersonListAdapter(themeContext, null, android.support.v4.widget.SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        listView.setAdapter(listAdapter);
-        // Listener
-        
-        listView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Log.d(TAG, String.format( "Select personId %s", id));
-                if (mCallBack != null) {
-                    Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                    PersonHelper helper = new PersonHelper().initWrapper(cursor);
-                    Person person = helper.getEntity(cursor);
-                    mCallBack.onSelectPerson(person);
-                }
-                cancel();
-            }
-        });
-        // Query
-        loaderManager.initLoader(GEOTRACK_SELECT_LOADER, null, geoTrackLoaderCallback);
-    }
+		// View
+		LayoutInflater inflater = (LayoutInflater) themeContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.map_geotrack_select_dialog, null);
+		setView(view);
 
-    // ===========================================================
-    // Loader
-    // ===========================================================
+		// List Of icons
+		ListView listView = (ListView) view;
+		listAdapter = new GeoTrackSelectPersonListAdapter(themeContext, null, 
+				 SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER,   mCallBack, geoTrackOverlayByUser);
+		listView.setAdapter(listAdapter);
+		// Listener
 
-    private final LoaderManager.LoaderCallbacks<Cursor> geoTrackLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+				Log.d(TAG, String.format("Select personId %s", id));
+				if (mCallBack != null) {
+					Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+					PersonHelper helper = new PersonHelper().initWrapper(cursor);
+					Person person = helper.getEntity(cursor);
+					mCallBack.onSelectPerson(person);
+				}
+				cancel();
+			}
+		});
+		// Query
+		loaderManager.initLoader(GEOTRACK_SELECT_LOADER, null, geoTrackPersonLoaderCallback);
+	}
 
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Log.d(TAG, "onCreateLoader");
-            String sortOrder = String.format("%s ASC", PersonColumns.KEY_NAME);
-            String selection = null;
-            String[] selectionArgs = null;
-            // Loader
-            CursorLoader cursorLoader = new CursorLoader(getContext(), PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
-            return cursorLoader;
-        }
+	// ===========================================================
+	// Loader
+	// ===========================================================
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            int resultCount = cursor.getCount();
-            Log.d(TAG, String.format("onLoadFinished with %s results", resultCount));
-            listAdapter.swapCursor(cursor);
-        }
+	private final LoaderManager.LoaderCallbacks<Cursor> geoTrackPersonLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            listAdapter.swapCursor(null);
-        }
+		@Override
+		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			Log.d(TAG, "onCreateLoader");
+			String sortOrder = String.format("%s ASC", PersonColumns.KEY_NAME);
+			String selection = null;
+			String[] selectionArgs = null;
+			// Loader
+			CursorLoader cursorLoader = new CursorLoader(getContext(), PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
+			return cursorLoader;
+		}
 
-    };
+		@Override
+		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+			int resultCount = cursor.getCount();
+			Log.d(TAG, String.format("onLoadFinished with %s results", resultCount));
+			listAdapter.swapCursor(cursor);
+		}
+
+		@Override
+		public void onLoaderReset(Loader<Cursor> loader) {
+			listAdapter.swapCursor(null);
+		}
+
+	};
 
 }

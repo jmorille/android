@@ -5,23 +5,32 @@
     android:orientation="horizontal"
     android:padding="10dip" >
 
+    <ToggleButton
+        android:id="@+id/person_list_item_status_selected"
+        style="@style/entity_list_item"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:text="ToggleButton" />
+
     <TextView
-        android:id="@+id/person_list_item_name" 
-        style="@style/entity_list_item"  />
+        android:id="@+id/person_list_item_name"
+        style="@style/entity_list_item"
+       android:layout_toRightOf="@id/person_list_item_status_selected"
+        android:text="Person name" />
 
     <TextView
         android:id="@+id/person_list_item_phone"
         style="@style/entity_list_item"
         android:layout_below="@id/person_list_item_name"
-       
-         />
+         android:layout_alignLeft="@id/person_list_item_name"
+        android:text="Phone number" />
 
     <Button
         android:id="@+id/person_list_item_geoping_button"
         style="@style/entity_list_item"
-         android:width="20dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:text="@string/geoping" />
-    
+        android:text="@string/geoping"
+        android:width="20dp" />
+
 </RelativeLayout>

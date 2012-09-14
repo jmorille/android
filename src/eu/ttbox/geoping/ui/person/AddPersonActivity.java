@@ -107,8 +107,11 @@ public class AddPersonActivity extends FragmentActivity {
     
     public void onDeleteClick() { 
         Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, "/"+entityId);
-        getContentResolver().delete(entityUri, null, null);
-        setResult(Activity.RESULT_OK);
+        int deleteCount = getContentResolver().delete(entityUri, null, null);
+        Log.d(TAG, "Delete %s entity successuf");
+        if (deleteCount>0) {
+            setResult(Activity.RESULT_OK);
+        }
         finish();
     }
 

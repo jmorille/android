@@ -136,8 +136,7 @@ public class GeoTrackerProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown or Invalid URI " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
-
+        getContext().getContentResolver().notifyChange(uri, null); 
         return rowsAffected;
     }
 
