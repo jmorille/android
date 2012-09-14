@@ -13,12 +13,10 @@ import eu.ttbox.geoping.domain.person.PersonDatabase;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PersonProvider extends ContentProvider {
-
-    @SuppressWarnings("unused")
+ 
     private static final String TAG = "PersonProvider";
 
-    // Constante
-//    private static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", PersonColumns.KEY_ID);
+    // Constante 
     private static final String SELECT_BY_ENTITY_ID = String.format("rowid = ?", PersonColumns.COL_ID);
 
     // MIME types used for searching words or looking up a single definition
@@ -120,7 +118,7 @@ public class PersonProvider extends ContentProvider {
                  */
                 SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID };
 
-        return personDatabase.getPersonMatches(query, columns, null);
+        return personDatabase.getEntityMatches(query, columns, null);
     }
 
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
@@ -128,13 +126,13 @@ public class PersonProvider extends ContentProvider {
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
-        return personDatabase.queryPerson(selection, selectionArgs, projection, sortOrder);
+        return personDatabase.queryEntities(selection, selectionArgs, projection, sortOrder);
     }
 
     private Cursor getPerson(Uri uri) {
         String rowId = uri.getLastPathSegment();
         String[] columns = PersonDatabase.PersonColumns.ALL_KEYS;
-        return personDatabase.getPerson(rowId, columns);
+        return personDatabase.getEntityById(rowId, columns);
     }
 
     private Cursor refreshShortcut(Uri uri) {
@@ -149,7 +147,7 @@ public class PersonProvider extends ContentProvider {
         // SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
         };
 
-        return personDatabase.getPerson(rowId, columns);
+        return personDatabase.getEntityById(rowId, columns);
     }
 
     /**
@@ -176,7 +174,7 @@ public class PersonProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        long personId = personDatabase.insertPerson(values);
+        long personId = personDatabase.insertEntity(values);
         Uri personUri = null;
         if (personId > -1) {
             personUri = Uri.withAppendedPath(Constants.CONTENT_URI_PERSON, "/" + personId);
@@ -191,10 +189,10 @@ public class PersonProvider extends ContentProvider {
         case PERSON_ID:
             String entityId = uri.getLastPathSegment();
             String[] args = new String[] { entityId };
-            count = personDatabase.delete(SELECT_BY_ENTITY_ID, args);
+            count = personDatabase.deleteEntity(SELECT_BY_ENTITY_ID, args);
             break;
         case PERSONS:
-            count = personDatabase.delete(selection, selectionArgs);
+            count = personDatabase.deleteEntity(selection, selectionArgs);
             break;
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
@@ -209,10 +207,10 @@ public class PersonProvider extends ContentProvider {
         case PERSON_ID:
             String entityId = uri.getLastPathSegment();
             String[] args = new String[] { entityId };
-            count = personDatabase.update(values, SELECT_BY_ENTITY_ID, args);
+            count = personDatabase.updateEntity(values, SELECT_BY_ENTITY_ID, args);
             break;
         case PERSONS:
-            count = personDatabase.update(values, selection, selectionArgs);
+            count = personDatabase.updateEntity(values, selection, selectionArgs);
             break;
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);

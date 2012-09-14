@@ -33,18 +33,7 @@ public class GeoTrackDatabase {
         public static final String[] ALL_COLS = new String[] { COL_ID, COL_USERID, COL_TIME, COL_PROVIDER, COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_ACCURACY, COL_ALTITUDE, COL_BEARING, COL_SPEED };
 
     }
-
-    private static final int NUM_COL_ID = 0;
-    private static final int NUM_COL_USERID = 1;
-    private static final int NUM_COL_TIME = 2;
-    private static final int NUM_COL_PROVIDER = 3;
-    private static final int NUM_COL_LATITUDE_E6 = 4;
-    private static final int NUM_COL_LONGITUDE_E6 = 5;
-    private static final int NUM_COL_ACCURACY = 6;
-    private static final int NUM_COL_ALTITUDE = 7;
-    private static final int NUM_COL_BEARING = 8;
-    private static final int NUM_COL_SPEED = 9;
-
+ 
     private static final String CRITERIA_BY_ENTITY_ID = String.format("%s = ?", GeoTrackColumns.COL_ID);
     private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoTrackColumns.COL_USERID);
 
@@ -60,13 +49,9 @@ public class GeoTrackDatabase {
 
     private static HashMap<String, String> buildGeoTrackColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
-        // Add Id
-        // map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
-        // Add Identity Column
-        for (String col : GeoTrackColumns.ALL_COLS) {
-            // if (!col.equals(GeoTrackColumns.COL_ID)) {
-            map.put(col, col);
-            // }
+        // Add Id 
+        for (String col : GeoTrackColumns.ALL_COLS) { 
+            map.put(col, col); 
         }
         // Add Suggest Aliases
         map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", GeoTrackColumns.COL_LATITUDE_E6, SearchManager.SUGGEST_COLUMN_TEXT_1));
@@ -77,12 +62,12 @@ public class GeoTrackDatabase {
         return map;
     }
 
-    public Cursor getGeoTrack(String rowId, String[] columns) {
+    public Cursor getEntityById(String rowId, String[] columns) {
         String[] selectionArgs = new String[] { rowId };
-        return queryGeoTrack(CRITERIA_BY_ENTITY_ID, selectionArgs, columns, null);
+        return queryEntities(CRITERIA_BY_ENTITY_ID, selectionArgs, columns, null);
     }
 
-    public Cursor queryGeoTrack(String selection, String[] selectionArgs, String[] columns, String order) {
+    public Cursor queryEntities(String selection, String[] selectionArgs, String[] columns, String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_TRACK_POINT);
         builder.setProjectionMap(mGeoTrackColumnMap);
@@ -97,7 +82,7 @@ public class GeoTrackDatabase {
         return cursor;
     }
 
-    public long insert(ContentValues userValues) throws SQLException {
+    public long insertEntity(ContentValues userValues) throws SQLException {
         long result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
@@ -115,7 +100,7 @@ public class GeoTrackDatabase {
         return result;
     }
 
-    public int delete(String selection, String[] selectionArgs) {
+    public int deleteEntity(String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
@@ -132,7 +117,7 @@ public class GeoTrackDatabase {
         return result;
     }
 
-    public int update(ContentValues values, String selection, String[] selectionArgs) {
+    public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
@@ -149,17 +134,17 @@ public class GeoTrackDatabase {
         return result;
     }
 
-    @Deprecated
-    public void open() {
-        // on ouvre la BDD en �criture
-        bdd = mDatabaseOpenHelper.getWritableDatabase();
-    }
-
-    @Deprecated
-    public void close() {
-        // on ferme l'acc�s � la BDD
-        bdd.close();
-    }
+//    @Deprecated
+//    public void open() {
+//        // on ouvre la BDD en �criture
+//        bdd = mDatabaseOpenHelper.getWritableDatabase();
+//    }
+//
+//    @Deprecated
+//    public void close() {
+//        // on ferme l'acc�s � la BDD
+//        bdd.close();
+//    }
 
     //
     // @Deprecated

@@ -96,7 +96,7 @@ public class GeoTrackerProvider extends ContentProvider {
         case GEO_TRACKS:
             String[] columns = projection == null ? GeoTrackColumns.ALL_COLS : projection;
             String order = String.format("%s ASC", GeoTrackColumns.COL_TIME);
-            return database.queryGeoTrack(selection, selectionArgs, columns, order);
+            return database.queryEntities(selection, selectionArgs, columns, order);
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
@@ -104,7 +104,7 @@ public class GeoTrackerProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        long personId = database.insert(values);
+        long personId = database.insertEntity(values);
         Uri personUri = null;
         if (personId > -1) {
             personUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + personId);
@@ -127,11 +127,11 @@ public class GeoTrackerProvider extends ContentProvider {
         switch (uriType) {
         case GEOTRACK_ID:
             String entityId = uri.getLastPathSegment();
-            rowsAffected = database.delete(SELECT_BY_ENTITY_ID, new String[] { entityId });
+            rowsAffected = database.deleteEntity(SELECT_BY_ENTITY_ID, new String[] { entityId });
             Log.d(TAG, String.format("delete %s geoTrack Uri : ", rowsAffected, uri));
             break;
         case GEO_TRACKS:
-            rowsAffected = database.delete(selection, selectionArgs);
+            rowsAffected = database.deleteEntity(selection, selectionArgs);
             break;
         default:
             throw new IllegalArgumentException("Unknown or Invalid URI " + uri);
@@ -146,10 +146,10 @@ public class GeoTrackerProvider extends ContentProvider {
         switch (sURIMatcher.match(uri)) {
         case GEOTRACK_ID:
             String entityId = uri.getLastPathSegment();
-            rowsAffected = database.update(values, SELECT_BY_ENTITY_ID, new String[] { entityId });
+            rowsAffected = database.updateEntity(values, SELECT_BY_ENTITY_ID, new String[] { entityId });
             break;
         case GEO_TRACKS:
-            rowsAffected = database.update(values, selection, selectionArgs);
+            rowsAffected = database.updateEntity(values, selection, selectionArgs);
             Log.d(TAG, String.format("update %s geoTrack Uri : ", rowsAffected, uri));
             break;
         default:

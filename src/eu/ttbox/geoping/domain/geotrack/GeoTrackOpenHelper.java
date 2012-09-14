@@ -31,11 +31,9 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
             + GeoTrackColumns.COL_TIME //
             + ");";
 
-    private final Context mHelperContext;
-
+  
     public GeoTrackOpenHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        mHelperContext = context;
+        super(context, DATABASE_NAME, null, DATABASE_VERSION); 
     }
 
     @Override
