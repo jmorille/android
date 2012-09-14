@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
@@ -26,9 +27,14 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
     private boolean isNotBinding = true;
     private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser;
     
-    private final OnSelectPersonListener mCallBack;
+    private final OnActivatedPersonListener mCallBack;
     
-    public GeoTrackSelectPersonListAdapter(Context context, Cursor c, int flags,OnSelectPersonListener mCallBack, HashMap<String,  GeoTrackOverlay> geoTrackOverlayByUser) {
+    public interface OnActivatedPersonListener { 
+        void onDoRemovePerson(Person person);
+        void onDoAddPerson(Person person);
+    }
+    
+    public GeoTrackSelectPersonListAdapter(Context context, Cursor c, int flags,OnActivatedPersonListener mCallBack, HashMap<String,  GeoTrackOverlay> geoTrackOverlayByUser) {
         super(context, R.layout.map_geotrack_select_dialog_list_item, c, flags); // if >10 add ", flags"
         this.geoTrackOverlayByUser = geoTrackOverlayByUser;
         this.mCallBack  = mCallBack;
@@ -41,7 +47,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
     }
 
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
 
         if (isNotBinding) {
             intViewBinding(view, context, cursor);
@@ -50,23 +56,27 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
         // Bind Value
         helper.setTextPersonName(holder.nameText, cursor)//
                 .setTextPersonPhone(holder.phoneText, cursor);
-        // Button
-        final String entityId = helper.getPersonIdAsString(cursor);
+        // Button 
+        final    Person person = helper.getEntity(cursor);
         final String phoneNumber = helper.getPersonPhone(cursor);
         // Display Status
         boolean isActif = geoTrackOverlayByUser.containsKey(phoneNumber);
-        holder.selectedSelector.setChecked(isActif);
-        Log.d(TAG, String.format("geoTrackOverlay for %s : actif=%s", phoneNumber, isActif));
-//        holder.selectedSelector.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				if (mCallBack!=null) {
-//					
-//				}
-//				
-//			}
-//		});
+        holder.selectedSelector.setChecked(isActif); 
+        holder.selectedSelector.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (mCallBack!=null) {
+				    ToggleButton tb = (ToggleButton)v; 
+					if (tb.isChecked()) {
+					    mCallBack.onDoAddPerson(person);
+					} else {
+                        mCallBack.onDoRemovePerson(person);
+ 					}
+				}
+				
+			}
+		});
         // Action 
         holder.pingButton.setOnClickListener(new OnClickListener() {
             @Override

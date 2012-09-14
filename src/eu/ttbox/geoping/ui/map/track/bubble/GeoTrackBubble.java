@@ -87,8 +87,7 @@ public class GeoTrackBubble extends FrameLayout {
 		    timeTextView.setText(dateString);
 			// Coord
 		    double lat = geoTrack.getLatitude();
-		    double lng = geoTrack.getLatitude();
-            
+		    double lng = geoTrack.getLongitude(); 
 			String coordString = String.format(Locale.US, "(%.6f, %.6f)", lat, lng);
  			coordTextView.setText(coordString);
 			if (displayGeoLoc) {

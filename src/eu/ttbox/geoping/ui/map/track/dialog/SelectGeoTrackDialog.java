@@ -22,6 +22,7 @@ import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
+import eu.ttbox.geoping.ui.map.track.dialog.GeoTrackSelectPersonListAdapter.OnActivatedPersonListener;
 /**
 
  * @see http
@@ -48,10 +49,9 @@ public class SelectGeoTrackDialog extends AlertDialog {
 	 * The callback used to indicate the user is done selecting the favorite
 	 * Icon.
 	 */
-	public interface OnSelectPersonListener {
-
-		void onSelectPerson(Person person);
-	}
+	public interface OnSelectPersonListener extends OnActivatedPersonListener {
+ 		void onSelectPerson(Person person);
+ 	}
 
 	public SelectGeoTrackDialog(Context context, LoaderManager loaderManager, OnSelectPersonListener callBack, HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser) {
 		this(context, 0, loaderManager, callBack, geoTrackOverlayByUser);
@@ -98,6 +98,14 @@ public class SelectGeoTrackDialog extends AlertDialog {
 		loaderManager.initLoader(GEOTRACK_SELECT_LOADER, null, geoTrackPersonLoaderCallback);
 	}
 
+    // ===========================================================
+    // Service
+    // ===========================================================
+
+	private void onSelectPerson() {
+	    
+	}
+	
 	// ===========================================================
 	// Loader
 	// ===========================================================
