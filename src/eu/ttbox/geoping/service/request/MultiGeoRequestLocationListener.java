@@ -1,11 +1,11 @@
-package eu.ttbox.geoping.service.sender;
+package eu.ttbox.geoping.service.request;
 
 import java.util.List;
 
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import eu.ttbox.geoping.service.sender.GeoPingSmsSenderService.GeoPingRequest;
+import eu.ttbox.geoping.service.request.GeoPingRequestHandlerService.GeoPingRequest;
 
 public class MultiGeoRequestLocationListener implements LocationListener {
 

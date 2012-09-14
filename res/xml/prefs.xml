@@ -4,7 +4,7 @@
 <CheckBoxPreference android:title="@string/prefs.localSave" android:key="localSave" android:summaryOn="@string/prefs.localSave.summaryOn" android:summaryOff="@string/prefs.localSave.summaryOff" android:defaultValue="false"/>
  
 <PreferenceCategory android:title="@string/prefs.smsCategory">
-	<CheckBoxPreference android:title="@string/prefs.smsUse" android:key="smsUse" android:summaryOn="@string/prefs.smsUse.summaryOn" android:summaryOff="@string/prefs.smsUse.summaryOff" android:defaultValue="false"/>
+	<CheckBoxPreference android:title="@string/prefs.smsUse" android:key="smsUse" android:summaryOn="@string/prefs.smsUse.summaryOn" android:summaryOff="@string/prefs.smsUse.summaryOff" android:defaultValue="true"/>
 	<EditTextPreference android:title="@string/prefs.smsPhoneNumber" android:key="smsPhoneNumber"  android:selectable="true"  />
 </PreferenceCategory>
 

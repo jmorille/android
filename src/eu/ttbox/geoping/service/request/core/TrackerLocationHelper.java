@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.receiver;
+package eu.ttbox.geoping.service.request.core;
 
 import android.location.Location;
 import android.util.Log;

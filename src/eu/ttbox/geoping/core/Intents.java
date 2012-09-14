@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.service.sender.GeoPingSmsSenderService;
+import eu.ttbox.geoping.service.request.GeoPingRequestHandlerService;
 import eu.ttbox.geoping.ui.person.AddPersonActivity;
 
 public class Intents {
@@ -36,13 +36,13 @@ public class Intents {
     }
 
     public static Intent sendGeoPingRequest(Context context, String phoneNumber) {
-        return new Intent(context, GeoPingSmsSenderService.class) //
+        return new Intent(context, GeoPingRequestHandlerService.class) //
                 .setAction(ACTION_SMS_GEOPING_REQUEST)//
                 .putExtra(EXTRA_SMS_PHONE_NUMBER, phoneNumber);
     }
 
     public static Intent sendGeoPingResponse(Context context, String phoneNumber) {
-        return new Intent(context, GeoPingSmsSenderService.class) //
+        return new Intent(context, GeoPingRequestHandlerService.class) //
                 .setAction(ACTION_SMS_GEOPING_RESPONSE)//
                 .putExtra(EXTRA_SMS_PHONE_NUMBER, phoneNumber);
     }

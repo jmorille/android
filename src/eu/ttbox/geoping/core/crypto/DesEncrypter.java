@@ -1,9 +1,6 @@
 package eu.ttbox.geoping.core.crypto;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;

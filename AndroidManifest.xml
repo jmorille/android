@@ -41,7 +41,7 @@
 		<activity android:name=".ui.ping.GeoPingActivity"></activity> 
 		<activity android:name=".ui.person.AddPersonActivity"></activity> 
 				
-		<receiver android:name=".service.receiver.SMSReceiver" >
+		<receiver android:name=".service.request.receiver.SMSReceiver" >
 			<intent-filter android:priority="100">
 				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
 				<action android:name="android.intent.action.ACTION_SHUTDOWN" />
@@ -58,8 +58,9 @@
 <!-- 		    </intent-filter>  --> 
 		</service> 
 		
-		<service android:name=".service.sender.GeoPingSmsSenderService"></service>
-		
+		<service android:name=".service.request.GeoPingRequestHandlerService"></service>
+		<service android:name=".service.request.GeoPingResponseHandlerService"></service>
+				
 		<provider
             android:name=".domain.PersonProvider"
             android:authorities="eu.ttbox.geoping.PersonProvider"

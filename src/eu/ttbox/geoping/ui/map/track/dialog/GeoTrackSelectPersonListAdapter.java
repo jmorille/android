@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
-import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
 
 public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.ResourceCursorAdapter {
 

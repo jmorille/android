@@ -183,9 +183,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		 
 		// Localisation
 		mCirclePaint = new Paint();
-		mCirclePaint.setColor(c);
-//        mCirclePaint.setARGB(O, Color.red(c), Color.green(c), Color.blue(c));
-//		mCirclePaint.setARGB(0, 255, 100, 100);
+		mCirclePaint.setColor(c); 
 		mCirclePaint.setAntiAlias(true);
 		mCirclePaint.setAlpha(50);
 		mCirclePaint.setStyle(Style.FILL);
@@ -248,7 +246,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC.equals(key)) {
-			boolean displayGeoLoc = sharedPreferences.getBoolean(AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, false);
+			boolean displayGeoLoc = sharedPreferences.getBoolean(AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, true);
 			if (balloonView != null) {
 				balloonView.setDisplayGeoLoc(displayGeoLoc);
 			}
@@ -303,19 +301,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 			canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, radius, mCirclePaintBorder);
 		}
 	}
-
-	// private int cachedZoomLevel = -1;
-	// private float cachedZoomLevelGroundResolutionInM = -1;
-	//
-	// private void computeCacheForZoomLevel(MapView mapView) {
-	// int zoomLevel = mapView.getZoomLevel();
-	// if (cachedZoomLevel != cachedZoomLevel) {
-	// cachedZoomLevelGroundResolutionInM = (float)
-	// TileSystem.GroundResolution(lastFix.getLatitude(),
-	// mapView.getZoomLevel());
-	// }
-	// }
-
+ 
 	// ===========================================================
 	// Map Motion Event Management
 	// ===========================================================
@@ -350,6 +336,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		}
 		if (selectedGeoTrack != null) {
 			openBubble(mapView, selectedGeoTrack);
+			onHandleEvent = true;
 		} else if (isRemovePriorPopup) {
 			hideBubble();
 		}

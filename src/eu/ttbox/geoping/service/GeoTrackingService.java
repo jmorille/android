@@ -24,7 +24,7 @@ import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
-import eu.ttbox.geoping.service.receiver.TrackerLocationHelper;
+import eu.ttbox.geoping.service.request.core.TrackerLocationHelper;
 
 /**
  * @see http://blog.developpez.com/android23/p8571/android/creation-de-service/
@@ -33,6 +33,7 @@ import eu.ttbox.geoping.service.receiver.TrackerLocationHelper;
  * @see http://www.java2s.com/Open-Source/Android/Map/osmand/net/osmand/data/Boundary.java.htm
  *
  */
+@Deprecated
 public class GeoTrackingService extends Service implements LocationListener {
 
 	private static final int ONE_MINUTES = 1000 * 60 ;

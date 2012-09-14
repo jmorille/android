@@ -14,7 +14,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import eu.ttbox.geoping.domain.GeoTrack;
-import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class GeoTrackDatabase {
 

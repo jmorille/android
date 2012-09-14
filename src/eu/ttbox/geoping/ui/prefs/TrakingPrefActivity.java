@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.ui.prefs;
 
-import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.R.xml;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -10,6 +8,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
+import eu.ttbox.geoping.R;
 
 public class TrakingPrefActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 

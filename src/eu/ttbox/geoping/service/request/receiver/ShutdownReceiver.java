@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.receiver;
+package eu.ttbox.geoping.service.request.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
