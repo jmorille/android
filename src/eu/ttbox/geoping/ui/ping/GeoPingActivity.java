@@ -61,7 +61,7 @@ public class GeoPingActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.track_person_list);
 		// Bindings
-		listView = (ListView) findViewById(R.id.track_person_list);
+		listView = (ListView) findViewById(android.R.id.list);
 		addPersonButton = (Button) findViewById(R.id.add_track_person_button);
 		addPersonButton.setOnClickListener(new OnClickListener() {
 			@Override

@@ -106,21 +106,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 		getSupportLoaderManager().initLoader(GEOTRACK_PERSON_LOADER, null, geoTrackPersonLoaderCallback); 
 	}
 
-	private void addGeoTrackOverlay(String userId) {
-		if (!geoTrackOverlayByUser.containsKey(userId)) {
-			GeoTrackOverlay geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(), userId, System.currentTimeMillis());
-			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
-			// register
-			mapView.getOverlays().add(geoTrackOverlay);
-		}
-	}
 
-	private void removeGeoTrackOverlay(String userId) {
-		if (!geoTrackOverlayByUser.containsKey(userId)) {
-			GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.remove(userId);
-			mapView.getOverlays().remove(geoTrackOverlay);
-		}
-	}
 
 	@Override
 	protected void onDestroy() {
@@ -308,10 +294,6 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 		return false;
 	}
 
-	// ===========================================================
-	// Intents Handler
-	// ===========================================================
-
 	protected void onNewIntent(Intent intent) {
 		handleIntent(intent);
 	}
@@ -319,6 +301,28 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 	private void handleIntent(Intent intent) {
 
 	}
+	
+	// ===========================================================
+	// GeoTrack Overlay
+	// ===========================================================
+
+
+	private void addGeoTrackOverlay(String userId) {
+		if (!geoTrackOverlayByUser.containsKey(userId)) {
+			GeoTrackOverlay geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(), userId, System.currentTimeMillis());
+			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
+			// register
+			mapView.getOverlays().add(geoTrackOverlay);
+		}
+	}
+
+	private void removeGeoTrackOverlay(String userId) {
+		if (!geoTrackOverlayByUser.containsKey(userId)) {
+			GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.remove(userId);
+			mapView.getOverlays().remove(geoTrackOverlay);
+		}
+	}
+	
 
 	// ===========================================================
 	// Listeners

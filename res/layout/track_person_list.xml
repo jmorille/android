@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <ListView
-        android:id="@+id/track_person_list"
+        android:id="@android:id/list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
     </ListView>

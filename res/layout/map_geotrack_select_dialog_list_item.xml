@@ -10,19 +10,21 @@
         style="@style/entity_list_item"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:text="ToggleButton" />
 
     <TextView
         android:id="@+id/person_list_item_name"
         style="@style/entity_list_item"
-       android:layout_toRightOf="@id/person_list_item_status_selected"
+        android:layout_toRightOf="@id/person_list_item_status_selected"
         android:text="Person name" />
 
     <TextView
         android:id="@+id/person_list_item_phone"
         style="@style/entity_list_item"
+        android:layout_alignLeft="@id/person_list_item_name"
         android:layout_below="@id/person_list_item_name"
-         android:layout_alignLeft="@id/person_list_item_name"
         android:text="Phone number" />
 
     <Button
@@ -30,6 +32,8 @@
         style="@style/entity_list_item"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:text="@string/geoping"
         android:width="20dp" />
 
