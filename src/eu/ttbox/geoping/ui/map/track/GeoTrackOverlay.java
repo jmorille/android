@@ -142,7 +142,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 			Log.w(TAG, "The Geocoder is not Present");
 		}
 		// Init
-		initDirectionPaint();
+		initDirectionPaint(userId.color);
 		onResume();
 	}
 
@@ -168,7 +168,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		super.onDetach(mapView);
 	}
 
-	private void initDirectionPaint() {
+	private void initDirectionPaint(int c) {
 		// Text
 		mPaint = new Paint();
 		mPaint.setColor(Color.BLACK);
@@ -176,13 +176,16 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		mPaint.setStrokeWidth(3);
 		// Point
 		mPointPaint = new Paint();
-		mPointPaint.setColor(Color.RED);
+		mPointPaint.setColor(c);
 		mPointPaint.setStyle(Style.FILL_AND_STROKE);
 		mPointPaint.setStrokeWidth(3);
 
+		 
 		// Localisation
 		mCirclePaint = new Paint();
-		mCirclePaint.setARGB(0, 255, 100, 100);
+		mCirclePaint.setColor(c);
+//        mCirclePaint.setARGB(O, Color.red(c), Color.green(c), Color.blue(c));
+//		mCirclePaint.setARGB(0, 255, 100, 100);
 		mCirclePaint.setAntiAlias(true);
 		mCirclePaint.setAlpha(50);
 		mCirclePaint.setStyle(Style.FILL);

@@ -1,9 +1,13 @@
 package eu.ttbox.geoping.ui.person;
 
+import java.util.Random;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -16,14 +20,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 
-public class AddPersonActivity extends FragmentActivity {
+public class AddPersonActivity extends FragmentActivity implements ColorPickerDialog.OnColorChangedListener {
 
     private static final String TAG = "AddPersonActivity";
 
@@ -32,12 +38,20 @@ public class AddPersonActivity extends FragmentActivity {
 
     private static final int PICK_CONTACT = 0;
 
+    // Paint
+    Paint mPaint = new Paint();
+
     // Bindings
     private EditText nameEditText;
     private EditText phoneEditText;
+    private Button colorPickerButton;
 
     // Instance
     private String entityId;
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +60,7 @@ public class AddPersonActivity extends FragmentActivity {
         // binding
         nameEditText = (EditText) findViewById(R.id.person_name);
         phoneEditText = (EditText) findViewById(R.id.person_phone);
+        colorPickerButton = (Button) findViewById(R.id.person_color_picker_button);
         // Intents
         handleIntent(getIntent());
     }
@@ -78,6 +93,10 @@ public class AddPersonActivity extends FragmentActivity {
         return false;
     }
 
+    // ===========================================================
+    // Intent Handler
+    // ===========================================================
+
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
@@ -101,9 +120,14 @@ public class AddPersonActivity extends FragmentActivity {
             // TODO
         } else if (Intent.ACTION_INSERT.equals(action)) {
             this.entityId = null;
+            doColorChangeRamdom();
         }
 
     }
+
+    // ===========================================================
+    // Listener
+    // ===========================================================
 
     public void onDeleteClick() {
         Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, "/" + entityId);
@@ -118,7 +142,7 @@ public class AddPersonActivity extends FragmentActivity {
     public void onSaveClick() {
         String name = nameEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
-        Uri uri = savePerson(name, phone);
+        Uri uri = doSavePerson(name, phone);
         setResult(Activity.RESULT_OK);
         finish();
     }
@@ -129,14 +153,40 @@ public class AddPersonActivity extends FragmentActivity {
     }
 
     public void onSelectContactClick(View v) {
-        // Intent intent = new
-        // Intent(android.provider.Contacts.Intents.UI.LIST_STARRED_ACTION);
-
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
         // run
         startActivityForResult(intent, PICK_CONTACT);
     }
+
+    // ===========================================================
+    // Color
+    // ===========================================================
+
+    public void onColorPickerClick(View v) {
+        ColorPickerDialog dialog = new ColorPickerDialog(this, this, mPaint.getColor());
+        dialog.show();
+    }
+
+    @Override
+    public void colorChanged(int color) {
+        Log.d(TAG, "Choose Color : " + color);
+        mPaint.setColor(color);
+        colorPickerButton.setBackgroundColor(color);
+    }
+
+    private void doColorChangeRamdom() {
+        Random rand = new Random();
+        int r = rand.nextInt(255);
+        int g = rand.nextInt(255);
+        int b = rand.nextInt(255);
+        int ramdomColor = Color.rgb(r, g, b);
+        colorChanged(ramdomColor);
+    }
+
+    // ===========================================================
+    // Activity Result handler
+    // ===========================================================
 
     @Override
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
@@ -152,7 +202,13 @@ public class AddPersonActivity extends FragmentActivity {
         }
     }
 
+    // ===========================================================
+    // Contact Picker
+    // ===========================================================
+
     private void saveContactData(Uri contactData) {
+        String selection = null;
+        String[] selectionArgs = null;
         Cursor c = getContentResolver().query(contactData, new String[] { //
                 ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, // TODO
                                                                         // Check
@@ -160,14 +216,14 @@ public class AddPersonActivity extends FragmentActivity {
                                                                         // V10
                                                                         // compatibility
                         ContactsContract.CommonDataKinds.Phone.NUMBER, //
-                        ContactsContract.CommonDataKinds.Phone.TYPE }, null, null, null);
+                        ContactsContract.CommonDataKinds.Phone.TYPE }, selection, selectionArgs, null);
         try {
             // Read value
             if (c != null && c.moveToFirst()) {
                 String name = c.getString(0);
                 String phone = c.getString(1);
                 int type = c.getInt(2);
-                savePerson(name, phone);
+                doSavePerson(name, phone);
                 // showSelectedNumber(type, number);
             }
         } finally {
@@ -175,12 +231,26 @@ public class AddPersonActivity extends FragmentActivity {
         }
     }
 
-    private Uri savePerson(String name, String phone) {
+    // ===========================================================
+    // Data Model Management
+    // ===========================================================
+
+    private String cleanPhone(String phone) {
+        String cleanPhone = phone;
+        if (cleanPhone != null) {
+            cleanPhone = cleanPhone.replaceAll(" ", "");
+        }
+        return cleanPhone;
+    }
+
+    private Uri doSavePerson(String name, String phoneDirty) {
+        String phone = cleanPhone(phoneDirty);
         setPerson(name, phone);
         // Prepare db insert
         ContentValues values = new ContentValues();
-        values.put(PersonColumns.KEY_NAME, name);
-        values.put(PersonColumns.KEY_PHONE, phone);
+        values.put(PersonColumns.COL_NAME, name);
+        values.put(PersonColumns.COL_PHONE, phone);
+        values.put(PersonColumns.COL_COLOR, mPaint.getColor());
         // Content
         Uri uri;
         if (entityId == null) {
@@ -201,6 +271,10 @@ public class AddPersonActivity extends FragmentActivity {
         phoneEditText.setText(phone);
     }
 
+    // ===========================================================
+    // LoaderManager
+    // ===========================================================
+
     private final LoaderManager.LoaderCallbacks<Cursor> personLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
@@ -220,6 +294,8 @@ public class AddPersonActivity extends FragmentActivity {
             if (cursor.moveToFirst()) {
                 PersonHelper helper = new PersonHelper().initWrapper(cursor);
                 helper.setTextPersonName(nameEditText, cursor).setTextPersonPhone(phoneEditText, cursor);
+                int color = helper.getPersonColor(cursor);
+                colorChanged(color);
             }
         }
 
@@ -229,4 +305,5 @@ public class AddPersonActivity extends FragmentActivity {
         }
 
     };
+
 }

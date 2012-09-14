@@ -17,7 +17,7 @@ public class GeoTrackerProvider extends ContentProvider {
     private final static String TAG = "GeoTrackerContentProvider";
 
     // Constante
-    private static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", PersonColumns.KEY_ID);
+    private static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", PersonColumns.COL_ID);
 
     // Instance
     private GeoTrackDatabase database;

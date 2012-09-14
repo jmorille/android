@@ -23,7 +23,14 @@
         android:id="@+id/select_contact_button"
         style="@style/entity_edit"
         android:layout_below="@id/person_phone"
-        android:hint="@string/menu_select_contact"
+        android:text="@string/menu_select_contact"
         android:onClick="onSelectContactClick" />
+
+    <Button
+        android:id="@+id/person_color_picker_button"
+        style="@style/entity_edit"
+        android:layout_below="@id/select_contact_button"
+        android:text="Color Picker"
+        android:onClick="onColorPickerClick" />
 
 </RelativeLayout>

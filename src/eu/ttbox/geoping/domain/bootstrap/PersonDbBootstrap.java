@@ -83,8 +83,8 @@ public class PersonDbBootstrap {
 	public long addPerson(String phone, String name ) {
 	    
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(PersonDatabase.PersonColumns.KEY_NAME, name);
-		initialValues.put(PersonDatabase.PersonColumns.KEY_PHONE, phone); 
+		initialValues.put(PersonDatabase.PersonColumns.COL_NAME, name);
+		initialValues.put(PersonDatabase.PersonColumns.COL_PHONE, phone); 
 		return mDatabase.insert(PersonDatabase.TABLE_PERSON_FTS, null, initialValues);
 	}
 

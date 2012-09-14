@@ -20,11 +20,12 @@ public class PersonDatabase {
 
     public static class PersonColumns {
 
-        public static final String KEY_ID = BaseColumns._ID;
-        public static final String KEY_NAME = "NAME";
-        public static final String KEY_PHONE = "PHONE";
+        public static final String COL_ID = BaseColumns._ID;
+        public static final String COL_NAME = "NAME";
+        public static final String COL_PHONE = "PHONE";
+        public static final String COL_COLOR = "COLOR";
 
-        public static final String[] ALL_KEYS = new String[] { KEY_ID, KEY_NAME, KEY_PHONE };
+        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_COLOR };
 
     }
     
@@ -38,16 +39,16 @@ public class PersonDatabase {
     private static HashMap<String, String> buildUserColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Id
-        map.put(PersonColumns.KEY_ID, "rowid AS " + BaseColumns._ID);
+        map.put(PersonColumns.COL_ID, "rowid AS " + BaseColumns._ID);
         // Add Identity Column
         for (String col : PersonColumns.ALL_KEYS) {
-            if (!col.equals(PersonColumns.KEY_ID)) {
+            if (!col.equals(PersonColumns.COL_ID)) {
                 map.put(col, col);
             }
         }
         // Add Suggest Aliases
-        map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", PersonColumns.KEY_NAME,  SearchManager.SUGGEST_COLUMN_TEXT_1));
-        map.put(SearchManager.SUGGEST_COLUMN_TEXT_2, String.format("%s AS %s", PersonColumns.KEY_PHONE, SearchManager.SUGGEST_COLUMN_TEXT_2));
+        map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", PersonColumns.COL_NAME,  SearchManager.SUGGEST_COLUMN_TEXT_1));
+        map.put(SearchManager.SUGGEST_COLUMN_TEXT_2, String.format("%s AS %s", PersonColumns.COL_PHONE, SearchManager.SUGGEST_COLUMN_TEXT_2));
         map.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
         map.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS " + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
         // Add Other Aliases
@@ -70,7 +71,7 @@ public class PersonDatabase {
      * @return Cursor over all words that match, or null if none found.
      */
     public Cursor getPersonMatches(String query, String[] columns, String order) {
-        String selection = PersonColumns.KEY_NAME + " MATCH ?";
+        String selection = PersonColumns.COL_NAME + " MATCH ?";
         String queryString = new StringBuilder(query).append("*").toString();
         String[] selectionArgs = new String[] { queryString };
         return queryPerson(selection, selectionArgs, columns, order);

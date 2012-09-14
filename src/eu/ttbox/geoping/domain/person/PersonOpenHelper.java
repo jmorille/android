@@ -10,7 +10,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "PersonOpenHelper";
 
     public static final String DATABASE_NAME = "personDb.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     /*
      * Note that FTS3 does not support column constraints and thus, you cannot
@@ -20,8 +20,9 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
      */
     private static final String FTS_TABLE_CREATE_USER = "CREATE VIRTUAL TABLE " + PersonDatabase.TABLE_PERSON_FTS + //
             " USING fts3 " //
-            + "( " + PersonDatabase.PersonColumns.KEY_NAME // 
-            + ", " + PersonDatabase.PersonColumns.KEY_PHONE // 
+            + "( " + PersonDatabase.PersonColumns.COL_NAME // 
+            + ", " + PersonDatabase.PersonColumns.COL_PHONE // 
+            + ", " + PersonDatabase.PersonColumns.COL_COLOR //  
             + ");";
 
    

@@ -7,6 +7,11 @@ public class AppConstants {
 	public static final String LOCAL_DB_KEY ="local";
     public static final int SMS_MAX_SIZE =160;
 
+    // Request Notification
+    public static final String PREFS_SMS_DELETE_ON_MESSAGE = "smsDeleteOnMessage";
+    public static final String PREFS_SMS_REQUEST_NOTIFY_ME = "smsRequestNotif";
+    
+    
 	// TODO in  prefs
     public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = "MYLOCATION_DISPLAY_GEOLOC";
 

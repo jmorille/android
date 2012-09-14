@@ -12,12 +12,13 @@ public class PersonHelper {
 	public int idIdx = -1;
 	public int nameIdx = -1;
 	public int phoneIdx = -1;
+    public int colorIdx = -1;
 
 	public PersonHelper initWrapper(Cursor cursor) {
-		idIdx = cursor.getColumnIndex(PersonColumns.KEY_ID);
-		nameIdx = cursor.getColumnIndex(PersonColumns.KEY_NAME);
-		phoneIdx = cursor.getColumnIndex(PersonColumns.KEY_PHONE);
-
+		idIdx = cursor.getColumnIndex(PersonColumns.COL_ID);
+		nameIdx = cursor.getColumnIndex(PersonColumns.COL_NAME);
+		phoneIdx = cursor.getColumnIndex(PersonColumns.COL_PHONE);
+		colorIdx = cursor.getColumnIndex(PersonColumns.COL_COLOR); 
 		isNotInit = false;
 		return this;
 	}
@@ -30,6 +31,7 @@ public class PersonHelper {
 		user.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
 		user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
 		user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
+        user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : null);
 		return user;
 	}
 
@@ -49,6 +51,10 @@ public class PersonHelper {
 	public long getPersonId(Cursor cursor) {
 		return cursor.getLong(idIdx);
 	}
+	
+	public int getPersonColor(Cursor cursor) {
+        return cursor.getInt(colorIdx);
+    }
 
 	public PersonHelper setTextPersonName(TextView view, Cursor cursor) {
 		return setTextWithIdx(view, cursor, nameIdx);
@@ -65,10 +71,10 @@ public class PersonHelper {
 	public static ContentValues getContentValues(Person user) {
 		ContentValues initialValues = new ContentValues();
 		if (user.id > -1) {
-			initialValues.put(PersonColumns.KEY_ID, Long.valueOf(user.id));
+			initialValues.put(PersonColumns.COL_ID, Long.valueOf(user.id));
 		}
-		initialValues.put(PersonColumns.KEY_NAME, user.name);
-		initialValues.put(PersonColumns.KEY_PHONE, user.phone);
+		initialValues.put(PersonColumns.COL_NAME, user.name);
+		initialValues.put(PersonColumns.COL_PHONE, user.phone);
 		return initialValues;
 	}
 

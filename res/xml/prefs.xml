@@ -9,7 +9,11 @@
 </PreferenceCategory>
 
 <PreferenceCategory android:title="SMS Monitor">
-	<CheckBoxPreference android:title="Delete SMS Monitor" android:key="smsMonitorDelete" android:summaryOn="Delete Geo tracking SMS" android:summaryOff="Off" android:defaultValue="false"/>
+	<CheckBoxPreference android:title="Delete SMS Monitor" android:key="smsDeleteOnMessage" android:summaryOn="Delete Geo tracking SMS" android:summaryOff="Off" android:defaultValue="true"/>
 </PreferenceCategory>
 
+<PreferenceCategory android:title="Request Notification">
+	<CheckBoxPreference android:title="Request Notification" android:key="smsRequestNotif" android:summaryOn="Notify me for request" android:summaryOff="Invisible request management" android:defaultValue="false"/>
+</PreferenceCategory>
+    
 </PreferenceScreen>

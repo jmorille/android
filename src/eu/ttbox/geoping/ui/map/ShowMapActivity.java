@@ -375,7 +375,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
-            String sortOrder = String.format("%s ASC", PersonColumns.KEY_NAME);
+            String sortOrder = String.format("%s ASC", PersonColumns.COL_NAME);
             String selection = null;
             String[] selectionArgs = null;
             // Loader

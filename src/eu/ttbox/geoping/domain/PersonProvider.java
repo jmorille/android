@@ -19,7 +19,7 @@ public class PersonProvider extends ContentProvider {
 
     // Constante
 //    private static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", PersonColumns.KEY_ID);
-    private static final String SELECT_BY_ENTITY_ID = String.format("rowid = ?", PersonColumns.KEY_ID);
+    private static final String SELECT_BY_ENTITY_ID = String.format("rowid = ?", PersonColumns.COL_ID);
 
     // MIME types used for searching words or looking up a single definition
     public static final String PERSONS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/person";
@@ -111,8 +111,8 @@ public class PersonProvider extends ContentProvider {
 
     private Cursor getSuggestions(String query) {
         query = query.toLowerCase();
-        String[] columns = new String[] { PersonDatabase.PersonColumns.KEY_ID, //
-                PersonDatabase.PersonColumns.KEY_NAME, PersonDatabase.PersonColumns.KEY_PHONE, //
+        String[] columns = new String[] { PersonDatabase.PersonColumns.COL_ID, //
+                PersonDatabase.PersonColumns.COL_NAME, PersonDatabase.PersonColumns.COL_PHONE, //
                 SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_TEXT_2, //
                 /*
                  * SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, (only if you want
@@ -140,7 +140,7 @@ public class PersonProvider extends ContentProvider {
     private Cursor refreshShortcut(Uri uri) {
         Log.i(TAG, "refreshShortcut uri " + uri);
         String rowId = uri.getLastPathSegment();
-        String[] columns = new String[] { PersonDatabase.PersonColumns.KEY_ID //
+        String[] columns = new String[] { PersonDatabase.PersonColumns.COL_ID //
                 , BaseColumns._ID //
                 // , PersonDatabase.PersonColumns.KEY_LASTNAME,
                 // PersonDatabase.PersonColumns.KEY_FIRSTNAME //
