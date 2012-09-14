@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.location.Address;
-import android.location.Location;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.GeoTrack;
+import eu.ttbox.geoping.domain.Person;
 
 public class GeoTrackBubble extends FrameLayout {
 
@@ -26,7 +26,9 @@ public class GeoTrackBubble extends FrameLayout {
 	
 	// Display
 	private LinearLayout layout;
-	private TextView coordTextView;
+	private TextView nameTextView;
+    private TextView timeTextView;
+    private TextView coordTextView;
 	private TextView accuracyTextView;
 	private TextView altitudeTextView;
 	private View altitudeBlock;
@@ -43,6 +45,9 @@ public class GeoTrackBubble extends FrameLayout {
 		View v = inflater.inflate(R.layout.map_geotrack_bubble, layout);
 
 		// Init fields
+		this.nameTextView =  (TextView) v.findViewById(R.id.map_geotrack_bubbleView_name);
+		
+        this.timeTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_time);
 		this.coordTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_coord);
 		this.accuracyTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_accuracy);
 		this.addressTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_address);
@@ -68,13 +73,18 @@ public class GeoTrackBubble extends FrameLayout {
         return false;
     }
 
-    public void setData(GeoTrack geoTrack) {
-//		 Location location = geoTrack.asLocation();
+    public void setData(Person person, GeoTrack geoTrack) {
+        // Person
+        this.nameTextView.setText(person.name);
+        // Track
 		if (this.geoTrack == null || !isSameGeoTrack(this.geoTrack, geoTrack)) {
 			this.geoTrack = geoTrack;
 			setAddress(null);
 		}
 		if (geoTrack != null) {
+		    // Date $Time 
+		    String dateString = String.format(   getResources().getString(R.string.geotrack_time_dateformat),  geoTrack.getTimeAsDate());
+		    timeTextView.setText(dateString);
 			// Coord
 		    double lat = geoTrack.getLatitude();
 		    double lng = geoTrack.getLatitude();

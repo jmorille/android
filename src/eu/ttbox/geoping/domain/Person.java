@@ -19,6 +19,10 @@ public class Person {
         this.phone = phone;
         return this;
     }
+    @Override
+    public String toString() {
+        return "Person [id=" + id + ", name=" + name + ", phone=" + phone + "]";
+    }
     
     
     

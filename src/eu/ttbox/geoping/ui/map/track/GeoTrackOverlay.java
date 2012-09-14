@@ -2,7 +2,6 @@ package eu.ttbox.geoping.ui.map.track;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -48,6 +47,7 @@ import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
+import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.ui.map.track.bubble.GeoTrackBubble;
@@ -73,7 +73,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	// Listener
 
 	// Config
-	private String userId;
+	private Person person;
 	private String timeBeginInMs;
 	private String timeEndInMs;
 
@@ -119,14 +119,15 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	// Constructors
 	// ===========================================================
 
-	public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, String userId, long timeDay) {
+	public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay) {
 		this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay);
 	}
 
-	public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, String userId, long timeInMs) {
+	public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy,
+	        LoaderManager loaderManager, Person userId, long timeInMs) {
 		super(pResourceProxy);
 		this.context = ctx;
-		this.userId = userId;
+		this.person = userId;
 		this.loaderManager = loaderManager;
 		this.mMapController = mapView.getController();
 		setDateRange(timeInMs);
@@ -142,6 +143,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		}
 		// Init
 		initDirectionPaint();
+		onResume();
 	}
 
 	public void onResume() {
@@ -211,12 +213,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 				beginMs, endMs));
 	}
 
-	public void animateToLastKnowPosition() {
+	public void animateToLastKnowPosition() { 
 		int geoTrackSize = geoTracks.size();
 		if (geoTrackSize > 0) {
 			GeoTrack geoTrack = geoTracks.get(geoTrackSize - 1);
 			mMapController.animateTo(geoTrack.asGeoPoint());
-		}
+		} 
 	}
 
 	// ===========================================================
@@ -426,7 +428,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
 	private void setBubbleData(final GeoTrack geoTrack) {
 		if (balloonView != null && View.VISIBLE == balloonView.getVisibility()) {
-			balloonView.setData(geoTrack);
+			balloonView.setData(person ,geoTrack);
 			// Runnable geocoderTask = new Runnable() {
 			//
 			// @Override
@@ -471,7 +473,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 			Log.d(TAG, "onCreateLoader");
 			String sortOrder = SQL_SORT_DEFAULT;
 			String selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_USERID, GeoTrackColumns.COL_TIME);
-			String[] selectionArgs = new String[] { userId, timeBeginInMs, timeEndInMs };
+			String[] selectionArgs = new String[] { getPersonUserId(), timeBeginInMs, timeEndInMs };
 			Log.w(TAG, String.format("Prepare Sql Selection : %s / for param : user [%s] with date range(%s, %s)", selection, selectionArgs[0], selectionArgs[1], selectionArgs[2]));
 			// selection = null;
 			// selectionArgs = null;
@@ -483,7 +485,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		@Override
 		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 			int resultCount = cursor.getCount();
-			Log.d(TAG, String.format("onLoadFinished with %s results", resultCount));
+			Log.d(TAG, String.format("Geotracks onLoadFinished with %s results", resultCount));
 			GeoTrackHelper helper = new GeoTrackHelper().initWrapper(cursor);
 			ArrayList<GeoTrack> points = new ArrayList<GeoTrack>(resultCount);
 			if (cursor.moveToFirst()) {
@@ -524,6 +526,9 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		}
 	}
 
+	private String getPersonUserId() {
+	    return  person.phone;
+	}
 	private BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -532,7 +537,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 			if (Intents.ACTION_NEW_GEOTRACK_INSERTED.equals(action)) {
 				Bundle extras = intent.getExtras();
 				String userIdIntent = extras.getString(GeoTrackColumns.COL_USERID);
-				if (userId.equals(userIdIntent)) {
+				if (getPersonUserId().equals(userIdIntent)) {
 					// TODO Load
 
 					GeoTrack addedGeoTrack = null;

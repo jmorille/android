@@ -36,9 +36,9 @@ public class AddPersonActivity extends FragmentActivity {
     private EditText nameEditText;
     private EditText phoneEditText;
 
-    // Instance 
+    // Instance
     private String entityId;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +52,7 @@ public class AddPersonActivity extends FragmentActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_person_edit, menu); 
+        inflater.inflate(R.menu.menu_person_edit, menu);
         return true;
     }
 
@@ -91,7 +91,7 @@ public class AddPersonActivity extends FragmentActivity {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "handleIntent for action : " + action);
         }
-        if (Intent.ACTION_EDIT.equals(action)) { 
+        if (Intent.ACTION_EDIT.equals(action)) {
             Uri data = intent.getData();
             this.entityId = data.getLastPathSegment();
             Bundle bundle = new Bundle();
@@ -104,12 +104,12 @@ public class AddPersonActivity extends FragmentActivity {
         }
 
     }
-    
-    public void onDeleteClick() { 
-        Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, "/"+entityId);
+
+    public void onDeleteClick() {
+        Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, "/" + entityId);
         int deleteCount = getContentResolver().delete(entityUri, null, null);
         Log.d(TAG, "Delete %s entity successuf");
-        if (deleteCount>0) {
+        if (deleteCount > 0) {
             setResult(Activity.RESULT_OK);
         }
         finish();
@@ -129,9 +129,10 @@ public class AddPersonActivity extends FragmentActivity {
     }
 
     public void onSelectContactClick(View v) {
-//        Intent intent = new Intent(android.provider.Contacts.Intents.UI.LIST_STARRED_ACTION);
-   
-         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        // Intent intent = new
+        // Intent(android.provider.Contacts.Intents.UI.LIST_STARRED_ACTION);
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
         // run
         startActivityForResult(intent, PICK_CONTACT);
@@ -181,8 +182,17 @@ public class AddPersonActivity extends FragmentActivity {
         values.put(PersonColumns.KEY_NAME, name);
         values.put(PersonColumns.KEY_PHONE, phone);
         // Content
-        Uri uri = getContentResolver().insert(PersonProvider.Constants.CONTENT_URI_PERSON, values);
-        setResult(Activity.RESULT_OK);
+        Uri uri;
+        if (entityId == null) {
+            uri = getContentResolver().insert(PersonProvider.Constants.CONTENT_URI_PERSON, values);
+            setResult(Activity.RESULT_OK);
+        } else {
+            uri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, entityId);
+            int count = getContentResolver().update(uri, values, null, null);
+            if (count != 1) {
+                Log.e(TAG, String.format("Error, %s entities was updates for Expected One", count));
+            }
+        }
         return uri;
     }
 

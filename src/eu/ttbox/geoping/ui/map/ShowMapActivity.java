@@ -29,11 +29,10 @@ import android.view.SubMenu;
 import android.widget.Toast;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
+import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
 import eu.ttbox.geoping.ui.map.core.MyAppTilesProviders;
 import eu.ttbox.geoping.ui.map.mylocation.MyLocationOverlay;
@@ -269,13 +268,10 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 		}
 		case R.id.menuMap_track_person: {
 			SelectGeoTrackDialog personListDialod = new SelectGeoTrackDialog(this, getSupportLoaderManager(), new OnSelectPersonListener() {
-
-				@Override
+ 				@Override
 				public void onSelectPerson(Person person) {
-					// TODO Auto-generated method stub
-					Toast.makeText(ShowMapActivity.this, String.format("Select Person %s", person), Toast.LENGTH_SHORT).show();
-
-				}
+ 				    animateToLastKnowPosition(person.phone);
+ 				}
 			}, geoTrackOverlayByUser);
 			personListDialod.show();
 		}
@@ -307,22 +303,37 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 	// ===========================================================
 
 
-	private void addGeoTrackOverlay(String userId) {
+	private boolean addGeoTrackOverlay(Person userId) {
+	    boolean isDone = false;
 		if (!geoTrackOverlayByUser.containsKey(userId)) {
 			GeoTrackOverlay geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(), userId, System.currentTimeMillis());
-			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
+			geoTrackOverlayByUser.put(userId.phone, geoTrackOverlay);
 			// register
-			mapView.getOverlays().add(geoTrackOverlay);
+			isDone = mapView.getOverlays().add(geoTrackOverlay);
 		}
+		return isDone;
 	}
 
-	private void removeGeoTrackOverlay(String userId) {
-		if (!geoTrackOverlayByUser.containsKey(userId)) {
+	private boolean removeGeoTrackOverlay(String userId) {
+	    boolean isDone = false;
+		if (geoTrackOverlayByUser.containsKey(userId)) {
 			GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.remove(userId);
-			mapView.getOverlays().remove(geoTrackOverlay);
+			isDone = mapView.getOverlays().remove(geoTrackOverlay);
 		}
+		return isDone;
 	}
 	
+	private boolean animateToLastKnowPosition(String userId) {
+	    boolean isDone = false;
+	    
+        if (geoTrackOverlayByUser.containsKey(userId)) {
+            GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.remove(userId);
+            geoTrackOverlay.animateToLastKnowPosition();
+            isDone = true;
+        }
+        Log.d(TAG, String.format("animateToLastKnowPosition for User : %s (is done %s)" , userId , isDone));
+        return isDone;
+	}
 
 	// ===========================================================
 	// Listeners
@@ -358,19 +369,19 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 			if (cursor.moveToFirst()) {
 				PersonHelper helper = new PersonHelper().initWrapper(cursor);
 				do {
-					String phone = helper.getPersonPhone(cursor);
-					Log.d(TAG, String.format("Add Person with phone : %s", phone));
-					addGeoTrackOverlay(phone);
+					Person pers = helper.getEntity(cursor);
+					Log.d(TAG, String.format("Add Person with phone : %s", pers));
+					addGeoTrackOverlay(pers);
 				} while (cursor.moveToNext());
 			}
 		}
 
 		@Override
 		public void onLoaderReset(Loader<Cursor> loader) {
-			for (Map.Entry<String, GeoTrackOverlay> entry : geoTrackOverlayByUser.entrySet()) {
-				String key = entry.getKey();
-				removeGeoTrackOverlay(key);
-			}
+//			for (Map.Entry<String, GeoTrackOverlay> entry : geoTrackOverlayByUser.entrySet()) {
+//				String key = entry.getKey();
+//				removeGeoTrackOverlay(key);
+//			}
 		}
 
 	};
