@@ -22,12 +22,12 @@ public class GeoPingResponseHandlerService extends WorkerService {
     // config
     boolean notifyGeoPingResponse = false;
     
+    // Instance Data
     
-    public class LocalBinder extends Binder {
-        public GeoPingResponseHandlerService getService() {
-            return GeoPingResponseHandlerService.this;
-        }
-    }
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
     
     public GeoPingResponseHandlerService(String name) {
         super(TAG); 
@@ -44,6 +44,30 @@ public class GeoPingResponseHandlerService extends WorkerService {
         Log.d(TAG, "### GeoPingResponseHandlerService Service Started.");
         Log.d(TAG, "#################################");
     }
+    
+
+    // ===========================================================
+    // Binder
+    // ===========================================================
+ 
+    
+    public class LocalBinder extends Binder {
+        public GeoPingResponseHandlerService getService() {
+            return GeoPingResponseHandlerService.this;
+        }
+    }
+    
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+    
+
+    // ===========================================================
+    // Intent Handler
+    // ===========================================================
+ 
+ 
     @Override
     protected void onHandleIntent(Intent intent) {
        if (intent!=null) { 
@@ -51,6 +75,12 @@ public class GeoPingResponseHandlerService extends WorkerService {
        }
         
     }
+    
+
+    // ===========================================================
+    // Other
+    // ===========================================================
+ 
 
     
     private void displayPingRequestNotification(GeoTrackSmsMsg clearMsg ) {

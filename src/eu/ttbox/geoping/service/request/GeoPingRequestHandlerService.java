@@ -31,24 +31,22 @@ public class GeoPingRequestHandlerService extends WorkerService {
 
     private static final String TAG = "GeoPingRequestHandlerService";
 
+    private final IBinder binder = new LocalBinder();
+
+    // Services
     private LocationManager locationManager;
-
     private MyLocationListenerProxy myLocation;
-
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
+    // Instance Data
     private List<GeoPingRequest> geoPingRequestList;
     private MultiGeoRequestLocationListener multiGeoRequestListener;
 
     private int batterLevelInPercent = -1;
 
-    private final IBinder binder = new LocalBinder();
-
-    public class LocalBinder extends Binder {
-        public GeoPingRequestHandlerService getService() {
-            return GeoPingRequestHandlerService.this;
-        }
-    }
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     public GeoPingRequestHandlerService() {
         super(TAG);
@@ -78,6 +76,25 @@ public class GeoPingRequestHandlerService extends WorkerService {
         Log.d(TAG, "#################################");
     }
 
+    // ===========================================================
+    // Binder
+    // ===========================================================
+
+    public class LocalBinder extends Binder {
+        public GeoPingRequestHandlerService getService() {
+            return GeoPingRequestHandlerService.this;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+    // ===========================================================
+    // Intent Handler
+    // ===========================================================
+
     @Override
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
@@ -96,6 +113,10 @@ public class GeoPingRequestHandlerService extends WorkerService {
             sendSmsPing(phone);
         }
     }
+
+    // ===========================================================
+    // Other
+    // ===========================================================
 
     public boolean registerGeoPingRequest(GeoPingRequest request) {
         Location initLastLoc = myLocation.getLastKnownLocation();
