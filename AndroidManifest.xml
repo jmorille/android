@@ -62,12 +62,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".service.GeoTrackingService" >
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name=".GeoTrackingService.ACTION" /> -->
-            <!-- </intent-filter> -->
-        </service>
+    
         <service android:name=".service.request.GeoPingRequestHandlerService" >
         </service>
         <service android:name=".service.request.GeoPingResponseHandlerService" >

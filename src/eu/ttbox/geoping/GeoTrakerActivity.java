@@ -30,9 +30,9 @@ import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
-import eu.ttbox.geoping.service.GeoTrackingService;
 import eu.ttbox.geoping.service.SmsMsgActionHelper;
 import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
+import eu.ttbox.geoping.service.request.GeoPingRequestHandlerService;
 import eu.ttbox.geoping.ui.AbstractSmsTrackerActivity;
 
 public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnClickListener, LocationListener {
@@ -51,28 +51,28 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // On sp�cifie que l'on va avoir besoin de g�rer l'affichage du cercle
+        // On spécifie que l'on va avoir besoin de gérer l'affichage du cercle
         // de chargement
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         setContentView(R.layout.geotracker);
 
-        // On r�cup�re le service de localisation
+        // On récupére le service de localisation
         lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         trackingBDD = new GeoTrackDatabase(this);
 
-        // Initialisation de l'�cran
+        // Initialisation de l'écran
         reinitialisationEcran();
 
-        // On affecte un �couteur d'�v�nement aux boutons
+        // On affecte un écouteur d'événement aux boutons
         findViewById(R.id.choix_source).setOnClickListener(this);
         findViewById(R.id.obtenir_position).setOnClickListener(this);
         findViewById(R.id.afficherAdresse).setOnClickListener(this);
         findViewById(R.id.sendSmsLoc).setOnClickListener(this);
     }
 
-    // M�thode d�clencher au clique sur un bouton
+    // Méthode déclencher au clique sur un bouton
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.choix_source:
@@ -93,12 +93,12 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
             }
             break;
         case R.id.startService: {
-            Intent intentService = new Intent(this, GeoTrackingService.class);
+            Intent intentService = new Intent(this, GeoPingRequestHandlerService.class);
             startService(intentService);
             break;
         }
         case R.id.stopService: {
-            Intent intentService = new Intent(this, GeoTrackingService.class);
+            Intent intentService = new Intent(this, GeoPingRequestHandlerService.class);
             stopService(intentService);
             break;
         }
@@ -107,7 +107,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         }
     }
 
-    // R�initialisation de l'�cran
+    // Réinitialisation de l'écran
     private void reinitialisationEcran() {
         ((TextView) findViewById(R.id.latitude)).setText("0.0");
         ((TextView) findViewById(R.id.longitude)).setText("0.0");
@@ -128,7 +128,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 
         final String[] sources = providers.toArray(new String[providers.size()]);
 
-        // On affiche la liste des sources dans une fen�tre de dialog
+        // On affiche la liste des sources dans une fenétre de dialog
         // Pour plus d'infos sur AlertDialog, vous pouvez suivre le guide
         // http://developer.android.com/guide/topics/ui/dialogs.html
         new AlertDialog.Builder(this).setItems(sources, new DialogInterface.OnClickListener() {
@@ -137,7 +137,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
                 // on stock le choix de la source choisi
                 choix_source = sources[which];
                 // on ajoute dans la barre de titre de l'application le
-                // nom de la source utilis�
+                // nom de la source utilisé
                 setTitle(String.format("%s - %s", getString(R.string.app_name), choix_source));
             }
         }).create().show();
@@ -149,14 +149,14 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
      *      .html
      */
     private void obtenirPosition() {
-        // on d�marre le cercle de chargement
+        // on démarre le cercle de chargement
         setProgressBarIndeterminateVisibility(true);
 
         // On demande au service de localisation de nous notifier tout
         // changement de position
         // sur la source (le provider) choisie, toute les minutes
         // (60000millisecondes).
-        // Le param�tre this sp�cifie que notre classe impl�mente
+        // Le paramétre this spécifie que notre classe implémente
         // LocationListener et recevra
         // les notifications.
         lManager.requestLocationUpdates(choix_source, 60000, 0, this);
@@ -165,7 +165,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
     }
 
     private void afficherLocation() {
-        // On affiche les informations de la position a l'�cran
+        // On affiche les informations de la position a l'écran
         ((TextView) findViewById(R.id.latitude)).setText(String.valueOf(location.getLatitude()));
         ((TextView) findViewById(R.id.longitude)).setText(String.valueOf(location.getLongitude()));
         ((TextView) findViewById(R.id.altitude)).setText(String.valueOf(location.getAltitude()));
@@ -185,12 +185,12 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
     private void afficherAdresse() {
         setProgressBarIndeterminateVisibility(true);
 
-        // Le geocoder permet de r�cup�rer ou chercher des adresses
-        // gr�ce � un mot cl� ou une position
+        // Le geocoder permet de récupérer ou chercher des adresses
+        // gréce é un mot clé ou une position
         Geocoder geo = new Geocoder(this);
         try {
-            // Ici on r�cup�re la premiere adresse trouv� gr�ce � la position
-            // que l'on a r�cup�r�
+            // Ici on récupére la premiere adresse trouvé gréce é la position
+            // que l'on a récupéré
             List<Address> adresses = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
             if (adresses != null && adresses.size() == 1) {
@@ -199,11 +199,11 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
                 ((TextView) findViewById(R.id.adresse)).setText(String.format("%s, %s %s", adresse.getAddressLine(0), adresse.getPostalCode(), adresse.getLocality()));
             } else {
                 // sinon on affiche un message d'erreur
-                ((TextView) findViewById(R.id.adresse)).setText("L'adresse n'a pu �tre d�termin�e");
+                ((TextView) findViewById(R.id.adresse)).setText("L'adresse n'a pu étre déterminée");
             }
         } catch (IOException e) {
             e.printStackTrace();
-            ((TextView) findViewById(R.id.adresse)).setText("L'adresse n'a pu �tre d�termin�e");
+            ((TextView) findViewById(R.id.adresse)).setText("L'adresse n'a pu étre déterminée");
         }
         // on stop le cercle de chargement
         setProgressBarIndeterminateVisibility(false);
@@ -212,7 +212,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
     @Override
     public void onLocationChanged(Location location) {
         // Lorsque la position change...
-        Log.i("Tuto g�olocalisation", "La position a chang�.");
+        Log.i("Tuto géolocalisation", "La position a changé.");
         // ... on stop le cercle de chargement
         setProgressBarIndeterminateVisibility(false);
         // ... on active le bouton pour afficher l'adresse
@@ -221,19 +221,19 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         this.location = location;
         // ... on l'affiche
         afficherLocation();
-        // ... et on sp�cifie au service que l'on ne souhaite plus avoir de mise
-        // � jour
+        // ... et on spécifie au service que l'on ne souhaite plus avoir de mise
+        // é jour
         lManager.removeUpdates(this);
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        // Lorsque la source (GSP ou r�seau GSM) est d�sactiv�
-        Log.i("Tuto g�olocalisation", "La source a �t� d�sactiv�");
-        // ...on affiche un Toast pour le signaler � l'utilisateur
-        Toast.makeText(this, String.format("La source \"%s\" a �t� d�sactiv�", provider), Toast.LENGTH_SHORT).show();
-        // ... et on sp�cifie au service que l'on ne souhaite plus avoir de mise
-        // � jour
+        // Lorsque la source (GSP ou réseau GSM) est désactivé
+        Log.i("Tuto géolocalisation", "La source a été désactivé");
+        // ...on affiche un Toast pour le signaler é l'utilisateur
+        Toast.makeText(this, String.format("La source \"%s\" a été désactivé", provider), Toast.LENGTH_SHORT).show();
+        // ... et on spécifie au service que l'on ne souhaite plus avoir de mise
+        // é jour
         lManager.removeUpdates(this);
         // ... on stop le cercle de chargement
         setProgressBarIndeterminateVisibility(false);
@@ -241,12 +241,12 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 
     @Override
     public void onProviderEnabled(String provider) {
-        Log.i("Tuto g�olocalisation", "La source a �t� activ�.");
+        Log.i("Tuto géolocalisation", "La source a été activé.");
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.i("Tuto g�olocalisation", "Le statut de la source a chang�.");
+        Log.i("Tuto géolocalisation", "Le statut de la source a changé.");
     }
 
     private void sendSms(Location location) {
