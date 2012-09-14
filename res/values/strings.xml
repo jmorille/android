@@ -7,8 +7,10 @@
     <string name="geoping">Geo Ping</string>
     
     
-    <string name="select_contact_button">Contacts</string>
-    <string name="save_button">Sauver</string>
+    <string name="menu_select_contact">Contacts</string>
+    <string name="menu_save">Sauver</string>
+    <string name="menu_delete">Supprimer</string>
+    
     <string name="cancel_button">Annuler</string>
     
     <!-- Encryption -->

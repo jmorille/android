@@ -11,4 +11,6 @@ public class AppConstants {
     public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = "MYLOCATION_DISPLAY_GEOLOC";
 
 	public static final String PREFS_KEY_TILE_SOURCE = "KEY_TILE_SOURCE";
+
+    public static final String PREFS_APP_COUNT_LAUGHT = "APP_COUNT_LAUGHT";
 }

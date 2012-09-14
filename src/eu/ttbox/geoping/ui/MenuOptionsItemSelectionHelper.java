@@ -26,7 +26,7 @@ public class MenuOptionsItemSelectionHelper {
 			Intent intentMap = new Intent(context, ShowMapActivity.class);
 			context.startActivity(intentMap);
 			return true; 
-		case R.id.menuGeoPing:
+		case R.id.menu_track_person:
 			Intent intentGeoPing = new Intent(context, GeoPingActivity.class);
 			context.startActivity(intentGeoPing);
 			return true;  

@@ -9,11 +9,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
@@ -28,7 +30,7 @@ public class GeoPingActivity extends FragmentActivity {
     // Constant
     private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.KEY_NAME, PersonColumns.KEY_PHONE);
 
-    private static final int SAVE_ENTITY = 0;
+    private static final int EDIT_ENTITY = 0;
 
     // binding
     private ListView listView;
@@ -40,15 +42,14 @@ public class GeoPingActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.geoping);
+        setContentView(R.layout.track_person_list);
         // Bindings
         listView = (ListView) findViewById(R.id.track_person_list);
         addPersonButton = (Button) findViewById(R.id.add_track_person_button);
         addPersonButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = Intents.addTrackerPerson(GeoPingActivity.this);
-                startActivityForResult(intent, SAVE_ENTITY);
+                onAddEntityClick(v);
             }
         });
         // init
@@ -58,6 +59,33 @@ public class GeoPingActivity extends FragmentActivity {
         // Intents
         getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
         handleIntent(getIntent());
+    }
+
+    public void onAddEntityClick(View v) {
+        Intent intent = Intents.addTrackerPerson(GeoPingActivity.this);
+        startActivityForResult(intent, EDIT_ENTITY);
+    }
+
+    private void onCancelClick() {
+        finish();
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_person_list, menu); 
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.menu_add:
+            onAddEntityClick(null);
+            return true;
+        case R.id.menu_cancel:
+            onCancelClick();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -79,7 +107,7 @@ public class GeoPingActivity extends FragmentActivity {
         super.onActivityResult(reqCode, resultCode, data);
 
         switch (reqCode) {
-        case (SAVE_ENTITY):
+        case (EDIT_ENTITY):
             if (resultCode == Activity.RESULT_OK) {
                 getSupportLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
             }
@@ -96,7 +124,7 @@ public class GeoPingActivity extends FragmentActivity {
             String[] selectionArgs = null;
             String queryString = null;
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(GeoPingActivity.this, PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(GeoPingActivity.this, PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 

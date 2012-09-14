@@ -4,5 +4,6 @@
     <item type="id" name="config_id_person_list_loader"/>  
     <item type="id" name="config_id_person_edit_loader"/>  
     <item type="id" name="config_id_geotrack_list_loader"/>  
+    <item type="id" name="config_id_geotrack_select_person_loader"/>  
     
 </resources>
