@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.ping;
+package eu.ttbox.geoping.ui.person;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -44,7 +44,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		holder.pingButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				context.startService(Intents.sendGeoPingRequest(context, phoneNumber));
+				context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
 			}
 		});
 	}

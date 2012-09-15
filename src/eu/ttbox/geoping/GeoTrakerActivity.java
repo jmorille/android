@@ -32,7 +32,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.service.SmsMsgActionHelper;
 import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
-import eu.ttbox.geoping.service.request.GeoPingRequestHandlerService;
+import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
 import eu.ttbox.geoping.ui.AbstractSmsTrackerActivity;
 
 public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnClickListener, LocationListener {
@@ -93,12 +93,12 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
             }
             break;
         case R.id.startService: {
-            Intent intentService = new Intent(this, GeoPingRequestHandlerService.class);
+            Intent intentService = new Intent(this, GeoPingSlaveService.class);
             startService(intentService);
             break;
         }
         case R.id.stopService: {
-            Intent intentService = new Intent(this, GeoPingRequestHandlerService.class);
+            Intent intentService = new Intent(this, GeoPingSlaveService.class);
             stopService(intentService);
             break;
         }

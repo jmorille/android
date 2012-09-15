@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.request.receiver;
+package eu.ttbox.geoping.service.slave.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
@@ -85,23 +85,23 @@ public class SMSReceiver extends BroadcastReceiver {
     }
 
     private boolean consumeGeoPingRequest(Context context, GeoTrackSmsMsg clearMsg) {
-        boolean isConsume = false;
-        // Send request
-        Intent intent = Intents.sendGeoPingResponse(context, clearMsg.smsNumber);
-        context.startService(intent);
+        boolean isConsume = false; 
+        context.startService(Intents.consumeSmsGeoPingRequestHandler(context, clearMsg ));
         isConsume = true;
         return isConsume;
     }
 
     private boolean consumeGeoPingResponse(Context context, GeoTrackSmsMsg clearMsg) {
         boolean isConsume = false;
-        Location loc = SmsMsgActionHelper.fromSmsMessage(clearMsg.body);
-        if (loc != null) {
-            GeoTrack geoPoint = new GeoTrack(clearMsg.smsNumber, loc);
-            ContentValues values = GeoTrackHelper.getContentValues(geoPoint);
-            context.getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
-            isConsume = true;
-        }
+        context.startService(Intents.consumerSmsGeoPingResponsetHandler(context, clearMsg )); 
+        isConsume = true;
+//        Location loc = SmsMsgActionHelper.fromSmsMessage(clearMsg.body);
+//        if (loc != null) {
+//            GeoTrack geoPoint = new GeoTrack(clearMsg.phone, loc);
+//            ContentValues values = GeoTrackHelper.getContentValues(geoPoint);
+//            context.getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
+//            isConsume = true;
+//        }
         return isConsume;
     }
 

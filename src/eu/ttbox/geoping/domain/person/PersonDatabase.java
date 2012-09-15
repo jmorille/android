@@ -20,12 +20,14 @@ public class PersonDatabase {
 
     public static class PersonColumns {
 
-        public static final String COL_ID = "rowid";
+        public static final String COL_ID =  BaseColumns._ID;
         public static final String COL_NAME = "NAME";
         public static final String COL_PHONE = "PHONE";
         public static final String COL_COLOR = "COLOR";
-
+        // All Cols
         public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_COLOR };
+        // Where Clause 
+        public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
 
     }
     
@@ -39,12 +41,12 @@ public class PersonDatabase {
     private static HashMap<String, String> buildUserColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Id
-//        map.put(PersonColumns.COL_ID, "rowid AS " + BaseColumns._ID);
+         map.put(PersonColumns.COL_ID, "rowid AS " + BaseColumns._ID);
         // Add Identity Column
         for (String col : PersonColumns.ALL_KEYS) {
-//            if (!col.equals(PersonColumns.COL_ID)) {
+            if (!col.equals(PersonColumns.COL_ID)) {
                 map.put(col, col);
-//            }
+            }
         }
         // Add Suggest Aliases
         map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", PersonColumns.COL_NAME,  SearchManager.SUGGEST_COLUMN_TEXT_1));

@@ -25,7 +25,6 @@
         <meta-data
             android:name="CLOUDMADE_KEY"
             android:value="75b3a96b94c74eb0b7f1450ed5235a78" />
-
         <!-- Bing Key https://www.bingmapsportal.com -->
         <meta-data
             android:name="BING_KEY"
@@ -40,32 +39,45 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".GeoTrakerActivity" >
+        </activity>
+
+        <!-- Pref -->
+        <activity android:name=".ui.prefs.TrakingPrefActivity" >
+        </activity>
+
+        <!-- Map -->
         <activity
             android:name=".ui.map.ShowMapActivity"
             android:theme="@style/MapActionBar" >
         </activity>
-        <activity android:name=".GeoTrakerActivity" >
+
+        <!-- Person -->
+        <activity android:name=".ui.person.PersonListActivity" >
         </activity>
-        <activity android:name=".ui.prefs.TrakingPrefActivity" >
-        </activity>
-        <activity android:name=".ui.ping.GeoPingActivity" >
-        </activity>
-        <activity android:name=".ui.person.AddPersonActivity" >
+        <activity android:name=".ui.person.PersonEditActivity" >
         </activity>
 
-        <receiver android:name=".service.request.receiver.SMSReceiver" >
-            <intent-filter android:priority="100" >
+        <!-- Receiver -->
+        <receiver android:name=".service.slave.receiver.SMSReceiver" >
+            <intent-filter android:priority="90000" >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".service.slave.receiver.ShutdownReceiver"
+            android:enabled="false" >
+            <intent-filter android:priority="9000" >
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-    
-        <service android:name=".service.request.GeoPingRequestHandlerService" >
+        <!-- Sms service -->
+        <service android:name=".service.slave.GeoPingSlaveService" >
         </service>
-        <service android:name=".service.request.GeoPingResponseHandlerService" >
+        <service android:name=".service.master.GeoPingMasterService" >
         </service>
 
         <provider

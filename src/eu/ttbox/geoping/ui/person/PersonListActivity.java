@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.ping;
+package eu.ttbox.geoping.ui.person;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 
-public class GeoPingActivity extends FragmentActivity {
+public class PersonListActivity extends FragmentActivity {
 
 	private static final String TAG = "GeoPingActivity";
 
@@ -78,12 +78,12 @@ public class GeoPingActivity extends FragmentActivity {
 	}
 
 	public void onAddEntityClick(View v) {
-		Intent intent = Intents.addTrackerPerson(GeoPingActivity.this);
+		Intent intent = Intents.addTrackerPerson(PersonListActivity.this);
 		startActivityForResult(intent, EDIT_ENTITY);
 	}
 
 	public void onEditEntityClick(String entityId) {
-		Intent intent = Intents.editPersone(GeoPingActivity.this, entityId);
+		Intent intent = Intents.editPersone(PersonListActivity.this, entityId);
 		startActivityForResult(intent, EDIT_ENTITY);
 	}
 
@@ -150,7 +150,7 @@ public class GeoPingActivity extends FragmentActivity {
 			String[] selectionArgs = null;
 			String queryString = null;
 			// Loader
-			CursorLoader cursorLoader = new CursorLoader(GeoPingActivity.this, PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
+			CursorLoader cursorLoader = new CursorLoader(PersonListActivity.this, PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
 			return cursorLoader;
 		}
 

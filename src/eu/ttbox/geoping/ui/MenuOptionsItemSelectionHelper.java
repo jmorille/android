@@ -6,7 +6,7 @@ import android.view.MenuItem;
 import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
-import eu.ttbox.geoping.ui.ping.GeoPingActivity;
+import eu.ttbox.geoping.ui.person.PersonListActivity;
 import eu.ttbox.geoping.ui.prefs.TrakingPrefActivity;
 
 public class MenuOptionsItemSelectionHelper {
@@ -27,7 +27,7 @@ public class MenuOptionsItemSelectionHelper {
 			context.startActivity(intentMap);
 			return true; 
 		case R.id.menu_track_person:
-			Intent intentGeoPing = new Intent(context, GeoPingActivity.class);
+			Intent intentGeoPing = new Intent(context, PersonListActivity.class);
 			context.startActivity(intentGeoPing);
 			return true;  
 		}

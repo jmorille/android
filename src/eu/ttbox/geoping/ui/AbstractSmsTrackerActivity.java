@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
-import eu.ttbox.geoping.ui.ping.GeoPingActivity;
+import eu.ttbox.geoping.ui.person.PersonListActivity;
 import eu.ttbox.geoping.ui.prefs.TrakingPrefActivity;
 
 public class AbstractSmsTrackerActivity extends FragmentActivity {
@@ -39,7 +39,7 @@ public class AbstractSmsTrackerActivity extends FragmentActivity {
 			startActivity(intentMap);
 			return true; 
 		case R.id.menu_track_person:
-			Intent intentGeoPing = new Intent(this, GeoPingActivity.class);
+			Intent intentGeoPing = new Intent(this, PersonListActivity.class);
 			startActivity(intentGeoPing);
 			return true; 
 		case R.id.menuQuitter:

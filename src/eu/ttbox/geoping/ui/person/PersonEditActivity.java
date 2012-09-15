@@ -29,7 +29,7 @@ import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 
-public class AddPersonActivity extends FragmentActivity implements ColorPickerDialog.OnColorChangedListener {
+public class PersonEditActivity extends FragmentActivity implements ColorPickerDialog.OnColorChangedListener {
 
     private static final String TAG = "AddPersonActivity";
 
@@ -283,7 +283,7 @@ public class AddPersonActivity extends FragmentActivity implements ColorPickerDi
             String entityId = args.getCharSequence(Intents.EXTRA_USERID).toString();
             Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, String.format("/%s", entityId));
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(AddPersonActivity.this, entityUri, null, null, null, null);
+            CursorLoader cursorLoader = new CursorLoader(PersonEditActivity.this, entityUri, null, null, null, null);
             return cursorLoader;
         }
 

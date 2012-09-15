@@ -17,7 +17,6 @@ public class GeoTrackerProvider extends ContentProvider {
     private final static String TAG = "GeoTrackerContentProvider";
 
     // Constante
-    private static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", PersonColumns.COL_ID);
 
     // Instance
     private GeoTrackDatabase database;
@@ -127,7 +126,7 @@ public class GeoTrackerProvider extends ContentProvider {
         switch (uriType) {
         case GEOTRACK_ID:
             String entityId = uri.getLastPathSegment();
-            rowsAffected = database.deleteEntity(SELECT_BY_ENTITY_ID, new String[] { entityId });
+            rowsAffected = database.deleteEntity(PersonColumns.SELECT_BY_ENTITY_ID, new String[] { entityId });
             Log.d(TAG, String.format("delete %s geoTrack Uri : ", rowsAffected, uri));
             break;
         case GEO_TRACKS:
@@ -146,7 +145,7 @@ public class GeoTrackerProvider extends ContentProvider {
         switch (sURIMatcher.match(uri)) {
         case GEOTRACK_ID:
             String entityId = uri.getLastPathSegment();
-            rowsAffected = database.updateEntity(values, SELECT_BY_ENTITY_ID, new String[] { entityId });
+            rowsAffected = database.updateEntity(values, PersonColumns.SELECT_BY_ENTITY_ID, new String[] { entityId });
             break;
         case GEO_TRACKS:
             rowsAffected = database.updateEntity(values, selection, selectionArgs);

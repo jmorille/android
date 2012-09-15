@@ -79,7 +79,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
         holder.pingButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startService(Intents.sendGeoPingRequest(context, phoneNumber));
+                context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
             }
         });
 //        view.setOnClickListener(new OnClickListener() {

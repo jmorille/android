@@ -22,7 +22,7 @@ public class SmsMsgEncryptHelperTest extends AndroidTestCase {
         for (GeoTrackSmsMsg msg : sms) {
             String encryped = SmsMsgEncryptHelper.encodeSmsMessage(msg);
             Log.d(TAG, String.format("Encoded Message (%s chars) : %s", encryped.length(), encryped));
-            GeoTrackSmsMsg decoded = SmsMsgEncryptHelper.decodeSmsMessage(msg.smsNumber, encryped);
+            GeoTrackSmsMsg decoded = SmsMsgEncryptHelper.decodeSmsMessage(msg.phone, encryped);
             assertEquals(msg.action, decoded.action);
             assertEquals(msg.body, decoded.body);
         }

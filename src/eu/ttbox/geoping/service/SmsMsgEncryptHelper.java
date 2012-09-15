@@ -40,7 +40,7 @@ public class SmsMsgEncryptHelper {
 			int idxActEnd = clearMsg.indexOf(ACTION_END);
 			if (idxActEnd > 0) {
 				result = new GeoTrackSmsMsg();
-				result.smsNumber = smsNumber;
+				result.phone = smsNumber;
 				result.action = clearMsg.substring(0, idxActEnd);
 				// Check Param
 				if (clearMsgSize > idxActEnd+1) {

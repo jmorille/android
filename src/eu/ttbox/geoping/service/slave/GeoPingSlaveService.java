@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.request;
+package eu.ttbox.geoping.service.slave;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +27,9 @@ import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
 import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
-public class GeoPingRequestHandlerService extends WorkerService {
+public class GeoPingSlaveService extends WorkerService {
 
-    private static final String TAG = "GeoPingRequestHandlerService";
+    private static final String TAG = "GeoPingSlaveService";
 
     private final IBinder binder = new LocalBinder();
 
@@ -48,7 +48,7 @@ public class GeoPingRequestHandlerService extends WorkerService {
     // Constructors
     // ===========================================================
 
-    public GeoPingRequestHandlerService() {
+    public GeoPingSlaveService() {
         super(TAG);
     }
 
@@ -77,29 +77,15 @@ public class GeoPingRequestHandlerService extends WorkerService {
     }
 
     // ===========================================================
-    // Binder
-    // ===========================================================
-
-    public class LocalBinder extends Binder {
-        public GeoPingRequestHandlerService getService() {
-            return GeoPingRequestHandlerService.this;
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
-    }
-
-    // ===========================================================
     // Intent Handler
     // ===========================================================
 
     @Override
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
-        if (Intents.ACTION_SMS_GEOPING_RESPONSE.equals(action)) {
-            String phoneNumber = intent.getStringExtra(Intents.EXTRA_SMS_PHONE_NUMBER);
+        Log.d(TAG,String.format(  "onHandleIntent for action %s : %s", action, intent));
+         if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
+            String phoneNumber = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             // String accuracyExpected =
             // intent.getStringExtra(Intents.EXTRA_EXPECTED_ACCURACY);
             // Request
@@ -108,9 +94,6 @@ public class GeoPingRequestHandlerService extends WorkerService {
             // schedule it
             registerGeoPingRequest(request);
             executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
-        } else if (Intents.ACTION_SMS_GEOPING_REQUEST.equals(action)) {
-            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE_NUMBER);
-            sendSmsPing(phone);
         }
     }
 
@@ -141,11 +124,7 @@ public class GeoPingRequestHandlerService extends WorkerService {
         }
     }
 
-    private void sendSmsPing(String phone) {
-        GeoTrackSmsMsg clearMsg = SmsMsgActionHelper.geoPingMessage();
-        sendSms(phone, clearMsg);
-        Log.d(TAG, String.format("Send SMS GeoPing %s : %s", phone, clearMsg));
-    }
+
 
     private void sendSms(String phone, GeoTrackSmsMsg smsMsg) {
         String encrypedMsg = SmsMsgEncryptHelper.encodeSmsMessage(smsMsg);
@@ -226,4 +205,21 @@ public class GeoPingRequestHandlerService extends WorkerService {
 
     }
 
+
+    // ===========================================================
+    // Binder
+    // ===========================================================
+
+    public class LocalBinder extends Binder {
+        public GeoPingSlaveService getService() {
+            return GeoPingSlaveService.this;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+    
 }

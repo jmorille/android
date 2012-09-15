@@ -2,7 +2,7 @@ package eu.ttbox.geoping.domain;
 
 public class GeoTrackSmsMsg {
 
-    public String smsNumber;
+    public String phone;
     public String action;
     public String body;
 
@@ -12,14 +12,14 @@ public class GeoTrackSmsMsg {
 
     public GeoTrackSmsMsg(String smsNumber, String action, String body) {
         super();
-        this.smsNumber = smsNumber;
+        this.phone = smsNumber;
         this.action = action;
         this.body = body;
     }
 
     @Override
     public String toString() {
-        return "GeoTrackSmsMsg [smsNumber=" + smsNumber + ", action=" + action + ", body=" + body + "]";
+        return "GeoTrackSmsMsg [smsNumber=" + phone + ", action=" + action + ", body=" + body + "]";
     }
     
     

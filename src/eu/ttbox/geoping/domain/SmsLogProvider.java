@@ -14,10 +14,7 @@ public class SmsLogProvider extends ContentProvider {
 
     private static final String TAG = "SmsLogProvider";
 
-    // Constante
-    private static final String SELECT_BY_ENTITY_ID = String.format("rowid = ?", SmsLogColumns.COL_ID);
-
-    // MIME types used for searching words or looking up a single definition
+     // MIME types used for searching words or looking up a single definition
     public static final String SMSLOGS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/smslog";
     public static final String SMSLOG_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/smslog";
 
@@ -130,7 +127,7 @@ public class SmsLogProvider extends ContentProvider {
         case SMSLOG_ID:
             String entityId = uri.getLastPathSegment();
             String[] args = new String[] { entityId };
-            count = smslogDatabase.deleteEntity(SELECT_BY_ENTITY_ID, args);
+            count = smslogDatabase.deleteEntity(SmsLogColumns.SELECT_BY_ENTITY_ID, args);
             break;
         case SMSLOGS:
             count = smslogDatabase.deleteEntity(selection, selectionArgs);
@@ -148,7 +145,7 @@ public class SmsLogProvider extends ContentProvider {
         case SMSLOG_ID:
             String entityId = uri.getLastPathSegment();
             String[] args = new String[] { entityId };
-            count = smslogDatabase.updateEntity(values, SELECT_BY_ENTITY_ID, args);
+            count = smslogDatabase.updateEntity(values, SmsLogColumns.SELECT_BY_ENTITY_ID, args);
             break;
         case SMSLOGS:
             count = smslogDatabase.updateEntity(values, selection, selectionArgs);

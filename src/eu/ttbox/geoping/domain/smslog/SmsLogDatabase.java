@@ -2,6 +2,8 @@ package eu.ttbox.geoping.domain.smslog;
 
 import java.util.HashMap;
 
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
+
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,6 +11,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.provider.BaseColumns;
 
 public class SmsLogDatabase {
 
@@ -19,13 +22,16 @@ public class SmsLogDatabase {
 
     public static class SmsLogColumns {
 
-        public static final String COL_ID = "rowid";
+        public static final String COL_ID = BaseColumns._ID;
         public static final String COL_ACTION = "ACTION";
         public static final String COL_PHONE = "PHONE";
         public static final String COL_MSG = "MSG";
         public static final String COL_TIME = "TIME";
 
+        // All Cols
         public static final String[] ALL_KEYS = new String[] { COL_ID, COL_TIME, COL_ACTION, COL_PHONE, COL_MSG };
+        // Where Clause
+        public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
 
     }
 
@@ -39,6 +45,7 @@ public class SmsLogDatabase {
     private static HashMap<String, String> buildUserColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Identity Column
+        map.put(PersonColumns.COL_ID, "rowid AS " + BaseColumns._ID);
         for (String col : SmsLogColumns.ALL_KEYS) {
             if (!col.equals(SmsLogColumns.COL_ID)) {
                 map.put(col, col);
