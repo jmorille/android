@@ -144,13 +144,13 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         }
 
         // Overlay GeoTrack
-        if (!geoTrackOverlayByUser.isEmpty()) {
-            for (Map.Entry<String, GeoTrackOverlay> entry : geoTrackOverlayByUser.entrySet()) {
+//        if (!geoTrackOverlayByUser.isEmpty()) {
+//            for (Map.Entry<String, GeoTrackOverlay> entry : geoTrackOverlayByUser.entrySet()) {
                 // String key = entry.getKey();
-                GeoTrackOverlay geoTrackOverlay = entry.getValue();
-                geoTrackOverlay.onPause();
-            }
-        }
+//                GeoTrackOverlay geoTrackOverlay = entry.getValue();
+//                geoTrackOverlay.onPause();
+//            }
+//        }
 
         super.onPause();
         // timer.cancel();
@@ -193,13 +193,13 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         }
 
         // Overlay GeoTrack
-        if (!geoTrackOverlayByUser.isEmpty()) {
-            for (Map.Entry<String, GeoTrackOverlay> entry : geoTrackOverlayByUser.entrySet()) {
-                // String key = entry.getKey();
-                GeoTrackOverlay geoTrackOverlay = entry.getValue();
-                geoTrackOverlay.onResume();
-            }
-        }
+//        if (!geoTrackOverlayByUser.isEmpty()) {
+//            for (Map.Entry<String, GeoTrackOverlay> entry : geoTrackOverlayByUser.entrySet()) {
+//                // String key = entry.getKey();
+//                GeoTrackOverlay geoTrackOverlay = entry.getValue();
+//                geoTrackOverlay.onResume();
+//            }
+//        }
 
         handleIntent(getIntent());
 
@@ -335,7 +335,8 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         if (geoTrackOverlayByUser.containsKey(userId)) {
             GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.remove(userId);
             isDone = mapView.getOverlays().remove(geoTrackOverlay);
-            Log.i(TAG, String.format("Remove GeoTrack Overlay (%s) for %s",isDone,  person));
+            geoTrackOverlay.onDetach(mapView);
+             Log.i(TAG, String.format("Remove GeoTrack Overlay (%s) for %s",isDone,  person));
         } else {
             Log.e(TAG,String.format( "Could not remove person %s in geoTrackOverlayByUser", person));
         }

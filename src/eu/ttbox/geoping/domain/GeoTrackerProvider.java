@@ -31,8 +31,7 @@ public class GeoTrackerProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.GeoTrackerProvider";
 
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
-        public static final Uri CONTENT_URI_GEOTRACKS = Uri.parse("content://" + AUTHORITY+"/geoTrackPoints");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY+"/geoTrackPoint"); 
 
         // MIME types used for searching words or looking up a single definition
         public static final String COLLECTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.geoTrackPoint";
@@ -43,7 +42,7 @@ public class GeoTrackerProvider extends ContentProvider {
     static {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         // to get definitions...
-        matcher.addURI(Constants.AUTHORITY, "geoTrackPoints", GEO_TRACKS);
+        matcher.addURI(Constants.AUTHORITY, "geoTrackPoint", GEO_TRACKS);
         matcher.addURI(Constants.AUTHORITY, "geoTrackPoint/#", GEOTRACK_ID);
         // to get suggestions...
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
@@ -88,30 +87,33 @@ public class GeoTrackerProvider extends ContentProvider {
         }
     }
 
+ 
+
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Log.d(TAG, "query for uri : " + uri);
-        switch (sURIMatcher.match(uri)) {
-        case GEO_TRACKS:
-            String[] columns = projection == null ? GeoTrackColumns.ALL_COLS : projection;
-            String order = String.format("%s ASC", GeoTrackColumns.COL_TIME);
-            return database.queryEntities(selection, selectionArgs, columns, order);
-        default:
-            throw new IllegalArgumentException("Unknown Uri: " + uri);
-        }
+      switch (sURIMatcher.match(uri)) {
+      case GEO_TRACKS:
+          String[] columns = projection == null ? GeoTrackColumns.ALL_COLS : projection;
+          String order = String.format("%s ASC", GeoTrackColumns.COL_TIME);
+          return database.queryEntities( columns, selection, selectionArgs, order);
+      default:
+          throw new IllegalArgumentException("Unknown Uri: " + uri);
+      }
     }
 
+    
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         long personId = database.insertEntity(values);
         Uri personUri = null;
         if (personId > -1) {
-            personUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + personId);
+            personUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(  personId));
             getContext().getContentResolver().notifyChange(personUri, null);
             String userId = values.getAsString(GeoTrackColumns.COL_USERID);
             String latE6 = values.getAsString(GeoTrackColumns.COL_LATITUDE_E6);
             String lngE6 = values.getAsString(GeoTrackColumns.COL_LONGITUDE_E6);
-            Log.d(TAG, String.format( "insert geoTrack UserId [%s] with Uri : %s with WSG84(%s, %s)" ,userId,  uri, latE6, lngE6));
+            Log.d(TAG, String.format( "insert geoTrack UserId [%s] with Uri : %s with WSG84(%s, %s)" ,userId,  personUri, latE6, lngE6));
             // Notify in broadcast
             // TODO sendBroadcast
 
@@ -157,5 +159,6 @@ public class GeoTrackerProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
         return rowsAffected;
     }
+
 
 }

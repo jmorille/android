@@ -53,7 +53,7 @@ public class GeoPingMasterService extends IntentService {
         this.notifyGeoPingResponse = appPreferences.getBoolean(AppConstants.PREFS_SMS_REQUEST_NOTIFY_ME, false);
 
         Log.d(TAG, "#################################");
-        Log.d(TAG, "### GeoPingResponseHandlerService Service Started.");
+        Log.d(TAG, "### GeoPingMasterService Service Started.");
         Log.d(TAG, "#################################");
     }
 
@@ -115,7 +115,7 @@ public class GeoPingMasterService extends IntentService {
 
     private boolean consumeGeoPingResponse(Bundle bundle) {
         boolean isConsume = false;
-        String phone = bundle.getString(Intents.EXTRA_SMS_ACTION);
+        String phone = bundle.getString(Intents.EXTRA_SMS_PHONE);
         String body = bundle.getString(Intents.EXTRA_SMS_ENCODED_MESSAGE);
         Location loc = SmsMsgActionHelper.fromSmsMessage(body);
         if (loc != null) {

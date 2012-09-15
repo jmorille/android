@@ -49,16 +49,19 @@ public class GeoTrackHelper {
         GeoTrack geoTrack = new GeoTrack();
         geoTrack.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
         geoTrack.setUserId(userIdIdx > -1 ? cursor.getString(userIdIdx) : null);
-        geoTrack.setTime(timeIdx > -1 ? cursor.getLong(timeIdx) : null);
+        geoTrack.setTime(timeIdx > -1 ? cursor.getLong(timeIdx) : -1);
         geoTrack.setProvider(providerIdx > -1 ? cursor.getString(providerIdx) : null);
+        if (latitudeE6Idx > -1) {
+            geoTrack.setLatitudeE6(cursor.getInt(latitudeE6Idx));
+        }
+        if (longitudeE6Idx > -1) {
+            geoTrack.setLongitudeE6(cursor.getInt(longitudeE6Idx));
+        }
+        geoTrack.setAccuracy(accuracyIdx > -1 ? cursor.getInt(accuracyIdx) : -1);
+        geoTrack.setAltitude(altitudeIdx > -1 ? cursor.getDouble(altitudeIdx) : -1);
 
-        geoTrack.setLatitudeE6(latitudeE6Idx > -1 ? cursor.getInt(latitudeE6Idx) : null);
-        geoTrack.setLongitudeE6(longitudeE6Idx > -1 ? cursor.getInt(longitudeE6Idx) : null);
-        geoTrack.setAccuracy(accuracyIdx > -1 ? cursor.getInt(accuracyIdx) : null);
-        geoTrack.setAltitude(altitudeIdx > -1 ? cursor.getDouble(altitudeIdx) : null);
-
-        geoTrack.setBearing(bearingIdx > -1 ? cursor.getFloat(bearingIdx) : null);
-        geoTrack.setSpeed(speedIdx > -1 ? cursor.getFloat(speedIdx) : null);
+        geoTrack.setBearing(bearingIdx > -1 ? cursor.getFloat(bearingIdx) : -1);
+        geoTrack.setSpeed(speedIdx > -1 ? cursor.getFloat(speedIdx) : -1);
 
         return geoTrack;
     }
@@ -88,7 +91,6 @@ public class GeoTrackHelper {
         initialValues.put(GeoTrackColumns.COL_USERID, user.userId);
         initialValues.put(GeoTrackColumns.COL_TIME, user.time);
         initialValues.put(GeoTrackColumns.COL_PROVIDER, user.provider);
-
         initialValues.put(GeoTrackColumns.COL_LATITUDE_E6, user.getLatitudeE6());
         initialValues.put(GeoTrackColumns.COL_LONGITUDE_E6, user.getLongitudeE6());
         initialValues.put(GeoTrackColumns.COL_ACCURACY, user.accuracy);

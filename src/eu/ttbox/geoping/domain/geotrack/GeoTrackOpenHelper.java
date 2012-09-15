@@ -19,9 +19,9 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
             .append(GeoTrackColumns.COL_LATITUDE_E6).append(" INTEGER NOT NULL, ")// /
             .append(GeoTrackColumns.COL_LONGITUDE_E6).append(" INTEGER NOT NULL, ")// /
             .append(GeoTrackColumns.COL_ACCURACY).append(" REAL NOT NULL, ")// /
-            .append(GeoTrackColumns.COL_ALTITUDE).append(" REAL, ")// /
+            .append(GeoTrackColumns.COL_ALTITUDE).append(" INTEGER, ")// /
             .append(GeoTrackColumns.COL_BEARING).append(" REAL, ")// /
-            .append(GeoTrackColumns.COL_SPEED).append(" REAL ")// /
+            .append(GeoTrackColumns.COL_SPEED).append(" INTEGER ")// /
             .append(" );").toString();
 
     // Index

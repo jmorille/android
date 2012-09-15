@@ -58,7 +58,7 @@ public class SelectGeoTrackDialog extends AlertDialog {
 	}
 
 	public SelectGeoTrackDialog(Context context, int theme, LoaderManager loaderManager, OnSelectPersonListener callBack, HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser) {
-		super(context, theme);
+		super(context, theme); 
 		this.loaderManager = loaderManager;
 		this.mCallBack = callBack;
 		this.geoTrackOverlayByUser = geoTrackOverlayByUser;

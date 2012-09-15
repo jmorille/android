@@ -36,7 +36,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -63,7 +62,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     private final MapController mMapController;
 
     // Constant
-    private static final int GEOTRACK_LIST_LOADER = R.id.config_id_geotrack_list_loader;
+    private final int GEOTRACK_LIST_LOADER;// = R.id.config_id_geotrack_list_loader;
 
     // Service
     private final SharedPreferences sharedPreferences;
@@ -72,6 +71,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     private ScheduledExecutorService runOnFirstFixExecutor = Executors.newSingleThreadScheduledExecutor();
 
     // Listener
+    private BroadcastReceiver mStatusReceiver;
 
     // Config
     private Person person;
@@ -124,10 +124,15 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay);
     }
 
-    public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person userId, long timeInMs) {
+    public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs) {
         super(pResourceProxy);
+         GEOTRACK_LIST_LOADER = R.id.config_id_geotrack_list_loader+ (int)person.id + 1000;
+        // person.id;
+        Log.d(TAG, "#################################");
+        Log.d(TAG, "### Create " + person);
+        Log.d(TAG, "#################################");
         this.context = ctx;
-        this.person = userId;
+        this.person = person;
         this.loaderManager = loaderManager;
         this.mMapController = mapView.getController();
         setDateRange(timeInMs);
@@ -140,15 +145,17 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             this.geocoder = null;
             Log.w(TAG, "The Geocoder is not Present");
         }
+        // Listener
+        mStatusReceiver = new StatusReceiver();
         // Init
-        initDirectionPaint(userId.color);
+        initDirectionPaint(person.color);
         onResume();
     }
 
-    public void onResume() {
-        Log.w(TAG, "##### onResume ####");
-        // context.getContentResolver().registerContentObserver(GeoTrackerProvider.Constants.CONTENT_URI,
-        // true, new MyContentObserver(uiHandler));
+    private void onResume() {
+        Log.d(TAG, "##### onResume #### " + person);
+         context.getContentResolver().registerContentObserver(GeoTrackerProvider.Constants.CONTENT_URI,
+         true, new MyContentObserver(uiHandler));
         // Prefs
         this.sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         // Listener
@@ -159,14 +166,15 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         loaderManager.initLoader(GEOTRACK_LIST_LOADER, null, geoTrackLoaderCallback);
     }
 
-    public void onPause() {
-        Log.w(TAG, "##### onPause ####");
+    private void onPause() {
+        Log.d(TAG, "##### onPause #### " + person);
         context.unregisterReceiver(mStatusReceiver);
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onDetach(final MapView mapView) {
+        Log.d(TAG, "##### onDetach #### " + person);
         onPause();
         super.onDetach(mapView);
     }
@@ -174,7 +182,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     private void initDirectionPaint(int c) {
         // Text
         mPaint = new Paint();
-        mPaint.setColor(Color.BLACK);
+        mPaint.setColor(c);
+        mPaint.setAlpha(100);
         mPaint.setStyle(Style.STROKE);
         mPaint.setStrokeWidth(3);
         // Point
@@ -220,8 +229,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         int geoTrackSize = geoTracks.size();
         if (geoTrackSize > 0) {
             GeoTrack geoTrack = geoTracks.get(geoTrackSize - 1);
-            mMapController.animateTo(geoTrack.asGeoPoint());
+            animateToGeoTrack(geoTrack);
         }
+    }
+
+    public void animateToGeoTrack(GeoTrack geoTrack) {
+        mMapController.animateTo(geoTrack.asGeoPoint());
     }
 
     // ===========================================================
@@ -273,6 +286,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         // Temp Point
         geoTracksPath.rewind();
         int idx = 0;
+        GeoTrack lastGeoTrack = null;
         for (GeoTrack geoTrack : geoTracks) {
             GeoPoint geoPoint = geoTrack.asGeoPoint();
             p.toMapPixels(geoPoint, myScreenCoords);
@@ -285,7 +299,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             // Point
             canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8, mPointPaint);
             // Increment Counter
+            lastGeoTrack = geoTrack;
             idx++;
+        }
+        if (lastGeoTrack != null) {
+            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 12, mCirclePaintBorder);
+
         }
         if (idx > 1) {
             canvas.drawPath(geoTracksPath, mPaint);
@@ -462,28 +481,25 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Log.d(TAG, "onCreateLoader");
             String sortOrder = SQL_SORT_DEFAULT;
             String selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_USERID, GeoTrackColumns.COL_TIME);
             String[] selectionArgs = new String[] { getPersonUserId(), timeBeginInMs, timeEndInMs };
-            Log.w(TAG, String.format("Prepare Sql Selection : %s / for param : user [%s] with date range(%s, %s)", selection, selectionArgs[0], selectionArgs[1], selectionArgs[2]));
-            // selection = null;
-            // selectionArgs = null;
+            Log.d(TAG, String.format("Sql request : %s / for param : user [%s] with date range(%s, %s)", selection, selectionArgs[0], selectionArgs[1], selectionArgs[2]));
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(context, GeoTrackerProvider.Constants.CONTENT_URI_GEOTRACKS, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(context, GeoTrackerProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             int resultCount = cursor.getCount();
-            Log.d(TAG, String.format("Geotracks onLoadFinished with %s results", resultCount));
-            GeoTrackHelper helper = new GeoTrackHelper().initWrapper(cursor);
+            Log.w(TAG, String.format("### Found %s Geotracks for %s", resultCount, person));
             ArrayList<GeoTrack> points = new ArrayList<GeoTrack>(resultCount);
             if (cursor.moveToFirst()) {
+                GeoTrackHelper helper = new GeoTrackHelper().initWrapper(cursor);
                 do {
                     GeoTrack geoTrack = helper.getEntity(cursor);
-                    Log.d(TAG, String.format("Cursor : %s", geoTrack));
+                    // Log.d(TAG, String.format("Cursor : %s", geoTrack));
                     // Adding to list
                     points.add(geoTrack);
                 } while (cursor.moveToNext());
@@ -517,7 +533,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            Log.d(TAG, "Notifi Change for URI : " + uri);
+            Log.e(TAG, "########################################");
+            Log.e(TAG, "### ContentObserver Notify Change for URI : " + uri);
             super.onChange(selfChange);
         }
     }
@@ -526,11 +543,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         return person.phone;
     }
 
-    private BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
+    private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.i(TAG, "onReceive Broadcast Intent action : " + action);
+            Log.e(TAG, "########################################");
+            Log.e(TAG, "StatusReceiver onReceive  action : " + action);
             if (Intents.ACTION_NEW_GEOTRACK_INSERTED.equals(action)) {
                 Bundle extras = intent.getExtras();
                 String userIdIntent = extras.getString(GeoTrackColumns.COL_USERID);
@@ -541,6 +559,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                     if (addedGeoTrack != null) {
                         // Add GeoTrack
                         geoTracks.add(addedGeoTrack);
+                        animateToGeoTrack(addedGeoTrack);
                         geoTracksPath = null;
                     }
                 } else {

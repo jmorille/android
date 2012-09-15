@@ -64,10 +64,10 @@ public class GeoTrackDatabase {
 
     public Cursor getEntityById(String rowId, String[] columns) {
         String[] selectionArgs = new String[] { rowId };
-        return queryEntities(CRITERIA_BY_ENTITY_ID, selectionArgs, columns, null);
+        return queryEntities(columns, CRITERIA_BY_ENTITY_ID, selectionArgs,  null);
     }
 
-    public Cursor queryEntities(String selection, String[] selectionArgs, String[] columns, String order) {
+    public Cursor queryEntities(String[] columns, String selection, String[] selectionArgs,  String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_TRACK_POINT);
         builder.setProjectionMap(mGeoTrackColumnMap);

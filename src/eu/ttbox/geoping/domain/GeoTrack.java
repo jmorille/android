@@ -10,12 +10,15 @@ import eu.ttbox.geoping.domain.cache.ZoomLevelComputeCache;
 
 public class GeoTrack {
 
-    public long id = -1;
+    public long id = -1l;
     public String userId;
     public String provider;
-    public long time;
+    public long time = -1l;
     private int latitudeE6;
     private int longitudeE6;
+    
+    private boolean hasLatitude;
+    private boolean hasLlongitude;
 
     public int altitude;
     public int accuracy;
@@ -105,41 +108,53 @@ public class GeoTrack {
         return latitudeE6 / AppConstants.E6;
     }
 
+    public boolean hasLatitude() {
+        return hasLatitude;
+    }
+
+
     public GeoTrack setLatitude(double latitude) {
-        this.latitudeE6 = (int) (latitude * AppConstants.E6);
-        clearLatLngCache();
-        return this;
-    }
-
-    public double getLongitude() {
-        return longitudeE6 / AppConstants.E6;
-    }
-
-    public GeoTrack setLongitude(double longitude) {
-        this.longitudeE6 = (int) (longitude * AppConstants.E6);
-        clearLatLngCache();
-        return this;
-    }
-
-    public int getLatitudeE6() {
-        return latitudeE6;
+        return setLatitudeE6 ( (int) (latitude * AppConstants.E6)); 
     }
 
     public GeoTrack setLatitudeE6(int latitudeE6) {
         this.latitudeE6 = latitudeE6;
+        this.hasLatitude = true;
         clearLatLngCache();
         return this;
     }
 
-    public int getLongitudeE6() {
-        return longitudeE6;
+    
+    public double getLongitude() {
+        return longitudeE6 / AppConstants.E6;
+    }
+
+    public boolean hasLongitude() {
+        return hasLlongitude;
+    }
+    
+    
+    public GeoTrack setLongitude(double longitude) {
+        return setLongitudeE6( (int) (longitude * AppConstants.E6));
     }
 
     public GeoTrack setLongitudeE6(int longitudeE6) {
         this.longitudeE6 = longitudeE6;
+        this.hasLlongitude = true;
         clearLatLngCache();
         return this;
     }
+    
+    public int getLatitudeE6() {
+        return latitudeE6;
+    }
+
+ 
+    public int getLongitudeE6() {
+        return longitudeE6;
+    }
+
+    
 
     public boolean hasAltitude() {
         return this.altitude != -1;
@@ -211,8 +226,9 @@ public class GeoTrack {
         cachedGeoPoint = null;
         cachedZoomLevelComputeCache = null;
     }
+
     public float computeGroundResolutionInMForZoomLevel(int zoomLevel) {
-        if (cachedZoomLevelComputeCache==null) {
+        if (cachedZoomLevelComputeCache == null) {
             cachedZoomLevelComputeCache = new ZoomLevelComputeCache(getLatitude());
         }
         return cachedZoomLevelComputeCache.computeGroundResolutionInMForZoomLevel(zoomLevel);
