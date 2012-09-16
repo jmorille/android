@@ -9,4 +9,17 @@ public class GeoPingMessage {
     public Bundle params;
     
     
+    public GeoPingMessage() {
+        super(); 
+    }
+
+
+    public GeoPingMessage(String phone, String action, Bundle params) {
+        super();
+        this.phone = phone;
+        this.action = action;
+        this.params = params;
+    }
+    
+    
 }

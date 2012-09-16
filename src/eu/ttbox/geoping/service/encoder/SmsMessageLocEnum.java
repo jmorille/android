@@ -53,6 +53,7 @@ public enum SmsMessageLocEnum {
         }
         // Affect
         bySmsFieldNames =fields;
+        byDbFieldNames = dbColNames;
      }
     
 

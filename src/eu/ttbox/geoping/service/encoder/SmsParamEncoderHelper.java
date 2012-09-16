@@ -1,7 +1,6 @@
 package eu.ttbox.geoping.service.encoder;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,8 +14,6 @@ public class SmsParamEncoderHelper {
     public static final String TAG = "SmsMessageEncoderHelper";
 
     public static final char FIELD_SEP = ',';
-    public static final char MSG_BEGIN = '(';
-    public static final char MSG_END = '(';
 
     // ===========================================================
     // Location Provider Encoder
@@ -52,17 +49,7 @@ public class SmsParamEncoderHelper {
         String result = locProviderEncoder.get(value);
         return result == null ? value : result;
     }
-
-    // ===========================================================
-    // Enum Map Ref
-    // ===========================================================
-
-
-
-//    public static SmsMessageLocEnum getByFieldName(char fieldName) {
-//        return SmsMessageLocEnum.getBySmsFieldName(fieldName);
-//    }
-
+ 
     // ===========================================================
     // Tools 
     // ===========================================================
