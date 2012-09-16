@@ -46,6 +46,16 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 
     private GeoTrackDatabase trackingBDD;
 
+    TextView latitudeTextView;
+    TextView longitudeTextView;
+    TextView altitudeTextView;
+    TextView accuracyTextView;
+    TextView speedTextView;
+    TextView bearingTextView;
+    TextView adresseTextView;
+    TextView extrasTextView;
+
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +73,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         trackingBDD = new GeoTrackDatabase(this);
 
         // Initialisation de l'écran
+        initBinding();
         reinitialisationEcran();
 
         // On affecte un écouteur d'événement aux boutons
@@ -70,6 +81,32 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         findViewById(R.id.obtenir_position).setOnClickListener(this);
         findViewById(R.id.afficherAdresse).setOnClickListener(this);
         findViewById(R.id.sendSmsLoc).setOnClickListener(this);
+    }
+
+    private void initBinding() {
+        latitudeTextView = (TextView) findViewById(R.id.latitude);
+        longitudeTextView = (TextView) findViewById(R.id.longitude);
+        altitudeTextView = (TextView) findViewById(R.id.altitude);
+        accuracyTextView = (TextView) findViewById(R.id.accuracy);
+        speedTextView = (TextView) findViewById(R.id.speed);
+        bearingTextView = (TextView) findViewById(R.id.bearing);
+        adresseTextView = (TextView) findViewById(R.id.adresse);
+        extrasTextView = (TextView) findViewById(R.id.extras);
+    }
+
+    // Réinitialisation de l'écran
+    private void reinitialisationEcran() {
+        latitudeTextView.setText("0.0");
+        longitudeTextView.setText("0.0");
+        altitudeTextView.setText("0.0");
+        accuracyTextView.setText("");
+        speedTextView.setText("");
+        bearingTextView.setText("");
+        adresseTextView.setText("");
+        extrasTextView.setText("");
+
+        findViewById(R.id.obtenir_position).setEnabled(false);
+        findViewById(R.id.afficherAdresse).setEnabled(false);
     }
 
     // Méthode déclencher au clique sur un bouton
@@ -105,19 +142,6 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         default:
             break;
         }
-    }
-
-    // Réinitialisation de l'écran
-    private void reinitialisationEcran() {
-        ((TextView) findViewById(R.id.latitude)).setText("0.0");
-        ((TextView) findViewById(R.id.longitude)).setText("0.0");
-        ((TextView) findViewById(R.id.altitude)).setText("0.0");
-        ((TextView) findViewById(R.id.accuracy)).setText("");
-        ((TextView) findViewById(R.id.adresse)).setText("");
-        ((TextView) findViewById(R.id.extras)).setText("");
-
-        findViewById(R.id.obtenir_position).setEnabled(false);
-        findViewById(R.id.afficherAdresse).setEnabled(false);
     }
 
     private void choisirSource() {
@@ -166,10 +190,12 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 
     private void afficherLocation() {
         // On affiche les informations de la position a l'écran
-        ((TextView) findViewById(R.id.latitude)).setText(String.valueOf(location.getLatitude()));
-        ((TextView) findViewById(R.id.longitude)).setText(String.valueOf(location.getLongitude()));
-        ((TextView) findViewById(R.id.altitude)).setText(String.valueOf(location.getAltitude()));
-        ((TextView) findViewById(R.id.accuracy)).setText(String.valueOf(location.getAccuracy()));
+        latitudeTextView.setText(String.valueOf(location.getLatitude()));
+        longitudeTextView.setText(String.valueOf(location.getLongitude()));
+        altitudeTextView.setText(String.valueOf(location.getAltitude()));
+        accuracyTextView.setText(String.valueOf(location.getAccuracy()));
+        speedTextView.setText(String.valueOf(location.getSpeed()));
+        bearingTextView.setText(String.valueOf(location.getBearing()));
         // Extras
         Bundle extras = location.getExtras();
         StringBuffer sb = new StringBuffer();
@@ -178,7 +204,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
             Log.i(getClass().getName(), "Extra " + key + " = " + extraVal);
             sb.append(key).append(" : ").append(extraVal).append("/n");
         }
-        ((TextView) findViewById(R.id.extras)).setText(String.valueOf(sb.toString()));
+        extrasTextView.setText(String.valueOf(sb.toString()));
 
     }
 
@@ -196,14 +222,14 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
             if (adresses != null && adresses.size() == 1) {
                 Address adresse = adresses.get(0);
                 // Si le geocoder a trouver une adresse, alors on l'affiche
-                ((TextView) findViewById(R.id.adresse)).setText(String.format("%s, %s %s", adresse.getAddressLine(0), adresse.getPostalCode(), adresse.getLocality()));
+                adresseTextView.setText(String.format("%s, %s %s", adresse.getAddressLine(0), adresse.getPostalCode(), adresse.getLocality()));
             } else {
                 // sinon on affiche un message d'erreur
-                ((TextView) findViewById(R.id.adresse)).setText("L'adresse n'a pu étre déterminée");
+                adresseTextView.setText("L'adresse n'a pu étre déterminée");
             }
         } catch (IOException e) {
             e.printStackTrace();
-            ((TextView) findViewById(R.id.adresse)).setText("L'adresse n'a pu étre déterminée");
+            adresseTextView.setText("L'adresse n'a pu étre déterminée");
         }
         // on stop le cercle de chargement
         setProgressBarIndeterminateVisibility(false);
