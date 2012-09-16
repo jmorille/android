@@ -80,8 +80,9 @@ public class SmsMessageEncoderHelperTest  extends AndroidTestCase {
         for (GeoPingMessage msg : messages) {
             String encryped = SmsMessageEncoderHelper.encodeSmsMessage(msg);
             Log.d(TAG, String.format("Sms Encoded Message (%s chars) : %s", encryped.length(), encryped));
-//            GeoTrackSmsMsg decoded = SmsMessageEncoderHelper.decodeSmsMessage(msg.phone, encryped);
-//            assertEquals(msg.action, decoded.action);
+            GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage(msg.phone, encryped);
+            Log.d(TAG, String.format("Sms Decoded Message (action: %s)",msg.action));
+            assertEquals(msg.action, decoded.action);
 //            assertEquals(msg.body, decoded.body);
         }
     }

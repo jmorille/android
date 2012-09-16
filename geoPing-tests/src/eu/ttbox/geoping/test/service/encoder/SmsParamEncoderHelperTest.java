@@ -3,6 +3,7 @@ package eu.ttbox.geoping.test.service.encoder;
 import java.util.HashMap;
 
 import android.location.Location;
+import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
 import eu.ttbox.geoping.domain.GeoTrack;
@@ -56,7 +57,7 @@ public class SmsParamEncoderHelperTest extends AndroidTestCase {
             String encoded = SmsParamEncoderHelper.encodeMessage(geoTrack).toString();
             Log.d(TAG, String.format("Encoded Message (%s chars) : %s", encoded.length(), encoded));
             // Decode
-            HashMap<String, Object> decoded = SmsParamEncoderHelper.decodeMessageAsMap(encoded);
+            Bundle decoded = SmsParamEncoderHelper.decodeMessageAsMap(encoded);
             assertEquals(geoTrack.provider, decoded.get(GeoTrackColumns.COL_PROVIDER));
             assertEquals(geoTrack.time, decoded.get(GeoTrackColumns.COL_TIME));
             assertEquals(geoTrack.getLatitudeE6(), decoded.get(GeoTrackColumns.COL_LATITUDE_E6));

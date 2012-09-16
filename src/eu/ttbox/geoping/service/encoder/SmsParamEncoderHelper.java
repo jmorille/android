@@ -111,12 +111,12 @@ public class SmsParamEncoderHelper {
     // GeoTrack Decoder
     // ===========================================================
     
-    public static HashMap<String, Object> decodeMessageAsMap(String encoded ) {
+    public static Bundle decodeMessageAsMap(String encoded ) {
         return decodeMessageAsMap(encoded, null);
     }
     
-    public static HashMap<String, Object> decodeMessageAsMap(String encoded, HashMap<String, Object> dest) {
-        HashMap<String, Object> result = dest != null ? dest : new HashMap<String, Object>();
+    public static Bundle decodeMessageAsMap(String encoded, Bundle dest) {
+        Bundle result = dest != null ? dest : new Bundle();
         String[] splitMsg = encoded.split(String.valueOf(FIELD_SEP));
         for (String field : splitMsg) {
             char key = field.charAt(0);
@@ -126,13 +126,13 @@ public class SmsParamEncoderHelper {
                 switch (fieldEnum.type) {
                 case GPS_PROVIDER:
                 case STRING:
-                    result.put(fieldEnum.dbFieldName, readToString(fieldEnum, valueEncoded));
+                    result.putString(fieldEnum.dbFieldName, readToString(fieldEnum, valueEncoded));
                     break;
                 case INT:
-                    result.put(fieldEnum.dbFieldName, readToInt(fieldEnum, valueEncoded));
+                    result.putInt(fieldEnum.dbFieldName, readToInt(fieldEnum, valueEncoded));
                     break;
                 case LONG:
-                    result.put(fieldEnum.dbFieldName, readToLong(fieldEnum, valueEncoded));
+                    result.putLong(fieldEnum.dbFieldName, readToLong(fieldEnum, valueEncoded));
                     break;
                 default:
                     break;
