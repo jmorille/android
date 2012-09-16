@@ -20,11 +20,18 @@ public class GeoTrack {
     private boolean hasLatitude;
     private boolean hasLlongitude;
 
+    // Optionnal
     public int altitude;
     public int accuracy;
     public float bearing;
     public float speed;
-
+ 
+    private boolean hasAltitude;
+    private boolean hasAccuracy;
+    private boolean hasBearing;
+    private boolean hasSpeed;
+    
+    // Other
     public String titre;
 
     private GeoPoint cachedGeoPoint;
@@ -182,6 +189,10 @@ public class GeoTrack {
         return this;
     }
 
+    public boolean hasBearing() {
+         return this.bearing!=1;
+    }
+    
     public float getBearing() {
         return bearing;
     }
@@ -222,6 +233,7 @@ public class GeoTrack {
         return this;
     }
 
+    // Business
     private void clearLatLngCache() {
         cachedGeoPoint = null;
         cachedZoomLevelComputeCache = null;
@@ -234,6 +246,8 @@ public class GeoTrack {
         return cachedZoomLevelComputeCache.computeGroundResolutionInMForZoomLevel(zoomLevel);
     }
 
+    // Override
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder().append("GeoTrack [");
@@ -248,5 +262,7 @@ public class GeoTrack {
         sb.append("]");
         return sb.toString();
     }
+
+
 
 }
