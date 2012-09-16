@@ -17,7 +17,7 @@ public class Intents {
     public static final String ACTION_SMS_GEOPING_REQUEST_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_REQUEST_HANDLER";
     public static final String ACTION_SMS_GEOPING_RESPONSE_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_RESPONSE_HANDLER";
 
-    public static final String ACTION_NEW_GEOTRACK_INSERTED = "eu.ttbox.geoping.ACTION_GEOTRACK";
+    public static final String ACTION_NEW_GEOTRACK_INSERTED = "eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED";
 
     public static final String EXTRA_SMS_PHONE = "SMS_PHONE";
     public static final String EXTRA_SMS_ENCODED_MESSAGE = "EXTRA_SMS_ENCODED_MESSAGE";
@@ -28,11 +28,12 @@ public class Intents {
 
     //
     public static Intent newGeoTrackInserted(Uri geoTrackData, ContentValues values) {
-        // String trackId = geoTrackData.getLastPathSegment();
         String userId = values.getAsString(GeoTrackColumns.COL_USERID);
-        return new Intent(ACTION_NEW_GEOTRACK_INSERTED) //
-                .setData(geoTrackData)//
-                .putExtra(EXTRA_USERID, userId);
+        // create
+        Intent intent = new Intent(Intents.ACTION_NEW_GEOTRACK_INSERTED);
+        intent.setData(geoTrackData);//
+        intent   .putExtra(EXTRA_USERID, userId);
+        return intent;
     }
 
     // Person Edit
@@ -46,7 +47,7 @@ public class Intents {
         return new Intent(context, PersonEditActivity.class) //
                 .setAction(Intent.ACTION_EDIT).putExtra(EXTRA_USERID, entityId).setData(entityUri);
     }
-    
+
     // ===========================================================
     // GeoPing Master
     // ===========================================================
@@ -57,11 +58,10 @@ public class Intents {
                 .setAction(ACTION_SMS_GEOPING_REQUEST_SENDER)//
                 .putExtra(EXTRA_SMS_PHONE, phoneNumber);
     }
-    
+
     // ===========================================================
     // GeoPing Slave
     // ===========================================================
-
 
     // Sms Consumer
     public static Intent consumeSmsGeoPingRequestHandler(Context context, GeoTrackSmsMsg msg) {

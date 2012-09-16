@@ -6,6 +6,13 @@
 
     <uses-sdk android:minSdkVersion="10" />
 
+    
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    
+    
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
@@ -50,6 +57,10 @@
         <activity
             android:name=".ui.map.ShowMapActivity"
             android:theme="@style/MapActionBar" >
+            <intent-filter>
+                <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED" />
+                
+            </intent-filter>
         </activity>
 
         <!-- Person -->
@@ -60,7 +71,7 @@
 
         <!-- Receiver -->
         <receiver android:name=".service.slave.receiver.SMSReceiver" >
-            <intent-filter android:priority="90000" >
+            <intent-filter android:priority="100" >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>

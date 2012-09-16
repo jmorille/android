@@ -19,11 +19,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentFilter.MalformedMimeTypeException;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
@@ -72,7 +72,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
     // Listener
     private BroadcastReceiver mStatusReceiver;
-
+    private IntentFilter mStatusReceiverIntentFilter;
     // Config
     private Person person;
     private String timeBeginInMs;
@@ -84,9 +84,10 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
     // Paint
     private Paint mPaint;
-    private Paint mPointPaint;
-    private Paint mCirclePaint;
-    private Paint mCirclePaintBorder;
+    private Paint mGeoPointPaint;
+    private Paint mGeoPointOldPaint;
+    private Paint mGeoPointAccuracyCirclePaint;
+    private Paint mGeoPointAccuracyCirclePaintBorder;
 
     // Bubble
     private GeoTrackBubble balloonView;
@@ -124,7 +125,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay);
     }
 
-    public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs) {
+    public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs)     {
         super(pResourceProxy);
          GEOTRACK_LIST_LOADER = R.id.config_id_geotrack_list_loader+ (int)person.id + 1000;
         // person.id;
@@ -147,6 +148,13 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         }
         // Listener
         mStatusReceiver = new StatusReceiver();
+        try {
+            mStatusReceiverIntentFilter = new IntentFilter(Intents.ACTION_NEW_GEOTRACK_INSERTED, GeoTrackerProvider.Constants.ITEM_MIME_TYPE);
+        } catch (MalformedMimeTypeException e) {
+           Log.e(TAG, "Coud not create Intenfilter for mStatusReceiver : " + e.getMessage());
+            e.printStackTrace();
+        }
+        
         // Init
         initDirectionPaint(person.color);
         onResume();
@@ -158,10 +166,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
          true, new MyContentObserver(uiHandler));
         // Prefs
         this.sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        // Listener
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intents.ACTION_NEW_GEOTRACK_INSERTED);
-        context.registerReceiver(mStatusReceiver, filter);
+        // Listener 
+        context.registerReceiver(mStatusReceiver, mStatusReceiverIntentFilter);
         // Load Data
         loaderManager.initLoader(GEOTRACK_LIST_LOADER, null, geoTrackLoaderCallback);
     }
@@ -186,22 +192,26 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         mPaint.setAlpha(100);
         mPaint.setStyle(Style.STROKE);
         mPaint.setStrokeWidth(3);
-        // Point
-        mPointPaint = new Paint();
-        mPointPaint.setColor(c);
-        mPointPaint.setStyle(Style.FILL_AND_STROKE);
-        mPointPaint.setStrokeWidth(3);
-
+        // Geo Point
+        mGeoPointPaint = new Paint();
+        mGeoPointPaint.setAntiAlias(true);
+        mGeoPointPaint.setColor(c);
+        mGeoPointPaint.setStyle(Style.FILL_AND_STROKE);
+        mGeoPointPaint.setStrokeWidth(3);
+         // Geo Point
+        mGeoPointOldPaint = new Paint(mGeoPointPaint);
+        mGeoPointOldPaint.setAlpha(80);
+        
         // Localisation
-        mCirclePaint = new Paint();
-        mCirclePaint.setColor(c);
-        mCirclePaint.setAntiAlias(true);
-        mCirclePaint.setAlpha(50);
-        mCirclePaint.setStyle(Style.FILL);
+        mGeoPointAccuracyCirclePaint = new Paint();
+        mGeoPointAccuracyCirclePaint.setColor(c);
+        mGeoPointAccuracyCirclePaint.setAntiAlias(true);
+        mGeoPointAccuracyCirclePaint.setAlpha(50);
+        mGeoPointAccuracyCirclePaint.setStyle(Style.FILL);
 
-        mCirclePaintBorder = new Paint(mCirclePaint);
-        mCirclePaintBorder.setAlpha(150);
-        mCirclePaintBorder.setStyle(Style.STROKE);
+        mGeoPointAccuracyCirclePaintBorder = new Paint(mGeoPointAccuracyCirclePaint);
+        mGeoPointAccuracyCirclePaintBorder.setAlpha(150);
+        mGeoPointAccuracyCirclePaintBorder.setStyle(Style.STROKE);
     }
 
     // ===========================================================
@@ -285,27 +295,27 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         // }
         // Temp Point
         geoTracksPath.rewind();
-        int idx = 0;
-        GeoTrack lastGeoTrack = null;
+        int idx = 0; 
+        int geoTrackSize = geoTracks.size();
         for (GeoTrack geoTrack : geoTracks) {
+            idx++;
             GeoPoint geoPoint = geoTrack.asGeoPoint();
             p.toMapPixels(geoPoint, myScreenCoords);
             // Line Path
-            if (idx == 0) {
+            boolean isLast = geoTrackSize == idx;
+            if (idx == 1) {
                 geoTracksPath.moveTo(myScreenCoords.x, myScreenCoords.y);
             } else {
                 geoTracksPath.lineTo(myScreenCoords.x, myScreenCoords.y);
             }
             // Point
-            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8, mPointPaint);
-            // Increment Counter
-            lastGeoTrack = geoTrack;
-            idx++;
+            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8, mGeoPointPaint);
+            if (isLast) {
+                canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 12, mGeoPointAccuracyCirclePaintBorder);
+                canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 16, mGeoPointAccuracyCirclePaintBorder);
+            }  
         }
-        if (lastGeoTrack != null) {
-            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 12, mCirclePaintBorder);
-
-        }
+         
         if (idx > 1) {
             canvas.drawPath(geoTracksPath, mPaint);
         }
@@ -318,8 +328,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             // Compute Radius Accuracy
             final float groundResolutionInM = lastFix.computeGroundResolutionInMForZoomLevel(mapView.getZoomLevel());
             final float radius = ((float) lastFix.getAccuracy()) / groundResolutionInM;
-            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, radius, mCirclePaint);
-            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, radius, mCirclePaintBorder);
+            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, radius, mGeoPointAccuracyCirclePaint);
+            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, radius, mGeoPointAccuracyCirclePaintBorder);
         }
     }
 
@@ -566,8 +576,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                     Log.d(TAG, "onReceive Intent action " + Intents.ACTION_NEW_GEOTRACK_INSERTED + " for another User than Mine");
                 }
             }
-        }
-
+        } 
     };
 
     private GeoTrack loadGeoTrackById(Uri geoTrackUri) {

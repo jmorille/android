@@ -124,7 +124,9 @@ public class GeoPingMasterService extends IntentService {
             Uri uri = getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
             if (uri != null) {
                 Log.d(TAG, String.format("Send Broadcast Notification for New GeoTrack %s ", uri));
-                sendBroadcast(Intents.newGeoTrackInserted(uri, values));
+//                Intent intent =    new Intent(Intents.ACTION_NEW_GEOTRACK_INSERTED);
+                Intent intent =  Intents.newGeoTrackInserted(uri, values);
+                sendBroadcast(intent); 
             }
             isConsume = true;
         }

@@ -1,24 +1,18 @@
 package eu.ttbox.geoping.service.slave.receiver;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
-import eu.ttbox.geoping.domain.GeoTrackerProvider;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
-import eu.ttbox.geoping.service.SmsMsgActionHelper;
 import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
-
+ 
 /**
  * @see http://www.tutos-android.com/broadcast-receiver-android {link
  *      http://mobiforge.com/developing/story/sms-messaging-android}
@@ -33,6 +27,7 @@ public class SMSReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        
         if (intent.getAction().equals(ACTION_RECEIVE_SMS)) {
             Log.d(TAG, "SMSReceiver : " + intent);
             Bundle bundle = intent.getExtras();
