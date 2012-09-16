@@ -14,6 +14,7 @@ public class SmsMessageEncoderHelper {
     public final static String ACTION_GEO_PING = "WRY";
     public final static String ACTION_GEO_LOC = "LOC";
 
+    
     // Constante
 
     // ===========================================================
@@ -21,16 +22,15 @@ public class SmsMessageEncoderHelper {
     // ===========================================================
 
     public static String encodeSmsMessage(GeoPingMessage msg) {
-        StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE);
-        sb.append(GEOPING_MSG_ID);
-        sb.append(GEOPING_PROTOCOL_CLEAR);
+        StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE); 
         sb.append(msg.action);
         sb.append(ACTION_END);
-        if (msg.body != null) {
-            sb.append(msg.body);
+        if (msg.params != null && !msg.params.isEmpty()) {
+//            sb.append(msg.body);
         }
-        String encryptedMsg = encryptSmsMsg(sb.toString());
-        return encryptedMsg;
+//        String encryptedMsg = encryptSmsMsg(sb.toString());
+        sb.insert(0, GEOPING_MSG_ID);
+        return sb.toString();
     }
 
     // ===========================================================

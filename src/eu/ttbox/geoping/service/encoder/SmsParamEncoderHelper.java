@@ -57,24 +57,11 @@ public class SmsParamEncoderHelper {
     // Enum Map Ref
     // ===========================================================
 
-    static HashMap<Character, SmsMessageLocEnum> byFieldNames = buildbyFieldNames();
 
-    private static HashMap<Character, SmsMessageLocEnum> buildbyFieldNames() {
-        SmsMessageLocEnum[] values = SmsMessageLocEnum.values();
-        HashMap<Character, SmsMessageLocEnum> fields = new HashMap<Character, SmsMessageLocEnum>(values.length);
-        for (SmsMessageLocEnum field : values) {
-            char key = field.fieldName;
-            if (fields.containsKey(key)) {
-                throw new IllegalArgumentException(String.format("Duplicated Key %s", key));
-            }
-            fields.put(key, field);
-        }
-        return fields;
-    }
 
-    public static SmsMessageLocEnum getByFieldName(char fieldName) {
-        return byFieldNames.get(fieldName);
-    }
+//    public static SmsMessageLocEnum getByFieldName(char fieldName) {
+//        return SmsMessageLocEnum.getBySmsFieldName(fieldName);
+//    }
 
     // ===========================================================
     // Tools 
@@ -87,7 +74,7 @@ public class SmsParamEncoderHelper {
         if (addSep) {
             sb.append(FIELD_SEP);
         }
-        sb.append(field.fieldName);
+        sb.append(field.smsFieldName);
         if (SmsMessageTypeEnum.GPS_PROVIDER == field.type) {
             sb.append(encodeToGpsProvider(value));
         } else {
@@ -104,18 +91,22 @@ public class SmsParamEncoderHelper {
         }
     }
 
-    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, int value) {
-        sb.append(FIELD_SEP);
+    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, int value, boolean addSep) {
+        if (addSep) {
+            sb.append(FIELD_SEP);
+        }
         String valueString = Integer.toString(value, NUMBER_ENCODER_RADIX);
-        sb.append(field.fieldName).append(valueString);
+        sb.append(field.smsFieldName).append(valueString);
         return sb;
 
     }
 
-    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, long value) {
-        sb.append(FIELD_SEP);
+    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, long value, boolean addSep) {
+        if (addSep) {
+            sb.append(FIELD_SEP);
+        }
         String valueString = Long.toString(value, NUMBER_ENCODER_RADIX);
-        sb.append(field.fieldName).append(valueString);
+        sb.append(field.smsFieldName).append(valueString);
         return sb;
     }
 
@@ -142,7 +133,7 @@ public class SmsParamEncoderHelper {
         String[] splitMsg = encoded.split(String.valueOf(FIELD_SEP));
         for (String field : splitMsg) {
             char key = field.charAt(0);
-            SmsMessageLocEnum fieldEnum = getByFieldName(key);
+            SmsMessageLocEnum fieldEnum =  SmsMessageLocEnum.getBySmsFieldName(key);
             if (fieldEnum != null) {
                 String valueEncoded = field.substring(1, field.length());
                 switch (fieldEnum.type) {
@@ -178,33 +169,60 @@ public class SmsParamEncoderHelper {
 
     public static StringBuilder encodeMessage(Bundle extras, StringBuilder dest) {
         StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE);
+        boolean isNotFirst = false; 
+       for (String key : extras.keySet()) {
+           SmsMessageLocEnum fieldEnum =  SmsMessageLocEnum.getByDbFieldName(key);
+           if (fieldEnum != null) {
+               switch (fieldEnum.type) {
+               case GPS_PROVIDER:
+               case STRING:
+                   writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
+                    break;
+               case INT:
+                   writeTo(sb, fieldEnum, extras.getInt(key), isNotFirst); 
+                   break;
+               case LONG:
+                   writeTo(sb, fieldEnum, extras.getLong(key), isNotFirst);  
+                   break;
+               default:
+                   break;
+               }
+           } else {
+               Log.w(TAG, String.format("Not found convertion Field ofr key(%s) : %s", key, key));
+               writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
+           }
+           // Manage Sep
+           isNotFirst = true;
+       }
         
+        return sb;
     }
+    
     public static StringBuilder encodeMessage(GeoTrack geoTrack, StringBuilder dest) {
         StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE);
         // sb.append(MSG_BEGIN);
         writeTo(sb, SmsMessageLocEnum.MSGKEY_PROVIDER, geoTrack.getProvider(), false);
-        writeTo(sb, SmsMessageLocEnum.MSGKEY_TIME, geoTrack.getTime());
+        writeTo(sb, SmsMessageLocEnum.MSGKEY_TIME, geoTrack.getTime(), true);
 
         // Lat Lng
         int latE6 = (int) (geoTrack.getLatitude() * AppConstants.E6);
         int lngE6 = (int) (geoTrack.getLongitude() * AppConstants.E6);
-        writeTo(sb, SmsMessageLocEnum.MSGKEY_LATITUDE_E6, latE6);
-        writeTo(sb, SmsMessageLocEnum.MSGKEY_LONGITUDE_E6, lngE6);
-        writeTo(sb, SmsMessageLocEnum.MSGKEY_ACCURACY, (int) geoTrack.getAccuracy());
+        writeTo(sb, SmsMessageLocEnum.MSGKEY_LATITUDE_E6, latE6, true);
+        writeTo(sb, SmsMessageLocEnum.MSGKEY_LONGITUDE_E6, lngE6, true);
+        writeTo(sb, SmsMessageLocEnum.MSGKEY_ACCURACY, (int) geoTrack.getAccuracy(), true);
 
         // altitude
         if (geoTrack.hasAltitude()) {
             int alt = (int) geoTrack.getAltitude();
-            writeTo(sb, SmsMessageLocEnum.MSGKEY_ALTITUDE, alt);
+            writeTo(sb, SmsMessageLocEnum.MSGKEY_ALTITUDE, alt, true);
         }
         if (geoTrack.hasBearing()) {
             int bearing = (int) geoTrack.getBearing();
-            writeTo(sb, SmsMessageLocEnum.MSGKEY_BEARING, bearing);
+            writeTo(sb, SmsMessageLocEnum.MSGKEY_BEARING, bearing, true);
         }
         if (geoTrack.hasSpeed()) {
             int speed = (int) geoTrack.getSpeed();
-            writeTo(sb, SmsMessageLocEnum.MSGKEY_SPEAD, speed);
+            writeTo(sb, SmsMessageLocEnum.MSGKEY_SPEAD, speed, true);
         }
         // sb.append(MSG_END);
         return sb;
