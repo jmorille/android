@@ -23,8 +23,8 @@ public class GeoTrack {
     // Optionnal
     public int altitude;
     public int accuracy;
-    public float bearing;
-    public float speed;
+    public int bearing;
+    public int speed;
  
     private boolean hasAltitude;
     private boolean hasAccuracy;
@@ -51,10 +51,10 @@ public class GeoTrack {
             this.altitude = (int) loc.getAltitude();
         }
         if (loc.hasBearing()) {
-            bearing = loc.getBearing();
+            bearing = (int)loc.getBearing();
         }
         if (loc.hasSpeed()) {
-            this.speed = loc.getSpeed();
+            this.speed = (int)loc.getSpeed();
         }
     }
 
@@ -193,20 +193,20 @@ public class GeoTrack {
          return this.bearing!=1;
     }
     
-    public float getBearing() {
+    public int getBearing() {
         return bearing;
     }
 
-    public GeoTrack setBearing(float bearing) {
+    public GeoTrack setBearing(int bearing) {
         this.bearing = bearing;
         return this;
     }
 
-    public float getSpeed() {
+    public int getSpeed() {
         return speed;
     }
 
-    public GeoTrack setSpeed(float speed) {
+    public GeoTrack setSpeed(int speed) {
         this.speed = speed;
         return this;
     }

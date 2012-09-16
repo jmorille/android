@@ -154,8 +154,9 @@
         android:id="@+id/extras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextViewBearing"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/bearing"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dip" />
 
     <LinearLayout
