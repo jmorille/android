@@ -8,7 +8,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 public class GeoTrackOpenHelper extends SQLiteOpenHelper {
     
 
-    public static final String DATABASE_NAME = "smstracking.db";
+    public static final String DATABASE_NAME = "geoping.db";
     public static final int DATABASE_VERSION = 1;
     
     private static final String CREATE_BDD = new StringBuffer("CREATE TABLE ").append(GeoTrackDatabase.TABLE_TRACK_POINT).append(" (")//
@@ -22,6 +22,7 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
             .append(GeoTrackColumns.COL_ALTITUDE).append(" INTEGER, ")// /
             .append(GeoTrackColumns.COL_BEARING).append(" REAL, ")// /
             .append(GeoTrackColumns.COL_SPEED).append(" INTEGER ")// /
+            .append(GeoTrackColumns.COL_ADDRESS).append(" TEXT, ")// /
             .append(" );").toString();
 
     // Index
@@ -39,13 +40,13 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_BDD);
-        // db.execSQL(CREATE_INDEX_AK);
+         db.execSQL(CREATE_INDEX_AK);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE " + GeoTrackDatabase.TABLE_TRACK_POINT + ";");
-        // db.execSQL("DROP INDEX " + INDEX_TRACK_POINT_AK + ";");
+         db.execSQL("DROP INDEX " + INDEX_TRACK_POINT_AK + ";");
 
         onCreate(db);
     }

@@ -16,6 +16,7 @@ public class GeoTrack {
     public long time = -1l;
     private int latitudeE6;
     private int longitudeE6;
+    public String address;
     
     private boolean hasLatitude;
     private boolean hasLlongitude;
@@ -248,6 +249,11 @@ public class GeoTrack {
 
     // Override
     
+    public GeoTrack setAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder().append("GeoTrack [");
