@@ -39,8 +39,9 @@ public class GeoPingApplication extends Application {
 
         public void execute() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[]) null);
-             }
+                // executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[])
+                // null);
+            }
         }
     }
 

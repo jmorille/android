@@ -6,14 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 
 public class GeoTrackOpenHelper extends SQLiteOpenHelper {
-    
 
     public static final String DATABASE_NAME = "geoping.db";
     public static final int DATABASE_VERSION = 1;
-    
+
     private static final String CREATE_BDD = new StringBuffer("CREATE TABLE ").append(GeoTrackDatabase.TABLE_TRACK_POINT).append(" (")//
             .append(GeoTrackColumns.COL_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")//
-            .append(GeoTrackColumns.COL_USERID).append(" TEXT NOT NULL, ")// /
+            .append(GeoTrackColumns.COL_PHONE_NUMBER).append(" TEXT NOT NULL, ")// /
             .append(GeoTrackColumns.COL_PROVIDER).append(" TEXT NOT NULL, ")// /
             .append(GeoTrackColumns.COL_TIME).append(" INTEGER NOT NULL, ")// /
             .append(GeoTrackColumns.COL_LATITUDE_E6).append(" INTEGER NOT NULL, ")// /
@@ -28,25 +27,24 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
     // Index
     private static final String INDEX_TRACK_POINT_AK = "IDX_TRACKPOINT_AK";
     private static final String CREATE_INDEX_AK = "CREATE INDEX " + INDEX_TRACK_POINT_AK + " on " + GeoTrackDatabase.TABLE_TRACK_POINT + "(" //
-            + GeoTrackColumns.COL_USERID + ", " //
+            + GeoTrackColumns.COL_PHONE_NUMBER + ", " //
             + GeoTrackColumns.COL_TIME //
             + ");";
 
-  
     public GeoTrackOpenHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION); 
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_BDD);
-         db.execSQL(CREATE_INDEX_AK);
+        db.execSQL(CREATE_INDEX_AK);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE " + GeoTrackDatabase.TABLE_TRACK_POINT + ";");
-         db.execSQL("DROP INDEX " + INDEX_TRACK_POINT_AK + ";");
+        db.execSQL("DROP INDEX " + INDEX_TRACK_POINT_AK + ";");
 
         onCreate(db);
     }

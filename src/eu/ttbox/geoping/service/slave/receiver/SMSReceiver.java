@@ -10,10 +10,9 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageEncoderHelper;
- 
+
 /**
  * @see http://www.tutos-android.com/broadcast-receiver-android {link
  *      http://mobiforge.com/developing/story/sms-messaging-android}
@@ -28,7 +27,7 @@ public class SMSReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        
+
         if (intent.getAction().equals(ACTION_RECEIVE_SMS)) {
             Log.d(TAG, "SMSReceiver : " + intent);
             Bundle bundle = intent.getExtras();
@@ -44,7 +43,7 @@ public class SMSReceiver extends BroadcastReceiver {
                     boolean deleteSms = appPreferences.getBoolean(AppConstants.PREFS_SMS_DELETE_ON_MESSAGE, true);
 
                     for (SmsMessage message : messages) {
-                        boolean isConsume = consumeMessage(context,  message);
+                        boolean isConsume = consumeMessage(context, message);
                         if (!isConsume) {
                             deleteSms = false;
                         }
@@ -61,7 +60,7 @@ public class SMSReceiver extends BroadcastReceiver {
         }
     }
 
-    private boolean consumeMessage(Context context,   SmsMessage message) {
+    private boolean consumeMessage(Context context, SmsMessage message) {
         boolean isConsume = false;
         final String messageBody = message.getMessageBody();
         final String phoneNumber = message.getDisplayOriginatingAddress();
@@ -81,16 +80,16 @@ public class SMSReceiver extends BroadcastReceiver {
     }
 
     private boolean consumeGeoPingRequest(Context context, GeoPingMessage clearMsg) {
-        boolean isConsume = false; 
-        context.startService(Intents.consumeSmsGeoPingRequestHandler(context, clearMsg ));
+        boolean isConsume = false;
+        context.startService(Intents.consumeSmsGeoPingRequestHandler(context, clearMsg));
         isConsume = true;
         return isConsume;
     }
 
     private boolean consumeGeoPingResponse(Context context, GeoPingMessage clearMsg) {
         boolean isConsume = false;
-        context.startService(Intents.consumerSmsGeoPingResponsetHandler(context, clearMsg )); 
-        isConsume = true; 
+        context.startService(Intents.consumerSmsGeoPingResponsetHandler(context, clearMsg));
+        isConsume = true;
         return isConsume;
     }
 

@@ -11,13 +11,13 @@ import eu.ttbox.geoping.domain.cache.ZoomLevelComputeCache;
 public class GeoTrack {
 
     public long id = -1l;
-    public String userId;
+    public String phone;
     public String provider;
     public long time = -1l;
     private int latitudeE6;
     private int longitudeE6;
     public String address;
-    
+
     private boolean hasLatitude;
     private boolean hasLlongitude;
 
@@ -26,12 +26,12 @@ public class GeoTrack {
     public int accuracy;
     public int bearing;
     public int speed;
- 
+
     private boolean hasAltitude;
     private boolean hasAccuracy;
     private boolean hasBearing;
     private boolean hasSpeed;
-    
+
     // Other
     public String titre;
 
@@ -41,8 +41,8 @@ public class GeoTrack {
     public GeoTrack() {
     }
 
-    public GeoTrack(String userId, Location loc) {
-        this.userId = userId;
+    public GeoTrack(String phone, Location loc) {
+        this.phone = phone;
         this.provider = loc.getProvider();
         this.time = loc.getTime();
         this.latitudeE6 = (int) (loc.getLatitude() * AppConstants.E6);
@@ -52,10 +52,10 @@ public class GeoTrack {
             this.altitude = (int) loc.getAltitude();
         }
         if (loc.hasBearing()) {
-            bearing = (int)loc.getBearing();
+            bearing = (int) loc.getBearing();
         }
         if (loc.hasSpeed()) {
-            this.speed = (int)loc.getSpeed();
+            this.speed = (int) loc.getSpeed();
         }
     }
 
@@ -120,9 +120,8 @@ public class GeoTrack {
         return hasLatitude;
     }
 
-
     public GeoTrack setLatitude(double latitude) {
-        return setLatitudeE6 ( (int) (latitude * AppConstants.E6)); 
+        return setLatitudeE6((int) (latitude * AppConstants.E6));
     }
 
     public GeoTrack setLatitudeE6(int latitudeE6) {
@@ -132,7 +131,6 @@ public class GeoTrack {
         return this;
     }
 
-    
     public double getLongitude() {
         return longitudeE6 / AppConstants.E6;
     }
@@ -140,10 +138,9 @@ public class GeoTrack {
     public boolean hasLongitude() {
         return hasLlongitude;
     }
-    
-    
+
     public GeoTrack setLongitude(double longitude) {
-        return setLongitudeE6( (int) (longitude * AppConstants.E6));
+        return setLongitudeE6((int) (longitude * AppConstants.E6));
     }
 
     public GeoTrack setLongitudeE6(int longitudeE6) {
@@ -152,17 +149,14 @@ public class GeoTrack {
         clearLatLngCache();
         return this;
     }
-    
+
     public int getLatitudeE6() {
         return latitudeE6;
     }
 
- 
     public int getLongitudeE6() {
         return longitudeE6;
     }
-
-    
 
     public boolean hasAltitude() {
         return this.altitude != -1;
@@ -191,9 +185,9 @@ public class GeoTrack {
     }
 
     public boolean hasBearing() {
-         return this.bearing!=1;
+        return this.bearing != 1;
     }
-    
+
     public int getBearing() {
         return bearing;
     }
@@ -225,12 +219,12 @@ public class GeoTrack {
         return this;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getPhone() {
+        return phone;
     }
 
-    public GeoTrack setUserId(String userId) {
-        this.userId = userId;
+    public GeoTrack setPhone(String phone) {
+        this.phone = phone;
         return this;
     }
 
@@ -248,7 +242,7 @@ public class GeoTrack {
     }
 
     // Override
-    
+
     public GeoTrack setAddress(String address) {
         this.address = address;
         return this;
@@ -258,7 +252,7 @@ public class GeoTrack {
     public String toString() {
         StringBuilder sb = new StringBuilder().append("GeoTrack [");
         sb.append("id=").append(id)//
-                .append(", userId=").append(userId)//
+                .append(", phone=").append(phone)//
                 .append(", provider=").append(provider)//
                 .append(", latitudeE6=").append(latitudeE6)//
                 .append(", longitudeE6=").append(longitudeE6)//
@@ -268,7 +262,5 @@ public class GeoTrack {
         sb.append("]");
         return sb.toString();
     }
-
-
 
 }

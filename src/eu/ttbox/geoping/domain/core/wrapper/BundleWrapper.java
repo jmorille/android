@@ -6,100 +6,101 @@ import android.os.Bundle;
 
 public class BundleWrapper implements HelperWrapper<Bundle> {
 
-	private Bundle bundle;
+    private Bundle bundle;
 
-	public BundleWrapper() {
-		this.bundle = new Bundle();
-	}
+    public BundleWrapper() {
+        this.bundle = new Bundle();
+    }
 
-	// public void putAll(Bundle map) {
+    // public void putAll(Bundle map) {
 
-	public BundleWrapper(Bundle bundle) {
-		super();
-		this.bundle = bundle;
-	}
- 
-	public Bundle getWrappedValue() {
-		return bundle;
-	}
-	public Bundle getBundle() {
-		return bundle;
-	}
+    public BundleWrapper(Bundle bundle) {
+        super();
+        this.bundle = bundle;
+    }
 
-	public int size() {
-		return bundle.size();
-	}
+    public Bundle getWrappedValue() {
+        return bundle;
+    }
 
-	public boolean isEmpty() {
-		return bundle.isEmpty();
-	}
+    public Bundle getBundle() {
+        return bundle;
+    }
 
-	public void clear() {
-		bundle.clear();
-	}
+    public int size() {
+        return bundle.size();
+    }
 
-	public boolean containsKey(String key) {
-		return bundle.containsKey(key);
-	}
+    public boolean isEmpty() {
+        return bundle.isEmpty();
+    }
 
-	public Object get(String key) {
-		return bundle.get(key);
-	}
+    public void clear() {
+        bundle.clear();
+    }
 
-	public void remove(String key) {
-		bundle.remove(key);
-	}
+    public boolean containsKey(String key) {
+        return bundle.containsKey(key);
+    }
 
-	public Set<String> keySet() {
-		return bundle.keySet();
-	}
+    public Object get(String key) {
+        return bundle.get(key);
+    }
 
-	// Accessors
+    public void remove(String key) {
+        bundle.remove(key);
+    }
 
-	@Override
-	public void putLong(String colId, Long valueOf) {
-		bundle.putLong(colId, valueOf);
-	}
+    public Set<String> keySet() {
+        return bundle.keySet();
+    }
 
-	@Override
-	public long getLong(String key) { 
-		return bundle.getLong(key);
-	}
+    // Accessors
 
-//	@Override
-//	public long getLong(String key, long defaultValue) {
-//		return bundle.getLong(key, defaultValue);
-//	}
+    @Override
+    public void putLong(String colId, Long valueOf) {
+        bundle.putLong(colId, valueOf);
+    }
 
-	@Override
-	public void putString(String colUserid, String userId) {
-		bundle.putString(colUserid, userId);
-	}
+    @Override
+    public long getLong(String key) {
+        return bundle.getLong(key);
+    }
 
-	@Override
-	public String getString(String key) {
-		return bundle.getString(key);
-	}
+    // @Override
+    // public long getLong(String key, long defaultValue) {
+    // return bundle.getLong(key, defaultValue);
+    // }
 
-//	@Override
-//	public String getString(String key, String defaultValue) { 
-//		return bundle.getString(key, defaultValue);
-//	}
+    @Override
+    public void putString(String colUserid, String userId) {
+        bundle.putString(colUserid, userId);
+    }
 
-	@Override
-	public void putInt(String colLatitudeE6, int latitudeE6) {
-		bundle.putInt(colLatitudeE6, latitudeE6);
+    @Override
+    public String getString(String key) {
+        return bundle.getString(key);
+    }
 
-	}
+    // @Override
+    // public String getString(String key, String defaultValue) {
+    // return bundle.getString(key, defaultValue);
+    // }
 
-	@Override
-	public int getInt(String key) {
-		return bundle.getInt(key);
-	}
-//
-//	@Override
-//	public int getInt(String key, int defaultValue) { 
-//		return bundle.getInt(key, defaultValue);
-//	}
+    @Override
+    public void putInt(String colLatitudeE6, int latitudeE6) {
+        bundle.putInt(colLatitudeE6, latitudeE6);
+
+    }
+
+    @Override
+    public int getInt(String key) {
+        return bundle.getInt(key);
+    }
+    //
+    // @Override
+    // public int getInt(String key, int defaultValue) {
+    // return bundle.getInt(key, defaultValue);
+    // }
 
 }

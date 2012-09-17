@@ -5,7 +5,6 @@ import java.util.HashMap;
 import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
-import eu.ttbox.geoping.domain.GeoTrack;
 
 public class SmsParamEncoderHelper {
 
@@ -49,9 +48,9 @@ public class SmsParamEncoderHelper {
         String result = locProviderEncoder.get(value);
         return result == null ? value : result;
     }
- 
+
     // ===========================================================
-    // Tools 
+    // Tools
     // ===========================================================
     private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, String value) {
         return writeTo(sb, field, value, true);
@@ -110,17 +109,17 @@ public class SmsParamEncoderHelper {
     // ===========================================================
     // GeoTrack Decoder
     // ===========================================================
-    
-    public static Bundle decodeMessageAsMap(String encoded ) {
+
+    public static Bundle decodeMessageAsMap(String encoded) {
         return decodeMessageAsMap(encoded, null);
     }
-    
+
     public static Bundle decodeMessageAsMap(String encoded, Bundle dest) {
         Bundle result = dest != null ? dest : new Bundle();
         String[] splitMsg = encoded.split(String.valueOf(FIELD_SEP));
         for (String field : splitMsg) {
             char key = field.charAt(0);
-            SmsMessageLocEnum fieldEnum =  SmsMessageLocEnum.getBySmsFieldName(key);
+            SmsMessageLocEnum fieldEnum = SmsMessageLocEnum.getBySmsFieldName(key);
             if (fieldEnum != null) {
                 String valueEncoded = field.substring(1, field.length());
                 switch (fieldEnum.type) {
@@ -147,75 +146,75 @@ public class SmsParamEncoderHelper {
     // ===========================================================
     // GeoTrack Encoder
     // ===========================================================
-    
-
-    
-
 
     public static StringBuilder encodeMessage(Bundle extras, StringBuilder dest) {
         StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE);
-        boolean isNotFirst = false; 
-       for (String key : extras.keySet()) {
-           SmsMessageLocEnum fieldEnum =  SmsMessageLocEnum.getByDbFieldName(key);
-           if (fieldEnum != null) {
-               switch (fieldEnum.type) {
-               case GPS_PROVIDER:
-               case STRING:
-                   writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
+        boolean isNotFirst = false;
+        for (String key : extras.keySet()) {
+            SmsMessageLocEnum fieldEnum = SmsMessageLocEnum.getByDbFieldName(key);
+            if (fieldEnum != null) {
+                switch (fieldEnum.type) {
+                case GPS_PROVIDER:
+                case STRING:
+                    writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
                     break;
-               case INT:
-                   writeTo(sb, fieldEnum, extras.getInt(key), isNotFirst); 
-                   break;
-               case LONG:
-                   writeTo(sb, fieldEnum, extras.getLong(key), isNotFirst);  
-                   break;
-               default:
-                   break;
-               }
-           } else {
-               Log.w(TAG, String.format("Ignore field [%s] : No convertion found",  key));
-//               writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
-           }
-           // Manage Sep
-           isNotFirst = true;
-       }
-        
+                case INT:
+                    writeTo(sb, fieldEnum, extras.getInt(key), isNotFirst);
+                    break;
+                case LONG:
+                    writeTo(sb, fieldEnum, extras.getLong(key), isNotFirst);
+                    break;
+                default:
+                    break;
+                }
+            } else {
+                Log.w(TAG, String.format("Ignore field [%s] : No convertion found", key));
+                // writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
+            }
+            // Manage Sep
+            isNotFirst = true;
+        }
+
         return sb;
     }
-    
-//    public static StringBuilder encodeMessage(GeoTrack geoTrack) {
-//        return encodeMessage(geoTrack, null);
-//    }
-//    
-//    public static StringBuilder encodeMessage(GeoTrack geoTrack, StringBuilder dest) {
-//        StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE);
-//        // sb.append(MSG_BEGIN);
-//        writeTo(sb, SmsMessageLocEnum.MSGKEY_PROVIDER, geoTrack.getProvider(), false);
-//        writeTo(sb, SmsMessageLocEnum.MSGKEY_TIME, geoTrack.getTime(), true);
-//
-//        // Lat Lng
-//        int latE6 = (int) (geoTrack.getLatitude() * AppConstants.E6);
-//        int lngE6 = (int) (geoTrack.getLongitude() * AppConstants.E6);
-//        writeTo(sb, SmsMessageLocEnum.MSGKEY_LATITUDE_E6, latE6, true);
-//        writeTo(sb, SmsMessageLocEnum.MSGKEY_LONGITUDE_E6, lngE6, true);
-//        writeTo(sb, SmsMessageLocEnum.MSGKEY_ACCURACY, (int) geoTrack.getAccuracy(), true);
-//
-//        // altitude
-//        if (geoTrack.hasAltitude()) {
-//            int alt = (int) geoTrack.getAltitude();
-//            writeTo(sb, SmsMessageLocEnum.MSGKEY_ALTITUDE, alt, true);
-//        }
-//        if (geoTrack.hasBearing()) {
-//            int bearing = (int) geoTrack.getBearing();
-//            writeTo(sb, SmsMessageLocEnum.MSGKEY_BEARING, bearing, true);
-//        }
-//        if (geoTrack.hasSpeed()) {
-//            int speed = (int) geoTrack.getSpeed();
-//            writeTo(sb, SmsMessageLocEnum.MSGKEY_SPEAD, speed, true);
-//        }
-//        // sb.append(MSG_END);
-//        return sb;
-//    }
+
+    // public static StringBuilder encodeMessage(GeoTrack geoTrack) {
+    // return encodeMessage(geoTrack, null);
+    // }
+    //
+    // public static StringBuilder encodeMessage(GeoTrack geoTrack,
+    // StringBuilder dest) {
+    // StringBuilder sb = dest != null ? dest : new
+    // StringBuilder(AppConstants.SMS_MAX_SIZE);
+    // // sb.append(MSG_BEGIN);
+    // writeTo(sb, SmsMessageLocEnum.MSGKEY_PROVIDER, geoTrack.getProvider(),
+    // false);
+    // writeTo(sb, SmsMessageLocEnum.MSGKEY_TIME, geoTrack.getTime(), true);
+    //
+    // // Lat Lng
+    // int latE6 = (int) (geoTrack.getLatitude() * AppConstants.E6);
+    // int lngE6 = (int) (geoTrack.getLongitude() * AppConstants.E6);
+    // writeTo(sb, SmsMessageLocEnum.MSGKEY_LATITUDE_E6, latE6, true);
+    // writeTo(sb, SmsMessageLocEnum.MSGKEY_LONGITUDE_E6, lngE6, true);
+    // writeTo(sb, SmsMessageLocEnum.MSGKEY_ACCURACY, (int)
+    // geoTrack.getAccuracy(), true);
+    //
+    // // altitude
+    // if (geoTrack.hasAltitude()) {
+    // int alt = (int) geoTrack.getAltitude();
+    // writeTo(sb, SmsMessageLocEnum.MSGKEY_ALTITUDE, alt, true);
+    // }
+    // if (geoTrack.hasBearing()) {
+    // int bearing = (int) geoTrack.getBearing();
+    // writeTo(sb, SmsMessageLocEnum.MSGKEY_BEARING, bearing, true);
+    // }
+    // if (geoTrack.hasSpeed()) {
+    // int speed = (int) geoTrack.getSpeed();
+    // writeTo(sb, SmsMessageLocEnum.MSGKEY_SPEAD, speed, true);
+    // }
+    // // sb.append(MSG_END);
+    // return sb;
+    // }
 
     // ===========================================================
     // Other

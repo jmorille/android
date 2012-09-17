@@ -2,42 +2,42 @@ package eu.ttbox.geoping.domain.core.wrapper;
 
 public interface HelperWrapper<T> {
 
-	T getWrappedValue();
+    T getWrappedValue();
 
-	// Iterator
-	int size();
+    // Iterator
+    int size();
 
-	boolean isEmpty();
+    boolean isEmpty();
 
-	void clear();
+    void clear();
 
-	boolean containsKey(String key);
+    boolean containsKey(String key);
 
-	Object get(String key);
+    Object get(String key);
 
-	void remove(String key);
+    void remove(String key);
 
-	// Set<String> keySet();
+    // Set<String> keySet();
 
-	// Long
-	void putLong(String key, Long value);
+    // Long
+    void putLong(String key, Long value);
 
-	public long getLong(String key);
+    public long getLong(String key);
 
-	// long getLong(String key, long defaultValue);
+    // long getLong(String key, long defaultValue);
 
-	// String
-	void putString(String key, String value);
+    // String
+    void putString(String key, String value);
 
-	String getString(String key);
+    String getString(String key);
 
-	// String getString(String key, String defaultValue);
+    // String getString(String key, String defaultValue);
 
-	// Int
-	void putInt(String key, int value);
+    // Int
+    void putInt(String key, int value);
 
-	int getInt(String key);
+    int getInt(String key);
 
-	// int getInt(String key, int defaultValue);
+    // int getInt(String key, int defaultValue);
 
 }

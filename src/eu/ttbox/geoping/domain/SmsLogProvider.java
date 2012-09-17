@@ -14,7 +14,7 @@ public class SmsLogProvider extends ContentProvider {
 
     private static final String TAG = "SmsLogProvider";
 
-     // MIME types used for searching words or looking up a single definition
+    // MIME types used for searching words or looking up a single definition
     public static final String SMSLOGS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/smslog";
     public static final String SMSLOG_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/smslog";
 

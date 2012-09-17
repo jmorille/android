@@ -7,12 +7,10 @@ public class GeoPingMessage {
     public String phone;
     public String action;
     public Bundle params;
-    
-    
-    public GeoPingMessage() {
-        super(); 
-    }
 
+    public GeoPingMessage() {
+        super();
+    }
 
     public GeoPingMessage(String phone, String action, Bundle params) {
         super();
@@ -21,13 +19,9 @@ public class GeoPingMessage {
         this.params = params;
     }
 
+    @Override
+    public String toString() {
+        return "GeoPingMessage [phone=" + phone + ", action=" + action + ", params=" + params + "]";
+    }
 
-	@Override
-	public String toString() {
-		return "GeoPingMessage [phone=" + phone + ", action=" + action + ", params=" + params + "]";
-	}
-    
-    
-    
-    
 }

@@ -42,7 +42,6 @@ public class MyAppTilesProviders {
             "http://tiles.openpistemap.org/contours-only", //
             "http://tiles2.openpistemap.org/landshaded//");
 
- 
     public static void initTilesSource(Context context) {
         // Remove Tiles
         TileSourceFactory.getTileSources().remove(TileSourceFactory.TOPO);
@@ -64,7 +63,7 @@ public class MyAppTilesProviders {
             TileSourceFactory.addTileSource(bmts);
         }
         // Add Other Tiles
-//        TileSourceFactory.addTileSource(CLOUDMADE_VECTOR_TILES);
+        // TileSourceFactory.addTileSource(CLOUDMADE_VECTOR_TILES);
         // TileSourceFactory.addTileSource(PISTEMAP);
 
     }

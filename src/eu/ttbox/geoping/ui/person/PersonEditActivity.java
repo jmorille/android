@@ -114,7 +114,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
             Uri data = intent.getData();
             this.entityId = data.getLastPathSegment();
             Bundle bundle = new Bundle();
-            bundle.putString(Intents.EXTRA_USERID, entityId);
+            bundle.putString(Intents.EXTRA_SMS_PHONE, entityId);
             getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER, bundle, personLoaderCallback);
         } else if (Intent.ACTION_DELETE.equals(action)) {
             // TODO
@@ -280,7 +280,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
-            String entityId = args.getCharSequence(Intents.EXTRA_USERID).toString();
+            String entityId = args.getCharSequence(Intents.EXTRA_SMS_PHONE).toString();
             Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, String.format("/%s", entityId));
             // Loader
             CursorLoader cursorLoader = new CursorLoader(PersonEditActivity.this, entityUri, null, null, null, null);

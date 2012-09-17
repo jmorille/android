@@ -1,7 +1,6 @@
 package eu.ttbox.geoping.ui.map;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
@@ -17,7 +16,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,10 +31,8 @@ import android.view.SubMenu;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
@@ -78,10 +74,9 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
     private SharedPreferences sharedPreferences;
     private SharedPreferences privateSharedPreferences;
 
-    
     // Deprecated
     private ResourceProxy mResourceProxy;
-    
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -126,7 +121,6 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
             Log.i(TAG, "### ### ### ### ### ### ### ### ### ### ### ### ###");
         }
     }
-    
 
     @Override
     protected void onResume() {
@@ -183,7 +177,6 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         }
     }
 
-
     @Override
     protected void onPause() {
         if (Log.isLoggable(TAG, Log.INFO)) {
@@ -208,12 +201,12 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 
         // Service
         unregisterReceiver(mStatusReceiver);
-        
+
         // Overlay May Location
         if (myLocation != null) {
             myLocation.onPause();
         }
-       
+
         // Overlay GeoTrack
         // if (!geoTrackOverlayByUser.isEmpty()) {
         // for (Map.Entry<String, GeoTrackOverlay> entry :
@@ -438,7 +431,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
             Log.e(TAG, "########################################");
             Log.e(TAG, "ShwoMap StatusReceiver onReceive  action : " + action);
             if (Intents.ACTION_NEW_GEOTRACK_INSERTED.equals(action)) {
-            } 
+            }
         }
     };
     // ===========================================================

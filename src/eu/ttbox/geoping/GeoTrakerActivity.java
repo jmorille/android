@@ -55,7 +55,6 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
     TextView adresseTextView;
     TextView extrasTextView;
 
-
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

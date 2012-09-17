@@ -251,15 +251,16 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
     private void invalidateMapFor(GeoTrack geoTrack) {
         // TODO for GeoPoint
-         mapView.invalidate();
+        mapView.invalidate();
     }
 
     private void addNewGeoTrack(GeoTrack geoTrack) {
         geoTracks.add(geoTrack);
         invalidateMapFor(geoTrack);
         animateToGeoTrack(geoTrack);
-//        geoTracksPath.reset();
+        // geoTracksPath.reset();
     }
+
     // ===========================================================
     // Accessor
     // ===========================================================
@@ -505,7 +506,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             String sortOrder = SQL_SORT_DEFAULT;
-            String selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_USERID, GeoTrackColumns.COL_TIME);
+            String selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_PHONE_NUMBER, GeoTrackColumns.COL_TIME);
             String[] selectionArgs = new String[] { getPersonUserId(), timeBeginInMs, timeEndInMs };
             Log.d(TAG, String.format("Sql request : %s / for param : user [%s] with date range(%s, %s)", selection, selectionArgs[0], selectionArgs[1], selectionArgs[2]));
             // Loader
@@ -569,22 +570,22 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction(); 
+            String action = intent.getAction();
             Log.d(TAG, "StatusReceiver onReceive  action : " + action);
             if (Intents.ACTION_NEW_GEOTRACK_INSERTED.equals(action)) {
                 Bundle extras = intent.getExtras();
-                String userIdIntent = extras.getString(Intents.EXTRA_USERID);
+                String userIdIntent = extras.getString(Intents.EXTRA_SMS_PHONE);
                 Log.d(TAG, "StatusReceiver for userId : " + userIdIntent);
                 if (getPersonUserId().equals(userIdIntent)) {
                     // TODO Load Data
                     Uri data = intent.getData();
                     Log.d(TAG, "StatusReceiver Starting loaded data form uri : " + data);
                     GeoTrack addedGeoTrack = loadGeoTrackById(data);
-                    Log.d(TAG, String.format("Data loader for Uri %s : %s",data, addedGeoTrack));
+                    Log.d(TAG, String.format("Data loader for Uri %s : %s", data, addedGeoTrack));
                     if (addedGeoTrack != null) {
                         // Add GeoTrack
                         addNewGeoTrack(addedGeoTrack);
-                        
+
                     }
                 } else {
                     Log.d(TAG, "onReceive Intent action " + Intents.ACTION_NEW_GEOTRACK_INSERTED + " for another User than Mine");
@@ -602,7 +603,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                 GeoTrackHelper helper = new GeoTrackHelper().initWrapper(c);
                 result = helper.getEntity(c);
                 // Validate
-                String resultUserId = result.userId;
+                String resultUserId = result.phone;
                 if (!getPersonUserId().equals(resultUserId)) {
                     Log.w(TAG, String.format("Ignore geoTrack %s for user %s : Current overlay for %s", geoTrackUri, resultUserId, person));
                 }

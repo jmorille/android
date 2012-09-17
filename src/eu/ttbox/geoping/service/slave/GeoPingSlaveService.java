@@ -23,11 +23,9 @@ import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
-import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
 import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageEncoderHelper;
-import eu.ttbox.geoping.service.encoder.SmsParamEncoderHelper;
 import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
 public class GeoPingSlaveService extends WorkerService {
@@ -86,8 +84,8 @@ public class GeoPingSlaveService extends WorkerService {
     @Override
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
-        Log.d(TAG,String.format(  "onHandleIntent for action %s : %s", action, intent));
-         if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
+        Log.d(TAG, String.format("onHandleIntent for action %s : %s", action, intent));
+        if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
             String phoneNumber = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             // Request
@@ -126,11 +124,10 @@ public class GeoPingSlaveService extends WorkerService {
         }
     }
 
-
     private void sendSmsLocation(String phone, Location location) {
-    	GeoTrack geotrack = new GeoTrack(phone, location); 
-    	Bundle params = GeoTrackHelper.getBundleValues(geotrack);
-    	GeoPingMessage smsMsg = new GeoPingMessage(phone, SmsMessageEncoderHelper.ACTION_GEO_LOC, params);
+        GeoTrack geotrack = new GeoTrack(phone, location);
+        Bundle params = GeoTrackHelper.getBundleValues(geotrack);
+        GeoPingMessage smsMsg = new GeoPingMessage(phone, SmsMessageEncoderHelper.ACTION_GEO_LOC, params);
         sendSms(phone, smsMsg);
     }
 
@@ -140,6 +137,7 @@ public class GeoPingSlaveService extends WorkerService {
             SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
         }
     }
+
     /**
      * Computes the battery level by registering a receiver to the intent
      * triggered by a battery status/level change. {link
@@ -167,12 +165,13 @@ public class GeoPingSlaveService extends WorkerService {
     public class GeoPingRequest implements Callable<Boolean>, LocationListener {
 
         public String smsPhoneNumber;
-        public Bundle params ;
+        public Bundle params;
+
         public GeoPingRequest() {
             super();
         }
 
-        public GeoPingRequest(String phoneNumber, Bundle params ) {
+        public GeoPingRequest(String phoneNumber, Bundle params) {
             super();
             this.smsPhoneNumber = phoneNumber;
             this.params = params;
@@ -208,7 +207,6 @@ public class GeoPingSlaveService extends WorkerService {
 
     }
 
-
     // ===========================================================
     // Binder
     // ===========================================================
@@ -224,5 +222,4 @@ public class GeoPingSlaveService extends WorkerService {
         return binder;
     }
 
-    
 }

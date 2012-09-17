@@ -2,8 +2,6 @@ package eu.ttbox.geoping.domain.smslog;
 
 import java.util.HashMap;
 
-import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
-
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,6 +10,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class SmsLogDatabase {
 

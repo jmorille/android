@@ -194,7 +194,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     }
 
     public void onResume() {
-        Log.d(TAG, "##### onResume ####"); 
+        Log.d(TAG, "##### onResume ####");
         enableMyLocation();
         enableCompass();
         enableThreadExecutors();

@@ -21,7 +21,7 @@ public class GeoTrackDatabase {
 
     public static class GeoTrackColumns {
         public static final String COL_ID = BaseColumns._ID;
-        public static final String COL_USERID = "USERID";
+        public static final String COL_PHONE_NUMBER = "PHONE_NUMBER";
         public static final String COL_TIME = "TIME";
         public static final String COL_PROVIDER = "PROVIDER";
         public static final String COL_LATITUDE_E6 = "LAT_E6";
@@ -31,12 +31,13 @@ public class GeoTrackDatabase {
         public static final String COL_BEARING = "BEARING";
         public static final String COL_SPEED = "SPEED";
         public static final String COL_ADDRESS = "ADDRESS";
-        public static final String[] ALL_COLS = new String[] { COL_ID, COL_USERID, COL_TIME, COL_PROVIDER, COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_ACCURACY, COL_ALTITUDE, COL_BEARING, COL_SPEED, COL_ADDRESS };
+        public static final String[] ALL_COLS = new String[] { COL_ID, COL_PHONE_NUMBER, COL_TIME, COL_PROVIDER, COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_ACCURACY, COL_ALTITUDE, COL_BEARING, COL_SPEED,
+                COL_ADDRESS };
 
     }
- 
+
     private static final String CRITERIA_BY_ENTITY_ID = String.format("%s = ?", GeoTrackColumns.COL_ID);
-    private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoTrackColumns.COL_USERID);
+    private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoTrackColumns.COL_PHONE_NUMBER);
 
     private SQLiteDatabase bdd;
 
@@ -50,9 +51,9 @@ public class GeoTrackDatabase {
 
     private static HashMap<String, String> buildGeoTrackColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
-        // Add Id 
-        for (String col : GeoTrackColumns.ALL_COLS) { 
-            map.put(col, col); 
+        // Add Id
+        for (String col : GeoTrackColumns.ALL_COLS) {
+            map.put(col, col);
         }
         // Add Suggest Aliases
         map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", GeoTrackColumns.COL_LATITUDE_E6, SearchManager.SUGGEST_COLUMN_TEXT_1));
@@ -65,21 +66,21 @@ public class GeoTrackDatabase {
 
     public Cursor getEntityById(String rowId, String[] columns) {
         String[] selectionArgs = new String[] { rowId };
-        return queryEntities(columns, CRITERIA_BY_ENTITY_ID, selectionArgs,  null);
+        return queryEntities(columns, CRITERIA_BY_ENTITY_ID, selectionArgs, null);
     }
 
-    public Cursor queryEntities(String[] columns, String selection, String[] selectionArgs,  String order) {
+    public Cursor queryEntities(String[] columns, String selection, String[] selectionArgs, String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_TRACK_POINT);
         builder.setProjectionMap(mGeoTrackColumnMap);
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), columns, selection, selectionArgs, null, null, order);
         // Manage Cursor
-//        if (cursor == null) {
-//            return null;
-//        } else if (!cursor.moveToFirst()) {
-//            cursor.close();
-//            return null;
-//        }
+        // if (cursor == null) {
+        // return null;
+        // } else if (!cursor.moveToFirst()) {
+        // cursor.close();
+        // return null;
+        // }
         return cursor;
     }
 
@@ -135,17 +136,17 @@ public class GeoTrackDatabase {
         return result;
     }
 
-//    @Deprecated
-//    public void open() {
-//        // on ouvre la BDD en �criture
-//        bdd = mDatabaseOpenHelper.getWritableDatabase();
-//    }
-//
-//    @Deprecated
-//    public void close() {
-//        // on ferme l'acc�s � la BDD
-//        bdd.close();
-//    }
+    // @Deprecated
+    // public void open() {
+    // // on ouvre la BDD en �criture
+    // bdd = mDatabaseOpenHelper.getWritableDatabase();
+    // }
+    //
+    // @Deprecated
+    // public void close() {
+    // // on ferme l'acc�s � la BDD
+    // bdd.close();
+    // }
 
     //
     // @Deprecated
@@ -223,7 +224,7 @@ public class GeoTrackDatabase {
         calendar.clear(Calendar.SECOND);
         calendar.clear(Calendar.MILLISECOND);
         long pointDate = calendar.getTimeInMillis();
-        String whereClause = GeoTrackColumns.COL_USERID + " = ? and " + GeoTrackColumns.COL_TIME + '>' + pointDate;
+        String whereClause = GeoTrackColumns.COL_PHONE_NUMBER + " = ? and " + GeoTrackColumns.COL_TIME + '>' + pointDate;
         Cursor c = bdd.query(TABLE_TRACK_POINT, GeoTrackColumns.ALL_COLS, whereClause, new String[] { userId }, null, null, GeoTrackColumns.COL_TIME);
         return cursorToLivre(c);
     }
@@ -243,7 +244,7 @@ public class GeoTrackDatabase {
             GeoTrackHelper helper = new GeoTrackHelper().initWrapper(c);
             while (c.moveToNext()) {
                 // On cr�� un livre
-                GeoTrack point = helper.getEntity(c); 
+                GeoTrack point = helper.getEntity(c);
                 points.add(point);
             }
         }

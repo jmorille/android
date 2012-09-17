@@ -30,7 +30,7 @@ public class GeoTrackHelper {
 
     public GeoTrackHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(GeoTrackColumns.COL_ID);
-        userIdIdx = cursor.getColumnIndex(GeoTrackColumns.COL_USERID);
+        userIdIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PHONE_NUMBER);
         timeIdx = cursor.getColumnIndex(GeoTrackColumns.COL_TIME);
         providerIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PROVIDER);
 
@@ -52,7 +52,7 @@ public class GeoTrackHelper {
         }
         GeoTrack geoTrack = new GeoTrack();
         geoTrack.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
-        geoTrack.setUserId(userIdIdx > -1 ? cursor.getString(userIdIdx) : null);
+        geoTrack.setPhone(userIdIdx > -1 ? cursor.getString(userIdIdx) : null);
         geoTrack.setTime(timeIdx > -1 ? cursor.getLong(timeIdx) : -1);
         geoTrack.setProvider(providerIdx > -1 ? cursor.getString(providerIdx) : null);
         if (latitudeE6Idx > -1) {
@@ -88,70 +88,70 @@ public class GeoTrackHelper {
     }
 
     public static ContentValues getContentValues(GeoTrack user) {
-    	ContentValuesWrapper wrapper = (ContentValuesWrapper)getWrapperValues(user,  new ContentValuesWrapper());
+        ContentValuesWrapper wrapper = (ContentValuesWrapper) getWrapperValues(user, new ContentValuesWrapper());
         ContentValues initialValues = wrapper.getWrappedValue();
         return initialValues;
     }
- 
+
     public static Bundle getBundleValues(GeoTrack geoTrack) {
-    	BundleWrapper wrapper = (BundleWrapper)getWrapperValues(geoTrack, new BundleWrapper());
-    	Bundle bundle = wrapper.getWrappedValue();
-    	return bundle;
-    } 
-    	
-    private static HelperWrapper<?> getWrapperValues(GeoTrack geoTrack, HelperWrapper<?> initialValues) { 
-          if (geoTrack.id > -1) {
-              initialValues.putLong(GeoTrackColumns.COL_ID, Long.valueOf(geoTrack.id));
-          }
-          initialValues.putString(GeoTrackColumns.COL_USERID, geoTrack.userId);
-          initialValues.putLong(GeoTrackColumns.COL_TIME, geoTrack.time);
-          initialValues.putString(GeoTrackColumns.COL_PROVIDER, geoTrack.provider);
-          initialValues.putInt(GeoTrackColumns.COL_LATITUDE_E6, geoTrack.getLatitudeE6());
-          initialValues.putInt(GeoTrackColumns.COL_LONGITUDE_E6, geoTrack.getLongitudeE6());
-          initialValues.putInt(GeoTrackColumns.COL_ACCURACY, geoTrack.accuracy);
-          initialValues.putInt(GeoTrackColumns.COL_ALTITUDE, geoTrack.altitude);
-
-          initialValues.putInt(GeoTrackColumns.COL_BEARING, geoTrack.bearing);
-          initialValues.putInt(GeoTrackColumns.COL_SPEED, geoTrack.speed);
-
-          return initialValues;
+        BundleWrapper wrapper = (BundleWrapper) getWrapperValues(geoTrack, new BundleWrapper());
+        Bundle bundle = wrapper.getWrappedValue();
+        return bundle;
     }
-    
-    public static GeoTrack getEntityFromBundle(Bundle initialValues) { 
-    	if (initialValues==null || initialValues.isEmpty()) {
-    		return null;
-    	}
-    	GeoTrack geoTrack = new GeoTrack();
-    	if (initialValues.containsKey(GeoTrackColumns.COL_ID)) {
-    		geoTrack.setId(initialValues.getLong(GeoTrackColumns.COL_ID));
-    	}
-    	if (initialValues.containsKey(GeoTrackColumns.COL_USERID)) {
-    		geoTrack.setUserId(initialValues.getString(GeoTrackColumns.COL_USERID));
-    	}
-    	if (initialValues.containsKey(GeoTrackColumns.COL_PROVIDER)) {
-    		geoTrack.setProvider(initialValues.getString(GeoTrackColumns.COL_PROVIDER));
-    	}
-    	if (initialValues.containsKey(GeoTrackColumns.COL_TIME)) {
-    		geoTrack.setTime(initialValues.getLong(GeoTrackColumns.COL_TIME));
-    	}
-    	if (initialValues.containsKey(GeoTrackColumns.COL_LATITUDE_E6)) {
-    		geoTrack.setLatitudeE6(initialValues.getInt(GeoTrackColumns.COL_LATITUDE_E6));
-    	}
-    	if (initialValues.containsKey(GeoTrackColumns.COL_LONGITUDE_E6)) {
-    		geoTrack.setLongitudeE6(initialValues.getInt(GeoTrackColumns.COL_LONGITUDE_E6));
-    	}
-    	if (initialValues.containsKey(GeoTrackColumns.COL_ACCURACY)) {
-    		geoTrack.setAccuracy(initialValues.getInt(GeoTrackColumns.COL_ACCURACY));
-    	}
-    	if (initialValues.containsKey(GeoTrackColumns.COL_ALTITUDE)) {
-    		geoTrack.setAltitude(initialValues.getInt(GeoTrackColumns.COL_ALTITUDE));
-    	}
-    	if (initialValues.containsKey(GeoTrackColumns.COL_BEARING)) {
-    		geoTrack.setBearing(initialValues.getInt(GeoTrackColumns.COL_BEARING));
-    	}
-    	if (initialValues.containsKey(GeoTrackColumns.COL_SPEED)) {
-    		geoTrack.setSpeed(initialValues.getInt(GeoTrackColumns.COL_SPEED));
-    	} 
+
+    private static HelperWrapper<?> getWrapperValues(GeoTrack geoTrack, HelperWrapper<?> initialValues) {
+        if (geoTrack.id > -1) {
+            initialValues.putLong(GeoTrackColumns.COL_ID, Long.valueOf(geoTrack.id));
+        }
+        initialValues.putString(GeoTrackColumns.COL_PHONE_NUMBER, geoTrack.phone);
+        initialValues.putLong(GeoTrackColumns.COL_TIME, geoTrack.time);
+        initialValues.putString(GeoTrackColumns.COL_PROVIDER, geoTrack.provider);
+        initialValues.putInt(GeoTrackColumns.COL_LATITUDE_E6, geoTrack.getLatitudeE6());
+        initialValues.putInt(GeoTrackColumns.COL_LONGITUDE_E6, geoTrack.getLongitudeE6());
+        initialValues.putInt(GeoTrackColumns.COL_ACCURACY, geoTrack.accuracy);
+        initialValues.putInt(GeoTrackColumns.COL_ALTITUDE, geoTrack.altitude);
+
+        initialValues.putInt(GeoTrackColumns.COL_BEARING, geoTrack.bearing);
+        initialValues.putInt(GeoTrackColumns.COL_SPEED, geoTrack.speed);
+
+        return initialValues;
+    }
+
+    public static GeoTrack getEntityFromBundle(Bundle initialValues) {
+        if (initialValues == null || initialValues.isEmpty()) {
+            return null;
+        }
+        GeoTrack geoTrack = new GeoTrack();
+        if (initialValues.containsKey(GeoTrackColumns.COL_ID)) {
+            geoTrack.setId(initialValues.getLong(GeoTrackColumns.COL_ID));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_PHONE_NUMBER)) {
+            geoTrack.setPhone(initialValues.getString(GeoTrackColumns.COL_PHONE_NUMBER));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_PROVIDER)) {
+            geoTrack.setProvider(initialValues.getString(GeoTrackColumns.COL_PROVIDER));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_TIME)) {
+            geoTrack.setTime(initialValues.getLong(GeoTrackColumns.COL_TIME));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_LATITUDE_E6)) {
+            geoTrack.setLatitudeE6(initialValues.getInt(GeoTrackColumns.COL_LATITUDE_E6));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_LONGITUDE_E6)) {
+            geoTrack.setLongitudeE6(initialValues.getInt(GeoTrackColumns.COL_LONGITUDE_E6));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_ACCURACY)) {
+            geoTrack.setAccuracy(initialValues.getInt(GeoTrackColumns.COL_ACCURACY));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_ALTITUDE)) {
+            geoTrack.setAltitude(initialValues.getInt(GeoTrackColumns.COL_ALTITUDE));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_BEARING)) {
+            geoTrack.setBearing(initialValues.getInt(GeoTrackColumns.COL_BEARING));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_SPEED)) {
+            geoTrack.setSpeed(initialValues.getInt(GeoTrackColumns.COL_SPEED));
+        }
         return geoTrack;
-  }
+    }
 }

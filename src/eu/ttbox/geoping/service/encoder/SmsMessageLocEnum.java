@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 
-
 public enum SmsMessageLocEnum {
 
     MSGKEY_PROVIDER('p', SmsMessageTypeEnum.GPS_PROVIDER, GeoTrackColumns.COL_PROVIDER), //
@@ -13,7 +12,7 @@ public enum SmsMessageLocEnum {
     MSGKEY_LONGITUDE_E6('y', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_LONGITUDE_E6), //
     MSGKEY_ALTITUDE('h', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ALTITUDE), //
     MSGKEY_ACCURACY('a', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ACCURACY), //
-    MSGKEY_BEARING('b', SmsMessageTypeEnum.INT,   GeoTrackColumns.COL_BEARING), //
+    MSGKEY_BEARING('b', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BEARING), //
     MSGKEY_SPEAD('s', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED);
 
     SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName) {
@@ -30,10 +29,10 @@ public enum SmsMessageLocEnum {
     // Conversion Sms Code
     // ===========================================================
 
-    static HashMap<Character, SmsMessageLocEnum> bySmsFieldNames ;
-    static HashMap<String, SmsMessageLocEnum> byDbFieldNames ;
+    static HashMap<Character, SmsMessageLocEnum> bySmsFieldNames;
+    static HashMap<String, SmsMessageLocEnum> byDbFieldNames;
 
-      static {
+    static {
         SmsMessageLocEnum[] values = SmsMessageLocEnum.values();
         HashMap<Character, SmsMessageLocEnum> fields = new HashMap<Character, SmsMessageLocEnum>(values.length);
         HashMap<String, SmsMessageLocEnum> dbColNames = new HashMap<String, SmsMessageLocEnum>(values.length);
@@ -52,23 +51,20 @@ public enum SmsMessageLocEnum {
             dbColNames.put(colName, field);
         }
         // Affect
-        bySmsFieldNames =fields;
+        bySmsFieldNames = fields;
         byDbFieldNames = dbColNames;
-     }
-    
+    }
 
- 
     // ===========================================================
     // Conversion Db Col Name
     // ===========================================================
 
-      public static SmsMessageLocEnum getBySmsFieldName(char fieldName) {
-          return bySmsFieldNames.get(fieldName);
-      }
+    public static SmsMessageLocEnum getBySmsFieldName(char fieldName) {
+        return bySmsFieldNames.get(fieldName);
+    }
 
-      public static SmsMessageLocEnum getByDbFieldName(String fieldName) {
-          return byDbFieldNames.get(fieldName);
-      }
+    public static SmsMessageLocEnum getByDbFieldName(String fieldName) {
+        return byDbFieldNames.get(fieldName);
+    }
 
-    
 }

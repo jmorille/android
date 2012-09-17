@@ -23,8 +23,8 @@ public class SmsMsgActionHelper {
     private final static String MSGKEY_BEARING = "b";
     private final static String MSGKEY_SPEAD = "s";
 
-    public static GeoPingMessage geoPingMessageRequest( Bundle params ) {
-    	GeoPingMessage msg = new GeoPingMessage(null, SmsMsgEncryptHelper.ACTION_GEO_PING, params);
+    public static GeoPingMessage geoPingMessageRequest(Bundle params) {
+        GeoPingMessage msg = new GeoPingMessage(null, SmsMsgEncryptHelper.ACTION_GEO_PING, params);
         return msg;
     }
 
@@ -125,7 +125,7 @@ public class SmsMsgActionHelper {
                 sb.append(key).append(":").append(value);
             }
             sb.append(")");
-        } 
+        }
         return sb.toString();
     }
 
@@ -174,5 +174,4 @@ public class SmsMsgActionHelper {
     // encoder
     // ===========================================================
 
-     
 }

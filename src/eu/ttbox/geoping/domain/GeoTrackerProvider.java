@@ -31,7 +31,7 @@ public class GeoTrackerProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.GeoTrackerProvider";
 
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY+"/geoTrackPoint"); 
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/geoTrackPoint");
 
         // MIME types used for searching words or looking up a single definition
         public static final String COLLECTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.geoTrackPoint";
@@ -87,36 +87,33 @@ public class GeoTrackerProvider extends ContentProvider {
         }
     }
 
- 
-
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Log.d(TAG, "query for uri : " + uri);
         String[] columns = projection == null ? GeoTrackColumns.ALL_COLS : projection;
-      switch (sURIMatcher.match(uri)) {
-      case GEOTRACK_ID:
-          String entityId = uri.getLastPathSegment();
-          return database.getEntityById(entityId, columns);
-      case GEO_TRACKS:
-           String order = String.format("%s ASC", GeoTrackColumns.COL_TIME);
-          return database.queryEntities( columns, selection, selectionArgs, order);
-      default:
-          throw new IllegalArgumentException("Unknown Uri: " + uri);
-      }
+        switch (sURIMatcher.match(uri)) {
+        case GEOTRACK_ID:
+            String entityId = uri.getLastPathSegment();
+            return database.getEntityById(entityId, columns);
+        case GEO_TRACKS:
+            String order = String.format("%s ASC", GeoTrackColumns.COL_TIME);
+            return database.queryEntities(columns, selection, selectionArgs, order);
+        default:
+            throw new IllegalArgumentException("Unknown Uri: " + uri);
+        }
     }
 
-    
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         long personId = database.insertEntity(values);
         Uri personUri = null;
         if (personId > -1) {
-            personUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(  personId));
+            personUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(personId));
             getContext().getContentResolver().notifyChange(personUri, null);
-            String userId = values.getAsString(GeoTrackColumns.COL_USERID);
+            String userId = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
             String latE6 = values.getAsString(GeoTrackColumns.COL_LATITUDE_E6);
             String lngE6 = values.getAsString(GeoTrackColumns.COL_LONGITUDE_E6);
-            Log.d(TAG, String.format( "insert geoTrack UserId [%s] with Uri : %s with WSG84(%s, %s)" ,userId,  personUri, latE6, lngE6));
+            Log.d(TAG, String.format("insert geoTrack UserId [%s] with Uri : %s with WSG84(%s, %s)", userId, personUri, latE6, lngE6));
             // Notify in broadcast
             // TODO sendBroadcast
 
@@ -140,7 +137,7 @@ public class GeoTrackerProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown or Invalid URI " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null); 
+        getContext().getContentResolver().notifyChange(uri, null);
         return rowsAffected;
     }
 
@@ -162,6 +159,5 @@ public class GeoTrackerProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
         return rowsAffected;
     }
-
 
 }

@@ -22,7 +22,5 @@ public class GeoTrackSmsMsg {
     public String toString() {
         return "GeoTrackSmsMsg [smsNumber=" + phone + ", action=" + action + ", body=" + body + "]";
     }
-    
-    
 
 }
