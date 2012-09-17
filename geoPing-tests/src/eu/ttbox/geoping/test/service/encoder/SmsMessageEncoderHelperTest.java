@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
 import eu.ttbox.geoping.domain.GeoTrack;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageEncoderHelper;
@@ -83,7 +84,12 @@ public class SmsMessageEncoderHelperTest  extends AndroidTestCase {
             GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage(msg.phone, encryped);
             Log.d(TAG, String.format("Sms Decoded Message (action: %s)",msg.action));
             assertEquals(msg.action, decoded.action);
-//            assertEquals(msg.body, decoded.body);
+            if (msg.params!=null) {
+                assertEquals(msg.params.getString(GeoTrackColumns.COL_PROVIDER), decoded.params.getString(GeoTrackColumns.COL_PROVIDER));
+                assertEquals(msg.params.getInt(GeoTrackColumns.COL_LATITUDE_E6), decoded.params.getInt(GeoTrackColumns.COL_LATITUDE_E6));
+                assertEquals(msg.params.getInt(GeoTrackColumns.COL_LONGITUDE_E6), decoded.params.getInt(GeoTrackColumns.COL_LONGITUDE_E6));
+                assertEquals(msg.params.getLong(GeoTrackColumns.COL_TIME), decoded.params.getLong(GeoTrackColumns.COL_TIME));
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package eu.ttbox.geoping.service.encoder;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 
+
 public class SmsMessageEncoderHelper {
     public final static String TAG = "SmsMessageEncoderHelper";
     

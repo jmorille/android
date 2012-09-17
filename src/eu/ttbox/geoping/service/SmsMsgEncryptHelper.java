@@ -13,6 +13,7 @@ import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
  * </ul>
  * 
  */
+@Deprecated
 public class SmsMsgEncryptHelper {
 
 	public final static String TAG = "SmsMsgEncryptHelper";

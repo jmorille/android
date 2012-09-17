@@ -20,6 +20,14 @@ public class GeoPingMessage {
         this.action = action;
         this.params = params;
     }
+
+
+	@Override
+	public String toString() {
+		return "GeoPingMessage [phone=" + phone + ", action=" + action + ", params=" + params + "]";
+	}
+    
+    
     
     
 }

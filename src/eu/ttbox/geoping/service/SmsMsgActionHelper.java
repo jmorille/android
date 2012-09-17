@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
+import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 
+@Deprecated
 public class SmsMsgActionHelper {
 
     private final static String MSGKEY_PROVIDER = "p";
@@ -21,8 +23,8 @@ public class SmsMsgActionHelper {
     private final static String MSGKEY_BEARING = "b";
     private final static String MSGKEY_SPEAD = "s";
 
-    public static GeoTrackSmsMsg geoPingMessage() {
-        GeoTrackSmsMsg msg = new GeoTrackSmsMsg(null, SmsMsgEncryptHelper.ACTION_GEO_PING, null);
+    public static GeoPingMessage geoPingMessageRequest( Bundle params ) {
+    	GeoPingMessage msg = new GeoPingMessage(null, SmsMsgEncryptHelper.ACTION_GEO_PING, params);
         return msg;
     }
 

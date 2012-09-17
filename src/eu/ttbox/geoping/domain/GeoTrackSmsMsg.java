@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.domain;
 
+@Deprecated
 public class GeoTrackSmsMsg {
 
     public String phone;

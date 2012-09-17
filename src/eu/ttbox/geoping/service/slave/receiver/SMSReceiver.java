@@ -10,8 +10,9 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
+import eu.ttbox.geoping.service.encoder.GeoPingMessage;
+import eu.ttbox.geoping.service.encoder.SmsMessageEncoderHelper;
  
 /**
  * @see http://www.tutos-android.com/broadcast-receiver-android {link
@@ -66,12 +67,12 @@ public class SMSReceiver extends BroadcastReceiver {
         final String phoneNumber = message.getDisplayOriginatingAddress();
         Log.w(TAG, "Consume SMS Geo Action : " + phoneNumber + " / " + messageBody);
         // Decrypt Msg
-        GeoTrackSmsMsg clearMsg = SmsMsgEncryptHelper.decodeSmsMessage(phoneNumber, messageBody);
+        GeoPingMessage clearMsg = SmsMessageEncoderHelper.decodeSmsMessage(phoneNumber, messageBody);
         if (clearMsg != null && clearMsg.action != null) {
-            if (SmsMsgEncryptHelper.ACTION_GEO_LOC.equals(clearMsg.action)) {
+            if (SmsMessageEncoderHelper.ACTION_GEO_LOC.equals(clearMsg.action)) {
                 // GeoPing Response
                 isConsume = consumeGeoPingResponse(context, clearMsg);
-            } else if (SmsMsgEncryptHelper.ACTION_GEO_PING.equals(clearMsg.action)) {
+            } else if (SmsMessageEncoderHelper.ACTION_GEO_PING.equals(clearMsg.action)) {
                 // GeoPing Request
                 isConsume = consumeGeoPingRequest(context, clearMsg);
             }
@@ -79,24 +80,17 @@ public class SMSReceiver extends BroadcastReceiver {
         return isConsume;
     }
 
-    private boolean consumeGeoPingRequest(Context context, GeoTrackSmsMsg clearMsg) {
+    private boolean consumeGeoPingRequest(Context context, GeoPingMessage clearMsg) {
         boolean isConsume = false; 
         context.startService(Intents.consumeSmsGeoPingRequestHandler(context, clearMsg ));
         isConsume = true;
         return isConsume;
     }
 
-    private boolean consumeGeoPingResponse(Context context, GeoTrackSmsMsg clearMsg) {
+    private boolean consumeGeoPingResponse(Context context, GeoPingMessage clearMsg) {
         boolean isConsume = false;
         context.startService(Intents.consumerSmsGeoPingResponsetHandler(context, clearMsg )); 
-        isConsume = true;
-//        Location loc = SmsMsgActionHelper.fromSmsMessage(clearMsg.body);
-//        if (loc != null) {
-//            GeoTrack geoPoint = new GeoTrack(clearMsg.phone, loc);
-//            ContentValues values = GeoTrackHelper.getContentValues(geoPoint);
-//            context.getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
-//            isConsume = true;
-//        }
+        isConsume = true; 
         return isConsume;
     }
 

@@ -150,9 +150,7 @@ public class SmsParamEncoderHelper {
     
 
     
-    public static StringBuilder encodeMessage(GeoTrack geoTrack) {
-        return encodeMessage(geoTrack, null);
-    }
+
 
     public static StringBuilder encodeMessage(Bundle extras, StringBuilder dest) {
         StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE);
@@ -175,8 +173,8 @@ public class SmsParamEncoderHelper {
                    break;
                }
            } else {
-               Log.w(TAG, String.format("Not found convertion Field ofr key(%s) : %s", key, key));
-               writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
+               Log.w(TAG, String.format("Ignore field [%s] : No convertion found",  key));
+//               writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
            }
            // Manage Sep
            isNotFirst = true;
@@ -185,35 +183,39 @@ public class SmsParamEncoderHelper {
         return sb;
     }
     
-    public static StringBuilder encodeMessage(GeoTrack geoTrack, StringBuilder dest) {
-        StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE);
-        // sb.append(MSG_BEGIN);
-        writeTo(sb, SmsMessageLocEnum.MSGKEY_PROVIDER, geoTrack.getProvider(), false);
-        writeTo(sb, SmsMessageLocEnum.MSGKEY_TIME, geoTrack.getTime(), true);
-
-        // Lat Lng
-        int latE6 = (int) (geoTrack.getLatitude() * AppConstants.E6);
-        int lngE6 = (int) (geoTrack.getLongitude() * AppConstants.E6);
-        writeTo(sb, SmsMessageLocEnum.MSGKEY_LATITUDE_E6, latE6, true);
-        writeTo(sb, SmsMessageLocEnum.MSGKEY_LONGITUDE_E6, lngE6, true);
-        writeTo(sb, SmsMessageLocEnum.MSGKEY_ACCURACY, (int) geoTrack.getAccuracy(), true);
-
-        // altitude
-        if (geoTrack.hasAltitude()) {
-            int alt = (int) geoTrack.getAltitude();
-            writeTo(sb, SmsMessageLocEnum.MSGKEY_ALTITUDE, alt, true);
-        }
-        if (geoTrack.hasBearing()) {
-            int bearing = (int) geoTrack.getBearing();
-            writeTo(sb, SmsMessageLocEnum.MSGKEY_BEARING, bearing, true);
-        }
-        if (geoTrack.hasSpeed()) {
-            int speed = (int) geoTrack.getSpeed();
-            writeTo(sb, SmsMessageLocEnum.MSGKEY_SPEAD, speed, true);
-        }
-        // sb.append(MSG_END);
-        return sb;
-    }
+//    public static StringBuilder encodeMessage(GeoTrack geoTrack) {
+//        return encodeMessage(geoTrack, null);
+//    }
+//    
+//    public static StringBuilder encodeMessage(GeoTrack geoTrack, StringBuilder dest) {
+//        StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE);
+//        // sb.append(MSG_BEGIN);
+//        writeTo(sb, SmsMessageLocEnum.MSGKEY_PROVIDER, geoTrack.getProvider(), false);
+//        writeTo(sb, SmsMessageLocEnum.MSGKEY_TIME, geoTrack.getTime(), true);
+//
+//        // Lat Lng
+//        int latE6 = (int) (geoTrack.getLatitude() * AppConstants.E6);
+//        int lngE6 = (int) (geoTrack.getLongitude() * AppConstants.E6);
+//        writeTo(sb, SmsMessageLocEnum.MSGKEY_LATITUDE_E6, latE6, true);
+//        writeTo(sb, SmsMessageLocEnum.MSGKEY_LONGITUDE_E6, lngE6, true);
+//        writeTo(sb, SmsMessageLocEnum.MSGKEY_ACCURACY, (int) geoTrack.getAccuracy(), true);
+//
+//        // altitude
+//        if (geoTrack.hasAltitude()) {
+//            int alt = (int) geoTrack.getAltitude();
+//            writeTo(sb, SmsMessageLocEnum.MSGKEY_ALTITUDE, alt, true);
+//        }
+//        if (geoTrack.hasBearing()) {
+//            int bearing = (int) geoTrack.getBearing();
+//            writeTo(sb, SmsMessageLocEnum.MSGKEY_BEARING, bearing, true);
+//        }
+//        if (geoTrack.hasSpeed()) {
+//            int speed = (int) geoTrack.getSpeed();
+//            writeTo(sb, SmsMessageLocEnum.MSGKEY_SPEAD, speed, true);
+//        }
+//        // sb.append(MSG_END);
+//        return sb;
+//    }
 
     // ===========================================================
     // Other

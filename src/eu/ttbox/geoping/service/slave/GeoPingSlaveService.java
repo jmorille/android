@@ -21,10 +21,13 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
-import eu.ttbox.geoping.service.SmsMsgActionHelper;
+import eu.ttbox.geoping.domain.GeoTrack;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
 import eu.ttbox.geoping.service.core.WorkerService;
+import eu.ttbox.geoping.service.encoder.GeoPingMessage;
+import eu.ttbox.geoping.service.encoder.SmsMessageEncoderHelper;
+import eu.ttbox.geoping.service.encoder.SmsParamEncoderHelper;
 import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
 public class GeoPingSlaveService extends WorkerService {
@@ -86,11 +89,10 @@ public class GeoPingSlaveService extends WorkerService {
         Log.d(TAG,String.format(  "onHandleIntent for action %s : %s", action, intent));
          if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
             String phoneNumber = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-            // String accuracyExpected =
-            // intent.getStringExtra(Intents.EXTRA_EXPECTED_ACCURACY);
+            Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             // Request
             int timeOutInSeconde = 30;
-            GeoPingRequest request = new GeoPingRequest(phoneNumber);
+            GeoPingRequest request = new GeoPingRequest(phoneNumber, params);
             // schedule it
             registerGeoPingRequest(request);
             executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
@@ -125,19 +127,19 @@ public class GeoPingSlaveService extends WorkerService {
     }
 
 
+    private void sendSmsLocation(String phone, Location location) {
+    	GeoTrack geotrack = new GeoTrack(phone, location); 
+    	Bundle params = GeoTrackHelper.getBundleValues(geotrack);
+    	GeoPingMessage smsMsg = new GeoPingMessage(phone, SmsMessageEncoderHelper.ACTION_GEO_LOC, params);
+        sendSms(phone, smsMsg);
+    }
 
-    private void sendSms(String phone, GeoTrackSmsMsg smsMsg) {
-        String encrypedMsg = SmsMsgEncryptHelper.encodeSmsMessage(smsMsg);
+    private void sendSms(String phone, GeoPingMessage smsMsg) {
+        String encrypedMsg = SmsMessageEncoderHelper.encodeSmsMessage(smsMsg);
         if (smsMsg != null && !encrypedMsg.isEmpty() && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
             SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
         }
     }
-
-    private void sendSmsLocation(String phone, Location location) {
-        GeoTrackSmsMsg smsMsg = SmsMsgActionHelper.geoLocMessage(location);
-        sendSms(phone, smsMsg);
-    }
-
     /**
      * Computes the battery level by registering a receiver to the intent
      * triggered by a battery status/level change. {link
@@ -165,14 +167,15 @@ public class GeoPingSlaveService extends WorkerService {
     public class GeoPingRequest implements Callable<Boolean>, LocationListener {
 
         public String smsPhoneNumber;
-
+        public Bundle params ;
         public GeoPingRequest() {
             super();
         }
 
-        public GeoPingRequest(String phoneNumber) {
+        public GeoPingRequest(String phoneNumber, Bundle params ) {
             super();
             this.smsPhoneNumber = phoneNumber;
+            this.params = params;
         }
 
         @Override
