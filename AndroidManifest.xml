@@ -60,8 +60,8 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
-        <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver">
-            <intent-filter android:priority="9000">
+        <receiver android:enabled="true" android:name=".service.slave.receiver.ShutdownReceiver">
+            <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
