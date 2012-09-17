@@ -35,10 +35,11 @@ public class Intents {
     //
     public static Intent newGeoTrackInserted(Uri geoTrackData, ContentValues values) {
         String userId = values.getAsString(GeoTrackColumns.COL_USERID);
+        Log.d(TAG, "Create Intent action for New GeoTrack for user " + userId);
         // create
         Intent intent = new Intent(Intents.ACTION_NEW_GEOTRACK_INSERTED);
         intent.setData(geoTrackData);//
-        intent   .putExtra(EXTRA_USERID, userId);
+        intent.putExtra(EXTRA_USERID, userId);
         return intent;
     }
 

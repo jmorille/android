@@ -92,10 +92,13 @@ public class GeoTrackerProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Log.d(TAG, "query for uri : " + uri);
+        String[] columns = projection == null ? GeoTrackColumns.ALL_COLS : projection;
       switch (sURIMatcher.match(uri)) {
+      case GEOTRACK_ID:
+          String entityId = uri.getLastPathSegment();
+          return database.getEntityById(entityId, columns);
       case GEO_TRACKS:
-          String[] columns = projection == null ? GeoTrackColumns.ALL_COLS : projection;
-          String order = String.format("%s ASC", GeoTrackColumns.COL_TIME);
+           String order = String.format("%s ASC", GeoTrackColumns.COL_TIME);
           return database.queryEntities( columns, selection, selectionArgs, order);
       default:
           throw new IllegalArgumentException("Unknown Uri: " + uri);

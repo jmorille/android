@@ -132,6 +132,7 @@ public class GeoPingMasterService extends IntentService {
                 Log.d(TAG, String.format("Send Broadcast Notification for New GeoTrack %s ", uri));
 //                Intent intent =    new Intent(Intents.ACTION_NEW_GEOTRACK_INSERTED);
                 Intent intent =  Intents.newGeoTrackInserted(uri, values);
+                
                 sendBroadcast(intent); 
             }
             isConsume = true;

@@ -8,6 +8,7 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.service.encoder.SmsParamEncoderHelper;
 
 public class SmsParamEncoderHelperTest extends AndroidTestCase {
@@ -54,7 +55,8 @@ public class SmsParamEncoderHelperTest extends AndroidTestCase {
         for (GeoTrack geoTrack : geoTracks) {
 
             // Encode
-            String encoded = SmsParamEncoderHelper.encodeMessage(geoTrack).toString();
+            Bundle extras = GeoTrackHelper.getBundleValues(geoTrack);
+            String encoded = SmsParamEncoderHelper.encodeMessage(extras, null).toString();
             Log.d(TAG, String.format("Encoded Message (%s chars) : %s", encoded.length(), encoded));
             // Decode
             Bundle decoded = SmsParamEncoderHelper.decodeMessageAsMap(encoded);

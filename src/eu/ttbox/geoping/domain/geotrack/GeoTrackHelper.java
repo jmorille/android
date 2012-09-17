@@ -93,26 +93,26 @@ public class GeoTrackHelper {
         return initialValues;
     }
  
-    public static Bundle getBundleValues(GeoTrack user) {
-    	BundleWrapper wrapper = (BundleWrapper)getWrapperValues(user, new BundleWrapper());
+    public static Bundle getBundleValues(GeoTrack geoTrack) {
+    	BundleWrapper wrapper = (BundleWrapper)getWrapperValues(geoTrack, new BundleWrapper());
     	Bundle bundle = wrapper.getWrappedValue();
     	return bundle;
     } 
     	
-    private static HelperWrapper<?> getWrapperValues(GeoTrack user, HelperWrapper<?> initialValues) { 
-          if (user.id > -1) {
-              initialValues.putLong(GeoTrackColumns.COL_ID, Long.valueOf(user.id));
+    private static HelperWrapper<?> getWrapperValues(GeoTrack geoTrack, HelperWrapper<?> initialValues) { 
+          if (geoTrack.id > -1) {
+              initialValues.putLong(GeoTrackColumns.COL_ID, Long.valueOf(geoTrack.id));
           }
-          initialValues.putString(GeoTrackColumns.COL_USERID, user.userId);
-          initialValues.putLong(GeoTrackColumns.COL_TIME, user.time);
-          initialValues.putString(GeoTrackColumns.COL_PROVIDER, user.provider);
-          initialValues.putInt(GeoTrackColumns.COL_LATITUDE_E6, user.getLatitudeE6());
-          initialValues.putInt(GeoTrackColumns.COL_LONGITUDE_E6, user.getLongitudeE6());
-          initialValues.putInt(GeoTrackColumns.COL_ACCURACY, user.accuracy);
-          initialValues.putInt(GeoTrackColumns.COL_ALTITUDE, user.altitude);
+          initialValues.putString(GeoTrackColumns.COL_USERID, geoTrack.userId);
+          initialValues.putLong(GeoTrackColumns.COL_TIME, geoTrack.time);
+          initialValues.putString(GeoTrackColumns.COL_PROVIDER, geoTrack.provider);
+          initialValues.putInt(GeoTrackColumns.COL_LATITUDE_E6, geoTrack.getLatitudeE6());
+          initialValues.putInt(GeoTrackColumns.COL_LONGITUDE_E6, geoTrack.getLongitudeE6());
+          initialValues.putInt(GeoTrackColumns.COL_ACCURACY, geoTrack.accuracy);
+          initialValues.putInt(GeoTrackColumns.COL_ALTITUDE, geoTrack.altitude);
 
-          initialValues.putInt(GeoTrackColumns.COL_BEARING, user.bearing);
-          initialValues.putInt(GeoTrackColumns.COL_SPEED, user.speed);
+          initialValues.putInt(GeoTrackColumns.COL_BEARING, geoTrack.bearing);
+          initialValues.putInt(GeoTrackColumns.COL_SPEED, geoTrack.speed);
 
           return initialValues;
     }

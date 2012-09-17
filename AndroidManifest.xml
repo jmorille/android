@@ -99,7 +99,7 @@
         <provider
             android:name=".domain.GeoTrackerProvider"
             android:authorities="eu.ttbox.geoping.GeoTrackerProvider"
-            android:multiprocess="true"
+             android:multiprocess="true"
             android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ"
             android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE" />
         <provider
