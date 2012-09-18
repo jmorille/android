@@ -1,12 +1,15 @@
 package eu.ttbox.geoping.ui.map;
 
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapController.AnimationType;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.TilesOverlay;
 
@@ -33,6 +36,7 @@ import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.PersonProvider;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
@@ -43,7 +47,7 @@ import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
 
 /**
- * @see http://mobiforge.com/developing/story/using-google-maps-android 
+ * @see http://mobiforge.com/developing/story/using-google-maps-android
  * 
  */
 public class ShowMapActivity extends FragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -72,6 +76,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
     // Service
     private SharedPreferences sharedPreferences;
     private SharedPreferences privateSharedPreferences;
+    private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     // Deprecated
     private ResourceProxy mResourceProxy;
@@ -319,34 +324,67 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
     // Handle Intent
     // ===========================================================
 
-    
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
     }
 
     private void handleIntent(Intent intent) {
-    	if (intent ==null) {
-    		return ;
-    	}
-    	String action = intent.getAction();
-    	if (Intent.ACTION_VIEW.equals(action)) {
-    		String userId = intent.getStringExtra(Intents.EXTRA_SMS_PHONE );
-    		if (!geoTrackOverlayByUser.containsKey(userId)) {
-    			// TODO add userId
-    		}
-    	}
+        if (intent == null) {
+            return;
+        }
+        String action = intent.getAction();
+        if (Intent.ACTION_VIEW.equals(action)) {
+            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+            int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
+            int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
+            annimateToPersonPhone(phone, latE6, lngE6);
+        }
+    }
+
+    private void annimateToPersonPhone(final String phone, final int latE6, final int lngE6) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
+                // Animate to
+                if (geoTrackOverlay != null) {
+                    if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
+                        mapController.animateTo(latE6, lngE6, AnimationType.HALFCOSINUSALDECELERATING);
+                    }
+                }
+            }
+        });
     }
 
     // ===========================================================
     // GeoTrack Overlay
     // ===========================================================
 
-    private boolean geoTrackOverlayAddPerson(Person person) {
-        boolean isDone = false;
+    private GeoTrackOverlay geoTrackOverlayGetOrAddForPhone(String phone) {
+        GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(phone);
+        // Add person layer
+        if (geoTrackOverlay == null) {
+            Person person = null;
+            Cursor cursor = getContentResolver().query(PersonProvider.Constants.CONTENT_URI_PERSON, null, PersonColumns.SELECT_BY_PHONE_NUMBER, new String[] { phone }, null);
+            if (cursor.moveToFirst()) {
+                PersonHelper helper = new PersonHelper().initWrapper(cursor);
+                person = helper.getEntity(cursor);
+                cursor.close();
+            }
+            if (person != null) {
+                geoTrackOverlay = geoTrackOverlayAddPerson(person);
+            }
+        }
 
+        return geoTrackOverlay;
+    }
+
+    private GeoTrackOverlay geoTrackOverlayAddPerson(Person person) {
+        GeoTrackOverlay geoTrackOverlay = null;
+        boolean isDone = false;
         String userId = person.phone;
         if (!geoTrackOverlayByUser.containsKey(userId)) {
-            GeoTrackOverlay geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(), person, System.currentTimeMillis());
+            geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(), person, System.currentTimeMillis());
             geoTrackOverlayByUser.put(userId, geoTrackOverlay);
             // register
             isDone = mapView.getOverlays().add(geoTrackOverlay);
@@ -354,7 +392,10 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         } else {
             Log.e(TAG, String.format("Could not Add person %s in geoTrackOverlayByUser (It already in List)", person));
         }
-        return isDone;
+        if (!isDone) {
+            geoTrackOverlay = null;
+        }
+        return geoTrackOverlay;
     }
 
     private boolean geoTrackOverlayRemovePerson(Person person) {
@@ -450,7 +491,5 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
     // ===========================================================
     // Others
     // ===========================================================
-
-    
 
 }

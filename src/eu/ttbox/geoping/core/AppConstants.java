@@ -11,6 +11,8 @@ public class AppConstants {
     public static final String PREFS_SMS_DELETE_ON_MESSAGE = "smsDeleteOnMessage";
     public static final String PREFS_SMS_REQUEST_NOTIFY_ME = "smsRequestNotif";
 
+    // TODO Security
+    
     // TODO in prefs
     public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = "MYLOCATION_DISPLAY_GEOLOC";
 

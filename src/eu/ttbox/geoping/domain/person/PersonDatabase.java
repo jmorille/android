@@ -28,6 +28,7 @@ public class PersonDatabase {
         public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_COLOR };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
+        public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);
 
     }
 

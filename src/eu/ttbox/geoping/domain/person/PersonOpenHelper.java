@@ -9,8 +9,8 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "PersonOpenHelper";
 
-    public static final String DATABASE_NAME = "personDb.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final String DATABASE_NAME = "person.db";
+    public static final int DATABASE_VERSION = 1;
 
     /*
      * Note that FTS3 does not support column constraints and thus, you cannot

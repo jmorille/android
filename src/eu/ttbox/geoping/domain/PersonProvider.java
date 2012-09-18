@@ -17,8 +17,7 @@ public class PersonProvider extends ContentProvider {
     private static final String TAG = "PersonProvider";
 
     // Constante
-    private static final String SELECT_BY_ENTITY_ID = String.format("rowid = ?", PersonColumns.COL_ID);
-
+  
     // MIME types used for searching words or looking up a single definition
     public static final String PERSONS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/person";
     public static final String PERSON_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/person";
@@ -194,7 +193,7 @@ public class PersonProvider extends ContentProvider {
         case PERSON_ID:
             String entityId = uri.getLastPathSegment();
             String[] args = new String[] { entityId };
-            count = personDatabase.deleteEntity(SELECT_BY_ENTITY_ID, args);
+            count = personDatabase.deleteEntity(PersonColumns.SELECT_BY_ENTITY_ID, args);
             break;
         case PERSONS:
             count = personDatabase.deleteEntity(selection, selectionArgs);
@@ -212,7 +211,7 @@ public class PersonProvider extends ContentProvider {
         case PERSON_ID:
             String entityId = uri.getLastPathSegment();
             String[] args = new String[] { entityId };
-            count = personDatabase.updateEntity(values, SELECT_BY_ENTITY_ID, args);
+            count = personDatabase.updateEntity(values, PersonColumns.SELECT_BY_ENTITY_ID, args);
             break;
         case PERSONS:
             count = personDatabase.updateEntity(values, selection, selectionArgs);
