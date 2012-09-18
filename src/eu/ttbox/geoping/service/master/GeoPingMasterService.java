@@ -143,7 +143,7 @@ public class GeoPingMasterService extends IntentService {
 	}
 
 	// ===========================================================
-	// Other
+	// Notification
 	// ===========================================================
 
 	private void showNotificationNewPingResponse(Uri geoTrackData, ContentValues values) {
@@ -169,5 +169,9 @@ public class GeoPingMasterService extends IntentService {
 
 		mNotificationManager.notify(SHOW_ON_NOTIFICATION_ID, notification);
 	}
+
+	// ===========================================================
+	// Other
+	// ===========================================================
 
 }

@@ -12,6 +12,7 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_BDD = new StringBuffer("CREATE TABLE ").append(GeoTrackDatabase.TABLE_TRACK_POINT).append(" (")//
             .append(GeoTrackColumns.COL_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")//
+            .append(GeoTrackColumns.COL_PERSON_ID).append(" INTEGER   NULL, ")// /
             .append(GeoTrackColumns.COL_PHONE_NUMBER).append(" TEXT NOT NULL, ")// /
             .append(GeoTrackColumns.COL_PROVIDER).append(" TEXT NOT NULL, ")// /
             .append(GeoTrackColumns.COL_TIME).append(" INTEGER NOT NULL, ")// /

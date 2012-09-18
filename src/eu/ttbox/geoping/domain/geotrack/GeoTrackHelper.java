@@ -16,7 +16,8 @@ public class GeoTrackHelper {
     boolean isNotInit = true;
 
     public int idIdx = -1;
-    public int userIdIdx = -1;
+    public int phoneIdIdx = -1;
+    public int personIdIdx = -1;
     public int timeIdx = -1;
     public int providerIdx = -1;
     public int latitudeE6Idx = -1;
@@ -33,7 +34,8 @@ public class GeoTrackHelper {
 
     public GeoTrackHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(GeoTrackColumns.COL_ID);
-        userIdIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PHONE_NUMBER);
+        personIdIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PERSON_ID);
+        phoneIdIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PHONE_NUMBER);
         timeIdx = cursor.getColumnIndex(GeoTrackColumns.COL_TIME);
         providerIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PROVIDER);
 
@@ -56,7 +58,8 @@ public class GeoTrackHelper {
         }
         GeoTrack geoTrack = new GeoTrack();
         geoTrack.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
-        geoTrack.setPhone(userIdIdx > -1 ? cursor.getString(userIdIdx) : null);
+        geoTrack.setPersonId(personIdIdx > -1 ? cursor.getLong(personIdIdx) : null);
+        geoTrack.setPhone(phoneIdIdx > -1 ? cursor.getString(phoneIdIdx) : null);
         geoTrack.setTime(timeIdx > -1 ? cursor.getLong(timeIdx) : -1);
         geoTrack.setProvider(providerIdx > -1 ? cursor.getString(providerIdx) : null);
         if (latitudeE6Idx > -1) {
@@ -92,6 +95,10 @@ public class GeoTrackHelper {
         return cursor.getLong(idIdx);
     }
 
+    public long getPersonId(Cursor cursor) {
+        return cursor.getLong(personIdIdx);
+    }
+
     public static ContentValues getContentValues(GeoTrack user) {
         ContentValuesWrapper wrapper = (ContentValuesWrapper) getWrapperValues(user, new ContentValuesWrapper());
         ContentValues initialValues = wrapper.getWrappedValue();
@@ -108,6 +115,7 @@ public class GeoTrackHelper {
         if (geoTrack.id > -1) {
             initialValues.putLong(GeoTrackColumns.COL_ID, Long.valueOf(geoTrack.id));
         }
+        initialValues.putLong(GeoTrackColumns.COL_PERSON_ID, geoTrack.personId);
         initialValues.putString(GeoTrackColumns.COL_PHONE_NUMBER, geoTrack.phone);
         initialValues.putLong(GeoTrackColumns.COL_TIME, geoTrack.time);
         initialValues.putString(GeoTrackColumns.COL_PROVIDER, geoTrack.provider);
@@ -130,6 +138,9 @@ public class GeoTrackHelper {
         GeoTrack geoTrack = new GeoTrack();
         if (initialValues.containsKey(GeoTrackColumns.COL_ID)) {
             geoTrack.setId(initialValues.getLong(GeoTrackColumns.COL_ID));
+        }
+        if (initialValues.containsKey(GeoTrackColumns.COL_PERSON_ID)) {
+            geoTrack.setPersonId(initialValues.getLong(GeoTrackColumns.COL_PERSON_ID));
         }
         if (initialValues.containsKey(GeoTrackColumns.COL_PHONE_NUMBER)) {
             geoTrack.setPhone(initialValues.getString(GeoTrackColumns.COL_PHONE_NUMBER));

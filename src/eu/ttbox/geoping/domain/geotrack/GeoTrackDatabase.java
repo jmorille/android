@@ -22,6 +22,7 @@ public class GeoTrackDatabase {
     public static class GeoTrackColumns {
         public static final String COL_ID = BaseColumns._ID;
         public static final String COL_PHONE_NUMBER = "PHONE_NUMBER";
+        public static final String COL_PERSON_ID = "PERSON_ID";
         public static final String COL_TIME = "TIME";
         public static final String COL_PROVIDER = "PROVIDER";
         public static final String COL_LATITUDE_E6 = "LAT_E6";
@@ -31,7 +32,7 @@ public class GeoTrackDatabase {
         public static final String COL_BEARING = "BEARING";
         public static final String COL_SPEED = "SPEED";
         public static final String COL_ADDRESS = "ADDRESS";
-        public static final String[] ALL_COLS = new String[] { COL_ID, COL_PHONE_NUMBER, COL_TIME, COL_PROVIDER, COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_ACCURACY, COL_ALTITUDE, COL_BEARING, COL_SPEED,
+        public static final String[] ALL_COLS = new String[] { COL_ID,COL_PERSON_ID, COL_PHONE_NUMBER, COL_TIME, COL_PROVIDER, COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_ACCURACY, COL_ALTITUDE, COL_BEARING, COL_SPEED,
                 COL_ADDRESS };
 
     }
