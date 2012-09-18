@@ -10,6 +10,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.master.GeoPingMasterService;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
+import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.person.PersonEditActivity;
 
 public class Intents {
@@ -32,15 +33,7 @@ public class Intents {
 //    public static final String EXTRA_PHONE = "EXTRA_PHONE";
 
     //
-    public static Intent newGeoTrackInserted(Uri geoTrackData, ContentValues values) {
-        String userId = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
-        Log.d(TAG, "Create Intent action for New GeoTrack for user " + userId);
-        // create
-        Intent intent = new Intent(Intents.ACTION_NEW_GEOTRACK_INSERTED);
-        intent.setData(geoTrackData);//
-        intent.putExtra(EXTRA_SMS_PHONE, userId);
-        return intent;
-    }
+
 
     // Person Edit
     public static Intent addTrackerPerson(Context context) {
@@ -55,11 +48,44 @@ public class Intents {
     }
 
     // ===========================================================
+    // map Intent
+    // ===========================================================
+
+    public static Intent newGeoTrackInserted(Uri geoTrackData, ContentValues values) {
+        String userId = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
+        Log.d(TAG, "Create Intent action for New GeoTrack for user " + userId);
+        // create
+        Intent intent = new Intent(Intents.ACTION_NEW_GEOTRACK_INSERTED);
+        intent.setData(geoTrackData);//
+        intent.putExtra(EXTRA_SMS_PHONE, userId);
+        return intent;
+    }
+
+    public static Intent showOnMap(Context context , Uri geoTrackData, ContentValues values) {
+        String userId = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
+        Log.d(TAG, "Create Intent action for New GeoTrack for user " + userId);
+        // create
+        Intent intent = new Intent(context, ShowMapActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(geoTrackData);//
+        intent.putExtra(EXTRA_SMS_PHONE, userId);
+        return intent;
+    }
+
+    
+    // ===========================================================
     // GeoPing Master
     // ===========================================================
 
     // Sms Producer
     public static Intent sendSmsGeoPingRequest(Context context, String phoneNumber) {
+        return new Intent(context, GeoPingMasterService.class) //
+                .setAction(ACTION_SMS_GEOPING_REQUEST_SENDER)//
+                .putExtra(EXTRA_SMS_PHONE, phoneNumber);
+    }
+    
+ // Sms Producer
+    public static Intent displayGeotrackOnMap(Context context, String phoneNumber) {
         return new Intent(context, GeoPingMasterService.class) //
                 .setAction(ACTION_SMS_GEOPING_REQUEST_SENDER)//
                 .putExtra(EXTRA_SMS_PHONE, phoneNumber);

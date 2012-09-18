@@ -2,6 +2,7 @@ package eu.ttbox.geoping.domain.geotrack;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.location.Address;
 import android.os.Bundle;
 import android.widget.TextView;
 import eu.ttbox.geoping.domain.GeoTrack;
@@ -26,6 +27,8 @@ public class GeoTrackHelper {
     public int bearingIdx = -1;
     public int speedIdx = -1;
 
+    public int addressIdx = -1;
+
     // public int titreIdx = -1;
 
     public GeoTrackHelper initWrapper(Cursor cursor) {
@@ -42,6 +45,7 @@ public class GeoTrackHelper {
         bearingIdx = cursor.getColumnIndex(GeoTrackColumns.COL_BEARING);
         speedIdx = cursor.getColumnIndex(GeoTrackColumns.COL_SPEED);
 
+        addressIdx= cursor.getColumnIndex(GeoTrackColumns.COL_ADDRESS);
         isNotInit = false;
         return this;
     }
@@ -66,7 +70,8 @@ public class GeoTrackHelper {
 
         geoTrack.setBearing(bearingIdx > -1 ? cursor.getInt(bearingIdx) : -1);
         geoTrack.setSpeed(speedIdx > -1 ? cursor.getInt(speedIdx) : -1);
-
+        
+        geoTrack.setAddress(addressIdx > -1 ? cursor.getString(addressIdx) : null);
         return geoTrack;
     }
 
@@ -114,6 +119,7 @@ public class GeoTrackHelper {
         initialValues.putInt(GeoTrackColumns.COL_BEARING, geoTrack.bearing);
         initialValues.putInt(GeoTrackColumns.COL_SPEED, geoTrack.speed);
 
+        initialValues.putString(GeoTrackColumns.COL_ADDRESS, geoTrack.address);
         return initialValues;
     }
 
@@ -152,6 +158,28 @@ public class GeoTrackHelper {
         if (initialValues.containsKey(GeoTrackColumns.COL_SPEED)) {
             geoTrack.setSpeed(initialValues.getInt(GeoTrackColumns.COL_SPEED));
         }
+        if (initialValues.containsKey(GeoTrackColumns.COL_ADDRESS)) {
+            geoTrack.setAddress(initialValues.getString(GeoTrackColumns.COL_ADDRESS));
+        }
         return geoTrack;
     }
+    
+	public static String getAddressAsString(Address addr) {
+		String result = null;
+		if (addr != null) {
+			StringBuilder addrBuilder = new StringBuilder();
+			boolean isNotFist = false;
+			for (int i = 0; i < addr.getMaxAddressLineIndex(); i++) {
+				if (isNotFist) {
+					addrBuilder.append(", ");
+				} else {
+					isNotFist = true;
+				}
+				String addrLine = addr.getAddressLine(i);
+				addrBuilder.append(addrLine);
+			}
+			result = addrBuilder.toString();
+		}
+		return result;
+	}
 }

@@ -83,7 +83,13 @@ public class GeoTrack {
     public long getId() {
         return id;
     }
-
+    public String getIdAsString() {
+    	String result = null;
+    	if (id!=-1) {
+    		result = String.valueOf(id);
+    	}
+        return result;
+    }
     public GeoTrack setId(long id) {
         this.id = id;
         return this;
@@ -247,6 +253,10 @@ public class GeoTrack {
         this.address = address;
         return this;
     }
+    
+	public boolean hasAddress() {
+		return   this.address!=null &&   this.address.length()>0;
+	}
 
     @Override
     public String toString() {
@@ -262,5 +272,7 @@ public class GeoTrack {
         sb.append("]");
         return sb.toString();
     }
+
+
 
 }

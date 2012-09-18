@@ -6,5 +6,7 @@
     <item type="id" name="config_id_geotrack_list_loader"/>  
     <item type="id" name="config_id_geotrack_select_person_loader"/>  
     <item type="id" name="config_id_map_geotrack_person_loader"/>  
+
+    <item type="id" name="show_notification_new_geoping_response"/>  
     
 </resources>

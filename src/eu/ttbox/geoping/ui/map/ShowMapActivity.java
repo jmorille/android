@@ -43,8 +43,7 @@ import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
 
 /**
- * @see http://mobiforge.com/developing/story/using-google-maps-android
- * @author deostem
+ * @see http://mobiforge.com/developing/story/using-google-maps-android 
  * 
  */
 public class ShowMapActivity extends FragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -316,12 +315,26 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         }
     };
 
+    // ===========================================================
+    // Handle Intent
+    // ===========================================================
+
+    
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
     }
 
     private void handleIntent(Intent intent) {
-
+    	if (intent ==null) {
+    		return ;
+    	}
+    	String action = intent.getAction();
+    	if (Intent.ACTION_VIEW.equals(action)) {
+    		String userId = intent.getStringExtra(Intents.EXTRA_SMS_PHONE );
+    		if (!geoTrackOverlayByUser.containsKey(userId)) {
+    			// TODO add userId
+    		}
+    	}
     }
 
     // ===========================================================
