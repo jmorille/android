@@ -44,7 +44,7 @@ public class GeoPingSlaveService extends WorkerService {
 
     private final IBinder binder = new LocalBinder();
     // Constant
-    
+   
     
     // Services
     private LocationManager locationManager;
@@ -112,10 +112,10 @@ public class GeoPingSlaveService extends WorkerService {
     }
 
     // ===========================================================
-    // GeoPing Request
+    // GeoPing Request Security
     // ===========================================================
     private void test() {
-        appPreferences.getStringSet();
+//        appPreferences.getStringSet();
     }
 
     // ===========================================================
