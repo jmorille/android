@@ -359,6 +359,14 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         runOnFirstFixExecutor.schedule(blinkCallable, 1l, TimeUnit.SECONDS);
     }
 
+    public boolean enableCompass(boolean enable) {
+        if (enable) {
+            return enableCompass();
+        } else {
+            disableCompass();
+            return true;
+        }
+    }
     // @Override
     public boolean enableCompass() {
         boolean result = true;
@@ -372,6 +380,15 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // @Override
     public void disableCompass() {
         mOrientationListener.stopListening();
+    }
+    
+    public boolean enableMyLocation(boolean isEnable) {
+        if (isEnable) {
+            return enableMyLocation();
+        } else {
+            disableMyLocation();
+        }
+        return true;
     }
 
     // @Override

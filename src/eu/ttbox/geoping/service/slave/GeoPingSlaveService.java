@@ -27,6 +27,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.widget.RemoteViews;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -41,6 +42,8 @@ import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
 public class GeoPingSlaveService extends WorkerService {
 
     private static final String TAG = "GeoPingSlaveService";
+
+    private static final int SHOW_GEOPING_REQUEST_NOTIFICATION_ID =  R.id.show_notification_new_geoping_request_confirm;
 
     private final IBinder binder = new LocalBinder();
     // Constant
@@ -237,7 +240,10 @@ public class GeoPingSlaveService extends WorkerService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, Intents.showOnMap(this, geoTrackData, values), PendingIntent.FLAG_CANCEL_CURRENT);
 
         String phone = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
-
+        // remote View
+        RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
+        
+        // Create Notifiation
         Notification notification = new NotificationCompat.Builder(this) //
                 .setSmallIcon(R.drawable.icon_notif) //
                 .setWhen(System.currentTimeMillis()) //
@@ -245,8 +251,10 @@ public class GeoPingSlaveService extends WorkerService {
                 .setContentTitle("GeoPing Request" + phone) //
                 .setContentText("GeoTrack point") //
                 .setContentIntent(pendingIntent)//
+                 .setContent(contentView) //
                 .build();
-
+        // Show
+        mNotificationManager.notify(SHOW_GEOPING_REQUEST_NOTIFICATION_ID, notification);
     }
 
     // ===========================================================

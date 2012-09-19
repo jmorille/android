@@ -100,7 +100,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         mapView.setHapticFeedbackEnabled(true);
         // Map Controler
         mapController = mapView.getController();
-        mapController.setZoom(17); // Zoon 1 is world view
+        // mapController.setZoom(17); // Zoon 1 is world view
         this.mResourceProxy = new DefaultResourceProxyImpl(this);
         // Tiles
         MyAppTilesProviders.initTilesSource(this);
@@ -141,18 +141,20 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
             mapView.setTileSource(tileSource);
         } catch (final IllegalArgumentException ignore) {
         }
-
-        if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, false)) {
-            this.myLocation.enableMyLocation();
+        // Zoon 1 is world view
+        mapView.getController().setZoom(privateSharedPreferences.getInt(MapConstants.PREFS_ZOOM_LEVEL, 17));
+        // Center
+        int scrollX = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X, Integer.MIN_VALUE);
+        int scrollY = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, Integer.MIN_VALUE);
+        if (Integer.MIN_VALUE != scrollX && Integer.MIN_VALUE != scrollY) {
+            mapView.scrollTo(scrollX, scrollY);
         }
-        if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false)) {
-            this.myLocation.enableCompass();
-        }
-        // mapView.getController().setZoom(privateSharedPreferences.getInt(MapConstants.PREFS_ZOOM_LEVEL,
-        // 1));
-        // mapView.scrollTo(privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X,
-        // 0), privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, 0));
-
+        // Options
+        boolean showLocation = privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, true);
+        this.myLocation.enableMyLocation(showLocation);
+        boolean showCompass = privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false);
+        this.myLocation.enableCompass(showCompass);
+        
         // Service
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intents.ACTION_NEW_GEOTRACK_INSERTED);
