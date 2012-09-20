@@ -112,71 +112,87 @@ public class GeoPingSlaveService extends WorkerService {
         String action = intent.getAction();
         Log.d(TAG, String.format("onHandleIntent for action %s : %s", action, intent));
         if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
-            String phoneNumber = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             // Request
-            int timeOutInSeconde = 30;
-            GeoPingRequest request = new GeoPingRequest(phoneNumber, params);
-            // schedule it
-            registerGeoPingRequest(request);
-            executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
+            if (isAuthorizePhoneAlways(phone)) {
+                registerGeoPingRequest(phone, params);
+             } else if (!isAuthorizePhoneNever(phone)) {
+                  showNotificationNewPingRequest(phone, params);
+             } else {
+                  Log.i(TAG, "Ignore Never Authorize Geoping request from phone " + phone);
+             }
+      
         } else if (Intents.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE.equals(action)) {
             manageAuthorizeIntent(intent.getExtras());
         }
     }
 
     // ===========================================================
-    // GeoPing Request Security
+    // GeoPing Security
     // ===========================================================
+
     private void manageAuthorizeIntent(Bundle extras) {
         String phone = extras.getString(Intents.EXTRA_SMS_PHONE);
+        Bundle params = extras.getBundle(Intents.EXTRA_SMS_PARAMS);
         int typeOrdinal = extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL);
         PhoneAuthorizeTypeEnum type = PhoneAuthorizeTypeEnum.values()[typeOrdinal];
+
         switch (type) {
         case NEVER:
-            blackListPhone(phone);
+            authorizePhoneNever(phone);
         case NO:
+            Log.i(TAG, "Ignore Geoping request from phone " + phone);
             break;
         case ALWAYS:
-            authorizePhone(phone);
+            authorizePhoneAlways(phone);
         case YES:
+            registerGeoPingRequest(phone, params);
             break;
         default:
-            Log.e(TAG, "Not manage PhoneAuthorizeTypeEnum for " + type);
+            Log.w(TAG, "Not manage PhoneAuthorizeTypeEnum for " + type);
             break;
         }
     }
 
-    private void blackListPhone(String phone) {
+    private void authorizePhoneNever(String phone) {
         if (!secuAuthorizeNeverPhoneSet.contains(phone)) {
             secuAuthorizeNeverPhoneSet.add(phone);
             Editor editor = appPreferences.edit();
             // Never
             String neverPhoneString = convertPhoneSetAsString(secuAuthorizeNeverPhoneSet);
-            editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER, neverPhoneString);      
+            editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER, neverPhoneString);
             // Always
             if (secuAuthorizeAlwaysPhoneSet.contains(phone)) {
                 secuAuthorizeAlwaysPhoneSet.remove(phone);
-                String  alwaysPhoneString = convertPhoneSetAsString(secuAuthorizeAlwaysPhoneSet);
-                editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS, alwaysPhoneString);    
+                String alwaysPhoneString = convertPhoneSetAsString(secuAuthorizeAlwaysPhoneSet);
+                editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS, alwaysPhoneString);
             }
             Log.i(TAG, "Security Phone Authorize NEVER for Phone : " + phone);
             editor.commit();
         }
     }
 
-    private void authorizePhone(String phone) {
+    private boolean isAuthorizePhoneAlways(String phone) {
+        return secuAuthorizeAlwaysPhoneSet.contains(phone);
+    }
+
+    private boolean isAuthorizePhoneNever(String phone) {
+        return secuAuthorizeNeverPhoneSet.contains(phone);
+    }
+
+    private void authorizePhoneAlways(String phone) {
         if (!secuAuthorizeAlwaysPhoneSet.contains(phone)) {
             secuAuthorizeAlwaysPhoneSet.add(phone);
             Editor editor = appPreferences.edit();
             // Never
             String alwayPhoneString = convertPhoneSetAsString(secuAuthorizeAlwaysPhoneSet);
-            editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS, alwayPhoneString);      
+            editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS, alwayPhoneString);
             // Always
             if (secuAuthorizeNeverPhoneSet.contains(phone)) {
                 secuAuthorizeNeverPhoneSet.remove(phone);
-                String  neverPhoneString = convertPhoneSetAsString(secuAuthorizeNeverPhoneSet);
-                editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER, neverPhoneString);    
+                String neverPhoneString = convertPhoneSetAsString(secuAuthorizeNeverPhoneSet);
+                editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER, neverPhoneString);
             }
             Log.i(TAG, "Security Phone Authorize ALWAYS for Phone : " + phone);
             editor.commit();
@@ -200,10 +216,7 @@ public class GeoPingSlaveService extends WorkerService {
         }
         return result;
     }
-    private void savePrefPhoneSet(String key, Set<String> phoneSet) {
-        String phone =convertPhoneSetAsString(phoneSet);
-        
-    }
+ 
 
     private String convertPhoneSetAsString(Set<String> phoneSet) {
         StringBuilder sb = new StringBuilder();
@@ -221,12 +234,16 @@ public class GeoPingSlaveService extends WorkerService {
     // ===========================================================
     // Other
     // ===========================================================
-
-    public boolean registerGeoPingRequest(GeoPingRequest request) {
+   
+    public boolean registerGeoPingRequest( String phoneNumber ,Bundle params ) {
         Location initLastLoc = myLocation.getLastKnownLocation();
+        GeoPingRequest request = new GeoPingRequest(phoneNumber, params);
         geoPingRequestList.add(request);
         // TODO Bad for multi request
         boolean locProviderEnabled = myLocation.startListening(multiGeoRequestListener);
+        // schedule it for time out
+        int timeOutInSeconde = 30;
+        executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
         return locProviderEnabled;
     }
 
@@ -332,27 +349,26 @@ public class GeoPingSlaveService extends WorkerService {
     // Notification
     // ===========================================================
 
-    private void showNotificationNewPingRequest(Uri geoTrackData, ContentValues values) {
+    private void showNotificationNewPingRequest(String phone, Bundle params) {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
         // Intents.showOnMap(this, geoTrackData, values),
         // PendingIntent.FLAG_CANCEL_CURRENT);
 
-        String phone = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
         // remote View
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
         // Manage Button Confirmation
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_no, PendingIntent.getActivity(this, 0, //
-                Intents.authorizePhone(this, phone, PhoneAuthorizeTypeEnum.NO),//
+                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.NO),//
                 PendingIntent.FLAG_CANCEL_CURRENT));
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_yes, PendingIntent.getActivity(this, 0, //
-                Intents.authorizePhone(this, phone, PhoneAuthorizeTypeEnum.YES),//
+                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.YES),//
                 PendingIntent.FLAG_CANCEL_CURRENT));
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_always, PendingIntent.getActivity(this, 0, //
-                Intents.authorizePhone(this, phone, PhoneAuthorizeTypeEnum.ALWAYS),//
+                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.ALWAYS),//
                 PendingIntent.FLAG_CANCEL_CURRENT));
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_never, PendingIntent.getActivity(this, 0, //
-                Intents.authorizePhone(this, phone, PhoneAuthorizeTypeEnum.NEVER),//
+                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.NEVER),//
                 PendingIntent.FLAG_CANCEL_CURRENT));
 
         // Create Notifiation

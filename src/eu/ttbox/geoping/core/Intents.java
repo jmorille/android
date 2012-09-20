@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
@@ -97,12 +98,13 @@ public class Intents {
     // ===========================================================
 
     // Register Phone
-    public static Intent authorizePhone(Context context, String phone, PhoneAuthorizeTypeEnum authorizeType) {
-        Log.i(TAG, "Authorize Always Phone " + phone);
+    public static Intent authorizePhone(Context context, String phone, Bundle params , PhoneAuthorizeTypeEnum authorizeType) {
+        Log.i(TAG, "Authorize Always Phone " + phone); 
         // create
         Intent intent = new Intent(context, ShowMapActivity.class);
         intent.setAction(ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE);
         intent.putExtra(EXTRA_SMS_PHONE, phone);
+        intent.putExtra(EXTRA_SMS_PARAMS, params);
         intent.putExtra(EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL, authorizeType); 
         return intent;
     }
