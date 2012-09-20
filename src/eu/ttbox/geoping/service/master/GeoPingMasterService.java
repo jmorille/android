@@ -108,7 +108,7 @@ public class GeoPingMasterService extends IntentService {
 
 	private void sendSms(String phone, GeoPingMessage smsMsg) {
 		String encodeddMsg = SmsMessageEncoderHelper.encodeSmsMessage(smsMsg);
-		if (smsMsg != null && !encodeddMsg.isEmpty() && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
+		if (smsMsg != null && encodeddMsg.length()>0 && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
 			SmsManager.getDefault().sendTextMessage(phone, null, encodeddMsg, null, null);
 		}
 	}

@@ -1,7 +1,9 @@
 package eu.ttbox.geoping.service.slave;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -37,18 +40,18 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageEncoderHelper;
+import eu.ttbox.geoping.service.slave.receiver.PhoneAuthorizeTypeEnum;
 import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
 public class GeoPingSlaveService extends WorkerService {
 
     private static final String TAG = "GeoPingSlaveService";
 
-    private static final int SHOW_GEOPING_REQUEST_NOTIFICATION_ID =  R.id.show_notification_new_geoping_request_confirm;
+    private static final int SHOW_GEOPING_REQUEST_NOTIFICATION_ID = R.id.show_notification_new_geoping_request_confirm;
 
     private final IBinder binder = new LocalBinder();
     // Constant
-   
-    
+
     // Services
     private LocationManager locationManager;
     private MyLocationListenerProxy myLocation;
@@ -60,6 +63,10 @@ public class GeoPingSlaveService extends WorkerService {
     private MultiGeoRequestLocationListener multiGeoRequestListener;
 
     private int batterLevelInPercent = -1;
+
+    // Security
+    Set<String> secuAuthorizeNeverPhoneSet;
+    Set<String> secuAuthorizeAlwaysPhoneSet;
 
     // ===========================================================
     // Constructors
@@ -78,7 +85,9 @@ public class GeoPingSlaveService extends WorkerService {
         this.myLocation = new MyLocationListenerProxy(locationManager);
         this.geoPingRequestList = new ArrayList<GeoPingRequest>();
         this.multiGeoRequestListener = new MultiGeoRequestLocationListener(geoPingRequestList);
-
+        // Read Security Set
+        this.secuAuthorizeNeverPhoneSet = readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER);
+        this.secuAuthorizeAlwaysPhoneSet = readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS);
         Log.d(TAG, "#################################");
         Log.d(TAG, "### GeoPing Service Started.");
         Log.d(TAG, "#################################");
@@ -111,14 +120,102 @@ public class GeoPingSlaveService extends WorkerService {
             // schedule it
             registerGeoPingRequest(request);
             executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
+        } else if (Intents.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE.equals(action)) {
+            manageAuthorizeIntent(intent.getExtras());
         }
     }
 
     // ===========================================================
     // GeoPing Request Security
     // ===========================================================
-    private void test() {
-//        appPreferences.getStringSet();
+    private void manageAuthorizeIntent(Bundle extras) {
+        String phone = extras.getString(Intents.EXTRA_SMS_PHONE);
+        int typeOrdinal = extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL);
+        PhoneAuthorizeTypeEnum type = PhoneAuthorizeTypeEnum.values()[typeOrdinal];
+        switch (type) {
+        case NEVER:
+            blackListPhone(phone);
+        case NO:
+            break;
+        case ALWAYS:
+            authorizePhone(phone);
+        case YES:
+            break;
+        default:
+            Log.e(TAG, "Not manage PhoneAuthorizeTypeEnum for " + type);
+            break;
+        }
+    }
+
+    private void blackListPhone(String phone) {
+        if (!secuAuthorizeNeverPhoneSet.contains(phone)) {
+            secuAuthorizeNeverPhoneSet.add(phone);
+            Editor editor = appPreferences.edit();
+            // Never
+            String neverPhoneString = convertPhoneSetAsString(secuAuthorizeNeverPhoneSet);
+            editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER, neverPhoneString);      
+            // Always
+            if (secuAuthorizeAlwaysPhoneSet.contains(phone)) {
+                secuAuthorizeAlwaysPhoneSet.remove(phone);
+                String  alwaysPhoneString = convertPhoneSetAsString(secuAuthorizeAlwaysPhoneSet);
+                editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS, alwaysPhoneString);    
+            }
+            Log.i(TAG, "Security Phone Authorize NEVER for Phone : " + phone);
+            editor.commit();
+        }
+    }
+
+    private void authorizePhone(String phone) {
+        if (!secuAuthorizeAlwaysPhoneSet.contains(phone)) {
+            secuAuthorizeAlwaysPhoneSet.add(phone);
+            Editor editor = appPreferences.edit();
+            // Never
+            String alwayPhoneString = convertPhoneSetAsString(secuAuthorizeAlwaysPhoneSet);
+            editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS, alwayPhoneString);      
+            // Always
+            if (secuAuthorizeNeverPhoneSet.contains(phone)) {
+                secuAuthorizeNeverPhoneSet.remove(phone);
+                String  neverPhoneString = convertPhoneSetAsString(secuAuthorizeNeverPhoneSet);
+                editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER, neverPhoneString);    
+            }
+            Log.i(TAG, "Security Phone Authorize ALWAYS for Phone : " + phone);
+            editor.commit();
+        }
+    }
+
+    private Set<String> readPrefPhoneSet(String key) {
+        String phoneSet = appPreferences.getString(key, null);
+        HashSet<String> result = new HashSet<String>();
+        if (phoneSet != null && phoneSet.length() > 0) {
+            int phoneSetSize = phoneSet.length();
+            int pos = 0;
+            int end = 0;
+            while ((end = phoneSet.indexOf(AppConstants.PHONE_SEP, pos)) >= 0) {
+                result.add(phoneSet.substring(pos, end));
+                pos = end + 1;
+            }
+            if (pos < phoneSetSize) {
+                result.add(phoneSet.substring(pos, phoneSetSize));
+            }
+        }
+        return result;
+    }
+    private void savePrefPhoneSet(String key, Set<String> phoneSet) {
+        String phone =convertPhoneSetAsString(phoneSet);
+        
+    }
+
+    private String convertPhoneSetAsString(Set<String> phoneSet) {
+        StringBuilder sb = new StringBuilder();
+        boolean addSep = false;
+        for (String phone : phoneSet) {
+            if (addSep) {
+                sb.append(AppConstants.PHONE_SEP);
+            }
+            sb.append(phone);
+            addSep = true;
+        }
+        return sb.toString();
     }
 
     // ===========================================================
@@ -157,7 +254,7 @@ public class GeoPingSlaveService extends WorkerService {
 
     private void sendSms(String phone, GeoPingMessage smsMsg) {
         String encrypedMsg = SmsMessageEncoderHelper.encodeSmsMessage(smsMsg);
-        if (smsMsg != null && !encrypedMsg.isEmpty() && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
+        if (smsMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
             SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
         }
     }
@@ -237,12 +334,27 @@ public class GeoPingSlaveService extends WorkerService {
 
     private void showNotificationNewPingRequest(Uri geoTrackData, ContentValues values) {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, Intents.showOnMap(this, geoTrackData, values), PendingIntent.FLAG_CANCEL_CURRENT);
+        // PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+        // Intents.showOnMap(this, geoTrackData, values),
+        // PendingIntent.FLAG_CANCEL_CURRENT);
 
         String phone = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
         // remote View
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
-        
+        // Manage Button Confirmation
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_no, PendingIntent.getActivity(this, 0, //
+                Intents.authorizePhone(this, phone, PhoneAuthorizeTypeEnum.NO),//
+                PendingIntent.FLAG_CANCEL_CURRENT));
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_yes, PendingIntent.getActivity(this, 0, //
+                Intents.authorizePhone(this, phone, PhoneAuthorizeTypeEnum.YES),//
+                PendingIntent.FLAG_CANCEL_CURRENT));
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_always, PendingIntent.getActivity(this, 0, //
+                Intents.authorizePhone(this, phone, PhoneAuthorizeTypeEnum.ALWAYS),//
+                PendingIntent.FLAG_CANCEL_CURRENT));
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_never, PendingIntent.getActivity(this, 0, //
+                Intents.authorizePhone(this, phone, PhoneAuthorizeTypeEnum.NEVER),//
+                PendingIntent.FLAG_CANCEL_CURRENT));
+
         // Create Notifiation
         Notification notification = new NotificationCompat.Builder(this) //
                 .setSmallIcon(R.drawable.icon_notif) //
@@ -250,8 +362,7 @@ public class GeoPingSlaveService extends WorkerService {
                 .setAutoCancel(true) //
                 .setContentTitle("GeoPing Request" + phone) //
                 .setContentText("GeoTrack point") //
-                .setContentIntent(pendingIntent)//
-                 .setContent(contentView) //
+                .setContent(contentView) //
                 .build();
         // Show
         mNotificationManager.notify(SHOW_GEOPING_REQUEST_NOTIFICATION_ID, notification);

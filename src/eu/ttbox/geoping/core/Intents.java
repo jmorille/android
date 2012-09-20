@@ -10,6 +10,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.master.GeoPingMasterService;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
+import eu.ttbox.geoping.service.slave.receiver.PhoneAuthorizeTypeEnum;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.person.PersonEditActivity;
 
@@ -21,19 +22,20 @@ public class Intents {
     public static final String ACTION_SMS_GEOPING_REQUEST_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_REQUEST_HANDLER";
     public static final String ACTION_SMS_GEOPING_RESPONSE_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_RESPONSE_HANDLER";
 
+    public static final String ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE = "eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE";
+
+    
     public static final String ACTION_NEW_GEOTRACK_INSERTED = "eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED";
 
     public static final String EXTRA_SMS_PHONE = "EXTRA_SMS_PHONE";
     public static final String EXTRA_SMS_PARAMS = "EXTRA_SMS_PARAMS";
-    // public static final String EXTRA_SMS_ENCODED_MESSAGE =
-    // "EXTRA_SMS_ENCODED_MESSAGE";
     public static final String EXTRA_SMS_ACTION = "EXTRA_SMS_ACTION";
 
+    public static final String EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL = "EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL";
+
     public static final String EXTRA_EXPECTED_ACCURACY = "EXPECTED_ACCURACY";
-//    public static final String EXTRA_PHONE = "EXTRA_PHONE";
 
     //
-
 
     // Person Edit
     public static Intent addTrackerPerson(Context context) {
@@ -61,7 +63,7 @@ public class Intents {
         return intent;
     }
 
-    public static Intent showOnMap(Context context , Uri geoTrackData, ContentValues values) {
+    public static Intent showOnMap(Context context, Uri geoTrackData, ContentValues values) {
         String userId = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
         Log.d(TAG, "Create Intent action for New GeoTrack for user " + userId);
         // create
@@ -72,7 +74,6 @@ public class Intents {
         return intent;
     }
 
-    
     // ===========================================================
     // GeoPing Master
     // ===========================================================
@@ -83,8 +84,8 @@ public class Intents {
                 .setAction(ACTION_SMS_GEOPING_REQUEST_SENDER)//
                 .putExtra(EXTRA_SMS_PHONE, phoneNumber);
     }
-    
- // Sms Producer
+
+    // Sms Producer
     public static Intent displayGeotrackOnMap(Context context, String phoneNumber) {
         return new Intent(context, GeoPingMasterService.class) //
                 .setAction(ACTION_SMS_GEOPING_REQUEST_SENDER)//
@@ -94,6 +95,17 @@ public class Intents {
     // ===========================================================
     // GeoPing Slave
     // ===========================================================
+
+    // Register Phone
+    public static Intent authorizePhone(Context context, String phone, PhoneAuthorizeTypeEnum authorizeType) {
+        Log.i(TAG, "Authorize Always Phone " + phone);
+        // create
+        Intent intent = new Intent(context, ShowMapActivity.class);
+        intent.setAction(ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE);
+        intent.putExtra(EXTRA_SMS_PHONE, phone);
+        intent.putExtra(EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL, authorizeType); 
+        return intent;
+    }
 
     // Sms Consumer
     public static Intent consumeSmsGeoPingRequestHandler(Context context, GeoPingMessage msg) {
