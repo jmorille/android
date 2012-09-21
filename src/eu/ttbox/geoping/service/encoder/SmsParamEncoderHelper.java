@@ -10,7 +10,7 @@ public class SmsParamEncoderHelper {
 
     private static final int NUMBER_ENCODER_RADIX = 36;
 
-    public static final String TAG = "SmsMessageEncoderHelper";
+    public static final String TAG = "SmsParamEncoderHelper";
 
     public static final char FIELD_SEP = ',';
 

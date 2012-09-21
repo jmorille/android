@@ -47,7 +47,7 @@ public class GeoTrackHelper {
         bearingIdx = cursor.getColumnIndex(GeoTrackColumns.COL_BEARING);
         speedIdx = cursor.getColumnIndex(GeoTrackColumns.COL_SPEED);
 
-        addressIdx= cursor.getColumnIndex(GeoTrackColumns.COL_ADDRESS);
+        addressIdx = cursor.getColumnIndex(GeoTrackColumns.COL_ADDRESS);
         isNotInit = false;
         return this;
     }
@@ -73,7 +73,7 @@ public class GeoTrackHelper {
 
         geoTrack.setBearing(bearingIdx > -1 ? cursor.getInt(bearingIdx) : -1);
         geoTrack.setSpeed(speedIdx > -1 ? cursor.getInt(speedIdx) : -1);
-        
+
         geoTrack.setAddress(addressIdx > -1 ? cursor.getString(addressIdx) : null);
         return geoTrack;
     }
@@ -115,19 +115,31 @@ public class GeoTrackHelper {
         if (geoTrack.id > -1) {
             initialValues.putLong(GeoTrackColumns.COL_ID, Long.valueOf(geoTrack.id));
         }
-        initialValues.putLong(GeoTrackColumns.COL_PERSON_ID, geoTrack.personId);
-        initialValues.putString(GeoTrackColumns.COL_PHONE_NUMBER, geoTrack.phone);
+        if (geoTrack.hasPersonId()) {
+            initialValues.putLong(GeoTrackColumns.COL_PERSON_ID, geoTrack.personId);
+        }
+        if (geoTrack.hasPhone()) {
+            initialValues.putString(GeoTrackColumns.COL_PHONE_NUMBER, geoTrack.phone);
+        }
         initialValues.putLong(GeoTrackColumns.COL_TIME, geoTrack.time);
         initialValues.putString(GeoTrackColumns.COL_PROVIDER, geoTrack.provider);
         initialValues.putInt(GeoTrackColumns.COL_LATITUDE_E6, geoTrack.getLatitudeE6());
         initialValues.putInt(GeoTrackColumns.COL_LONGITUDE_E6, geoTrack.getLongitudeE6());
-        initialValues.putInt(GeoTrackColumns.COL_ACCURACY, geoTrack.accuracy);
-        initialValues.putInt(GeoTrackColumns.COL_ALTITUDE, geoTrack.altitude);
-
-        initialValues.putInt(GeoTrackColumns.COL_BEARING, geoTrack.bearing);
-        initialValues.putInt(GeoTrackColumns.COL_SPEED, geoTrack.speed);
-
-        initialValues.putString(GeoTrackColumns.COL_ADDRESS, geoTrack.address);
+        if (geoTrack.hasAccuracy()) {
+            initialValues.putInt(GeoTrackColumns.COL_ACCURACY, geoTrack.accuracy);
+        }
+        if (geoTrack.hasAltitude()) {
+            initialValues.putInt(GeoTrackColumns.COL_ALTITUDE, geoTrack.altitude);
+        }
+        if (geoTrack.hasBearing()) {
+            initialValues.putInt(GeoTrackColumns.COL_BEARING, geoTrack.bearing);
+        }
+        if (geoTrack.hasSpeed()) {
+            initialValues.putInt(GeoTrackColumns.COL_SPEED, geoTrack.speed);
+        }
+        if (geoTrack.hasAddress()) {
+            initialValues.putString(GeoTrackColumns.COL_ADDRESS, geoTrack.address);
+        }
         return initialValues;
     }
 
@@ -174,23 +186,23 @@ public class GeoTrackHelper {
         }
         return geoTrack;
     }
-    
-	public static String getAddressAsString(Address addr) {
-		String result = null;
-		if (addr != null) {
-			StringBuilder addrBuilder = new StringBuilder();
-			boolean isNotFist = false;
-			for (int i = 0; i < addr.getMaxAddressLineIndex(); i++) {
-				if (isNotFist) {
-					addrBuilder.append(", ");
-				} else {
-					isNotFist = true;
-				}
-				String addrLine = addr.getAddressLine(i);
-				addrBuilder.append(addrLine);
-			}
-			result = addrBuilder.toString();
-		}
-		return result;
-	}
+
+    public static String getAddressAsString(Address addr) {
+        String result = null;
+        if (addr != null) {
+            StringBuilder addrBuilder = new StringBuilder();
+            boolean isNotFist = false;
+            for (int i = 0; i < addr.getMaxAddressLineIndex(); i++) {
+                if (isNotFist) {
+                    addrBuilder.append(", ");
+                } else {
+                    isNotFist = true;
+                }
+                String addrLine = addr.getAddressLine(i);
+                addrBuilder.append(addrLine);
+            }
+            result = addrBuilder.toString();
+        }
+        return result;
+    }
 }

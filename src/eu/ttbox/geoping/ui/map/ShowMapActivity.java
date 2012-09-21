@@ -154,7 +154,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         this.myLocation.enableMyLocation(showLocation);
         boolean showCompass = privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false);
         this.myLocation.enableCompass(showCompass);
-        
+
         // Service
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intents.ACTION_NEW_GEOTRACK_INSERTED);
@@ -339,6 +339,11 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
             int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
+            if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
+                if (myLocation != null) {
+                    myLocation.disableFollowLocation();
+                }
+            }
             annimateToPersonPhone(phone, latE6, lngE6);
         }
     }

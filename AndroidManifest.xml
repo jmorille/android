@@ -28,8 +28,7 @@
 
         <activity android:label="@string/app_name" android:name=".SmsTrakerActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
+                <action android:name="android.intent.action.MAIN"/> 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -41,7 +40,7 @@
         </activity>
 
         <!-- Map -->
-        <activity android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">
+        <activity android:name=".ui.map.ShowMapActivity"  android:launchMode="singleTask" android:theme="@style/MapActionBar">
             <intent-filter>
                 <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED"/>
                 
@@ -70,6 +69,10 @@
 
         <!-- Sms service -->
         <service android:name=".service.slave.GeoPingSlaveService">
+            	<intent-filter>
+            	    <action android:name="eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE"/>
+            	    <category android:name="android.intent.category.DEFAULT" />
+            	</intent-filter>
         </service>
         <service android:name=".service.master.GeoPingMasterService">
         </service>

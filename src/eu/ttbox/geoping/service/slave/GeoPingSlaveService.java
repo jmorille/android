@@ -13,7 +13,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -22,7 +21,6 @@ import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -35,7 +33,6 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrack;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
@@ -117,12 +114,12 @@ public class GeoPingSlaveService extends WorkerService {
             // Request
             if (isAuthorizePhoneAlways(phone)) {
                 registerGeoPingRequest(phone, params);
-             } else if (!isAuthorizePhoneNever(phone)) {
-                  showNotificationNewPingRequest(phone, params);
-             } else {
-                  Log.i(TAG, "Ignore Never Authorize Geoping request from phone " + phone);
-             }
-      
+            } else if (!isAuthorizePhoneNever(phone)) {
+                showNotificationNewPingRequest(phone, params);
+            } else {
+                Log.i(TAG, "Ignore Never Authorize Geoping request from phone " + phone);
+            }
+
         } else if (Intents.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE.equals(action)) {
             manageAuthorizeIntent(intent.getExtras());
         }
@@ -137,16 +134,20 @@ public class GeoPingSlaveService extends WorkerService {
         Bundle params = extras.getBundle(Intents.EXTRA_SMS_PARAMS);
         int typeOrdinal = extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL);
         PhoneAuthorizeTypeEnum type = PhoneAuthorizeTypeEnum.values()[typeOrdinal];
-
+        Log.d(TAG, String.format("manageAuthorizeIntent for phone %s with security policy %s (%s)", phone, type, typeOrdinal));
         switch (type) {
         case NEVER:
-            authorizePhoneNever(phone);
+            Log.d(TAG, "Need to authorizePhoneNever case Never");
+//            authorizePhoneNever(phone);
         case NO:
+            Log.d(TAG, "Need to authorizePhoneNever case No");
             Log.i(TAG, "Ignore Geoping request from phone " + phone);
             break;
         case ALWAYS:
-            authorizePhoneAlways(phone);
+            Log.d(TAG, "Need to authorizePhoneNever case ALWAYS");
+//            authorizePhoneAlways(phone);
         case YES:
+            Log.d(TAG, "Need to authorizePhoneNever case Yes");
             registerGeoPingRequest(phone, params);
             break;
         default:
@@ -216,7 +217,6 @@ public class GeoPingSlaveService extends WorkerService {
         }
         return result;
     }
- 
 
     private String convertPhoneSetAsString(Set<String> phoneSet) {
         StringBuilder sb = new StringBuilder();
@@ -234,8 +234,8 @@ public class GeoPingSlaveService extends WorkerService {
     // ===========================================================
     // Other
     // ===========================================================
-   
-    public boolean registerGeoPingRequest( String phoneNumber ,Bundle params ) {
+
+    public boolean registerGeoPingRequest(String phoneNumber, Bundle params) {
         Location initLastLoc = myLocation.getLastKnownLocation();
         GeoPingRequest request = new GeoPingRequest(phoneNumber, params);
         geoPingRequestList.add(request);
@@ -358,18 +358,18 @@ public class GeoPingSlaveService extends WorkerService {
         // remote View
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
         // Manage Button Confirmation
-        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_no, PendingIntent.getActivity(this, 0, //
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_no, PendingIntent.getService(this, 0, //
                 Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.NO),//
-                PendingIntent.FLAG_CANCEL_CURRENT));
-        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_yes, PendingIntent.getActivity(this, 0, //
-                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.YES),//
-                PendingIntent.FLAG_CANCEL_CURRENT));
-        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_always, PendingIntent.getActivity(this, 0, //
-                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.ALWAYS),//
-                PendingIntent.FLAG_CANCEL_CURRENT));
-        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_never, PendingIntent.getActivity(this, 0, //
+                PendingIntent.FLAG_UPDATE_CURRENT));
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_never, PendingIntent.getService(this, 1, //
                 Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.NEVER),//
-                PendingIntent.FLAG_CANCEL_CURRENT));
+                PendingIntent.FLAG_UPDATE_CURRENT));
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_yes, PendingIntent.getService(this, 2, //
+                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.YES),//
+                PendingIntent.FLAG_UPDATE_CURRENT));
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_always, PendingIntent.getService(this, 3, //
+                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.ALWAYS),//
+                PendingIntent.FLAG_UPDATE_CURRENT));
 
         // Create Notifiation
         Notification notification = new NotificationCompat.Builder(this) //

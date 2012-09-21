@@ -99,13 +99,12 @@ public class Intents {
 
     // Register Phone
     public static Intent authorizePhone(Context context, String phone, Bundle params , PhoneAuthorizeTypeEnum authorizeType) {
-        Log.i(TAG, "Authorize Always Phone " + phone); 
-        // create
-        Intent intent = new Intent(context, ShowMapActivity.class);
+         // create
+        Intent intent = new Intent(context, GeoPingSlaveService.class);
         intent.setAction(ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE);
         intent.putExtra(EXTRA_SMS_PHONE, phone);
         intent.putExtra(EXTRA_SMS_PARAMS, params);
-        intent.putExtra(EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL, authorizeType); 
+        intent.putExtra(EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL, authorizeType.ordinal()); 
         return intent;
     }
 

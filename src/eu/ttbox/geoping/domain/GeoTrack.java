@@ -15,10 +15,11 @@ public class GeoTrack {
 
     public String phone;
     public String provider;
+    public String address;
+
     public long time = -1l;
     private int latitudeE6;
     private int longitudeE6;
-    public String address;
 
     private boolean hasLatitude;
     private boolean hasLlongitude;
@@ -29,10 +30,10 @@ public class GeoTrack {
     public int bearing = -1;
     public int speed = -1;
 
-    private boolean hasAltitude;
-    private boolean hasAccuracy;
-    private boolean hasBearing;
-    private boolean hasSpeed;
+    private boolean hasAltitude = false;
+    private boolean hasAccuracy= false;
+    private boolean hasBearing= false;
+    private boolean hasSpeed= false;
 
     // Other
     public String titre;
@@ -174,6 +175,7 @@ public class GeoTrack {
 
     public GeoTrack setAltitude(double altitude) {
         this.altitude = (int) altitude;
+        this.hasAltitude = true;
         return this;
     }
 
@@ -183,6 +185,7 @@ public class GeoTrack {
 
     public GeoTrack setAccuracy(int accuracy) {
         this.accuracy = accuracy;
+        this.hasAccuracy = true;
         return this;
     }
 
@@ -192,6 +195,7 @@ public class GeoTrack {
 
     public GeoTrack setBearing(int bearing) {
         this.bearing = bearing;
+        this.hasBearing = true;
         return this;
     }
 
@@ -201,7 +205,8 @@ public class GeoTrack {
 
     public GeoTrack setSpeed(int speed) {
         this.speed = speed;
-        return this;
+        this.hasSpeed = true;
+         return this;
     }
 
     public String getTitre() {
@@ -236,6 +241,12 @@ public class GeoTrack {
     // Setter Value Test
     // ===========================================================
 
+    public boolean hasPersonId() {
+        return personId != -1L;
+    }
+    public boolean hasPhone() {
+        return phone != null;
+    }
     public boolean hasLatitude() {
         return hasLatitude;
     }
@@ -245,7 +256,7 @@ public class GeoTrack {
     }
 
     public boolean hasAltitude() {
-        return this.altitude != -1;
+        return hasAltitude;
     }
 
     public boolean hasAccuracy() {
@@ -292,7 +303,7 @@ public class GeoTrack {
                 .append(", provider=").append(provider)//
                 .append(", latitudeE6=").append(latitudeE6)//
                 .append(", longitudeE6=").append(longitudeE6)//
-                .append(", time=").append(time) //
+//                .append(", time=").append(time) //
                 .append(", time=").append(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS,%1$tL", time));
 
         sb.append("]");

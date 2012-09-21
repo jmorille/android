@@ -152,6 +152,10 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         finish();
     }
 
+    /**
+     * {link http://www.higherpass.com/Android/Tutorials/Working-With-Android-Contacts/}
+     * @param v
+     */
     public void onSelectContactClick(View v) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
