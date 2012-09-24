@@ -13,12 +13,14 @@ public class PersonHelper {
     public int nameIdx = -1;
     public int phoneIdx = -1;
     public int colorIdx = -1;
+    public int contactUri = -1;
 
     public PersonHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(PersonColumns.COL_ID);
         nameIdx = cursor.getColumnIndex(PersonColumns.COL_NAME);
         phoneIdx = cursor.getColumnIndex(PersonColumns.COL_PHONE);
         colorIdx = cursor.getColumnIndex(PersonColumns.COL_COLOR);
+        contactUri = cursor.getColumnIndex(PersonColumns.COL_CONTACT_URI);
         isNotInit = false;
         return this;
     }
@@ -32,6 +34,7 @@ public class PersonHelper {
         user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
         user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : null);
+        user.setContactUri(contactUri > -1 ? cursor.getString(contactUri) : null);
         return user;
     }
 
@@ -75,6 +78,8 @@ public class PersonHelper {
         }
         initialValues.put(PersonColumns.COL_NAME, user.name);
         initialValues.put(PersonColumns.COL_PHONE, user.phone);
+        initialValues.put(PersonColumns.COL_COLOR, user.color);
+        initialValues.put(PersonColumns.COL_CONTACT_URI, user.contactUri);
         return initialValues;
     }
 

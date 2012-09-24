@@ -39,6 +39,11 @@
     <string name="prefs.localSave.summaryOn">Keep trace in local DB</string>
     <string name="prefs.localSave.summaryOff">Off</string>
     
+    <string name="prefs_pairing_phone_authorize">GeoPing Request Sécurité</string>
+    <string name="prefs_pairing_phone_authorize_always">White List</string>
+    <string name="prefs_pairing_phone_authorize_never">Black List</string>
+    <string name="prefs_geoping_request_notifyme">Afficher une Notification</string>
+    
     <!-- Person model -->
     <string name="person_name">Nom</string>
     <string name="person_phone">N° Téléphone</string>

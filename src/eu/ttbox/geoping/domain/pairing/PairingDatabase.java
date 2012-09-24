@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.domain.person;
+package eu.ttbox.geoping.domain.pairing;
 
 import java.util.HashMap;
 
@@ -11,48 +11,47 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 
-public class PersonDatabase {
+public class PairingDatabase {
 
     @SuppressWarnings("unused")
-    private static final String TAG = "PersonDatabase";
+    private static final String TAG = "PairingDatabase";
 
     public static final String TABLE_PERSON_FTS = "personFTS";
 
-    public static class PersonColumns {
+    public static class PairingColumns {
 
         public static final String COL_ID = BaseColumns._ID;
         public static final String COL_NAME = "NAME";
         public static final String COL_PHONE = "PHONE";
         public static final String COL_COLOR = "COLOR";
-        public static final String COL_CONTACT_URI = "CONTACT_URI";
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_COLOR, COL_CONTACT_URI };
+        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_COLOR };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);
 
     }
 
-    private final PersonOpenHelper mDatabaseOpenHelper;
-    private static final HashMap<String, String> mPersonColumnMap = buildUserColumnMap();
+    private final PairingOpenHelper mDatabaseOpenHelper;
+    private static final HashMap<String, String> mPairingColumnMap = buildUserColumnMap();
 
-    public PersonDatabase(Context context) {
-        mDatabaseOpenHelper = new PersonOpenHelper(context);
+    public PairingDatabase(Context context) {
+        mDatabaseOpenHelper = new PairingOpenHelper(context);
     }
 
     private static HashMap<String, String> buildUserColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Id
-        map.put(PersonColumns.COL_ID, "rowid AS " + BaseColumns._ID);
+        map.put(PairingColumns.COL_ID, "rowid AS " + BaseColumns._ID);
         // Add Identity Column
-        for (String col : PersonColumns.ALL_KEYS) {
-            if (!col.equals(PersonColumns.COL_ID)) {
+        for (String col : PairingColumns.ALL_KEYS) {
+            if (!col.equals(PairingColumns.COL_ID)) {
                 map.put(col, col);
             }
         }
         // Add Suggest Aliases
-        map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", PersonColumns.COL_NAME, SearchManager.SUGGEST_COLUMN_TEXT_1));
-        map.put(SearchManager.SUGGEST_COLUMN_TEXT_2, String.format("%s AS %s", PersonColumns.COL_PHONE, SearchManager.SUGGEST_COLUMN_TEXT_2));
+        map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", PairingColumns.COL_NAME, SearchManager.SUGGEST_COLUMN_TEXT_1));
+        map.put(SearchManager.SUGGEST_COLUMN_TEXT_2, String.format("%s AS %s", PairingColumns.COL_PHONE, SearchManager.SUGGEST_COLUMN_TEXT_2));
         map.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
         map.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS " + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
         // Add Other Aliases
@@ -66,7 +65,7 @@ public class PersonDatabase {
     }
 
     public Cursor getEntityMatches(String query, String[] columns, String order) {
-        String selection = PersonColumns.COL_NAME + " MATCH ?";
+        String selection = PairingColumns.COL_NAME + " MATCH ?";
         String queryString = new StringBuilder(query).append("*").toString();
         String[] selectionArgs = new String[] { queryString };
         return queryEntities(selection, selectionArgs, columns, order);
@@ -75,7 +74,7 @@ public class PersonDatabase {
     public Cursor queryEntities(String selection, String[] selectionArgs, String[] columns, String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_PERSON_FTS);
-        builder.setProjectionMap(mPersonColumnMap);
+        builder.setProjectionMap(mPairingColumnMap);
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), columns, selection, selectionArgs, null, null, order);
         // Manage Cursor
         // if (cursor == null) {

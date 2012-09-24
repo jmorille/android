@@ -61,7 +61,8 @@ public class GeoPingSlaveService extends WorkerService {
 
     private int batterLevelInPercent = -1;
 
-    // Security
+    // Config
+    boolean displayGeopingRequestNotification = false;
     Set<String> secuAuthorizeNeverPhoneSet;
     Set<String> secuAuthorizeAlwaysPhoneSet;
 
@@ -82,12 +83,18 @@ public class GeoPingSlaveService extends WorkerService {
         this.myLocation = new MyLocationListenerProxy(locationManager);
         this.geoPingRequestList = new ArrayList<GeoPingRequest>();
         this.multiGeoRequestListener = new MultiGeoRequestLocationListener(geoPingRequestList);
-        // Read Security Set
-        this.secuAuthorizeNeverPhoneSet = readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER);
-        this.secuAuthorizeAlwaysPhoneSet = readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS);
+        loadPrefConfig();
         Log.d(TAG, "#################################");
         Log.d(TAG, "### GeoPing Service Started.");
         Log.d(TAG, "#################################");
+    }
+
+    private void loadPrefConfig() {
+        this.displayGeopingRequestNotification = appPreferences.getBoolean(AppConstants.PREFS_GEOPING_REQUEST_NOTIFYME, false);
+
+        // Read Security Set
+        this.secuAuthorizeNeverPhoneSet = readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER);
+        this.secuAuthorizeAlwaysPhoneSet = readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS);
     }
 
     @Override
@@ -112,8 +119,9 @@ public class GeoPingSlaveService extends WorkerService {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             // Request
+            // registerGeoPingRequest(phone, params);
             if (isAuthorizePhoneAlways(phone)) {
-                registerGeoPingRequest(phone, params);
+                registerGeoPingRequest(phone, params);  
             } else if (!isAuthorizePhoneNever(phone)) {
                 showNotificationNewPingRequest(phone, params);
             } else {
@@ -138,14 +146,14 @@ public class GeoPingSlaveService extends WorkerService {
         switch (type) {
         case NEVER:
             Log.d(TAG, "Need to authorizePhoneNever case Never");
-//            authorizePhoneNever(phone);
+            // authorizePhoneNever(phone);
         case NO:
             Log.d(TAG, "Need to authorizePhoneNever case No");
             Log.i(TAG, "Ignore Geoping request from phone " + phone);
             break;
         case ALWAYS:
             Log.d(TAG, "Need to authorizePhoneNever case ALWAYS");
-//            authorizePhoneAlways(phone);
+            // authorizePhoneAlways(phone);
         case YES:
             Log.d(TAG, "Need to authorizePhoneNever case Yes");
             registerGeoPingRequest(phone, params);

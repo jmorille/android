@@ -1,35 +1,29 @@
 package eu.ttbox.geoping.domain;
 
-public class Person {
+public class Pairing {
 
     public long id = -1;
     public String name;
     public String phone;
     public int color;
-    public String contactUri;
 
-    public Person setId(long id) {
+    public Pairing setId(long id) {
         this.id = id;
         return this;
     }
 
-    public Person setName(String name) {
+    public Pairing setName(String name) {
         this.name = name;
         return this;
     }
 
-    public Person setPhone(String phone) {
+    public Pairing setPhone(String phone) {
         this.phone = phone;
         return this;
     }
 
-    public Person setColor(int color) {
+    public Pairing setColor(int color) {
         this.color = color;
-        return this;
-    }
-
-    public Person setContactUri(String contactUri) {
-        this.contactUri = contactUri;
         return this;
     }
 

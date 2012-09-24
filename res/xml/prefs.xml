@@ -15,5 +15,11 @@
 <PreferenceCategory android:title="Request Notification">
 	<CheckBoxPreference android:title="Request Notification" android:key="smsRequestNotif" android:summaryOn="Notify me for request" android:summaryOff="Invisible request management" android:defaultValue="false"/>
 </PreferenceCategory>
-    
+ 
+<PreferenceCategory android:title="string/prefs_pairing_phone_authorize">
+	<EditTextPreference android:title="@string/prefs_pairing_phone_authorize_always" android:key="PAIRING_PHONES_AUTHORIZE_ALWAYS" />
+	<EditTextPreference android:title="@string/prefs_pairing_phone_authorize_never" android:key="PAIRING_PHONES_AUTHORIZE_NEVER" />
+	<CheckBoxPreference android:title="@string/prefs_geoping_request_notifyme"  android:key="GEOPING_REQUEST_NOTIFYME"  android:defaultValue="false" />
+</PreferenceCategory>
+
 </PreferenceScreen>

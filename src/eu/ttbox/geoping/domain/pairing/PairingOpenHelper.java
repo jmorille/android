@@ -1,16 +1,16 @@
-package eu.ttbox.geoping.domain.person;
+package eu.ttbox.geoping.domain.pairing;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class PersonOpenHelper extends SQLiteOpenHelper {
+public class PairingOpenHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = "PersonOpenHelper";
+    private static final String TAG = "PairingOpenHelper";
 
     public static final String DATABASE_NAME = "person.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
 
     /*
      * Note that FTS3 does not support column constraints and thus, you cannot
@@ -18,17 +18,16 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
      * identifier, so when making requests, we will use "_id" as an alias for
      * "rowid"
      */
-    private static final String FTS_TABLE_CREATE_USER = "CREATE VIRTUAL TABLE " + PersonDatabase.TABLE_PERSON_FTS + //
+    private static final String FTS_TABLE_CREATE_USER = "CREATE VIRTUAL TABLE " + PairingDatabase.TABLE_PERSON_FTS + //
             " USING fts3 " //
-            + "( " + PersonDatabase.PersonColumns.COL_NAME //
-            + ", " + PersonDatabase.PersonColumns.COL_PHONE //
-            + ", " + PersonDatabase.PersonColumns.COL_COLOR //
-            + ", " + PersonDatabase.PersonColumns.COL_CONTACT_URI//
+            + "( " + PairingDatabase.PairingColumns.COL_NAME //
+            + ", " + PairingDatabase.PairingColumns.COL_PHONE //
+            + ", " + PairingDatabase.PairingColumns.COL_COLOR //
             + ");";
 
     private SQLiteDatabase mDatabase;
 
-    PersonOpenHelper(Context context) {
+    PairingOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -36,13 +35,13 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         mDatabase = db;
         mDatabase.execSQL(FTS_TABLE_CREATE_USER);
-        // new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary();
+        // new PairingDbBootstrap(mHelperContext, mDatabase).loadDictionary();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + PersonDatabase.TABLE_PERSON_FTS);
+        db.execSQL("DROP TABLE IF EXISTS " + PairingDatabase.TABLE_PERSON_FTS);
         onCreate(db);
     }
 

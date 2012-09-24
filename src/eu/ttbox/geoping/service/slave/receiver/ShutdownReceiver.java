@@ -22,7 +22,7 @@ public class ShutdownReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String phone = "0777048649";
+        String phone = null;//"0777048649";
         if (intent.getAction().equals(ACTION_BOOT_COMPLETED)) {
             String encrypedMsg = "Mon tel ACTION_BOOT_COMPLETED";
             Log.d(TAG, "### ############################### ### ");

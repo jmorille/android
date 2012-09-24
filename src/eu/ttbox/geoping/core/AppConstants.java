@@ -23,7 +23,10 @@ public class AppConstants {
 
     public static final String PREFS_APP_COUNT_LAUGHT = "APP_COUNT_LAUGHT";
 
-    // Slave Authorize set
-    public static final String PREFS_PHONES_SET_AUTHORIZE_ALWAYS = "AUTHORIZE_ALWAYS_PHONES_SET";
-    public static final String PREFS_PHONES_SET_AUTHORIZE_NEVER = "AUTHORIZE_NEVER_PHONES_SET";
+    // Prefs Slave Authorize set
+    public static final String PREFS_PHONES_SET_AUTHORIZE_ALWAYS = "PAIRING_PHONES_AUTHORIZE_ALWAYS";
+    public static final String PREFS_PHONES_SET_AUTHORIZE_NEVER = "PAIRING_PHONES_AUTHORIZE_NEVER";
+    public static final String PREFS_GEOPING_REQUEST_NOTIFYME = "GEOPING_REQUEST_NOTIFYME";
+
+    
 }

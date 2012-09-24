@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="2" android:versionName="0.0.1" package="eu.ttbox.geoping">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="5" android:versionName="0.0.2" package="eu.ttbox.geoping">
 
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="16"/>
 
@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
 
-    <application  android:icon="@drawable/icon" android:label="@string/app_name" android:name="GeoPingApplication" android:theme="@style/AppTheme">
+    <application android:debuggable="false" android:icon="@drawable/icon" android:label="@string/app_name" android:name="GeoPingApplication" android:theme="@style/AppTheme">
 
         <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
         <meta-data android:name="CLOUDMADE_KEY" android:value="75b3a96b94c74eb0b7f1450ed5235a78"/>
@@ -40,7 +40,7 @@
         </activity>
 
         <!-- Map -->
-        <activity android:name=".ui.map.ShowMapActivity"  android:launchMode="singleTask" android:theme="@style/MapActionBar">
+        <activity android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">
             <intent-filter>
                 <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED"/>
                 
@@ -59,7 +59,7 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
-        <receiver android:enabled="true" android:name=".service.slave.receiver.ShutdownReceiver">
+        <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/>
@@ -71,7 +71,7 @@
         <service android:name=".service.slave.GeoPingSlaveService">
             	<intent-filter>
             	    <action android:name="eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE"/>
-            	    <category android:name="android.intent.category.DEFAULT" />
+            	    <category android:name="android.intent.category.DEFAULT"/>
             	</intent-filter>
         </service>
         <service android:name=".service.master.GeoPingMasterService">
@@ -80,7 +80,8 @@
         <provider android:authorities="eu.ttbox.geoping.PersonProvider" android:name=".domain.PersonProvider" android:readPermission="eu.ttbox.geoping.PERSON_READ" android:writePermission="eu.ttbox.geoping.PERSON_WRITE"/>
         <provider android:authorities="eu.ttbox.geoping.GeoTrackerProvider" android:multiprocess="true" android:name=".domain.GeoTrackerProvider" android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ" android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE"/>
         <provider android:authorities="eu.ttbox.geoping.SmsLogProvider" android:multiprocess="true" android:name=".domain.SmsLogProvider" android:readPermission="eu.ttbox.geoping.SMSLOG_READ" android:writePermission="eu.ttbox.geoping.SMSLOG_WRITE"/>
-
+       <provider android:authorities="eu.ttbox.geoping.PairingProvider" android:multiprocess="true" android:name=".domain.PairingProvider" android:readPermission="eu.ttbox.geoping.PAIRING_READ" android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
+        
         <uses-library android:name="com.google.android.maps" android:required="true"/>
     </application>
 
