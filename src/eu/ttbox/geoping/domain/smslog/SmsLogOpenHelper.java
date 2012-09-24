@@ -12,6 +12,10 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "smsLog.db";
     public static final int DATABASE_VERSION = 2;
 
+    // ===========================================================
+    // Table
+    // ===========================================================
+
     /*
      * Note that FTS3 does not support column constraints and thus, you cannot
      * declare a primary key. However, "rowid" is automatically used as a unique
@@ -24,6 +28,10 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
             + ", " + SmsLogDatabase.SmsLogColumns.COL_PHONE //
             + ", " + SmsLogDatabase.SmsLogColumns.COL_TIME //
             + ");";
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     private SQLiteDatabase mDatabase;
 

@@ -1,6 +1,8 @@
-package eu.ttbox.geoping.domain.pairing;
+package eu.ttbox.geoping.domain.message;
 
 import java.util.HashMap;
+
+import eu.ttbox.geoping.domain.person.PersonOpenHelper;
 
 import android.app.SearchManager;
 import android.content.ContentValues;
@@ -11,14 +13,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 
-public class PairingDatabase {
+public class MessageDatabase {
 
     @SuppressWarnings("unused")
-    private static final String TAG = "PairingDatabase";
+    private static final String TAG = "MessageDatabase";
 
-    public static final String TABLE_PAIRING_FTS = "pairingFTS";
+    public static final String TABLE_MESSAGE_FTS = "messageFTS";
 
-    public static class PairingColumns {
+    public static class MessageColumns {
 
         public static final String COL_ID = BaseColumns._ID;
         public static final String COL_NAME = "NAME";
@@ -32,26 +34,26 @@ public class PairingDatabase {
 
     }
 
-    private final PairingOpenHelper mDatabaseOpenHelper;
+    private final PersonOpenHelper mDatabaseOpenHelper;
     private static final HashMap<String, String> mPairingColumnMap = buildUserColumnMap();
 
-    public PairingDatabase(Context context) {
-        mDatabaseOpenHelper = new PairingOpenHelper(context);
+    public MessageDatabase(Context context) {
+        mDatabaseOpenHelper = new PersonOpenHelper(context);
     }
 
     private static HashMap<String, String> buildUserColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Id
-        map.put(PairingColumns.COL_ID, "rowid AS " + BaseColumns._ID);
+        map.put(MessageColumns.COL_ID, "rowid AS " + BaseColumns._ID);
         // Add Identity Column
-        for (String col : PairingColumns.ALL_KEYS) {
-            if (!col.equals(PairingColumns.COL_ID)) {
+        for (String col : MessageColumns.ALL_KEYS) {
+            if (!col.equals(MessageColumns.COL_ID)) {
                 map.put(col, col);
             }
         }
         // Add Suggest Aliases
-        map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", PairingColumns.COL_NAME, SearchManager.SUGGEST_COLUMN_TEXT_1));
-        map.put(SearchManager.SUGGEST_COLUMN_TEXT_2, String.format("%s AS %s", PairingColumns.COL_PHONE, SearchManager.SUGGEST_COLUMN_TEXT_2));
+        map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", MessageColumns.COL_NAME, SearchManager.SUGGEST_COLUMN_TEXT_1));
+        map.put(SearchManager.SUGGEST_COLUMN_TEXT_2, String.format("%s AS %s", MessageColumns.COL_PHONE, SearchManager.SUGGEST_COLUMN_TEXT_2));
         map.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
         map.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS " + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
         // Add Other Aliases
@@ -65,7 +67,7 @@ public class PairingDatabase {
     }
 
     public Cursor getEntityMatches(String query, String[] columns, String order) {
-        String selection = PairingColumns.COL_NAME + " MATCH ?";
+        String selection = MessageColumns.COL_NAME + " MATCH ?";
         String queryString = new StringBuilder(query).append("*").toString();
         String[] selectionArgs = new String[] { queryString };
         return queryEntities(selection, selectionArgs, columns, order);
@@ -73,7 +75,7 @@ public class PairingDatabase {
 
     public Cursor queryEntities(String selection, String[] selectionArgs, String[] columns, String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(TABLE_PAIRING_FTS);
+        builder.setTables(TABLE_MESSAGE_FTS);
         builder.setProjectionMap(mPairingColumnMap);
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), columns, selection, selectionArgs, null, null, order);
         // Manage Cursor
@@ -92,7 +94,7 @@ public class PairingDatabase {
         try {
             db.beginTransaction();
             try {
-                result = db.insertOrThrow(TABLE_PAIRING_FTS, null, userValues);
+                result = db.insertOrThrow(TABLE_MESSAGE_FTS, null, userValues);
                 // commit
                 db.setTransactionSuccessful();
             } finally {
@@ -110,7 +112,7 @@ public class PairingDatabase {
         try {
             db.beginTransaction();
             try {
-                result = db.delete(TABLE_PAIRING_FTS, selection, selectionArgs);
+                result = db.delete(TABLE_MESSAGE_FTS, selection, selectionArgs);
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
@@ -127,7 +129,7 @@ public class PairingDatabase {
         try {
             db.beginTransaction();
             try {
-                result = db.update(TABLE_PAIRING_FTS, values, selection, selectionArgs);
+                result = db.update(TABLE_MESSAGE_FTS, values, selection, selectionArgs);
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();

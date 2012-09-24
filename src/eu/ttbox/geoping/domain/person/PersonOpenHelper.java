@@ -4,46 +4,80 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import eu.ttbox.geoping.domain.message.MessageDatabase;
 
 public class PersonOpenHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = "PersonOpenHelper";
+	private static final String TAG = "PersonOpenHelper";
 
-    public static final String DATABASE_NAME = "person.db";
-    public static final int DATABASE_VERSION = 2;
+	public static final String DATABASE_NAME = "person.db";
+	public static final int DATABASE_VERSION = 2;
+	
+    // ===========================================================
+    // Table
+    // ===========================================================
 
-    /*
-     * Note that FTS3 does not support column constraints and thus, you cannot
-     * declare a primary key. However, "rowid" is automatically used as a unique
-     * identifier, so when making requests, we will use "_id" as an alias for
-     * "rowid"
-     */
-    private static final String FTS_TABLE_CREATE_USER = "CREATE VIRTUAL TABLE " + PersonDatabase.TABLE_PERSON_FTS + //
-            " USING fts3 " //
-            + "( " + PersonDatabase.PersonColumns.COL_NAME //
-            + ", " + PersonDatabase.PersonColumns.COL_PHONE //
-            + ", " + PersonDatabase.PersonColumns.COL_COLOR //
-            + ", " + PersonDatabase.PersonColumns.COL_CONTACT_URI//
-            + ");";
+	private static final String FTS_TABLE_CREATE_USER = "CREATE VIRTUAL TABLE " + PersonDatabase.TABLE_PERSON_FTS + //
+			" USING fts3 " //
+			+ "( " + PersonDatabase.PersonColumns.COL_NAME //
+			+ ", " + PersonDatabase.PersonColumns.COL_PHONE //
+			+ ", " + PersonDatabase.PersonColumns.COL_COLOR //
+			+ ", " + PersonDatabase.PersonColumns.COL_CONTACT_URI//
+			+ ");";
 
-    private SQLiteDatabase mDatabase;
+	private static final String FTS_TABLE_CREATE_MESSAGE = "CREATE VIRTUAL TABLE " + MessageDatabase.TABLE_MESSAGE_FTS + //
+			" USING fts3 " //
+			+ "( " + MessageDatabase.MessageColumns.COL_NAME //
+			+ ", " + MessageDatabase.MessageColumns.COL_PHONE //
+			+ ", " + MessageDatabase.MessageColumns.COL_COLOR //
+			+ ");";
 
-    PersonOpenHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
+    // ===========================================================
+    // Index
+    // ===========================================================
+ 
+	private static final String INDEX_PERSON_AK = "IDX_PERSON_AK";
+	private static final String CREATE_INDEX_PERSON_AK = "CREATE INDEX " + INDEX_PERSON_AK + " on " + PersonDatabase.TABLE_PERSON_FTS + "(" //
+			+ PersonDatabase.PersonColumns.COL_PHONE //
+			+ ");";
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        mDatabase = db;
-        mDatabase.execSQL(FTS_TABLE_CREATE_USER);
-        // new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary();
-    }
+	private static final String INDEX_MESSAGE_AK = "IDX_MESSAGE_AK";
+	private static final String CREATE_INDEX_MESSAGE_AK = "CREATE INDEX " + INDEX_MESSAGE_AK + " on " + MessageDatabase.TABLE_MESSAGE_FTS + "(" //
+			+ MessageDatabase.MessageColumns.COL_PHONE //
+			+ ");";
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + PersonDatabase.TABLE_PERSON_FTS);
-        onCreate(db);
-    }
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+	private SQLiteDatabase mDatabase;
+
+	public PersonOpenHelper(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		mDatabase = db;
+		// Create
+		mDatabase.execSQL(FTS_TABLE_CREATE_USER);
+		mDatabase.execSQL(FTS_TABLE_CREATE_MESSAGE);
+		// Index
+		db.execSQL(CREATE_INDEX_PERSON_AK);
+		db.execSQL(CREATE_INDEX_MESSAGE_AK);
+		// new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary();
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
+		// Index
+		db.execSQL("DROP INDEX  IF EXISTS " + INDEX_PERSON_AK + ";");
+		db.execSQL("DROP INDEX  IF EXISTS " + INDEX_MESSAGE_AK + ";");
+		// Table
+		db.execSQL("DROP TABLE IF EXISTS " + MessageDatabase.TABLE_MESSAGE_FTS);
+		db.execSQL("DROP TABLE IF EXISTS " + PersonDatabase.TABLE_PERSON_FTS);
+		onCreate(db);
+	}
 
 }

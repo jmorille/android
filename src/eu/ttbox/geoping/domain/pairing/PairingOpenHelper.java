@@ -12,19 +12,22 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "person.db";
     public static final int DATABASE_VERSION = 1;
 
-    /*
-     * Note that FTS3 does not support column constraints and thus, you cannot
-     * declare a primary key. However, "rowid" is automatically used as a unique
-     * identifier, so when making requests, we will use "_id" as an alias for
-     * "rowid"
-     */
-    private static final String FTS_TABLE_CREATE_USER = "CREATE VIRTUAL TABLE " + PairingDatabase.TABLE_PERSON_FTS + //
+    // ===========================================================
+    // Table
+    // ===========================================================
+
+    private static final String FTS_TABLE_CREATE_PAIRING = "CREATE VIRTUAL TABLE " + PairingDatabase.TABLE_PAIRING_FTS + //
             " USING fts3 " //
             + "( " + PairingDatabase.PairingColumns.COL_NAME //
             + ", " + PairingDatabase.PairingColumns.COL_PHONE //
             + ", " + PairingDatabase.PairingColumns.COL_COLOR //
             + ");";
 
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    
     private SQLiteDatabase mDatabase;
 
     PairingOpenHelper(Context context) {
@@ -34,14 +37,14 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         mDatabase = db;
-        mDatabase.execSQL(FTS_TABLE_CREATE_USER);
+        mDatabase.execSQL(FTS_TABLE_CREATE_PAIRING);
         // new PairingDbBootstrap(mHelperContext, mDatabase).loadDictionary();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + PairingDatabase.TABLE_PERSON_FTS);
+        db.execSQL("DROP TABLE IF EXISTS " + PairingDatabase.TABLE_PAIRING_FTS);
         onCreate(db);
     }
 
