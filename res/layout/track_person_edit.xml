@@ -33,4 +33,13 @@
         android:text="Color Picker"
         android:onClick="onColorPickerClick" />
 
+        <Button
+        android:id="@+id/person_pairing_button"
+        android:visibility="gone"
+        style="@style/entity_edit"
+        android:layout_below="@id/person_pairing_button"
+        android:text="Paring"
+        android:onClick="onPairingClick" />
+    
+        
 </RelativeLayout>

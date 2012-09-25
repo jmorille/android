@@ -45,6 +45,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
     private EditText nameEditText;
     private EditText phoneEditText;
     private Button colorPickerButton;
+    private Button personPairingButton;
 
     // Instance
     private String entityId;
@@ -61,6 +62,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         nameEditText = (EditText) findViewById(R.id.person_name);
         phoneEditText = (EditText) findViewById(R.id.person_phone);
         colorPickerButton = (Button) findViewById(R.id.person_color_picker_button);
+        personPairingButton = (Button) findViewById(R.id.person_pairing_button); 
         // Intents
         handleIntent(getIntent());
     }
@@ -163,6 +165,11 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         startActivityForResult(intent, PICK_CONTACT);
     }
 
+    public void onPairingClick(View v) {
+    	Intent intent = Intents.pairingRequest(this, phoneEditText.getText().toString(), entityId);
+    	startService(intent);
+    }
+    
     // ===========================================================
     // Color
     // ===========================================================
@@ -297,7 +304,9 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
             // Display List
             if (cursor.moveToFirst()) {
                 PersonHelper helper = new PersonHelper().initWrapper(cursor);
-                helper.setTextPersonName(nameEditText, cursor).setTextPersonPhone(phoneEditText, cursor);
+                helper.setTextPersonName(nameEditText, cursor)//
+                .setTextPersonPhone(phoneEditText, cursor);
+                personPairingButton.setVisibility(View.VISIBLE);
                 int color = helper.getPersonColor(cursor);
                 colorChanged(color);
             }
