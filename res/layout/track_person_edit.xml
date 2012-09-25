@@ -23,23 +23,22 @@
         android:id="@+id/select_contact_button"
         style="@style/entity_edit"
         android:layout_below="@id/person_phone"
-        android:text="@string/menu_select_contact"
-        android:onClick="onSelectContactClick" />
+        android:onClick="onSelectContactClick"
+        android:text="@string/menu_select_contact" />
 
     <Button
         android:id="@+id/person_color_picker_button"
         style="@style/entity_edit"
         android:layout_below="@id/select_contact_button"
-        android:text="Color Picker"
-        android:onClick="onColorPickerClick" />
+        android:onClick="onColorPickerClick"
+        android:text="Color Picker" />
 
-        <Button
+    <Button
         android:id="@+id/person_pairing_button"
-        android:visibility="gone"
         style="@style/entity_edit"
         android:layout_below="@id/person_pairing_button"
+        android:onClick="onPairingClick"
         android:text="Paring"
-        android:onClick="onPairingClick" />
-    
-        
+        android:visibility="gone" />
+
 </RelativeLayout>

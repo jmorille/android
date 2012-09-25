@@ -74,6 +74,9 @@ public class SMSReceiver extends BroadcastReceiver {
             } else if (SmsMessageEncoderHelper.ACTION_GEO_PING.equals(clearMsg.action)) {
                 // GeoPing Request
                 isConsume = consumeGeoPingRequest(context, clearMsg);
+            } else if (SmsMessageEncoderHelper.ACTION_GEO_PAIRING.equals(clearMsg.action)) {
+                context.startService(Intents.consumerSmsPairingResponsetHandler(context, clearMsg));
+                isConsume = true;
             }
         }
         return isConsume;

@@ -94,6 +94,10 @@ public class GeoPingMasterService extends IntentService {
             sendSmsGeoPingRequest(phone, params);
         } else if (Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER.equals(action)) {
             consumeGeoPingResponse(intent.getExtras());
+        } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
+            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+            long userId= intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
+            sendSmsPairingRequest(phone, userId);
         }
 
     }
@@ -101,6 +105,14 @@ public class GeoPingMasterService extends IntentService {
     // ===========================================================
     // Send GeoPing Request
     // ===========================================================
+
+    private void sendSmsPairingRequest(String phone, long userId) {
+        Bundle params = new Bundle();
+        params.putLong(GeoTrackColumns.COL_PERSON_ID, userId);
+        GeoPingMessage geoPingMessage = new GeoPingMessage(phone, SmsMessageEncoderHelper.ACTION_GEO_PAIRING, params);
+        sendSms(phone, geoPingMessage);
+        
+    }
 
     private void sendSmsGeoPingRequest(String phone, Bundle params) {
         GeoPingMessage geoPingMessage = new GeoPingMessage(phone, SmsMessageEncoderHelper.ACTION_GEO_PING, params);

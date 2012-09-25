@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Style;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -121,15 +122,23 @@ public class GeoPingSlaveService extends WorkerService {
             // Request
             // registerGeoPingRequest(phone, params);
             if (isAuthorizePhoneAlways(phone)) {
-                registerGeoPingRequest(phone, params);  
+                registerGeoPingRequest(phone, params);
             } else if (!isAuthorizePhoneNever(phone)) {
-                showNotificationNewPingRequest(phone, params);
+                showNotificationNewPingRequestConfirm(phone, params);
             } else {
                 Log.i(TAG, "Ignore Never Authorize Geoping request from phone " + phone);
             }
 
         } else if (Intents.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE.equals(action)) {
             manageAuthorizeIntent(intent.getExtras());
+        } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
+            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+            Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
+            if (isAuthorizePhoneAlways(phone)) {
+
+            } else if (!isAuthorizePhoneNever(phone)) {
+                showNotificationPairingRequest(phone, params);
+            }
         }
     }
 
@@ -357,7 +366,55 @@ public class GeoPingSlaveService extends WorkerService {
     // Notification
     // ===========================================================
 
-    private void showNotificationNewPingRequest(String phone, Bundle params) {
+    private void showNotificationPairingRequest(String phone, Bundle params) {
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Style
+       
+        RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_pairing_request);
+        contentView.setTextViewText(R.id.notif_geoping_phone, phone);
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_no, PendingIntent.getService(this, 0, //
+                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.NO),//
+                PendingIntent.FLAG_UPDATE_CURRENT));
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_never, PendingIntent.getService(this, 1, //
+                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.NEVER),//
+                PendingIntent.FLAG_UPDATE_CURRENT)); 
+        contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_always, PendingIntent.getService(this, 3, //
+                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.ALWAYS),//
+                PendingIntent.FLAG_UPDATE_CURRENT));
+        
+        // Create Notifiation
+      
+        Notification notification = new NotificationCompat.Builder(this) //
+                .setSmallIcon(R.drawable.icon_notif) //
+                .setWhen(System.currentTimeMillis()) //
+                .setAutoCancel(true) //
+                .setContentTitle("GeoPing Request" + phone) //
+                .setContentText("GeoTrack point") //
+                // .setContent(contentView) //
+                .build();
+        // Show
+        mNotificationManager.notify(SHOW_GEOPING_REQUEST_NOTIFICATION_ID, notification);
+
+    }
+    private void showNotificationNewPingRequestPost(String phone, Bundle params) {
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // Create Notifiation
+        Style style = new NotificationCompat.InboxStyle().addLine("GeoPing request from").addLine(phone);
+        Notification notification = new NotificationCompat.Builder(this) //
+                .setStyle(style)//
+                .setSmallIcon(R.drawable.icon_notif) //
+                .setWhen(System.currentTimeMillis()) //
+                .setAutoCancel(true) //
+                .setContentTitle("GeoPing Request" + phone) //
+                .setContentText("GeoTrack point") //
+                // .setContent(contentView) //
+                .build();
+        // Show
+        mNotificationManager.notify(SHOW_GEOPING_REQUEST_NOTIFICATION_ID, notification);
+    }
+
+    private void showNotificationNewPingRequestConfirm(String phone, Bundle params) {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
         // Intents.showOnMap(this, geoTrackData, values),
@@ -365,6 +422,7 @@ public class GeoPingSlaveService extends WorkerService {
 
         // remote View
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
+        contentView.setTextViewText(R.id.notif_geoping_phone, phone);
         // Manage Button Confirmation
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_no, PendingIntent.getService(this, 0, //
                 Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.NO),//

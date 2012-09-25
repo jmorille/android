@@ -46,6 +46,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
     private EditText phoneEditText;
     private Button colorPickerButton;
     private Button personPairingButton;
+    private Button contactSelectButton;
 
     // Instance
     private String entityId;
@@ -62,7 +63,8 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         nameEditText = (EditText) findViewById(R.id.person_name);
         phoneEditText = (EditText) findViewById(R.id.person_phone);
         colorPickerButton = (Button) findViewById(R.id.person_color_picker_button);
-        personPairingButton = (Button) findViewById(R.id.person_pairing_button); 
+        personPairingButton = (Button) findViewById(R.id.person_pairing_button);
+        contactSelectButton= (Button) findViewById(R.id.select_contact_button);
         // Intents
         handleIntent(getIntent());
     }
@@ -113,12 +115,9 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
             Log.d(TAG, "handleIntent for action : " + action);
         }
         if (Intent.ACTION_EDIT.equals(action)) {
-            Uri data = intent.getData();
-            this.entityId = data.getLastPathSegment();
-            Bundle bundle = new Bundle();
-            bundle.putString(Intents.EXTRA_SMS_PHONE, entityId);
-            getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER, bundle, personLoaderCallback);
-        } else if (Intent.ACTION_DELETE.equals(action)) {
+            Uri data = intent.getData(); 
+            loadEntity( data.getLastPathSegment());
+         } else if (Intent.ACTION_DELETE.equals(action)) {
             // TODO
         } else if (Intent.ACTION_INSERT.equals(action)) {
             this.entityId = null;
@@ -127,6 +126,13 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 
     }
 
+    private void loadEntity(String entityId) {
+        this.entityId =entityId;
+        Bundle bundle = new Bundle();
+        bundle.putString(Intents.EXTRA_SMS_PHONE, entityId);
+        getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER, bundle, personLoaderCallback);
+    }
+    
     // ===========================================================
     // Listener
     // ===========================================================
@@ -155,7 +161,9 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
     }
 
     /**
-     * {link http://www.higherpass.com/Android/Tutorials/Working-With-Android-Contacts/}
+     * {link http://www.higherpass.com/Android/Tutorials/Working-With-Android-
+     * Contacts/}
+     * 
      * @param v
      */
     public void onSelectContactClick(View v) {
@@ -166,10 +174,10 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
     }
 
     public void onPairingClick(View v) {
-    	Intent intent = Intents.pairingRequest(this, phoneEditText.getText().toString(), entityId);
-    	startService(intent);
+        Intent intent = Intents.pairingRequest(this, phoneEditText.getText().toString(), entityId);
+        startService(intent);
     }
-    
+
     // ===========================================================
     // Color
     // ===========================================================
@@ -303,10 +311,13 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
             Log.d(TAG, "onLoadFinished with cursor result count : " + cursor.getCount());
             // Display List
             if (cursor.moveToFirst()) {
+                // Data
                 PersonHelper helper = new PersonHelper().initWrapper(cursor);
                 helper.setTextPersonName(nameEditText, cursor)//
-                .setTextPersonPhone(phoneEditText, cursor);
+                        .setTextPersonPhone(phoneEditText, cursor);
+                // Button
                 personPairingButton.setVisibility(View.VISIBLE);
+                contactSelectButton.setVisibility(View.GONE);
                 int color = helper.getPersonColor(cursor);
                 colorChanged(color);
             }

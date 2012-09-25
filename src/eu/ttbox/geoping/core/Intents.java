@@ -23,7 +23,7 @@ public class Intents {
 	public static final String ACTION_SMS_GEOPING_REQUEST_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_REQUEST_HANDLER";
 	public static final String ACTION_SMS_GEOPING_RESPONSE_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_RESPONSE_HANDLER";
 
-	public static final String ACTION_SMS_PAIRING_RESQUEST_SENDER = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESQUEST_SENDER";
+	public static final String ACTION_SMS_PAIRING_RESQUEST = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESQUEST_SENDER";
 
 	public static final String ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE = "eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE";
 
@@ -97,7 +97,7 @@ public class Intents {
 
 	public static Intent pairingRequest(Context context, String phoneNumber, String userId) {
 		return new Intent(context, GeoPingMasterService.class) //
-				.setAction(ACTION_SMS_PAIRING_RESQUEST_SENDER)//
+				.setAction(ACTION_SMS_PAIRING_RESQUEST)//
 				.putExtra(EXTRA_SMS_USER_ID, userId)//
 				.putExtra(EXTRA_SMS_PHONE, phoneNumber);
 	}
@@ -118,17 +118,6 @@ public class Intents {
 	}
 
 	// Sms Consumer
-	public static Intent consumeSmsGeoPingRequestHandler(Context context, GeoPingMessage msg) {
-		Log.d(TAG, String.format("Create Intent from %s", msg));
-		Intent intent = new Intent(context, GeoPingSlaveService.class) //
-				.setAction(ACTION_SMS_GEOPING_REQUEST_HANDLER);//
-		if (msg.params != null && !msg.params.isEmpty()) {
-			intent.putExtra(EXTRA_SMS_PARAMS, msg.params);
-		}
-		intent.putExtra(EXTRA_SMS_ACTION, msg.action);
-		intent.putExtra(EXTRA_SMS_PHONE, msg.phone); //
-		return intent;
-	}
 
 	public static Intent consumerSmsGeoPingResponsetHandler(Context context, GeoPingMessage msg) {
 		Intent intent = new Intent(context, GeoPingMasterService.class) //
@@ -141,4 +130,25 @@ public class Intents {
 		return intent;
 	}
 
+	   public static Intent consumeSmsGeoPingRequestHandler(Context context, GeoPingMessage msg) {
+	        Log.d(TAG, String.format("Create Intent from %s", msg));
+	        return convertForSlaveGeoPingMessage(context, msg, ACTION_SMS_GEOPING_REQUEST_HANDLER);  
+	    }
+
+	   
+	public static Intent consumerSmsPairingResponsetHandler(Context context, GeoPingMessage msg) {
+	    return convertForSlaveGeoPingMessage(context, msg, ACTION_SMS_PAIRING_RESQUEST); 
+	}
+	
+	public static Intent convertForSlaveGeoPingMessage(Context context, GeoPingMessage msg, String intentAction) {
+	    Log.d(TAG, String.format("Create Intent from %s", msg));
+        Intent intent = new Intent(context, GeoPingSlaveService.class) //
+                .setAction(intentAction);//
+        if (msg.params != null && !msg.params.isEmpty()) {
+            intent.putExtra(EXTRA_SMS_PARAMS, msg.params);
+        }
+        intent.putExtra(EXTRA_SMS_ACTION, msg.action);
+        intent.putExtra(EXTRA_SMS_PHONE, msg.phone); //
+        return intent;
+	}
 }
