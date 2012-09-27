@@ -17,6 +17,9 @@
     <string name="no_geoping_description">\n\nPlease install \'GeoPing\' from the Market\n\n</string>
     <string name="geoping_encrypted_message">GeoPing encrypted message</string>
      
+     <!-- GeoTrack Notification-->
+    <string name="notif_geoping_response">GeoPing réponse</string>
+     
      <!-- GeoTrack -->
     <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
      

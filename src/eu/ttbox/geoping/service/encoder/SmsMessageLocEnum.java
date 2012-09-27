@@ -17,6 +17,11 @@ public enum SmsMessageLocEnum {
     MSGKEY_BEARING('b', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BEARING), //
     MSGKEY_SPEAD('s', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED);//
     
+    // ===========================================================
+    // Constructor
+    // ===========================================================
+
+     
     SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName) {
         this.smsFieldName = fieldName;
         this.type = type;
@@ -28,7 +33,7 @@ public enum SmsMessageLocEnum {
     public final String dbFieldName;
 
     // ===========================================================
-    // Conversion Sms Code
+    // Conversion Init
     // ===========================================================
 
     static HashMap<Character, SmsMessageLocEnum> bySmsFieldNames;
@@ -58,7 +63,7 @@ public enum SmsMessageLocEnum {
     }
 
     // ===========================================================
-    // Conversion Db Col Name
+    // Conversion Accessor
     // ===========================================================
 
     public static SmsMessageLocEnum getBySmsFieldName(char fieldName) {

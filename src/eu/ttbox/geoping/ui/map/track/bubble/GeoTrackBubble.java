@@ -3,7 +3,6 @@ package eu.ttbox.geoping.ui.map.track.bubble;
 import java.util.Locale;
 
 import android.content.Context;
-import android.location.Address;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;

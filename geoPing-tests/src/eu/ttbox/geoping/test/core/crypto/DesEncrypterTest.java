@@ -3,12 +3,14 @@ package eu.ttbox.geoping.test.core.crypto;
 import javax.crypto.SecretKey;
 
 import android.location.Location;
+import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
 import eu.ttbox.geoping.core.crypto.DesEncrypter;
-import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
-import eu.ttbox.geoping.service.SmsMsgActionHelper;
-import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
+import eu.ttbox.geoping.domain.GeoTrack;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 
 public class DesEncrypterTest extends AndroidTestCase {
 
@@ -29,8 +31,10 @@ public class DesEncrypterTest extends AndroidTestCase {
         loc.setBearing(257.16416464646446464646413f);
         loc.setSpeed(125.1464646464468946444646f);
         // Convertion 2 String
-        GeoTrackSmsMsg geoTrackMsg = SmsMsgActionHelper.geoLocMessage(loc);
-        String msg = SmsMsgEncryptHelper.encodeSmsMessage(geoTrackMsg);
+        GeoTrack geotrack = new GeoTrack(null, loc);
+        Bundle params = GeoTrackHelper.getBundleValues(geotrack);
+        String msg = SmsMessageIntentEncoderHelper.encodeSmsMessage(SmsMessageActionEnum.ACTION_GEO_LOC, params);
+
         return msg;
     }
     

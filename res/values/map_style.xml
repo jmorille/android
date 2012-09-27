@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
- 
-    
+
     <style name="mylocation_dialog_bubbleBackground">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item> 
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/map_mylocation_dialog_background</item>
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">10</item>
         <item name="android:shadowColor">#FF000000</item>
-        </style>
+    </style>
 
     <style name="mylocation_dialog_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">12dip</item>
+        <item name="android:paddingRight">1dip</item>
         <item name="android:textColor">#e0f1f8</item>
         <item name="android:gravity">center</item>
     </style>
-        
- 
 
 </resources>

@@ -1,19 +1,19 @@
-package eu.ttbox.geoping.service.encoder;
+package eu.ttbox.geoping.test.service.encoder;
 
 import android.os.Bundle;
 
- 
+@Deprecated
 public class GeoPingMessage {
 
     public String phone;
-    public SmsMessageActionEnum action;
+    public String action;
     public Bundle params;
 
     public GeoPingMessage() {
         super();
     }
 
-    public GeoPingMessage(String phone, SmsMessageActionEnum action, Bundle params) {
+    public GeoPingMessage(String phone, String action, Bundle params) {
         super();
         this.phone = phone;
         this.action = action;

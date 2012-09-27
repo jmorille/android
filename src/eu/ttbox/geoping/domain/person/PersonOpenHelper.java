@@ -63,8 +63,8 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 		mDatabase.execSQL(FTS_TABLE_CREATE_USER);
 		mDatabase.execSQL(FTS_TABLE_CREATE_MESSAGE);
 		// Index
-		db.execSQL(CREATE_INDEX_PERSON_AK);
-		db.execSQL(CREATE_INDEX_MESSAGE_AK);
+//		db.execSQL(CREATE_INDEX_PERSON_AK);
+//		db.execSQL(CREATE_INDEX_MESSAGE_AK);
 		// new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary();
 	}
 
@@ -72,8 +72,8 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
 		// Index
-		db.execSQL("DROP INDEX  IF EXISTS " + INDEX_PERSON_AK + ";");
-		db.execSQL("DROP INDEX  IF EXISTS " + INDEX_MESSAGE_AK + ";");
+//		db.execSQL("DROP INDEX  IF EXISTS " + INDEX_PERSON_AK + ";");
+//		db.execSQL("DROP INDEX  IF EXISTS " + INDEX_MESSAGE_AK + ";");
 		// Table
 		db.execSQL("DROP TABLE IF EXISTS " + MessageDatabase.TABLE_MESSAGE_FTS);
 		db.execSQL("DROP TABLE IF EXISTS " + PersonDatabase.TABLE_PERSON_FTS);

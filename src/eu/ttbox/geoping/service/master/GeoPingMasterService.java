@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -26,8 +25,8 @@ import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
-import eu.ttbox.geoping.service.encoder.GeoPingMessage;
-import eu.ttbox.geoping.service.encoder.SmsMessageEncoderHelper;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 
 public class GeoPingMasterService extends IntentService {
 
@@ -96,7 +95,7 @@ public class GeoPingMasterService extends IntentService {
             consumeGeoPingResponse(intent.getExtras());
         } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-            long userId= intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
+            long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
             sendSmsPairingRequest(phone, userId);
         }
 
@@ -108,21 +107,19 @@ public class GeoPingMasterService extends IntentService {
 
     private void sendSmsPairingRequest(String phone, long userId) {
         Bundle params = new Bundle();
-        params.putLong(GeoTrackColumns.COL_PERSON_ID, userId);
-        GeoPingMessage geoPingMessage = new GeoPingMessage(phone, SmsMessageEncoderHelper.ACTION_GEO_PAIRING, params);
-        sendSms(phone, geoPingMessage);
-        
+        params.putLong(GeoTrackColumns.COL_PERSON_ID, userId); 
+        sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
+
     }
 
     private void sendSmsGeoPingRequest(String phone, Bundle params) {
-        GeoPingMessage geoPingMessage = new GeoPingMessage(phone, SmsMessageEncoderHelper.ACTION_GEO_PING, params);
-        sendSms(phone, geoPingMessage);
-        Log.d(TAG, String.format("Send SMS GeoPing %s : %s", phone, geoPingMessage));
+        sendSms(phone, SmsMessageActionEnum.GEOPING_REQUEST, params);
+        Log.d(TAG, String.format("Send SMS GeoPing %s : %s", phone, params));
     }
 
-    private void sendSms(String phone, GeoPingMessage smsMsg) {
-        String encodeddMsg = SmsMessageEncoderHelper.encodeSmsMessage(smsMsg);
-        if (smsMsg != null && encodeddMsg.length() > 0 && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
+    private void sendSms(String phone, SmsMessageActionEnum action, Bundle params) {
+        String encodeddMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
+        if (encodeddMsg != null && encodeddMsg.length() > 0 && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
             SmsManager.getDefault().sendTextMessage(phone, null, encodeddMsg, null, null);
         }
     }
@@ -186,20 +183,22 @@ public class GeoPingMasterService extends IntentService {
         // Create Notif
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, Intents.showOnMap(this, geoTrackData, values), PendingIntent.FLAG_CANCEL_CURRENT);
 
-        String tickerText = "New GeoPing"; // TODO
-                                           // getString(R.string.imcoming_message_ticker_text,
-                                           // message);
-
         // construct the Notification object.
         String phone = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
-
+        // Style style = new NotificationCompat.InboxStyle()//
+        // .addLine(getString(R.string.notif_geoping_response)) //
+        // .addLine(phone) //
+        // .setSummaryText("sumary");
         Notification notification = new NotificationCompat.Builder(this) //
+                .setDefaults(Notification.DEFAULT_ALL) //
                 .setSmallIcon(R.drawable.icon_notif) //
                 .setWhen(System.currentTimeMillis()) //
+                // .setStyle(style) //
                 .setAutoCancel(true) //
-                .setContentTitle("New GeoPing " + phone) //
-                .setContentText("GeoTrack point") //
+                .setContentTitle(getString(R.string.notif_geoping_response)) //
+                .setContentText(phone) //
                 .setContentIntent(pendingIntent)//
+                .setPriority(Notification.PRIORITY_DEFAULT) //
                 .build();
 
         mNotificationManager.notify(SHOW_ON_NOTIFICATION_ID, notification);

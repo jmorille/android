@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.service.encoder;
 
+import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 
@@ -26,13 +27,22 @@ public class SmsMessageEncoderHelper {
     // Encoder
     // ===========================================================
 
-    public static String encodeSmsMessage(GeoPingMessage msg) {
+    // @Deprecated
+    // public static String encodeSmsMessage(GeoPingMessage msg) {
+    // return encodeSmsMessage(msg.action, msg.params);
+    // }
+
+    public static String encodeSmsMessage(SmsMessageActionEnum action, Bundle params) {
+        return encodeSmsMessage(action.smsAction, params);
+    }
+    
+    public static String encodeSmsMessage(String action, Bundle params) {
         StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE);
-        sb.append(msg.action);
+        sb.append(action);
         sb.append(ACTION_END);
-        if (msg.params != null && !msg.params.isEmpty()) {
+        if (params != null && !params.isEmpty()) {
             sb.append(PARAM_BEGIN);
-            SmsParamEncoderHelper.encodeMessage(msg.params, sb);
+            SmsParamEncoderHelper.encodeMessage(params, sb);
             sb.append(PARAM_END);
         }
         // String encryptedMsg = encryptSmsMsg(sb.toString());
@@ -41,26 +51,28 @@ public class SmsMessageEncoderHelper {
     }
 
     public static GeoPingMessage decodeSmsMessage(String phone, String encryped) {
-        GeoPingMessage result = null;
+         GeoPingMessage result = null;
         if (encryped.startsWith(GEOPING_MSG_ID)) {
             String clearMsg = encryped;
             // Decodes
             int clearMsgSize = clearMsg.length();
             int idxActEnd = clearMsg.indexOf(ACTION_END);
             if (idxActEnd > 0) {
-                result = new GeoPingMessage();
-                result.phone = phone;
-                result.action = clearMsg.substring(GEOPING_MSG_ID.length(), idxActEnd);
+                Bundle params = null;
+                String smsMessage = clearMsg.substring(GEOPING_MSG_ID.length(), idxActEnd);
+                SmsMessageActionEnum action = SmsMessageActionEnum.getBySmsCode(smsMessage);
                 // Check Param
                 int idxParamBegin = clearMsg.indexOf(PARAM_BEGIN, idxActEnd);
                 int idxParamEnd = clearMsg.indexOf(PARAM_END, idxActEnd);
                 if (idxParamBegin > -1 && idxParamEnd > -1) {
                     String encodedParams = clearMsg.substring(idxParamBegin + 1, idxParamEnd);
-                    result.params = SmsParamEncoderHelper.decodeMessageAsMap(encodedParams);
+                    params = SmsParamEncoderHelper.decodeMessageAsMap(encodedParams);
                     Log.d(TAG, String.format("Sms Decoded Message : params = [%s]", encodedParams));
                     // result.params = clearMsg.substring(idxActEnd + 1,
                     // clearMsgSize);
                 }
+                // Create Result
+                result = new GeoPingMessage(phone, action, params);
             }
         }
         return result;

@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Style;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -36,8 +35,8 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.service.core.WorkerService;
-import eu.ttbox.geoping.service.encoder.GeoPingMessage;
-import eu.ttbox.geoping.service.encoder.SmsMessageEncoderHelper;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.slave.receiver.PhoneAuthorizeTypeEnum;
 import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
@@ -280,16 +279,17 @@ public class GeoPingSlaveService extends WorkerService {
     }
 
     private void sendSmsLocation(String phone, Location location) {
-        GeoTrack geotrack = new GeoTrack(phone, location);
-        Bundle params = GeoTrackHelper.getBundleValues(geotrack);
-        GeoPingMessage smsMsg = new GeoPingMessage(phone, SmsMessageEncoderHelper.ACTION_GEO_LOC, params);
-        sendSms(phone, smsMsg);
+        GeoTrack geotrack = new GeoTrack(null, location);
+        Bundle params = GeoTrackHelper.getBundleValues(geotrack); 
+        sendSms(phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
     }
 
-    private void sendSms(String phone, GeoPingMessage smsMsg) {
-        String encrypedMsg = SmsMessageEncoderHelper.encodeSmsMessage(smsMsg);
-        if (smsMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
+    private void sendSms(String phone, SmsMessageActionEnum action, Bundle params) {
+        String encrypedMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(  action,   params);
+        if (encrypedMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
             SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
+        } else {
+            Log.e(TAG, String.format("Too long SmsMessage (%s chars, args) : %s", encrypedMsg.length() , encrypedMsg));
         }
     }
 
@@ -386,6 +386,7 @@ public class GeoPingSlaveService extends WorkerService {
         // Create Notifiation
       
         Notification notification = new NotificationCompat.Builder(this) //
+                .setDefaults(Notification.DEFAULT_ALL) //
                 .setSmallIcon(R.drawable.icon_notif) //
                 .setWhen(System.currentTimeMillis()) //
                 .setAutoCancel(true) //
@@ -399,16 +400,15 @@ public class GeoPingSlaveService extends WorkerService {
     }
     private void showNotificationNewPingRequestPost(String phone, Bundle params) {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // Create Notifiation
-        Style style = new NotificationCompat.InboxStyle().addLine("GeoPing request from").addLine(phone);
+        // Create Notifiation 
         Notification notification = new NotificationCompat.Builder(this) //
-                .setStyle(style)//
-                .setSmallIcon(R.drawable.icon_notif) //
+                .setDefaults(Notification.DEFAULT_ALL) //
+                .setSmallIcon(R.drawable.icon_notif) // 
                 .setWhen(System.currentTimeMillis()) //
                 .setAutoCancel(true) //
-                .setContentTitle("GeoPing Request" + phone) //
-                .setContentText("GeoTrack point") //
-                // .setContent(contentView) //
+                .setContentTitle(getString(R.string.notif_geoping_response)) //
+                .setContentText(phone) //
+                 .setPriority(Notification.PRIORITY_DEFAULT) //
                 .build();
         // Show
         mNotificationManager.notify(SHOW_GEOPING_REQUEST_NOTIFICATION_ID, notification);
@@ -439,6 +439,7 @@ public class GeoPingSlaveService extends WorkerService {
 
         // Create Notifiation
         Notification notification = new NotificationCompat.Builder(this) //
+                .setDefaults(Notification.DEFAULT_ALL) //
                 .setSmallIcon(R.drawable.icon_notif) //
                 .setWhen(System.currentTimeMillis()) //
                 .setAutoCancel(true) //

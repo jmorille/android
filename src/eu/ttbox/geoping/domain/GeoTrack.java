@@ -8,8 +8,10 @@ import android.location.Location;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.cache.ZoomLevelComputeCache;
 
-public class GeoTrack {
+public class GeoTrack implements Comparable<GeoTrack>{
 
+    private static final long UNSET_TIME = -1l;
+    
     public long id = -1l;
     public long personId = -1l;
 
@@ -17,7 +19,7 @@ public class GeoTrack {
     public String provider;
     public String address;
 
-    public long time = -1l;
+    public long time = UNSET_TIME;
     private int latitudeE6;
     private int longitudeE6;
 
@@ -25,15 +27,15 @@ public class GeoTrack {
     private boolean hasLlongitude;
 
     // Optionnal
-    public int altitude;
+    private int altitude;
     public int accuracy = -1;
     public int bearing = -1;
     public int speed = -1;
 
     private boolean hasAltitude = false;
-    private boolean hasAccuracy= false;
-    private boolean hasBearing= false;
-    private boolean hasSpeed= false;
+    private boolean hasAccuracy = false;
+    private boolean hasBearing = false;
+    private boolean hasSpeed = false;
 
     // Other
     public String titre;
@@ -46,20 +48,20 @@ public class GeoTrack {
 
     public GeoTrack(String phone, Location loc) {
         this.phone = phone;
-        this.provider = loc.getProvider();
-        this.time = loc.getTime();
-        this.latitudeE6 = (int) (loc.getLatitude() * AppConstants.E6);
-        this.longitudeE6 = (int) (loc.getLongitude() * AppConstants.E6);
-        this.accuracy = (int) loc.getAccuracy();
+        this.provider = loc.getProvider(); 
+        setTime(loc.getTime());
+        setLatitude(loc.getLatitude());
+        setLongitude(loc.getLongitude());
+         setAccuracy((int) loc.getAccuracy());
         if (loc.hasAltitude()) {
-            this.altitude = (int) loc.getAltitude();
+            setAltitude((int)loc.getAltitude()); 
         }
         if (loc.hasBearing()) {
-            bearing = (int) loc.getBearing();
-        }
+            setBearing((int) loc.getBearing());
+         }
         if (loc.hasSpeed()) {
-            this.speed = (int) loc.getSpeed();
-        }
+            setSpeed( (int) loc.getSpeed());
+         }
     }
 
     public Location asLocation() {
@@ -121,7 +123,11 @@ public class GeoTrack {
         return time;
     }
 
+  
     public Date getTimeAsDate() {
+        if (time == UNSET_TIME) {
+            return null;
+        }
         Date timeAsDate = new Date(time);
         return timeAsDate;
     }
@@ -173,7 +179,7 @@ public class GeoTrack {
         return altitude;
     }
 
-    public GeoTrack setAltitude(double altitude) {
+    public GeoTrack setAltitude(int altitude) {
         this.altitude = (int) altitude;
         this.hasAltitude = true;
         return this;
@@ -206,7 +212,7 @@ public class GeoTrack {
     public GeoTrack setSpeed(int speed) {
         this.speed = speed;
         this.hasSpeed = true;
-         return this;
+        return this;
     }
 
     public String getTitre() {
@@ -241,12 +247,18 @@ public class GeoTrack {
     // Setter Value Test
     // ===========================================================
 
+    public boolean hasTime() {
+        return  time != UNSET_TIME;
+    }
+    
     public boolean hasPersonId() {
         return personId != -1L;
     }
+
     public boolean hasPhone() {
         return phone != null;
     }
+
     public boolean hasLatitude() {
         return hasLatitude;
     }
@@ -303,11 +315,17 @@ public class GeoTrack {
                 .append(", provider=").append(provider)//
                 .append(", latitudeE6=").append(latitudeE6)//
                 .append(", longitudeE6=").append(longitudeE6)//
-//                .append(", time=").append(time) //
+                // .append(", time=").append(time) //
                 .append(", time=").append(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS,%1$tL", time));
 
         sb.append("]");
         return sb.toString();
     }
+
+    @Override
+    public int compareTo(GeoTrack another) {
+        long rhs = another.time;
+        return time < rhs ? -1 : (time == rhs ? 0 : 1);
+     }
 
 }

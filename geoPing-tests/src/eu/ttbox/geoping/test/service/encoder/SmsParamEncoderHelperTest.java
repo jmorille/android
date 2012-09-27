@@ -64,12 +64,14 @@ public class SmsParamEncoderHelperTest extends AndroidTestCase {
             assertEquals(geoTrack.time, decoded.get(GeoTrackColumns.COL_TIME));
             assertEquals(geoTrack.getLatitudeE6(), decoded.get(GeoTrackColumns.COL_LATITUDE_E6));
             assertEquals(geoTrack.getLongitudeE6(), decoded.get(GeoTrackColumns.COL_LONGITUDE_E6));
-            assertEquals(geoTrack.altitude, decoded.get(GeoTrackColumns.COL_ALTITUDE));
+            assertEquals(geoTrack.getAltitude(), decoded.get(GeoTrackColumns.COL_ALTITUDE));
             assertEquals(geoTrack.accuracy, decoded.get(GeoTrackColumns.COL_ACCURACY));
             assertEquals(geoTrack.bearing, decoded.get(GeoTrackColumns.COL_BEARING));
             assertEquals(geoTrack.speed, decoded.get(GeoTrackColumns.COL_SPEED));
         }
 
     }
+
+    
 
 }

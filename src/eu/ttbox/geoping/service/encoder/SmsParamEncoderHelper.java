@@ -83,6 +83,7 @@ public class SmsParamEncoderHelper {
         }
         String valueString = Integer.toString(value, NUMBER_ENCODER_RADIX);
         sb.append(field.smsFieldName).append(valueString);
+//        Log.d(TAG, String.format("writeTo Int for field %s : %s = %s", field, field.smsFieldName, valueString));
         return sb;
 
     }

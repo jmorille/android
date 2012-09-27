@@ -26,12 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.GeoTrack;
-import eu.ttbox.geoping.domain.GeoTrackSmsMsg;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
-import eu.ttbox.geoping.service.SmsMsgActionHelper;
-import eu.ttbox.geoping.service.SmsMsgEncryptHelper;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
 import eu.ttbox.geoping.ui.AbstractSmsTrackerActivity;
 
@@ -294,10 +293,11 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         if (useSms) {
             String destinationAddress = appPreferences.getString(KEY_SMS_PHONE_NUMBER, null);
             if (destinationAddress != null && destinationAddress.length() > 0) {
-                GeoTrackSmsMsg geoTrackMsg = SmsMsgActionHelper.geoLocMessage(location);
-                String smsMsg = SmsMsgEncryptHelper.encodeSmsMessage(geoTrackMsg);
-                if (smsMsg != null && smsMsg.length() > 0) {
-                    SmsManager.getDefault().sendTextMessage(destinationAddress, null, smsMsg, null, null);
+                GeoTrack geotrack = new GeoTrack(null, location);
+                Bundle params = GeoTrackHelper.getBundleValues(geotrack); 
+                String encoded = SmsMessageIntentEncoderHelper.encodeSmsMessage(SmsMessageActionEnum.ACTION_GEO_LOC, params);
+                if (encoded != null && encoded.length() > 0) {
+                    SmsManager.getDefault().sendTextMessage(destinationAddress, null, encoded, null, null);
                 }
             } else {
                 Log.w("SMS Sender", "No SMS destination, define preference key " + KEY_SMS_PHONE_NUMBER);
