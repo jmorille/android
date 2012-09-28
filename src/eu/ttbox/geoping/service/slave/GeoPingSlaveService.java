@@ -37,6 +37,7 @@ import android.preference.PreferenceManager;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -51,14 +52,14 @@ import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
-import eu.ttbox.geoping.service.slave.receiver.PhoneAuthorizeTypeEnum;
+import eu.ttbox.geoping.service.slave.receiver.AuthorizePhoneTypeEnum;
 import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
 public class GeoPingSlaveService extends WorkerService {
 
     private static final String TAG = "GeoPingSlaveService";
 
-    private static final int SHOW_GEOPING_REQUEST_NOTIFICATION_ID = R.id.show_notification_new_geoping_request_confirm;
+    private static final int SHOW_GEOPING_REQUEST_NOTIFICATION_ID = AppConstants.PER_PERSON_ID_MULTIPLICATOR * R.id.show_notification_new_geoping_request_confirm;
 
     private final IBinder binder = new LocalBinder();
     // Constant
@@ -151,7 +152,7 @@ public class GeoPingSlaveService extends WorkerService {
             if (isAuthorizePhoneAlways(phone)) {
                 registerGeoPingRequest(phone, params);
             } else if (!isAuthorizePhoneNever(phone)) {
-                showNotificationNewPingRequestConfirm(phone, params, false);
+                showNotificationNewPingRequestConfirm(phone, params, GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM);
             } else {
                 Log.i(TAG, "Ignore Never Authorize Geoping request from phone " + phone);
             }
@@ -165,7 +166,7 @@ public class GeoPingSlaveService extends WorkerService {
                 long personId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1l);
                 sendPairingResponse(phone, personId);
             } else if (!isAuthorizePhoneNever(phone)) {
-                showNotificationNewPingRequestConfirm(phone, params, true);
+                showNotificationNewPingRequestConfirm(phone, params, GeopingNotifSlaveTypeEnum.PAIRING);
                 // TODO Send pairing Response
             }
         }
@@ -179,9 +180,9 @@ public class GeoPingSlaveService extends WorkerService {
         // Init
         String phone = extras.getString(Intents.EXTRA_SMS_PHONE);
         Bundle params = extras.getBundle(Intents.EXTRA_SMS_PARAMS);
-        boolean onlyPairing = extras.getBoolean(Intents.EXTRA_PAIRING_ONLY);
-        int typeOrdinal = extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL);
-        PhoneAuthorizeTypeEnum type = PhoneAuthorizeTypeEnum.values()[typeOrdinal];
+        GeopingNotifSlaveTypeEnum notifType = GeopingNotifSlaveTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL, -1));
+        int typeOrdinal = extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL);
+        AuthorizePhoneTypeEnum type = AuthorizePhoneTypeEnum.getByOrdinal(typeOrdinal);
         // Cancel Notification
         int notifId = extras.getInt(Intents.EXTRA_NOTIF_ID, -1);
         Log.w(TAG, "Remove Notification Id : " + notifId);
@@ -206,7 +207,7 @@ public class GeoPingSlaveService extends WorkerService {
             isPairing = true;
         case YES:
             Log.d(TAG, "Need to authorizePhoneNever case Yes");
-            if (!onlyPairing) {
+            if (GeopingNotifSlaveTypeEnum.PAIRING.equals(notifType)) {
                 registerGeoPingRequest(phone, params);
             }
             break;
@@ -443,58 +444,74 @@ public class GeoPingSlaveService extends WorkerService {
         mNotificationManager.notify(SHOW_GEOPING_REQUEST_NOTIFICATION_ID, notification);
     }
 
-    private void showNotificationNewPingRequestConfirm(String phone, Bundle params, boolean onlyPairing) {
+    private void showNotificationNewPingRequestConfirm(String phone, Bundle params, GeopingNotifSlaveTypeEnum onlyPairing) {
         String phoneNumber = phone;
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
         // Contact Name
         ContactVo contact = searchContactForPhone(phone);
+        Bitmap photo = null;
         if (contact != null) {
             if (contact.displayName != null && contact.displayName.length() > 0) {
                 phoneNumber = contact.displayName;
             }
-            Bitmap photo = openPhotoBitmap(contact.id);
+            photo = openPhotoBitmap(contact.id);
             if (photo != null) {
-                 contentView.setImageViewBitmap(R.id.notif_geoping_photo,  photo);
-//                
-            }  
+                contentView.setImageViewBitmap(R.id.notif_geoping_photo, photo);
+                //
+            }
         }
         // Title
         String title = "GeoPing Request";
-        if (onlyPairing) {
+        switch (onlyPairing) {
+        case PAIRING:
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.GONE);
             title = "Pairing Request";
+            break;
+        case GEOPING_REQUEST_CONFIRM:
+            title = "GeoPing Request";
+            break;
+        case GEOPING_NOTIF:
+            title = "GeoPing";
+            break;
+        default:
+            break;
         }
-        // TODO Generate Notification ID per Person
-        int notifId = SHOW_GEOPING_REQUEST_NOTIFICATION_ID  + phone.hashCode();
-      Log.d(TAG,String.format(  "GeoPing Notification Id : %s for phone %s", notifId, phone));
+
+        // Generate Notification ID per Person
+        int notifId = SHOW_GEOPING_REQUEST_NOTIFICATION_ID + phone.hashCode();
+        Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
+        
         // View
         contentView.setTextViewText(R.id.notif_geoping_title, title);
         contentView.setTextViewText(R.id.notif_geoping_phone, phoneNumber);
         // Manage Button Confirmation
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_no, PendingIntent.getService(this, 0, //
-                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.NO, notifId, onlyPairing),//
+                Intents.authorizePhone(this, phone, params, AuthorizePhoneTypeEnum.NO, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_never, PendingIntent.getService(this, 1, //
-                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.NEVER, notifId, onlyPairing),//
+                Intents.authorizePhone(this, phone, params, AuthorizePhoneTypeEnum.NEVER, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_yes, PendingIntent.getService(this, 2, //
-                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.YES, notifId, onlyPairing),//
+                Intents.authorizePhone(this, phone, params, AuthorizePhoneTypeEnum.YES, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_always, PendingIntent.getService(this, 3, //
-                Intents.authorizePhone(this, phone, params, PhoneAuthorizeTypeEnum.ALWAYS, notifId, onlyPairing),//
+                Intents.authorizePhone(this, phone, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
 
         // Create Notifiation
-        Notification notification = new NotificationCompat.Builder(this) //
+        Builder notificationBuilder = new NotificationCompat.Builder(this) //
                 .setDefaults(Notification.DEFAULT_ALL) //
                 .setSmallIcon(R.drawable.ic_stat_notif_icon) //
                 .setWhen(System.currentTimeMillis()) //
                 .setAutoCancel(true) //
                 .setContentTitle(title) //
                 .setContentText(phoneNumber) //
-                .setContent(contentView) //
-                .build();
+                .setContent(contentView); //
+        if (photo != null) {
+            notificationBuilder.setLargeIcon(photo);
+        }
+        Notification notification = notificationBuilder.build();
         // Show
         mNotificationManager.notify(notifId, notification);
     }

@@ -39,7 +39,7 @@ public class GeoPingMasterService extends IntentService {
 
 	private static final String TAG = "GeoPingMasterService";
 
-	private static final int SHOW_ON_NOTIFICATION_ID = R.id.show_notification_new_geoping_response;
+	private static final int SHOW_ON_NOTIFICATION_ID = AppConstants.PER_PERSON_ID_MULTIPLICATOR * R.id.show_notification_new_geoping_response;
 
 	private final IBinder binder = new LocalBinder();
 
@@ -249,6 +249,12 @@ public class GeoPingMasterService extends IntentService {
 
 		// construct the Notification object.
 		String phone = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
+		
+        // Generate Notification ID per Person
+        int notifId = SHOW_ON_NOTIFICATION_ID + phone.hashCode();
+        Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
+        
+
 		// Style style = new NotificationCompat.InboxStyle()//
 		// .addLine(getString(R.string.notif_geoping_response)) //
 		// .addLine(phone) //
@@ -265,7 +271,7 @@ public class GeoPingMasterService extends IntentService {
 				.setPriority(Notification.PRIORITY_DEFAULT) //
 				.build();
 
-		mNotificationManager.notify(SHOW_ON_NOTIFICATION_ID, notification);
+		mNotificationManager.notify(notifId, notification);
 	}
 	// ===========================================================
 	// Other

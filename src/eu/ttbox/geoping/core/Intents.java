@@ -10,7 +10,8 @@ import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.service.master.GeoPingMasterService;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
-import eu.ttbox.geoping.service.slave.receiver.PhoneAuthorizeTypeEnum;
+import eu.ttbox.geoping.service.slave.GeopingNotifSlaveTypeEnum;
+import eu.ttbox.geoping.service.slave.receiver.AuthorizePhoneTypeEnum;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.person.PersonEditActivity;
 
@@ -33,12 +34,12 @@ public class Intents {
 	public static final String EXTRA_SMS_PARAMS = "EXTRA_SMS_PARAMS";
 	public static final String EXTRA_SMS_ACTION = "EXTRA_SMS_ACTION";
 	public static final String EXTRA_SMS_USER_ID = "EXTRA_SMS_USER_ID";
-	public static final String EXTRA_PAIRING_ONLY = "EXTRA_PAIRING_ONLY";
+	public static final String EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL = "EXTRA_NOTIFICATION_TYPE";
 	public static final String EXTRA_NOTIF_ID = "EXTRA_NOTIF_ID";
 	
 	
 
-	public static final String EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL = "EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL";
+	public static final String EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL = "EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL";
 
 	public static final String EXTRA_EXPECTED_ACCURACY = "EXPECTED_ACCURACY";
 
@@ -112,15 +113,15 @@ public class Intents {
 	// ===========================================================
 
 	// Register Phone
-	public static Intent authorizePhone(Context context, String phone, Bundle params, PhoneAuthorizeTypeEnum authorizeType, int notificationId, boolean onlyPairing) {
+	public static Intent authorizePhone(Context context, String phone, Bundle params, AuthorizePhoneTypeEnum authorizePhoneType, int notificationId, GeopingNotifSlaveTypeEnum notifType) {
 		// create
 		Intent intent = new Intent(context, GeoPingSlaveService.class);
 		intent.setAction(ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE);
 		intent.putExtra(EXTRA_SMS_PHONE, phone);
 		intent.putExtra(EXTRA_SMS_PARAMS, params);
-		intent.putExtra(EXTRA_PAIRING_ONLY, onlyPairing);
+		intent.putExtra(EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL, notifType.ordinal());
         intent.putExtra(EXTRA_NOTIF_ID, notificationId);
-		intent.putExtra(EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL, authorizeType.ordinal());
+		intent.putExtra(EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL, authorizePhoneType.ordinal());
 		return intent;
 	}
 
