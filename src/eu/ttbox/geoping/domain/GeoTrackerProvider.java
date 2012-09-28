@@ -109,11 +109,13 @@ public class GeoTrackerProvider extends ContentProvider {
         Uri personUri = null;
         if (personId > -1) {
             personUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(personId));
-            getContext().getContentResolver().notifyChange(personUri, null);
+            getContext().getContentResolver().notifyChange(uri, null);
+            // Logging 
             String userId = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
             String latE6 = values.getAsString(GeoTrackColumns.COL_LATITUDE_E6);
             String lngE6 = values.getAsString(GeoTrackColumns.COL_LONGITUDE_E6);
             Log.d(TAG, String.format("insert geoTrack UserId [%s] with Uri : %s with WSG84(%s, %s)", userId, personUri, latE6, lngE6));
+
             // Notify in broadcast
             // TODO sendBroadcast
 
@@ -137,7 +139,9 @@ public class GeoTrackerProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown or Invalid URI " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (rowsAffected > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return rowsAffected;
     }
 
@@ -156,7 +160,9 @@ public class GeoTrackerProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (rowsAffected > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return rowsAffected;
     }
 

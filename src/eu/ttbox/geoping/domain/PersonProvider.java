@@ -178,7 +178,8 @@ public class PersonProvider extends ContentProvider {
             long personId = personDatabase.insertEntity(values);
             Uri personUri = null;
             if (personId > -1) {
-                personUri = Uri.withAppendedPath(Constants.CONTENT_URI_PERSON, "/" + personId);
+                personUri = Uri.withAppendedPath(Constants.CONTENT_URI_PERSON, String.valueOf(  personId));
+                getContext().getContentResolver().notifyChange(uri, null);
             }
             return personUri;
         default:
@@ -201,6 +202,9 @@ public class PersonProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
+        if (count>0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return count;
     }
 
@@ -218,6 +222,9 @@ public class PersonProvider extends ContentProvider {
             break;
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
+        }
+        if (count > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
         }
         return count;
     }

@@ -175,12 +175,13 @@ public class MessageProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         switch (sURIMatcher.match(uri)) {
         case MESSAGES:
-            long MessageId = messageDatabase.insertEntity(values);
-            Uri MessageUri = null;
-            if (MessageId > -1) {
-                MessageUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + MessageId);
+            long messageId = messageDatabase.insertEntity(values);
+            Uri messageUri = null;
+            if (messageId > -1) {
+                messageUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(  messageId));
+                getContext().getContentResolver().notifyChange(uri, null);
             }
-            return MessageUri;
+            return messageUri;
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
@@ -201,6 +202,9 @@ public class MessageProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
+        if (count>0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return count;
     }
 
@@ -218,6 +222,9 @@ public class MessageProvider extends ContentProvider {
             break;
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
+        }
+        if (count > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
         }
         return count;
     }

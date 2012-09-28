@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.person;
+package eu.ttbox.geoping.ui.pairing;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,40 +14,37 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
-import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.domain.PairingProvider;
+import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.domain.pairing.PairingHelper;
 
-public class PersonListActivity extends FragmentActivity {
+public class PairingListActivity extends FragmentActivity {
 
     private static final String TAG = "GeoPingActivity";
 
-    private static final int PERSON_LIST_LOADER = R.id.config_id_person_list_loader;
+    private static final int PAIRING_LIST_LOADER = R.id.config_id_pairing_list_loader;
 
     // Constant
-    private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.COL_NAME, PersonColumns.COL_PHONE);
+    private static final String PAIRING_SORT_DEFAULT = String.format("%s DESC, %s DESC", PairingColumns.COL_NAME, PairingColumns.COL_PHONE);
 
     private static final int EDIT_ENTITY = 0;
 
     // binding
     private ListView listView;
-    private Button addPersonButton;
-
+  
     // init
-    private PersonListAdapter listAdapter;
+    private PairingListAdapter listAdapter;
 
     private final AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
             Log.w(TAG, "OnItemClickListener on Item at Position=" + position + " with id=" + id);
             Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-            PersonHelper helper = new PersonHelper().initWrapper(cursor);
-            String entityId = helper.getPersonIdAsString(cursor);
+            PairingHelper helper = new PairingHelper().initWrapper(cursor);
+            String entityId = helper.getPairingIdAsString(cursor);
             onEditEntityClick(entityId);
         }
     };
@@ -55,33 +52,27 @@ public class PersonListActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.track_person_list);
+        setContentView(R.layout.pairing_list);
         // Bindings
         listView = (ListView) findViewById(android.R.id.list);
-        addPersonButton = (Button) findViewById(R.id.add_track_person_button);
-        addPersonButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onAddEntityClick(v);
-            }
-        });
+        
         // init
-        listAdapter = new PersonListAdapter(this, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        listAdapter = new PairingListAdapter(this, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(mOnClickListener);
         Log.d(TAG, "Binding end");
         // Intents
-        getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+        getSupportLoaderManager().initLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
         handleIntent(getIntent());
     }
 
     public void onAddEntityClick(View v) {
-        Intent intent = Intents.editPerson(PersonListActivity.this, null);
+        Intent intent = Intents.editPairing(PairingListActivity.this, null);
         startActivityForResult(intent, EDIT_ENTITY);
     }
 
     public void onEditEntityClick(String entityId) {
-        Intent intent = Intents.editPerson(PersonListActivity.this, entityId);
+        Intent intent = Intents.editPairing(PairingListActivity.this, entityId);
         startActivityForResult(intent, EDIT_ENTITY);
     }
 
@@ -91,7 +82,7 @@ public class PersonListActivity extends FragmentActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_person_list, menu);
+        inflater.inflate(R.menu.menu_pairing_list, menu);
         return true;
     }
 
@@ -128,7 +119,7 @@ public class PersonListActivity extends FragmentActivity {
         switch (reqCode) {
         case (EDIT_ENTITY):
             if (resultCode == Activity.RESULT_OK) {
-                getSupportLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+                getSupportLoaderManager().restartLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
             }
         }
     }
@@ -137,17 +128,17 @@ public class PersonListActivity extends FragmentActivity {
     // Loader
     // ===========================================================
 
-    private final LoaderManager.LoaderCallbacks<Cursor> personLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+    private final LoaderManager.LoaderCallbacks<Cursor> pairingLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
-            String sortOrder = PERSON_SORT_DEFAULT;
+            String sortOrder = PAIRING_SORT_DEFAULT;
             String selection = null;
             String[] selectionArgs = null;
             String queryString = null;
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(PersonListActivity.this, PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(PairingListActivity.this, PairingProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 
@@ -156,7 +147,7 @@ public class PersonListActivity extends FragmentActivity {
             Log.d(TAG, "onLoadFinished");
             // Display List
             listAdapter.swapCursor(cursor);
-            cursor.setNotificationUri(getContentResolver(), PersonProvider.Constants.CONTENT_URI_PERSON);
+            cursor.setNotificationUri(getContentResolver(), PairingProvider.Constants.CONTENT_URI );
             // Display Counter
             int count = 0;
             if (cursor != null) {

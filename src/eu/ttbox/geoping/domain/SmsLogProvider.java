@@ -112,7 +112,8 @@ public class SmsLogProvider extends ContentProvider {
             long smslogId = smslogDatabase.insertEntity(values);
             Uri smslogUri = null;
             if (smslogId > -1) {
-                smslogUri = Uri.withAppendedPath(Constants.CONTENT_URI_SMSLOG, "/" + smslogId);
+                smslogUri = Uri.withAppendedPath(Constants.CONTENT_URI_SMSLOG, String.valueOf( smslogId));
+                getContext().getContentResolver().notifyChange(uri, null);
             }
             return smslogUri;
         default:
@@ -135,6 +136,9 @@ public class SmsLogProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
+        if (count>0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return count;
     }
 
@@ -152,6 +156,9 @@ public class SmsLogProvider extends ContentProvider {
             break;
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
+        }
+        if (count > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
         }
         return count;
     }

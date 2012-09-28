@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp" >
+
+    <EditText
+        android:id="@+id/person_name"
+        style="@style/entity_edit"
+        android:layout_width="fill_parent"
+        android:hint="@string/person_name" />
+
+    <EditText
+        android:id="@+id/person_phone"
+        style="@style/entity_edit"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/person_name"
+        android:hint="@string/person_phone" />
+
+    <Button
+        android:id="@+id/select_contact_button"
+        style="@style/entity_edit"
+        android:layout_below="@id/person_phone"
+        android:onClick="onSelectContactClick"
+        android:text="@string/menu_select_contact" />
+ 
+</RelativeLayout>

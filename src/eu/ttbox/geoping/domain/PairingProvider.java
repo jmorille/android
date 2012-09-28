@@ -178,7 +178,8 @@ public class PairingProvider extends ContentProvider {
             long pairingId = pairingDatabase.insertEntity(values);
             Uri pairingUri = null;
             if (pairingId > -1) {
-                pairingUri = Uri.withAppendedPath(Constants.CONTENT_URI, "/" + pairingId);
+                pairingUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(  pairingId));
+                getContext().getContentResolver().notifyChange(uri, null);
             }
             return pairingUri;
         default:
@@ -201,6 +202,9 @@ public class PairingProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
+        if (count>0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return count;
     }
 
@@ -218,6 +222,9 @@ public class PairingProvider extends ContentProvider {
             break;
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
+        }
+        if (count > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
         }
         return count;
     }
