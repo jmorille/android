@@ -9,7 +9,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "PairingOpenHelper";
 
-    public static final String DATABASE_NAME = "person.db";
+    public static final String DATABASE_NAME = "pairing.db";
     public static final int DATABASE_VERSION = 1;
 
     // ===========================================================
