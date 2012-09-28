@@ -15,6 +15,7 @@ import eu.ttbox.geoping.service.slave.GeopingNotifSlaveTypeEnum;
 import eu.ttbox.geoping.service.slave.receiver.AuthorizePhoneTypeEnum;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.pairing.PairingEditActivity;
+import eu.ttbox.geoping.ui.person.PersonEditActivity;
 
 public class Intents {
 
@@ -46,7 +47,7 @@ public class Intents {
 
     // Person Edit
     public static Intent editPerson(Context context, String entityId) {
-        Intent intent = new Intent(context, PairingEditActivity.class);
+        Intent intent = new Intent(context, PersonEditActivity.class);
         if (entityId == null) {
             intent.setAction(Intent.ACTION_INSERT);
         } else {

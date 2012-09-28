@@ -126,7 +126,7 @@ public class PairingEditActivity extends FragmentActivity {
     // ===========================================================
 
     public void onDeleteClick() {
-        Uri entityUri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI , "/" + entityId);
+        Uri entityUri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI ,   entityId);
         int deleteCount = getContentResolver().delete(entityUri, null, null);
         Log.d(TAG, "Delete %s entity successuf");
         if (deleteCount > 0) {

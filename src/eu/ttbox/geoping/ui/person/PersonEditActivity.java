@@ -31,7 +31,7 @@ import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 
 public class PersonEditActivity extends FragmentActivity implements ColorPickerDialog.OnColorChangedListener {
 
-    private static final String TAG = "AddPersonActivity";
+    private static final String TAG = "PersonEditActivity";
 
     // Constant
     private static final int PERSON_EDIT_LOADER = R.id.config_id_person_edit_loader;
@@ -138,7 +138,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
     // ===========================================================
 
     public void onDeleteClick() {
-        Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, "/" + entityId);
+        Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON,  entityId);
         int deleteCount = getContentResolver().delete(entityUri, null, null);
         Log.d(TAG, "Delete %s entity successuf");
         if (deleteCount > 0) {
@@ -300,7 +300,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
             String entityId = args.getCharSequence(Intents.EXTRA_SMS_PHONE).toString();
-            Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, String.format("/%s", entityId));
+            Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON,   entityId) ;
             // Loader
             CursorLoader cursorLoader = new CursorLoader(PersonEditActivity.this, entityUri, null, null, null, null);
             return cursorLoader;
