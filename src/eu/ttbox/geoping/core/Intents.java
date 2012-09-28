@@ -112,13 +112,14 @@ public class Intents {
 	// ===========================================================
 
 	// Register Phone
-	public static Intent authorizePhone(Context context, String phone, Bundle params, PhoneAuthorizeTypeEnum authorizeType, boolean onlyPairing) {
+	public static Intent authorizePhone(Context context, String phone, Bundle params, PhoneAuthorizeTypeEnum authorizeType, int notificationId, boolean onlyPairing) {
 		// create
 		Intent intent = new Intent(context, GeoPingSlaveService.class);
 		intent.setAction(ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE);
 		intent.putExtra(EXTRA_SMS_PHONE, phone);
 		intent.putExtra(EXTRA_SMS_PARAMS, params);
 		intent.putExtra(EXTRA_PAIRING_ONLY, onlyPairing);
+        intent.putExtra(EXTRA_NOTIF_ID, notificationId);
 		intent.putExtra(EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL, authorizeType.ordinal());
 		return intent;
 	}

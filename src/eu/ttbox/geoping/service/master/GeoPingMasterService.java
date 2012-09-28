@@ -255,7 +255,7 @@ public class GeoPingMasterService extends IntentService {
 		// .setSummaryText("sumary");
 		Notification notification = new NotificationCompat.Builder(this) //
 				.setDefaults(Notification.DEFAULT_ALL) //
-				.setSmallIcon(R.drawable.icon_notif) //
+				.setSmallIcon(R.drawable.ic_stat_notif_icon) //
 				.setWhen(System.currentTimeMillis()) //
 				// .setStyle(style) //
 				.setAutoCancel(true) //
