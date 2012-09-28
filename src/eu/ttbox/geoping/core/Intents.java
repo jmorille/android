@@ -22,7 +22,8 @@ public class Intents {
 	public static final String ACTION_SMS_GEOPING_REQUEST_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_REQUEST_HANDLER";
 	public static final String ACTION_SMS_GEOPING_RESPONSE_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_RESPONSE_HANDLER";
 
-	public static final String ACTION_SMS_PAIRING_RESQUEST = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESQUEST_SENDER";
+	public static final String ACTION_SMS_PAIRING_RESQUEST = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESQUEST";
+	public static final String ACTION_SMS_PAIRING_RESPONSE = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESPONSE";
 
 	public static final String ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE = "eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE";
 
@@ -32,6 +33,10 @@ public class Intents {
 	public static final String EXTRA_SMS_PARAMS = "EXTRA_SMS_PARAMS";
 	public static final String EXTRA_SMS_ACTION = "EXTRA_SMS_ACTION";
 	public static final String EXTRA_SMS_USER_ID = "EXTRA_SMS_USER_ID";
+	public static final String EXTRA_PAIRING_ONLY = "EXTRA_PAIRING_ONLY";
+	public static final String EXTRA_NOTIF_ID = "EXTRA_NOTIF_ID";
+	
+	
 
 	public static final String EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL = "EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL";
 
@@ -95,9 +100,10 @@ public class Intents {
 	}
 
 	public static Intent pairingRequest(Context context, String phoneNumber, String userId) {
+		Long entityId= Long.valueOf(userId);
 		return new Intent(context, GeoPingMasterService.class) //
 				.setAction(ACTION_SMS_PAIRING_RESQUEST)//
-				.putExtra(EXTRA_SMS_USER_ID, userId)//
+				.putExtra(EXTRA_SMS_USER_ID, entityId)//
 				.putExtra(EXTRA_SMS_PHONE, phoneNumber);
 	}
 
@@ -106,12 +112,13 @@ public class Intents {
 	// ===========================================================
 
 	// Register Phone
-	public static Intent authorizePhone(Context context, String phone, Bundle params, PhoneAuthorizeTypeEnum authorizeType) {
+	public static Intent authorizePhone(Context context, String phone, Bundle params, PhoneAuthorizeTypeEnum authorizeType, boolean onlyPairing) {
 		// create
 		Intent intent = new Intent(context, GeoPingSlaveService.class);
 		intent.setAction(ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE);
 		intent.putExtra(EXTRA_SMS_PHONE, phone);
 		intent.putExtra(EXTRA_SMS_PARAMS, params);
+		intent.putExtra(EXTRA_PAIRING_ONLY, onlyPairing);
 		intent.putExtra(EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL, authorizeType.ordinal());
 		return intent;
 	}

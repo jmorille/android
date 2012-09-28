@@ -2,21 +2,25 @@ package eu.ttbox.geoping.service.encoder;
 
 import java.util.HashMap;
 
+import android.os.Bundle;
+
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 
 public enum SmsMessageLocEnum {
-    // Person
-    MSGKEY_PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID),
-    // Loc
+
+	// Loc
     MSGKEY_PROVIDER('p', SmsMessageTypeEnum.GPS_PROVIDER, GeoTrackColumns.COL_PROVIDER), //
     MSGKEY_TIME('t', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_TIME), //
     MSGKEY_LATITUDE_E6('x', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_LATITUDE_E6), //
     MSGKEY_LONGITUDE_E6('y', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_LONGITUDE_E6), //
-    MSGKEY_ALTITUDE('h', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ALTITUDE), //
+    MSGKEY_ALTITUDE('z', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ALTITUDE), //
     MSGKEY_ACCURACY('a', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ACCURACY), //
     MSGKEY_BEARING('b', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BEARING), //
-    MSGKEY_SPEAD('s', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED);//
+    MSGKEY_SPEAD('c', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED),//
     
+    // Person
+    MSGKEY_PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID); //
+
     // ===========================================================
     // Constructor
     // ===========================================================
@@ -63,6 +67,49 @@ public enum SmsMessageLocEnum {
     }
 
     // ===========================================================
+    // Writer / Reader
+    // ===========================================================
+	public Bundle writeToBundle(Bundle extras, long value) {
+		Bundle params = extras==null ? new Bundle() : extras;
+		params.putLong(dbFieldName, value);
+		return params;
+	}
+	public Bundle writeToBundle(Bundle extras, int value) {
+		Bundle params = extras==null ? new Bundle() : extras;
+		params.putInt(dbFieldName, value);
+		return params;
+	}
+	public Bundle writeToBundle(Bundle extras, String value) {
+		Bundle params = extras==null ? new Bundle() : extras;
+		params.putString(dbFieldName, value);
+		return params;
+	}
+
+	public long readLong(Bundle params, long defaultValue) {
+		long result  = defaultValue;
+		if (params!=null && params.containsKey(dbFieldName)) {
+			result = params.getLong(dbFieldName, defaultValue);
+		}
+		return result;
+	}
+	public int readInt(Bundle params, int defaultValue) {
+		int result  = defaultValue;
+		if (params!=null && params.containsKey(dbFieldName)) {
+			result = params.getInt(dbFieldName, defaultValue);
+		}
+		return result;
+	}
+	
+	public String readString(Bundle params ) {
+		String result  = null;
+		if (params!=null && params.containsKey(dbFieldName)) {
+			result = params.getString(dbFieldName);
+		}
+		return result;
+	}
+    
+    
+    // ===========================================================
     // Conversion Accessor
     // ===========================================================
 
@@ -73,5 +120,7 @@ public enum SmsMessageLocEnum {
     public static SmsMessageLocEnum getByDbFieldName(String fieldName) {
         return byDbFieldNames.get(fieldName);
     }
+
+
 
 }

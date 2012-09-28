@@ -36,7 +36,7 @@
     <Button
         android:id="@+id/person_pairing_button"
         style="@style/entity_edit"
-        android:layout_below="@id/person_pairing_button"
+        android:layout_below="@id/person_color_picker_button"
         android:onClick="onPairingClick"
         android:text="Paring"
         android:visibility="gone" />
