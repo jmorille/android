@@ -455,24 +455,26 @@ public class GeoPingSlaveService extends WorkerService {
             if (contact.displayName != null && contact.displayName.length() > 0) {
                 phoneNumber = contact.displayName;
             }
-            photo = openPhotoBitmap(contact.id);
-            if (photo != null) {
-                contentView.setImageViewBitmap(R.id.notif_geoping_photo, photo);
-                //
-            }
+            photo = openPhotoBitmap(contact.id); 
         }
         // Title
         String title = "GeoPing Request";
         switch (onlyPairing) {
         case PAIRING:
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.GONE);
-            title = "Pairing Request";
+            title = "GeoPing Pairing";
             break;
         case GEOPING_REQUEST_CONFIRM:
             title = "GeoPing Request";
+            contentView.setViewVisibility(R.id.notif_geoping_confirm_button_never, View.GONE);
+            contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.GONE);
             break;
         case GEOPING_NOTIF:
             title = "GeoPing";
+            contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.GONE);
+            contentView.setViewVisibility(R.id.notif_geoping_confirm_button_no, View.GONE);
+            contentView.setViewVisibility(R.id.notif_geoping_confirm_button_never, View.GONE);
+            contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.GONE);
             break;
         default:
             break;
@@ -508,8 +510,11 @@ public class GeoPingSlaveService extends WorkerService {
                 .setContentTitle(title) //
                 .setContentText(phoneNumber) //
                 .setContent(contentView); //
-        if (photo != null) {
+         if (photo != null) {
             notificationBuilder.setLargeIcon(photo);
+        } else {
+            Bitmap icon =  BitmapFactory.decodeResource(getResources(), R.drawable.ic_stat_notif_icon);
+            notificationBuilder.setLargeIcon(icon);
         }
         Notification notification = notificationBuilder.build();
         // Show
