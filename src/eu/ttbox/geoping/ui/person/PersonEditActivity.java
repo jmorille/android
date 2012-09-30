@@ -64,7 +64,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         phoneEditText = (EditText) findViewById(R.id.person_phone);
         colorPickerButton = (Button) findViewById(R.id.person_color_picker_button);
         personPairingButton = (Button) findViewById(R.id.person_pairing_button);
-        contactSelectButton= (Button) findViewById(R.id.select_contact_button);
+        contactSelectButton = (Button) findViewById(R.id.select_contact_button);
         // Intents
         handleIntent(getIntent());
     }
@@ -115,9 +115,9 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
             Log.d(TAG, "handleIntent for action : " + action);
         }
         if (Intent.ACTION_EDIT.equals(action)) {
-            Uri data = intent.getData(); 
-            loadEntity( data.getLastPathSegment());
-         } else if (Intent.ACTION_DELETE.equals(action)) {
+            Uri data = intent.getData();
+            loadEntity(data.getLastPathSegment());
+        } else if (Intent.ACTION_DELETE.equals(action)) {
             // TODO
         } else if (Intent.ACTION_INSERT.equals(action)) {
             this.entityId = null;
@@ -127,18 +127,18 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
     }
 
     private void loadEntity(String entityId) {
-        this.entityId =entityId;
+        this.entityId = entityId;
         Bundle bundle = new Bundle();
         bundle.putString(Intents.EXTRA_SMS_PHONE, entityId);
         getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER, bundle, personLoaderCallback);
     }
-    
+
     // ===========================================================
     // Listener
     // ===========================================================
 
     public void onDeleteClick() {
-        Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON,  entityId);
+        Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, entityId);
         int deleteCount = getContentResolver().delete(entityUri, null, null);
         Log.d(TAG, "Delete %s entity successuf");
         if (deleteCount > 0) {
@@ -192,6 +192,10 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         Log.d(TAG, "Choose Color : " + color);
         mPaint.setColor(color);
         colorPickerButton.setBackgroundColor(color);
+        // Direct Persist Change
+        ContentValues values = new ContentValues();
+        values.put(PersonColumns.COL_COLOR, color);
+        getContentResolver().update(getUriEntity(), values, null, null);
     }
 
     private void doColorChangeRamdom() {
@@ -276,7 +280,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
             uri = getContentResolver().insert(PersonProvider.Constants.CONTENT_URI_PERSON, values);
             setResult(Activity.RESULT_OK);
         } else {
-            uri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, entityId);
+            uri = getUriEntity();
             int count = getContentResolver().update(uri, values, null, null);
             if (count != 1) {
                 Log.e(TAG, String.format("Error, %s entities was updates for Expected One", count));
@@ -290,6 +294,10 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         phoneEditText.setText(phone);
     }
 
+    private Uri getUriEntity() {
+        return Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, entityId);
+    }
+
     // ===========================================================
     // LoaderManager
     // ===========================================================
@@ -300,7 +308,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
             String entityId = args.getCharSequence(Intents.EXTRA_SMS_PHONE).toString();
-            Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON,   entityId) ;
+            Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, entityId);
             // Loader
             CursorLoader cursorLoader = new CursorLoader(PersonEditActivity.this, entityUri, null, null, null, null);
             return cursorLoader;

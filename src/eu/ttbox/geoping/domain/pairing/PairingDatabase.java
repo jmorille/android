@@ -10,6 +10,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
+import android.telephony.PhoneNumberUtils;
 
 public class PairingDatabase {
 
@@ -23,12 +24,15 @@ public class PairingDatabase {
         public static final String COL_ID = BaseColumns._ID;
         public static final String COL_NAME = "NAME";
         public static final String COL_PHONE = "PHONE";
-        public static final String COL_COLOR = "COLOR";
+        public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
+        public static final String COL_AUTHORIZE_TYPE = "AUTHORIZE_TYPE";
+        public static final String COL_SHOW_NOTIF = "SHOW_NOTIF";
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_COLOR };
+        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE,  COL_AUTHORIZE_TYPE, COL_SHOW_NOTIF };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);
+       
 
     }
 
@@ -61,38 +65,32 @@ public class PairingDatabase {
     public Cursor getEntityById(String rowId, String[] columns) {
         String selection = "rowid = ?";
         String[] selectionArgs = new String[] { rowId };
-        return queryEntities(selection, selectionArgs, columns, null);
+        return queryEntities(columns, selection, selectionArgs, null);
     }
 
-    public Cursor getEntityMatches(String query, String[] columns, String order) {
+    public Cursor getEntityMatches(String[] projection, String query, String order) {
         String selection = PairingColumns.COL_NAME + " MATCH ?";
         String queryString = new StringBuilder(query).append("*").toString();
         String[] selectionArgs = new String[] { queryString };
-        return queryEntities(selection, selectionArgs, columns, order);
+        return queryEntities(projection, selection, selectionArgs, order);
     }
 
-    public Cursor queryEntities(String selection, String[] selectionArgs, String[] columns, String order) {
+    public Cursor queryEntities(String[] projection, String selection, String[] selectionArgs, String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_PAIRING_FTS);
         builder.setProjectionMap(mPairingColumnMap);
-        Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), columns, selection, selectionArgs, null, null, order);
-        // Manage Cursor
-        // if (cursor == null) {
-        // return null;
-        // } else if (!cursor.moveToFirst()) {
-        // cursor.close();
-        // return null;
-        // }
+        Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
         return cursor;
     }
 
-    public long insertEntity(ContentValues userValues) throws SQLException {
+    public long insertEntity(ContentValues values) throws SQLException {
         long result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
+            parseForPhoneNormalize(values);
             db.beginTransaction();
             try {
-                result = db.insertOrThrow(TABLE_PAIRING_FTS, null, userValues);
+                 result = db.insertOrThrow(TABLE_PAIRING_FTS, null, values);
                 // commit
                 db.setTransactionSuccessful();
             } finally {
@@ -104,6 +102,14 @@ public class PairingDatabase {
         return result;
     }
 
+    private void parseForPhoneNormalize(ContentValues values) {
+        if (values.containsKey(PairingColumns.COL_PHONE)) {
+            String phone = values.getAsString(PairingColumns.COL_PHONE);
+            String normalizePhone = eu.ttbox.geoping.core.PhoneNumberUtils.normalizeNumber(phone);
+            values.put(PairingColumns.COL_PHONE_NORMALIZED, normalizePhone);
+        }
+    }
+    
     public int deleteEntity(String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
@@ -125,6 +131,7 @@ public class PairingDatabase {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
+            parseForPhoneNormalize(values);
             db.beginTransaction();
             try {
                 result = db.update(TABLE_PAIRING_FTS, values, selection, selectionArgs);

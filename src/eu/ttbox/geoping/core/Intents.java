@@ -54,7 +54,7 @@ public class Intents {
             Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, String.valueOf(entityId));
             intent.setAction(Intent.ACTION_EDIT).putExtra(EXTRA_SMS_PHONE, entityId).setData(entityUri);
         }
-        return intent; 
+        return intent;
     }
 
     public static Intent editPairing(Context context, String entityId) {
@@ -83,13 +83,17 @@ public class Intents {
     }
 
     public static Intent showOnMap(Context context, Uri geoTrackData, ContentValues values) {
-        String userId = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
-        Log.d(TAG, "Create Intent action for New GeoTrack for user " + userId);
+        String phone = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
+        Log.d(TAG, "Create Intent action for New GeoTrack for user " + phone);
         // create
         Intent intent = new Intent(context, ShowMapActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(geoTrackData);//
-        intent.putExtra(EXTRA_SMS_PHONE, userId);
+        intent.putExtra(EXTRA_SMS_PHONE, phone);
+        // Wsg84
+        for (String cloneKey : new String[] { GeoTrackColumns.COL_LATITUDE_E6, GeoTrackColumns.COL_LONGITUDE_E6 }) {
+            intent.putExtra(cloneKey, values.getAsInteger(cloneKey));
+         }
         return intent;
     }
 

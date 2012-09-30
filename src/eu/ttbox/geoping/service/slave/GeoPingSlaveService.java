@@ -4,9 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -17,11 +15,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -46,7 +44,11 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrack;
+import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
+import eu.ttbox.geoping.domain.model.Pairing;
+import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
+import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
@@ -78,8 +80,9 @@ public class GeoPingSlaveService extends WorkerService {
 
     // Config
     boolean displayGeopingRequestNotification = false;
-    Set<String> secuAuthorizeNeverPhoneSet;
-    Set<String> secuAuthorizeAlwaysPhoneSet;
+
+    // Set<String> secuAuthorizeNeverPhoneSet;
+    // Set<String> secuAuthorizeAlwaysPhoneSet;
 
     // ===========================================================
     // Constructors
@@ -108,8 +111,10 @@ public class GeoPingSlaveService extends WorkerService {
         this.displayGeopingRequestNotification = appPreferences.getBoolean(AppConstants.PREFS_GEOPING_REQUEST_NOTIFYME, false);
 
         // Read Security Set
-        this.secuAuthorizeNeverPhoneSet = readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER);
-        this.secuAuthorizeAlwaysPhoneSet = readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS);
+        // this.secuAuthorizeNeverPhoneSet =
+        // readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER);
+        // this.secuAuthorizeAlwaysPhoneSet =
+        // readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS);
     }
 
     @Override
@@ -144,85 +149,176 @@ public class GeoPingSlaveService extends WorkerService {
         // }
         //
         Log.d(TAG, String.format("onHandleIntent for action %s : %s", action, intent));
+
         if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
+            // GeoPing Request
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             // Request
             // registerGeoPingRequest(phone, params);
-            if (isAuthorizePhoneAlways(phone)) {
+            Pairing pairing = getPairingByPhone(phone);
+            switch (pairing.authorizeType) {
+            case AUTHORIZE_NEVER:
+                Log.i(TAG, "Ignore Geoping (Never Authorize) request from phone " + phone);
+                break;
+            case AUTHORIZE_ALWAYS:
                 registerGeoPingRequest(phone, params);
-            } else if (!isAuthorizePhoneNever(phone)) {
+                break;
+            case AUTHORIZE_REQUEST:
                 showNotificationNewPingRequestConfirm(phone, params, GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM);
-            } else {
-                Log.i(TAG, "Ignore Never Authorize Geoping request from phone " + phone);
+                break;
+            default:
+                break;
             }
 
+            // if (isAuthorizePhoneAlways(phone)) {
+            // registerGeoPingRequest(phone, params);
+            // } else if (!isAuthorizePhoneNever(phone)) {
+            // showNotificationNewPingRequestConfirm(phone, params,
+            // GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM);
+            // } else {
+            // Log.i(TAG, "Ignore Never Authorize Geoping request from phone " +
+            // phone);
+            // }
+
         } else if (Intents.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE.equals(action)) {
-            manageAuthorizeIntent(intent.getExtras());
+            // GeoPing Pairing User ressponse
+            manageNotificationAuthorizeIntent(intent.getExtras());
         } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
+            // GeoPing Pairing
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-            if (isAuthorizePhoneAlways(phone)) {
-                long personId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1l);
-                sendPairingResponse(phone, personId);
-            } else if (!isAuthorizePhoneNever(phone)) {
-                showNotificationNewPingRequestConfirm(phone, params, GeopingNotifSlaveTypeEnum.PAIRING);
-                // TODO Send pairing Response
-            }
+
+            managePairingRequest(phone, params);
+
+            // if (isAuthorizePhoneAlways(phone)) {
+            // long personId =
+            // SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1l);
+            // sendPairingResponse(phone, personId);
+            // } else if (!isAuthorizePhoneNever(phone)) {
+            // showNotificationNewPingRequestConfirm(phone, params,
+            // GeopingNotifSlaveTypeEnum.PAIRING);
+            // // TODO Send pairing Response
+            // }
         }
     }
 
     // ===========================================================
     // Pairing
     // ===========================================================
+    private void managePairingRequest(String phone, Bundle params) {
+        PairingAuthorizeTypeEnum authorizeType = PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
+        Pairing pairing = getPairingByPhone(phone);
+        if (pairing != null && pairing.authorizeType != null) {
+            authorizeType = pairing.authorizeType;
+        }
+        long personId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1l);
+        switch (authorizeType) {
+        case AUTHORIZE_ALWAYS:// Already pairing, resent the response
+            doPairingPhone(pairing, PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS, personId);
+            break;
+        case AUTHORIZE_NEVER: // No Auhtorize it !!
+            doPairingPhone(pairing, PairingAuthorizeTypeEnum.AUTHORIZE_NEVER, personId);
+            break;
+        case AUTHORIZE_REQUEST:
+            // Open the Notification For asking Yes or fuck
+            showNotificationNewPingRequestConfirm(phone, params, GeopingNotifSlaveTypeEnum.PAIRING);
+            break;
+        default:
+            break;
+        }
+    }
 
-    private void manageAuthorizeIntent(Bundle extras) {
-        // Init
+    private void manageNotificationAuthorizeIntent(Bundle extras) {
+        // Read Intent
         String phone = extras.getString(Intents.EXTRA_SMS_PHONE);
         Bundle params = extras.getBundle(Intents.EXTRA_SMS_PARAMS);
+        long personId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1l);
         GeopingNotifSlaveTypeEnum notifType = GeopingNotifSlaveTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL, -1));
-        int typeOrdinal = extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL);
-        AuthorizePhoneTypeEnum type = AuthorizePhoneTypeEnum.getByOrdinal(typeOrdinal);
+        AuthorizePhoneTypeEnum type = AuthorizePhoneTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL));
+
         // Cancel Notification
         int notifId = extras.getInt(Intents.EXTRA_NOTIF_ID, -1);
-        Log.w(TAG, "Remove Notification Id : " + notifId);
         if (notifId != -1) {
             NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notifManager.cancel(notifId);
         }
-        // Manage case
-        boolean isPairing = false;
-        Log.d(TAG, String.format("manageAuthorizeIntent for phone %s with security policy %s (%s)", phone, type, typeOrdinal));
+        // Read Pairing
+        Pairing pairing = getPairingByPhone(phone);
+
+        // ### Manage Pairing Type
+        // #############################
+        Log.d(TAG, String.format("manageAuthorizeIntent for phone %s with security policy %s (%s)", phone, type, type));
+        boolean positifResponse = false;
         switch (type) {
         case NEVER:
-            Log.d(TAG, "Need to authorizePhoneNever case Never");
-            // authorizePhoneNever(phone);
-        case NO:
-            Log.d(TAG, "Need to authorizePhoneNever case No");
-            Log.i(TAG, "Ignore Geoping request from phone " + phone);
+            doPairingPhone(pairing, PairingAuthorizeTypeEnum.AUTHORIZE_NEVER, personId);
             break;
         case ALWAYS:
-            Log.d(TAG, "Need to authorizePhoneNever case ALWAYS");
-            // authorizePhoneAlways(phone);
-            isPairing = true;
+            doPairingPhone(pairing, PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS, personId);
+            positifResponse = true;
+            break;
         case YES:
-            Log.d(TAG, "Need to authorizePhoneNever case Yes");
-            if (GeopingNotifSlaveTypeEnum.PAIRING.equals(notifType)) {
+            positifResponse = true;
+            break;
+        default:
+            Log.w(TAG, "Not manage PhoneAuthorizeTypeEnum for " + type);
+            positifResponse = false;
+            break;
+        }
+
+        // ### Manage Notification Type
+        // #############################
+        switch (notifType) {
+        case GEOPING_REQUEST_CONFIRM:
+            if (positifResponse) {
                 registerGeoPingRequest(phone, params);
             }
             break;
         default:
-            Log.w(TAG, "Not manage PhoneAuthorizeTypeEnum for " + type);
             break;
-        }
-        // Send Pairing response
-        if (isPairing) {
-            long personId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1l);
-            sendPairingResponse(phone, personId);
         }
     }
 
-    private void sendPairingResponse(String phone, long personId) {
+    private void doPairingPhone(Pairing pairing, PairingAuthorizeTypeEnum authorizeType, long personId) {
+        // ### Persist Pairing
+        // #############################
+        if (pairing.id > -1l) {
+            if (pairing.authorizeType == null || !pairing.authorizeType.equals(authorizeType)) {
+                // update
+                ContentValues values = authorizeType.writeTo(null);
+                Uri uri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI, String.valueOf(pairing.id));
+                int affectedRow = getContentResolver().update(uri, values, null, null);
+                Log.w(TAG, String.format("Change %s Pairing %s : to new  %s", affectedRow, uri, authorizeType));
+            } else {
+                Log.d(TAG, String.format("Ignore Change Pairing type %s to %s", pairing.authorizeType, authorizeType));
+            }
+        } else {
+            // Create
+            ContentValues values = PairingHelper.getContentValues(pairing);
+            Uri pairingUri = getContentResolver().insert(PairingProvider.Constants.CONTENT_URI, values);
+            if (pairingUri != null) {
+                String entityId = pairingUri.getLastPathSegment();
+                pairing.setId(Long.valueOf(entityId));
+            }
+            Log.w(TAG, String.format("Insert new Pairing %s : to new  %s", pairingUri, pairing));
+        }
+        // ### Send Pairing response
+        // #############################
+        switch (authorizeType) {
+        case AUTHORIZE_NEVER:
+            // TODO Check Last Send
+            break;
+        case AUTHORIZE_ALWAYS:
+            sendPairingResponse(pairing.phone, personId, authorizeType);
+            break;
+        default:
+            break;
+        }
+
+    }
+
+    private void sendPairingResponse(String phone, long personId, PairingAuthorizeTypeEnum authorizeType) {
         Bundle params = null;
         if (personId != -1l) {
             params = SmsMessageLocEnum.MSGKEY_PERSON_ID.writeToBundle(null, personId);
@@ -234,80 +330,32 @@ public class GeoPingSlaveService extends WorkerService {
     // GeoPing Security
     // ===========================================================
 
-    private void authorizePhoneNever(String phone) {
-        if (!secuAuthorizeNeverPhoneSet.contains(phone)) {
-            secuAuthorizeNeverPhoneSet.add(phone);
-            Editor editor = appPreferences.edit();
-            // Never
-            String neverPhoneString = convertPhoneSetAsString(secuAuthorizeNeverPhoneSet);
-            editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER, neverPhoneString);
-            // Always
-            if (secuAuthorizeAlwaysPhoneSet.contains(phone)) {
-                secuAuthorizeAlwaysPhoneSet.remove(phone);
-                String alwaysPhoneString = convertPhoneSetAsString(secuAuthorizeAlwaysPhoneSet);
-                editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS, alwaysPhoneString);
+    private Pairing getPairingByPhone(String phoneNumber) {
+        Pairing result = null;
+        // Search
+        // Log.d(TAG, String.format("Search Painring for Phone [%s]",
+        // phoneNumber));
+        Uri uri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+        Cursor cur = getContentResolver().query(uri, null, null, null, null);
+        try {
+            if (cur != null && cur.moveToFirst()) {
+                PairingHelper helper = new PairingHelper().initWrapper(cur);
+                result = helper.getEntity(cur);
             }
-            Log.i(TAG, "Security Phone Authorize NEVER for Phone : " + phone);
-            editor.commit();
+        } finally {
+            cur.close();
         }
-    }
-
-    private boolean isAuthorizePhoneAlways(String phone) {
-        return secuAuthorizeAlwaysPhoneSet.contains(phone);
-    }
-
-    private boolean isAuthorizePhoneNever(String phone) {
-        return secuAuthorizeNeverPhoneSet.contains(phone);
-    }
-
-    private void authorizePhoneAlways(String phone) {
-        if (!secuAuthorizeAlwaysPhoneSet.contains(phone)) {
-            secuAuthorizeAlwaysPhoneSet.add(phone);
-            Editor editor = appPreferences.edit();
-            // Never
-            String alwayPhoneString = convertPhoneSetAsString(secuAuthorizeAlwaysPhoneSet);
-            editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS, alwayPhoneString);
-            // Always
-            if (secuAuthorizeNeverPhoneSet.contains(phone)) {
-                secuAuthorizeNeverPhoneSet.remove(phone);
-                String neverPhoneString = convertPhoneSetAsString(secuAuthorizeNeverPhoneSet);
-                editor.putString(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER, neverPhoneString);
-            }
-            Log.i(TAG, "Security Phone Authorize ALWAYS for Phone : " + phone);
-            editor.commit();
-        }
-    }
-
-    private Set<String> readPrefPhoneSet(String key) {
-        String phoneSet = appPreferences.getString(key, null);
-        HashSet<String> result = new HashSet<String>();
-        if (phoneSet != null && phoneSet.length() > 0) {
-            int phoneSetSize = phoneSet.length();
-            int pos = 0;
-            int end = 0;
-            while ((end = phoneSet.indexOf(AppConstants.PHONE_SEP, pos)) >= 0) {
-                result.add(phoneSet.substring(pos, end));
-                pos = end + 1;
-            }
-            if (pos < phoneSetSize) {
-                result.add(phoneSet.substring(pos, phoneSetSize));
-            }
+        Log.d(TAG, String.format("Search Painring for Phone [%s] : Found %s", phoneNumber, result));
+        // Create It
+        if (result == null) {
+            // TODO Read Prefs values
+            result = new Pairing();
+            result.setPhone(phoneNumber);
+            result.setAuthorizeType(PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST);
         }
         return result;
     }
-
-    private String convertPhoneSetAsString(Set<String> phoneSet) {
-        StringBuilder sb = new StringBuilder();
-        boolean addSep = false;
-        for (String phone : phoneSet) {
-            if (addSep) {
-                sb.append(AppConstants.PHONE_SEP);
-            }
-            sb.append(phone);
-            addSep = true;
-        }
-        return sb.toString();
-    }
+ 
 
     // ===========================================================
     // Other
@@ -455,35 +503,36 @@ public class GeoPingSlaveService extends WorkerService {
             if (contact.displayName != null && contact.displayName.length() > 0) {
                 phoneNumber = contact.displayName;
             }
-            photo = openPhotoBitmap(contact.id); 
+            photo = openPhotoBitmap(contact.id);
         }
         // Title
-        String title = "GeoPing Request";
+        String title;
         switch (onlyPairing) {
         case PAIRING:
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.GONE);
-            title = "GeoPing Pairing";
+            title = getString(R.string.notif_pairing);
             break;
         case GEOPING_REQUEST_CONFIRM:
-            title = "GeoPing Request";
+            title = getString(R.string.notif_geoping_request);
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_never, View.GONE);
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.GONE);
             break;
         case GEOPING_NOTIF:
-            title = "GeoPing";
+            title = getString(R.string.notif_geoping_request);
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.GONE);
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_no, View.GONE);
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_never, View.GONE);
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.GONE);
             break;
         default:
+            title = getString(R.string.app_name);
             break;
         }
 
         // Generate Notification ID per Person
         int notifId = SHOW_GEOPING_REQUEST_NOTIFICATION_ID + phone.hashCode();
         Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
-        
+
         // View
         contentView.setTextViewText(R.id.notif_geoping_title, title);
         contentView.setTextViewText(R.id.notif_geoping_phone, phoneNumber);
@@ -510,10 +559,10 @@ public class GeoPingSlaveService extends WorkerService {
                 .setContentTitle(title) //
                 .setContentText(phoneNumber) //
                 .setContent(contentView); //
-         if (photo != null) {
+        if (photo != null) {
             notificationBuilder.setLargeIcon(photo);
         } else {
-            Bitmap icon =  BitmapFactory.decodeResource(getResources(), R.drawable.ic_stat_notif_icon);
+            Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_stat_notif_icon);
             notificationBuilder.setLargeIcon(icon);
         }
         Notification notification = notificationBuilder.build();

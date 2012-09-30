@@ -10,7 +10,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "PairingOpenHelper";
 
     public static final String DATABASE_NAME = "pairing.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     // ===========================================================
     // Table
@@ -20,7 +20,9 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
             " USING fts3 " //
             + "( " + PairingDatabase.PairingColumns.COL_NAME //
             + ", " + PairingDatabase.PairingColumns.COL_PHONE //
-            + ", " + PairingDatabase.PairingColumns.COL_COLOR //
+            + ", " + PairingDatabase.PairingColumns.COL_PHONE_NORMALIZED //
+            + ", " + PairingDatabase.PairingColumns.COL_AUTHORIZE_TYPE //
+            + ", " + PairingDatabase.PairingColumns.COL_SHOW_NOTIF //
             + ");";
 
     // ===========================================================

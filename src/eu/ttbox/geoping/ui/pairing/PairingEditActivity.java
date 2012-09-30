@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -38,10 +39,12 @@ public class PairingEditActivity extends FragmentActivity {
 
     // Bindings
     private EditText nameEditText;
-    private EditText phoneEditText; 
+    private EditText phoneEditText;
+    private CheckBox showNotificationCheckBox;
 
     // Instance
-    private String entityId;
+    // private String entityId;
+    private Uri entityUri;
 
     // ===========================================================
     // Constructors
@@ -52,8 +55,10 @@ public class PairingEditActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pairing_edit);
         // binding
-        nameEditText = (EditText) findViewById(R.id.person_name);
-        phoneEditText = (EditText) findViewById(R.id.person_phone); 
+        nameEditText = (EditText) findViewById(R.id.pairing_name);
+        phoneEditText = (EditText) findViewById(R.id.pairing_phone);
+        showNotificationCheckBox = (CheckBox) findViewById(R.id.paring_show_notification);
+
         // Intents
         handleIntent(getIntent());
     }
@@ -104,29 +109,28 @@ public class PairingEditActivity extends FragmentActivity {
             Log.d(TAG, "handleIntent for action : " + action);
         }
         if (Intent.ACTION_EDIT.equals(action)) {
-            Uri data = intent.getData(); 
-            loadEntity( data.getLastPathSegment());
-         } else if (Intent.ACTION_DELETE.equals(action)) {
+            Uri data = intent.getData();
+            loadEntity(data.getLastPathSegment());
+        } else if (Intent.ACTION_DELETE.equals(action)) {
             // TODO
         } else if (Intent.ACTION_INSERT.equals(action)) {
-            this.entityId = null; 
+            this.entityUri = null;
         }
 
     }
 
     private void loadEntity(String entityId) {
-        this.entityId =entityId;
+        this.entityUri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI, entityId);
         Bundle bundle = new Bundle();
         bundle.putString(Intents.EXTRA_SMS_PHONE, entityId);
         getSupportLoaderManager().initLoader(PAIRING_EDIT_LOADER, bundle, pairingLoaderCallback);
     }
-    
+
     // ===========================================================
     // Listener
     // ===========================================================
 
     public void onDeleteClick() {
-        Uri entityUri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI ,   entityId);
         int deleteCount = getContentResolver().delete(entityUri, null, null);
         Log.d(TAG, "Delete %s entity successuf");
         if (deleteCount > 0) {
@@ -162,10 +166,18 @@ public class PairingEditActivity extends FragmentActivity {
     }
 
     public void onPairingClick(View v) {
+        String entityId = entityUri.getLastPathSegment();
         Intent intent = Intents.pairingRequest(this, phoneEditText.getText().toString(), entityId);
         startService(intent);
     }
- 
+
+    public void onShowNotificationClick(View v) {
+        boolean isCheck = showNotificationCheckBox.isChecked();
+        ContentValues values = new ContentValues();
+        values.put(PairingColumns.COL_SHOW_NOTIF, isCheck);
+        int count = getContentResolver().update(entityUri, values, null, null);
+    }
+
     // ===========================================================
     // Activity Result handler
     // ===========================================================
@@ -232,14 +244,14 @@ public class PairingEditActivity extends FragmentActivity {
         ContentValues values = new ContentValues();
         values.put(PairingColumns.COL_NAME, name);
         values.put(PairingColumns.COL_PHONE, phone);
-        values.put(PairingColumns.COL_COLOR, mPaint.getColor());
+        values.put(PairingColumns.COL_AUTHORIZE_TYPE, mPaint.getColor());
         // Content
         Uri uri;
-        if (entityId == null) {
-            uri = getContentResolver().insert(PairingProvider.Constants.CONTENT_URI , values);
+        if (entityUri == null) {
+            uri = getContentResolver().insert(PairingProvider.Constants.CONTENT_URI, values);
             setResult(Activity.RESULT_OK);
         } else {
-            uri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI , entityId);
+            uri = entityUri;
             int count = getContentResolver().update(uri, values, null, null);
             if (count != 1) {
                 Log.e(TAG, String.format("Error, %s entities was updates for Expected One", count));
@@ -263,7 +275,7 @@ public class PairingEditActivity extends FragmentActivity {
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
             String entityId = args.getCharSequence(Intents.EXTRA_SMS_PHONE).toString();
-            Uri entityUri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI, String.valueOf(  entityId));
+            Uri entityUri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI, String.valueOf(entityId));
             // Loader
             CursorLoader cursorLoader = new CursorLoader(PairingEditActivity.this, entityUri, null, null, null, null);
             return cursorLoader;
@@ -277,7 +289,8 @@ public class PairingEditActivity extends FragmentActivity {
                 // Data
                 PairingHelper helper = new PairingHelper().initWrapper(cursor);
                 helper.setTextPairingName(nameEditText, cursor)//
-                        .setTextPairingPhone(phoneEditText, cursor); 
+                        .setTextPairingPhone(phoneEditText, cursor)//
+                        .setCheckBoxPairingShowNotif(showNotificationCheckBox, cursor);
             }
         }
 

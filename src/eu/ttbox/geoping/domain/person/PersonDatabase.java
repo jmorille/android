@@ -62,21 +62,21 @@ public class PersonDatabase {
     public Cursor getEntityById(String rowId, String[] columns) {
         String selection = "rowid = ?";
         String[] selectionArgs = new String[] { rowId };
-        return queryEntities(selection, selectionArgs, columns, null);
+        return queryEntities(columns, selection, selectionArgs, null);
     }
 
-    public Cursor getEntityMatches(String query, String[] columns, String order) {
+    public Cursor getEntityMatches(String[] projection, String query, String order) {
         String selection = PersonColumns.COL_NAME + " MATCH ?";
         String queryString = new StringBuilder(query).append("*").toString();
         String[] selectionArgs = new String[] { queryString };
-        return queryEntities(selection, selectionArgs, columns, order);
+        return queryEntities(projection, selection, selectionArgs, order);
     }
 
-    public Cursor queryEntities(String selection, String[] selectionArgs, String[] columns, String order) {
+    public Cursor queryEntities(String[] projection, String selection, String[] selectionArgs, String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_PERSON_FTS);
         builder.setProjectionMap(mPersonColumnMap);
-        Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), columns, selection, selectionArgs, null, null, order);
+        Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
         // Manage Cursor
         // if (cursor == null) {
         // return null;

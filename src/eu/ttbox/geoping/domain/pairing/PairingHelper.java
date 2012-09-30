@@ -2,8 +2,10 @@ package eu.ttbox.geoping.domain.pairing;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.widget.CheckBox;
 import android.widget.TextView;
-import eu.ttbox.geoping.domain.Pairing;
+import eu.ttbox.geoping.domain.model.Pairing;
+import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 
 public class PairingHelper {
@@ -12,13 +14,17 @@ public class PairingHelper {
     public int idIdx = -1;
     public int nameIdx = -1;
     public int phoneIdx = -1;
-    public int colorIdx = -1;
+    public int phoneNormalizedIdx = -1;
+    public int authorizeTypeIdx = -1;
+    public int showNotificationIdx = -1;
 
     public PairingHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(PairingColumns.COL_ID);
         nameIdx = cursor.getColumnIndex(PairingColumns.COL_NAME);
         phoneIdx = cursor.getColumnIndex(PairingColumns.COL_PHONE);
-        colorIdx = cursor.getColumnIndex(PairingColumns.COL_COLOR);
+        phoneNormalizedIdx = cursor.getColumnIndex(PairingColumns.COL_PHONE_NORMALIZED);
+        authorizeTypeIdx = cursor.getColumnIndex(PairingColumns.COL_AUTHORIZE_TYPE);
+        showNotificationIdx = cursor.getColumnIndex(PairingColumns.COL_SHOW_NOTIF);
         isNotInit = false;
         return this;
     }
@@ -31,7 +37,8 @@ public class PairingHelper {
         user.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
         user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
-        user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : null);
+        user.setAuthorizeType(authorizeTypeIdx > -1 ? PairingAuthorizeTypeEnum.getByCode(cursor.getInt(authorizeTypeIdx)) : null);
+        user.setShowNotification(showNotificationIdx > -1 ? cursor.getInt(showNotificationIdx) == 1 ? true : false : false);
         return user;
     }
 
@@ -53,7 +60,7 @@ public class PairingHelper {
     }
 
     public int getPairingColor(Cursor cursor) {
-        return cursor.getInt(colorIdx);
+        return cursor.getInt(authorizeTypeIdx);
     }
 
     public PairingHelper setTextPairingName(TextView view, Cursor cursor) {
@@ -62,6 +69,12 @@ public class PairingHelper {
 
     public PairingHelper setTextPairingPhone(TextView view, Cursor cursor) {
         return setTextWithIdx(view, cursor, phoneIdx);
+    }
+
+    public PairingHelper setCheckBoxPairingShowNotif(CheckBox view, Cursor cursor) {
+        boolean showNotif = cursor.getInt(showNotificationIdx) == 1;
+        view.setChecked(showNotif);
+        return this;
     }
 
     public String getPairingPhone(Cursor cursor) {
@@ -75,6 +88,10 @@ public class PairingHelper {
         }
         initialValues.put(PairingColumns.COL_NAME, user.name);
         initialValues.put(PairingColumns.COL_PHONE, user.phone);
+        initialValues.put(PairingColumns.COL_SHOW_NOTIF, user.showNotification);
+        // secu
+        PairingAuthorizeTypeEnum authorizeType = user.authorizeType != null ? user.authorizeType : PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
+        initialValues.put(PairingColumns.COL_AUTHORIZE_TYPE, authorizeType.getCode());
         return initialValues;
     }
 

@@ -7,23 +7,34 @@
     android:paddingRight="8dp" >
 
     <EditText
-        android:id="@+id/person_name"
+        android:id="@+id/pairing_name"
         style="@style/entity_edit"
         android:layout_width="fill_parent"
-        android:hint="@string/person_name" />
+        android:hint="@string/pairing_name" />
 
     <EditText
-        android:id="@+id/person_phone"
+        android:id="@+id/pairing_phone"
         style="@style/entity_edit"
         android:layout_width="fill_parent"
-        android:layout_below="@id/person_name"
-        android:hint="@string/person_phone" />
+        android:layout_below="@id/pairing_name"
+        android:hint="@string/pairing_phone" />
 
     <Button
         android:id="@+id/select_contact_button"
         style="@style/entity_edit"
-        android:layout_below="@id/person_phone"
+        android:layout_alignParentBottom="true"
         android:onClick="onSelectContactClick"
         android:text="@string/menu_select_contact" />
- 
+
+    <CheckBox
+        android:id="@+id/paring_show_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/pairing_phone"
+        android:onClick="onShowNotificationClick"
+        android:text="@string/pairing_show_notification" />
+
+  
+  
 </RelativeLayout>

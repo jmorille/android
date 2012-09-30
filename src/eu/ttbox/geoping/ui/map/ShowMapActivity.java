@@ -335,31 +335,33 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
             return;
         }
         String action = intent.getAction();
+        Log.d(TAG, String.format("Handle Intent for action %s : %s", action, intent));
         if (Intent.ACTION_VIEW.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
             int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
+            Log.w(TAG, String.format("Show on Map Phone [%s] (%s, %s) ", phone, latE6, lngE6));
             if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
                 if (myLocation != null) {
                     myLocation.disableFollowLocation();
                 }
+                annimateToPersonPhone(phone, latE6, lngE6);
             }
-            annimateToPersonPhone(phone, latE6, lngE6);
         }
     }
 
     private void annimateToPersonPhone(final String phone, final int latE6, final int lngE6) {
+        mapController.animateTo(latE6, lngE6, AnimationType.HALFCOSINUSALDECELERATING);
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
                 // Animate to
-                if (geoTrackOverlay != null) {
-                    if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
-                        mapController.animateTo(latE6, lngE6, AnimationType.HALFCOSINUSALDECELERATING);
-                    }
+                if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
+                    mapController.animateTo(latE6, lngE6, AnimationType.HALFCOSINUSALDECELERATING);
                 }
-            }
+                // Display GeoPoints for person
+                GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
+             }
         });
     }
 

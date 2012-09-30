@@ -12,6 +12,11 @@
         android:showAsAction="ifRoom"
         android:title="@string/menu_geoping"/>
     <item
+        android:id="@+id/menu_pairing"
+        android:icon="@drawable/ic_device_access_secure"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_pairing"/>
+    <item
         android:id="@+id/menuGeotracker"
         android:icon="@drawable/map"
         android:showAsAction="ifRoom"

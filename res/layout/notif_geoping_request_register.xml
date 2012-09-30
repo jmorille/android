@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="2dp"
-            android:text="Phone" />
+            android:text="@string/pairing_phone" />
     </LinearLayout>
 
     <LinearLayout
@@ -36,25 +36,25 @@
             android:id="@+id/notif_geoping_confirm_button_never"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jamais" />
+            android:text="@string/notif_pairing_never" />
 
         <Button
             android:id="@+id/notif_geoping_confirm_button_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Non" />
+            android:text="@string/notif_confirm_no" />
 
         <Button
             android:id="@+id/notif_geoping_confirm_button_yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Oui" />
+            android:text="@string/notif_confirm_yes" />
 
         <Button
             android:id="@+id/notif_geoping_confirm_button_always"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Toujours" />
+             android:text="@string/notif_pairing_always" />
     </LinearLayout>
 
 </LinearLayout>

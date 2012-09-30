@@ -65,16 +65,16 @@ public class GeoTrackDatabase {
         return map;
     }
 
-    public Cursor getEntityById(String rowId, String[] columns) {
+    public Cursor getEntityById(String rowId, String[] projection) {
         String[] selectionArgs = new String[] { rowId };
-        return queryEntities(columns, CRITERIA_BY_ENTITY_ID, selectionArgs, null);
+        return queryEntities(projection, CRITERIA_BY_ENTITY_ID, selectionArgs, null);
     }
 
-    public Cursor queryEntities(String[] columns, String selection, String[] selectionArgs, String order) {
+    public Cursor queryEntities(String[] projection, String selection, String[] selectionArgs, String order) {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_TRACK_POINT);
         builder.setProjectionMap(mGeoTrackColumnMap);
-        Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), columns, selection, selectionArgs, null, null, order);
+        Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
         // Manage Cursor
         // if (cursor == null) {
         // return null;

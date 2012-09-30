@@ -117,7 +117,7 @@ public class PersonProvider extends ContentProvider {
                  */
                 SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID };
 
-        return personDatabase.getEntityMatches(query, columns, null);
+        return personDatabase.getEntityMatches(columns, query, null);
     }
 
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
@@ -125,7 +125,7 @@ public class PersonProvider extends ContentProvider {
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
-        return personDatabase.queryEntities(selection, selectionArgs, projection, sortOrder);
+        return personDatabase.queryEntities(projection, selection, selectionArgs, sortOrder);
     }
 
     private Cursor getPerson(Uri uri) {

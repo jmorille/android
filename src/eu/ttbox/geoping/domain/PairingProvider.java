@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
+import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 
@@ -17,7 +18,7 @@ public class PairingProvider extends ContentProvider {
     private static final String TAG = "PairingProvider";
 
     // Constante
-  
+
     // MIME types used for searching words or looking up a single definition
     public static final String PAIRINGS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/pairing";
     public static final String PAIRING_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/pairing";
@@ -27,6 +28,8 @@ public class PairingProvider extends ContentProvider {
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/pairing");
         // public static final Uri CONTENT_URI_GET_PRODUCT =
         // Uri.parse("content://" + AUTHORITY + "/pairing/");
+
+        public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");;
     }
 
     private PairingDatabase pairingDatabase;
@@ -34,8 +37,9 @@ public class PairingProvider extends ContentProvider {
     // UriMatcher stuff
     private static final int PAIRINGS = 0;
     private static final int PAIRING_ID = 1;
-    private static final int SEARCH_SUGGEST = 2;
-    private static final int REFRESH_SHORTCUT = 3;
+    private static final int PAIRING_PHONE_FILTER = 2;
+    private static final int SEARCH_SUGGEST = 3;
+    private static final int REFRESH_SHORTCUT = 4;
 
     private static final UriMatcher sURIMatcher = buildUriMatcher();
 
@@ -48,6 +52,16 @@ public class PairingProvider extends ContentProvider {
         // to get definitions...
         matcher.addURI(Constants.AUTHORITY, "pairing", PAIRINGS);
         matcher.addURI(Constants.AUTHORITY, "pairing/#", PAIRING_ID);
+        /**
+         * The content:// style URI for this table. Append the phone number you
+         * want to lookup to this URI and query it to perform a lookup. For
+         * example:
+         * 
+         * <pre>
+         * Uri lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_URI, Uri.encode(phoneNumber));
+         * </pre>
+         */
+        matcher.addURI(Constants.AUTHORITY, "pairing/phone_lookup/*", PAIRING_PHONE_FILTER);
         // to get suggestions...
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
@@ -99,11 +113,27 @@ public class PairingProvider extends ContentProvider {
             // return search(selectionArgs[0]);
         case PAIRING_ID:
             return getPairing(uri);
+        case PAIRING_PHONE_FILTER:
+            String phone = uri.getLastPathSegment();
+            String phoneDecoder = Uri.decode(phone);
+            return searchForPhoneNumber(phoneDecoder, projection, sortOrder);
         case REFRESH_SHORTCUT:
             return refreshShortcut(uri);
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
+    }
+
+    private Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) {
+        String[] projection = _projection == null ? PairingDatabase.PairingColumns.ALL_KEYS : _projection;
+        // Normalise For search 
+        // String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+        // String minMatch =
+        // PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+        // Prepare Query
+        String selection = String.format("%s = ?", PairingColumns.COL_PHONE);
+        String [] selectionArgs = new String[] { number };
+        return pairingDatabase.queryEntities(projection, selection, selectionArgs, sortOrder); 
     }
 
     private Cursor getSuggestions(String query) {
@@ -117,7 +147,7 @@ public class PairingProvider extends ContentProvider {
                  */
                 SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID };
 
-        return pairingDatabase.getEntityMatches(query, columns, null);
+        return pairingDatabase.getEntityMatches(columns, query, null);
     }
 
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
@@ -125,7 +155,7 @@ public class PairingProvider extends ContentProvider {
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
-        return pairingDatabase.queryEntities(selection, selectionArgs, projection, sortOrder);
+        return pairingDatabase.queryEntities(projection, selection, selectionArgs, sortOrder);
     }
 
     private Cursor getPairing(Uri uri) {
@@ -175,11 +205,13 @@ public class PairingProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         switch (sURIMatcher.match(uri)) {
         case PAIRINGS:
+
             long pairingId = pairingDatabase.insertEntity(values);
             Uri pairingUri = null;
             if (pairingId > -1) {
-                pairingUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(  pairingId));
+                pairingUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(pairingId));
                 getContext().getContentResolver().notifyChange(uri, null);
+                Log.i(TAG, String.format("Insert Pairing %s : %s", pairingUri, values));
             }
             return pairingUri;
         default:
@@ -202,7 +234,7 @@ public class PairingProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
-        if (count>0) {
+        if (count > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return count;

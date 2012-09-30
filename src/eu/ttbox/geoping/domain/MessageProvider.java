@@ -117,7 +117,7 @@ public class MessageProvider extends ContentProvider {
                  */
                 SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID };
 
-        return messageDatabase.getEntityMatches(query, columns, null);
+        return messageDatabase.getEntityMatches(columns, query, null);
     }
 
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
@@ -125,7 +125,7 @@ public class MessageProvider extends ContentProvider {
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
-        return messageDatabase.queryEntities(selection, selectionArgs, projection, sortOrder);
+        return messageDatabase.queryEntities(projection, selection, selectionArgs, sortOrder);
     }
 
     private Cursor getMessage(Uri uri) {

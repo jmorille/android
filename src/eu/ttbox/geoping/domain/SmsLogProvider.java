@@ -78,7 +78,7 @@ public class SmsLogProvider extends ContentProvider {
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
-        return smslogDatabase.queryEntities(selection, selectionArgs, projection, sortOrder);
+        return smslogDatabase.queryEntities(projection, selection, selectionArgs, sortOrder);
     }
 
     private Cursor getSmsLog(Uri uri) {

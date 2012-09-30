@@ -1,11 +1,12 @@
-package eu.ttbox.geoping.domain;
+package eu.ttbox.geoping.domain.model;
 
 public class Pairing {
 
     public long id = -1;
     public String name;
     public String phone;
-    public int color;
+    public PairingAuthorizeTypeEnum authorizeType;
+    public boolean showNotification = false;
 
     public Pairing setId(long id) {
         this.id = id;
@@ -22,8 +23,13 @@ public class Pairing {
         return this;
     }
 
-    public Pairing setColor(int color) {
-        this.color = color;
+    public Pairing setAuthorizeType(PairingAuthorizeTypeEnum color) {
+        this.authorizeType = color;
+        return this;
+    }
+
+    public Pairing setShowNotification(boolean showNotification) {
+        this.showNotification = showNotification;
         return this;
     }
 
