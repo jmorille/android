@@ -20,7 +20,7 @@ public class SmsLogProvider extends ContentProvider {
 
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.SmsLogProvider";
-        public static final Uri CONTENT_URI_SMSLOG = Uri.parse("content://" + AUTHORITY + "/smslog");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/smslog");
         // public static final Uri CONTENT_URI_GET_PRODUCT =
         // Uri.parse("content://" + AUTHORITY + "/smslog/");
     }
@@ -112,7 +112,7 @@ public class SmsLogProvider extends ContentProvider {
             long smslogId = smslogDatabase.insertEntity(values);
             Uri smslogUri = null;
             if (smslogId > -1) {
-                smslogUri = Uri.withAppendedPath(Constants.CONTENT_URI_SMSLOG, String.valueOf( smslogId));
+                smslogUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf( smslogId));
                 getContext().getContentResolver().notifyChange(uri, null);
             }
             return smslogUri;

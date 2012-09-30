@@ -73,7 +73,8 @@ public class GeoTrackHelper {
         geoTrack.setAccuracy(accuracyIdx > -1 ? cursor.getInt(accuracyIdx) : -1);
         geoTrack.setAltitude(altitudeIdx > -1 ? cursor.getInt(altitudeIdx) : -1);
 
-        geoTrack.setBearing(bearingIdx > -1 ? cursor.getInt(bearingIdx) : -1);
+        geoTrack.setBearing(bearingIdx > -1 ? cursor.getInt(bearingIdx) : -1); 
+       
         geoTrack.setSpeed(speedIdx > -1 ? cursor.getInt(speedIdx) : -1);
 
         geoTrack.setAddress(addressIdx > -1 ? cursor.getString(addressIdx) : null);

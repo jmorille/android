@@ -19,15 +19,17 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
     public static final String PROVIDER_GPS = "gps";
 
     private GeoPingMessage getGeoPingMessage01(String provider) {
-        GeoTrack geoTrack = new GeoTrack();
-        geoTrack.setProvider(provider);
-        geoTrack.setLatitudeE6(43158549).setLongitude(25218546).setAccuracy(120);
-        geoTrack.setTime(1347481830000l);
+        GeoTrack geoTrack = new GeoTrack() //
+                .setProvider(provider)//
+                .setLatitudeE6(43158549)//
+                .setLongitude(25218546)//
+                .setAccuracy(120) //
+                .setTime(1347481830000l);
         if (PROVIDER_GPS.equals(provider)) {
-            geoTrack.setAccuracy(25);
-            geoTrack.setAltitude(124);
-            geoTrack.setSpeed(23);
-            geoTrack.setBearing(257);
+            geoTrack.setAccuracy(25) //
+                    .setAltitude(124)//
+                    .setSpeed(23)//
+                    .setBearing(257);
         }
         Bundle bundle = convertAsBundle(geoTrack);
         GeoPingMessage result = new GeoPingMessage("+33612131415", SmsMessageActionEnum.ACTION_GEO_LOC, bundle);
@@ -91,7 +93,7 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
     }
 
     public void testDecode() {
-        String encryped = "geoPing?LOC!(th7lhawmo,h31,y1e14h,xt3jbc,aa,s0,pg,b1p)";
+        String encryped = "geoPing?LOC!(th7lhawmo,z31,y1e14h,xt3jbc,aa,s0,pg,b1p)";
         GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", encryped);
         GeoTrack geoTrack = GeoTrackHelper.getEntityFromBundle(decoded.params);
         // has
@@ -101,8 +103,8 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
         assertTrue(geoTrack.hasAltitude());
         assertTrue(geoTrack.hasLatitude());
         assertTrue(geoTrack.hasLongitude());
-        // 
-        Log.d(TAG, "GeoTrack : " + geoTrack );
+        //
+        Log.d(TAG, "GeoTrack : " + geoTrack);
         Log.d(TAG, "Time : " + geoTrack.getTimeAsDate());
 
     }

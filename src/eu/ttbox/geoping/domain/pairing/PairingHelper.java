@@ -81,16 +81,16 @@ public class PairingHelper {
         return cursor.getString(phoneIdx);
     }
 
-    public static ContentValues getContentValues(Pairing user) {
+    public static ContentValues getContentValues(Pairing vo) {
         ContentValues initialValues = new ContentValues();
-        if (user.id > -1) {
-            initialValues.put(PairingColumns.COL_ID, Long.valueOf(user.id));
+        if (vo.id > -1) {
+            initialValues.put(PairingColumns.COL_ID, Long.valueOf(vo.id));
         }
-        initialValues.put(PairingColumns.COL_NAME, user.name);
-        initialValues.put(PairingColumns.COL_PHONE, user.phone);
-        initialValues.put(PairingColumns.COL_SHOW_NOTIF, user.showNotification);
+        initialValues.put(PairingColumns.COL_NAME, vo.name);
+        initialValues.put(PairingColumns.COL_PHONE, vo.phone);
+        initialValues.put(PairingColumns.COL_SHOW_NOTIF, vo.showNotification);
         // secu
-        PairingAuthorizeTypeEnum authorizeType = user.authorizeType != null ? user.authorizeType : PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
+        PairingAuthorizeTypeEnum authorizeType = vo.authorizeType != null ? vo.authorizeType : PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
         initialValues.put(PairingColumns.COL_AUTHORIZE_TYPE, authorizeType.getCode());
         return initialValues;
     }
