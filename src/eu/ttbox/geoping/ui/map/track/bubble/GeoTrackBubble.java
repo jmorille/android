@@ -26,6 +26,8 @@ public class GeoTrackBubble extends FrameLayout {
 	// Display
 	private LinearLayout layout;
 	private TextView nameTextView;
+    private TextView providerTextView;
+	
 	private TextView timeTextView;
 	private TextView coordTextView;
 	private TextView accuracyTextView;
@@ -42,10 +44,10 @@ public class GeoTrackBubble extends FrameLayout {
 		layout = new LinearLayout(context);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.map_geotrack_bubble, layout);
-
+		
 		// Init fields
 		this.nameTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_name);
-
+		this.providerTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_provider);
 		this.timeTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_time);
 		this.coordTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_coord);
 		this.accuracyTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_accuracy);
@@ -79,7 +81,8 @@ public class GeoTrackBubble extends FrameLayout {
 			// Date $Time
 			String dateString = String.format(getResources().getString(R.string.geotrack_time_dateformat), geoTrack.getTimeAsDate());
 			timeTextView.setText(dateString);
-			// Coord
+			providerTextView.setText( geoTrack.getProvider() ); 
+	       	// Coord
 			double lat = geoTrack.getLatitude();
 			double lng = geoTrack.getLongitude();
 			String coordString = String.format(Locale.US, "(%.6f, %.6f)", lat, lng);
@@ -89,6 +92,7 @@ public class GeoTrackBubble extends FrameLayout {
 			} else {
 				coordTextView.setVisibility(GONE);
 			}
+		 
 			// Accuracy
 			if (geoTrack.hasAccuracy()) {
 				accuracyTextView.setText((int) geoTrack.getAccuracy() + "m");

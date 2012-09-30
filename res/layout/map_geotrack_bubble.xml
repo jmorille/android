@@ -17,6 +17,10 @@
         style="@style/mylocation_dialog_text"
         android:text="Time" />
     
+      <TextView
+        android:id="@+id/map_geotrack_bubbleView_provider"
+        style="@style/mylocation_dialog_text"
+        android:text="Provider" />
       
     <LinearLayout
         android:layout_width="wrap_content"
