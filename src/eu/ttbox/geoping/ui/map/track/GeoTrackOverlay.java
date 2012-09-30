@@ -30,7 +30,6 @@ import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.location.Address;
@@ -86,7 +85,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
     // Cached
     private Point myScreenCoords = new Point();
-    private Path geoTracksPath = new Path();
+    private Point lastScreenCoords = new Point(); 
 
     // Paint
     private Paint mPaint;
@@ -309,13 +308,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             return;
         }
         MapView.Projection p = mapView.getProjection();
-        // Draw Geo Tracks
-        // Path geoTracksPath = computePath(mapView, geoTracks);
-        // if (geoTracksPath != null) {
-        //
-        // }
-        // Temp Point
-        geoTracksPath.rewind();
+ 
         int idx = 0;
         int geoTrackSize = geoTracks.size();
         for (GeoTrack geoTrack : geoTracks) {
@@ -324,22 +317,20 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             p.toMapPixels(geoPoint, myScreenCoords);
             // Line Path
             boolean isLast = geoTrackSize == idx;
-            if (idx == 1) {
-                geoTracksPath.moveTo(myScreenCoords.x, myScreenCoords.y);
-            } else {
-                geoTracksPath.lineTo(myScreenCoords.x, myScreenCoords.y);
-            }
+            if (idx > 1) {  
+                canvas.drawLine(lastScreenCoords.x, lastScreenCoords.y, myScreenCoords.x, myScreenCoords.y, mPaint);
+             }
             // Point
-            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8, mGeoPointPaint);
+            canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 4, mGeoPointPaint);
             if (isLast) {
+                canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 8, mGeoPointAccuracyCirclePaintBorder);
                 canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 12, mGeoPointAccuracyCirclePaintBorder);
-                canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 16, mGeoPointAccuracyCirclePaintBorder);
             }
-        }
-
-        if (idx > 1) {
-            canvas.drawPath(geoTracksPath, mPaint);
-        }
+            // End Loop
+            lastScreenCoords.x = myScreenCoords.x;
+            lastScreenCoords.y = myScreenCoords.y;
+        } 
+        
         // Draw Selected
         if (selectedGeoTrack != null) {
             // Select Point
@@ -562,8 +553,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-            geoTracks.clear();
-            geoTracksPath = null;
+            geoTracks.clear(); 
         }
 
     };
