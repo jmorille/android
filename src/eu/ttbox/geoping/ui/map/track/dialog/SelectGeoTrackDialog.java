@@ -119,7 +119,7 @@ public class SelectGeoTrackDialog extends AlertDialog {
             String selection = null;
             String[] selectionArgs = null;
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(getContext(), PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(getContext(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 

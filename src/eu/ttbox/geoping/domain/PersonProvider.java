@@ -17,16 +17,17 @@ public class PersonProvider extends ContentProvider {
     private static final String TAG = "PersonProvider";
 
     // Constante
-  
+
     // MIME types used for searching words or looking up a single definition
     public static final String PERSONS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/person";
     public static final String PERSON_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/person";
 
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.PersonProvider";
-        public static final Uri CONTENT_URI_PERSON = Uri.parse("content://" + AUTHORITY + "/person");
-        // public static final Uri CONTENT_URI_GET_PRODUCT =
-        // Uri.parse("content://" + AUTHORITY + "/person/");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/person");
+
+        public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");
+
     }
 
     private PersonDatabase personDatabase;
@@ -34,8 +35,9 @@ public class PersonProvider extends ContentProvider {
     // UriMatcher stuff
     private static final int PERSONS = 0;
     private static final int PERSON_ID = 1;
-    private static final int SEARCH_SUGGEST = 2;
-    private static final int REFRESH_SHORTCUT = 3;
+    private static final int PHONE_FILTER = 2;
+    private static final int SEARCH_SUGGEST = 3;
+    private static final int REFRESH_SHORTCUT = 4;
 
     private static final UriMatcher sURIMatcher = buildUriMatcher();
 
@@ -48,6 +50,11 @@ public class PersonProvider extends ContentProvider {
         // to get definitions...
         matcher.addURI(Constants.AUTHORITY, "person", PERSONS);
         matcher.addURI(Constants.AUTHORITY, "person/#", PERSON_ID);
+        /*
+         * <pre> Uri lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_URI,
+         * Uri.encode(phoneNumber)); </pre>
+         */
+        matcher.addURI(Constants.AUTHORITY, "person/phone_lookup/*", PHONE_FILTER);
         // to get suggestions...
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
@@ -99,6 +106,10 @@ public class PersonProvider extends ContentProvider {
             // return search(selectionArgs[0]);
         case PERSON_ID:
             return getPerson(uri);
+        case PHONE_FILTER:
+            String phone = uri.getLastPathSegment();
+            String phoneDecoder = Uri.decode(phone);
+            return searchForPhoneNumber(phoneDecoder, projection, sortOrder);
         case REFRESH_SHORTCUT:
             return refreshShortcut(uri);
         default:
@@ -120,8 +131,20 @@ public class PersonProvider extends ContentProvider {
         return personDatabase.getEntityMatches(columns, query, null);
     }
 
+    private Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) {
+        String[] projection = _projection == null ? PersonColumns.ALL_KEYS : _projection;
+        // Normalise For search
+        // String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+        // String minMatch =
+        // PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+        // Prepare Query
+        String selection = String.format("%s = ?", PersonColumns.COL_PHONE);
+        String[] selectionArgs = new String[] { number };
+        return personDatabase.queryEntities(projection, selection, selectionArgs, sortOrder);
+    }
+
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
-        String[] projection = _projection == null ? PersonDatabase.PersonColumns.ALL_KEYS : _projection;
+        String[] projection = _projection == null ? PersonColumns.ALL_KEYS : _projection;
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
@@ -178,7 +201,7 @@ public class PersonProvider extends ContentProvider {
             long personId = personDatabase.insertEntity(values);
             Uri personUri = null;
             if (personId > -1) {
-                personUri = Uri.withAppendedPath(Constants.CONTENT_URI_PERSON, String.valueOf(  personId));
+                personUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(personId));
                 getContext().getContentResolver().notifyChange(uri, null);
             }
             return personUri;
@@ -202,7 +225,7 @@ public class PersonProvider extends ContentProvider {
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
-        if (count>0) {
+        if (count > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return count;

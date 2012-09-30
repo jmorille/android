@@ -51,7 +51,7 @@ public class Intents {
         if (entityId == null) {
             intent.setAction(Intent.ACTION_INSERT);
         } else {
-            Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, String.valueOf(entityId));
+            Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, String.valueOf(entityId));
             intent.setAction(Intent.ACTION_EDIT).putExtra(EXTRA_SMS_PHONE, entityId).setData(entityUri);
         }
         return intent;

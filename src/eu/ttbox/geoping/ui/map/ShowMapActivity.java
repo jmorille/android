@@ -374,7 +374,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         // Add person layer
         if (geoTrackOverlay == null) {
             Person person = null;
-            Cursor cursor = getContentResolver().query(PersonProvider.Constants.CONTENT_URI_PERSON, null, PersonColumns.SELECT_BY_PHONE_NUMBER, new String[] { phone }, null);
+            Cursor cursor = getContentResolver().query(PersonProvider.Constants.CONTENT_URI, null, PersonColumns.SELECT_BY_PHONE_NUMBER, new String[] { phone }, null);
             if (cursor.moveToFirst()) {
                 PersonHelper helper = new PersonHelper().initWrapper(cursor);
                 person = helper.getEntity(cursor);
@@ -448,7 +448,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
             String selection = null;
             String[] selectionArgs = null;
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(getApplicationContext(), PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(getApplicationContext(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 

@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
-import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 
@@ -26,10 +25,8 @@ public class PairingProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.PairingProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/pairing");
-        // public static final Uri CONTENT_URI_GET_PRODUCT =
-        // Uri.parse("content://" + AUTHORITY + "/pairing/");
 
-        public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");;
+        public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");
     }
 
     private PairingDatabase pairingDatabase;
@@ -125,21 +122,21 @@ public class PairingProvider extends ContentProvider {
     }
 
     private Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) {
-        String[] projection = _projection == null ? PairingDatabase.PairingColumns.ALL_KEYS : _projection;
-        // Normalise For search 
+        String[] projection = _projection == null ? PairingColumns.ALL_KEYS : _projection;
+        // Normalise For search
         // String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
         // String minMatch =
         // PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
         // Prepare Query
         String selection = String.format("%s = ?", PairingColumns.COL_PHONE);
-        String [] selectionArgs = new String[] { number };
-        return pairingDatabase.queryEntities(projection, selection, selectionArgs, sortOrder); 
+        String[] selectionArgs = new String[] { number };
+        return pairingDatabase.queryEntities(projection, selection, selectionArgs, sortOrder);
     }
 
     private Cursor getSuggestions(String query) {
         query = query.toLowerCase();
-        String[] columns = new String[] { PairingDatabase.PairingColumns.COL_ID, //
-                PairingDatabase.PairingColumns.COL_NAME, PairingDatabase.PairingColumns.COL_PHONE, //
+        String[] columns = new String[] { PairingColumns.COL_ID, //
+                PairingColumns.COL_NAME, PairingColumns.COL_PHONE, //
                 SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_TEXT_2, //
                 /*
                  * SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, (only if you want
@@ -151,7 +148,7 @@ public class PairingProvider extends ContentProvider {
     }
 
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
-        String[] projection = _projection == null ? PairingDatabase.PairingColumns.ALL_KEYS : _projection;
+        String[] projection = _projection == null ? PairingColumns.ALL_KEYS : _projection;
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
@@ -160,17 +157,17 @@ public class PairingProvider extends ContentProvider {
 
     private Cursor getPairing(Uri uri) {
         String rowId = uri.getLastPathSegment();
-        String[] columns = PairingDatabase.PairingColumns.ALL_KEYS;
+        String[] columns = PairingColumns.ALL_KEYS;
         return pairingDatabase.getEntityById(rowId, columns);
     }
 
     private Cursor refreshShortcut(Uri uri) {
         Log.i(TAG, "refreshShortcut uri " + uri);
         String rowId = uri.getLastPathSegment();
-        String[] columns = new String[] { PairingDatabase.PairingColumns.COL_ID //
+        String[] columns = new String[] { PairingColumns.COL_ID //
                 , BaseColumns._ID //
-                // , PairingDatabase.PairingColumns.KEY_LASTNAME,
-                // PairingDatabase.PairingColumns.KEY_FIRSTNAME //
+                // , PairingColumns.KEY_LASTNAME,
+                // PairingColumns.KEY_FIRSTNAME //
                 , SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_TEXT_2 //
         // , SearchManager.SUGGEST_COLUMN_SHORTCUT_ID,
         // SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID

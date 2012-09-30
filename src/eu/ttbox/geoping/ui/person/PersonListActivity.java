@@ -147,7 +147,7 @@ public class PersonListActivity extends FragmentActivity {
             String[] selectionArgs = null;
             String queryString = null;
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(PersonListActivity.this, PersonProvider.Constants.CONTENT_URI_PERSON, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(PersonListActivity.this, PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 
@@ -156,7 +156,7 @@ public class PersonListActivity extends FragmentActivity {
             Log.d(TAG, "onLoadFinished");
             // Display List
             listAdapter.swapCursor(cursor);
-            cursor.setNotificationUri(getContentResolver(), PersonProvider.Constants.CONTENT_URI_PERSON);
+            cursor.setNotificationUri(getContentResolver(), PersonProvider.Constants.CONTENT_URI);
             // Display Counter
             int count = 0;
             if (cursor != null) {

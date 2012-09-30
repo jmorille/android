@@ -138,7 +138,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
     // ===========================================================
 
     public void onDeleteClick() {
-        Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, entityId);
+        Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, entityId);
         int deleteCount = getContentResolver().delete(entityUri, null, null);
         Log.d(TAG, "Delete %s entity successuf");
         if (deleteCount > 0) {
@@ -277,7 +277,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         // Content
         Uri uri;
         if (entityId == null) {
-            uri = getContentResolver().insert(PersonProvider.Constants.CONTENT_URI_PERSON, values);
+            uri = getContentResolver().insert(PersonProvider.Constants.CONTENT_URI, values);
             setResult(Activity.RESULT_OK);
         } else {
             uri = getUriEntity();
@@ -295,7 +295,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
     }
 
     private Uri getUriEntity() {
-        return Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, entityId);
+        return Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, entityId);
     }
 
     // ===========================================================
@@ -308,7 +308,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
             String entityId = args.getCharSequence(Intents.EXTRA_SMS_PHONE).toString();
-            Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PERSON, entityId);
+            Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, entityId);
             // Loader
             CursorLoader cursorLoader = new CursorLoader(PersonEditActivity.this, entityUri, null, null, null, null);
             return cursorLoader;

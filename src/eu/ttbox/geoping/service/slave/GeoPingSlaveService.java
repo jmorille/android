@@ -49,6 +49,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.Pairing;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
+import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
@@ -163,24 +164,17 @@ public class GeoPingSlaveService extends WorkerService {
                 break;
             case AUTHORIZE_ALWAYS:
                 registerGeoPingRequest(phone, params);
+                // Display Notification GeoPing
+                if (pairing.showNotification) {
+                    showNotificationGeoPing(phone, params);
+                }
                 break;
             case AUTHORIZE_REQUEST:
                 showNotificationNewPingRequestConfirm(phone, params, GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM);
                 break;
             default:
                 break;
-            }
-
-            // if (isAuthorizePhoneAlways(phone)) {
-            // registerGeoPingRequest(phone, params);
-            // } else if (!isAuthorizePhoneNever(phone)) {
-            // showNotificationNewPingRequestConfirm(phone, params,
-            // GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM);
-            // } else {
-            // Log.i(TAG, "Ignore Never Authorize Geoping request from phone " +
-            // phone);
-            // }
-
+            } 
         } else if (Intents.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE.equals(action)) {
             // GeoPing Pairing User ressponse
             manageNotificationAuthorizeIntent(intent.getExtras());
@@ -190,16 +184,7 @@ public class GeoPingSlaveService extends WorkerService {
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
 
             managePairingRequest(phone, params);
-
-            // if (isAuthorizePhoneAlways(phone)) {
-            // long personId =
-            // SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1l);
-            // sendPairingResponse(phone, personId);
-            // } else if (!isAuthorizePhoneNever(phone)) {
-            // showNotificationNewPingRequestConfirm(phone, params,
-            // GeopingNotifSlaveTypeEnum.PAIRING);
-            // // TODO Send pairing Response
-            // }
+ 
         }
     }
 
@@ -355,7 +340,6 @@ public class GeoPingSlaveService extends WorkerService {
         }
         return result;
     }
- 
 
     // ===========================================================
     // Other
@@ -476,34 +460,51 @@ public class GeoPingSlaveService extends WorkerService {
     // Notification
     // ===========================================================
 
-    private void showNotificationNewPingRequestPost(String phone, Bundle params) {
+    private void showNotificationGeoPing(String phone, Bundle params) {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // Contact Name
+        ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
+        String contactDisplayName = phone;
+        Bitmap photo = null;
+        if (contact != null) {
+            if (contact.displayName != null && contact.displayName.length() > 0) {
+                contactDisplayName = contact.displayName;
+            }
+            photo = ContactHelper.openPhotoBitmap(this, contact.id);
+        }
         // Create Notifiation
-        Notification notification = new NotificationCompat.Builder(this) //
+        Builder notificationBuilder = new NotificationCompat.Builder(this) //
                 .setDefaults(Notification.DEFAULT_ALL) //
                 .setSmallIcon(R.drawable.ic_stat_notif_icon) //
                 .setWhen(System.currentTimeMillis()) //
                 .setAutoCancel(true) //
-                .setContentTitle(getString(R.string.notif_geoping_response)) //
-                .setContentText(phone) //
-                .setPriority(Notification.PRIORITY_DEFAULT) //
-                .build();
+                .setContentTitle(getString(R.string.notif_geoping)) //
+                .setContentText(contactDisplayName); // 
+        if (photo != null) {
+            notificationBuilder.setLargeIcon(photo);
+        } else {
+            Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_stat_notif_icon);
+            notificationBuilder.setLargeIcon(icon);
+        }
+        Notification notification = notificationBuilder.build();
         // Show
+//        int notifId = SHOW_GEOPING_REQUEST_NOTIFICATION_ID + phone.hashCode();
+//        Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
         mNotificationManager.notify(SHOW_GEOPING_REQUEST_NOTIFICATION_ID, notification);
     }
 
     private void showNotificationNewPingRequestConfirm(String phone, Bundle params, GeopingNotifSlaveTypeEnum onlyPairing) {
-        String phoneNumber = phone;
+        String contactDisplayName = phone;
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
         // Contact Name
-        ContactVo contact = searchContactForPhone(phone);
+        ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
         Bitmap photo = null;
         if (contact != null) {
             if (contact.displayName != null && contact.displayName.length() > 0) {
-                phoneNumber = contact.displayName;
+                contactDisplayName = contact.displayName;
             }
-            photo = openPhotoBitmap(contact.id);
+            photo = ContactHelper.openPhotoBitmap(this, contact.id);
         }
         // Title
         String title;
@@ -535,7 +536,7 @@ public class GeoPingSlaveService extends WorkerService {
 
         // View
         contentView.setTextViewText(R.id.notif_geoping_title, title);
-        contentView.setTextViewText(R.id.notif_geoping_phone, phoneNumber);
+        contentView.setTextViewText(R.id.notif_geoping_phone, contactDisplayName);
         // Manage Button Confirmation
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_no, PendingIntent.getService(this, 0, //
                 Intents.authorizePhone(this, phone, params, AuthorizePhoneTypeEnum.NO, notifId, onlyPairing),//
@@ -557,7 +558,7 @@ public class GeoPingSlaveService extends WorkerService {
                 .setWhen(System.currentTimeMillis()) //
                 .setAutoCancel(true) //
                 .setContentTitle(title) //
-                .setContentText(phoneNumber) //
+                .setContentText(contactDisplayName) //
                 .setContent(contentView); //
         if (photo != null) {
             notificationBuilder.setLargeIcon(photo);
@@ -568,69 +569,6 @@ public class GeoPingSlaveService extends WorkerService {
         Notification notification = notificationBuilder.build();
         // Show
         mNotificationManager.notify(notifId, notification);
-    }
-
-    private boolean isPermissionReadContact() {
-        return PackageManager.PERMISSION_GRANTED == getPackageManager().checkPermission("android.permission.READ_CONTACTS", getPackageName());
-    }
-
-    private ContactVo searchContactForPhone(String phoneNumber) {
-        String contactName = null;
-        long contactId = -1l;
-        if (isPermissionReadContact()) {
-            Log.d(TAG, String.format("Search Contact Name for Phone [%s]", phoneNumber));
-            Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
-            Cursor cur = getContentResolver().query(uri, new String[] { PhoneLookup.DISPLAY_NAME, PhoneLookup._ID }, null, null, null);
-
-            try {
-                if (cur != null && cur.moveToFirst()) {
-                    contactName = cur.getString(cur.getColumnIndex(PhoneLookup.DISPLAY_NAME));
-                    contactId = cur.getLong(cur.getColumnIndexOrThrow(PhoneLookup._ID));
-                }
-            } finally {
-                cur.close();
-            }
-        }
-        Log.d(TAG, String.format("Found Contact %s Name for Phone [%s] : %s", contactId, phoneNumber, contactName));
-        ContactVo result = null;
-        if (contactId != -1l) {
-            result = new ContactVo(contactId, contactName);
-        }
-        return result;
-    }
-
-    public Bitmap openPhotoBitmap(long contactId) {
-        Bitmap photo = null;
-        InputStream is = openPhoto(Long.valueOf(contactId));
-        if (is != null) {
-            photo = BitmapFactory.decodeStream(is);
-            try {
-                is.close();
-            } catch (IOException e) {
-                Log.e(TAG, "Could not close Contact Photo Input Stream");
-            }
-        }
-        return photo;
-    }
-
-    public InputStream openPhoto(long contactId) {
-        Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId);
-        Uri photoUri = Uri.withAppendedPath(contactUri, Contacts.Photo.CONTENT_DIRECTORY);
-        Cursor cursor = getContentResolver().query(photoUri, new String[] { Contacts.Photo.PHOTO }, null, null, null);
-        if (cursor == null) {
-            return null;
-        }
-        try {
-            if (cursor.moveToFirst()) {
-                byte[] data = cursor.getBlob(0);
-                if (data != null) {
-                    return new ByteArrayInputStream(data);
-                }
-            }
-        } finally {
-            cursor.close();
-        }
-        return null;
     }
 
     // ===========================================================
