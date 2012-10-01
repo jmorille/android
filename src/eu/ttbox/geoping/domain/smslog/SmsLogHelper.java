@@ -42,7 +42,7 @@ public class SmsLogHelper {
 		user.setTime(timeIdx > -1 ? cursor.getLong(timeIdx) : SmsLog.UNSET_TIME);
 		user.setAction(actionIdx > -1 ? cursor.getString(actionIdx) : null);
 		user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
-		user.setSmsLogType(smsLogTypeIdx > -1 ? SmsLogTypeEnum.getByCode(cursor.getInt(smsLogTypeIdx)) : null);
+		user.setSmsLogType(smsLogTypeIdx > -1 ? getSmsLogType(cursor ) : null);
 		user.setMessage(messageIdx > -1 ? cursor.getString(messageIdx) : null);
 		return user;
 	}
@@ -64,6 +64,11 @@ public class SmsLogHelper {
 		return cursor.getLong(idIdx);
 	}
 
+	
+	public Object setTextSmsLogAction(TextView view, Cursor cursor) { 
+		return setTextWithIdx(view, cursor, actionIdx); 
+	}
+	
 	public SmsLogHelper setTextSmsLogMessage(TextView view, Cursor cursor) {
 		return setTextWithIdx(view, cursor, messageIdx);
 	}
@@ -74,6 +79,10 @@ public class SmsLogHelper {
 
 	public String getSmsLogPhone(Cursor cursor) {
 		return cursor.getString(phoneIdx);
+	}
+	
+	public SmsLogTypeEnum getSmsLogType(Cursor cursor) {
+		return  SmsLogTypeEnum.getByCode(cursor.getInt(smsLogTypeIdx));
 	}
 
 	public static ContentValues getContentValues(SmsLog vo) {
@@ -104,5 +113,7 @@ public class SmsLogHelper {
 		}
 		return values;
 	}
+
+
 
 }

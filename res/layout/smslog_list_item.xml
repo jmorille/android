@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/entity_list_item_container"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="10dip" >
+
+    <TextView
+        android:id="@+id/smslog_list_item_time"
+        style="@style/entity_list_item" />
+
+    <TextView
+        android:id="@+id/smslog_list_item_phone"
+        style="@style/entity_list_item"
+        android:layout_toRightOf="@id/smslog_list_item_time" />
+
+       <TextView
+        android:id="@+id/smslog_list_item_action"
+        style="@style/entity_list_item"
+        android:layout_toRightOf="@id/smslog_list_item_phone" />
+    
+ 
+
+</RelativeLayout>
