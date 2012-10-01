@@ -65,7 +65,7 @@ public class SmsLogHelper {
 	}
 
 	
-	public Object setTextSmsLogAction(TextView view, Cursor cursor) { 
+	public SmsLogHelper setTextSmsLogAction(TextView view, Cursor cursor) { 
 		return setTextWithIdx(view, cursor, actionIdx); 
 	}
 	
