@@ -37,17 +37,9 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         ViewHolder holder = (ViewHolder) view.getTag();
         // Bind Value
         helper.setTextSmsLogAction(holder.actionText, cursor)//
-                .setTextSmsLogTime(holder.timeText, cursor);
+                .setTextSmsLogTime(holder.timeText, cursor) //
                 .setTextSmsLogPhone(holder.phoneText, cursor);
-        // Button
-        final String entityId = helper.getSmsLogIdAsString(cursor);
-        final String phoneNumber = helper.getSmsLogPhone(cursor);
-        holder.pingButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
-            }
-        });
+       
     }
 
     @Override

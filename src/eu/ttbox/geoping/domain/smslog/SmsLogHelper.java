@@ -77,9 +77,15 @@ public class SmsLogHelper {
 		return setTextWithIdx(view, cursor, phoneIdx);
 	}
 
+	public SmsLogHelper setTextSmsLogTime(TextView view, Cursor cursor) {
+		return setTextWithIdx(view, cursor, timeIdx);
+	}
+	
 	public String getSmsLogPhone(Cursor cursor) {
 		return cursor.getString(phoneIdx);
 	}
+	
+	
 	
 	public SmsLogTypeEnum getSmsLogType(Cursor cursor) {
 		return  SmsLogTypeEnum.getByCode(cursor.getInt(smsLogTypeIdx));
