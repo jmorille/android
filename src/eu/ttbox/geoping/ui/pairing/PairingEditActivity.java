@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.PhoneLookup;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -19,9 +20,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PairingProvider;
+import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 
@@ -41,7 +44,8 @@ public class PairingEditActivity extends FragmentActivity {
     private EditText nameEditText;
     private EditText phoneEditText;
     private CheckBox showNotificationCheckBox;
-
+    private TextView authorizeTypeTextView;
+    
     // Instance
     // private String entityId;
     private Uri entityUri;
@@ -58,7 +62,8 @@ public class PairingEditActivity extends FragmentActivity {
         nameEditText = (EditText) findViewById(R.id.pairing_name);
         phoneEditText = (EditText) findViewById(R.id.pairing_phone);
         showNotificationCheckBox = (CheckBox) findViewById(R.id.paring_show_notification);
-
+        authorizeTypeTextView = (TextView) findViewById(R.id.pairing_authorize_type);
+        
         // Intents
         handleIntent(getIntent());
     }
@@ -142,7 +147,8 @@ public class PairingEditActivity extends FragmentActivity {
     public void onSaveClick() {
         String name = nameEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
-        Uri uri = doSavePairing(name, phone);
+        // TODO Select authorizeType
+        Uri uri = doSavePairing(name, phone, null);
         setResult(Activity.RESULT_OK);
         finish();
     }
@@ -159,6 +165,8 @@ public class PairingEditActivity extends FragmentActivity {
      * @param v
      */
     public void onSelectContactClick(View v) {
+//        String phoneNumber = phoneEditText.getText().toString();
+//        Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
         // run
@@ -217,7 +225,7 @@ public class PairingEditActivity extends FragmentActivity {
                 String name = c.getString(0);
                 String phone = c.getString(1);
                 int type = c.getInt(2);
-                doSavePairing(name, phone);
+                doSavePairing(name, phone, null);
                 // showSelectedNumber(type, number);
             }
         } finally {
@@ -237,14 +245,16 @@ public class PairingEditActivity extends FragmentActivity {
         return cleanPhone;
     }
 
-    private Uri doSavePairing(String name, String phoneDirty) {
+    private Uri doSavePairing(String name, String phoneDirty, PairingAuthorizeTypeEnum authorizeType) {
         String phone = cleanPhone(phoneDirty);
         setPairing(name, phone);
         // Prepare db insert
         ContentValues values = new ContentValues();
         values.put(PairingColumns.COL_NAME, name);
         values.put(PairingColumns.COL_PHONE, phone);
-        values.put(PairingColumns.COL_AUTHORIZE_TYPE, mPaint.getColor());
+        if (authorizeType!=null) {
+             authorizeType.writeTo(values);
+        }
         // Content
         Uri uri;
         if (entityUri == null) {
@@ -290,7 +300,12 @@ public class PairingEditActivity extends FragmentActivity {
                 PairingHelper helper = new PairingHelper().initWrapper(cursor);
                 helper.setTextPairingName(nameEditText, cursor)//
                         .setTextPairingPhone(phoneEditText, cursor)//
+                         .setTextPairingAuthorizeType(authorizeTypeTextView, cursor)//
                         .setCheckBoxPairingShowNotif(showNotificationCheckBox, cursor);
+                PairingAuthorizeTypeEnum authType =  helper.getPairingAuthorizeTypeEnum(cursor);
+                if (PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST.equals(authType)) {
+                    showNotificationCheckBox.setVisibility(View.GONE);
+                }
             }
         }
 

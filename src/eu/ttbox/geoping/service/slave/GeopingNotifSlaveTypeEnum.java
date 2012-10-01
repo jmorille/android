@@ -4,7 +4,7 @@ public enum GeopingNotifSlaveTypeEnum {
 
     PAIRING, //
     GEOPING_REQUEST_CONFIRM, //
-    GEOPING_NOTIF;//
+    GEOPING_REQUEST_CONFIRM_FIRST;//
 
     public static GeopingNotifSlaveTypeEnum getByOrdinal(int notifTypeOrdinal) {
         if (notifTypeOrdinal < 0 || notifTypeOrdinal > GeopingNotifSlaveTypeEnum.values().length) {

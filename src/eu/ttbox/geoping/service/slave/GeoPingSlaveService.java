@@ -30,7 +30,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.telephony.SmsManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -47,7 +46,6 @@ import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
-import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.core.WorkerService;
@@ -146,15 +144,24 @@ public class GeoPingSlaveService extends WorkerService {
 			switch (pairing.authorizeType) {
 			case AUTHORIZE_NEVER:
 				Log.i(TAG, "Ignore Geoping (Never Authorize) request from phone " + phone);
+				// Show Blocking Notification
+				if (pairing.showNotification) {
+				    showNotificationGeoPing(phone, params, false);
+				}
 				break;
 			case AUTHORIZE_ALWAYS:
+			    Log.i(TAG, "Accept Geoping (always Authorize) request from phone " + phone);
 				registerGeoPingRequest(phone, params);
 				// Display Notification GeoPing
 				if (pairing.showNotification) {
-					showNotificationGeoPing(phone, params);
+					showNotificationGeoPing(phone, params, true);
 				}
 				break;
 			case AUTHORIZE_REQUEST:
+			    GeopingNotifSlaveTypeEnum type = GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM;
+			    if (AppConstants.UNSET_ID == pairing.id) {
+			        type = GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM_FIRST;
+			    }
 				showNotificationNewPingRequestConfirm(phone, params, GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM);
 				break;
 			default:
@@ -219,7 +226,7 @@ public class GeoPingSlaveService extends WorkerService {
 
 		// ### Manage Pairing Type
 		// #############################
-		Log.d(TAG, String.format("manageAuthorizeIntent for phone %s with security policy %s (%s)", phone, type, type));
+		Log.d(TAG, String.format("manageAuthorizeIntent for phone %s with User security choice %s", phone, type));
 		boolean positifResponse = false;
 		switch (type) {
 		case NEVER:
@@ -231,6 +238,9 @@ public class GeoPingSlaveService extends WorkerService {
 			break;
 		case YES:
 			positifResponse = true;
+			if (AppConstants.UNSET_ID == pairing.id) {
+			    doPairingPhone(pairing, PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST, personId);
+			}
 			break;
 		default:
 			Log.w(TAG, "Not manage PhoneAuthorizeTypeEnum for " + type);
@@ -269,6 +279,7 @@ public class GeoPingSlaveService extends WorkerService {
 			// Create
 			pairing.setPairingTime(System.currentTimeMillis());
 			ContentValues values = PairingHelper.getContentValues(pairing);
+			 authorizeType.writeTo(values);
 			Uri pairingUri = getContentResolver().insert(PairingProvider.Constants.CONTENT_URI, values);
 			if (pairingUri != null) {
 				String entityId = pairingUri.getLastPathSegment();
@@ -467,7 +478,7 @@ public class GeoPingSlaveService extends WorkerService {
 	// Notification
 	// ===========================================================
 
-	private void showNotificationGeoPing(String phone, Bundle params) {
+	private void showNotificationGeoPing(String phone, Bundle params, boolean authorizeIt) {
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// Contact Name
 		ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
@@ -485,8 +496,12 @@ public class GeoPingSlaveService extends WorkerService {
 				.setSmallIcon(R.drawable.ic_stat_notif_icon) //
 				.setWhen(System.currentTimeMillis()) //
 				.setAutoCancel(true) //
-				.setContentTitle(getString(R.string.notif_geoping)) //
-				.setContentText(contactDisplayName); //
+ 				.setContentText(contactDisplayName); //
+		if (authorizeIt) {
+		    notificationBuilder.setContentTitle(getString(R.string.notif_geoping)); //
+		} else {
+            notificationBuilder.setContentTitle(getString(R.string.notif_geoping_request_blocked)); //
+ 		}
 		if (photo != null) {
 			notificationBuilder.setLargeIcon(photo);
 		} else {
@@ -519,7 +534,8 @@ public class GeoPingSlaveService extends WorkerService {
 		String title;
 		switch (onlyPairing) {
 		case PAIRING:
-			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.GONE);
+			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_no, View.GONE);
+			contentView.setTextViewText(R.id.notif_geoping_confirm_button_yes, getText(R.string.notif_confirm_request_eachtime));
 			title = getString(R.string.notif_pairing);
 			break;
 		case GEOPING_REQUEST_CONFIRM:
@@ -527,12 +543,11 @@ public class GeoPingSlaveService extends WorkerService {
 			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_never, View.GONE);
 			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.GONE);
 			break;
-		case GEOPING_NOTIF:
+		case GEOPING_REQUEST_CONFIRM_FIRST:
 			title = getString(R.string.notif_geoping_request);
 			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.GONE);
 			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_no, View.GONE);
-			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_never, View.GONE);
-			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.GONE);
+ 			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.GONE);
 			break;
 		default:
 			title = getString(R.string.app_name);

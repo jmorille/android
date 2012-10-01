@@ -41,10 +41,20 @@ public class Pairing {
 		this.pairingTime = pairingTime;
 		 return this;
 	}
-
+ 
 	@Override
     public String toString() {
-        return "Person [id=" + id + ", name=" + name + ", phone=" + phone + "]";
+        StringBuilder sb = new StringBuilder().append("Pairing [");
+        sb.append("id=").append(id)//
+                .append(", phone=").append(phone)//
+                .append(", name=").append(name)//
+                .append(", authorizeType=").append(authorizeType)//
+                .append(", showNotification=").append(showNotification)//
+                // .append(", time=").append(time) //
+                .append(", pairingTime=").append(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS,%1$tL", pairingTime));
+
+        sb.append("]");
+        return sb.toString();
     }
 
 }

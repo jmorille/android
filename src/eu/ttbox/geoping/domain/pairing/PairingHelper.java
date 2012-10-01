@@ -42,11 +42,12 @@ public class PairingHelper {
         user.setId(idIdx > -1 ? cursor.getLong(idIdx) :  AppConstants.UNSET_ID);
         user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
-        user.setAuthorizeType(authorizeTypeIdx > -1 ? PairingAuthorizeTypeEnum.getByCode(cursor.getInt(authorizeTypeIdx)) : null);
+        user.setAuthorizeType(authorizeTypeIdx > -1 ? getPairingAuthorizeTypeEnum(cursor ) : null);
         user.setShowNotification(showNotificationIdx > -1 ? cursor.getInt(showNotificationIdx) == 1 ? true : false : false);
         user.setPairingTime(pairingTimeIdx > -1 ? cursor.getLong(pairingTimeIdx)  : AppConstants.UNSET_TIME );
         return user;
     }
+
 
     private PairingHelper setTextWithIdx(TextView view, Cursor cursor, int idx) {
         view.setText(cursor.getString(idx));
@@ -77,12 +78,21 @@ public class PairingHelper {
         return setTextWithIdx(view, cursor, phoneIdx);
     }
 
+    public PairingHelper setTextPairingAuthorizeType(TextView authorizeTypeTextView, Cursor cursor) {
+        PairingAuthorizeTypeEnum type = getPairingAuthorizeTypeEnum(cursor);
+        authorizeTypeTextView.setText(type.name());
+        return this;
+    }
     public PairingHelper setCheckBoxPairingShowNotif(CheckBox view, Cursor cursor) {
         boolean showNotif = cursor.getInt(showNotificationIdx) == 1;
         view.setChecked(showNotif);
         return this;
     }
 
+    public PairingAuthorizeTypeEnum getPairingAuthorizeTypeEnum(Cursor cursor) {
+        return PairingAuthorizeTypeEnum.getByCode(cursor.getInt(authorizeTypeIdx));
+     }
+    
     public String getPairingPhone(Cursor cursor) {
         return cursor.getString(phoneIdx);
     }
@@ -101,5 +111,7 @@ public class PairingHelper {
         initialValues.put(PairingColumns.COL_AUTHORIZE_TYPE, authorizeType.getCode());
         return initialValues;
     }
+
+  
 
 }

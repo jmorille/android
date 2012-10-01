@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!--     <color name="map_actionbar_color">#4B000000</color> -->
+
+    <color name="pairing_authorize_type_always">#4B00FF00</color>
+    <color name="pairing_authorize_type_never">#4BFF0000</color>
+    <color name="pairing_authorize_type_request">#4BFF00FF</color>
+    
+ 
+    
+</resources>

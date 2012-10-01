@@ -9,11 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
+import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 
 public class PairingListAdapter extends android.support.v4.widget.ResourceCursorAdapter {
 
-    private PersonHelper helper;
+    private PairingHelper helper;
 
     private boolean isNotBinding = true;
 
@@ -24,7 +26,7 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
 
     private void intViewBinding(View view, Context context, Cursor cursor) {
         // Init Cursor
-        helper = new PersonHelper().initWrapper(cursor);
+        helper = new PairingHelper().initWrapper(cursor);
         isNotBinding = false;
     }
 
@@ -35,18 +37,33 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
             intViewBinding(view, context, cursor);
         }
         ViewHolder holder = (ViewHolder) view.getTag();
-        // Bind Value
-        helper.setTextPersonName(holder.nameText, cursor)//
-                .setTextPersonPhone(holder.phoneText, cursor);
+        // Bind Value 
+        final String phoneNumber = helper.getPairingPhone(cursor);
+        holder.phoneText.setText(phoneNumber);
+        helper.setTextPairingName(holder.nameText, cursor);
         // Button
-        final String entityId = helper.getPersonIdAsString(cursor);
-        final String phoneNumber = helper.getPersonPhone(cursor);
         holder.pingButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
             }
         });
+        // Backgroud
+        PairingAuthorizeTypeEnum authType =  helper.getPairingAuthorizeTypeEnum(cursor);
+        switch (authType) {
+        case AUTHORIZE_ALWAYS:
+            view.setBackgroundResource(R.color.pairing_authorize_type_always);
+            break;
+        case AUTHORIZE_NEVER:
+            view.setBackgroundResource(R.color.pairing_authorize_type_never);
+             break;
+        case AUTHORIZE_REQUEST:
+            view.setBackgroundResource(R.color.pairing_authorize_type_request);
+             break; 
+        default:
+            view.setBackgroundResource(android.R.color.transparent);
+            break;
+        }
     }
 
     @Override

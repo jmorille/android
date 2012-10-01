@@ -3,12 +3,9 @@ package eu.ttbox.geoping.ui.smslog;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 
 public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorAdapter {
@@ -18,8 +15,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
     private boolean isNotBinding = true;
 
     public SmsLogListAdapter(Context context, Cursor c, int flags) {
-        super(context, R.layout.smslog_list_item, c, flags); // if >10 add
-                                                                   // ", flags"
+        super(context, R.layout.smslog_list_item, c, flags); 
     }
 
     private void intViewBinding(View view, Context context, Cursor cursor) {
@@ -29,8 +25,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
     }
 
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
-
+    public void bindView(View view, final Context context, Cursor cursor) { 
         if (isNotBinding) {
             intViewBinding(view, context, cursor);
         }
@@ -39,7 +34,6 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         helper.setTextSmsLogAction(holder.actionText, cursor)//
                 .setTextSmsLogTime(holder.timeText, cursor) //
                 .setTextSmsLogPhone(holder.phoneText, cursor);
-       
     }
 
     @Override
@@ -53,7 +47,6 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         // and store it inside the layout.
         view.setTag(holder);
         return view;
-
     }
 
     static class ViewHolder {

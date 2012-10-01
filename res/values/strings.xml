@@ -10,18 +10,21 @@
     <string name="cancel_button">Annuler</string>
 
     <!-- Encryption -->
-    <string name="no_geoping_description">\n\nPlease install \'GeoPing\' from the Market\n\n</string>
+    <string name="no_geoping_description">Please install \'GeoPing\' from the Market (https://play.google.com/store/apps/details?id=eu.ttbox.geoping)</string>
     <string name="geoping_encrypted_message">GeoPing encrypted message</string>
 
     <!-- GeoTrack Notification -->
     <string name="notif_geoping">GeoPing</string>
     <string name="notif_geoping_response">GeoPing réponse</string>
-    <string name="notif_geoping_request">GeoPing Appariement</string>
+    <string name="notif_geoping_request">GeoPing</string>
+    <string name="notif_geoping_request_blocked">GeoPing Bloqué</string> 
     <string name="notif_pairing">GeoPing Appariement</string>
     <string name="notif_pairing_always">Toujours</string>
-    <string name="notif_pairing_never">Blacklist</string>
+    <string name="notif_pairing_never">Bloquer</string>
     <string name="notif_confirm_yes">Oui</string>
     <string name="notif_confirm_no">Non</string>
+    <string name="notif_confirm_request_eachtime">Ask</string>
+    
 
     <!-- GeoTrack -->
     <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
