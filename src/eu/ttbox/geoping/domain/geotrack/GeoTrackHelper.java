@@ -6,12 +6,13 @@ import android.database.Cursor;
 import android.location.Address;
 import android.os.Bundle;
 import android.widget.TextView;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.core.wrapper.BundleWrapper;
 import eu.ttbox.geoping.domain.core.wrapper.ContentValuesWrapper;
 import eu.ttbox.geoping.domain.core.wrapper.HelperWrapper;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
+import eu.ttbox.geoping.domain.model.GeoTrack;
 
 public class GeoTrackHelper {
 
@@ -59,8 +60,8 @@ public class GeoTrackHelper {
             initWrapper(cursor);
         }
         GeoTrack geoTrack = new GeoTrack();
-        geoTrack.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
-        geoTrack.setPersonId(personIdIdx > -1 ? cursor.getLong(personIdIdx) : null);
+        geoTrack.setId(idIdx > -1 ? cursor.getLong(idIdx) : AppConstants.UNSET_ID);
+        geoTrack.setPersonId(personIdIdx > -1 ? cursor.getLong(personIdIdx) : AppConstants.UNSET_ID);
         geoTrack.setPhone(phoneIdIdx > -1 ? cursor.getString(phoneIdIdx) : null);
         geoTrack.setTime(timeIdx > -1 ? cursor.getLong(timeIdx) : -1);
         geoTrack.setProvider(providerIdx > -1 ? cursor.getString(providerIdx) : null);

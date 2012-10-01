@@ -4,7 +4,7 @@ import org.osmdroid.util.GeoPoint;
 
 import android.test.AndroidTestCase;
 import android.util.Log;
-import eu.ttbox.geoping.domain.GeoTrack;
+import eu.ttbox.geoping.domain.model.GeoTrack;
 
 public class GeoTrackTest extends AndroidTestCase {
 

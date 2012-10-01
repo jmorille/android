@@ -48,11 +48,11 @@ import android.view.View;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
-import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
+import eu.ttbox.geoping.domain.model.GeoTrack;
+import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.ui.map.track.bubble.GeoTrackBubble;
 
 public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnSharedPreferenceChangeListener {

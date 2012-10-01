@@ -4,6 +4,11 @@ public class AppConstants {
 
     public final static double E6 = 1000000d;
 
+    // Constant
+    public static final long UNSET_TIME = -1l;
+    public static final long UNSET_ID = -1l;
+    
+    //
     public static final String LOCAL_DB_KEY = "local";
     public static final int SMS_MAX_SIZE = 160;
 

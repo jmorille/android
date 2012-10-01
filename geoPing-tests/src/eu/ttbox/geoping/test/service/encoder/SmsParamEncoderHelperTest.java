@@ -1,14 +1,12 @@
 package eu.ttbox.geoping.test.service.encoder;
 
-import java.util.HashMap;
-
 import android.location.Location;
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
+import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.service.encoder.SmsParamEncoderHelper;
 
 public class SmsParamEncoderHelperTest extends AndroidTestCase {

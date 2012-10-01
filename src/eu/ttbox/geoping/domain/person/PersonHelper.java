@@ -3,7 +3,8 @@ package eu.ttbox.geoping.domain.person;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.widget.TextView;
-import eu.ttbox.geoping.domain.Person;
+import eu.ttbox.geoping.core.AppConstants;
+import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PersonHelper {
@@ -14,6 +15,7 @@ public class PersonHelper {
     public int phoneIdx = -1;
     public int colorIdx = -1;
     public int contactUri = -1;
+    public int pairingTimeIdx = -1;
 
     public PersonHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(PersonColumns.COL_ID);
@@ -21,6 +23,7 @@ public class PersonHelper {
         phoneIdx = cursor.getColumnIndex(PersonColumns.COL_PHONE);
         colorIdx = cursor.getColumnIndex(PersonColumns.COL_COLOR);
         contactUri = cursor.getColumnIndex(PersonColumns.COL_CONTACT_URI);
+        pairingTimeIdx = cursor.getColumnIndex(PersonColumns.COL_PAIRING_TIME);
         isNotInit = false;
         return this;
     }
@@ -30,11 +33,12 @@ public class PersonHelper {
             initWrapper(cursor);
         }
         Person user = new Person();
-        user.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
+        user.setId(idIdx > -1 ? cursor.getLong(idIdx) :  AppConstants.UNSET_ID);
         user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
-        user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : null);
+        user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : 0);
         user.setContactUri(contactUri > -1 ? cursor.getString(contactUri) : null);
+        user.setPairingTime(pairingTimeIdx > -1 ? cursor.getLong(pairingTimeIdx)  : AppConstants.UNSET_TIME );
         return user;
     }
 
@@ -80,6 +84,7 @@ public class PersonHelper {
         initialValues.put(PersonColumns.COL_PHONE, user.phone);
         initialValues.put(PersonColumns.COL_COLOR, user.color);
         initialValues.put(PersonColumns.COL_CONTACT_URI, user.contactUri);
+        initialValues.put(PersonColumns.COL_PAIRING_TIME, user.pairingTime);
         return initialValues;
     }
 

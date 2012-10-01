@@ -1,8 +1,10 @@
-package eu.ttbox.geoping.domain;
+package eu.ttbox.geoping.domain.model;
+
+import eu.ttbox.geoping.core.AppConstants;
 
 public class Message {
 
-    public long id = -1;
+    public long id =  AppConstants.UNSET_ID;
     public String name;
     public String phone;
     public int color;

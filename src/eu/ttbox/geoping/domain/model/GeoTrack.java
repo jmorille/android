@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.domain;
+package eu.ttbox.geoping.domain.model;
 
 import java.util.Date;
 
@@ -10,16 +10,16 @@ import eu.ttbox.geoping.domain.cache.ZoomLevelComputeCache;
 
 public class GeoTrack implements Comparable<GeoTrack>{
 
-    private static final long UNSET_TIME = -1l;
+ 
     
-    public long id = -1l;
-    public long personId = -1l;
+    public long id = AppConstants.UNSET_ID;
+    public long personId =  AppConstants.UNSET_ID;
 
     public String phone;
     public String provider;
     public String address;
 
-    public long time = UNSET_TIME;
+    public long time = AppConstants.UNSET_TIME;
     private int latitudeE6;
     private int longitudeE6;
 
@@ -125,7 +125,7 @@ public class GeoTrack implements Comparable<GeoTrack>{
 
   
     public Date getTimeAsDate() {
-        if (time == UNSET_TIME) {
+        if (time == AppConstants.UNSET_TIME) {
             return null;
         }
         Date timeAsDate = new Date(time);
@@ -248,7 +248,7 @@ public class GeoTrack implements Comparable<GeoTrack>{
     // ===========================================================
 
     public boolean hasTime() {
-        return  time != UNSET_TIME;
+        return  time != AppConstants.UNSET_TIME;
     }
     
     public boolean hasPersonId() {

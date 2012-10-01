@@ -1,8 +1,8 @@
 package eu.ttbox.geoping.test.core.crypto;
 
-import eu.ttbox.geoping.core.crypto.SimpleCrypto;
 import android.test.AndroidTestCase;
 import android.util.Log;
+import eu.ttbox.geoping.core.crypto.SimpleCrypto;
 
 public class SimpleCryptoTest  extends AndroidTestCase {
 

@@ -4,9 +4,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.model.Pairing;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PairingHelper {
 
@@ -17,6 +19,7 @@ public class PairingHelper {
     public int phoneNormalizedIdx = -1;
     public int authorizeTypeIdx = -1;
     public int showNotificationIdx = -1;
+    public int pairingTimeIdx = -1;
 
     public PairingHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(PairingColumns.COL_ID);
@@ -25,6 +28,8 @@ public class PairingHelper {
         phoneNormalizedIdx = cursor.getColumnIndex(PairingColumns.COL_PHONE_NORMALIZED);
         authorizeTypeIdx = cursor.getColumnIndex(PairingColumns.COL_AUTHORIZE_TYPE);
         showNotificationIdx = cursor.getColumnIndex(PairingColumns.COL_SHOW_NOTIF);
+        pairingTimeIdx = cursor.getColumnIndex(PairingColumns.COL_PAIRING_TIME);
+
         isNotInit = false;
         return this;
     }
@@ -34,11 +39,12 @@ public class PairingHelper {
             initWrapper(cursor);
         }
         Pairing user = new Pairing();
-        user.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
+        user.setId(idIdx > -1 ? cursor.getLong(idIdx) :  AppConstants.UNSET_ID);
         user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
         user.setAuthorizeType(authorizeTypeIdx > -1 ? PairingAuthorizeTypeEnum.getByCode(cursor.getInt(authorizeTypeIdx)) : null);
         user.setShowNotification(showNotificationIdx > -1 ? cursor.getInt(showNotificationIdx) == 1 ? true : false : false);
+        user.setPairingTime(pairingTimeIdx > -1 ? cursor.getLong(pairingTimeIdx)  : AppConstants.UNSET_TIME );
         return user;
     }
 
@@ -89,6 +95,7 @@ public class PairingHelper {
         initialValues.put(PairingColumns.COL_NAME, vo.name);
         initialValues.put(PairingColumns.COL_PHONE, vo.phone);
         initialValues.put(PairingColumns.COL_SHOW_NOTIF, vo.showNotification);
+        initialValues.put(PairingColumns.COL_PAIRING_TIME, vo.pairingTime);
         // secu
         PairingAuthorizeTypeEnum authorizeType = vo.authorizeType != null ? vo.authorizeType : PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
         initialValues.put(PairingColumns.COL_AUTHORIZE_TYPE, authorizeType.getCode());

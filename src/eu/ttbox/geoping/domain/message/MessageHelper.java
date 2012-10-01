@@ -3,8 +3,9 @@ package eu.ttbox.geoping.domain.message;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.widget.TextView;
-import eu.ttbox.geoping.domain.Message;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.message.MessageDatabase.MessageColumns;
+import eu.ttbox.geoping.domain.model.Message;
 
 public class MessageHelper {
 
@@ -28,7 +29,7 @@ public class MessageHelper {
             initWrapper(cursor);
         }
         Message user = new Message();
-        user.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
+        user.setId(idIdx > -1 ? cursor.getLong(idIdx) : AppConstants.UNSET_ID);
         user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
         user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : null);

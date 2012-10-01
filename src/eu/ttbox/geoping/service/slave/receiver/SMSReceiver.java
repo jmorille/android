@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.service.slave.receiver;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,11 @@ import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
+import eu.ttbox.geoping.domain.SmsLogProvider;
+import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
+import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
+import eu.ttbox.geoping.service.encoder.GeoPingMessage;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 
 /**
@@ -64,12 +70,27 @@ public class SMSReceiver extends BroadcastReceiver {
         final String phoneNumber = message.getDisplayOriginatingAddress();
         Log.w(TAG, "Consume SMS Geo Action : " + phoneNumber + " / " + messageBody);
         // Decrypt Msg
-        Intent intent = SmsMessageIntentEncoderHelper.decodeSmsMessage(context, phoneNumber, messageBody);
-        if (intent != null) {
+        GeoPingMessage geoMsg = SmsMessageIntentEncoderHelper.decodeAsGeoPingMessage(  context,   phoneNumber, messageBody);
+        Intent intent = SmsMessageIntentEncoderHelper.convertForIntentGeoPingMessage(context, geoMsg);
+        if (intent != null) { 
             isConsume = true;
             context.startService(intent);
+            // Log It
+            logSmsMessage(context,SmsLogTypeEnum.RECEIVE,  geoMsg);
         }
+   
+        
         return isConsume;
     }
+    
+	// ===========================================================
+	// Log Sms message
+	// ===========================================================
+
+	private void logSmsMessage(Context context, SmsLogTypeEnum type,   GeoPingMessage geoMsg) {
+		ContentValues values = SmsLogHelper.getContentValues(type, geoMsg);
+		context.getContentResolver().insert(SmsLogProvider.Constants.CONTENT_URI, values);
+	}
+
 
 }

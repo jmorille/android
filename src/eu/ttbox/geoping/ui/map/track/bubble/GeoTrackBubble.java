@@ -10,8 +10,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.domain.GeoTrack;
-import eu.ttbox.geoping.domain.Person;
+import eu.ttbox.geoping.domain.model.GeoTrack;
+import eu.ttbox.geoping.domain.model.Person;
 
 public class GeoTrackBubble extends FrameLayout {
 

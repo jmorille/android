@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
 import eu.ttbox.geoping.core.crypto.RsaEncrypter;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
+import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 

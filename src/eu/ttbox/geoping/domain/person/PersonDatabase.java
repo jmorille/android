@@ -25,8 +25,9 @@ public class PersonDatabase {
         public static final String COL_PHONE = "PHONE";
         public static final String COL_COLOR = "COLOR";
         public static final String COL_CONTACT_URI = "CONTACT_URI";
+        public static final String COL_PAIRING_TIME = "COL_PAIRING_TIME";
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_COLOR, COL_CONTACT_URI };
+        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_COLOR, COL_CONTACT_URI, COL_PAIRING_TIME };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);

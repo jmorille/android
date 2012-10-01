@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.Person;
+import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 

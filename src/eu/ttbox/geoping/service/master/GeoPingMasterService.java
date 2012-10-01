@@ -26,14 +26,18 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.SmsTrakerActivity;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
-import eu.ttbox.geoping.domain.Person;
 import eu.ttbox.geoping.domain.PersonProvider;
+import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
+import eu.ttbox.geoping.domain.model.GeoTrack;
+import eu.ttbox.geoping.domain.model.Person;
+import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
+import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
@@ -103,17 +107,17 @@ public class GeoPingMasterService extends IntentService {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             sendSmsGeoPingRequest(phone, params);
-        } else if (Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER.equals(action)) {
-            consumeGeoPingResponse(intent.getExtras());
         } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
             sendSmsPairingRequest(phone, userId);
+        } else if (Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER.equals(action)) {
+            consumeGeoPingResponse(intent.getExtras());
         } else if (Intents.ACTION_SMS_PAIRING_RESPONSE.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             long userId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1);
-            consumeSmsPairingResponse(phone, userId);
+            consumeSmsPairingResponse(phone, userId); 
         }
 
     }
@@ -141,6 +145,7 @@ public class GeoPingMasterService extends IntentService {
             if (personPhone == null || !personPhone.equals(phone)) {
                 ContentValues values = new ContentValues(1);
                 values.put(PersonColumns.COL_PHONE, phone);
+                values.put(PersonColumns.COL_PAIRING_TIME, System.currentTimeMillis());
                 getContentResolver().update(uri, values, null, null);
             }
         } else {
@@ -149,6 +154,12 @@ public class GeoPingMasterService extends IntentService {
 
     }
 
+    // ===========================================================
+    // Sender Sms message
+    // ===========================================================
+    
+
+    
     private void sendSmsPairingRequest(String phone, long userId) {
         Bundle params = SmsMessageLocEnum.MSGKEY_PERSON_ID.writeToBundle(null, userId);
         sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
@@ -164,12 +175,25 @@ public class GeoPingMasterService extends IntentService {
         String encodeddMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
         if (encodeddMsg != null && encodeddMsg.length() > 0 && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
             SmsManager.getDefault().sendTextMessage(phone, null, encodeddMsg, null, null);
+            // Log It
+            logSmsMessage(SmsLogTypeEnum.SEND, phone, action, params);
         }
     }
 
     // ===========================================================
+    // Log Sms message
+    // ===========================================================
+    
+    private void logSmsMessage(SmsLogTypeEnum type, String phone,  SmsMessageActionEnum action , Bundle params ) {
+    	ContentValues values =SmsLogHelper.getContentValues(type, phone, action, params);
+    	getContentResolver().insert(SmsLogProvider.Constants.CONTENT_URI, values);
+    }
+    
+    
+    // ===========================================================
     // Consume Localisation
     // ===========================================================
+    
     private void consumeSmsLog(Bundle bundle) {
         // TODO
     }
@@ -283,49 +307,7 @@ public class GeoPingMasterService extends IntentService {
 
         mNotificationManager.notify(notifId, notification);
     }
-    
-//    @SuppressLint("NewApi")
-//    private void showNotificationNewPingResponse(Uri geoTrackData, ContentValues values) {
-//        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        // Create Notif Intent response
-//        PendingIntent pendingIntent = null;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//            pendingIntent = PendingIntent.getActivities(this, 0, //
-//                    new Intent[] { new Intent(this, SmsTrakerActivity.class), Intents.showOnMap(this, geoTrackData, values) }, //
-//                    PendingIntent.FLAG_CANCEL_CURRENT);
-//        } else {
-//            pendingIntent = PendingIntent.getActivity(this, 0, //
-//                    Intents.showOnMap(this, geoTrackData, values), //
-//                    PendingIntent.FLAG_CANCEL_CURRENT);
-//        }
-//
-//        // construct the Notification object.
-//        String phone = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
-//
-//        // Generate Notification ID per Person
-//        int notifId = SHOW_ON_NOTIFICATION_ID + phone.hashCode();
-//        Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
-//
-//        // Photo
-//
-//        // Style style = new NotificationCompat.InboxStyle()//
-//        // .addLine(getString(R.string.notif_geoping_response)) //
-//        // .addLine(phone) //
-//        // .setSummaryText("sumary");
-//        Notification notification = new NotificationCompat.Builder(this) //
-//                .setDefaults(Notification.DEFAULT_ALL) //
-//                .setSmallIcon(R.drawable.ic_stat_notif_icon) //
-//                .setWhen(System.currentTimeMillis()) //
-//                // .setStyle(style) //
-//                .setAutoCancel(true) //
-//                .setContentTitle(getString(R.string.notif_geoping_response)) //
-//                .setContentText(phone) //
-//                .setContentIntent(pendingIntent)//
-//                .setPriority(Notification.PRIORITY_DEFAULT) //
-//                .build();
-//
-//        mNotificationManager.notify(notifId, notification);
-//    }
+     
     // ===========================================================
     // Other
     // ===========================================================

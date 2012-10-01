@@ -49,11 +49,7 @@ public class PairingProvider extends ContentProvider {
         // to get definitions...
         matcher.addURI(Constants.AUTHORITY, "pairing", PAIRINGS);
         matcher.addURI(Constants.AUTHORITY, "pairing/#", PAIRING_ID);
-        /**
-         * The content:// style URI for this table. Append the phone number you
-         * want to lookup to this URI and query it to perform a lookup. For
-         * example:
-         * 
+        /** 
          * <pre>
          * Uri lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_URI, Uri.encode(phoneNumber));
          * </pre>

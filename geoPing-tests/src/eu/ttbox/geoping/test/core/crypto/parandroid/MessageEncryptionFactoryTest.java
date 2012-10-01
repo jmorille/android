@@ -14,8 +14,8 @@ import android.util.Base64;
 import android.util.Log;
 import eu.ttbox.geoping.core.crypto.parandroid.MessageEncryption;
 import eu.ttbox.geoping.core.crypto.parandroid.MessageEncryptionFactory;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
+import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 

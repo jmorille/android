@@ -15,15 +15,13 @@ public class SmsLogProvider extends ContentProvider {
     private static final String TAG = "SmsLogProvider";
 
     // MIME types used for searching words or looking up a single definition
-    public static final String SMSLOGS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/smslog";
-    public static final String SMSLOG_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/smslog";
+    public static final String SMSLOGS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/smsLog";
+    public static final String SMSLOG_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/smsLog";
 
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.SmsLogProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/smslog");
-        // public static final Uri CONTENT_URI_GET_PRODUCT =
-        // Uri.parse("content://" + AUTHORITY + "/smslog/");
-    }
+     }
 
     private SmsLogDatabase smslogDatabase;
 
@@ -108,7 +106,7 @@ public class SmsLogProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         switch (sURIMatcher.match(uri)) {
-        case SMSLOG_ID:
+        case SMSLOGS:
             long smslogId = smslogDatabase.insertEntity(values);
             Uri smslogUri = null;
             if (smslogId > -1) {

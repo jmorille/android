@@ -27,8 +27,9 @@ public class PairingDatabase {
         public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
         public static final String COL_AUTHORIZE_TYPE = "AUTHORIZE_TYPE";
         public static final String COL_SHOW_NOTIF = "SHOW_NOTIF";
+        public static final String COL_PAIRING_TIME = "COL_PAIRING_TIME";
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE,  COL_AUTHORIZE_TYPE, COL_SHOW_NOTIF };
+        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE,  COL_AUTHORIZE_TYPE, COL_SHOW_NOTIF, COL_PAIRING_TIME };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);

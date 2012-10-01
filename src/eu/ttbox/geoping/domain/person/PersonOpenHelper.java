@@ -5,13 +5,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import eu.ttbox.geoping.domain.message.MessageDatabase;
+import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 
 public class PersonOpenHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = "PersonOpenHelper";
 
 	public static final String DATABASE_NAME = "person.db";
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 3;
 	
     // ===========================================================
     // Table
@@ -23,6 +24,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 			+ ", " + PersonDatabase.PersonColumns.COL_PHONE //
 			+ ", " + PersonDatabase.PersonColumns.COL_COLOR //
 			+ ", " + PersonDatabase.PersonColumns.COL_CONTACT_URI//
+            + ", " + PairingDatabase.PairingColumns.COL_PAIRING_TIME // 
 			+ ");";
 
 	private static final String FTS_TABLE_CREATE_MESSAGE = "CREATE VIRTUAL TABLE " + MessageDatabase.TABLE_MESSAGE_FTS + //

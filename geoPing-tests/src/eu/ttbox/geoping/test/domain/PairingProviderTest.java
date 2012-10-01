@@ -37,8 +37,9 @@ public class PairingProviderTest extends ProviderTestCase2<PairingProvider> {
         ContentProvider provider = getProvider();
         // Data
         Pairing vo = new Pairing()//
-                .setPhone("060102030405") //
+                .setPhone("0601020304") //
                 .setShowNotification(true)//
+                .setPairingTime(System.currentTimeMillis())
                 .setAuthorizeType(PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS);
         ContentValues values = PairingHelper.getContentValues(vo);
         // Insert
@@ -54,6 +55,7 @@ public class PairingProviderTest extends ProviderTestCase2<PairingProvider> {
             assertEquals(vo.phone, voDb.phone);
             assertEquals(vo.showNotification, voDb.showNotification);
             assertEquals(vo.authorizeType, voDb.authorizeType);
+            assertEquals(vo.pairingTime, voDb.pairingTime);
         } finally {
             cursor.close();
         }
@@ -65,6 +67,7 @@ public class PairingProviderTest extends ProviderTestCase2<PairingProvider> {
         Pairing vo = new Pairing()//
                 .setPhone("0601020304") //
                 .setShowNotification(true)//
+                .setPairingTime(System.currentTimeMillis())
                 .setAuthorizeType(PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS);
         ContentValues values = PairingHelper.getContentValues(vo);
         // Insert
@@ -82,6 +85,7 @@ public class PairingProviderTest extends ProviderTestCase2<PairingProvider> {
                 assertEquals(Long.valueOf(uri.getLastPathSegment()).longValue(), voDb.id);
                 assertEquals(vo.phone, voDb.phone);
                 assertEquals(vo.showNotification, voDb.showNotification);
+                assertEquals(vo.pairingTime, voDb.pairingTime);
                 assertEquals(vo.authorizeType, voDb.authorizeType);
             } finally {
                 cursor.close();

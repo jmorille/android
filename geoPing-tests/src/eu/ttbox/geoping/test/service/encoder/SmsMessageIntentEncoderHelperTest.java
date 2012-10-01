@@ -8,8 +8,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
+import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 
@@ -46,7 +46,7 @@ public class SmsMessageIntentEncoderHelperTest extends AndroidTestCase {
         Bundle params = GeoTrackHelper.getBundleValues(geotrack);
         String encryped = SmsMessageIntentEncoderHelper.encodeSmsMessage(SmsMessageActionEnum.ACTION_GEO_LOC, params);
         Log.d(TAG, String.format("Sms Encoded Message (%s chars) : %s", encryped.length(), encryped));
-        Intent intent =   SmsMessageIntentEncoderHelper.decodeSmsMessage(getContext(), PHONE, encryped);
+        Intent intent =   SmsMessageIntentEncoderHelper.decodeAsIntent(getContext(), PHONE, encryped);
         Log.d(TAG, String.format("Sms Decoded Message (action: %s)", intent.getAction()));
         GeoTrack geoTrack = GeoTrackHelper.getEntityFromIntent(intent);
         Log.d(TAG, "GeoTrack : " + geoTrack);
@@ -68,7 +68,7 @@ public class SmsMessageIntentEncoderHelperTest extends AndroidTestCase {
 
     public void testDecodeGeopingResponse() {
         String encryped = "geoPing?LOC!(th7lhawmo,h31,y1e14h,xt3jbc,aa,s0,pg,b1p)";
-        Intent decoded = SmsMessageIntentEncoderHelper.decodeSmsMessage(getContext(), PHONE, encryped);
+        Intent decoded = SmsMessageIntentEncoderHelper.decodeAsIntent(getContext(), PHONE, encryped);
         GeoTrack geoTrack = GeoTrackHelper.getEntityFromIntent(decoded);
         // has
         assertTrue(geoTrack.hasTime());

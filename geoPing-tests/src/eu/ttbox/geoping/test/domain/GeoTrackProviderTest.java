@@ -5,12 +5,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.test.ProviderTestCase2;
-import eu.ttbox.geoping.domain.GeoTrack;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
-import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
-import eu.ttbox.geoping.domain.model.Pairing;
-import eu.ttbox.geoping.domain.pairing.PairingHelper;
+import eu.ttbox.geoping.domain.model.GeoTrack;
 
 public class GeoTrackProviderTest extends ProviderTestCase2<GeoTrackerProvider> {
 

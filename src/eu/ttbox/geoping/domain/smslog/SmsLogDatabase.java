@@ -24,11 +24,13 @@ public class SmsLogDatabase {
         public static final String COL_ID = BaseColumns._ID;
         public static final String COL_ACTION = "ACTION";
         public static final String COL_PHONE = "PHONE";
-        public static final String COL_MSG = "MSG";
+        public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
+        public static final String COL_MESSAGE = "MSG";
+        public static final String COL_SMSLOG_TYPE = "SMSLOG_TYPE";
         public static final String COL_TIME = "TIME";
 
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_TIME, COL_ACTION, COL_PHONE, COL_MSG };
+        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_TIME, COL_ACTION, COL_PHONE, COL_SMSLOG_TYPE,  COL_MESSAGE };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
 

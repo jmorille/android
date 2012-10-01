@@ -1,12 +1,15 @@
-package eu.ttbox.geoping.domain;
+package eu.ttbox.geoping.domain.model;
+
+import eu.ttbox.geoping.core.AppConstants;
 
 public class Person {
 
-    public long id = -1;
+    public long id =  AppConstants.UNSET_ID;
     public String name;
     public String phone;
     public int color;
     public String contactUri;
+    public long pairingTime;
 
     public Person setId(long id) {
         this.id = id;
@@ -33,6 +36,11 @@ public class Person {
         return this;
     }
 
+    public Person setPairingTime(long pairingTime) {
+		this.pairingTime = pairingTime;
+		 return this;
+	}
+    
     @Override
     public String toString() {
         return "Person [id=" + id + ", name=" + name + ", phone=" + phone + "]";
