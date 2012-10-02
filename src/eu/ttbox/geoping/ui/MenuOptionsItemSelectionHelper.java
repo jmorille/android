@@ -9,6 +9,7 @@ import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.pairing.PairingListActivity;
 import eu.ttbox.geoping.ui.person.PersonListActivity;
 import eu.ttbox.geoping.ui.prefs.TrakingPrefActivity;
+import eu.ttbox.geoping.ui.smslog.SmsLogListActivity;
 
 public class MenuOptionsItemSelectionHelper {
 
@@ -33,6 +34,10 @@ public class MenuOptionsItemSelectionHelper {
         case R.id.menu_track_person:
             Intent intentGeoPing = new Intent(context, PersonListActivity.class);
             context.startActivity(intentGeoPing);
+            return true;
+        case R.id.menu_smslog:
+            Intent intentSmsLog = new Intent(context,SmsLogListActivity.class);
+            context.startActivity(intentSmsLog);
             return true;
         }
         return false;

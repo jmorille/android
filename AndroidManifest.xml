@@ -49,13 +49,14 @@
             </intent-filter>
         </activity>
 
+        <!-- Sms Log -->
+        <activity android:name=".ui.smslog.SmsLogListActivity"></activity>
         <!-- Person -->
-        <activity android:name=".ui.person.PersonListActivity">
-        </activity>
-        <activity android:name=".ui.person.PersonEditActivity">
-        </activity>
+        <activity android:name=".ui.person.PersonListActivity"></activity>
+        <activity android:name=".ui.person.PersonEditActivity"></activity>
 
-          <!-- Pairing -->
+        
+         <!-- Pairing -->
         <activity android:name=".ui.pairing.PairingListActivity">
         </activity>
         <activity android:name=".ui.pairing.PairingEditActivity">

@@ -76,5 +76,14 @@ public enum SmsMessageActionEnum {
         }
         return bySmsCodeNames.get(fieldName);
     }
+    
+    public static SmsMessageActionEnum getByCode(int code) {
+    	return SmsMessageActionEnum.values()[code];
+    }
+
+	public int getCode() {
+		return ordinal();
+	}
+
 
 }

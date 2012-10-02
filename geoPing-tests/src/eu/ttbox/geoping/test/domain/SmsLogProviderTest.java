@@ -40,7 +40,7 @@ public class SmsLogProviderTest extends ProviderTestCase2<SmsLogProvider> {
         // Data
         SmsLog vo = new SmsLog()//
                 .setPhone("0601020304") //
-                .setAction(SmsMessageActionEnum.GEOPING_REQUEST.smsAction)//
+                .setAction(SmsMessageActionEnum.GEOPING_REQUEST)//
                 .setTime(java.lang.System.currentTimeMillis()) //
                 .setMessage("th7lhawmo,z31,y1e14h,xt3jbc,aa,s0,pg,b1p") //
                 .setSmsLogType(SmsLogTypeEnum.SEND);

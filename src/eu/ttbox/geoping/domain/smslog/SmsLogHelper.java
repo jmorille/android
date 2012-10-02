@@ -40,7 +40,7 @@ public class SmsLogHelper {
 		SmsLog user = new SmsLog();
 		user.setId(idIdx > -1 ? cursor.getLong(idIdx) : -1);
 		user.setTime(timeIdx > -1 ? cursor.getLong(timeIdx) : SmsLog.UNSET_TIME);
-		user.setAction(actionIdx > -1 ? cursor.getString(actionIdx) : null);
+		user.setAction(actionIdx > -1 ? getSmsMessageActionEnum(cursor) : null);
 		user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
 		user.setSmsLogType(smsLogTypeIdx > -1 ? getSmsLogType(cursor ) : null);
 		user.setMessage(messageIdx > -1 ? cursor.getString(messageIdx) : null);
@@ -60,12 +60,34 @@ public class SmsLogHelper {
 		return cursor.getString(idIdx);
 	}
 
+    // ===========================================================
+    // Data Accessor
+    // ===========================================================
+
+	
 	public long getSmsLogId(Cursor cursor) {
 		return cursor.getLong(idIdx);
 	}
 
 	
-	public SmsLogHelper setTextSmsLogAction(TextView view, Cursor cursor) { 
+	public String getSmsLogPhone(Cursor cursor) {
+		return cursor.getString(phoneIdx);
+	}
+	
+	public SmsLogTypeEnum getSmsLogType(Cursor cursor) {
+		return  SmsLogTypeEnum.getByCode(cursor.getInt(smsLogTypeIdx));
+	}
+
+	public SmsMessageActionEnum getSmsMessageActionEnum(Cursor cursor) {
+		return  SmsMessageActionEnum.getByCode(cursor.getInt(actionIdx));
+	}
+	
+    // ===========================================================
+    // Field Setter
+    // ===========================================================
+
+	
+	public SmsLogHelper setTextSmsLogAction(TextView view, Cursor cursor) {  
 		return setTextWithIdx(view, cursor, actionIdx); 
 	}
 	
@@ -81,15 +103,7 @@ public class SmsLogHelper {
 		return setTextWithIdx(view, cursor, timeIdx);
 	}
 	
-	public String getSmsLogPhone(Cursor cursor) {
-		return cursor.getString(phoneIdx);
-	}
-	
-	
-	
-	public SmsLogTypeEnum getSmsLogType(Cursor cursor) {
-		return  SmsLogTypeEnum.getByCode(cursor.getInt(smsLogTypeIdx));
-	}
+	//
 
 	public static ContentValues getContentValues(SmsLog vo) {
 		ContentValues initialValues = new ContentValues();
@@ -98,7 +112,7 @@ public class SmsLogHelper {
 		}
 		initialValues.put(SmsLogColumns.COL_TIME, vo.time);
 		initialValues.put(SmsLogColumns.COL_PHONE, vo.phone);
-		initialValues.put(SmsLogColumns.COL_ACTION, vo.action);
+		initialValues.put(SmsLogColumns.COL_ACTION, vo.action.getCode());
 		initialValues.put(SmsLogColumns.COL_MESSAGE, vo.message);
 		initialValues.put(SmsLogColumns.COL_SMSLOG_TYPE, vo.smsLogType.getCode());
 		return initialValues;
@@ -112,7 +126,7 @@ public class SmsLogHelper {
 		ContentValues values = new ContentValues();
 		values.put(SmsLogColumns.COL_TIME, System.currentTimeMillis());
 		values.put(SmsLogColumns.COL_PHONE, phone);
-		values.put(SmsLogColumns.COL_ACTION, action.intentAction);
+		values.put(SmsLogColumns.COL_ACTION, action.name());
 		values.put(SmsLogColumns.COL_SMSLOG_TYPE, type.getCode());
 		if (params != null && !params.isEmpty()) {
 			// TODO Message form Bundle

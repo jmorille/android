@@ -14,6 +14,11 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
 
     private boolean isNotBinding = true;
 
+    // ===========================================================
+    // Constructor
+    // ===========================================================
+
+    
     public SmsLogListAdapter(Context context, Cursor c, int flags) {
         super(context, R.layout.smslog_list_item, c, flags); 
     }
@@ -32,6 +37,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         ViewHolder holder = (ViewHolder) view.getTag();
         // Bind Value
         helper.setTextSmsLogAction(holder.actionText, cursor)//
+                
                 .setTextSmsLogTime(holder.timeText, cursor) //
                 .setTextSmsLogPhone(holder.phoneText, cursor);
     }

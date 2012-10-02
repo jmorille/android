@@ -7,18 +7,24 @@
 
     <TextView
         android:id="@+id/smslog_list_item_time"
-        style="@style/entity_list_item" />
+        style="@style/entity_list_item"
+        android:text="10-10-2009 12:55:12"
+        android:width="100dp" />
+
+    <TextView
+        android:id="@+id/smslog_list_item_action"
+        style="@style/entity_list_item"
+        android:layout_alignBottom="@+id/smslog_list_item_time"
+        android:layout_marginLeft="21dp"
+        android:layout_toRightOf="@+id/smslog_list_item_time"
+        android:text="ACTION_GEO_LOC" />
 
     <TextView
         android:id="@+id/smslog_list_item_phone"
         style="@style/entity_list_item"
-        android:layout_toRightOf="@id/smslog_list_item_time" />
-
-       <TextView
-        android:id="@+id/smslog_list_item_action"
-        style="@style/entity_list_item"
-        android:layout_toRightOf="@id/smslog_list_item_phone" />
-    
- 
+        android:layout_alignBaseline="@+id/smslog_list_item_time"
+        android:layout_alignBottom="@+id/smslog_list_item_time"
+        android:layout_alignLeft="@+id/smslog_list_item_action"
+        android:text="+33601020304" />
 
 </RelativeLayout>

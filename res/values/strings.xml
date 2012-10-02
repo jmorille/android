@@ -38,7 +38,8 @@
     <string name="menu_geoping">GeoPing</string>
     <string name="menu.quit">Quit</string>
     <string name="menu_pairing">Appariement</string>
-
+    <string name="menu_smslog">Log Sms</string>
+    
     <!-- Prefs -->
     <string name="prefs.smsCategory">SMS Tracker</string>
     <string name="prefs.smsUse">SMS Send</string>
@@ -62,4 +63,8 @@
     <string name="pairing_phone">N° Téléphone</string>
     <string name="pairing_show_notification">Afficher une notification</string>
 
+    <!-- SmsLog Model -->
+	<string name="smslog_delete_all">Tous Suppr.</string>
+
+    
 </resources>
