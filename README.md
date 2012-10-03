@@ -1,3 +1,12 @@
+
+## mapsforge
+############################
+Project : http://code.google.com/p/mapsforge/
+
+wget http://mapsforge.googlecode.com/files/mapsforge-map-0.3.0-jar-with-dependencies.jar
+mvn install:install-file -DgroupId=org.mapsforge -DartifactId=mapsforge-map -Dversion=0.3.0 -Dpackaging=jar -Dfile=mapsforge-map-0.3.0-jar-with-dependencies.jar
+
+
 -- TODO
 Quick Contact badge
 http://mobile.tutsplus.com/tutorials/android/android-sdk_contact-badge/
