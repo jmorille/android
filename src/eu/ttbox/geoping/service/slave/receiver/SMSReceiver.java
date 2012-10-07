@@ -14,7 +14,6 @@ import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
-import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 
 /**
@@ -27,8 +26,8 @@ public class SMSReceiver extends BroadcastReceiver {
 
     private static final String TAG = "SMSReceiver";
 
-    private final String ACTION_RECEIVE_SMS = "android.provider.Telephony.SMS_RECEIVED";
-
+    public  static final  String ACTION_RECEIVE_SMS = "android.provider.Telephony.SMS_RECEIVED";
+    public  static final  String EXTRA_PDUS = "pdus";
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -36,7 +35,7 @@ public class SMSReceiver extends BroadcastReceiver {
             Log.d(TAG, "SMSReceiver : " + intent);
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                Object[] pdus = (Object[]) bundle.get("pdus");
+                Object[] pdus = (Object[]) bundle.get(EXTRA_PDUS);
 
                 final SmsMessage[] messages = new SmsMessage[pdus.length];
                 for (int i = 0; i < pdus.length; i++) {

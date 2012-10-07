@@ -34,12 +34,12 @@ public class SmsMessageIntentEncoderHelper {
 	}
 	
 	
-	public static Intent convertForIntentGeoPingMessage(Context context, GeoPingMessage msg) {
-		SmsMessageActionEnum action = msg.action;
-		if (msg==null || action == null) {
+	public static Intent convertForIntentGeoPingMessage(Context context, GeoPingMessage msg) { 
+		if (msg==null || msg.action == null) {
 			Log.w(TAG, String.format("Ignore for No Action the GeoPingMessage : %s", msg));
 			return null;
 		}
+		  SmsMessageActionEnum action = msg.action;
 		Log.d(TAG, String.format("Create Intent from %s", msg));
 		Intent intent = new Intent(context, action.serviceClass) //
 				.setAction(action.intentAction);//
