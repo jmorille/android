@@ -15,10 +15,12 @@ public class AppConstants {
     public static final char PHONE_SEP = ';';  
 
     public static final int PER_PERSON_ID_MULTIPLICATOR = 10000;
+    public static final String KEY_DB_LOCAL = "local";
     // Request Notification
     public static final String PREFS_SMS_DELETE_ON_MESSAGE = "smsDeleteOnMessage";
     public static final String PREFS_SMS_REQUEST_NOTIFY_ME = "smsRequestNotif";
-
+    public static final String PREFS_LOCAL_SAVE = "localSave";
+    
     // TODO Security
     
     // TODO in prefs
