@@ -91,6 +91,17 @@ public class PersonDatabase {
         // }
         return cursor;
     }
+    
+    public Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) {
+        String[] projection = _projection == null ? PersonColumns.ALL_KEYS : _projection;
+        // Normalise For search
+         String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+         String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+        // Prepare Query
+        String selection = String.format("%s = ?", PersonColumns.COL_PHONE_MIN_MATCH);
+        String[] selectionArgs = new String[] { minMatch };
+        return queryEntities(projection, selection, selectionArgs, sortOrder);
+    }
 
     public long insertEntity(ContentValues values) throws SQLException {
         long result = -1;

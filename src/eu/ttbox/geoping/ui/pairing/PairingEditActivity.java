@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.PhoneLookup;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -20,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -46,6 +47,16 @@ public class PairingEditActivity extends FragmentActivity {
     private CheckBox showNotificationCheckBox;
     private TextView authorizeTypeTextView;
     
+    private RadioGroup authorizeTypeRadioGroup;
+    
+    private RadioButton authorizeTypeAskRadioButton;
+    private RadioButton authorizeTypeNeverRadioButton;
+    private RadioButton authorizeTypeAlwaysRadioButton;
+    
+    private static final int UI_ID_AUTHORIZE_REQUEST = R.id.pairing_authorize_type_radio_ask;
+    private static final int UI_ID_AUTHORIZE_ALWAYS= R.id.pairing_authorize_type_radio_always;
+    private static final int UI_ID_AUTHORIZE_NEVER= R.id.pairing_authorize_type_radio_never;
+
     // Instance
     // private String entityId;
     private Uri entityUri;
@@ -63,6 +74,12 @@ public class PairingEditActivity extends FragmentActivity {
         phoneEditText = (EditText) findViewById(R.id.pairing_phone);
         showNotificationCheckBox = (CheckBox) findViewById(R.id.paring_show_notification);
         authorizeTypeTextView = (TextView) findViewById(R.id.pairing_authorize_type);
+        
+        authorizeTypeRadioGroup = (RadioGroup)findViewById(R.id.pairing_authorize_type_radioGroup);
+        authorizeTypeAskRadioButton = (RadioButton)findViewById(R.id.pairing_authorize_type_radio_ask);
+        authorizeTypeNeverRadioButton = (RadioButton)findViewById(R.id.pairing_authorize_type_radio_never);
+        authorizeTypeAlwaysRadioButton = (RadioButton)findViewById(R.id.pairing_authorize_type_radio_always);
+
         
         // Intents
         handleIntent(getIntent());
@@ -233,6 +250,29 @@ public class PairingEditActivity extends FragmentActivity {
         }
     }
 
+    public void onRadioAuthorizeTypeButtonClicked(View view) {
+ 	   // Is the button now checked?
+     boolean checked = ((RadioButton) view).isChecked();
+     PairingAuthorizeTypeEnum authType = null;
+     // Check which radio button was clicked
+     switch(view.getId()) {
+         case R.id.pairing_authorize_type_radio_ask:
+             if (checked)
+             	authType = PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
+             break;
+         case R.id.pairing_authorize_type_radio_always:
+             if (checked)
+             	authType = PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS;
+             break;
+         case R.id.pairing_authorize_type_radio_never:
+             if (checked)
+             	authType = PairingAuthorizeTypeEnum.AUTHORIZE_NEVER;
+             break;
+     }
+     if (authType!=null && entityUri!=null ) {
+//    	 getContentResolver()
+     }
+ }
     // ===========================================================
     // Data Model Management
     // ===========================================================
@@ -302,12 +342,30 @@ public class PairingEditActivity extends FragmentActivity {
                         .setTextPairingPhone(phoneEditText, cursor)//
                          .setTextPairingAuthorizeType(authorizeTypeTextView, cursor)//
                         .setCheckBoxPairingShowNotif(showNotificationCheckBox, cursor);
-                PairingAuthorizeTypeEnum authType =  helper.getPairingAuthorizeTypeEnum(cursor);
+                // Pairing
+                PairingAuthorizeTypeEnum authType = helper.getPairingAuthorizeTypeEnum(cursor);
+                switch (authType) {
+				case AUTHORIZE_REQUEST:
+					authorizeTypeAskRadioButton.setChecked(true);
+					break;
+				case AUTHORIZE_NEVER:
+					authorizeTypeNeverRadioButton.setChecked(true);
+					break;
+				case AUTHORIZE_ALWAYS:
+					authorizeTypeAlwaysRadioButton.setChecked(true);
+					break;
+
+				default:
+					break;
+				}
+                // Notif 
                 if (PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST.equals(authType)) {
                     showNotificationCheckBox.setVisibility(View.GONE);
                 }
             }
         }
+        
+
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {

@@ -8,7 +8,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 public class GeoTrackOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "geoping.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     // ===========================================================
     // Table
@@ -20,6 +20,7 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
             .append(GeoTrackColumns.COL_PHONE_NUMBER).append(" TEXT NOT NULL, ")// /
             .append(GeoTrackColumns.COL_PROVIDER).append(" TEXT NOT NULL, ")// /
             .append(GeoTrackColumns.COL_TIME).append(" INTEGER NOT NULL, ")// /
+            .append(GeoTrackColumns.COL_TIME_MIDNIGHT).append(" INTEGER NOT NULL, ")// / 
             .append(GeoTrackColumns.COL_LATITUDE_E6).append(" INTEGER NOT NULL, ")// /
             .append(GeoTrackColumns.COL_LONGITUDE_E6).append(" INTEGER NOT NULL, ")// /
             .append(GeoTrackColumns.COL_ACCURACY).append(" REAL NOT NULL, ")// /

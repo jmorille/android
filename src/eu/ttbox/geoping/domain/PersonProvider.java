@@ -117,6 +117,10 @@ public class PersonProvider extends ContentProvider {
         }
     }
 
+    private Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) { 
+        return personDatabase.searchForPhoneNumber(number, _projection, sortOrder);
+    }
+    
     private Cursor getSuggestions(String query) {
         query = query.toLowerCase();
         String[] columns = new String[] { PersonDatabase.PersonColumns.COL_ID, //
@@ -130,18 +134,7 @@ public class PersonProvider extends ContentProvider {
 
         return personDatabase.getEntityMatches(columns, query, null);
     }
-
-    private Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) {
-        String[] projection = _projection == null ? PersonColumns.ALL_KEYS : _projection;
-        // Normalise For search
-        // String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
-        // String minMatch =
-        // PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
-        // Prepare Query
-        String selection = String.format("%s = ?", PersonColumns.COL_PHONE);
-        String[] selectionArgs = new String[] { number };
-        return personDatabase.queryEntities(projection, selection, selectionArgs, sortOrder);
-    }
+ 
 
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
         String[] projection = _projection == null ? PersonColumns.ALL_KEYS : _projection;

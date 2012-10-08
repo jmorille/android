@@ -2,6 +2,9 @@ package eu.ttbox.geoping.domain.pairing;
 
 import java.util.HashMap;
 
+import eu.ttbox.geoping.core.PhoneNumberUtils;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
+
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,8 +12,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.provider.BaseColumns;
-import android.telephony.PhoneNumberUtils;
+import android.provider.BaseColumns; 
+import android.text.TextUtils;
 
 public class PairingDatabase {
 
@@ -25,18 +28,18 @@ public class PairingDatabase {
         public static final String COL_NAME = "NAME";
         public static final String COL_PHONE = "PHONE";
         public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
+		public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
         public static final String COL_AUTHORIZE_TYPE = "AUTHORIZE_TYPE";
         public static final String COL_SHOW_NOTIF = "SHOW_NOTIF";
         public static final String COL_PAIRING_TIME = "COL_PAIRING_TIME";
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE,  COL_AUTHORIZE_TYPE, COL_SHOW_NOTIF, COL_PAIRING_TIME };
+        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH,  COL_AUTHORIZE_TYPE, COL_SHOW_NOTIF, COL_PAIRING_TIME };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);
-       
-
     }
 
+    
     private final PairingOpenHelper mDatabaseOpenHelper;
     private static final HashMap<String, String> mPairingColumnMap = buildUserColumnMap();
 
@@ -86,9 +89,9 @@ public class PairingDatabase {
 
     public long insertEntity(ContentValues values) throws SQLException {
         long result = -1;
+    	fillNormalizedNumber(values);
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
-            parseForPhoneNormalize(values);
             db.beginTransaction();
             try {
                  result = db.insertOrThrow(TABLE_PAIRING_FTS, null, values);
@@ -103,16 +106,43 @@ public class PairingDatabase {
         return result;
     }
 
-    private void parseForPhoneNormalize(ContentValues values) {
-        if (values.containsKey(PairingColumns.COL_PHONE)) {
-            String phone = values.getAsString(PairingColumns.COL_PHONE);
-            String normalizePhone = eu.ttbox.geoping.core.PhoneNumberUtils.normalizeNumber(phone);
-            values.put(PairingColumns.COL_PHONE_NORMALIZED, normalizePhone);
+    public Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) {
+        String[] projection = _projection == null ? PairingColumns.ALL_KEYS : _projection;
+        // Normalise For search
+         String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+         String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+        // Prepare Query
+        String selection = String.format("%s = ?", PairingColumns.COL_PHONE_MIN_MATCH);
+        String[] selectionArgs = new String[] { minMatch };
+        return queryEntities(projection, selection, selectionArgs, sortOrder);
+    }
+
+    
+    private void fillNormalizedNumber(ContentValues values) {
+        // No NUMBER? Also ignore NORMALIZED_NUMBER
+        if (!values.containsKey(PairingColumns.COL_PHONE)) {
+            values.remove(PairingColumns.COL_PHONE_NORMALIZED);
+            values.remove(PairingColumns.COL_PHONE_MIN_MATCH); 
+            return;
         }
+
+        // NUMBER is given. Try to extract NORMALIZED_NUMBER from it, unless it
+        // is also given
+        String number = values.getAsString(PairingColumns.COL_PHONE);
+        
+//      final String newNumberE164 = PhoneNumberUtils.formatNumberToE164(number,
+//              mDbHelper.getCurrentCountryIso());
+        String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+        if (!TextUtils.isEmpty(normalizedNumber)) {
+            String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+            values.put(PairingColumns.COL_PHONE_NORMALIZED, normalizedNumber);
+            values.put(PairingColumns.COL_PHONE_MIN_MATCH, minMatch);
+        } 
     }
     
+    
     public int deleteEntity(String selection, String[] selectionArgs) {
-        int result = -1;
+        int result = -1; 
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
             db.beginTransaction();
@@ -130,9 +160,9 @@ public class PairingDatabase {
 
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
+    	fillNormalizedNumber(values);
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
-            parseForPhoneNormalize(values);
             db.beginTransaction();
             try {
                 result = db.update(TABLE_PAIRING_FTS, values, selection, selectionArgs);

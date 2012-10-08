@@ -21,6 +21,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
             + "( " + PairingDatabase.PairingColumns.COL_NAME //
             + ", " + PairingDatabase.PairingColumns.COL_PHONE //
             + ", " + PairingDatabase.PairingColumns.COL_PHONE_NORMALIZED //
+            + ", " + PairingDatabase.PairingColumns.COL_PHONE_MIN_MATCH // 
             + ", " + PairingDatabase.PairingColumns.COL_AUTHORIZE_TYPE //
             + ", " + PairingDatabase.PairingColumns.COL_SHOW_NOTIF //
             + ", " + PairingDatabase.PairingColumns.COL_PAIRING_TIME // 
