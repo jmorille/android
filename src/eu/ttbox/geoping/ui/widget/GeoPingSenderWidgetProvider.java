@@ -48,6 +48,8 @@ public class GeoPingSenderWidgetProvider extends AppWidgetProvider  {
           remoteViews.setOnClickPendingIntent(R.id.update, pendingIntent);
           appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
+        // Super
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
     
     
