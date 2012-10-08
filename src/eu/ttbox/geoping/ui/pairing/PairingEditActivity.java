@@ -24,6 +24,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
@@ -53,9 +54,9 @@ public class PairingEditActivity extends FragmentActivity {
     private RadioButton authorizeTypeNeverRadioButton;
     private RadioButton authorizeTypeAlwaysRadioButton;
     
-    private static final int UI_ID_AUTHORIZE_REQUEST = R.id.pairing_authorize_type_radio_ask;
-    private static final int UI_ID_AUTHORIZE_ALWAYS= R.id.pairing_authorize_type_radio_always;
-    private static final int UI_ID_AUTHORIZE_NEVER= R.id.pairing_authorize_type_radio_never;
+//    private static final int UI_ID_AUTHORIZE_REQUEST = R.id.pairing_authorize_type_radio_ask;
+//    private static final int UI_ID_AUTHORIZE_ALWAYS= R.id.pairing_authorize_type_radio_always;
+//    private static final int UI_ID_AUTHORIZE_NEVER= R.id.pairing_authorize_type_radio_never;
 
     // Instance
     // private String entityId;
@@ -270,17 +271,18 @@ public class PairingEditActivity extends FragmentActivity {
              break;
      }
      if (authType!=null && entityUri!=null ) {
-//    	 getContentResolver()
+         ContentValues values = authType.writeTo(null);
+    	 getContentResolver().update(entityUri, values, null, null);
      }
  }
     // ===========================================================
     // Data Model Management
     // ===========================================================
 
-    private String cleanPhone(String phone) {
+    private String cleanPhone(String phone) { 
         String cleanPhone = phone;
         if (cleanPhone != null) {
-            cleanPhone = cleanPhone.replaceAll(" ", "");
+            cleanPhone = PhoneNumberUtils.normalizeNumber(phone);
         }
         return cleanPhone;
     }
