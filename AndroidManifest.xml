@@ -77,6 +77,18 @@
             </intent-filter>
         </receiver>
 
+         <!-- Widget -->
+          <receiver android:name=".ui.widget.GeoPingSenderWidgetProvider" >
+            <intent-filter >
+                <action 
+                    android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_geoping_sender_info" />
+        </receiver>
+         
         <!-- Sms service -->
         <service android:name=".service.slave.GeoPingSlaveService">
             	<intent-filter>
