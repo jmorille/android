@@ -10,6 +10,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
+import eu.ttbox.geoping.core.PhoneNumberUtils;
 
 public class PersonDatabase {
 
@@ -23,22 +25,24 @@ public class PersonDatabase {
         public static final String COL_ID = BaseColumns._ID;
         public static final String COL_NAME = "NAME";
         public static final String COL_PHONE = "PHONE";
+        public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
+        public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
         public static final String COL_COLOR = "COLOR";
         public static final String COL_CONTACT_URI = "CONTACT_URI";
         public static final String COL_PAIRING_TIME = "COL_PAIRING_TIME";
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_COLOR, COL_CONTACT_URI, COL_PAIRING_TIME };
+        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH, COL_COLOR, COL_CONTACT_URI, COL_PAIRING_TIME };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);
 
     }
 
-    private final PersonOpenHelper mDatabaseOpenHelper;
+    private final PersonOpenHelper mDbHelper;
     private static final HashMap<String, String> mPersonColumnMap = buildUserColumnMap();
 
     public PersonDatabase(Context context) {
-        mDatabaseOpenHelper = new PersonOpenHelper(context);
+        mDbHelper = new PersonOpenHelper(context);
     }
 
     private static HashMap<String, String> buildUserColumnMap() {
@@ -77,7 +81,7 @@ public class PersonDatabase {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_PERSON_FTS);
         builder.setProjectionMap(mPersonColumnMap);
-        Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
+        Cursor cursor = builder.query(mDbHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
         // Manage Cursor
         // if (cursor == null) {
         // return null;
@@ -88,13 +92,14 @@ public class PersonDatabase {
         return cursor;
     }
 
-    public long insertEntity(ContentValues userValues) throws SQLException {
+    public long insertEntity(ContentValues values) throws SQLException {
         long result = -1;
-        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
         try {
+            fillNormalizedNumber(values);
             db.beginTransaction();
             try {
-                result = db.insertOrThrow(TABLE_PERSON_FTS, null, userValues);
+                result = db.insertOrThrow(TABLE_PERSON_FTS, null, values);
                 // commit
                 db.setTransactionSuccessful();
             } finally {
@@ -106,13 +111,39 @@ public class PersonDatabase {
         return result;
     }
 
-    public int deleteEntity(String selection, String[] selectionArgs) {
+    private void fillNormalizedNumber(ContentValues values) {
+        // No NUMBER? Also ignore NORMALIZED_NUMBER
+        if (!values.containsKey(PersonColumns.COL_PHONE)) {
+            values.remove(PersonColumns.COL_PHONE_NORMALIZED);
+            values.remove(PersonColumns.COL_PHONE_MIN_MATCH); 
+            return;
+        }
+
+        // NUMBER is given. Try to extract NORMALIZED_NUMBER from it, unless it
+        // is also given
+        String number = values.getAsString(PersonColumns.COL_PHONE);
+        
+//      final String newNumberE164 = PhoneNumberUtils.formatNumberToE164(number,
+//              mDbHelper.getCurrentCountryIso());
+        String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+        if (!TextUtils.isEmpty(normalizedNumber)) {
+            String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+            values.put(PersonColumns.COL_PHONE_NORMALIZED, normalizedNumber);
+            values.put(PersonColumns.COL_PHONE_MIN_MATCH, minMatch);
+        }
+
+    }
+    
+    
+
+    public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
-        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+        fillNormalizedNumber(values);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
         try {
             db.beginTransaction();
             try {
-                result = db.delete(TABLE_PERSON_FTS, selection, selectionArgs);
+                result = db.update(TABLE_PERSON_FTS, values, selection, selectionArgs);
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
@@ -122,14 +153,15 @@ public class PersonDatabase {
         }
         return result;
     }
+    
 
-    public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
+    public int deleteEntity(String selection, String[] selectionArgs) {
         int result = -1;
-        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
         try {
             db.beginTransaction();
             try {
-                result = db.update(TABLE_PERSON_FTS, values, selection, selectionArgs);
+                result = db.delete(TABLE_PERSON_FTS, selection, selectionArgs);
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();

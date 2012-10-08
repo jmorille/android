@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import eu.ttbox.geoping.domain.core.CountryMonitor;
 import eu.ttbox.geoping.domain.message.MessageDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 
@@ -12,7 +13,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 	private static final String TAG = "PersonOpenHelper";
 
 	public static final String DATABASE_NAME = "person.db";
-	public static final int DATABASE_VERSION = 3;
+	public static final int DATABASE_VERSION = 4;
 	
     // ===========================================================
     // Table
@@ -22,10 +23,13 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 			" USING fts3 " //
 			+ "( " + PersonDatabase.PersonColumns.COL_NAME //
 			+ ", " + PersonDatabase.PersonColumns.COL_PHONE //
+            + ", " + PersonDatabase.PersonColumns.COL_PHONE_NORMALIZED //
+            + ", " + PersonDatabase.PersonColumns.COL_PHONE_MIN_MATCH //
 			+ ", " + PersonDatabase.PersonColumns.COL_COLOR //
 			+ ", " + PersonDatabase.PersonColumns.COL_CONTACT_URI//
             + ", " + PairingDatabase.PairingColumns.COL_PAIRING_TIME // 
 			+ ");";
+	
 
 	private static final String FTS_TABLE_CREATE_MESSAGE = "CREATE VIRTUAL TABLE " + MessageDatabase.TABLE_MESSAGE_FTS + //
 			" USING fts3 " //
@@ -53,9 +57,12 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
     // ===========================================================
 
 	private SQLiteDatabase mDatabase;
-
+	private CountryMonitor countryMonitor;
+	
 	public PersonOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		//
+		countryMonitor = new CountryMonitor(context);
 	}
 
 	@Override
@@ -81,5 +88,9 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + PersonDatabase.TABLE_PERSON_FTS);
 		onCreate(db);
 	}
+
+    public Object getCurrentCountryIso() {
+         return countryMonitor.getCountryIso();
+    }
 
 }
