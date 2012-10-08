@@ -105,6 +105,10 @@ public class SmsLogHelper {
 	
 	//
 
+	public long getSmsLogTime(  Cursor cursor) {
+        return cursor.getLong(timeIdx);
+    }
+	
 	public static ContentValues getContentValues(SmsLog vo) {
 		ContentValues initialValues = new ContentValues();
 		if (vo.id > -1) {

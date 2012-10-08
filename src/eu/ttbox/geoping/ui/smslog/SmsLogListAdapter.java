@@ -36,10 +36,13 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         }
         ViewHolder holder = (ViewHolder) view.getTag();
         // Bind Value
-        helper.setTextSmsLogAction(holder.actionText, cursor)//
-                
-                .setTextSmsLogTime(holder.timeText, cursor) //
+        helper.setTextSmsLogAction(holder.actionText, cursor)//  
                 .setTextSmsLogPhone(holder.phoneText, cursor);
+       // Time
+       long time = helper.getSmsLogTime(cursor);
+       String timeFormat =  String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", time);
+       holder.timeText.setText(timeFormat);
+       
     }
 
     @Override

@@ -166,7 +166,17 @@ public class PairingEditActivity extends FragmentActivity {
         String name = nameEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
         // TODO Select authorizeType
-        Uri uri = doSavePairing(name, phone, null);
+        PairingAuthorizeTypeEnum authType = null;
+        if (authorizeTypeAlwaysRadioButton.isChecked()) {
+            authType = PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS;
+        } else   if (authorizeTypeNeverRadioButton.isChecked()) {
+            authType = PairingAuthorizeTypeEnum.AUTHORIZE_NEVER;
+         } else {
+             authType = PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST; 
+        }
+      
+        // Do Save
+        Uri uri = doSavePairing(name, phone, authType);
         setResult(Activity.RESULT_OK);
         finish();
     }
