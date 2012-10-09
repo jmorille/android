@@ -8,7 +8,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 public class GeoTrackOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "geoping.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     // ===========================================================
     // Table
@@ -17,7 +17,8 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
     private static final String CREATE_BDD = new StringBuffer("CREATE TABLE ").append(GeoTrackDatabase.TABLE_TRACK_POINT).append(" (")//
             .append(GeoTrackColumns.COL_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")//
             .append(GeoTrackColumns.COL_PERSON_ID).append(" INTEGER   NULL, ")// /
-            .append(GeoTrackColumns.COL_PHONE_NUMBER).append(" TEXT NOT NULL, ")// /
+            .append(GeoTrackColumns.COL_PHONE).append(" TEXT NOT NULL, ")// /
+            .append(GeoTrackColumns.COL_PHONE_MIN_MATCH).append(" TEXT NOT NULL, ")// / 
             .append(GeoTrackColumns.COL_PROVIDER).append(" TEXT NOT NULL, ")// /
             .append(GeoTrackColumns.COL_TIME).append(" INTEGER NOT NULL, ")// /
             .append(GeoTrackColumns.COL_TIME_MIDNIGHT).append(" INTEGER NOT NULL, ")// / 
@@ -36,7 +37,7 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
 
     private static final String INDEX_TRACK_POINT_AK = "IDX_TRACKPOINT_AK";
     private static final String CREATE_INDEX_AK = "CREATE INDEX " + INDEX_TRACK_POINT_AK + " on " + GeoTrackDatabase.TABLE_TRACK_POINT + "(" //
-            + GeoTrackColumns.COL_PHONE_NUMBER + ", " //
+            + GeoTrackColumns.COL_PHONE + ", " //
             + GeoTrackColumns.COL_TIME //
             + ");";
 

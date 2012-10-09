@@ -14,7 +14,7 @@ public class PersonHelper {
     public int nameIdx = -1;
     public int phoneIdx = -1;
     public int colorIdx = -1;
-    public int contactUri = -1;
+    public int contactIdIdx = -1;
     public int pairingTimeIdx = -1;
 
     public PersonHelper initWrapper(Cursor cursor) {
@@ -22,7 +22,7 @@ public class PersonHelper {
         nameIdx = cursor.getColumnIndex(PersonColumns.COL_NAME);
         phoneIdx = cursor.getColumnIndex(PersonColumns.COL_PHONE);
         colorIdx = cursor.getColumnIndex(PersonColumns.COL_COLOR);
-        contactUri = cursor.getColumnIndex(PersonColumns.COL_CONTACT_URI);
+        contactIdIdx = cursor.getColumnIndex(PersonColumns.COL_CONTACT_ID);
         pairingTimeIdx = cursor.getColumnIndex(PersonColumns.COL_PAIRING_TIME);
         isNotInit = false;
         return this;
@@ -34,10 +34,10 @@ public class PersonHelper {
         }
         Person user = new Person();
         user.setId(idIdx > -1 ? cursor.getLong(idIdx) :  AppConstants.UNSET_ID);
-        user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
+        user.setDisplayName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
         user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : 0);
-        user.setContactUri(contactUri > -1 ? cursor.getString(contactUri) : null);
+        user.setContactId(contactIdIdx > -1 ? cursor.getString(contactIdIdx) : null);
         user.setPairingTime(pairingTimeIdx > -1 ? cursor.getLong(pairingTimeIdx)  : AppConstants.UNSET_TIME );
         return user;
     }
@@ -63,6 +63,11 @@ public class PersonHelper {
         return cursor.getInt(colorIdx);
     }
 
+    public String getContactId(Cursor cursor) {
+        return cursor.getString(contactIdIdx);
+    }
+ 
+    
     public PersonHelper setTextPersonName(TextView view, Cursor cursor) {
         return setTextWithIdx(view, cursor, nameIdx);
     }
@@ -75,16 +80,16 @@ public class PersonHelper {
         return cursor.getString(phoneIdx);
     }
 
-    public static ContentValues getContentValues(Person user) {
+    public static ContentValues getContentValues(Person entity) {
         ContentValues initialValues = new ContentValues();
-        if (user.id > -1) {
-            initialValues.put(PersonColumns.COL_ID, Long.valueOf(user.id));
+        if (entity.id > -1) {
+            initialValues.put(PersonColumns.COL_ID, Long.valueOf(entity.id));
         }
-        initialValues.put(PersonColumns.COL_NAME, user.name);
-        initialValues.put(PersonColumns.COL_PHONE, user.phone);
-        initialValues.put(PersonColumns.COL_COLOR, user.color);
-        initialValues.put(PersonColumns.COL_CONTACT_URI, user.contactUri);
-        initialValues.put(PersonColumns.COL_PAIRING_TIME, user.pairingTime);
+        initialValues.put(PersonColumns.COL_NAME, entity.displayName);
+        initialValues.put(PersonColumns.COL_PHONE, entity.phone);
+        initialValues.put(PersonColumns.COL_COLOR, entity.color);
+        initialValues.put(PersonColumns.COL_CONTACT_ID, entity.contactId);
+        initialValues.put(PersonColumns.COL_PAIRING_TIME, entity.pairingTime);
         return initialValues;
     }
 

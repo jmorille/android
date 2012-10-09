@@ -8,6 +8,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import eu.ttbox.geoping.domain.PersonProvider.Constants;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
@@ -23,8 +24,9 @@ public class GeoTrackerProvider extends ContentProvider {
 
     private static final int GEO_TRACKS = 0;
     private static final int GEOTRACK_ID = 1;
-    private static final int SEARCH_SUGGEST = 2;
-    private static final int REFRESH_SHORTCUT = 3;
+    private static final int PHONE_FILTER = 2;
+    private static final int SEARCH_SUGGEST = 3;
+    private static final int REFRESH_SHORTCUT = 4;
 
     private static final UriMatcher sURIMatcher;
 
@@ -32,7 +34,9 @@ public class GeoTrackerProvider extends ContentProvider {
         public static String AUTHORITY = "eu.ttbox.geoping.GeoTrackerProvider";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/geoTrackPoint");
-
+        public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");
+        
+        
         // MIME types used for searching words or looking up a single definition
         public static final String COLLECTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.geoTrackPoint";
         public static final String ITEM_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.geoTrackPoint";
@@ -44,6 +48,8 @@ public class GeoTrackerProvider extends ContentProvider {
         // to get definitions...
         matcher.addURI(Constants.AUTHORITY, "geoTrackPoint", GEO_TRACKS);
         matcher.addURI(Constants.AUTHORITY, "geoTrackPoint/#", GEOTRACK_ID);
+        matcher.addURI(Constants.AUTHORITY, "geoTrackPoint/phone_lookup/*", PHONE_FILTER);
+        
         // to get suggestions...
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
         matcher.addURI(Constants.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
@@ -78,6 +84,8 @@ public class GeoTrackerProvider extends ContentProvider {
             return Constants.COLLECTION_MIME_TYPE;
         case GEOTRACK_ID:
             return Constants.ITEM_MIME_TYPE;
+        case PHONE_FILTER:
+        	 return Constants.ITEM_MIME_TYPE;
         case SEARCH_SUGGEST:
             return SearchManager.SUGGEST_MIME_TYPE;
         case REFRESH_SHORTCUT:
@@ -98,6 +106,10 @@ public class GeoTrackerProvider extends ContentProvider {
         case GEO_TRACKS:
             String order = String.format("%s ASC", GeoTrackColumns.COL_TIME);
             return database.queryEntities(columns, selection, selectionArgs, order);
+        case PHONE_FILTER:
+            String phone = uri.getLastPathSegment();
+            String phoneDecoder = Uri.decode(phone);
+            return database.searchForPhoneNumber(phoneDecoder, projection, sortOrder);
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
@@ -111,7 +123,7 @@ public class GeoTrackerProvider extends ContentProvider {
             personUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(personId));
             getContext().getContentResolver().notifyChange(uri, null);
             // Logging 
-            String userId = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
+            String userId = values.getAsString(GeoTrackColumns.COL_PHONE);
             String latE6 = values.getAsString(GeoTrackColumns.COL_LATITUDE_E6);
             String lngE6 = values.getAsString(GeoTrackColumns.COL_LONGITUDE_E6);
             Log.d(TAG, String.format("insert geoTrack UserId [%s] with Uri : %s with WSG84(%s, %s)", userId, personUri, latE6, lngE6));

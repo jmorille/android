@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
+import eu.ttbox.geoping.domain.GeoTrackerProvider.Constants;
 import eu.ttbox.geoping.domain.person.PersonDatabase;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
@@ -176,6 +177,8 @@ public class PersonProvider extends ContentProvider {
             return PERSONS_LIST_MIME_TYPE;
         case PERSON_ID:
             return PERSON_MIME_TYPE;
+        case PHONE_FILTER:
+       	 return PERSON_MIME_TYPE;
         case SEARCH_SUGGEST:
             return SearchManager.SUGGEST_MIME_TYPE;
         case REFRESH_SHORTCUT:

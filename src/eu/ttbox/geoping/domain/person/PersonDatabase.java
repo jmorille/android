@@ -28,10 +28,10 @@ public class PersonDatabase {
         public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
         public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
         public static final String COL_COLOR = "COLOR";
-        public static final String COL_CONTACT_URI = "CONTACT_URI";
+        public static final String COL_CONTACT_ID = "CONTACT_ID";
         public static final String COL_PAIRING_TIME = "COL_PAIRING_TIME";
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH, COL_COLOR, COL_CONTACT_URI, COL_PAIRING_TIME };
+        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH, COL_COLOR, COL_CONTACT_ID, COL_PAIRING_TIME };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);
@@ -82,13 +82,6 @@ public class PersonDatabase {
         builder.setTables(TABLE_PERSON_FTS);
         builder.setProjectionMap(mPersonColumnMap);
         Cursor cursor = builder.query(mDbHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
-        // Manage Cursor
-        // if (cursor == null) {
-        // return null;
-        // } else if (!cursor.moveToFirst()) {
-        // cursor.close();
-        // return null;
-        // }
         return cursor;
     }
     
@@ -102,25 +95,7 @@ public class PersonDatabase {
         String[] selectionArgs = new String[] { minMatch };
         return queryEntities(projection, selection, selectionArgs, sortOrder);
     }
-
-    public long insertEntity(ContentValues values) throws SQLException {
-        long result = -1;
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        try {
-            fillNormalizedNumber(values);
-            db.beginTransaction();
-            try {
-                result = db.insertOrThrow(TABLE_PERSON_FTS, null, values);
-                // commit
-                db.setTransactionSuccessful();
-            } finally {
-                db.endTransaction();
-            }
-        } finally {
-            db.close();
-        }
-        return result;
-    }
+    
 
     private void fillNormalizedNumber(ContentValues values) {
         // No NUMBER? Also ignore NORMALIZED_NUMBER
@@ -144,6 +119,26 @@ public class PersonDatabase {
         }
 
     }
+
+    public long insertEntity(ContentValues values) throws SQLException {
+        long result = -1;
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        try {
+            fillNormalizedNumber(values);
+            db.beginTransaction();
+            try {
+                result = db.insertOrThrow(TABLE_PERSON_FTS, null, values);
+                // commit
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        } finally {
+            db.close();
+        }
+        return result;
+    }
+
     
     
 

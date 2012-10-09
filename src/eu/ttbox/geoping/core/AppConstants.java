@@ -7,6 +7,10 @@ public class AppConstants {
     // Constant
     public static final long UNSET_TIME = -1l;
     public static final long UNSET_ID = -1l;
+
+    public static final String MARKET_LINK = "market://details?id=eu.ttbox.geoping"; //"https://play.google.com/store/apps/details?id=eu.ttbox.geoping";
+//    "market://search?q=pname:eu.ttbox.geoping"
+    // "market://search?q=pub:eu.ttbox.geoping"
     
     //
     public static final String LOCAL_DB_KEY = "local";

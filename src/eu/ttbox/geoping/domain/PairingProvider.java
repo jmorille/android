@@ -173,6 +173,8 @@ public class PairingProvider extends ContentProvider {
             return PAIRINGS_LIST_MIME_TYPE;
         case PAIRING_ID:
             return PAIRING_MIME_TYPE;
+        case PAIRING_PHONE_FILTER:
+        	 return PAIRING_MIME_TYPE;
         case SEARCH_SUGGEST:
             return SearchManager.SUGGEST_MIME_TYPE;
         case REFRESH_SHORTCUT:

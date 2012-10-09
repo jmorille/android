@@ -75,7 +75,7 @@ public class GeoTrackBubble extends FrameLayout {
 
 	public void setData(Person person, GeoTrack geoTrack) {
 		// Person
-		this.nameTextView.setText(person.name);
+		this.nameTextView.setText(person.displayName);
 		// Track
 		if (geoTrack != null) {
 			// Date $Time

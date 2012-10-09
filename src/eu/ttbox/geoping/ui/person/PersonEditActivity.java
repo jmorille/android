@@ -50,6 +50,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 
 	// Instance
 	private String entityId;
+	private String contactId;
 
 	// ===========================================================
 	// Constructors
@@ -148,7 +149,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 	public void onSaveClick() {
 		String name = nameEditText.getText().toString();
 		String phone = phoneEditText.getText().toString();
-		Uri uri = doSavePerson(name, phone);
+		Uri uri = doSavePerson(name, phone, contactId);
 		setResult(Activity.RESULT_OK);
 		finish();
 	}
@@ -158,18 +159,6 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 		finish();
 	}
 
-	/**
-	 * {link http://www.higherpass.com/Android/Tutorials/Working-With-Android-
-	 * Contacts/}
-	 * 
-	 * @param v
-	 */
-	public void onSelectContactClick(View v) {
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-		// run
-		startActivityForResult(intent, PICK_CONTACT);
-	}
 
 	public void onPairingClick(View v) {
 		Intent intent = Intents.pairingRequest(this, phoneEditText.getText().toString(), entityId);
@@ -229,15 +218,25 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 	// Contact Picker
 	// ===========================================================
 
+	/**
+	 * {link http://www.higherpass.com/Android/Tutorials/Working-With-Android-
+	 * Contacts/}
+	 * 
+	 * @param v
+	 */
+	public void onSelectContactClick(View v) {
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+		startActivityForResult(intent, PICK_CONTACT);
+	}
+
+	
 	private void saveContactData(Uri contactData) {
 		String selection = null;
 		String[] selectionArgs = null;
-		Cursor c = getContentResolver().query(contactData, new String[] { //
-				ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, // TODO
-																		// Check
-																		// for
-																		// V10
-																		// compatibility
+		String contactId = contactData.getLastPathSegment();
+		Cursor c = getContentResolver().query(contactData, new String[] { // 
+				ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, //
 						ContactsContract.CommonDataKinds.Phone.NUMBER, //
 						ContactsContract.CommonDataKinds.Phone.TYPE }, selection, selectionArgs, null);
 		try {
@@ -245,8 +244,8 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 			if (c != null && c.moveToFirst()) {
 				String name = c.getString(0);
 				String phone = c.getString(1);
-				int type = c.getInt(2);
-				doSavePerson(name, phone);
+				int type = c.getInt(1);
+				doSavePerson(name, phone, contactId);
 				// showSelectedNumber(type, number);
 			}
 		} finally {
@@ -266,14 +265,17 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 		return cleanPhone;
 	}
 
-	private Uri doSavePerson(String name, String phoneDirty) {
+	private Uri doSavePerson(String name, String phoneDirty, String contactId) {
 		String phone = cleanPhone(phoneDirty);
-		setPerson(name, phone);
+		setPerson(name, phone, contactId);
 		// Prepare db insert
 		ContentValues values = new ContentValues();
 		values.put(PersonColumns.COL_NAME, name);
 		values.put(PersonColumns.COL_PHONE, phone);
 		values.put(PersonColumns.COL_COLOR, mPaint.getColor());
+		values.put(PersonColumns.COL_CONTACT_ID, contactId);
+		
+		Log.d(TAG, "Save Person with Contact Id : "+contactId);
 		// Content
 		Uri uri;
 		if (entityId == null) {
@@ -289,9 +291,10 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 		return uri;
 	}
 
-	private void setPerson(String name, String phone) {
+	private void setPerson(String name, String phone, String contactId) {
 		nameEditText.setText(name);
 		phoneEditText.setText(phone);
+		this.contactId = contactId;
 	}
 
 	private Uri getUriEntity() {
@@ -323,6 +326,8 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 				PersonHelper helper = new PersonHelper().initWrapper(cursor);
 				helper.setTextPersonName(nameEditText, cursor)//
 						.setTextPersonPhone(phoneEditText, cursor);
+				// Data
+				contactId = helper.getContactId(cursor); 
 				// Button
 				personPairingButton.setVisibility(View.VISIBLE);
 				contactSelectButton.setVisibility(View.GONE);
@@ -333,7 +338,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 
 		@Override
 		public void onLoaderReset(Loader<Cursor> loader) {
-			setPerson(null, null);
+			setPerson(null, null, null);
 		}
 
 	};

@@ -194,9 +194,7 @@ public class GeoPingMasterService extends IntentService {
     // Consume Localisation
     // ===========================================================
     
-    private void consumeSmsLog(Bundle bundle) {
-        // TODO
-    }
+     
 
     private boolean consumeGeoPingResponse(Bundle bundle) {
         boolean isConsume = false;
@@ -238,22 +236,7 @@ public class GeoPingMasterService extends IntentService {
         }
         return person;
     }
-
-    private String searchPersonForPersonId(long personId) {
-        String entityId = String.valueOf(personId);
-        Uri uri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, entityId);
-        String[] cols = new String[] { PersonColumns.COL_PHONE };
-        Cursor cur = getContentResolver().query(uri, cols, null, null, null);
-        try {
-            if (cur != null && cur.moveToFirst()) {
-                String value = cur.getString(1);
-                return value;
-            }
-        } finally {
-            cur.close();
-        }
-        return null;
-    }
+ 
 
     // ===========================================================
     // Notification
@@ -262,17 +245,24 @@ public class GeoPingMasterService extends IntentService {
 
     @SuppressLint("NewApi")
     private void showNotificationGeoPing(Uri geoTrackData, ContentValues values) {
-        String phone = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
+        String phone = values.getAsString(GeoTrackColumns.COL_PHONE);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // Contact Name
-        ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
+        Person contact = searchPersonForPhone(phone);
+   
+        if (true) {
+        	// TODO Dont Search twice
+        	ContactVo contactSearch = ContactHelper.searchContactForPhone(this, phone); 
+        	Log.w(TAG, String.format("Compare Person Contact Id %s with Search Phone Contact Id %s", contact.contactId, contactSearch.id));
+        	contact.contactId = String.valueOf(contactSearch.id);
+        }
         String contactDisplayName = phone;
         Bitmap photo = null;
         if (contact != null) {
             if (contact.displayName != null && contact.displayName.length() > 0) {
                 contactDisplayName = contact.displayName;
             }
-            photo = ContactHelper.openPhotoBitmap(this, contact.id);
+            photo = ContactHelper.openPhotoBitmap(this, contact.contactId);
         }
         // Create Notif Intent response
         PendingIntent pendingIntent = null;

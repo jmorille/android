@@ -15,10 +15,24 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 import android.util.Log;
 
+/**
+ * @see Woking With Contact {link http://www.higherpass.com/Android/Tutorials/Working-With-Android-Contacts/}
+ * @author a000cqp
+ *
+ */
 public class ContactHelper {
 
-    private static final String TAG = "ContactHelper";
+	private static final String TAG = "ContactHelper";
 
+	private static final String PERMISSION_READ_CONTACTS = "android.permission.READ_CONTACTS";
+
+    public static Bitmap openPhotoBitmap(Context context,String contactId) {
+    	if (contactId==null) {
+    		return null;
+    	}
+    	Long contactIden = Long.valueOf(contactId);
+    	return openPhotoBitmap(context, contactIden);
+    }
     public static Bitmap openPhotoBitmap(Context context,long contactId) {
         Bitmap photo = null;
         InputStream is = openPhoto(context, Long.valueOf(contactId));
@@ -34,6 +48,7 @@ public class ContactHelper {
     }
 
     public static InputStream openPhoto(Context context,long contactId) {
+    	Log.d(TAG, "Open Photo for COntact Id : " + contactId );
         Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId);
         Uri photoUri = Uri.withAppendedPath(contactUri, Contacts.Photo.CONTENT_DIRECTORY);
         Cursor cursor = context.getContentResolver().query(photoUri, new String[] { Contacts.Photo.PHOTO }, null, null, null);
@@ -54,9 +69,6 @@ public class ContactHelper {
     }
     
     
-    private static boolean isPermissionReadContact(Context context) {
-        return PackageManager.PERMISSION_GRANTED == context.getPackageManager().checkPermission("android.permission.READ_CONTACTS", context.getPackageName());
-    }
 
     public static ContactVo searchContactForPhone(Context context, String phoneNumber) {
         String contactName = null;
@@ -65,7 +77,6 @@ public class ContactHelper {
             Log.d(TAG, String.format("Search Contact Name for Phone [%s]", phoneNumber));
             Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
             Cursor cur = context.getContentResolver().query(uri, new String[] { PhoneLookup.DISPLAY_NAME, PhoneLookup._ID }, null, null, null);
-
             try {
                 if (cur != null && cur.moveToFirst()) {
                     contactName = cur.getString(cur.getColumnIndex(PhoneLookup.DISPLAY_NAME));
@@ -82,4 +93,11 @@ public class ContactHelper {
         }
         return result;
     }
+    
+
+    private static boolean isPermissionReadContact(Context context) {
+        return PackageManager.PERMISSION_GRANTED == context.getPackageManager().checkPermission(PERMISSION_READ_CONTACTS, context.getPackageName());
+    }
+
+    
 }

@@ -392,7 +392,7 @@ public class GeoPingSlaveService extends WorkerService {
             return;
         }
         ContentValues values = GeoTrackHelper.getContentValues(geotrack);
-        values.put(GeoTrackColumns.COL_PHONE_NUMBER, AppConstants.KEY_DB_LOCAL);
+        values.put(GeoTrackColumns.COL_PHONE , AppConstants.KEY_DB_LOCAL);
         getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
     }
 

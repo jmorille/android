@@ -15,8 +15,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
-import eu.ttbox.geoping.domain.model.GeoTrack;
-import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.domain.model.GeoTrack; 
 
 public class GeoTrackDatabase {
 
@@ -24,7 +23,8 @@ public class GeoTrackDatabase {
 
 	public static class GeoTrackColumns {
 		public static final String COL_ID = BaseColumns._ID;
-		public static final String COL_PHONE_NUMBER = "PHONE_NUMBER";
+		public static final String COL_PHONE = "PHONE_NUMBER";
+		public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
 		public static final String COL_PERSON_ID = "PERSON_ID";
 		public static final String COL_TIME = "TIME";
 		public static final String COL_TIME_MIDNIGHT = "TIME_MIDNIGHT";
@@ -36,13 +36,13 @@ public class GeoTrackDatabase {
 		public static final String COL_BEARING = "BEARING";
 		public static final String COL_SPEED = "SPEED";
 		public static final String COL_ADDRESS = "ADDRESS";
-		public static final String[] ALL_COLS = new String[] { COL_ID, COL_PERSON_ID, COL_PHONE_NUMBER, COL_TIME, COL_PROVIDER, COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_ACCURACY, COL_ALTITUDE,
+		public static final String[] ALL_COLS = new String[] { COL_ID, COL_PERSON_ID, COL_PHONE, COL_PHONE_MIN_MATCH, COL_TIME, COL_PROVIDER, COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_ACCURACY, COL_ALTITUDE,
 				COL_BEARING, COL_SPEED, COL_ADDRESS };
 
 	}
 
 	private static final String CRITERIA_BY_ENTITY_ID = String.format("%s = ?", GeoTrackColumns.COL_ID);
-	private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoTrackColumns.COL_PHONE_NUMBER);
+	private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoTrackColumns.COL_PHONE);
 
 	private SQLiteDatabase bdd;
 
@@ -81,10 +81,40 @@ public class GeoTrackDatabase {
 		Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
 		return cursor;
 	}
+	
+	  public Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) {
+	        String[] projection = _projection == null ? GeoTrackColumns.ALL_COLS : _projection;
+	        // Normalise For search
+	         String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+	         String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+	        // Prepare Query
+	        String selection = String.format("%s = ?", GeoTrackColumns.COL_PHONE_MIN_MATCH);
+	        String[] selectionArgs = new String[] { minMatch };
+	        return queryEntities(projection, selection, selectionArgs, sortOrder);
+	    }
+	    
+
+	    private void fillNormalizedNumber(ContentValues values) {
+	        // No NUMBER? Also ignore NORMALIZED_NUMBER
+	        if (!values.containsKey(GeoTrackColumns.COL_PHONE)) { 
+	            values.remove(GeoTrackColumns.COL_PHONE_MIN_MATCH); 
+	            return;
+	        } 
+	        // NUMBER is given. Try to extract NORMALIZED_NUMBER from it, unless it
+	        // is also given
+	        String number = values.getAsString(GeoTrackColumns.COL_PHONE); 
+	        String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+	        if (!TextUtils.isEmpty(normalizedNumber)) {
+	            String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber); 
+	            values.put(GeoTrackColumns.COL_PHONE_MIN_MATCH, minMatch);
+	        }
+
+	    }
 
 	public long insertEntity(ContentValues values) throws SQLException {
 		long result = -1;
 		fillTimeMidnight(values);
+		fillNormalizedNumber(values);
 		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 		try {
 			db.beginTransaction();
@@ -126,6 +156,7 @@ public class GeoTrackDatabase {
 	public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
 		int result = -1;
 		fillTimeMidnight(values);
+		fillNormalizedNumber(values);
 		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 		try {
 			db.beginTransaction();
@@ -167,7 +198,7 @@ public class GeoTrackDatabase {
 		calendar.clear(Calendar.SECOND);
 		calendar.clear(Calendar.MILLISECOND);
 		long pointDate = calendar.getTimeInMillis();
-		String whereClause = GeoTrackColumns.COL_PHONE_NUMBER + " = ? and " + GeoTrackColumns.COL_TIME + '>' + pointDate;
+		String whereClause = GeoTrackColumns.COL_PHONE + " = ? and " + GeoTrackColumns.COL_TIME + '>' + pointDate;
 		Cursor c = bdd.query(TABLE_TRACK_POINT, GeoTrackColumns.ALL_COLS, whereClause, new String[] { userId }, null, null, GeoTrackColumns.COL_TIME);
 		return cursorToLivre(c);
 	}

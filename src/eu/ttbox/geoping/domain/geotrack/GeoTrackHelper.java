@@ -38,7 +38,7 @@ public class GeoTrackHelper {
     public GeoTrackHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(GeoTrackColumns.COL_ID);
         personIdIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PERSON_ID);
-        phoneIdIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PHONE_NUMBER);
+        phoneIdIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PHONE);
         timeIdx = cursor.getColumnIndex(GeoTrackColumns.COL_TIME);
         providerIdx = cursor.getColumnIndex(GeoTrackColumns.COL_PROVIDER);
 
@@ -123,7 +123,7 @@ public class GeoTrackHelper {
             initialValues.putLong(GeoTrackColumns.COL_PERSON_ID, geoTrack.personId);
         }
         if (geoTrack.hasPhone()) {
-            initialValues.putString(GeoTrackColumns.COL_PHONE_NUMBER, geoTrack.phone);
+            initialValues.putString(GeoTrackColumns.COL_PHONE, geoTrack.phone);
         }
         initialValues.putLong(GeoTrackColumns.COL_TIME, geoTrack.time);
         initialValues.putString(GeoTrackColumns.COL_PROVIDER, geoTrack.provider);
@@ -151,7 +151,7 @@ public class GeoTrackHelper {
         Bundle initialValues = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
         GeoTrack geoTrack = getEntityFromBundle(initialValues);
         String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-        if (phone!=null && !initialValues.containsKey(GeoTrackColumns.COL_PHONE_NUMBER)) {
+        if (phone!=null && !initialValues.containsKey(GeoTrackColumns.COL_PHONE)) {
             geoTrack.setPhone(phone);
         }
         return geoTrack;
@@ -167,8 +167,8 @@ public class GeoTrackHelper {
         if (initialValues.containsKey(GeoTrackColumns.COL_PERSON_ID)) {
             geoTrack.setPersonId(initialValues.getLong(GeoTrackColumns.COL_PERSON_ID));
         }
-        if (initialValues.containsKey(GeoTrackColumns.COL_PHONE_NUMBER)) {
-            geoTrack.setPhone(initialValues.getString(GeoTrackColumns.COL_PHONE_NUMBER));
+        if (initialValues.containsKey(GeoTrackColumns.COL_PHONE)) {
+            geoTrack.setPhone(initialValues.getString(GeoTrackColumns.COL_PHONE));
         }
         if (initialValues.containsKey(GeoTrackColumns.COL_PROVIDER)) {
             geoTrack.setProvider(initialValues.getString(GeoTrackColumns.COL_PROVIDER));

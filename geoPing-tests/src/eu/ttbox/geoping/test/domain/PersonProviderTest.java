@@ -40,7 +40,7 @@ public class PersonProviderTest extends ProviderTestCase2<PersonProvider> {
                 .setPhone("0601020304") //
                 .setColor(Color.GREEN)//
                 .setPairingTime(System.currentTimeMillis())
-                .setName("Lena Sjššblom");
+                .setDisplayName("Lena Sjï¿½ï¿½blom");
         ContentValues values = PersonHelper.getContentValues(vo);
         // Insert
         Uri uri = provider.insert(CONTENT_URI, values);
@@ -54,7 +54,7 @@ public class PersonProviderTest extends ProviderTestCase2<PersonProvider> {
             assertEquals(Long.valueOf(uri.getLastPathSegment()).longValue(), voDb.id);
             assertEquals(vo.phone, voDb.phone);
             assertEquals(vo.color, voDb.color);
-            assertEquals(vo.name, voDb.name);
+            assertEquals(vo.displayName, voDb.displayName);
             assertEquals(vo.pairingTime, voDb.pairingTime);
         } finally {
             cursor.close();
@@ -68,7 +68,7 @@ public class PersonProviderTest extends ProviderTestCase2<PersonProvider> {
         .setPhone("0601020304") //
         .setColor(Color.GREEN)//
         .setPairingTime(System.currentTimeMillis())
-        .setName("Lena Sjššblom");
+        .setDisplayName("Lena Sjï¿½ï¿½blom");
         ContentValues values = PersonHelper.getContentValues(vo);
         // Insert
         Uri uri = provider.insert(CONTENT_URI, values);
@@ -86,7 +86,7 @@ public class PersonProviderTest extends ProviderTestCase2<PersonProvider> {
                 assertEquals(vo.phone, voDb.phone);
                 assertEquals(vo.color, voDb.color);
                 assertEquals(vo.pairingTime, voDb.pairingTime);
-                assertEquals(vo.name, voDb.name);
+                assertEquals(vo.displayName, voDb.displayName);
             } finally {
                 cursor.close();
             }

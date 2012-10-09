@@ -26,7 +26,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
             + ", " + PersonDatabase.PersonColumns.COL_PHONE_NORMALIZED //
             + ", " + PersonDatabase.PersonColumns.COL_PHONE_MIN_MATCH //
 			+ ", " + PersonDatabase.PersonColumns.COL_COLOR //
-			+ ", " + PersonDatabase.PersonColumns.COL_CONTACT_URI//
+			+ ", " + PersonDatabase.PersonColumns.COL_CONTACT_ID//
             + ", " + PairingDatabase.PairingColumns.COL_PAIRING_TIME // 
 			+ ");";
 	

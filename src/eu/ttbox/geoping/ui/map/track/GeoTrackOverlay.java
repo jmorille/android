@@ -524,7 +524,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             String sortOrder = SQL_SORT_DEFAULT;
-            String selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_PHONE_NUMBER, GeoTrackColumns.COL_TIME);
+            String selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_PHONE, GeoTrackColumns.COL_TIME);
             String[] selectionArgs = new String[] { getPersonUserId(), timeBeginInMs, timeEndInMs };
             Log.d(TAG, String.format("Sql request : %s / for param : user [%s] with date range(%s, %s)", selection, selectionArgs[0], selectionArgs[1], selectionArgs[2]));
             // Loader

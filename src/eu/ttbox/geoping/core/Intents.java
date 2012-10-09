@@ -73,7 +73,7 @@ public class Intents {
     // ===========================================================
 
     public static Intent newGeoTrackInserted(Uri geoTrackData, ContentValues values) {
-        String userId = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
+        String userId = values.getAsString(GeoTrackColumns.COL_PHONE);
         Log.d(TAG, "Create Intent action for New GeoTrack for user " + userId);
         // create
         Intent intent = new Intent(Intents.ACTION_NEW_GEOTRACK_INSERTED);
@@ -83,7 +83,7 @@ public class Intents {
     }
 
     public static Intent showOnMap(Context context, Uri geoTrackData, ContentValues values) {
-        String phone = values.getAsString(GeoTrackColumns.COL_PHONE_NUMBER);
+        String phone = values.getAsString(GeoTrackColumns.COL_PHONE);
         Log.d(TAG, "Create Intent action for New GeoTrack for user " + phone);
         // create
         Intent intent = new Intent(context, ShowMapActivity.class);
