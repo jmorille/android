@@ -6,11 +6,15 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 import android.widget.RemoteViews;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.domain.PersonProvider;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 /**
  * {link http://www.vogella.com/articles/AndroidWidgets/article.html}
@@ -25,7 +29,11 @@ public class GeoPingSenderWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		// Get all ids
-		ComponentName thisWidget = new ComponentName(context, GeoPingSenderWidgetProvider.class);
+//	    String[] projection = new String[] { PersonColumns.COL_NAME, PersonColumns.COL_PHONE};
+//	    final ContentResolver r = context.getContentResolver();
+//	    Cursor cursor = r.query(PersonProvider.Constants.CONTENT_URI, projection, null, null, PersonColumns.COL_NAME);
+ 	    
+	    ComponentName thisWidget = new ComponentName(context, GeoPingSenderWidgetProvider.class);
 		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 		for (int widgetId : allWidgetIds) {
 			// Create some random data
