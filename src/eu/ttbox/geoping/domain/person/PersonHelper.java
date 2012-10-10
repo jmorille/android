@@ -11,7 +11,7 @@ public class PersonHelper {
 
     boolean isNotInit = true;
     public int idIdx = -1;
-    public int nameIdx = -1;
+    public int displayNameIdx = -1;
     public int phoneIdx = -1;
     public int colorIdx = -1;
     public int contactIdIdx = -1;
@@ -19,7 +19,7 @@ public class PersonHelper {
 
     public PersonHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(PersonColumns.COL_ID);
-        nameIdx = cursor.getColumnIndex(PersonColumns.COL_NAME);
+        displayNameIdx = cursor.getColumnIndex(PersonColumns.COL_NAME);
         phoneIdx = cursor.getColumnIndex(PersonColumns.COL_PHONE);
         colorIdx = cursor.getColumnIndex(PersonColumns.COL_COLOR);
         contactIdIdx = cursor.getColumnIndex(PersonColumns.COL_CONTACT_ID);
@@ -34,7 +34,7 @@ public class PersonHelper {
         }
         Person user = new Person();
         user.setId(idIdx > -1 ? cursor.getLong(idIdx) :  AppConstants.UNSET_ID);
-        user.setDisplayName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
+        user.setDisplayName(displayNameIdx > -1 ? cursor.getString(displayNameIdx) : null);
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
         user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : 0);
         user.setContactId(contactIdIdx > -1 ? cursor.getString(contactIdIdx) : null);
@@ -69,7 +69,7 @@ public class PersonHelper {
  
     
     public PersonHelper setTextPersonName(TextView view, Cursor cursor) {
-        return setTextWithIdx(view, cursor, nameIdx);
+        return setTextWithIdx(view, cursor, displayNameIdx);
     }
 
     public PersonHelper setTextPersonPhone(TextView view, Cursor cursor) {
@@ -78,6 +78,11 @@ public class PersonHelper {
 
     public String getPersonPhone(Cursor cursor) {
         return cursor.getString(phoneIdx);
+    }
+
+    
+    public String getPersonDisplayName(Cursor cursor) {
+        return cursor.getString(displayNameIdx);
     }
 
     public static ContentValues getContentValues(Person entity) {
