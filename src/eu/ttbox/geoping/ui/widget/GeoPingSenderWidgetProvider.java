@@ -1,22 +1,18 @@
 package eu.ttbox.geoping.ui.widget;
 
-import java.util.Random;
-
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
+import eu.ttbox.geoping.core.Intents;
 
 /**
  * {link http://www.vogella.com/articles/AndroidWidgets/article.html}
@@ -27,8 +23,28 @@ import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 @TargetApi(14)
 public class GeoPingSenderWidgetProvider extends AppWidgetProvider {
 
-	private static final String ACTION_CLICK = "ACTION_CLICK";
+    private static final String TAG = "GeoPingSenderWidgetProvider";
 
+    private static final String ACTION_CLICK = "ACTION_CLICK";
+
+
+    @Override
+    public void onReceive(Context ctx, Intent intent) {
+        final String action = intent.getAction();
+        Log.w(TAG,String.format(  "OnReceive Intent %s : %s" , action, intent));
+        if (action.equals(ACTION_CLICK)) {
+            final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
+            final String phoneNumber = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+            final String formatStr = "Send GeoPing Request : %s"  ;
+            Toast.makeText(ctx, String.format(formatStr, phoneNumber), Toast.LENGTH_SHORT).show();
+            // Send it
+            Intent intentGeoPing = Intents.sendSmsGeoPingRequest(ctx, phoneNumber);
+            ctx.startService(intentGeoPing);
+        }
+        super.onReceive(ctx, intent);
+    }
+    
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		// Get all ids
@@ -45,9 +61,19 @@ public class GeoPingSenderWidgetProvider extends AppWidgetProvider {
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,widgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
             final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_geoping_sender);
-            rv.setRemoteAdapter( widgetId, R.id.widget_person_list, intent);
+            rv.setRemoteAdapter(   R.id.widget_person_list, intent);
 
-		    
+            // Bind a click listener template for the contents of the weather list.  Note that we
+            // need to update the intent's data if we set an extra, since the extras will be
+            // ignored otherwise.
+            final Intent onClickIntent = new Intent(context, GeoPingSenderWidgetProvider.class);
+            onClickIntent.setAction(GeoPingSenderWidgetProvider.ACTION_CLICK);
+            onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+            onClickIntent.setData(Uri.parse(onClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            final PendingIntent onClickPendingIntent = PendingIntent.getBroadcast(context, 0,
+                    onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            rv.setPendingIntentTemplate(R.id.widget_person_list, onClickPendingIntent);
+            
 		    // Create some random data
 //			int number = (new Random().nextInt(100));
 //

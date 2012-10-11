@@ -9,8 +9,10 @@ import android.text.TextUtils;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.service.master.GeoPingMasterService;
 
 /**
  * {link http://www.java2s.com/Code/Android/UI/WeatherListWidget.htm}
@@ -71,7 +73,9 @@ public class WidgetPersonRemoteViewsService extends RemoteViewsService {
             rv.setTextViewText(R.id.widget_person_item_displayName,displayName);
 
             // Set the click intent so that we can handle it and show a toast message
-            final Intent fillInIntent = eu.ttbox.geoping.core.Intents.sendSmsGeoPingRequest(mContext, phoneNumber);
+            final Intent fillInIntent = new Intent() // 
+            .putExtra(Intents.EXTRA_SMS_PHONE, phoneNumber);
+            //final Intent fillInIntent =  Intents.sendSmsGeoPingRequest(mContext, phoneNumber);
              rv.setOnClickFillInIntent(R.id.widget_person_item_displayName, fillInIntent);
 
             return rv;
