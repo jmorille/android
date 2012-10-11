@@ -97,6 +97,10 @@ public class PairingHelper {
         return cursor.getString(phoneIdx);
     }
 
+    public String getDisplayName(Cursor cursor) {
+        return cursor.getString(phoneIdx);
+    }
+    
     public static ContentValues getContentValues(Pairing vo) {
         ContentValues initialValues = new ContentValues();
         if (vo.id > -1) {
@@ -111,6 +115,8 @@ public class PairingHelper {
         initialValues.put(PairingColumns.COL_AUTHORIZE_TYPE, authorizeType.getCode());
         return initialValues;
     }
+
+
 
   
 

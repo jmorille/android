@@ -2,6 +2,6 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
      android:minWidth="50dip"
     android:minHeight="50dip"
-    android:initialLayout="@layout/widget_geoping_sender" android:resizeMode="horizontal|vertical">
+    android:initialLayout="@layout/widget_person" android:resizeMode="horizontal|vertical">
 
 </appwidget-provider>

@@ -87,22 +87,29 @@
             </intent-filter>
         </receiver>
 
-         <!-- Widget -->
-          <receiver android:name=".ui.widget.GeoPingSenderWidgetProvider" android:permission="eu.ttbox.">
+         <!-- Widget Person -->
+          <receiver android:name=".ui.widget.PersonWidgetProvider"  >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_geoping_sender_info"/>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_geoping_info"/>
         </receiver>
-        <service android:name=".ui.widget.WidgetPersonRemoteViewsService"
+        <service android:name=".ui.widget.PersonWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" 
-            android:exported="false" >
-           
-        </service>    
-<!--             android:permission="android.permission.BIND_REMOTEVIEWS"  -->
-<!--          -->
-<!--           readPermission="eu.ttbox.geoping.PERSON_READ" -->
-            
+            android:exported="false" />
+
+        <!-- Widget Pairing -->
+          <receiver android:name=".ui.widget.PairingWidgetProvider" android:permission="eu.ttbox.geoping.PAIRING_READ">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter> 
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_geoping_info"/>
+        </receiver>
+        <service android:name=".ui.widget.PairingWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" 
+            android:exported="false" />
+        
+        
         <!-- Sms service -->
         <service android:name=".service.slave.GeoPingSlaveService">
             	<intent-filter>

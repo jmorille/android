@@ -12,7 +12,6 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonHelper;
-import eu.ttbox.geoping.service.master.GeoPingMasterService;
 
 /**
  * {link http://www.java2s.com/Code/Android/UI/WeatherListWidget.htm}
@@ -20,7 +19,7 @@ import eu.ttbox.geoping.service.master.GeoPingMasterService;
  *
  */
 @TargetApi(11)
-public class WidgetPersonRemoteViewsService extends RemoteViewsService {
+public class PersonWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
