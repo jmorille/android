@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/widget_geoping_sender"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-     android:background="@drawable/widget_background"
-    android:orientation="vertical" >
-    
- <TextView
-        android:id="@+id/update"
+    android:orientation="horizontal" >
+
+    <Button
+        android:id="@+id/widget_person_item_displayName"
         style="@android:style/TextAppearance.Medium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:gravity="center_horizontal|center_vertical"
         android:layout_margin="4dip"
-        android:text="Static Text" >
-    </TextView>
-    
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/app_name" />
+
 </LinearLayout>

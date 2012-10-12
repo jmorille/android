@@ -9,6 +9,7 @@ import android.util.Log;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.master.GeoPingMasterService;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
 import eu.ttbox.geoping.service.slave.GeopingNotifSlaveTypeEnum;
@@ -140,6 +141,12 @@ public class Intents {
         return intent;
     }
 
+    public static Intent sendSmsGeoPingResponse(Context context, String phoneNumber) {
+        return new Intent(context, GeoPingSlaveService.class) //
+                .setAction(SmsMessageActionEnum.ACTION_GEO_LOC.intentAction)//
+                .putExtra(EXTRA_SMS_PHONE, phoneNumber);
+    }
+    
     // Sms Consumer
 
     // public static Intent consumerSmsGeoPingResponsetHandler(Context context,
