@@ -36,11 +36,10 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
         }
         ViewHolder holder = (ViewHolder) view.getTag();
         // Bind Value
-        helper.setTextPersonName(holder.nameText, cursor)//
-                .setTextPersonPhone(holder.phoneText, cursor);
-        // Button
-        final String entityId = helper.getPersonIdAsString(cursor);
         final String phoneNumber = helper.getPersonPhone(cursor);
+        holder.phoneText.setText(phoneNumber);
+        // Button
+        helper.setTextPersonName(holder.nameText, cursor);
         holder.pingButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
