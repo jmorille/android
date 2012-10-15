@@ -117,7 +117,7 @@ public class GeoPingMasterService extends IntentService {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             long userId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1);
-            consumeSmsPairingResponse(phone, userId); 
+            consumeSmsPairingResponse(phone, userId);
         }
 
     }
@@ -157,9 +157,7 @@ public class GeoPingMasterService extends IntentService {
     // ===========================================================
     // Sender Sms message
     // ===========================================================
-    
 
-    
     private void sendSmsPairingRequest(String phone, long userId) {
         Bundle params = SmsMessageLocEnum.MSGKEY_PERSON_ID.writeToBundle(null, userId);
         sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
@@ -183,18 +181,15 @@ public class GeoPingMasterService extends IntentService {
     // ===========================================================
     // Log Sms message
     // ===========================================================
-    
-    private void logSmsMessage(SmsLogTypeEnum type, String phone,  SmsMessageActionEnum action , Bundle params ) {
-    	ContentValues values =SmsLogHelper.getContentValues(type, phone, action, params);
-    	getContentResolver().insert(SmsLogProvider.Constants.CONTENT_URI, values);
+
+    private void logSmsMessage(SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params) {
+        ContentValues values = SmsLogHelper.getContentValues(type, phone, action, params);
+        getContentResolver().insert(SmsLogProvider.Constants.CONTENT_URI, values);
     }
-    
-    
+
     // ===========================================================
     // Consume Localisation
     // ===========================================================
-    
-     
 
     private boolean consumeGeoPingResponse(Bundle bundle) {
         boolean isConsume = false;
@@ -236,12 +231,10 @@ public class GeoPingMasterService extends IntentService {
         }
         return person;
     }
- 
 
     // ===========================================================
     // Notification
     // ===========================================================
-
 
     @SuppressLint("NewApi")
     private void showNotificationGeoPing(Uri geoTrackData, ContentValues values) {
@@ -249,12 +242,14 @@ public class GeoPingMasterService extends IntentService {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // Contact Name
         Person contact = searchPersonForPhone(phone);
-   
+
         if (true) {
-        	// TODO Dont Search twice
-        	ContactVo contactSearch = ContactHelper.searchContactForPhone(this, phone); 
-        	Log.w(TAG, String.format("Compare Person Contact Id %s with Search Phone Contact Id %s", contact.contactId, contactSearch.id));
-        	contact.contactId = String.valueOf(contactSearch.id);
+            // TODO Dont Search twice
+            ContactVo contactSearch = ContactHelper.searchContactForPhone(this, phone);
+            if (contactSearch!=null) {
+                Log.w(TAG, String.format("Compare Person Contact Id %s with Search Phone Contact Id %s", contact.contactId,  contactSearch.id));
+                contact.contactId = String.valueOf(contactSearch.id);
+            }
         }
         String contactDisplayName = phone;
         Bitmap photo = null;
@@ -281,9 +276,9 @@ public class GeoPingMasterService extends IntentService {
                 .setSmallIcon(R.drawable.ic_stat_notif_icon) //
                 .setWhen(System.currentTimeMillis()) //
                 .setAutoCancel(true) //
-                 .setContentIntent(pendingIntent)//
+                .setContentIntent(pendingIntent)//
                 .setContentTitle(getString(R.string.notif_geoping)) //
-                .setContentText(contactDisplayName); // 
+                .setContentText(contactDisplayName); //
         if (photo != null) {
             notificationBuilder.setLargeIcon(photo);
         } else {
@@ -292,12 +287,12 @@ public class GeoPingMasterService extends IntentService {
         }
         Notification notification = notificationBuilder.build();
         // Show
-      int notifId = SHOW_ON_NOTIFICATION_ID + phone.hashCode();
-      Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
+        int notifId = SHOW_ON_NOTIFICATION_ID + phone.hashCode();
+        Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
 
         mNotificationManager.notify(notifId, notification);
     }
-     
+
     // ===========================================================
     // Other
     // ===========================================================

@@ -5,14 +5,19 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.PersonProvider;
 
 /**
  * {link http://www.vogella.com/articles/AndroidWidgets/article.html}
@@ -27,6 +32,34 @@ public class PersonWidgetProvider extends AppWidgetProvider {
 
     private static final String ACTION_CLICK = "ACTION_CLICK";
 
+   
+    private static HandlerThread sWorkerThread;
+    private static Handler sWorkerQueue;
+    private static PersonWidgetDataProviderObserver sDataObserver;
+    
+    public PersonWidgetProvider() {
+        // Start the worker thread
+        sWorkerThread = new HandlerThread("PersonWidgetProvider-worker");
+        sWorkerThread.start();
+        sWorkerQueue = new Handler(sWorkerThread.getLooper());
+    }
+
+    @Override
+    public void onEnabled(Context context) {
+        // Register for external updates to the data to trigger an update of the widget.  When using
+        // content providers, the data is often updated via a background service, or in response to
+        // user interaction in the main app.  To ensure that the widget always reflects the current
+        // state of the data, we must listen for changes and update ourselves accordingly.
+     
+        if (sDataObserver == null) {
+            final ContentResolver r = context.getContentResolver();
+            final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+            final ComponentName cn = new ComponentName(context, PersonWidgetProvider.class);
+            sDataObserver = new PersonWidgetDataProviderObserver(mgr, cn, sWorkerQueue);
+            r.registerContentObserver(PersonProvider.Constants.CONTENT_URI, true, sDataObserver);
+         }
+    }
+    
     @Override
     public void onReceive(Context ctx, Intent intent) {
         final String action = intent.getAction();
@@ -96,4 +129,23 @@ public class PersonWidgetProvider extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
+    class PersonWidgetDataProviderObserver extends ContentObserver {
+        private AppWidgetManager mAppWidgetManager;
+        private ComponentName mComponentName;
+
+        PersonWidgetDataProviderObserver(AppWidgetManager mgr, ComponentName cn, Handler h) {
+            super(h);
+            mAppWidgetManager = mgr;
+            mComponentName = cn;
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            // The data has changed, so notify the widget that the collection view needs to be updated.
+            // In response, the factory's onDataSetChanged() will be called which will requery the
+            // cursor for the new data.
+            mAppWidgetManager.notifyAppWidgetViewDataChanged(
+                    mAppWidgetManager.getAppWidgetIds(mComponentName), R.id.widget_person_list);
+        }
+    }
 }

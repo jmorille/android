@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import eu.ttbox.geoping.R;
@@ -89,7 +90,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
             @Override
             public void onClick(View v) {
                 if (mCallBack != null) {
-                    ToggleButton tb = (ToggleButton) v;
+                    CheckBox tb = (CheckBox) v;
                     if (tb.isChecked()) {
                         mCallBack.onDoAddPerson(person);
                     } else {
@@ -124,7 +125,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
         holder.nameText = (TextView) view.findViewById(R.id.person_list_item_name);
         holder.phoneText = (TextView) view.findViewById(R.id.person_list_item_phone);
         holder.pingButton = (Button) view.findViewById(R.id.person_list_item_geoping_button);
-        holder.selectedSelector = (ToggleButton) view.findViewById(R.id.person_list_item_status_selected);
+        holder.selectedSelector = (CheckBox) view.findViewById(R.id.person_list_item_status_selected);
         // Backgroup Shape
 
         // normal.getPaint().setShader(shader);
@@ -138,7 +139,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
         Button pingButton;
         TextView nameText;
         TextView phoneText;
-        ToggleButton selectedSelector;
+        CheckBox selectedSelector;
         // CustomShapeDrawable backgroud;
     }
 
