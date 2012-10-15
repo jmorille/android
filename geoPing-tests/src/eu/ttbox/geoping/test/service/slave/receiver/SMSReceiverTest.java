@@ -26,7 +26,9 @@ public class SMSReceiverTest extends AndroidTestCase {
     {
         Intent intent = new Intent(SMSReceiver.ACTION_RECEIVE_SMS);
         intent.putExtra(Intent.EXTRA_PHONE_NUMBER, "01234567890");
-
+     //TODO   intent.putExtra(SMSReceiver.EXTRA_PDUS, value);
+        
+        
         mReceiver.onReceive(mContext, intent);        
         assertEquals(1, mContext.getReceivedIntents().size());
         assertNull(mReceiver.getResultData());

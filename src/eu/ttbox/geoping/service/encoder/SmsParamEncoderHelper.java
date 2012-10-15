@@ -125,6 +125,7 @@ public class SmsParamEncoderHelper {
                 String valueEncoded = field.substring(1, field.length());
                 switch (fieldEnum.type) {
                 case GPS_PROVIDER:
+                    // Same as String
                 case STRING:
                     result.putString(fieldEnum.dbFieldName, readToString(fieldEnum, valueEncoded));
                     break;
