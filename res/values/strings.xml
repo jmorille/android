@@ -25,7 +25,7 @@
     <string name="notif_confirm_no">Non</string>
     <string name="notif_confirm_request_eachtime">Ask</string>
     
-    <string name="toast_notif_sended_geoping_request">GeoPing demandé %s</string>
+    <string name="toast_notif_sended_geoping_request">GeoPing demandé : %s</string>
     
     <!-- Sms Action -->
     <string name="sms_action_geoping_request">GeoPing requête</string>
