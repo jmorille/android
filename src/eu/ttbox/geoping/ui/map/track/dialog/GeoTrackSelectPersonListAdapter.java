@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
@@ -105,6 +106,9 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
             @Override
             public void onClick(View v) {
                 context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
+                 // Notif
+                NotifToasts.showToastSendGeoPing(context, phoneNumber);
+
             }
         });
         // view.setOnClickListener(new OnClickListener() {

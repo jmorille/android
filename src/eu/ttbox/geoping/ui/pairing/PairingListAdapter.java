@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.domain.person.PersonHelper;
@@ -46,7 +47,9 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
             @Override
             public void onClick(View v) {
                 context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
-            }
+                // Notif
+                NotifToasts.showToastSendGeoPing(context, phoneNumber);
+             }
         });
         // Backgroud
         PairingAuthorizeTypeEnum authType =  helper.getPairingAuthorizeTypeEnum(cursor);
