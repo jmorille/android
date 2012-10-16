@@ -84,7 +84,7 @@ public class PairingWidgetProvider extends AppWidgetProvider {
             // Specify the service to provide data for the collection widget.
             // Note that we need to
             // embed the appWidgetId via the data otherwise it will be ignored.
-            final Intent intent = new Intent(context, PersonWidgetService.class);
+            final Intent intent = new Intent(context, PairingWidgetService.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
             final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_pairing);

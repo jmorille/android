@@ -98,7 +98,7 @@ public class PairingHelper {
     }
 
     public String getDisplayName(Cursor cursor) {
-        return cursor.getString(phoneIdx);
+        return cursor.getString(nameIdx);
     }
     
     public static ContentValues getContentValues(Pairing vo) {
