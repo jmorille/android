@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="11" android:versionName="0.0.3" package="eu.ttbox.geoping">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="12" android:versionName="0.0.4" package="eu.ttbox.geoping">
 
     
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="16"/>
@@ -119,7 +119,7 @@
         <provider android:authorities="eu.ttbox.geoping.PersonProvider" android:name=".domain.PersonProvider" android:writePermission="eu.ttbox.geoping.PERSON_WRITE"/>
         <provider android:authorities="eu.ttbox.geoping.GeoTrackerProvider" android:name=".domain.GeoTrackerProvider" android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ" android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE"/>
         <provider android:authorities="eu.ttbox.geoping.SmsLogProvider" android:name=".domain.SmsLogProvider" android:readPermission="eu.ttbox.geoping.SMSLOG_READ" android:writePermission="eu.ttbox.geoping.SMSLOG_WRITE"/>
-        <provider android:authorities="eu.ttbox.geoping.PairingProvider" android:name=".domain.PairingProvider"  android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.PairingProvider" android:name=".domain.PairingProvider" android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
         <provider android:authorities="eu.ttbox.geoping.MessageProvider" android:name=".domain.MessageProvider" android:readPermission="eu.ttbox.geoping.MESSAGE_READ" android:writePermission="eu.ttbox.geoping.MESSAGE_WRITE"/>
         
 		<uses-library android:name="com.google.android.maps" android:required="true"/>
