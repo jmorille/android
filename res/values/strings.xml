@@ -25,8 +25,13 @@
     <string name="notif_confirm_no">Non</string>
     <string name="notif_confirm_request_eachtime">Ask</string>
     
-  <string name="toast_notif_sended_geoping_request">GeoPing demandé %s</string>
+    <string name="toast_notif_sended_geoping_request">GeoPing demandé : %s</string>
     
+    <!-- Sms Action -->
+    <string name="sms_action_geoping_request">GeoPing requête</string>
+    <string name="sms_action_geoping_response">GeoPing réponse</string>
+    <string name="sms_action_pairing_request">Appariement requête</string>
+    <string name="sms_action_pairing_response">Appariement réponse</string>
     
     <!-- GeoTrack -->
     <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>

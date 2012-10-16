@@ -3,28 +3,39 @@
     style="@style/entity_list_item_container"
     android:gravity="center"
     android:orientation="horizontal"
-    android:padding="10dip" >
+    android:paddingBottom="10dip"
+    android:paddingRight="10dip"
+    android:paddingTop="10dip" >
+
+    <ImageView
+        android:id="@+id/smslog_list_item_smsType_imgs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_call_voicemail_holo_dark" />
 
     <TextView
         android:id="@+id/smslog_list_item_time"
         style="@style/entity_list_item"
+        android:layout_toRightOf="@id/smslog_list_item_smsType_imgs"
+        android:paddingRight="5dp"
         android:text="10-10-2009 12:55:12"
-        android:width="100dp" />
+        android:width="110dp" />
 
     <TextView
         android:id="@+id/smslog_list_item_action"
         style="@style/entity_list_item"
-        android:layout_alignBottom="@+id/smslog_list_item_time"
-        android:layout_marginLeft="21dp"
-        android:layout_toRightOf="@+id/smslog_list_item_time"
+        android:layout_alignBaseline="@id/smslog_list_item_time"
+        android:layout_toRightOf="@id/smslog_list_item_time"
         android:text="ACTION_GEO_LOC" />
 
     <TextView
         android:id="@+id/smslog_list_item_phone"
         style="@style/entity_list_item"
-        android:layout_alignBaseline="@+id/smslog_list_item_time"
-        android:layout_alignBottom="@+id/smslog_list_item_time"
-        android:layout_alignLeft="@+id/smslog_list_item_action"
+        android:layout_alignBottom="@id/smslog_list_item_time"
+        android:layout_alignLeft="@id/smslog_list_item_action"
+        android:layout_below="@id/smslog_list_item_action"
         android:text="+33601020304" />
 
 </RelativeLayout>

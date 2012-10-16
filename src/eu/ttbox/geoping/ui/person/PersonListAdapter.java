@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 
 public class PersonListAdapter extends android.support.v4.widget.ResourceCursorAdapter {
@@ -44,6 +45,9 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
             @Override
             public void onClick(View v) {
                 context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
+                // Notif
+                NotifToasts.showToastSendGeoPing(context, phoneNumber);
+
             }
         });
     }

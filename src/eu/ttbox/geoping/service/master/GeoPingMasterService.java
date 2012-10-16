@@ -22,6 +22,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.widget.Toast;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.SmsTrakerActivity;
 import eu.ttbox.geoping.core.AppConstants;
@@ -167,6 +168,9 @@ public class GeoPingMasterService extends IntentService {
     private void sendSmsGeoPingRequest(String phone, Bundle params) {
         sendSms(phone, SmsMessageActionEnum.GEOPING_REQUEST, params);
         Log.d(TAG, String.format("Send SMS GeoPing %s : %s", phone, params));
+        // Display Notif 
+//        final String formatStr = getResources().getString(R.string.toast_notif_sended_geoping_request, phone);
+//        Toast.makeText(getApplicationContext(),formatStr, Toast.LENGTH_SHORT).show();
     }
 
     private void sendSms(String phone, SmsMessageActionEnum action, Bundle params) {
