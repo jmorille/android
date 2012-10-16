@@ -107,7 +107,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
             public void onClick(View v) {
                 context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
                  // Notif
-                NotifToasts.showToastSendGeoPing(context, phoneNumber);
+                NotifToasts.showToastSendGeoPingRequest(context, phoneNumber);
 
             }
         });

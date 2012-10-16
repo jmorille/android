@@ -143,7 +143,7 @@ public class Intents {
 
     public static Intent sendSmsGeoPingResponse(Context context, String phoneNumber) {
         return new Intent(context, GeoPingSlaveService.class) //
-                .setAction(SmsMessageActionEnum.ACTION_GEO_LOC.intentAction)//
+                .setAction(SmsMessageActionEnum.GEOPING_REQUEST.intentAction)//
                 .putExtra(EXTRA_SMS_PHONE, phoneNumber);
     }
     

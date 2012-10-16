@@ -48,7 +48,7 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
             public void onClick(View v) {
                 context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
                 // Notif
-                NotifToasts.showToastSendGeoPing(context, phoneNumber);
+                NotifToasts.showToastSendGeoPingRequest(context, phoneNumber);
              }
         });
         // Backgroud

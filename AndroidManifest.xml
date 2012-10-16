@@ -88,7 +88,7 @@
         </receiver>
 
          <!-- Widget Person -->
-          <receiver android:name=".ui.widget.PersonWidgetProvider"  >
+          <receiver android:name=".ui.widget.PersonWidgetProvider" android:label="@string/sms_action_geoping_request" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
@@ -99,7 +99,8 @@
             android:exported="false" />
 
         <!-- Widget Pairing -->
-          <receiver android:name=".ui.widget.PairingWidgetProvider" android:permission="eu.ttbox.geoping.PAIRING_READ">
+          <receiver android:name=".ui.widget.PairingWidgetProvider" android:label="@string/sms_action_geoping_response"
+              android:permission="eu.ttbox.geoping.PAIRING_READ">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
