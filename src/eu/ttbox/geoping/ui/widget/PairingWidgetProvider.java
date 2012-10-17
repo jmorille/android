@@ -17,6 +17,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.PairingProvider;
 
 /**
@@ -70,9 +71,8 @@ public class PairingWidgetProvider extends AppWidgetProvider {
             Intent intentGeoPing = Intents.sendSmsGeoPingResponse(context, phoneNumber);
             context.startService(intentGeoPing);
             // Display Notif
-            final String formatStr = context.getResources().getString(R.string.toast_notif_sended_geoping_request, phoneNumber);
-             Toast.makeText(context,formatStr, Toast.LENGTH_SHORT).show();
-        }
+            NotifToasts.showToastSendGeoPingResponse(context, phoneNumber);
+         }
         super.onReceive(context, intent);
     }
 
@@ -84,7 +84,7 @@ public class PairingWidgetProvider extends AppWidgetProvider {
             // Specify the service to provide data for the collection widget.
             // Note that we need to
             // embed the appWidgetId via the data otherwise it will be ignored.
-            final Intent intent = new Intent(context, PersonWidgetService.class);
+            final Intent intent = new Intent(context, PairingWidgetService.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
             final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_pairing);

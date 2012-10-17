@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="10" android:versionName="0.0.3" package="eu.ttbox.geoping">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="12" android:versionName="0.0.4" package="eu.ttbox.geoping">
 
     
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="16"/>
 
     
     
-	<permission android:name="eu.ttbox.geoping.PERSON_READ" 
-      android:label="Read Person" 
-        android:protectionLevel="normal" />
+	<permission android:label="Read Person" android:name="eu.ttbox.geoping.PERSON_READ" android:protectionLevel="normal"/>
 		
 		
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -88,26 +86,22 @@
         </receiver>
 
          <!-- Widget Person -->
-          <receiver android:name=".ui.widget.PersonWidgetProvider"  >
+          <receiver android:label="@string/sms_action_geoping_request" android:name=".ui.widget.PersonWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_geoping_info"/>
         </receiver>
-        <service android:name=".ui.widget.PersonWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" 
-            android:exported="false" />
+        <service android:exported="false" android:name=".ui.widget.PersonWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <!-- Widget Pairing -->
-          <receiver android:name=".ui.widget.PairingWidgetProvider" android:permission="eu.ttbox.geoping.PAIRING_READ">
+          <receiver android:label="@string/sms_action_geoping_response" android:name=".ui.widget.PairingWidgetProvider" android:permission="eu.ttbox.geoping.PAIRING_READ">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_geoping_info"/>
         </receiver>
-        <service android:name=".ui.widget.PairingWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" 
-            android:exported="false" />
+        <service android:exported="false" android:name=".ui.widget.PairingWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
         
         
         <!-- Sms service -->
@@ -121,10 +115,11 @@
         </service>
         
 <!--         android:readPermission="eu.ttbox.geoping.PERSON_READ"  -->
+<!-- android:readPermission="eu.ttbox.geoping.PAIRING_READ" -->
         <provider android:authorities="eu.ttbox.geoping.PersonProvider" android:name=".domain.PersonProvider" android:writePermission="eu.ttbox.geoping.PERSON_WRITE"/>
         <provider android:authorities="eu.ttbox.geoping.GeoTrackerProvider" android:name=".domain.GeoTrackerProvider" android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ" android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE"/>
         <provider android:authorities="eu.ttbox.geoping.SmsLogProvider" android:name=".domain.SmsLogProvider" android:readPermission="eu.ttbox.geoping.SMSLOG_READ" android:writePermission="eu.ttbox.geoping.SMSLOG_WRITE"/>
-        <provider android:authorities="eu.ttbox.geoping.PairingProvider" android:name=".domain.PairingProvider" android:readPermission="eu.ttbox.geoping.PAIRING_READ" android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.PairingProvider" android:name=".domain.PairingProvider" android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
         <provider android:authorities="eu.ttbox.geoping.MessageProvider" android:name=".domain.MessageProvider" android:readPermission="eu.ttbox.geoping.MESSAGE_READ" android:writePermission="eu.ttbox.geoping.MESSAGE_WRITE"/>
         
 		<uses-library android:name="com.google.android.maps" android:required="true"/>

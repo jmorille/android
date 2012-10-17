@@ -425,11 +425,14 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
     private boolean geoTrackOverlayAnimateToLastKnowPosition(String userId) {
         boolean isDone = false;
         if (geoTrackOverlayByUser.containsKey(userId)) {
-            GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.remove(userId);
+            GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(userId);
             geoTrackOverlay.animateToLastKnowPosition();
             isDone = true;
         } else {
-            Log.e(TAG, String.format("Could not Animate to last positiono of person %s in geoTrackOverlayByUser", userId));
+            Log.e(TAG, String.format("Could not Animate to last position of person %s in geoTrackOverlayByUser", userId));
+            for (String key :  geoTrackOverlayByUser.keySet() ) {
+                Log.e(TAG, String.format("geoTrackOverlayByUser contains Key : %s", key));
+            }
         }
         Log.d(TAG, String.format("animateToLastKnowPosition for User : %s (is done %s)", userId, isDone));
         return isDone;
