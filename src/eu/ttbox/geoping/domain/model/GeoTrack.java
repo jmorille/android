@@ -23,8 +23,8 @@ public class GeoTrack implements Comparable<GeoTrack>{
     private int latitudeE6;
     private int longitudeE6;
 
-    private boolean hasLatitude;
-    private boolean hasLlongitude;
+    private boolean hasLatitude = false;
+    private boolean hasLlongitude = false;
 
     // Optionnal
     private int altitude;
@@ -33,9 +33,9 @@ public class GeoTrack implements Comparable<GeoTrack>{
     public int speed = -1;
 
     private boolean hasAltitude = false;
-    private boolean hasAccuracy = false;
-    private boolean hasBearing = false;
-    private boolean hasSpeed = false;
+//    private boolean hasAccuracy = false;
+//    private boolean hasBearing = false;
+//    private boolean hasSpeed = false;
 
     // Other
     public String titre;
@@ -191,7 +191,7 @@ public class GeoTrack implements Comparable<GeoTrack>{
 
     public GeoTrack setAccuracy(int accuracy) {
         this.accuracy = accuracy;
-        this.hasAccuracy = true;
+//        this.hasAccuracy = true;
         return this;
     }
 
@@ -201,7 +201,7 @@ public class GeoTrack implements Comparable<GeoTrack>{
 
     public GeoTrack setBearing(int bearing) {
         this.bearing = bearing;
-        this.hasBearing = true;
+//        this.hasBearing = true;
         return this;
     }
 
@@ -211,7 +211,7 @@ public class GeoTrack implements Comparable<GeoTrack>{
 
     public GeoTrack setSpeed(int speed) {
         this.speed = speed;
-        this.hasSpeed = true;
+//        this.hasSpeed = true;
         return this;
     }
 
@@ -276,7 +276,7 @@ public class GeoTrack implements Comparable<GeoTrack>{
     }
 
     public boolean hasBearing() {
-        return this.bearing != 1;
+        return this.bearing != -1;
     }
 
     public boolean hasSpeed() {

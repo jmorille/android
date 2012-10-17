@@ -4,10 +4,7 @@
     
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="16"/>
 
-    
-    
-	<permission android:label="Read Person" android:name="eu.ttbox.geoping.PERSON_READ" android:protectionLevel="normal"/>
-		
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />		
 		
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -73,45 +70,58 @@
         
         <!-- Receiver -->
         <receiver android:name=".service.slave.receiver.SMSReceiver">
-            <intent-filter android:priority="100">
+            <intent-filter android:priority="99999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
-        <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver">
-            <intent-filter>
+        <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver" >
+            <intent-filter android:priority="99999">
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
+       <receiver android:enabled="false" android:name=".service.slave.receiver.BootCompleteReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+         </receiver>
+        <service android:exported="false"  android:name=".service.slave.BackgroudLocService"   />
+       
          <!-- Widget Person -->
           <receiver android:label="@string/sms_action_geoping_request" android:name=".ui.widget.PersonWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_geoping_info"/>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_person_info"/>
         </receiver>
         <service android:exported="false" android:name=".ui.widget.PersonWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <!-- Widget Pairing -->
-          <receiver android:label="@string/sms_action_geoping_response" android:name=".ui.widget.PairingWidgetProvider" android:permission="eu.ttbox.geoping.PAIRING_READ">
+          <receiver android:label="@string/sms_action_geoping_response" android:name=".ui.widget.pairing.PairingWidgetProvider" android:permission="eu.ttbox.geoping.PAIRING_READ">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_geoping_info"/>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_pairing_info"/>
         </receiver>
-        <service android:exported="false" android:name=".ui.widget.PairingWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
-        
+        <service android:exported="false" android:name=".ui.widget.pairing.PairingWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+         
+        <activity  android:name=".ui.widget.pairing.PairingWidgetConfig" android:label="@string/app_name" >
+          <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+          </intent-filter>
+        </activity>
         
         <!-- Sms service -->
-        <service android:name=".service.slave.GeoPingSlaveService">
+        <service android:name=".service.slave.GeoPingSlaveService" android:exported="false" >
             	<intent-filter>
             	    <action android:name="eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE"/>
             	    <category android:name="android.intent.category.DEFAULT"/>
             	</intent-filter>
         </service>
-        <service android:name=".service.master.GeoPingMasterService">
+        <service android:name=".service.master.GeoPingMasterService" android:exported="false" >
         </service>
         
 <!--         android:readPermission="eu.ttbox.geoping.PERSON_READ"  -->

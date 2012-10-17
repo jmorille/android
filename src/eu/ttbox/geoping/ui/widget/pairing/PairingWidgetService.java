@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.widget;
+package eu.ttbox.geoping.ui.widget.pairing;
 
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;

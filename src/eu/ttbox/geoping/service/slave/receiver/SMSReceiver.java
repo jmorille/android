@@ -76,9 +76,7 @@ public class SMSReceiver extends BroadcastReceiver {
             context.startService(intent);
             // Log It
             logSmsMessage(context,SmsLogTypeEnum.RECEIVE,  geoMsg);
-        }
-   
-        
+        } 
         return isConsume;
     }
     

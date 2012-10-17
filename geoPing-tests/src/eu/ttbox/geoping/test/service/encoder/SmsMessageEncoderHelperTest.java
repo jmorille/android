@@ -88,6 +88,17 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
                 assertEquals(msg.params.getInt(GeoTrackColumns.COL_LATITUDE_E6), decoded.params.getInt(GeoTrackColumns.COL_LATITUDE_E6));
                 assertEquals(msg.params.getInt(GeoTrackColumns.COL_LONGITUDE_E6), decoded.params.getInt(GeoTrackColumns.COL_LONGITUDE_E6));
                 assertEquals(msg.params.getLong(GeoTrackColumns.COL_TIME), decoded.params.getLong(GeoTrackColumns.COL_TIME));
+                //
+                String provider = msg.params.getString(GeoTrackColumns.COL_PROVIDER);
+                if (provider.equals(PROVIDER_NETWORK)) {
+                    assertFalse(decoded.params.containsKey(GeoTrackColumns.COL_ALTITUDE));
+                    assertFalse(decoded.params.containsKey(GeoTrackColumns.COL_SPEED));
+                    assertFalse(decoded.params.containsKey(GeoTrackColumns.COL_BEARING));
+                } else if (provider.equals(PROVIDER_GPS)) {
+                    assertEquals(msg.params.getInt(GeoTrackColumns.COL_ALTITUDE), decoded.params.getInt(GeoTrackColumns.COL_ALTITUDE));
+                    assertEquals(msg.params.getInt(GeoTrackColumns.COL_SPEED), decoded.params.getInt(GeoTrackColumns.COL_SPEED));
+                    assertEquals(msg.params.getInt(GeoTrackColumns.COL_BEARING), decoded.params.getInt(GeoTrackColumns.COL_BEARING));
+                }
             }
         }
     }
