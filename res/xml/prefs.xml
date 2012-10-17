@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-<CheckBoxPreference android:title="@string/prefs.localSave" android:key="localSave" android:summaryOn="@string/prefs.localSave.summaryOn" android:summaryOff="@string/prefs.localSave.summaryOff" android:defaultValue="false"/>
- 
-<PreferenceCategory android:title="@string/prefs.smsCategory">
-	<CheckBoxPreference android:title="@string/prefs.smsUse" android:key="smsUse" android:summaryOn="@string/prefs.smsUse.summaryOn" android:summaryOff="@string/prefs.smsUse.summaryOff" android:defaultValue="true"/>
-	<EditTextPreference android:title="@string/prefs.smsPhoneNumber" android:key="smsPhoneNumber"  android:selectable="true"  />
-</PreferenceCategory>
-
-<PreferenceCategory android:title="SMS Monitor">
-	<CheckBoxPreference android:title="Delete SMS Monitor" android:key="smsDeleteOnMessage" android:summaryOn="Delete Geo tracking SMS" android:summaryOff="Off" android:defaultValue="true"/>
-</PreferenceCategory>
-
-<PreferenceCategory android:title="Request Notification">
-	<CheckBoxPreference android:title="Request Notification" android:key="smsRequestNotif" android:summaryOn="Notify me for request" android:summaryOff="Invisible request management" android:defaultValue="false"/>
-</PreferenceCategory>
- 
-<PreferenceCategory android:title="string/prefs_pairing_phone_authorize">
-	<EditTextPreference android:title="@string/prefs_pairing_phone_authorize_always" android:key="PAIRING_PHONES_AUTHORIZE_ALWAYS" />
-	<EditTextPreference android:title="@string/prefs_pairing_phone_authorize_never" android:key="PAIRING_PHONES_AUTHORIZE_NEVER" />
-	<CheckBoxPreference android:title="@string/prefs_geoping_request_notifyme"  android:key="GEOPING_REQUEST_NOTIFYME"  android:defaultValue="false" />
-</PreferenceCategory>
-
+    <PreferenceCategory android:title="@string/prefs_sms_category" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="smsDeleteOnMessage"
+            android:summaryOff="@string/prefs_sms_delete_onMessage_summaryOff"
+            android:summaryOn="@string/prefs_sms_delete_onMessage_summaryOn"
+            android:title="@string/prefs_sms_delete_onMessage" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_geoping_request" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="localSave"
+            android:summaryOff="@string/prefs_geoping_localSave_summaryOff"
+            android:summaryOn="@string/prefs_geoping_localSave_summaryOn"
+            android:title="@string/prefs_geoping_localSave" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="showGeopingNotification"
+            android:summary="@string/prefs_show_geoping_notification_summary"
+            android:title="@string/prefs_show_geoping_notification" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_geoping_request" >
+         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="myLocationDisplayLatlng" 
+            android:title="@string/prefs_myLocation_display_LatLng" />
+    </PreferenceCategory>
+    
+    
 </PreferenceScreen>

@@ -5,12 +5,12 @@
         android:id="@+id/menuMap"
         android:icon="@android:drawable/ic_dialog_map"
         android:showAsAction="ifRoom"
-        android:title="@string/menu.map"/>
+        android:title="@string/menu_map"/>
     <item
         android:id="@+id/menu_track_person"
         android:icon="@drawable/ic_action_user"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_geoping"/>
+        android:title="@string/menu_person"/>
     <item
         android:id="@+id/menu_pairing"
         android:icon="@drawable/ic_device_access_secure"
@@ -30,11 +30,11 @@
         android:id="@+id/option"
         android:icon="@android:drawable/ic_menu_mapmode"
         android:showAsAction="never"
-        android:title="@string/menu.options"/>
+        android:title="@string/menu_options"/>
      <item
         android:id="@+id/menuQuitter"
         android:icon="@android:drawable/ic_lock_power_off"
         android:showAsAction="never"
-        android:title="@string/menu.quit"/>
+        android:title="@string/menu_quit"/>
 
 </menu>

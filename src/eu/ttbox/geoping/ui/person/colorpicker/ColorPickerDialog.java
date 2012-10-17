@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.ui.person.colorpicker;
 
+import eu.ttbox.geoping.R;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -64,7 +65,7 @@ public class ColorPickerDialog extends Dialog {
 
         ColorPickerView colorView = new ColorPickerView(getContext(), l, mInitialColor);
         setContentView(colorView, params);
-        setTitle("Pick a Color");
+        setTitle(R.string.color_picker);
     }
 
     // ===========================================================

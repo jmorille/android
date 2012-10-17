@@ -40,28 +40,35 @@
     <!-- Menu -->
     <string name="menu_map_mypositioncenter">Ma position</string>
     <string name="map_mode">Type de Carte</string>
-    <string name="menu.options">Options</string>
     <string name="menu.geoTracker">Geo Tacker</string>
-    <string name="menu.map">Map</string>
     <string name="menu_geoping">GeoPing</string>
-    <string name="menu.quit">Quit</string>
+
+    <string name="menu_options">Options</string>
+    <string name="menu_map">Map</string>
+    <string name="menu_quit">Quit</string>
+    <string name="menu_person">Personnes</string>
     <string name="menu_pairing">Appariement</string>
     <string name="menu_smslog">Log Sms</string>
     
     <!-- Prefs -->
-    <string name="prefs.smsCategory">SMS Tracker</string>
-    <string name="prefs.smsUse">SMS Send</string>
-    <string name="prefs.smsUse.summaryOn">Send all Geo Fix By SMS</string>
-    <string name="prefs.smsUse.summaryOff">Off</string>
-    <string name="prefs.smsPhoneNumber">Sms Telephone</string>
-    <string name="prefs.localSave">Local Save</string>
-    <string name="prefs.localSave.summaryOn">Keep trace in local DB</string>
-    <string name="prefs.localSave.summaryOff">Off</string>
-    <string name="prefs_pairing_phone_authorize">GeoPing Request Sécurité</string>
-    <string name="prefs_pairing_phone_authorize_always">White List</string>
-    <string name="prefs_pairing_phone_authorize_never">Black List</string>
-    <string name="prefs_geoping_request_notifyme">Afficher une Notification</string>
+    <string name="prefs_sms_category">Monitoring Sms</string>
+    <string name="prefs_sms_delete_onMessage">Suppression des SMS</string>
+    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing sont invisible</string>
+    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping ne sont pas effacé</string>
+    
+    <string name="prefs_geoping_request">Requêtes GeoPing</string>
+    <string name="prefs_show_geoping_notification">Afficher une notification</string>
+    <string name="prefs_show_geoping_notification_summary">Pour les nouveaux appariements</string> 
+    <string name="prefs_geoping_localSave">Sauvegardé en base local</string>
+    <string name="prefs_geoping_localSave_summaryOn">Garde une trace en DB Local</string>
+    <string name="prefs_geoping_localSave_summaryOff">Désactivé</string>
 
+    <string name="prefs_myLocation">Ma Position</string>
+    <string name="prefs_myLocation_display_LatLng">Afficher les coord. WSG84</string>
+
+    <!-- Dialog -->
+    <string name="color_picker">Sélectionner une couleur</string>
+     
     <!-- Person model -->
     <string name="person_name">Nom</string>
     <string name="person_phone">N° Téléphone</string>

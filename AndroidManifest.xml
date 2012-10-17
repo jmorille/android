@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE"   />
     
     
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -26,7 +26,8 @@
 
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
      
-    
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
+    <uses-feature android:name="android.hardware.telephony" android:required="false"/>
     
     <application android:debuggable="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:theme="@style/AppTheme">
 	    <meta-data android:name="com.google.android.backup.api_key" android:value="@string/backup_api_key"/>
@@ -52,20 +53,19 @@
         <!-- Map -->
         <activity android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">
             <intent-filter>
-                <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED"/>
-                
+                <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED"/> 
             </intent-filter>
         </activity>
 
         <!-- Sms Log -->
-        <activity android:name=".ui.smslog.SmsLogListActivity"/>
+        <activity android:name=".ui.smslog.SmsLogListActivity" android:label="@string/menu_smslog"/>
         <!-- Person -->
-        <activity android:name=".ui.person.PersonListActivity"/>
+        <activity android:name=".ui.person.PersonListActivity" android:label="@string/menu_person"/>
         <activity android:name=".ui.person.PersonEditActivity"/>
 
         
          <!-- Pairing -->
-        <activity android:name=".ui.pairing.PairingListActivity">
+        <activity android:name=".ui.pairing.PairingListActivity" android:label="@string/menu_pairing">
         </activity>
         <activity android:name=".ui.pairing.PairingEditActivity">
         </activity>

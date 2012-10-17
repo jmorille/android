@@ -29,7 +29,10 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.telephony.CellLocation;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -39,8 +42,8 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.SmsLogProvider;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Pairing;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
@@ -71,7 +74,8 @@ public class GeoPingSlaveService extends WorkerService {
     private MyLocationListenerProxy myLocation;
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private SharedPreferences appPreferences;
-
+    private TelephonyManager telephonyManager;
+    
     // Instance Data
     private List<GeoPingRequest> geoPingRequestList;
     private MultiGeoRequestLocationListener multiGeoRequestListener;
@@ -99,6 +103,7 @@ public class GeoPingSlaveService extends WorkerService {
         // service
         this.appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        this.telephonyManager =  (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
         this.myLocation = new MyLocationListenerProxy(locationManager);
         this.geoPingRequestList = new ArrayList<GeoPingRequest>();
         this.multiGeoRequestListener = new MultiGeoRequestLocationListener(geoPingRequestList);
@@ -109,7 +114,7 @@ public class GeoPingSlaveService extends WorkerService {
     }
 
     private void loadPrefConfig() {
-        this.displayGeopingRequestNotification = appPreferences.getBoolean(AppConstants.PREFS_GEOPING_REQUEST_NOTIFYME, false);
+        this.displayGeopingRequestNotification = appPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, false);
         this.saveInLocalDb = appPreferences.getBoolean(AppConstants.PREFS_LOCAL_SAVE, false);
         // Read Security Set
         // this.secuAuthorizeNeverPhoneSet =
@@ -338,11 +343,30 @@ public class GeoPingSlaveService extends WorkerService {
             // TODO Read Prefs values
             result = new Pairing();
             result.setPhone(phoneNumber);
+            result.setShowNotification(displayGeopingRequestNotification);
             result.setAuthorizeType(PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST);
         }
         return result;
     }
 
+    // ===========================================================
+    // Cell Id
+    // ===========================================================
+
+    /**
+     * {link http://www.devx.com/wireless/Article/40524/0/page/2}
+     */
+    private void getCellId() {
+    	CellLocation  cellLoc =	telephonyManager.getCellLocation(); 
+    	if (cellLoc instanceof GsmCellLocation) {
+    		GsmCellLocation gsmLoc = (GsmCellLocation)cellLoc;
+    		int lac = gsmLoc.getLac();
+    		int cellId = gsmLoc.getCid();
+    		Log.d(TAG, String.format("Cell Id : %s  / Lac : %s", cellId, lac));
+    	}
+    }
+ 
+    
     // ===========================================================
     // Other
     // ===========================================================

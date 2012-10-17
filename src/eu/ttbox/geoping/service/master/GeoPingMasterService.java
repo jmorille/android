@@ -1,5 +1,14 @@
 package eu.ttbox.geoping.service.master;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+
 import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.Notification;
@@ -22,7 +31,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Toast;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.SmsTrakerActivity;
 import eu.ttbox.geoping.core.AppConstants;
@@ -37,7 +45,6 @@ import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
-import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
@@ -74,7 +81,7 @@ public class GeoPingMasterService extends IntentService {
         super.onCreate();
         // service
         this.appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        this.notifyGeoPingResponse = appPreferences.getBoolean(AppConstants.PREFS_SMS_REQUEST_NOTIFY_ME, false);
+        this.notifyGeoPingResponse = appPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, false);
 
         Log.d(TAG, "#################################");
         Log.d(TAG, "### GeoPingMasterService Service Started.");
@@ -301,4 +308,82 @@ public class GeoPingMasterService extends IntentService {
     // Other
     // ===========================================================
 
+    /**
+     * {link http://www.devx.com/wireless/Article/40524/0/page/2}
+     * @param cellID
+     * @param lac
+     * @return
+     * @throws Exception
+     */
+    private boolean displayMap(int cellID, int lac) throws Exception 
+    {
+        String urlString = "http://www.google.com/glm/mmap";            
+    
+        //---open a connection to Google Maps API---
+        URL url = new URL(urlString); 
+        URLConnection conn = url.openConnection();
+        HttpURLConnection httpConn = (HttpURLConnection) conn;        
+        httpConn.setRequestMethod("POST");
+        httpConn.setDoOutput(true); 
+        httpConn.setDoInput(true);
+        httpConn.connect(); 
+        
+        //---write some custom data to Google Maps API---
+        OutputStream outputStream = httpConn.getOutputStream();
+        WriteData(outputStream, cellID, lac);       
+        
+        //---get the response---
+        InputStream inputStream = httpConn.getInputStream();  
+        DataInputStream dataInputStream = new DataInputStream(inputStream);
+        
+        //---interpret the response obtained---
+        dataInputStream.readShort();
+        dataInputStream.readByte();
+        int code = dataInputStream.readInt();
+        if (code == 0) {
+            double lat = (double) dataInputStream.readInt() / 1000000D;
+            double lng = (double) dataInputStream.readInt() / 1000000D;
+            dataInputStream.readInt();
+            dataInputStream.readInt();
+            dataInputStream.readUTF();
+            
+            //---display Google Maps---
+            String uriString = "geo:" + lat
+                + "," + lng;
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, 
+                Uri.parse(uriString));
+            startActivity(intent);
+            return true;
+        }
+        else
+        {        	
+        	return false;
+        }
+    }  
+    
+    private void WriteData(OutputStream out, int cellID, int lac) 
+    	    throws IOException
+    	    {    	
+    	        DataOutputStream dataOutputStream = new DataOutputStream(out);
+    	        dataOutputStream.writeShort(21);
+    	        dataOutputStream.writeLong(0);
+    	        dataOutputStream.writeUTF("en");
+    	        dataOutputStream.writeUTF("Android");
+    	        dataOutputStream.writeUTF("1.0");
+    	        dataOutputStream.writeUTF("Web");
+    	        dataOutputStream.writeByte(27);
+    	        dataOutputStream.writeInt(0);
+    	        dataOutputStream.writeInt(0);
+    	        dataOutputStream.writeInt(3);
+    	        dataOutputStream.writeUTF("");
+
+    	        dataOutputStream.writeInt(cellID);  
+    	        dataOutputStream.writeInt(lac);     
+
+    	        dataOutputStream.writeInt(0);
+    	        dataOutputStream.writeInt(0);
+    	        dataOutputStream.writeInt(0);
+    	        dataOutputStream.writeInt(0);
+    	        dataOutputStream.flush();    	
+    	    }
 }
