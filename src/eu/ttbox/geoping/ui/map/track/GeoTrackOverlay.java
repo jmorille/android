@@ -82,7 +82,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     private Person person;
     private String timeBeginInMs;
     private String timeEndInMs;
-
+    private boolean geocodingAuto = false;
     // Cached
     private Point myScreenCoords = new Point();
     private Point lastScreenCoords = new Point(); 
@@ -126,11 +126,11 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     // Constructors
     // ===========================================================
 
-    public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay) {
-        this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay);
+    public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay, boolean geocodingAuto) {
+        this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay, geocodingAuto);
     }
 
-    public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs) {
+    public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs, boolean geocodingAuto) {
         super(pResourceProxy);
         GEOTRACK_LIST_LOADER = R.id.config_id_geotrack_list_loader + (int) person.id + 1000;
         // person.id;
@@ -139,6 +139,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         Log.d(TAG, "#################################");
         this.context = ctx;
         this.person = person;
+        this.geocodingAuto = geocodingAuto;
         this.loaderManager = loaderManager;
         this.mapView = mapView;
         this.mMapController = mapView.getController();
@@ -458,54 +459,61 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         }
     }
 
+ 
+    
     private void setBubbleData(final GeoTrack geoTrack) {
         if (balloonView != null && View.VISIBLE == balloonView.getVisibility()) {
             Log.d(TAG, String.format("setBubbleData for %s", geoTrack));
             balloonView.setData(person, geoTrack);
-            if (geoTrack.address == null || geoTrack.address.length() < 1) {
-                final String entityId = geoTrack.getIdAsString();
-                Runnable geocoderTask = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            if (geocoder != null) {
-                                // Write Geocoding Text
-                                Message msgTemp = uiHandler.obtainMessage(UI_MSG_SET_ADDRESS, "Geocoding...");
-                                uiHandler.sendMessage(msgTemp);
-                                // Do Geocoding
-                                double lat = geoTrack.getLatitude();
-                                double lng = geoTrack.getLongitude();
-                                List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
-                                if (addresses != null && !addresses.isEmpty()) {
-                                    final Address addr = addresses.get(0);
-                                    String addrString = GeoTrackHelper.getAddressAsString(addr);
-                                    // Display Result
-                                    Message msg = uiHandler.obtainMessage(UI_MSG_SET_ADDRESS, addrString);
-                                    uiHandler.sendMessage(msg);
-                                    // Save
-                                    if (entityId != null) {
-                                        Uri uri = Uri.withAppendedPath(GeoTrackerProvider.Constants.CONTENT_URI, entityId);
-                                        ContentValues values = new ContentValues(1);
-                                        values.put(GeoTrackColumns.COL_ADDRESS, addrString);
-                                        int count = context.getContentResolver().update(uri, values, null, null);
-                                        if (count > 0) {
-                                            geoTrack.setAddress(addrString);
-                                        }
-                                    }
-                                }
-                            }
-                        } catch (IOException e) {
-                            Log.e(TAG, "MyLocation Geocoder Error : " + e.getMessage());
-                        }
-                    }
-                };
-                runOnFirstFixExecutor.execute(geocoderTask);
+            if (geocodingAuto) {
+            	doGeocodingData(geoTrack);
             }
-
         }
     }
 
+    private void doGeocodingData(final GeoTrack geoTrack) {
+        if (geoTrack.address == null || geoTrack.address.length() < 1) {
+            final String entityId = geoTrack.getIdAsString();
+            Runnable geocoderTask = new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        if (geocoder != null) {
+                            // Write Geocoding Text
+                            Message msgTemp = uiHandler.obtainMessage(UI_MSG_SET_ADDRESS, "Geocoding...");
+                            uiHandler.sendMessage(msgTemp);
+                            // Do Geocoding
+                            double lat = geoTrack.getLatitude();
+                            double lng = geoTrack.getLongitude();
+                            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+                            if (addresses != null && !addresses.isEmpty()) {
+                                final Address addr = addresses.get(0);
+                                String addrString = GeoTrackHelper.getAddressAsString(addr);
+                                // Display Result
+                                Message msg = uiHandler.obtainMessage(UI_MSG_SET_ADDRESS, addrString);
+                                uiHandler.sendMessage(msg);
+                                // Save
+                                if (entityId != null) {
+                                    Uri uri = Uri.withAppendedPath(GeoTrackerProvider.Constants.CONTENT_URI, entityId);
+                                    ContentValues values = new ContentValues(1);
+                                    values.put(GeoTrackColumns.COL_ADDRESS, addrString);
+                                    int count = context.getContentResolver().update(uri, values, null, null);
+                                    if (count > 0) {
+                                        geoTrack.setAddress(addrString);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "MyLocation Geocoder Error : " + e.getMessage());
+                    }
+                }
+            };
+            runOnFirstFixExecutor.execute(geocoderTask);
+        }
+    }
+    
     private boolean hideBubble() {
         boolean isHide = false;
         if (balloonView != null && View.GONE != balloonView.getVisibility()) {

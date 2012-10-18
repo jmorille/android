@@ -7,9 +7,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.ExternalIntents;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
 
@@ -26,14 +28,17 @@ public class GeoTrackBubble extends FrameLayout {
 	// Display
 	private LinearLayout layout;
 	private TextView nameTextView;
-    private TextView providerTextView;
-	
+	private TextView providerTextView;
+
 	private TextView timeTextView;
 	private TextView coordTextView;
 	private TextView accuracyTextView;
 	private TextView altitudeTextView;
 	private View altitudeBlock;
 	private TextView speedTextView;
+
+	private ImageView navigationImg;
+	private ImageView streetviewImg;
 
 	private TextView addressTextView;
 
@@ -44,7 +49,7 @@ public class GeoTrackBubble extends FrameLayout {
 		layout = new LinearLayout(context);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.map_geotrack_bubble, layout);
-		
+
 		// Init fields
 		this.nameTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_name);
 		this.providerTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_provider);
@@ -55,6 +60,24 @@ public class GeoTrackBubble extends FrameLayout {
 		this.altitudeTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_altitude);
 		this.altitudeBlock = v.findViewById(R.id.map_geotrack_bubbleView_block_altitude);
 		this.speedTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_speed);
+
+		// Button
+		streetviewImg = (ImageView) v.findViewById(R.id.map_geotrack_bubbleView_streetview_image);
+		streetviewImg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				startStreetView();
+			}
+		});
+		navigationImg = (ImageView) v.findViewById(R.id.map_geotrack_bubbleView_navigation_image);
+		navigationImg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				startNavigationTo();
+			}
+		});
 
 		// Frame
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -73,70 +96,104 @@ public class GeoTrackBubble extends FrameLayout {
 		return false;
 	}
 
+	private void startNavigationTo() {
+		if (geoTrack != null) {
+			ExternalIntents.startActivityNavigationTo(getContext(), geoTrack.getLatitude(), geoTrack.getLongitude());
+		}
+	}
+
+	private void startStreetView() {
+		if (geoTrack != null) {
+			ExternalIntents.startActivityStreetView(getContext(), geoTrack.getLatitude(), geoTrack.getLongitude());
+		}
+	}
+
 	public void setData(Person person, GeoTrack geoTrack) {
 		// Person
 		this.nameTextView.setText(person.displayName);
 		// Track
+		boolean hasLatLng = false;
+		boolean hasAccuracy = false;
+		boolean hasAltitude = false;
+		boolean hasSpeed = false;
+		boolean hasAddress = false;
+		boolean hasProvider = false;
+		boolean hasTime = false;
 		if (geoTrack != null) {
+			hasLatLng = geoTrack.hasLatLng();
+			hasAccuracy = geoTrack.hasAccuracy();
+			hasAltitude = geoTrack.hasAltitude();
+			hasSpeed = geoTrack.hasSpeed();
+			hasAddress = geoTrack.hasAddress();
+			hasProvider = geoTrack.hasProvider();
+			hasTime = geoTrack.hasTime();
+		}
+		this.geoTrack = geoTrack;
+		// Bind values
+     	if (hasTime) {
 			// Date $Time
 			String dateString = String.format(getResources().getString(R.string.geotrack_time_dateformat), geoTrack.getTimeAsDate());
 			timeTextView.setText(dateString);
-			providerTextView.setText( geoTrack.getProvider() ); 
-	       	// Coord
+			timeTextView.setVisibility(VISIBLE);
+		} else {
+			timeTextView.setVisibility(GONE);
+		} 
+		if (hasProvider) {
+			providerTextView.setText(geoTrack.getProvider());
+			providerTextView.setVisibility(VISIBLE);
+		} else {
+			providerTextView.setVisibility(GONE);
+		}
+		// Coord
+		if (hasLatLng && displayGeoLoc) { 
 			double lat = geoTrack.getLatitude();
 			double lng = geoTrack.getLongitude();
 			String coordString = String.format(Locale.US, "(%.6f, %.6f)", lat, lng);
 			coordTextView.setText(coordString);
-			if (displayGeoLoc) {
-				coordTextView.setVisibility(VISIBLE);
-			} else {
-				coordTextView.setVisibility(GONE);
-			}
-		 
-			// Accuracy
-			if (geoTrack.hasAccuracy()) {
-				accuracyTextView.setText((int) geoTrack.getAccuracy() + "m");
-				accuracyTextView.setVisibility(VISIBLE);
-			} else {
-				accuracyTextView.setText("");
-				accuracyTextView.setVisibility(GONE);
-			}
-			// Altitude
-			if (geoTrack.hasAltitude()) {
-				altitudeTextView.setText((int) geoTrack.getAltitude() + "m");
-				altitudeBlock.setVisibility(VISIBLE);
-			} else {
-				altitudeTextView.setText("");
-				altitudeBlock.setVisibility(GONE);
-			}
-			// Speed
-			if (geoTrack.hasSpeed()) {
-				speedTextView.setText((int) geoTrack.getSpeed() + "m/s");
-				speedTextView.setVisibility(GONE);
-			} else {
-				speedTextView.setText("");
-				speedTextView.setVisibility(GONE);
-			}
-			// Address
-			setAddress(geoTrack.address);
+			coordTextView.setVisibility(VISIBLE);
+		} else {
+			coordTextView.setVisibility(GONE);
+		}
+		// Accuracy
+		if (hasAccuracy) {
+			accuracyTextView.setText(String.format("%s m",(int) geoTrack.getAccuracy() ));
+			accuracyTextView.setVisibility(VISIBLE);
 		} else {
 			accuracyTextView.setText("");
+			accuracyTextView.setVisibility(GONE);
+		} 
+		// Altitude
+		if (hasAltitude) {
+			altitudeTextView.setText(String.format("%s m", (int) geoTrack.getAltitude()));
+			altitudeBlock.setVisibility(VISIBLE);
+		} else {
+			altitudeTextView.setText("");
 			altitudeBlock.setVisibility(GONE);
 		}
-
+		// Speed
+		if (hasSpeed) {
+			speedTextView.setText(String.format("%s m/s",(int) geoTrack.getSpeed()));
+			speedTextView.setVisibility(GONE);
+		} else {
+			speedTextView.setText("");
+			speedTextView.setVisibility(GONE);
+		}
+		// Address
+		if (hasAddress) {
+			 setAddress(geoTrack.address);
+		} else {
+			 setAddress("");
+		}  	
 	}
 
-
- 
-	public void setAddress(String  addr) { 
-		if (addr != null && addr.length()>0) {  
+	public void setAddress(String addr) {
+		if (addr != null && addr.length() > 0) {
 			addressTextView.setText(addr);
 			addressTextView.setVisibility(VISIBLE);
 		} else {
 			addressTextView.setText("");
 			addressTextView.setVisibility(GONE);
-		}
-
+		} 
 	}
 
 	public void setDisplayGeoLoc(boolean displayGeoLoc) {

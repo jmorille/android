@@ -251,6 +251,11 @@ public class GeoTrack implements Comparable<GeoTrack>{
         return  time != AppConstants.UNSET_TIME;
     }
     
+    
+    public boolean hasProvider() {
+        return provider != null;
+    }
+    
     public boolean hasPersonId() {
         return personId != -1L;
     }
@@ -271,6 +276,12 @@ public class GeoTrack implements Comparable<GeoTrack>{
         return hasAltitude;
     }
 
+    public boolean hasLatLng() {
+        return hasLatitude && hasLlongitude;
+    }
+
+
+    
     public boolean hasAccuracy() {
         return this.accuracy != -1;
     }

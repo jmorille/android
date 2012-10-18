@@ -28,6 +28,12 @@
             android:key="myLocationDisplayLatlng" 
             android:title="@string/prefs_myLocation_display_LatLng" />
     </PreferenceCategory>
-    
+    <PreferenceCategory android:title="@string/prefs_geoping_geoPoint_category" >
+         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="geoPointGeocodingAuto" 
+            android:title="@string/prefs_geoPoint_geocoding_auto" />
+        
+    </PreferenceCategory>
     
 </PreferenceScreen>

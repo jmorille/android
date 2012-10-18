@@ -27,6 +27,8 @@ public class AppConstants {
     
     // Map
     public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = "myLocationDisplayLatlng";
+    public static final String PREFS_GEOPOINT_GEOCODING_AUTO = "geoPointGeocodingAuto";
+    
     
     // TODO in prefs
 

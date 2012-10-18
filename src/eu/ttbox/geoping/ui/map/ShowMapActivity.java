@@ -61,11 +61,14 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
      * This number depend of previous menu
      */
     private int MENU_LAST_ID = 3;
-
+    
     // Map
     private MapController mapController;
     private MapView mapView;
 
+    // Config
+    private boolean geocodingAuto = true;
+    
     // Overlay
     private MyLocationOverlay myLocation;
     // private GeoTrackOverlay geoTrackOverlay;
@@ -94,6 +97,9 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         privateSharedPreferences = getSharedPreferences(MapConstants.PREFS_NAME, MODE_PRIVATE);
+        // Config
+        geocodingAuto = sharedPreferences.getBoolean(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO, true);
+        
         // Map
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setMultiTouchControls(true);
@@ -393,7 +399,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         boolean isDone = false;
         String userId = person.phone;
         if (!geoTrackOverlayByUser.containsKey(userId)) {
-            geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(), person, System.currentTimeMillis());
+            geoTrackOverlay = new GeoTrackOverlay(this, this.mapView, getSupportLoaderManager(), person, System.currentTimeMillis(), geocodingAuto);
             geoTrackOverlayByUser.put(userId, geoTrackOverlay);
             // register
             isDone = mapView.getOverlays().add(geoTrackOverlay);
@@ -486,8 +492,9 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // TODO Auto-generated method stub
-
+    	if (key.equals(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO)) {
+    		geocodingAuto = sharedPreferences.getBoolean(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO, true);
+    	}
     }
 
     private class StatusReceiver extends BroadcastReceiver {

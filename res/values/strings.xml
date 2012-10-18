@@ -34,8 +34,6 @@
     <string name="sms_action_pairing_request">Appariement requête</string>
     <string name="sms_action_pairing_response">Appariement réponse</string>
     
-    <!-- GeoTrack -->
-    <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
 
     <!-- Menu -->
     <string name="menu_map_mypositioncenter">Ma position</string>
@@ -66,9 +64,21 @@
     <string name="prefs_myLocation">Ma Position</string>
     <string name="prefs_myLocation_display_LatLng">Afficher les coord. WSG84</string>
 
+    <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
+    <string name="prefs_geoPoint_geocoding_auto">Geocoding automatique</string>
+    
+    
+    <!-- Map -->
+    <string name="ask_activate_gps">Voulez-vous activer le GPS ?</string>
+    
     <!-- Dialog -->
     <string name="color_picker">Sélectionner une couleur</string>
-     
+ 
+    <!-- GeoTrack -->
+    <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
+  
+    
+    
     <!-- Person model -->
     <string name="person_name">Nom</string>
     <string name="person_phone">N° Téléphone</string>

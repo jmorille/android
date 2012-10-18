@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map_mylocation_dialogView"
-    style="@style/mylocation_dialog_bubbleBackground"
+    style="@style/map_geoping_balloon_style"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
@@ -9,36 +9,44 @@
 
     <TextView
         android:id="@+id/map_geotrack_bubbleView_name"
-        style="@style/mylocation_dialog_text"
+        style="@style/map_geotrack_dialog_text"
+        android:layout_centerHorizontal="true"
         android:text="Name" />
 
-      <TextView
+    <TextView
         android:id="@+id/map_geotrack_bubbleView_time"
-        style="@style/mylocation_dialog_text"
+        style="@style/map_geotrack_dialog_text"
+        android:layout_below="@id/map_geotrack_bubbleView_name"
+        android:layout_centerHorizontal="true"
         android:text="Time" />
-    
-      <TextView
+
+    <TextView
         android:id="@+id/map_geotrack_bubbleView_provider"
-        style="@style/mylocation_dialog_text"
+        style="@style/map_geotrack_dialog_text"
+        android:layout_below="@id/map_geotrack_bubbleView_time"
+        android:layout_centerHorizontal="true"
         android:text="Provider" />
-      
+
     <LinearLayout
+        android:id="@+id/map_geotrack_bubbleView_block_coord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/map_geotrack_bubbleView_provider"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/map_geotrack_bubbleView_coord"
-            style="@style/mylocation_dialog_text"
+            style="@style/map_geotrack_dialog_text"
             android:text="Wsg84" />
 
         <TextView
-            style="@style/mylocation_dialog_text"
+            style="@style/map_geotrack_dialog_text"
             android:text="@string/accuracy_separator" />
 
         <TextView
             android:id="@+id/map_geotrack_bubbleView_accuracy"
-            style="@style/mylocation_dialog_text"
+            style="@style/map_geotrack_dialog_text"
             android:text="accuracy" />
     </LinearLayout>
 
@@ -46,26 +54,55 @@
         android:id="@+id/map_geotrack_bubbleView_block_altitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/map_geotrack_bubbleView_block_coord"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
 
         <TextView
-            style="@style/mylocation_dialog_text"
+            style="@style/map_geotrack_dialog_text"
+            android:paddingRight="5dp"
             android:text="@string/altitude" />
 
         <TextView
             android:id="@+id/map_geotrack_bubbleView_altitude"
-            style="@style/mylocation_dialog_text"  
+            style="@style/map_geotrack_dialog_text"
             android:text="00m" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/map_geotrack_bubbleView_speed"
-        style="@style/mylocation_dialog_text"
+       style="@style/map_geotrack_dialog_text"
+        android:layout_below="@id/map_geotrack_bubbleView_block_altitude"
+        android:layout_centerHorizontal="true"
         android:text="speed" />
 
     <TextView
         android:id="@+id/map_geotrack_bubbleView_address"
-        style="@style/mylocation_dialog_text"
+         style="@style/map_geotrack_dialog_text"
+        android:layout_below="@id/map_geotrack_bubbleView_speed"
+        android:layout_centerHorizontal="true"
         android:text="address" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/map_geotrack_bubbleView_streetview_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="StreetView"
+          style="@style/map_geotrack_dialog_text"
+        android:paddingLeft="5dp"
+        android:src="@android:drawable/ic_menu_view" />
+
+    <ImageView
+        android:id="@+id/map_geotrack_bubbleView_navigation_image"
+       style="@style/map_geotrack_dialog_text"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" 
+        android:contentDescription="Navigation"
+        android:paddingRight="5dp"
+        android:src="@android:drawable/ic_menu_directions" />
+
+</RelativeLayout>
