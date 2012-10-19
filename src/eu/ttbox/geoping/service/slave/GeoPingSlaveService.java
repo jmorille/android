@@ -537,7 +537,7 @@ public class GeoPingSlaveService extends WorkerService {
                 .setAutoCancel(true) //
                 .setContentText(contactDisplayName); //
         if (authorizeIt) {
-            notificationBuilder.setContentTitle(getString(R.string.notif_geoping)); //
+            notificationBuilder.setContentTitle(getString(R.string.notif_geoping_request)); //
         } else {
             notificationBuilder.setContentTitle(getString(R.string.notif_geoping_request_blocked)); //
         }

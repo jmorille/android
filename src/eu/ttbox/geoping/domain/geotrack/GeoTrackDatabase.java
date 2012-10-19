@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
-import eu.ttbox.geoping.domain.model.GeoTrack; 
+import eu.ttbox.geoping.domain.model.GeoTrack;
 
 public class GeoTrackDatabase {
 

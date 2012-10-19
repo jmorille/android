@@ -8,7 +8,6 @@ import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.model.Pairing;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
-import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PairingHelper {
 

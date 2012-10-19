@@ -1,6 +1,5 @@
 package eu.ttbox.geoping.domain.model;
 
-import android.net.Uri;
 import eu.ttbox.geoping.core.AppConstants;
 
 public class Person {

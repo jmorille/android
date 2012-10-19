@@ -1,9 +1,9 @@
 package eu.ttbox.geoping.service.slave.receiver;
 
-import eu.ttbox.geoping.service.slave.BackgroudLocService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import eu.ttbox.geoping.service.slave.BackgroudLocService;
 
 public class BootCompleteReceiver extends BroadcastReceiver {
 

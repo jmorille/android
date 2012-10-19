@@ -2,6 +2,7 @@ package eu.ttbox.geoping.ui.person;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -39,6 +40,11 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
         // Bind Value
         final String phoneNumber = helper.getPersonPhone(cursor);
         holder.phoneText.setText(phoneNumber);
+        // Color
+        int color = helper.getPersonColor(cursor);
+        Drawable stld = PersonColorDrawableHelper.getListBackgroundColor(color);
+        view.setBackgroundDrawable(stld);
+
         // Button
         helper.setTextPersonName(holder.nameText, cursor);
         holder.pingButton.setOnClickListener(new OnClickListener() {

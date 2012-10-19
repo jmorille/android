@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.NotifToasts;
