@@ -132,8 +132,8 @@ public class GeoTrackBubble extends FrameLayout {
 			hasTime = geoTrack.hasTime();
 		}
 		// Color
-//		Drawable colorDrawable = PersonColorDrawableHelper.getBubbleBackgroundColor(person.color);
-//		setBackgroundDrawable(colorDrawable);
+		Drawable colorDrawable = PersonColorDrawableHelper.getBubbleBackgroundColor(person.color);
+		setBackgroundDrawable(colorDrawable);
 		// GeoTrack
 		this.geoTrack = geoTrack;
 		// Bind values

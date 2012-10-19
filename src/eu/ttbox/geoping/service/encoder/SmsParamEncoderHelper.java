@@ -5,10 +5,13 @@ import java.util.HashMap;
 import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
+import eu.ttbox.geoping.service.encoder.params.IntegerEncoded;
+import eu.ttbox.geoping.service.encoder.params.LongEncoded;
 
 public class SmsParamEncoderHelper {
 
-    private static final int NUMBER_ENCODER_RADIX = 36;
+//    public static final int NUMBER_ENCODER_RADIX =  IntegerEncoded.MAX_RADIX;  
+    public static final int NUMBER_ENCODER_RADIX =   36;
 
     public static final String TAG = "SmsParamEncoderHelper";
 
@@ -81,7 +84,7 @@ public class SmsParamEncoderHelper {
         if (addSep) {
             sb.append(FIELD_SEP);
         }
-        String valueString = Integer.toString(value, NUMBER_ENCODER_RADIX);
+        String valueString = IntegerEncoded.toString(value, NUMBER_ENCODER_RADIX);
         sb.append(field.smsFieldName).append(valueString);
 //        Log.d(TAG, String.format("writeTo Int for field %s : %s = %s", field, field.smsFieldName, valueString));
         return sb;
@@ -92,18 +95,18 @@ public class SmsParamEncoderHelper {
         if (addSep) {
             sb.append(FIELD_SEP);
         }
-        String valueString = Long.toString(value, NUMBER_ENCODER_RADIX);
+        String valueString = LongEncoded.toString(value, NUMBER_ENCODER_RADIX);
         sb.append(field.smsFieldName).append(valueString);
         return sb;
     }
 
     private static Integer readToInt(SmsMessageLocEnum field, String value) {
-        Integer result = Integer.valueOf(value, NUMBER_ENCODER_RADIX);
+        Integer result = IntegerEncoded.valueOf(value, NUMBER_ENCODER_RADIX);
         return result;
     }
 
     private static Long readToLong(SmsMessageLocEnum field, String value) {
-        Long result = Long.valueOf(value, NUMBER_ENCODER_RADIX);
+        Long result = LongEncoded.valueOf(value, NUMBER_ENCODER_RADIX);
         return result;
     }
 

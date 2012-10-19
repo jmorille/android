@@ -1,10 +1,15 @@
 package eu.ttbox.geoping.ui.person;
 
+import android.graphics.AvoidXfermode.Mode;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ComposeShader;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.Shader;
+import android.graphics.Xfermode;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -28,8 +33,8 @@ public class PersonColorDrawableHelper {
     }
 
     public static Drawable getBubbleBackgroundColor(int color) {
-        RoundRectShape rs = new RoundRectShape(new float[] { 10, 10, 10, 10, 10, 10, 10, 10 }, null, null);
-        ShapeDrawable sdOff = new BorderShapeDrawable(rs, color, color, 10);
+        RoundRectShape rs = new RoundRectShape(new float[] { 20, 20, 20, 20, 20, 20, 20, 20 }, null, null);
+        BubbleBackgroudShapeDrawable sdOff = new BubbleBackgroudShapeDrawable(rs, color, color, 2);
         return sdOff;
     }
     
@@ -91,16 +96,23 @@ public class PersonColorDrawableHelper {
     public static class BubbleBackgroudShapeDrawable extends ShapeDrawable {
         Paint fillpaint;
         Paint strokepaint;
-        private static final int WIDTH = 5;
-        private int strokeWidth;
+         private int strokeWidth;
 
-        public BubbleBackgroudShapeDrawable(Shape s, int fill, int stroke, int strokeWidth) {
+        public BubbleBackgroudShapeDrawable(Shape s,final int fill, int stroke, int strokeWidth) {
             super(s);
             this.strokeWidth = strokeWidth;
-            fillpaint = new Paint(this.getPaint());
-            fillpaint.setColor(fill);
-            fillpaint.setShader(new LinearGradient(0, getIntrinsicWidth(), 0, 0, fill, Color.WHITE, Shader.TileMode.MIRROR));
-
+            fillpaint =  this.getPaint();
+//            fillpaint.setColor(fill);
+            final Rect r = getBounds();
+//            fillpaint.setShader(new LinearGradient(0, r.width(), 0, 0,  fill, Color.WHITE, Shader.TileMode.MIRROR));
+            ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory() {
+                @Override
+                public Shader resize(int width, int height) { 
+                    LinearGradient lg =   new LinearGradient(0, width, 0, 0,  Color.WHITE,  fill, Shader.TileMode.REPEAT);
+                    return lg;
+                }
+            };
+            setShaderFactory(sf);
             strokepaint = new Paint(fillpaint);
             strokepaint.setStyle(Paint.Style.STROKE);
             strokepaint.setStrokeWidth(strokeWidth);

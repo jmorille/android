@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="12" android:versionName="0.0.4" package="eu.ttbox.geoping">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="13" android:versionName="0.0.5" package="eu.ttbox.geoping">
 
     
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="16"/>
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />		
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>		
 		
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.VIBRATE"   />
+    <uses-permission android:name="android.permission.VIBRATE"/>
     
     
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -26,7 +26,7 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <uses-feature android:name="android.hardware.telephony" android:required="false"/>
     
-    <application android:debuggable="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:theme="@style/AppTheme">
+    <application android:debuggable="false" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:theme="@style/AppTheme">
 	    <meta-data android:name="com.google.android.backup.api_key" android:value="@string/backup_api_key"/>
 	    
         <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
@@ -55,14 +55,14 @@
         </activity>
 
         <!-- Sms Log -->
-        <activity android:name=".ui.smslog.SmsLogListActivity" android:label="@string/menu_smslog"/>
+        <activity android:label="@string/menu_smslog" android:name=".ui.smslog.SmsLogListActivity"/>
         <!-- Person -->
-        <activity android:name=".ui.person.PersonListActivity" android:label="@string/menu_person"/>
+        <activity android:label="@string/menu_person" android:name=".ui.person.PersonListActivity"/>
         <activity android:name=".ui.person.PersonEditActivity"/>
 
         
          <!-- Pairing -->
-        <activity android:name=".ui.pairing.PairingListActivity" android:label="@string/menu_pairing">
+        <activity android:label="@string/menu_pairing" android:name=".ui.pairing.PairingListActivity">
         </activity>
         <activity android:name=".ui.pairing.PairingEditActivity">
         </activity>
@@ -74,7 +74,7 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
-        <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver" >
+        <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver">
             <intent-filter android:priority="99999">
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/>
@@ -84,11 +84,11 @@
 
        <receiver android:enabled="false" android:name=".service.slave.receiver.BootCompleteReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.HOME" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <category android:name="android.intent.category.HOME"/>
             </intent-filter>
          </receiver>
-        <service android:exported="false"  android:name=".service.slave.BackgroudLocService"   />
+        <service android:exported="false" android:name=".service.slave.BackgroudLocService"/>
        
          <!-- Widget Person -->
           <receiver android:label="@string/sms_action_geoping_request" android:name=".ui.widget.PersonWidgetProvider">
@@ -108,20 +108,20 @@
         </receiver>
         <service android:exported="false" android:name=".ui.widget.pairing.PairingWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
          
-        <activity  android:name=".ui.widget.pairing.PairingWidgetConfig" android:label="@string/app_name" >
+        <activity android:label="@string/app_name" android:name=".ui.widget.pairing.PairingWidgetConfig">
           <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
           </intent-filter>
         </activity>
         
         <!-- Sms service -->
-        <service android:name=".service.slave.GeoPingSlaveService" android:exported="false" >
+        <service android:exported="false" android:name=".service.slave.GeoPingSlaveService">
             	<intent-filter>
             	    <action android:name="eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE"/>
             	    <category android:name="android.intent.category.DEFAULT"/>
             	</intent-filter>
         </service>
-        <service android:name=".service.master.GeoPingMasterService" android:exported="false" >
+        <service android:exported="false" android:name=".service.master.GeoPingMasterService">
         </service>
         
 <!--         android:readPermission="eu.ttbox.geoping.PERSON_READ"  -->

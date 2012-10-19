@@ -10,6 +10,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.service.encoder.SmsParamEncoderHelper;
+import eu.ttbox.geoping.service.encoder.params.BitSetHelper;
 
 public class SmsParamEncoderHelperTest extends AndroidTestCase {
 
@@ -80,30 +81,11 @@ public class SmsParamEncoderHelperTest extends AndroidTestCase {
         bitset.set(7);
         bitset.set(30);
 
-        long converted = convert(bitset );
+        long converted =  BitSetHelper.convert(bitset );
        
         
         Log.d(TAG, String.format("Encoded BitSet (%s) : %s",converted,   bitset.toString()));
     }
 
-    public static BitSet convert(long value) {
-        BitSet bits = new BitSet();
-        int index = 0;
-        while (value != 0L) {
-          if (value % 2L != 0) {
-            bits.set(index);
-          }
-          ++index;
-          value = value >>> 1;
-        }
-        return bits;
-      }
-
-      public static long convert(BitSet bits) {
-        long value = 0L;
-        for (int i = 0; i < bits.length(); ++i) {
-          value += bits.get(i) ? (1L << i) : 0L;
-        }
-        return value;
-      }
+   
 }

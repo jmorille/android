@@ -214,6 +214,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         disableMyLocation();
         disableCompass();
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        hideBubble();
         super.onDetach(mapView);
     }
 
