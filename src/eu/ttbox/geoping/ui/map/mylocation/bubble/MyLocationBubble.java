@@ -9,9 +9,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.ExternalIntents;
 
 public class MyLocationBubble extends FrameLayout {
 
@@ -31,11 +33,13 @@ public class MyLocationBubble extends FrameLayout {
 	private View altitudeBlock;
 	private TextView speedTextView;
 	private TextView providerTextView;
-
 	private TextView addressTextView;
+	private ImageView gpsStatusImageView;
 
+	// Config
 	private boolean displayGeoLoc = true;
 
+	
 	public MyLocationBubble(Context context) {
 		super(context);
 		layout = new LinearLayout(context);
@@ -50,11 +54,23 @@ public class MyLocationBubble extends FrameLayout {
 		this.altitudeBlock = v.findViewById(R.id.map_mylocation_dialogView_block_altitude);
 		this.speedTextView = (TextView) v.findViewById(R.id.map_mylocation_dialogView_speed);
 		this.providerTextView= (TextView) v.findViewById(R.id.map_mylocation_dialogView_provider);
+		this.gpsStatusImageView= (ImageView) v.findViewById(R.id.map_mylocation_dialogView_gpsStatus_image);
+		this.gpsStatusImageView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				 startGpsStatus();
+			}
+		});
 		// Frame
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params.gravity = Gravity.NO_GRAVITY;
 		params.width = DEFAULT_BUBBLE_WIDTH;
 		addView(layout, params);
+	}
+	
+	private void startGpsStatus() {
+		ExternalIntents.startActivityGpsStatus(getContext());
 	}
 
 	private boolean isSamelocation(Location location, Location other) {
@@ -78,6 +94,7 @@ public class MyLocationBubble extends FrameLayout {
 		if (location != null) {
 			hasLatLng = true;
 			hasTime = true;
+			hasProvider = true;
 			hasAccuracy = location.hasAccuracy();
 			hasAltitude = location.hasAltitude();
 			hasSpeed = location.hasSpeed();

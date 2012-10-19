@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map_mylocation_dialogView"
     style="@style/mylocation_dialog_bubbleBackground"
     android:layout_width="fill_parent"
@@ -14,9 +14,12 @@
         android:text="Provider" />
     
         
-    <LinearLayout
+        
+    <LinearLayout android:id="@+id/map_mylocation_dialogView_block_coord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/map_mylocation_dialogView_provider"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
 
         <TextView
@@ -37,7 +40,9 @@
     <LinearLayout
         android:id="@+id/map_mylocation_dialogView_block_altitude"
         android:layout_width="wrap_content"
+        android:layout_below="@id/map_mylocation_dialogView_block_coord"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
 
         <TextView
@@ -52,12 +57,27 @@
 
     <TextView
         android:id="@+id/map_mylocation_dialogView_speed"
+        android:layout_below="@id/map_mylocation_dialogView_block_altitude"
+        android:layout_centerHorizontal="true"
         style="@style/mylocation_dialog_text"
         android:text="speed" />
 
     <TextView
         android:id="@+id/map_mylocation_dialogView_address"
+        android:layout_below="@id/map_mylocation_dialogView_speed"
+        android:layout_centerHorizontal="true"
         style="@style/mylocation_dialog_text"
         android:text="address" />
 
-</LinearLayout>
+        <ImageView
+        android:id="@+id/map_mylocation_dialogView_gpsStatus_image"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/map_mylocation_dialogView_block_coord"
+        android:contentDescription="Gps Status"
+       style="@style/mylocation_dialog_text" 
+        android:src="@drawable/ic_action_locate" />
+        
+</RelativeLayout>
