@@ -34,7 +34,7 @@ public class SMSReceiverTest extends AndroidTestCase {
 
     public void testStartActivity() {
 
-        Intent intentFakeSms = createFakeSms(getContext(), "01234567890", SmsMessageEncoderHelperTest.MSG_ENCRYPED);
+        Intent intentFakeSms = createFakeSms(getContext(), "01234567890", SmsMessageEncoderHelperTest.MSG_ENCRYPED_LOC);
          
         mReceiver.onReceive(mContext, intentFakeSms);
         assertEquals(1, mContext.getReceivedIntents().size());

@@ -49,6 +49,22 @@ public class PlaceTestHelper {
         GeoTrack geo = new GeoTrack(null, loc);
         return geo;
     }
+    
+
+    public static GeoTrack getMessageLocRamdom(String provider) {
+        Location loc = new Location(provider);
+        loc.setTime(PlaceTestHelper.getDate(System.currentTimeMillis()));
+        loc.setLatitude((float) (Math.random() * 100));
+        loc.setLongitude((float) (Math.random() * 100));
+        loc.setAccuracy((float) (Math.random() * 1000));
+        if (PROVIDER_GPS.equals(provider)) {
+            loc.setAccuracy((float) (Math.random() * 100));
+            loc.setAltitude((float) (Math.random() * 1000));
+            loc.setBearing((float) (Math.random() * 100));
+            loc.setSpeed((float) (Math.random() * 100));
+        }
+        return new GeoTrack(null, loc);
+    }
 
     public static long getDate(long now) {
         Calendar cal = Calendar.getInstance();

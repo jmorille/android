@@ -25,21 +25,9 @@ public class SmsParamEncoderHelperTest extends AndroidTestCase {
     private GeoTrack getMessageLoc(String provider, WorldGeoPoint place) {
          return PlaceTestHelper.getMessageLoc(provider, place);
     }
-
-   
+ 
     public GeoTrack getMessageLocRamdom(String provider) {
-        Location loc = new Location(provider);
-        loc.setTime(PlaceTestHelper.getDate(System.currentTimeMillis()));
-        loc.setLatitude((float) (Math.random() * 100));
-        loc.setLongitude((float) (Math.random() * 100));
-        loc.setAccuracy((float) (Math.random() * 1000));
-        if (PROVIDER_GPS.equals(provider)) {
-            loc.setAccuracy((float) (Math.random() * 100));
-            loc.setAltitude((float) (Math.random() * 1000));
-            loc.setBearing((float) (Math.random() * 100));
-            loc.setSpeed((float) (Math.random() * 100));
-        }
-        return new GeoTrack(null, loc);
+         return PlaceTestHelper.getMessageLocRamdom(  provider) ;
     }
 
     public void testEncodeDecodeAnyRamdomMessage() {
@@ -72,8 +60,7 @@ public class SmsParamEncoderHelperTest extends AndroidTestCase {
     }
 
 
-    public void testEncodeDecodeMessageGpsPlace() {
-
+    public void testEncodeDecodeMessageGpsPlace() { 
         for (WorldGeoPoint place : WorldGeoPoint.values()) {
             ArrayList<GeoTrack> geoTracks = new ArrayList<GeoTrack>();
             geoTracks.add(getMessageLoc("network", place));
