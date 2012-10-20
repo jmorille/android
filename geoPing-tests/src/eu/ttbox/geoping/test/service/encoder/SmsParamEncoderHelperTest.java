@@ -16,7 +16,7 @@ import eu.ttbox.geoping.test.service.encoder.param.PlaceTestHelper.WorldGeoPoint
 
 public class SmsParamEncoderHelperTest extends AndroidTestCase {
 
-    private static final String TAG = "SmsMessageEncoderHelperTest";
+    private static final String TAG = "SmsParamEncoderHelperTest";
 
   
     public static final String PROVIDER_NETWORK = "network";
