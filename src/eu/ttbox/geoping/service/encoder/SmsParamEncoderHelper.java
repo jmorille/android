@@ -10,12 +10,13 @@ import eu.ttbox.geoping.service.encoder.params.LongEncoded;
 
 public class SmsParamEncoderHelper {
 
-//    public static final int NUMBER_ENCODER_RADIX =  IntegerEncoded.MAX_RADIX;  
-    public static final int NUMBER_ENCODER_RADIX =   36;
+    public static final int NUMBER_ENCODER_RADIX = IntegerEncoded.MAX_RADIX;
+    // public static final int NUMBER_ENCODER_RADIX = 36;
 
     public static final String TAG = "SmsParamEncoderHelper";
 
     public static final char FIELD_SEP = ',';
+    public static final char FIELD_MULTIDATA_SEP = ';';
 
     // ===========================================================
     // Location Provider Encoder
@@ -55,14 +56,8 @@ public class SmsParamEncoderHelper {
     // ===========================================================
     // Tools
     // ===========================================================
-    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, String value) {
-        return writeTo(sb, field, value, true);
-    }
 
-    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, String value, boolean addSep) {
-        if (addSep) {
-            sb.append(FIELD_SEP);
-        }
+    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, String value) {
         sb.append(field.smsFieldName);
         if (SmsMessageTypeEnum.GPS_PROVIDER == field.type) {
             sb.append(encodeToGpsProvider(value));
@@ -80,34 +75,108 @@ public class SmsParamEncoderHelper {
         }
     }
 
-    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, int value, boolean addSep) {
-        if (addSep) {
-            sb.append(FIELD_SEP);
-        }
-        String valueString = IntegerEncoded.toString(value, NUMBER_ENCODER_RADIX);
-        sb.append(field.smsFieldName).append(valueString);
-//        Log.d(TAG, String.format("writeTo Int for field %s : %s = %s", field, field.smsFieldName, valueString));
-        return sb;
-
-    }
-
-    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, long value, boolean addSep) {
-        if (addSep) {
-            sb.append(FIELD_SEP);
-        }
-        String valueString = LongEncoded.toString(value, NUMBER_ENCODER_RADIX);
+    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, int value, int radix) {
+        String valueString = IntegerEncoded.toString(value, radix);
         sb.append(field.smsFieldName).append(valueString);
         return sb;
     }
 
-    private static Integer readToInt(SmsMessageLocEnum field, String value) {
-        Integer result = IntegerEncoded.valueOf(value, NUMBER_ENCODER_RADIX);
+    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, int[] values, int radix) {
+        boolean isNotFirst = false;
+        for (int value : values) {
+            String valueEncoded = IntegerEncoded.toString(value, radix);
+            if (isNotFirst) {
+                sb.append(FIELD_MULTIDATA_SEP);
+            } else {
+                sb.append(field.smsFieldName);
+                isNotFirst = true;
+            }
+            sb.append(valueEncoded);
+        }
+        return sb;
+    }
+
+    private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, long value, int radix) {
+        String valueString = LongEncoded.toString(value, radix);
+        sb.append(field.smsFieldName).append(valueString);
+        return sb;
+    }
+
+    private static StringBuilder writeToDate(StringBuilder sb, SmsMessageLocEnum field, long value, int radix) {
+        long dateValue = (value - AppConstants.DATE_ZERO) / 1000;
+        String valueString = LongEncoded.toString(dateValue, radix);
+        sb.append(field.smsFieldName).append(valueString);
+        return sb;
+    }
+
+    private static int readToInt(SmsMessageLocEnum field, String value, int radix) {
+        int result = IntegerEncoded.parseInt(value, radix);
         return result;
     }
 
-    private static Long readToLong(SmsMessageLocEnum field, String value) {
-        Long result = LongEncoded.valueOf(value, NUMBER_ENCODER_RADIX);
+    private static long readToLong(SmsMessageLocEnum field, String value, int radix) {
+        Long result = LongEncoded.parseLong(value, radix);
         return result;
+    }
+
+    private static long readToDate(SmsMessageLocEnum field, String value, int radix) {
+        long result = LongEncoded.parseLong(value, radix);
+        long dateAsLong = (result * 1000) + AppConstants.DATE_ZERO;
+        return dateAsLong;
+    }
+
+    private static boolean writeToMultiInt(StringBuilder sb, SmsMessageLocEnum field, Bundle values, String[] colDatas, int radix) {
+        boolean isNotFirst = false;
+        int colDataSize = colDatas.length;
+        for (int i = 0; i < colDataSize; i++) {
+            String colData = colDatas[i];
+            if (values.containsKey(colData)) {
+                // Encode
+                int value = values.getInt(colData);
+                String valueEncoded = IntegerEncoded.toString(value, radix);
+                // Write
+                if (isNotFirst) {
+                    sb.append(FIELD_MULTIDATA_SEP);
+                } else if (i == 0) {
+                    sb.append(field.smsFieldName);
+                    isNotFirst = true;
+                } else if (!isNotFirst) {
+                    // first is not Lat => Ignore alls
+                    Log.w(TAG, String.format("Ignore Multis Datas : %s (because Not int good order os %s)", colData, colDatas));
+                    return false;
+                }
+                sb.append(valueEncoded);
+            }
+        }
+        return isNotFirst;
+    }
+
+    private static int readToMultiInt(Bundle extras, String value, String[] colDatas, int radix) {
+        int start = 0;
+        int colDataSize = colDatas.length;
+        boolean isLast = false;
+        for (int i = 0; i < colDataSize; i++) {
+            String colData = colDatas[i];
+            int idx = value.indexOf(FIELD_MULTIDATA_SEP, start);
+            if (idx == -1) {
+                idx = value.length();
+                isLast = true;
+            }
+            if (idx != -1) {
+                String s = value.substring(start, idx);
+                // Log.d(TAG, String.format("Read Multi Field(%s) %s : %s", i,
+                // colData, s));
+                if (s != null && s.length() > 0) {
+                    int unit = IntegerEncoded.parseInt(s, radix);
+                    extras.putInt(colData, unit);
+                }
+                start = idx + 1;
+            }
+            if (isLast) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     // ===========================================================
@@ -118,7 +187,15 @@ public class SmsParamEncoderHelper {
         return decodeMessageAsMap(encoded, null);
     }
 
+    public static Bundle decodeMessageAsMap(String encoded, int radix) {
+        return decodeMessageAsMap(encoded, null, radix);
+    }
+
     public static Bundle decodeMessageAsMap(String encoded, Bundle dest) {
+        return decodeMessageAsMap(encoded, dest, NUMBER_ENCODER_RADIX);
+    }
+
+    public static Bundle decodeMessageAsMap(String encoded, Bundle dest, int radix) {
         Bundle result = dest != null ? dest : new Bundle();
         String[] splitMsg = encoded.split(String.valueOf(FIELD_SEP));
         for (String field : splitMsg) {
@@ -133,16 +210,25 @@ public class SmsParamEncoderHelper {
                     result.putString(fieldEnum.dbFieldName, readToString(fieldEnum, valueEncoded));
                     break;
                 case INT:
-                    result.putInt(fieldEnum.dbFieldName, readToInt(fieldEnum, valueEncoded));
+                    result.putInt(fieldEnum.dbFieldName, readToInt(fieldEnum, valueEncoded, radix));
+                    break;
+                case DATE:
+                    result.putLong(fieldEnum.dbFieldName, readToDate(fieldEnum, valueEncoded, radix));
                     break;
                 case LONG:
-                    result.putLong(fieldEnum.dbFieldName, readToLong(fieldEnum, valueEncoded));
+                    result.putLong(fieldEnum.dbFieldName, readToLong(fieldEnum, valueEncoded, radix));
+                    break;
+                case MULTI:
+                    // Log.d(TAG,
+                    // String.format("Found convertion Multi Field for key(%s) : %s",
+                    // key, fieldEnum));
+                    readToMultiInt(result, valueEncoded, fieldEnum.multiFieldName, radix);
                     break;
                 default:
                     break;
                 }
             } else {
-                Log.d(TAG, String.format("Not found convertion Field ofr key(%s) : %s", key, field));
+                Log.d(TAG, String.format("Not found convertion Field for key(%s) : %s", key, field));
             }
         }
         return result;
@@ -153,36 +239,57 @@ public class SmsParamEncoderHelper {
     // ===========================================================
 
     public static StringBuilder encodeMessage(Bundle extras, StringBuilder dest) {
+        return encodeMessage(extras, dest, NUMBER_ENCODER_RADIX);
+    }
+
+    private static boolean addFieldSep(StringBuilder sb, boolean isNotFirst) {
+        if (isNotFirst) {
+            sb.append(FIELD_SEP);
+        } else {
+            return true;
+        }
+        return isNotFirst;
+    }
+
+    public static StringBuilder encodeMessage(Bundle extras, StringBuilder dest, int radix) {
         StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE);
         boolean isNotFirst = false;
+        // Single Field
         for (String key : extras.keySet()) {
             SmsMessageLocEnum fieldEnum = SmsMessageLocEnum.getByDbFieldName(key);
             if (fieldEnum != null) {
+                // Add Separator
+                isNotFirst = addFieldSep(sb, isNotFirst);
+                // Add Field
                 switch (fieldEnum.type) {
                 case GPS_PROVIDER:
                 case STRING:
-                    writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
+                    writeTo(sb, fieldEnum, extras.getString(key));
                     break;
                 case INT:
-                    writeTo(sb, fieldEnum, extras.getInt(key), isNotFirst);
+                    writeTo(sb, fieldEnum, extras.getInt(key), radix);
+                    break;
+                case DATE:
+                    writeToDate(sb, fieldEnum, extras.getLong(key), radix);
                     break;
                 case LONG:
-                    writeTo(sb, fieldEnum, extras.getLong(key), isNotFirst);
+                    writeTo(sb, fieldEnum, extras.getLong(key), radix);
+                    break;
+                case MULTI:
+                    writeToMultiInt(sb, fieldEnum, extras, fieldEnum.multiFieldName, radix);
                     break;
                 default:
                     break;
                 }
             } else {
-                Log.w(TAG, String.format("Ignore field [%s] : No convertion found", key));
-                // writeTo(sb, fieldEnum, extras.getString(key), isNotFirst);
+                if (!SmsMessageLocEnum.isIgnoreMultiField(key)) {
+                    Log.w(TAG, String.format("Ignore field [%s] : No convertion found", key));
+                }
             }
-            // Manage Sep
-            isNotFirst = true;
-        }
 
+        }
         return sb;
     }
-
     // public static StringBuilder encodeMessage(GeoTrack geoTrack) {
     // return encodeMessage(geoTrack, null);
     // }

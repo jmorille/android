@@ -14,7 +14,7 @@ public class SmsMessageIntentEncoderHelper {
 	// Encoder
 	// ===========================================================
 	public static String encodeSmsMessage(SmsMessageActionEnum action, Bundle params) {
-		String encrypedMsg = SmsMessageEncoderHelper.encodeSmsMessage(action.smsAction, params);
+		String encrypedMsg = SmsMessageEncoderHelper.encodeSmsMessage(action , params);
 		return encrypedMsg;
 	}
 

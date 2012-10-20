@@ -8,8 +8,9 @@ public class IntegerEncodedTest extends AndroidTestCase {
 
     public static final String TAG = "IntegerEncodedTest";
 
-    public static int[] VALUES_TESTED = new int[] { 0, 1, 2, 3, 7, 42, 73, //
-            Integer.MIN_VALUE + 1, Integer.MIN_VALUE + 2, Integer.MAX_VALUE - 1, Integer.MAX_VALUE - 2//
+    public static int[] VALUES_TESTED = new int[] { //
+    -1, -2, -3, -7, -42, -73, 0, 1, 2, 3, 7, 42, 73, //
+             Integer.MIN_VALUE + 1, Integer.MIN_VALUE + 2, Integer.MAX_VALUE - 1, Integer.MAX_VALUE - 2//
             , Integer.MIN_VALUE, Integer.MAX_VALUE //
     };
 

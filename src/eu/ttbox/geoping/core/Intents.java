@@ -33,6 +33,7 @@ public class Intents {
 
     public static final String ACTION_NEW_GEOTRACK_INSERTED = "eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED";
 
+    public static final String EXTRA_GEO_E6 = "EXTRA_GEO_E6";
     public static final String EXTRA_SMS_PHONE = "EXTRA_SMS_PHONE";
     public static final String EXTRA_SMS_PARAMS = "EXTRA_SMS_PARAMS";
     public static final String EXTRA_SMS_ACTION = "EXTRA_SMS_ACTION";

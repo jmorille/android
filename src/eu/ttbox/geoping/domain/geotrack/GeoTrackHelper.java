@@ -74,8 +74,8 @@ public class GeoTrackHelper {
         geoTrack.setAccuracy(accuracyIdx > -1 ? cursor.getInt(accuracyIdx) : -1);
         geoTrack.setAltitude(altitudeIdx > -1 ? cursor.getInt(altitudeIdx) : -1);
 
-        geoTrack.setBearing(bearingIdx > -1 ? cursor.getInt(bearingIdx) : -1); 
-       
+        geoTrack.setBearing(bearingIdx > -1 ? cursor.getInt(bearingIdx) : -1);
+
         geoTrack.setSpeed(speedIdx > -1 ? cursor.getInt(speedIdx) : -1);
 
         geoTrack.setAddress(addressIdx > -1 ? cursor.getString(addressIdx) : null);
@@ -151,11 +151,12 @@ public class GeoTrackHelper {
         Bundle initialValues = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
         GeoTrack geoTrack = getEntityFromBundle(initialValues);
         String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-        if (phone!=null && !initialValues.containsKey(GeoTrackColumns.COL_PHONE)) {
+        if (phone != null && !initialValues.containsKey(GeoTrackColumns.COL_PHONE)) {
             geoTrack.setPhone(phone);
         }
         return geoTrack;
     }
+
     public static GeoTrack getEntityFromBundle(Bundle initialValues) {
         if (initialValues == null || initialValues.isEmpty()) {
             return null;
@@ -176,12 +177,25 @@ public class GeoTrackHelper {
         if (initialValues.containsKey(GeoTrackColumns.COL_TIME)) {
             geoTrack.setTime(initialValues.getLong(GeoTrackColumns.COL_TIME));
         }
+        // Geo
+        if (initialValues.containsKey(Intents.EXTRA_GEO_E6)) {
+            int[] geoLatLng = initialValues.getIntArray(Intents.EXTRA_GEO_E6);
+            int geoLatLngSize = geoLatLng.length;
+            if (geoLatLngSize >= 2) {
+                geoTrack.setLatitudeE6(geoLatLng[0]);
+                geoTrack.setLongitudeE6(geoLatLng[1]);
+            }
+            if (geoLatLngSize >= 3) {
+                geoTrack.setAltitude(geoLatLng[3]);
+            }
+        }
         if (initialValues.containsKey(GeoTrackColumns.COL_LATITUDE_E6)) {
             geoTrack.setLatitudeE6(initialValues.getInt(GeoTrackColumns.COL_LATITUDE_E6));
         }
         if (initialValues.containsKey(GeoTrackColumns.COL_LONGITUDE_E6)) {
             geoTrack.setLongitudeE6(initialValues.getInt(GeoTrackColumns.COL_LONGITUDE_E6));
         }
+
         if (initialValues.containsKey(GeoTrackColumns.COL_ACCURACY)) {
             geoTrack.setAccuracy(initialValues.getInt(GeoTrackColumns.COL_ACCURACY));
         }

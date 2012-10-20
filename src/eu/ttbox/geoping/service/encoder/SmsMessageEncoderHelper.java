@@ -32,18 +32,21 @@ public class SmsMessageEncoderHelper {
     // public static String encodeSmsMessage(GeoPingMessage msg) {
     // return encodeSmsMessage(msg.action, msg.params);
     // }
-
     public static String encodeSmsMessage(SmsMessageActionEnum action, Bundle params) {
-        return encodeSmsMessage(action.smsAction, params);
+        return encodeSmsMessage(action.smsAction, params, SmsParamEncoderHelper.NUMBER_ENCODER_RADIX);
     }
-    
-    public static String encodeSmsMessage(String action, Bundle params) {
+
+    public static String encodeSmsMessage(SmsMessageActionEnum action, Bundle params, int radix) {
+        return encodeSmsMessage(action.smsAction, params, radix);
+    }
+
+    public static String encodeSmsMessage(String action, Bundle params, int radix) {
         StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE);
         sb.append(action);
         sb.append(ACTION_END);
         if (params != null && !params.isEmpty()) {
             sb.append(PARAM_BEGIN);
-            SmsParamEncoderHelper.encodeMessage(params, sb);
+            SmsParamEncoderHelper.encodeMessage(params, sb, radix);
             sb.append(PARAM_END);
         }
         // String encryptedMsg = encryptSmsMsg(sb.toString());
@@ -51,8 +54,12 @@ public class SmsMessageEncoderHelper {
         return sb.toString();
     }
 
-    public static GeoPingMessage decodeSmsMessage(String phone, String encryped) {
-         GeoPingMessage result = null;
+    public static GeoPingMessage decodeSmsMessage(String phone, String encryped ) {
+      return decodeSmsMessage(  phone,   encryped, SmsParamEncoderHelper.NUMBER_ENCODER_RADIX);
+    }
+
+    public static GeoPingMessage decodeSmsMessage(String phone, String encryped, int radix) {
+        GeoPingMessage result = null;
         if (encryped.startsWith(GEOPING_MSG_ID)) {
             String clearMsg = encryped;
             // Decodes
@@ -67,7 +74,7 @@ public class SmsMessageEncoderHelper {
                 int idxParamEnd = clearMsg.indexOf(PARAM_END, idxActEnd);
                 if (idxParamBegin > -1 && idxParamEnd > -1) {
                     String encodedParams = clearMsg.substring(idxParamBegin + 1, idxParamEnd);
-                    params = SmsParamEncoderHelper.decodeMessageAsMap(encodedParams);
+                    params = SmsParamEncoderHelper.decodeMessageAsMap(encodedParams, null, radix);
                     Log.d(TAG, String.format("Sms Decoded Message : params = [%s]", encodedParams));
                     // result.params = clearMsg.substring(idxActEnd + 1,
                     // clearMsgSize);

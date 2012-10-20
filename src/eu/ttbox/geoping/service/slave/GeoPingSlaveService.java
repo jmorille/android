@@ -198,7 +198,7 @@ public class GeoPingSlaveService extends WorkerService {
         if (pairing != null && pairing.authorizeType != null) {
             authorizeType = pairing.authorizeType;
         }
-        long personId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1l);
+        long personId = SmsMessageLocEnum.PARAM_PERSON_ID.readLong(params, -1l);
         switch (authorizeType) {
         case AUTHORIZE_ALWAYS:// Already pairing, resent the response
             doPairingPhone(pairing, PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS, personId);
@@ -219,7 +219,7 @@ public class GeoPingSlaveService extends WorkerService {
         // Read Intent
         String phone = extras.getString(Intents.EXTRA_SMS_PHONE);
         Bundle params = extras.getBundle(Intents.EXTRA_SMS_PARAMS);
-        long personId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1l);
+        long personId = SmsMessageLocEnum.PARAM_PERSON_ID.readLong(params, -1l);
         GeopingNotifSlaveTypeEnum notifType = GeopingNotifSlaveTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL, -1));
         AuthorizePhoneTypeEnum type = AuthorizePhoneTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL));
 
@@ -313,7 +313,7 @@ public class GeoPingSlaveService extends WorkerService {
     private void sendPairingResponse(String phone, long personId, PairingAuthorizeTypeEnum authorizeType) {
         Bundle params = null;
         if (personId != -1l) {
-            params = SmsMessageLocEnum.MSGKEY_PERSON_ID.writeToBundle(null, personId);
+            params = SmsMessageLocEnum.PARAM_PERSON_ID.writeToBundle(null, personId);
         }
         sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING_RESPONSE, params);
     }

@@ -124,7 +124,7 @@ public class GeoPingMasterService extends IntentService {
         } else if (Intents.ACTION_SMS_PAIRING_RESPONSE.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-            long userId = SmsMessageLocEnum.MSGKEY_PERSON_ID.readLong(params, -1);
+            long userId = SmsMessageLocEnum.PARAM_PERSON_ID.readLong(params, -1);
             consumeSmsPairingResponse(phone, userId);
         }
 
@@ -167,7 +167,7 @@ public class GeoPingMasterService extends IntentService {
     // ===========================================================
 
     private void sendSmsPairingRequest(String phone, long userId) {
-        Bundle params = SmsMessageLocEnum.MSGKEY_PERSON_ID.writeToBundle(null, userId);
+        Bundle params = SmsMessageLocEnum.PARAM_PERSON_ID.writeToBundle(null, userId);
         sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
 
     }

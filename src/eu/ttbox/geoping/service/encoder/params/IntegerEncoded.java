@@ -12,18 +12,14 @@ public class IntegerEncoded {
     /**
      * All possible chars for representing a number as a String
      */
-   public final static char[] ALPHABET = { //
-    '0', '1', '2', '3', '4', '5', //
-            '6', '7', '8', '9', 'a', 'b', //
-            'c', 'd', 'e', 'f', 'g', 'h', //
-            'i', 'j', 'k', 'l', 'm', 'n', //
-            'o', 'p', 'q', 'r', 's', 't', //
-            'u', 'v', 'w', 'x', 'y', 'z' //
-            , 'A', 'B', //
-            'C', 'D', 'E', 'F', 'G', 'H', //
-            'I', 'J', 'K', 'L', 'M', 'N', //
-            'O', 'P', 'Q', 'R', 'S', 'T', //
-            'U', 'V', 'W', 'X', 'Y', 'Z' //
+    public final static char[] ALPHABET = { //
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', //
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', //
+            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', //
+            'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', //
+            'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', //
+            'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', //
+            'Y', 'Z' //
     };
 
     /**
@@ -66,10 +62,10 @@ public class IntegerEncoded {
 
         return new String(buf, charPos, (33 - charPos));
     }
-    
+
     public static Integer valueOf(String s, int radix) throws NumberFormatException {
         return Integer.valueOf(parseInt(s, radix));
-        }
+    }
 
     public static int parseInt(String s, int radix) throws NumberFormatException {
         if (s == null) {
@@ -110,7 +106,7 @@ public class IntegerEncoded {
             }
             while (i < max) {
                 // Accumulating negatively avoids surprises near MAX_VALUE
-                digit =  digit(s.charAt(i++), radix);
+                digit = digit(s.charAt(i++), radix);
                 if (digit < 0) {
                     throw invalidInt(s);
                 }
@@ -155,7 +151,7 @@ public class IntegerEncoded {
         }
         return Character.digit(codePoint, radix);
     }
-    
+
     private static NumberFormatException invalidInt(String s) {
         throw new NumberFormatException("Invalid Int: \"" + s + "\"");
     }
