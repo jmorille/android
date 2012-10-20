@@ -32,10 +32,25 @@ public class SMSReceiverTest extends AndroidTestCase {
         mContext = new TestContext();
     }
 
+    public void tesBadSms() {
+        String[] badMessages = new String[] { "Coucou couc", //
+                "Tu connais l'appli GeoPing?", //
+                "WRY", //
+                "geoPing?", //
+                "geoPing?W", //
+                "geoPing?W(ssaa)" //
+        };
+        for (String msg : badMessages) {
+            Intent intentFakeSms = createFakeSms(getContext(), "01234567890", msg);
+            mReceiver.onReceive(mContext, intentFakeSms);
+            assertEquals(0, mContext.getReceivedIntents().size());
+        }
+    }
+
     public void testStartActivity() {
 
         Intent intentFakeSms = createFakeSms(getContext(), "01234567890", SmsMessageEncoderHelperTest.MSG_ENCRYPED_LOC);
-         
+
         mReceiver.onReceive(mContext, intentFakeSms);
         assertEquals(1, mContext.getReceivedIntents().size());
         assertNull(mReceiver.getResultData());
@@ -43,7 +58,8 @@ public class SMSReceiverTest extends AndroidTestCase {
         Intent receivedIntent = mContext.getReceivedIntents().get(0);
         assertNull(receivedIntent.getAction());
         assertEquals("01234567890", receivedIntent.getStringExtra("phoneNum"));
-//        assertEquals("01234567890", receivedIntent.getStringExtra(Intents.EXTRA_SMS_ACTION));
+        // assertEquals("01234567890",
+        // receivedIntent.getStringExtra(Intents.EXTRA_SMS_ACTION));
         // intent.putExtra(Intents.EXTRA_SMS_PARAMS, msg.params);
         // intent.putExtra(Intents.EXTRA_SMS_ACTION, msg.action);
         // intent.putExtra(Intents.EXTRA_SMS_PHONE, msg.phone); //
@@ -94,7 +110,7 @@ public class SMSReceiverTest extends AndroidTestCase {
         intent.setAction("android.provider.Telephony.SMS_RECEIVED");
         intent.putExtra("pdus", new Object[] { pdu });
         intent.putExtra("format", "3gpp");
-//        context.startService(intent);
+        // context.startService(intent);
         return intent;
     }
 

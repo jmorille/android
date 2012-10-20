@@ -32,7 +32,8 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
     public static final String MSG_ENCRYPED_WRY2 = "geoPing?WRY!";
 
     public static final String MSG_ENCRYPED_MULTI_LOC = "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)(d-mxNS,g-2i3wj;aeo4I;20,ak,pg,c21,b49)(d-mxNS,g2pFAg;9st3B;20,ak,pg,c21,b49)";
-    public static final String MSG_ENCRYPED_MULTI_LOC_WRY = "geoPing?WRY!LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)(d-mxNS,g-2i3wj;aeo4I;20,ak,pg,c21,b49)(d-mxNS,g2pFAg;9st3B;20,ak,pg,c21,b49)";
+    public static final String MSG_ENCRYPED_MULTI_LOC_WRY = "geoPing?WRY!LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)";
+    public static final String MSG_ENCRYPED_MULTI_WRY_LOC3 = "geoPing?WRY!LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)(d-mxNS,g-2i3wj;aeo4I;20,ak,pg,c21,b49)(d-mxNS,g2pFAg;9st3B;20,ak,pg,c21,b49)";
     public static final String[] MSG_ENCRYPED = new String[] { MSG_ENCRYPED_LOC, MSG_ENCRYPED_WRY, MSG_ENCRYPED_WRY2 };
 
     private GeoTrack getMessageLoc(String provider, WorldGeoPoint place) {
@@ -164,15 +165,13 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
 
     public void testNotDecodeBadMessage() {
         String[]  badMessages = new String [] {
-                "Coucou couc",
-                "Tu connais l'appli GeoPing?",
-                "WRY",
-                "geoPing?",
-                "geoPing?W",
-                "geoPing?W(ssaa)"
-
-
-        };
+                "Coucou couc", // 
+                "Tu connais l'appli GeoPing?", //
+                "WRY", //
+                "geoPing?", //
+                "geoPing?W", //
+                "geoPing?W(ssaa)" //
+         };
         for (String msg : badMessages) {
             GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
             Log.d(TAG, String.format("Not Extract %s from : %s", decoded, msg));
@@ -180,12 +179,30 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
         }
     }
     
-    public void testDecode() {
-      
+    public void testDecode() { 
         for (String msg : MSG_ENCRYPED) {
             GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
             Log.d(TAG, String.format("Extract %s from : %s", decoded, msg));
             assertNotNull(decoded.action);
+           
         }
     }
+    
+    public void testDecodeMultiMessageWryLoc() { 
+        String msg  = "geoPing?WRY!LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)";
+        // Message 01
+        GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
+        Log.d(TAG, String.format("Extract %s from : %s", decoded, msg));
+        assertNotNull(decoded.action);
+        assertEquals(SmsMessageActionEnum.GEOPING_REQUEST,decoded.action);
+        // Message 02
+        assertNotNull(decoded.multiMessages);
+        assertEquals(1, decoded.multiMessages.size());
+        GeoPingMessage decoded2=decoded.multiMessages.get(0);
+        assertNotNull(decoded2);
+        assertEquals(SmsMessageActionEnum.ACTION_GEO_LOC,decoded2.action);
+        assertNotNull(decoded2.params);
+    }
+    
+    
 }

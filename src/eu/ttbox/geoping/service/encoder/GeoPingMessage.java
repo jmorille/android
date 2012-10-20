@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.service.encoder;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 
  
@@ -9,6 +11,10 @@ public class GeoPingMessage {
     public SmsMessageActionEnum action;
     public Bundle params;
 
+    // Next Process Message
+    public int nextStartIdx;
+    public ArrayList<GeoPingMessage> multiMessages;
+    
     public GeoPingMessage() {
         super();
     }
@@ -18,6 +24,16 @@ public class GeoPingMessage {
         this.phone = phone;
         this.action = action;
         this.params = params;
+    }
+    
+    public void addMultiMessage(GeoPingMessage msg) {
+        if (msg==null) {
+            return;
+        }
+        if (multiMessages==null) {
+           this.multiMessages = new ArrayList<GeoPingMessage>();
+        }
+        this.multiMessages.add(msg);
     }
 
     @Override
