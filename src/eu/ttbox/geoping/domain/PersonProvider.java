@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.domain;
 
 import android.app.SearchManager;
+import android.app.backup.BackupManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -9,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.person.PersonDatabase;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
@@ -198,6 +200,8 @@ public class PersonProvider extends ContentProvider {
             if (personId > -1) {
                 personUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(personId));
                 getContext().getContentResolver().notifyChange(uri, null);
+                // Backup
+                BackupManager.dataChanged(getContext().getPackageName());
             }
             return personUri;
         default:
@@ -222,7 +226,9 @@ public class PersonProvider extends ContentProvider {
         }
         if (count > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
-        }
+            // Backup
+           BackupManager.dataChanged(getContext().getPackageName());
+         }
         return count;
     }
 
@@ -243,6 +249,8 @@ public class PersonProvider extends ContentProvider {
         }
         if (count > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
+            // Backup
+            BackupManager.dataChanged(getContext().getPackageName());
         }
         return count;
     }

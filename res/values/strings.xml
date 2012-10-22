@@ -27,7 +27,9 @@
     
     <string name="toast_notif_sended_geoping_request">GeoPing demandé : %s</string>
     <string name="toast_notif_sended_geoping_response">GeoPing envoyé : %s</string>
+    <string name="toast_notif_backup_restored">Sauvegarde restauré</string>
     
+   
     <!-- Sms Action -->
     <string name="sms_action_geoping_request">GeoPing requête</string>
     <string name="sms_action_geoping_response">GeoPing réponse</string>

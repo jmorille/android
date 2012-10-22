@@ -8,7 +8,7 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.pairing.PairingListActivity;
 import eu.ttbox.geoping.ui.person.PersonListActivity;
-import eu.ttbox.geoping.ui.prefs.TrakingPrefActivity;
+import eu.ttbox.geoping.ui.prefs.GeoPingPrefActivity;
 import eu.ttbox.geoping.ui.smslog.SmsLogListActivity;
 
 public class MenuOptionsItemSelectionHelper {
@@ -16,7 +16,7 @@ public class MenuOptionsItemSelectionHelper {
     public static boolean onOptionsItemSelected(Context context, MenuItem item) {
         switch (item.getItemId()) {
         case R.id.option:
-            Intent intentOption = new Intent(context, TrakingPrefActivity.class);
+            Intent intentOption = new Intent(context, GeoPingPrefActivity.class);
             context.startActivity(intentOption);
             return true;
         case R.id.menuGeotracker:

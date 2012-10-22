@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.domain;
 
 import android.app.SearchManager;
+import android.app.backup.BackupManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -197,6 +198,8 @@ public class PairingProvider extends ContentProvider {
                 pairingUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(pairingId));
                 getContext().getContentResolver().notifyChange(uri, null);
                 Log.i(TAG, String.format("Insert Pairing %s : %s", pairingUri, values));
+                // Backup
+                BackupManager.dataChanged(getContext().getPackageName());
             }
             return pairingUri;
         default:
@@ -221,6 +224,8 @@ public class PairingProvider extends ContentProvider {
         }
         if (count > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
+            // Backup
+           BackupManager.dataChanged(getContext().getPackageName());
         }
         return count;
     }
@@ -242,6 +247,8 @@ public class PairingProvider extends ContentProvider {
         }
         if (count > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
+            // Backup
+           BackupManager.dataChanged(getContext().getPackageName());
         }
         return count;
     }

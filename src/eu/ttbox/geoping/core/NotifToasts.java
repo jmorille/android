@@ -16,5 +16,9 @@ public class NotifToasts {
         final String formatStr = context.getResources().getString(R.string.toast_notif_sended_geoping_response, phone);
         Toast.makeText(context, formatStr, Toast.LENGTH_SHORT).show();
     }
+    
+    public static void showBackupRestored(Context context ) { 
+        Toast.makeText(context, R.string.toast_notif_backup_restored, Toast.LENGTH_SHORT).show();
+    }
 
 }
