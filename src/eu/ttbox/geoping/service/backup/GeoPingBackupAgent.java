@@ -10,6 +10,7 @@ import android.app.backup.SharedPreferencesBackupHelper;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import eu.ttbox.geoping.domain.pairing.PairingOpenHelper;
+import eu.ttbox.geoping.domain.person.PersonOpenHelper;
 
 public class GeoPingBackupAgent extends BackupAgentHelper {
 
@@ -20,11 +21,13 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 
     // The name of the SharedPreferences file
     static final String FILENAME_PAIRING_DB = PairingOpenHelper.DATABASE_NAME;
-    static final String PREFS = "user_preferences";
+    static final String FILENAME_PERSON_DB = PersonOpenHelper.DATABASE_NAME;
+    static final String PREFS = "eu.ttbox.geoping_preferences";
 
     // A key to uniquely identify the set of backup data
     static final String BACKUP_KEY_PREFS = "geoPingPrefs";
     static final String BACKUP_KEY_PAIRING_DB = "geoPingDbPairing";
+    static final String BACKUP_KEY_PERSON_DB = "geoPingDbPerson";
 
     // Allocate a helper and add it to the backup agent
     @Override
@@ -33,9 +36,12 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
         SharedPreferencesBackupHelper helperPrefs = new SharedPreferencesBackupHelper(this, PREFS);
         addHelper(BACKUP_KEY_PREFS, helperPrefs);
 
-        // Database
+        // Database Pairing
         FileBackupHelper helperDbPairing = new FileBackupHelper(this, FILENAME_PAIRING_DB);
         addHelper(BACKUP_KEY_PAIRING_DB, helperDbPairing);
+        // Database Person
+        FileBackupHelper helperDbPerson = new FileBackupHelper(this, FILENAME_PERSON_DB);
+        addHelper(BACKUP_KEY_PERSON_DB, helperDbPerson);
     }
 
     @Override
