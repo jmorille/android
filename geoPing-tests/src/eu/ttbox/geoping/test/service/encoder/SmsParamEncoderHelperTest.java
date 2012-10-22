@@ -1,6 +1,6 @@
 package eu.ttbox.geoping.test.service.encoder;
 
-import java.util.BitSet;
+import java.util.ArrayList;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -10,100 +10,91 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.service.encoder.SmsParamEncoderHelper;
+import eu.ttbox.geoping.service.encoder.params.IntegerEncoded;
+import eu.ttbox.geoping.test.service.encoder.param.PlaceTestHelper;
+import eu.ttbox.geoping.test.service.encoder.param.PlaceTestHelper.WorldGeoPoint;
 
 public class SmsParamEncoderHelperTest extends AndroidTestCase {
 
-    private static final String TAG = "SmsMessageEncoderHelperTest";
+    private static final String TAG = "SmsParamEncoderHelperTest";
 
-    private float getRamdomFloat() {
-        return (float) (Math.random() * 100);
+  
+    public static final String PROVIDER_NETWORK = "network";
+    public static final String PROVIDER_GPS = "gps";
+   
+    private GeoTrack getMessageLoc(String provider, WorldGeoPoint place) {
+         return PlaceTestHelper.getMessageLoc(provider, place);
     }
-
-    public GeoTrack getMessageLoc(String provider) {
-        Location loc = new Location(provider);
-
-        loc.setTime(System.currentTimeMillis());
-        loc.setLatitude(43.15854941164189446d);
-        loc.setLongitude(25.218546646446d);
-        loc.setAccuracy(120.258446418974f);
-        loc.setAltitude(124.6546533464d);
-        loc.setBearing(257.16416464646446464646413f);
-        loc.setSpeed(125.1464646464468946444646f);
-        return new GeoTrack("montel", loc);
-    }
-
+ 
     public GeoTrack getMessageLocRamdom(String provider) {
-        Location loc = new Location(provider);
-        loc.setTime(System.currentTimeMillis());
-        loc.setLatitude((float) (Math.random() * 100));
-        loc.setLongitude((float) (Math.random() * 100));
-        loc.setAccuracy((float) (Math.random() * 100));
-        loc.setAltitude((float) (Math.random() * 100));
-        loc.setBearing((float) (Math.random() * 100));
-        loc.setSpeed((float) (Math.random() * 100));
-        return new GeoTrack("montel", loc);
+         return PlaceTestHelper.getMessageLocRamdom(  provider) ;
     }
 
-    public void testEncodeDecodeMessage() {
+    public void testEncodeDecodeAnyRamdomMessage() {
         GeoTrack[] geoTracks = new GeoTrack[] { //
-        getMessageLoc("network"), getMessageLoc("passive"), getMessageLoc("gps"), getMessageLoc("nimportenawak") //
-                , getMessageLocRamdom("network"), getMessageLocRamdom("passive"), getMessageLocRamdom("gps"), getMessageLocRamdom("nimportenawak") //
+        getMessageLocRamdom("network"), getMessageLocRamdom("passive"), getMessageLocRamdom("gps"), getMessageLocRamdom("nimportenawak") //
                 , getMessageLocRamdom("network"), getMessageLocRamdom("passive"), getMessageLocRamdom("gps"), getMessageLocRamdom("nimportenawak") //
                 , getMessageLocRamdom("network"), getMessageLocRamdom("passive"), getMessageLocRamdom("gps"), getMessageLocRamdom("nimportenawak") //
         };
 
         for (GeoTrack geoTrack : geoTracks) {
+            doEncodeDecodeTest(geoTrack, "Encoded Ramdom Message", SmsParamEncoderHelper.NUMBER_ENCODER_RADIX);
+        }
+    }
 
-            // Encode
-            Bundle extras = GeoTrackHelper.getBundleValues(geoTrack);
-            String encoded = SmsParamEncoderHelper.encodeMessage(extras, null).toString();
-            Log.d(TAG, String.format("Encoded Message (%s chars) : %s", encoded.length(), encoded));
-            // Decode
-            Bundle decoded = SmsParamEncoderHelper.decodeMessageAsMap(encoded);
-            assertEquals(geoTrack.provider, decoded.get(GeoTrackColumns.COL_PROVIDER));
-            assertEquals(geoTrack.time, decoded.get(GeoTrackColumns.COL_TIME));
-            assertEquals(geoTrack.getLatitudeE6(), decoded.get(GeoTrackColumns.COL_LATITUDE_E6));
-            assertEquals(geoTrack.getLongitudeE6(), decoded.get(GeoTrackColumns.COL_LONGITUDE_E6));
+    public void testEncodeDecodeMessage() {
+
+        for (WorldGeoPoint place : WorldGeoPoint.values()) {
+            ArrayList<GeoTrack> geoTracks = new ArrayList<GeoTrack>();
+            geoTracks.add(getMessageLoc("network", place));
+            geoTracks.add(getMessageLoc("passive", place));
+            geoTracks.add(getMessageLoc("gps", place));
+            geoTracks.add(getMessageLoc("nimportenawak", place));
+
+            for (GeoTrack geoTrack : geoTracks) {
+                for (int radix : new int[] { 10, 36, IntegerEncoded.MAX_RADIX }) {
+                    doEncodeDecodeTest(geoTrack, String.format("Encoded Message %s radix=%s", place.name(), radix), radix);
+                }
+            }
+        }
+    }
+
+
+    public void testEncodeDecodeMessageGpsPlace() { 
+        for (WorldGeoPoint place : WorldGeoPoint.values()) {
+            ArrayList<GeoTrack> geoTracks = new ArrayList<GeoTrack>();
+            geoTracks.add(getMessageLoc("network", place));
+            geoTracks.add(getMessageLoc("gps", place));
+
+            for (GeoTrack geoTrack : geoTracks) {
+                for (int radix : new int[] { 10, 36, IntegerEncoded.MAX_RADIX }) {
+                    doEncodeDecodeTest(geoTrack, String.format("Encoded Place %s %s radix=%s", place.name(), geoTrack.provider, radix), radix);
+                }
+            }
+        }
+    }
+
+    private void doEncodeDecodeTest(GeoTrack geoTrack, String logTitle, int radix) {
+        // Encode
+        Bundle extras = GeoTrackHelper.getBundleValues(geoTrack);
+        String encoded = SmsParamEncoderHelper.encodeMessage(extras, null, radix).toString();
+        Log.d(TAG, String.format("%s (%s chars) : %s", logTitle, encoded.length(), encoded));
+        // Decode
+        Bundle decoded = SmsParamEncoderHelper.decodeMessageAsMap(encoded, null, radix);
+        assertEquals(geoTrack.provider, decoded.get(GeoTrackColumns.COL_PROVIDER));
+        assertEquals(geoTrack.time, decoded.get(GeoTrackColumns.COL_TIME));
+        assertEquals(geoTrack.getLatitudeE6(), decoded.get(GeoTrackColumns.COL_LATITUDE_E6));
+        assertEquals(geoTrack.getLongitudeE6(), decoded.get(GeoTrackColumns.COL_LONGITUDE_E6));
+        assertEquals(geoTrack.accuracy, decoded.get(GeoTrackColumns.COL_ACCURACY));
+        if (PROVIDER_GPS.equals(geoTrack.provider)) {
             assertEquals(geoTrack.getAltitude(), decoded.get(GeoTrackColumns.COL_ALTITUDE));
-            assertEquals(geoTrack.accuracy, decoded.get(GeoTrackColumns.COL_ACCURACY));
             assertEquals(geoTrack.bearing, decoded.get(GeoTrackColumns.COL_BEARING));
             assertEquals(geoTrack.speed, decoded.get(GeoTrackColumns.COL_SPEED));
+        } else {
+            assertNull(decoded.get(GeoTrackColumns.COL_ALTITUDE));
+            assertNull(decoded.get(GeoTrackColumns.COL_BEARING));
+            assertNull(decoded.get(GeoTrackColumns.COL_SPEED));
         }
-
     }
 
-    public void testEncodeBitSet() {
-        BitSet bitset = new BitSet();
-        bitset.set(1);
-        bitset.set(2);
-        bitset.set(3);
-        bitset.set(7);
-        bitset.set(30);
-
-        long converted = convert(bitset );
-       
-        
-        Log.d(TAG, String.format("Encoded BitSet (%s) : %s",converted,   bitset.toString()));
-    }
-
-    public static BitSet convert(long value) {
-        BitSet bits = new BitSet();
-        int index = 0;
-        while (value != 0L) {
-          if (value % 2L != 0) {
-            bits.set(index);
-          }
-          ++index;
-          value = value >>> 1;
-        }
-        return bits;
-      }
-
-      public static long convert(BitSet bits) {
-        long value = 0L;
-        for (int i = 0; i < bits.length(); ++i) {
-          value += bits.get(i) ? (1L << i) : 0L;
-        }
-        return value;
-      }
 }

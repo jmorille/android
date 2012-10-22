@@ -16,7 +16,7 @@
     <!-- GeoTrack Notification -->
     <string name="notif_geoping">GeoPing</string>
     <string name="notif_geoping_response">GeoPing réponse</string>
-    <string name="notif_geoping_request">GeoPing</string>
+    <string name="notif_geoping_request">GeoPing demandé</string>
     <string name="notif_geoping_request_blocked">GeoPing Bloqué</string> 
     <string name="notif_pairing">GeoPing Appariement</string>
     <string name="notif_pairing_always">Toujours</string>

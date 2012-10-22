@@ -44,7 +44,7 @@ public class SelectGeoTrackDialog extends AlertDialog {
     private GeoTrackSelectPersonListAdapter listAdapter;
 
     // Config
-    private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser;
+//    private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser;
 
     /**
      * The callback used to indicate the user is done selecting the favorite
@@ -62,7 +62,7 @@ public class SelectGeoTrackDialog extends AlertDialog {
         super(context, theme);
         this.loaderManager = loaderManager;
         this.mCallBack = callBack;
-        this.geoTrackOverlayByUser = geoTrackOverlayByUser;
+//        this.geoTrackOverlayByUser = geoTrackOverlayByUser;
         // Init
         Context themeContext = getContext();
         // setTitle(R.string.dialog_custum_favorite_icon);

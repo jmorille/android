@@ -1,6 +1,5 @@
 package eu.ttbox.geoping.ui.person.colorpicker;
 
-import eu.ttbox.geoping.R;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
+import eu.ttbox.geoping.R;
 
 /**
  * {link http://www.yougli.net/android/a-photoshop-like-color-picker-for-your-

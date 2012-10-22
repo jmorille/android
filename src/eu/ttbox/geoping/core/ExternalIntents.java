@@ -10,7 +10,7 @@ public class ExternalIntents {
 
 	public static void startActivityMarketDetails(Context context, String marketPackage) {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		intent.setData(Uri.parse("market://details?id=" + marketPackage));
 		context.startActivity(intent); 
 	}
@@ -29,7 +29,7 @@ public class ExternalIntents {
 			Toast.makeText(context, "GPS Status not found. Launching Market for you.", Toast.LENGTH_SHORT).show();
 			// get http://www.cyrket.com/package/com.eclipsim.gpsstatus2 from
 			startActivityMarketDetails(context, "com.eclipsim.gpsstatus2");
-		}
+		} 
 	}
 
 	public static void startActivityNavigationTo(Context context, double lat, double lng) {

@@ -3,6 +3,7 @@ package eu.ttbox.geoping.ui.map.track.bubble;
 import java.util.Locale;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.ExternalIntents;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
+import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
 
 public class GeoTrackBubble extends FrameLayout {
 
@@ -128,6 +131,10 @@ public class GeoTrackBubble extends FrameLayout {
 			hasProvider = geoTrack.hasProvider();
 			hasTime = geoTrack.hasTime();
 		}
+		// Color
+		Drawable colorDrawable = PersonColorDrawableHelper.getBubbleBackgroundColor(person.color);
+		setBackgroundDrawable(colorDrawable);
+		// GeoTrack
 		this.geoTrack = geoTrack;
 		// Bind values
      	if (hasTime) {

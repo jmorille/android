@@ -121,6 +121,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
 		} else if (Intent.ACTION_INSERT.equals(action)) {
 			this.entityId = null;
 			doColorChangeRamdom();
+			onSelectContactClick(null);
 		}
 
 	}

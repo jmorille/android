@@ -12,7 +12,6 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
-import eu.ttbox.geoping.domain.person.PersonHelper;
 
 public class PairingListAdapter extends android.support.v4.widget.ResourceCursorAdapter {
 

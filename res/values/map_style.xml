@@ -5,7 +5,8 @@
     <style name="mylocation_dialog_bubbleBackground">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/map_mylocation_dialog_background</item>
+        <item name="android:background">@drawable/map_geoping_balloon_background</item>
+<!--         <item name="android:background">@drawable/map_mylocation_dialog_background</item> -->
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">10</item>
@@ -17,7 +18,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">12dip</item>
         <item name="android:paddingRight">1dip</item>
-        <item name="android:textColor">#e0f1f8</item>
+<!--         <item name="android:textColor">#e0f1f8</item> -->
+          <item name="android:textColor">#000000</item>
         <item name="android:gravity">center</item>
     </style>
     
@@ -25,7 +27,7 @@
     <style name="map_geoping_balloon_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/map_geoping_balloon_background</item>
+<!--         <item name="android:background">@drawable/map_geoping_balloon_background</item> -->
     </style>
 
     <style name="map_geotrack_dialog_text">

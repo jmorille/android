@@ -7,8 +7,10 @@ import eu.ttbox.geoping.core.AppConstants;
 public class SmsMessageEncoderHelper {
     public final static String TAG = "SmsMessageEncoderHelper";
 
-    public final static String GEOPING_MSG_ID = "geoPing?";
-    public final static String GEOPING_PROTOCOL_CLEAR = "0";
+    public final static String GEOPING_MSGID = "geoPing?";
+    public final static int GEOPING_MSGID_SIZE = GEOPING_MSGID.length();
+
+    // public final static String GEOPING_PROTOCOL_CLEAR = "0";
 
     // Action
     public static String ACTION_END = "!"; // new String(
@@ -32,57 +34,128 @@ public class SmsMessageEncoderHelper {
     // public static String encodeSmsMessage(GeoPingMessage msg) {
     // return encodeSmsMessage(msg.action, msg.params);
     // }
-
     public static String encodeSmsMessage(SmsMessageActionEnum action, Bundle params) {
-        return encodeSmsMessage(action.smsAction, params);
+        return encodeSmsMessage(action.smsAction, params, SmsParamEncoderHelper.NUMBER_ENCODER_RADIX);
     }
-    
-    public static String encodeSmsMessage(String action, Bundle params) {
+
+    public static String encodeSmsMessage(SmsMessageActionEnum action, Bundle params, int radix) {
+        return encodeSmsMessage(action.smsAction, params, radix);
+    }
+
+    public static String encodeSmsMessage(String action, Bundle params, int radix) {
         StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE);
         sb.append(action);
-        sb.append(ACTION_END);
+
         if (params != null && !params.isEmpty()) {
             sb.append(PARAM_BEGIN);
-            SmsParamEncoderHelper.encodeMessage(params, sb);
+            SmsParamEncoderHelper.encodeMessage(params, sb, radix);
             sb.append(PARAM_END);
+        } else {
+            sb.append(ACTION_END);
         }
         // String encryptedMsg = encryptSmsMsg(sb.toString());
-        sb.insert(0, GEOPING_MSG_ID);
+        sb.insert(0, GEOPING_MSGID);
         return sb.toString();
-    }
-
-    public static GeoPingMessage decodeSmsMessage(String phone, String encryped) {
-         GeoPingMessage result = null;
-        if (encryped.startsWith(GEOPING_MSG_ID)) {
-            String clearMsg = encryped;
-            // Decodes
-            int clearMsgSize = clearMsg.length();
-            int idxActEnd = clearMsg.indexOf(ACTION_END);
-            if (idxActEnd > 0) {
-                Bundle params = null;
-                String smsMessage = clearMsg.substring(GEOPING_MSG_ID.length(), idxActEnd);
-                SmsMessageActionEnum action = SmsMessageActionEnum.getBySmsCode(smsMessage);
-                // Check Param
-                int idxParamBegin = clearMsg.indexOf(PARAM_BEGIN, idxActEnd);
-                int idxParamEnd = clearMsg.indexOf(PARAM_END, idxActEnd);
-                if (idxParamBegin > -1 && idxParamEnd > -1) {
-                    String encodedParams = clearMsg.substring(idxParamBegin + 1, idxParamEnd);
-                    params = SmsParamEncoderHelper.decodeMessageAsMap(encodedParams);
-                    Log.d(TAG, String.format("Sms Decoded Message : params = [%s]", encodedParams));
-                    // result.params = clearMsg.substring(idxActEnd + 1,
-                    // clearMsgSize);
-                }
-                // Create Result
-                result = new GeoPingMessage(phone, action, params);
-            }
-        }
-        return result;
     }
 
     // ===========================================================
     // Decoder
     // ===========================================================
 
+    public static GeoPingMessage decodeSmsMessage(String phone, String encryped) {
+        return decodeSmsMessage(phone, encryped, SmsParamEncoderHelper.NUMBER_ENCODER_RADIX);
+    }
+
+    public static GeoPingMessage decodeSmsMessage(String phone, String encryped, int radix) {
+        GeoPingMessage result = null;
+        if (encryped.startsWith(GEOPING_MSGID)) {
+            int startIdx = GEOPING_MSGID_SIZE;
+            String encodedMsg = encryped;
+            GeoPingMessage resultLast;
+            Log.d(TAG,String.format("--- Decode SmsMessage : %s",encodedMsg));
+            while ((resultLast= decodeSmsMessageBody(phone, encodedMsg, radix, startIdx) )!=null) {
+                if (resultLast!=null) {
+                    startIdx = resultLast.nextStartIdx;
+                    if (result==null) {
+                        result = resultLast;
+                    } else {
+                        // Multi-actions
+                        result.addMultiMessage(resultLast);
+                    }
+                } 
+            }
+        }
+        return result;
+    }
+
+    private static GeoPingMessage decodeSmsMessageBody(final String phone, final String encodedMsg, final int radix,final int pStartIdx) {
+        GeoPingMessage result = null;
+        int startIdx = pStartIdx;
+         Log.d(TAG,String.format("Decode SmsMessage Body (startIdx=%s) : %s",startIdx, encodedMsg));
+
+        // --- Manage Combinaison of End action
+        // ----------------------------------------
+        int idxActEnd = encodedMsg.indexOf(ACTION_END, startIdx);
+        int idxParamBegin = encodedMsg.indexOf(PARAM_BEGIN, startIdx);
+        boolean isIdxActionEnd = idxActEnd > -1;
+        boolean isIdxParamBegin = idxParamBegin > -1;
+         Log.d(TAG,String.format("Message isIdxActionEnd=%s / isIdxParamBegin=%s : %s",isIdxActionEnd,isIdxParamBegin,encodedMsg));
+        if (isIdxParamBegin && isIdxActionEnd) {
+            if (idxParamBegin < idxActEnd) {
+                isIdxActionEnd = isIdxParamBegin;
+                idxActEnd = idxParamBegin;
+            } else {
+                // After an action, it sould be a MultiAction Message => Not
+                // manage Now
+                isIdxParamBegin = false;
+            }
+        } else if (isIdxParamBegin) {
+            isIdxActionEnd = isIdxParamBegin;
+            idxActEnd = idxParamBegin;
+        } else if (!isIdxParamBegin && !isIdxActionEnd) {
+            int encodedMsgSize = encodedMsg.length();;
+            if (startIdx<encodedMsgSize) {
+                idxActEnd =encodedMsgSize; 
+                isIdxActionEnd = true;
+                Log.d(TAG,String.format("Define idxActEnd at Full Size Message (Full size %s chars) : %s",encodedMsgSize,encodedMsg));
+            }
+        }
+//         Log.d(TAG,String.format("Message isIdxActionEnd=%s / isIdxParamBegin=%s : %s",isIdxActionEnd,isIdxParamBegin,encodedMsg));
+
+        // --- Extract End Action
+        // ----------------------------------------
+        if (isIdxActionEnd) {
+            Bundle params = null;
+            String smsAction = encodedMsg.substring(startIdx, idxActEnd);
+            Log.d(TAG,String.format("Message action=[%s] : %s",smsAction,encodedMsg));
+            SmsMessageActionEnum action = SmsMessageActionEnum.getBySmsCode(smsAction);
+            if (action == null) {
+                // Not an geoPing Message
+                return null;
+            }
+            // Check Param
+            int idxParamEnd = encodedMsg.indexOf(PARAM_END, idxActEnd);
+            boolean isIdxParamEnd = idxParamEnd > -1;
+            if (isIdxParamBegin && isIdxParamEnd) {
+                String encodedParams = encodedMsg.substring(idxParamBegin + 1, idxParamEnd);
+                params = SmsParamEncoderHelper.decodeMessageAsMap(encodedParams, null, radix);
+                // Log.d(TAG,String.format("Sms Decoded Message : params = [%s]",encodedParams));
+                // --- Prepare Compute if next Message
+                startIdx = idxParamEnd + 1;
+                Log.d(TAG,String.format("Define With ParamEnd startIdx : %s",smsAction,encodedMsg));
+            } else {
+                // --- Prepare Compute if next Message
+                startIdx = idxActEnd + 1;
+                Log.d(TAG,String.format("Define No ParamEnd startIdx : %s",smsAction,encodedMsg));
+             }
+            // Create Result
+            result = new GeoPingMessage(phone, action, params);
+            // --- Prepare Compute if next Message
+            // ---------------------------------------- 
+            result.nextStartIdx = startIdx;
+        }
+        return result;
+    }
     // ===========================================================
     // Other
     // ===========================================================

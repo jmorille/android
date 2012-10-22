@@ -189,6 +189,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     public void onDetach(final MapView mapView) {
         Log.d(TAG, "##### onDetach #### " + person);
         onPause();
+        hideBubble();
         super.onDetach(mapView);
     }
 

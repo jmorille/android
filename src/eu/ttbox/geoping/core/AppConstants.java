@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.core;
 
+import java.util.Calendar;
+
 public class AppConstants {
 
     public final static double E6 = 1000000d;
@@ -8,6 +10,8 @@ public class AppConstants {
     public static final long UNSET_TIME = -1l;
     public static final long UNSET_ID = -1l;
 
+    public static final long DATE_ZERO =  getZeroDate();
+    
     public static final String MARKET_LINK = "market://details?id=eu.ttbox.geoping"; //"https://play.google.com/store/apps/details?id=eu.ttbox.geoping";
 //    "market://search?q=pname:eu.ttbox.geoping"
     // "market://search?q=pub:eu.ttbox.geoping"
@@ -37,4 +41,17 @@ public class AppConstants {
     public static final String PREFS_APP_COUNT_LAUGHT = "APP_COUNT_LAUGHT";
 
  
+    private static long getZeroDate() {
+        Calendar cal = Calendar.getInstance(); 
+        cal.set(Calendar.YEAR, 2012);
+        cal.set(Calendar.MONTH,Calendar.DECEMBER);
+        cal.set(Calendar.DAY_OF_MONTH, 22);
+        // Midnight
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        long timeAtMidnight = cal.getTimeInMillis();
+        return timeAtMidnight;
+    }
 }

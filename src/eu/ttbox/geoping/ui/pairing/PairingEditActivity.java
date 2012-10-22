@@ -138,6 +138,7 @@ public class PairingEditActivity extends FragmentActivity {
             // TODO
         } else if (Intent.ACTION_INSERT.equals(action)) {
             this.entityUri = null;
+            onSelectContactClick(null);
         }
 
     }
