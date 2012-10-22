@@ -2,7 +2,6 @@ package eu.ttbox.geoping.test.service.encoder;
 
 import java.util.ArrayList;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
