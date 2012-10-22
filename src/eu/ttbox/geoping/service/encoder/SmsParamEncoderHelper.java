@@ -195,41 +195,41 @@ public class SmsParamEncoderHelper {
 		return decodeMessageAsMap(encoded, dest, NUMBER_ENCODER_RADIX);
 	}
 
-	public static Bundle decodeMessageAsMapOld(String encoded, Bundle dest, int radix) {
-		Bundle result = dest != null ? dest : new Bundle();
-		String[] splitMsg = encoded.split(String.valueOf(FIELD_SEP));
-		for (String field : splitMsg) {
-			char key = field.charAt(0);
-			SmsMessageLocEnum fieldEnum = SmsMessageLocEnum.getBySmsFieldName(key);
-			if (fieldEnum != null) {
-				String valueEncoded = field.substring(1, field.length());
-				switch (fieldEnum.type) {
-				case GPS_PROVIDER:
-					// Same as String
-				case STRING:
-					result.putString(fieldEnum.dbFieldName, readToString(fieldEnum, valueEncoded));
-					break;
-				case INT:
-					result.putInt(fieldEnum.dbFieldName, readToInt(fieldEnum, valueEncoded, radix));
-					break;
-				case DATE:
-					result.putLong(fieldEnum.dbFieldName, readToDate(fieldEnum, valueEncoded, radix));
-					break;
-				case LONG:
-					result.putLong(fieldEnum.dbFieldName, readToLong(fieldEnum, valueEncoded, radix));
-					break;
-				case MULTI:
-					readToMultiInt(result, valueEncoded, fieldEnum.multiFieldName, radix);
-					break;
-				default:
-					break;
-				}
-			} else {
-				Log.d(TAG, String.format("Not found convertion Field for key(%s) : %s", key, field));
-			}
-		}
-		return result;
-	}
+//	public static Bundle decodeMessageAsMapOld(String encoded, Bundle dest, int radix) {
+//		Bundle result = dest != null ? dest : new Bundle();
+//		String[] splitMsg = encoded.split(String.valueOf(FIELD_SEP));
+//		for (String field : splitMsg) {
+//			char key = field.charAt(0);
+//			SmsMessageLocEnum fieldEnum = SmsMessageLocEnum.getBySmsFieldName(key);
+//			if (fieldEnum != null) {
+//				String valueEncoded = field.substring(1, field.length());
+//				switch (fieldEnum.type) {
+//				case GPS_PROVIDER:
+//					// Same as String
+//				case STRING:
+//					result.putString(fieldEnum.dbFieldName, readToString(fieldEnum, valueEncoded));
+//					break;
+//				case INT:
+//					result.putInt(fieldEnum.dbFieldName, readToInt(fieldEnum, valueEncoded, radix));
+//					break;
+//				case DATE:
+//					result.putLong(fieldEnum.dbFieldName, readToDate(fieldEnum, valueEncoded, radix));
+//					break;
+//				case LONG:
+//					result.putLong(fieldEnum.dbFieldName, readToLong(fieldEnum, valueEncoded, radix));
+//					break;
+//				case MULTI:
+//					readToMultiInt(result, valueEncoded, fieldEnum.multiFieldName, radix);
+//					break;
+//				default:
+//					break;
+//				}
+//			} else {
+//				Log.d(TAG, String.format("Not found convertion Field for key(%s) : %s", key, field));
+//			}
+//		}
+//		return result;
+//	}
 
 	public static Bundle decodeMessageAsMap(String encoded, Bundle dest, int radix) {
 		Bundle result = dest != null ? dest : new Bundle();
@@ -244,8 +244,7 @@ public class SmsParamEncoderHelper {
 		}
 		// Last Loop
 		sepIdx =  encodedSize;
-		readSmsMessageLocEnum(result, startIdx, sepIdx, encoded, radix);
-
+		readSmsMessageLocEnum(result, startIdx, sepIdx, encoded, radix); 
 		return result;
 	}
 

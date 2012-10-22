@@ -10,6 +10,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.telephony.PhoneNumberUtils;
 import android.test.AndroidTestCase;
 import android.test.mock.MockContext;
@@ -131,5 +132,11 @@ public class SMSReceiverTest extends AndroidTestCase {
         public List<Intent> getReceivedIntents() {
             return mReceivedIntents;
         }
+        
+        @Override
+        public SharedPreferences getSharedPreferences(String name, int mode) {
+            throw new UnsupportedOperationException();
+        }
+
     }
 }
