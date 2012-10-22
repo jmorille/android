@@ -11,11 +11,8 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.PhoneNumberUtils;
-import android.telephony.SmsMessage;
-import android.telephony.SmsMessage.SubmitPdu;
 import android.test.AndroidTestCase;
 import android.test.mock.MockContext;
-import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.service.slave.receiver.SMSReceiver;
 import eu.ttbox.geoping.test.service.encoder.SmsMessageEncoderHelperTest;
 

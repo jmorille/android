@@ -219,9 +219,6 @@ public class SmsParamEncoderHelper {
                     result.putLong(fieldEnum.dbFieldName, readToLong(fieldEnum, valueEncoded, radix));
                     break;
                 case MULTI:
-                    // Log.d(TAG,
-                    // String.format("Found convertion Multi Field for key(%s) : %s",
-                    // key, fieldEnum));
                     readToMultiInt(result, valueEncoded, fieldEnum.multiFieldName, radix);
                     break;
                 default:
@@ -232,6 +229,51 @@ public class SmsParamEncoderHelper {
             }
         }
         return result;
+    }
+
+    public static Bundle decodeMessageAsMap2(String encoded, Bundle dest, int radix) {
+        Bundle result = dest != null ? dest : new Bundle();
+        int encodedSize = encoded.length();
+        int startIdx = 0;
+        int sepIdx=0;
+        while ((sepIdx=encoded.indexOf(FIELD_SEP, startIdx))>-1) {
+           char key = encoded.charAt(startIdx);
+           SmsMessageLocEnum fieldEnum = SmsMessageLocEnum.getBySmsFieldName(key);
+           if (fieldEnum != null) {
+               String valueEncoded = encoded.substring(startIdx+1, sepIdx);
+               readSmsMessageLocEnum(result, fieldEnum, valueEncoded, radix);
+           } 
+           // Next Loop
+           startIdx = sepIdx+1;
+        }
+        // Last Loop
+        char key = encoded.charAt(startIdx);
+        
+        return result;
+    }
+    
+    private static void readSmsMessageLocEnum(Bundle result, SmsMessageLocEnum fieldEnum, String valueEncoded, int radix) {
+        switch (fieldEnum.type) {
+        case GPS_PROVIDER:
+            // Same as String
+        case STRING:
+            result.putString(fieldEnum.dbFieldName, readToString(fieldEnum, valueEncoded));
+            break;
+        case INT:
+            result.putInt(fieldEnum.dbFieldName, readToInt(fieldEnum, valueEncoded, radix));
+            break;
+        case DATE:
+            result.putLong(fieldEnum.dbFieldName, readToDate(fieldEnum, valueEncoded, radix));
+            break;
+        case LONG:
+            result.putLong(fieldEnum.dbFieldName, readToLong(fieldEnum, valueEncoded, radix));
+            break;
+        case MULTI:
+            readToMultiInt(result, valueEncoded, fieldEnum.multiFieldName, radix);
+            break;
+        default:
+            break;
+        }
     }
 
     // ===========================================================
