@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,7 +29,7 @@ public class SMSReceiverTest extends AndroidTestCase {
         super.setUp();
 
         mReceiver = new SMSReceiver();
-        mContext = new TestContext();
+        mContext = new TestContext(getContext());
     }
 
     public void tesBadSms() {
@@ -118,8 +120,14 @@ public class SMSReceiverTest extends AndroidTestCase {
 
     public class TestContext extends MockContext {
         private List<Intent> mReceivedIntents = new ArrayList<Intent>();
+        private Context context;
+        
+        public TestContext(Context context) {
+			super();
+			this.context = context;
+		}
 
-        @Override
+		@Override
         public String getPackageName() {
             return "eu.ttbox.geoping.test";
         }
@@ -135,8 +143,20 @@ public class SMSReceiverTest extends AndroidTestCase {
         
         @Override
         public SharedPreferences getSharedPreferences(String name, int mode) {
-            throw new UnsupportedOperationException();
+        	return context.getSharedPreferences(name, mode);
+        }
+        
+        @Override
+        public ComponentName startService(Intent service) {
+        	return context.startService(service);
+        }
+        
+        @Override
+        public ContentResolver getContentResolver() {
+            return context.getContentResolver();
         }
 
+        
+        
     }
 }
