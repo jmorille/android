@@ -70,6 +70,7 @@ public class GeoPingSlaveService extends WorkerService {
     // Constant
 
     // Services
+    private NotificationManager mNotificationManager;
     private LocationManager locationManager;
     private MyLocationListenerProxy myLocation;
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
@@ -102,6 +103,7 @@ public class GeoPingSlaveService extends WorkerService {
         super.onCreate();
         // service
         this.appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        this.mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         this.telephonyManager =  (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
         this.myLocation = new MyLocationListenerProxy(locationManager);
@@ -226,8 +228,7 @@ public class GeoPingSlaveService extends WorkerService {
         // Cancel Notification
         int notifId = extras.getInt(Intents.EXTRA_NOTIF_ID, -1);
         if (notifId != -1) {
-            NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notifManager.cancel(notifId);
+            mNotificationManager.cancel(notifId); 
         }
         // Read Pairing
         Pairing pairing = getPairingByPhone(phone);
@@ -518,7 +519,7 @@ public class GeoPingSlaveService extends WorkerService {
     // ===========================================================
 
     private void showNotificationGeoPing(String phone, Bundle params, boolean authorizeIt) {
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+       
         // Contact Name
         ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
         String contactDisplayName = phone;
@@ -537,7 +538,7 @@ public class GeoPingSlaveService extends WorkerService {
                 .setAutoCancel(true) //
                 .setContentText(contactDisplayName); //
         if (authorizeIt) {
-            notificationBuilder.setContentTitle(getString(R.string.notif_geoping)); //
+            notificationBuilder.setContentTitle(getString(R.string.notif_geoping_request)); //
         } else {
             notificationBuilder.setContentTitle(getString(R.string.notif_geoping_request_blocked)); //
         }
@@ -557,8 +558,7 @@ public class GeoPingSlaveService extends WorkerService {
     }
 
     private void showNotificationNewPingRequestConfirm(String phone, Bundle params, GeopingNotifSlaveTypeEnum onlyPairing) {
-        String contactDisplayName = phone;
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String contactDisplayName = phone; 
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
         // Contact Name
         ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
