@@ -27,17 +27,19 @@ public class BackgroudLocService extends Service {
 
 	@Override
 	public void onCreate() {
-		Log.v(TAG, "BackgroudLocService Created");
+		Log.i(TAG, "BackgroudLocService Created");
 	}
 
 	@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v(TAG, "BackgroudLocService -- onStartCommand()");
+        Log.i(TAG, "BackgroudLocService -- onStartCommand()");
         // Service
         this.telephonyManager =  (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
         this.telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CELL_LOCATION | PhoneStateListener.LISTEN_SIGNAL_STRENGTHS  | PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
+        sendGsmBrodcat(0, 0);
+        sendGsmBrodcat( telephonyManager.getCellLocation());
         return START_STICKY;
     }
 
@@ -53,7 +55,7 @@ public class BackgroudLocService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Log.v(TAG, "BackgroudLocService Destroyed");
+		Log.i(TAG, "BackgroudLocService Destroyed");
 		//Service
 		 this.telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 	}
@@ -71,15 +73,7 @@ public class BackgroudLocService extends Service {
 		public void onCellLocationChanged(CellLocation location) {
 			super.onCellLocationChanged(location);
 			Log.d(TAG, "onCellLocationChanged : " + location);
-			if (location instanceof GsmCellLocation) {
-				GsmCellLocation gsmLocation = (GsmCellLocation)location;
-				int cid = gsmLocation.getCid();
-				int lac = gsmLocation.getLac();
-				Intent intent = new Intent("EVENT_GSM");
-				intent.putExtra("cid", cid);
-                intent.putExtra("lac", lac);
-                sendBroadcast(intent);
-			}
+			sendGsmBrodcat(location);
 		}
 		
 		@Override 
@@ -89,6 +83,24 @@ public class BackgroudLocService extends Service {
 		}
 		
 	};
+	
+	private void sendGsmBrodcat(CellLocation location) {
+	    Log.d(TAG, "onCellLocationChanged : " + location);
+        if (location instanceof GsmCellLocation) {
+            GsmCellLocation gsmLocation = (GsmCellLocation)location;
+            int cid = gsmLocation.getCid();
+            int lac = gsmLocation.getLac();
+            sendGsmBrodcat(cid, lac);
+        }
+	}
+	
+	private void sendGsmBrodcat(int cid, int lac) {
+	    Log.i(TAG, String.format("Send broadcats (cid, lac) = (%s, %s)", cid, lac));
+	    Intent intent = new Intent("EVENT_GSM");
+        intent.putExtra("cid", cid);
+        intent.putExtra("lac", lac);
+        sendBroadcast(intent);
+	}
 
 	// ===========================================================
 	// Binder

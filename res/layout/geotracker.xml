@@ -141,6 +141,39 @@
         android:gravity="center"
         android:text="bearing" />
     
+       <TextView
+        android:id="@+id/TextViewGsmCidLac"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/gsmCidLac_Cid"
+        android:layout_alignTop="@+id/gsmCidLac_Cid"
+        android:layout_marginLeft="10dip"
+        android:gravity="center"
+        android:text="GSM Cid/Lac" />
+
+    <EditText
+        android:id="@+id/gsmCidLac_Cid"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content" 
+        android:layout_below="@+id/TextViewBearing"
+        android:layout_marginRight="10dip"
+        android:layout_toRightOf="@+id/TextViewGsmCidLac"
+        android:editable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:text="Cid" />
+
+     <EditText
+        android:id="@+id/gsmCidLac_Lac"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content" 
+        android:layout_toRightOf="@+id/gsmCidLac_Cid"
+        android:layout_below="@+id/TextViewBearing"
+        android:layout_marginRight="10dip"
+        android:editable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:text="Lac" />
     
     <TextView
         android:id="@+id/adresse"
@@ -148,15 +181,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/LinearLayout01"
         android:layout_centerHorizontal="true"
+        android:text="Address Geocoding"
         android:layout_marginTop="10dip" />
 
     <TextView
         android:id="@+id/extras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextViewBearing"
+        android:layout_alignLeft="@+id/TextViewGsmCidLac"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/bearing"
+        android:layout_below="@+id/TextViewGsmCidLac"
+        android:text="Extras"
         android:layout_marginTop="10dip" />
 
     <LinearLayout
@@ -165,6 +200,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/extras"
+         android:text="Extras"
         android:layout_marginTop="16dp" >
 
         <Button

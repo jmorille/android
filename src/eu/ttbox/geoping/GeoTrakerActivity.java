@@ -56,9 +56,12 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
     TextView adresseTextView;
     TextView extrasTextView;
 
+    TextView gsmCidTextView;
+    TextView gsmLacTextView;
+ 
     // Listener
     private BroadcastReceiver mStatusReceiver;
-    
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +80,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 
         // Services
         mStatusReceiver = new StatusReceiver();
-        
+
         // Initialisation de l'écran
         initBinding();
         reinitialisationEcran();
@@ -94,7 +97,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         super.onResume();
         // Register Listener
         IntentFilter filter = new IntentFilter();
-        filter.addAction("EVENT_GSM"); 
+        filter.addAction("EVENT_GSM");
         // Listener
         registerReceiver(mStatusReceiver, filter);
         Log.i(TAG, "###  onResume");
@@ -108,7 +111,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
 
         super.onPause();
     }
-    
+
     private void initBinding() {
         latitudeTextView = (TextView) findViewById(R.id.latitude);
         longitudeTextView = (TextView) findViewById(R.id.longitude);
@@ -118,6 +121,9 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         bearingTextView = (TextView) findViewById(R.id.bearing);
         adresseTextView = (TextView) findViewById(R.id.adresse);
         extrasTextView = (TextView) findViewById(R.id.extras);
+                
+       gsmCidTextView = (TextView) findViewById(R.id.gsmCidLac_Cid);
+        gsmLacTextView = (TextView) findViewById(R.id.gsmCidLac_Lac);
     }
 
     // Réinitialisation de l'écran
@@ -322,7 +328,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
             String destinationAddress = appPreferences.getString(KEY_SMS_PHONE_NUMBER, null);
             if (destinationAddress != null && destinationAddress.length() > 0) {
                 GeoTrack geotrack = new GeoTrack(null, location);
-                Bundle params = GeoTrackHelper.getBundleValues(geotrack); 
+                Bundle params = GeoTrackHelper.getBundleValues(geotrack);
                 String encoded = SmsMessageIntentEncoderHelper.encodeSmsMessage(SmsMessageActionEnum.ACTION_GEO_LOC, params);
                 if (encoded != null && encoded.length() > 0) {
                     SmsManager.getDefault().sendTextMessage(destinationAddress, null, encoded, null, null);
@@ -333,16 +339,17 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         }
     }
 
-    
     private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             Log.i(TAG, "onReceive Intent action : " + action);
             if ("EVENT_GSM".equals(action)) {
-                int cid =intent.getIntExtra("cid", 0);
+                int cid = intent.getIntExtra("cid", 0);
                 int lac = intent.getIntExtra("lac", 0);
-            }  
+                gsmCidTextView.setText(String.valueOf(cid));
+                gsmLacTextView.setText(String.valueOf(lac));
+            }
         }
     }
 }
