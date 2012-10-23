@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+     
     
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -90,7 +92,11 @@
                 <category android:name="android.intent.category.HOME"/>
             </intent-filter>
          </receiver>
-        <service android:exported="false" android:name=".service.slave.BackgroudLocService"/>
+        <service android:exported="false" android:enabled="true"  android:name=".service.slave.BackgroudLocService">
+		 <intent-filter> 
+               <action android:name="EVENT_GSM" /> 
+           </intent-filter> 
+        </service>
        
          <!-- Widget Person -->
           <receiver android:label="@string/sms_action_geoping_request" android:name=".ui.widget.PersonWidgetProvider">

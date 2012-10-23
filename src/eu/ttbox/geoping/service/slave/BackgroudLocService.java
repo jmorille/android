@@ -27,11 +27,14 @@ public class BackgroudLocService extends Service {
 
 	@Override
 	public void onCreate() {
-		Log.i(TAG, "BackgroudLocService Created");
+        super.onCreate();
+        Log.i(TAG, "************************************");
+		Log.i(TAG, "*** BackgroudLocService Created ***");
 	}
 
 	@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+	    super.onStartCommand(intent, flags, startId);
         Log.i(TAG, "BackgroudLocService -- onStartCommand()");
         // Service
         this.telephonyManager =  (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
@@ -58,6 +61,7 @@ public class BackgroudLocService extends Service {
 		Log.i(TAG, "BackgroudLocService Destroyed");
 		//Service
 		 this.telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+		 super.onDestroy();
 	}
 
 	// ===========================================================

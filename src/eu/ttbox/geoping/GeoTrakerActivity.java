@@ -136,7 +136,11 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         bearingTextView.setText("");
         adresseTextView.setText("");
         extrasTextView.setText("");
+        
+        gsmCidTextView.setText("");
+        gsmLacTextView.setText("");
 
+        
         findViewById(R.id.obtenir_position).setEnabled(false);
         findViewById(R.id.afficherAdresse).setEnabled(false);
     }
@@ -162,6 +166,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
             }
             break;
         case R.id.startService: {
+            Log.d(TAG, "Start Service Button");
             Intent intentService = new Intent(this, BackgroudLocService.class);
             startService(intentService);
             break;
