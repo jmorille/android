@@ -420,7 +420,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             pj.toPixels(tapPoint, tapPointTestScreenCoords);
             if (tapPointHitTestRect.contains(tapPointTestScreenCoords.x, tapPointTestScreenCoords.y)) {
                 hitMapLocation = testLocation;
-                break;
+//                break;
             }
         }
         return hitMapLocation;

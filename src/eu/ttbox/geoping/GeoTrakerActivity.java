@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
@@ -31,7 +33,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
-import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
+import eu.ttbox.geoping.service.slave.BackgroudLocService;
 import eu.ttbox.geoping.ui.AbstractSmsTrackerActivity;
 
 public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnClickListener, LocationListener {
@@ -54,6 +56,9 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
     TextView adresseTextView;
     TextView extrasTextView;
 
+    // Listener
+    private BroadcastReceiver mStatusReceiver;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,9 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         trackingBDD = new GeoTrackDatabase(this);
 
+        // Services
+        mStatusReceiver = new StatusReceiver();
+        
         // Initialisation de l'écran
         initBinding();
         reinitialisationEcran();
@@ -81,6 +89,26 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         findViewById(R.id.sendSmsLoc).setOnClickListener(this);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Register Listener
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("EVENT_GSM"); 
+        // Listener
+        registerReceiver(mStatusReceiver, filter);
+        Log.i(TAG, "###  onResume");
+    }
+
+    @Override
+    public void onPause() {
+        // Listener
+        unregisterReceiver(mStatusReceiver);
+        Log.i(TAG, "###  onPause");
+
+        super.onPause();
+    }
+    
     private void initBinding() {
         latitudeTextView = (TextView) findViewById(R.id.latitude);
         longitudeTextView = (TextView) findViewById(R.id.longitude);
@@ -128,12 +156,12 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
             }
             break;
         case R.id.startService: {
-            Intent intentService = new Intent(this, GeoPingSlaveService.class);
+            Intent intentService = new Intent(this, BackgroudLocService.class);
             startService(intentService);
             break;
         }
         case R.id.stopService: {
-            Intent intentService = new Intent(this, GeoPingSlaveService.class);
+            Intent intentService = new Intent(this, BackgroudLocService.class);
             stopService(intentService);
             break;
         }
@@ -305,4 +333,16 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         }
     }
 
+    
+    private class StatusReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.i(TAG, "onReceive Intent action : " + action);
+            if ("EVENT_GSM".equals(action)) {
+                int cid =intent.getIntExtra("cid", 0);
+                int lac = intent.getIntExtra("lac", 0);
+            }  
+        }
+    }
 }

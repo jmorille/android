@@ -20,7 +20,7 @@ public class BackgroudLocService extends Service {
 
 	private static final String TAG = "BackgroudLocService";
 
-	private final IBinder binder = new LocalBinder();
+	private final IBinder binder = new LocalBinder();  
 
 	// Service
 	private TelephonyManager telephonyManager;
@@ -73,6 +73,12 @@ public class BackgroudLocService extends Service {
 			Log.d(TAG, "onCellLocationChanged : " + location);
 			if (location instanceof GsmCellLocation) {
 				GsmCellLocation gsmLocation = (GsmCellLocation)location;
+				int cid = gsmLocation.getCid();
+				int lac = gsmLocation.getLac();
+				Intent intent = new Intent("EVENT_GSM");
+				intent.putExtra("cid", cid);
+                intent.putExtra("lac", lac);
+                sendBroadcast(intent);
 			}
 		}
 		
