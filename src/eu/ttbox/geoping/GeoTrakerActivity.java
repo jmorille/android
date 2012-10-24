@@ -33,6 +33,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
+import eu.ttbox.geoping.service.master.GsmCidLatHelper;
 import eu.ttbox.geoping.service.slave.BackgroudLocService;
 import eu.ttbox.geoping.ui.AbstractSmsTrackerActivity;
 
@@ -145,6 +146,17 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         findViewById(R.id.afficherAdresse).setEnabled(false);
     }
 
+    public void onGeocodingCidLatClick(View v) {
+        int cellID = Integer.parseInt(gsmCidTextView.getText().toString());
+        int lac = Integer.parseInt(gsmLacTextView.getText().toString());
+        try {
+            GsmCidLatHelper.displayMap(this, cellID, lac);
+        } catch (Exception e) {
+            Log.e(TAG, "Error in geocoding CidLat : " + e.getMessage(), e);
+         }
+    }
+    
+    
     // Méthode déclencher au clique sur un bouton
     public void onClick(View v) {
         switch (v.getId()) {
@@ -180,6 +192,8 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
             break;
         }
     }
+    
+    
 
     private void choisirSource() {
         reinitialisationEcran();

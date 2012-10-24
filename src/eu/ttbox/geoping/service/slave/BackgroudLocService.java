@@ -90,11 +90,20 @@ public class BackgroudLocService extends Service {
 	
 	private void sendGsmBrodcat(CellLocation location) {
 	    Log.d(TAG, "onCellLocationChanged : " + location);
-        if (location instanceof GsmCellLocation) {
+         if (location instanceof GsmCellLocation) {
+             String networkOperator = telephonyManager.getNetworkOperator();
+             if (networkOperator != null) {
+                 // Mobile Country Code
+                  int mcc = Integer.parseInt(networkOperator.substring(0, 3));
+                  // Mobile Network Code
+                 int mnc = Integer.parseInt(networkOperator.substring(3));
+                 Log.d(TAG, String.format("networkOperator mcc=%s / mnc=%s", mcc, mnc));
+             }
+      
             GsmCellLocation gsmLocation = (GsmCellLocation)location;
             int cid = gsmLocation.getCid();
             int lac = gsmLocation.getLac();
-            sendGsmBrodcat(cid, lac);
+             sendGsmBrodcat(cid, lac);
         }
 	}
 	

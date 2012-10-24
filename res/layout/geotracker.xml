@@ -247,10 +247,19 @@
             android:onClick="onClick"
             android:text="Stop Service" />
 
+        
+        <Button
+            android:id="@+id/geocodingCidLat"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:onClick="onGeocodingCidLatClick"
+            android:text="Geocoding CidLat" />
+        
         <Button
             android:id="@+id/sendSmsLoc"
             android:layout_width="100dip"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Sms Loc" />
     </LinearLayout>
 
