@@ -3,6 +3,7 @@ package eu.ttbox.geoping.test.service.encoder;
 import java.util.ArrayList;
 
 import android.content.ContentValues;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
@@ -164,45 +165,112 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
     }
 
     public void testNotDecodeBadMessage() {
-        String[]  badMessages = new String [] {
-                "Coucou couc", // 
+        String[] badMessages = new String[] { "Coucou couc", //
                 "Tu connais l'appli GeoPing?", //
                 "WRY", //
                 "geoPing?", //
                 "geoPing?W", //
                 "geoPing?W(ssaa)" //
-         };
+        };
         for (String msg : badMessages) {
             GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
             Log.d(TAG, String.format("Not Extract %s from : %s", decoded, msg));
             assertNull(decoded);
         }
     }
-    
-    public void testDecode() { 
+
+    public void testDecode() {
         for (String msg : MSG_ENCRYPED) {
             GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
             Log.d(TAG, String.format("Extract %s from : %s", decoded, msg));
             assertNotNull(decoded.action);
-           
+
         }
     }
-    
-    public void testDecodeMultiMessageWryLoc() { 
-        String msg  = "geoPing?WRY!LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)";
+
+    public void testDecodeMultiMessageWryLoc() {
+        String msg = "geoPing?WRY!LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)";
         // Message 01
         GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
         Log.d(TAG, String.format("Extract %s from : %s", decoded, msg));
         assertNotNull(decoded.action);
-        assertEquals(SmsMessageActionEnum.GEOPING_REQUEST,decoded.action);
+        assertEquals(SmsMessageActionEnum.GEOPING_REQUEST, decoded.action);
         // Message 02
         assertNotNull(decoded.multiMessages);
         assertEquals(1, decoded.multiMessages.size());
-        GeoPingMessage decoded2=decoded.multiMessages.get(0);
+        GeoPingMessage decoded2 = decoded.multiMessages.get(0);
         assertNotNull(decoded2);
-        assertEquals(SmsMessageActionEnum.ACTION_GEO_LOC,decoded2.action);
+        assertEquals(SmsMessageActionEnum.ACTION_GEO_LOC, decoded2.action);
         assertNotNull(decoded2.params);
     }
+
+    public void testDecodeMultiMessageMultiBiLoc() {
+        String[] messages = new String[] { "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)(d-kTzc,g2KPp7;-50weC,a1W,pn)" //
+                , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49) (d-kTzc,g2KPp7;-50weC,a1W,pn)" //
+                , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)  (d-kTzc,g2KPp7;-50weC,a1W,pn)" //
+                , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)   (d-kTzc,g2KPp7;-50weC,a1W,pn)" //
+                , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)   (d-kTzc,g2KPp7;-50weC,a1W,pn)" //
+               , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)LOC(d-kTzc,g2KPp7;-50weC,a1W,pn)" //
+                 };
+        for (String msg : messages) {
+            // Main Message 01
+            GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
+            Log.d(TAG, String.format("Extract %s from : %s", decoded, msg));
+            // Message 02
+            SmsMessageActionEnum[] expMultiEctions = new SmsMessageActionEnum[] { SmsMessageActionEnum.ACTION_GEO_LOC  };
+            doValidateMultiMessages(decoded, SmsMessageActionEnum.ACTION_GEO_LOC, expMultiEctions);
+        }
+    }
+    public void testDecodeMultiMessageMultiTriiLoc() {
+        String[] messages = new String[] { "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)(d-kTzc,g2KPp7;-50weC,a1W,pn)(d-kTkU,g3iZPk;9ROI,a1W,pn)" //
+                , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49) (d-kTzc,g2KPp7;-50weC,a1W,pn)(d-kTkU,g3iZPk;9ROI,a1W,pn)" //
+                , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)  (d-kTzc,g2KPp7;-50weC,a1W,pn)   (d-kTkU,g3iZPk;9ROI,a1W,pn)" //
+                , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)(d-kTzc,g2KPp7;-50weC,a1W,pn)  (d-kTkU,g3iZPk;9ROI,a1W,pn)" //
+                , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)   (d-kTzc,g2KPp7;-50weC,a1W,pn)LOC(d-kTkU,g3iZPk;9ROI,a1W,pn)" //
+               , "geoPing?LOC(d-mB9r,g3iZPk;9ROI;20,ak,c21,pg,b49)LOC(d-kTzc,g2KPp7;-50weC,a1W,pn)LOC(d-kTkU,g3iZPk;9ROI,a1W,pn)" //
+                 };
+        for (String msg : messages) {
+            // Main Message 01
+            GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
+            Log.d(TAG, String.format("Extract %s from : %s", decoded, msg));
+            // Message 02
+            SmsMessageActionEnum[] expMultiEctions = new SmsMessageActionEnum[] {    SmsMessageActionEnum.ACTION_GEO_LOC,  SmsMessageActionEnum.ACTION_GEO_LOC  };
+            doValidateMultiMessages(decoded, SmsMessageActionEnum.ACTION_GEO_LOC, expMultiEctions);
+        }
+    }
+
+    private void doValidateMultiMessages(GeoPingMessage decoded, SmsMessageActionEnum expMainAction, SmsMessageActionEnum[] expMultiActions) {
+        // Main Messages
+        assertNotNull(decoded.action);
+        assertEquals(SmsMessageActionEnum.ACTION_GEO_LOC, decoded.action);
+        // Check Expected Size
+        assertNotNull(decoded.multiMessages);
+        assertEquals(expMultiActions.length, decoded.multiMessages.size());
+        for (int i = 0; i < expMultiActions.length; i++) {
+            GeoPingMessage decoded2 = decoded.multiMessages.get(i);
+            assertNotNull(decoded2);
+            assertEquals(expMultiActions[i], decoded2.action);
+            assertNotNull(decoded2.params);
+        }
+    }
     
-    
+//    public void testEncodeMultiMessageMultiLoc() {
+//        GeoTrack[] geoTracks =  new GeoTrack[] { //
+//                PlaceTestHelper.getMessageLoc(PlaceTestHelper.PROVIDER_GPS, WorldGeoPoint.NEW_YORK) //
+//                ,   PlaceTestHelper.getMessageLoc(PlaceTestHelper.PROVIDER_GPS, WorldGeoPoint.PARIS) //
+//        };
+//        GeoPingMessage  message = null; 
+//        for (GeoTrack geoTrack : geoTracks) {
+//            Bundle bundle = convertAsBundle(geoTrack);
+//            GeoPingMessage result = new GeoPingMessage("+33612131415", SmsMessageActionEnum.ACTION_GEO_LOC, bundle);
+//            if (message==null) {
+//                message= result;
+//            } else {
+//                message.addMultiMessage(result);
+//            }
+//        }
+//        // Encode
+////        SmsMessageEncoderHelper.en
+//    }
+
 }

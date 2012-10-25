@@ -72,8 +72,9 @@ public class SmsMessageEncoderHelper {
             int startIdx = GEOPING_MSGID_SIZE;
             String encodedMsg = encryped;
             GeoPingMessage resultLast;
+            SmsMessageActionEnum actionLast = null;
             Log.d(TAG,String.format("--- Decode SmsMessage : %s",encodedMsg));
-            while ((resultLast= decodeSmsMessageBody(phone, encodedMsg, radix, startIdx) )!=null) {
+            while ((resultLast= decodeSmsMessageBody(phone, encodedMsg, radix, startIdx, actionLast ) )!=null) {
                 if (resultLast!=null) {
                     startIdx = resultLast.nextStartIdx;
                     if (result==null) {
@@ -82,13 +83,14 @@ public class SmsMessageEncoderHelper {
                         // Multi-actions
                         result.addMultiMessage(resultLast);
                     }
+                    actionLast = resultLast.action;
                 } 
             }
         }
         return result;
     }
 
-    private static GeoPingMessage decodeSmsMessageBody(final String phone, final String encodedMsg, final int radix,final int pStartIdx) {
+    private static GeoPingMessage decodeSmsMessageBody(final String phone, final String encodedMsg, final int radix,final int pStartIdx,  SmsMessageActionEnum actionLast ) {
         GeoPingMessage result = null;
         int startIdx = pStartIdx;
          Log.d(TAG,String.format("Decode SmsMessage Body (startIdx=%s) : %s",startIdx, encodedMsg));
@@ -130,9 +132,13 @@ public class SmsMessageEncoderHelper {
             Log.d(TAG,String.format("Message action=[%s] : %s",smsAction,encodedMsg));
             SmsMessageActionEnum action = SmsMessageActionEnum.getBySmsCode(smsAction);
             if (action == null) {
-                // Not an geoPing Message
-                return null;
-            }
+                if (actionLast!=null && smsAction.trim().length()<1) {
+                    action =actionLast;
+                } else {
+                    // Not an geoPing Message
+                    return null;
+                }
+            } 
             // Check Param
             int idxParamEnd = encodedMsg.indexOf(PARAM_END, idxActEnd);
             boolean isIdxParamEnd = idxParamEnd > -1;
