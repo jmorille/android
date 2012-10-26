@@ -26,11 +26,15 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gcm.GCMRegistrar;
+
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
+import eu.ttbox.geoping.service.GCMIntentService;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.master.GsmCidLatHelper;
@@ -92,6 +96,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         findViewById(R.id.afficherAdresse).setOnClickListener(this);
         findViewById(R.id.sendSmsLoc).setOnClickListener(this);
     }
+ 
 
     @Override
     public void onResume() {

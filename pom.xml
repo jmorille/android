@@ -5,7 +5,7 @@
 
 	<groupId>eu.ttbox.android.geoping</groupId>
 	<artifactId>geoPing</artifactId>
-	<version>0.0.7</version>
+	<version>0.0.8</version>
 	<packaging>apk</packaging>
 
 	<name>GeoPing</name>
@@ -16,7 +16,7 @@
 		<android.version>4.1_r2</android.version> <!-- 2.3.3 -->
 		<google.maps.version>16_r2</google.maps.version>
 		<!-- Google Api -->
-		<gcm.version>r1</gcm.version>
+		<gcm.version>3</gcm.version>
 		<!-- Osm -->
 		<osmdroid.version>3.0.8</osmdroid.version>
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
@@ -52,16 +52,16 @@
 
 
 		<!-- Google Api -->
-		<!-- <dependency> -->
-		<!-- <groupId>com.google.android.gcm</groupId> -->
-		<!-- <artifactId>gcm-server</artifactId> -->
-		<!-- <version>${gcm.version}</version> -->
-		<!-- </dependency> -->
 <!-- 		<dependency> -->
 <!-- 			<groupId>com.google.android.gcm</groupId> -->
-<!-- 			<artifactId>gcm-client</artifactId> -->
+<!-- 			<artifactId>gcm-server</artifactId> -->
 <!-- 			<version>${gcm.version}</version> -->
 <!-- 		</dependency> -->
+		<dependency>
+			<groupId>com.google.android.gcm</groupId>
+			<artifactId>gcm-client</artifactId>
+			<version>${gcm.version}</version>
+		</dependency>
  
 		<!-- Open Street Map -->
 		<dependency>
