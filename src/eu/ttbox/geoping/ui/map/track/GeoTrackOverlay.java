@@ -48,7 +48,9 @@ import android.view.View;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
+import eu.ttbox.geoping.domain.core.PhoneDatabaseUtils;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
@@ -85,7 +87,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     private boolean geocodingAuto = false;
     // Cached
     private Point myScreenCoords = new Point();
-    private Point lastScreenCoords = new Point(); 
+    private Point lastScreenCoords = new Point();
 
     // Paint
     private Paint mPaint;
@@ -310,7 +312,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             return;
         }
         MapView.Projection p = mapView.getProjection();
- 
+
         int idx = 0;
         int geoTrackSize = geoTracks.size();
         for (GeoTrack geoTrack : geoTracks) {
@@ -319,9 +321,9 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             p.toMapPixels(geoPoint, myScreenCoords);
             // Line Path
             boolean isLast = geoTrackSize == idx;
-            if (idx > 1) {  
+            if (idx > 1) {
                 canvas.drawLine(lastScreenCoords.x, lastScreenCoords.y, myScreenCoords.x, myScreenCoords.y, mPaint);
-             }
+            }
             // Point
             canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 4, mGeoPointPaint);
             if (isLast) {
@@ -331,8 +333,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             // End Loop
             lastScreenCoords.x = myScreenCoords.x;
             lastScreenCoords.y = myScreenCoords.y;
-        } 
-        
+        }
+
         // Draw Selected
         if (selectedGeoTrack != null) {
             // Select Point
@@ -420,7 +422,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             pj.toPixels(tapPoint, tapPointTestScreenCoords);
             if (tapPointHitTestRect.contains(tapPointTestScreenCoords.x, tapPointTestScreenCoords.y)) {
                 hitMapLocation = testLocation;
-//                break;
+                // break;
             }
         }
         return hitMapLocation;
@@ -460,14 +462,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         }
     }
 
- 
-    
     private void setBubbleData(final GeoTrack geoTrack) {
         if (balloonView != null && View.VISIBLE == balloonView.getVisibility()) {
             Log.d(TAG, String.format("setBubbleData for %s", geoTrack));
             balloonView.setData(person, geoTrack);
             if (geocodingAuto) {
-            	doGeocodingData(geoTrack);
+                doGeocodingData(geoTrack);
             }
         }
     }
@@ -514,7 +514,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             runOnFirstFixExecutor.execute(geocoderTask);
         }
     }
-    
+
     private boolean hideBubble() {
         boolean isHide = false;
         if (balloonView != null && View.GONE != balloonView.getVisibility()) {
@@ -528,16 +528,40 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     // Loader
     // ===========================================================
 
+    private boolean isPhoneExactMatch( String personPhone) { 
+        return AppConstants.LOCAL_DB_KEY.equals(personPhone) || personPhone.startsWith("+");
+    }
+    
+    private boolean isPhoneEquals(String otherPhone) {
+        final String personPhone = getPersonPhone();
+        boolean isPhoneExactMatch = isPhoneExactMatch(personPhone);
+        if (isPhoneExactMatch) {
+            return personPhone.equals(otherPhone);
+        } else {
+            String minMatch = PhoneNumberUtils.toCallerIDMinMatch(personPhone);
+            String otherMinMatch = PhoneNumberUtils.toCallerIDMinMatch(otherPhone);
+            return minMatch.equals(otherMinMatch);
+        }
+    }
     private final LoaderManager.LoaderCallbacks<Cursor> geoTrackLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            final String personPhone = getPersonPhone();
             String sortOrder = SQL_SORT_DEFAULT;
-            String selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_PHONE, GeoTrackColumns.COL_TIME);
-            String[] selectionArgs = new String[] { getPersonUserId(), timeBeginInMs, timeEndInMs };
-            Log.d(TAG, String.format("Sql request : %s / for param : user [%s] with date range(%s, %s)", selection, selectionArgs[0], selectionArgs[1], selectionArgs[2]));
+            String selection = null;
+            String[] selectionArgs = null;
+            Uri searchPhoneUri = null;
+            if (isPhoneExactMatch(personPhone)) {
+                searchPhoneUri =  GeoTrackerProvider.Constants.CONTENT_URI;
+                selection = String.format("%s = ? and %2$s >= ? and %2$s < ?", GeoTrackColumns.COL_PHONE, GeoTrackColumns.COL_TIME);
+                selectionArgs = new String[] { getPersonPhone(), timeBeginInMs, timeEndInMs };
+                Log.d(TAG, String.format("Sql request : %s / for param : user [%s] with date range(%s, %s)", selection, selectionArgs[0], selectionArgs[1], selectionArgs[2]));
+            } else {
+                searchPhoneUri = Uri.withAppendedPath(GeoTrackerProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(personPhone));
+             }
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(context, GeoTrackerProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(context, searchPhoneUri, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 
@@ -562,7 +586,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-            geoTracks.clear(); 
+            geoTracks.clear();
         }
 
     };
@@ -590,7 +614,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         }
     }
 
-    private String getPersonUserId() {
+    private String getPersonPhone() {
         return person.phone;
     }
 
@@ -603,7 +627,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                 Bundle extras = intent.getExtras();
                 String userIdIntent = extras.getString(Intents.EXTRA_SMS_PHONE);
                 Log.d(TAG, "StatusReceiver for userId : " + userIdIntent);
-                if (getPersonUserId().equals(userIdIntent)) {
+                if (isPhoneEquals(userIdIntent)) {
                     // TODO Load Data
                     Uri data = intent.getData();
                     Log.d(TAG, "StatusReceiver Starting loaded data form uri : " + data);
@@ -631,7 +655,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                 result = helper.getEntity(c);
                 // Validate
                 String resultUserId = result.phone;
-                if (!getPersonUserId().equals(resultUserId)) {
+                if (!getPersonPhone().equals(resultUserId)) {
                     Log.w(TAG, String.format("Ignore geoTrack %s for user %s : Current overlay for %s", geoTrackUri, resultUserId, person));
                 }
             }
