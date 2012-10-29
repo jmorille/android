@@ -3,7 +3,7 @@
 
       <item
         android:id="@+id/menu_delete_all"
-        android:icon="@drawable/ic_action_user_add"
+        android:icon="@drawable/ic_action_discard"
         android:showAsAction="ifRoom|withText"
         android:title="@string/smslog_delete_all"/>
    
