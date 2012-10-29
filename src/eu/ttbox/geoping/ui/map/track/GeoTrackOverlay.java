@@ -558,6 +558,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                 selectionArgs = new String[] { getPersonPhone(), timeBeginInMs, timeEndInMs };
                 Log.d(TAG, String.format("Sql request : %s / for param : user [%s] with date range(%s, %s)", selection, selectionArgs[0], selectionArgs[1], selectionArgs[2]));
             } else {
+                selection = String.format("%1$s >= ? and %1$s < ?",   GeoTrackColumns.COL_TIME);
+                selectionArgs = new String[] {  timeBeginInMs, timeEndInMs };
                 searchPhoneUri = Uri.withAppendedPath(GeoTrackerProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(personPhone));
              }
             // Loader

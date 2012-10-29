@@ -108,7 +108,7 @@ public class GeoTrackerProvider extends ContentProvider {
         case PHONE_FILTER:
             String phone = uri.getLastPathSegment();
             String phoneDecoder = Uri.decode(phone);
-            return database.searchForPhoneNumber(phoneDecoder, projection, sortOrder);
+            return database.searchForPhoneNumber(phoneDecoder, projection,   selection, selectionArgs, sortOrder);
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }

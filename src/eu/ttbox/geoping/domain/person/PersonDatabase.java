@@ -31,7 +31,7 @@ public class PersonDatabase {
         public static final String COL_CONTACT_ID = "CONTACT_ID";
         public static final String COL_PAIRING_TIME = "COL_PAIRING_TIME";
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH, COL_COLOR, COL_CONTACT_ID, COL_PAIRING_TIME };
+        public static final String[] ALL_COLS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH, COL_COLOR, COL_CONTACT_ID, COL_PAIRING_TIME };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);
@@ -50,7 +50,7 @@ public class PersonDatabase {
         // Add Id
         map.put(PersonColumns.COL_ID, "rowid AS " + BaseColumns._ID);
         // Add Identity Column
-        for (String col : PersonColumns.ALL_KEYS) {
+        for (String col : PersonColumns.ALL_COLS) {
             if (!col.equals(PersonColumns.COL_ID)) {
                 map.put(col, col);
             }
@@ -84,17 +84,29 @@ public class PersonDatabase {
         Cursor cursor = builder.query(mDbHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
         return cursor;
     }
+     
     
-    public Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) {
-        String[] projection = _projection == null ? PersonColumns.ALL_KEYS : _projection;
+    public Cursor searchForPhoneNumber(String number, String[] _projection, String pSelection, String[] pSelectionArgs, String sortOrder) {
+        String[] projection = _projection == null ? PersonColumns.ALL_COLS : _projection;
         // Normalise For search
-         String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
-         String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+        String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+        String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
         // Prepare Query
-        String selection = String.format("%s = ?", PersonColumns.COL_PHONE_MIN_MATCH);
-        String[] selectionArgs = new String[] { minMatch };
+        String selection = null;
+        String[] selectionArgs = null;
+        if (TextUtils.isEmpty(pSelection)) {
+            selection = String.format("%s = ?", PersonColumns.COL_PHONE_MIN_MATCH);
+            selectionArgs = new String[] { minMatch };
+        } else {
+            selection = String.format("%s = ? and (%s)", PersonColumns.COL_PHONE_MIN_MATCH, pSelection);
+            int pSelectionArgSize = pSelectionArgs.length;
+            selectionArgs = new String[   pSelectionArgSize+1 ] ;
+            System.arraycopy(pSelectionArgs, 0, selectionArgs, 1, pSelectionArgSize);
+            selectionArgs[0] = minMatch;
+        }
         return queryEntities(projection, selection, selectionArgs, sortOrder);
     }
+
     
 
     private void fillNormalizedNumber(ContentValues values) {

@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
-import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.person.PersonDatabase;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
@@ -111,18 +110,14 @@ public class PersonProvider extends ContentProvider {
         case PHONE_FILTER:
             String phone = uri.getLastPathSegment();
             String phoneDecoder = Uri.decode(phone);
-            return searchForPhoneNumber(phoneDecoder, projection, sortOrder);
+            return personDatabase.searchForPhoneNumber(phoneDecoder, projection, selection,  selectionArgs, sortOrder);
         case REFRESH_SHORTCUT:
             return refreshShortcut(uri);
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
     }
-
-    private Cursor searchForPhoneNumber(String number, String[] _projection, String sortOrder) { 
-        return personDatabase.searchForPhoneNumber(number, _projection, sortOrder);
-    }
-    
+     
     private Cursor getSuggestions(String query) {
         query = query.toLowerCase();
         String[] columns = new String[] { PersonDatabase.PersonColumns.COL_ID, //
@@ -139,7 +134,7 @@ public class PersonProvider extends ContentProvider {
  
 
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
-        String[] projection = _projection == null ? PersonColumns.ALL_KEYS : _projection;
+        String[] projection = _projection == null ? PersonColumns.ALL_COLS : _projection;
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
@@ -148,7 +143,7 @@ public class PersonProvider extends ContentProvider {
 
     private Cursor getPerson(Uri uri) {
         String rowId = uri.getLastPathSegment();
-        String[] columns = PersonDatabase.PersonColumns.ALL_KEYS;
+        String[] columns = PersonDatabase.PersonColumns.ALL_COLS;
         return personDatabase.getEntityById(rowId, columns);
     }
 

@@ -286,6 +286,7 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
 
                 @Override
                 public void run() {
+                    myLocation.animateToLastFix();
                     mapController.setZoom(17);
                 }
             });
@@ -433,6 +434,9 @@ public class ShowMapActivity extends FragmentActivity implements SharedPreferenc
         if (geoTrackOverlayByUser.containsKey(userId)) {
             GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(userId);
             geoTrackOverlay.animateToLastKnowPosition();
+            if (myLocation!=null) {
+                myLocation.disableFollowLocation();
+            }
             isDone = true;
         } else {
             Log.e(TAG, String.format("Could not Animate to last position of person %s in geoTrackOverlayByUser", userId));

@@ -110,7 +110,7 @@ public class PairingProvider extends ContentProvider {
         case PAIRING_PHONE_FILTER:
             String phone = uri.getLastPathSegment();
             String phoneDecoder = Uri.decode(phone);
-            return pairingDatabase.searchForPhoneNumber(phoneDecoder, projection, sortOrder);
+            return pairingDatabase.searchForPhoneNumber(phoneDecoder, projection,  selection,  selectionArgs, sortOrder);
         case REFRESH_SHORTCUT:
             return refreshShortcut(uri);
         default:
@@ -135,7 +135,7 @@ public class PairingProvider extends ContentProvider {
     }
 
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
-        String[] projection = _projection == null ? PairingColumns.ALL_KEYS : _projection;
+        String[] projection = _projection == null ? PairingColumns.ALL_COLS : _projection;
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
@@ -144,7 +144,7 @@ public class PairingProvider extends ContentProvider {
 
     private Cursor getPairing(Uri uri) {
         String rowId = uri.getLastPathSegment();
-        String[] columns = PairingColumns.ALL_KEYS;
+        String[] columns = PairingColumns.ALL_COLS;
         return pairingDatabase.getEntityById(rowId, columns);
     }
 

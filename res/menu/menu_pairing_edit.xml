@@ -13,12 +13,12 @@
         android:title="@string/menu_save"/>
     <item
         android:id="@+id/menu_select_contact"
-        android:icon="@android:drawable/ic_delete"
+        android:icon="@drawable/ic_action_user"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_select_contact"/>
     <item
         android:id="@+id/menu_delete"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@drawable/ic_action_discard"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_delete"/>
 

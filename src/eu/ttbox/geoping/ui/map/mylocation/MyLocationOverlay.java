@@ -288,7 +288,11 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // ===========================================================
     // GPS Sensor
     // ===========================================================
-
+     
+    public void animateToLastFix() {
+         mMapController.animateTo(  mLocationListener.getLastFixAsGeoPoint());
+    }
+    
     @Override
     public void onLocationChanged(final Location location) {
 
@@ -480,6 +484,10 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 
     public GeoPoint getLastKnownLocationAsGeoPoint() {
         return mLocationListener.getLastKnownLocationAsGeoPoint();
+    }
+    
+    public GeoPoint getLastFixAsGeoPoint() {
+        return mLocationListener.getLastFixAsGeoPoint();
     }
 
     private int getDisplayRotation() {
