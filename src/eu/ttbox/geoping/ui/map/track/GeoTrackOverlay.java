@@ -50,7 +50,6 @@ import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
-import eu.ttbox.geoping.domain.core.PhoneDatabaseUtils;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
@@ -630,10 +629,11 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                 String userIdIntent = extras.getString(Intents.EXTRA_SMS_PHONE);
                 Log.d(TAG, "StatusReceiver for userId : " + userIdIntent);
                 if (isPhoneEquals(userIdIntent)) {
-                    // TODO Load Data
+                    // Load Data
                     Uri data = intent.getData();
                     Log.d(TAG, "StatusReceiver Starting loaded data form uri : " + data);
                     GeoTrack addedGeoTrack = loadGeoTrackById(data);
+                    // TODO check Time Range
                     Log.d(TAG, String.format("Data loader for Uri %s : %s", data, addedGeoTrack));
                     if (addedGeoTrack != null) {
                         // Add GeoTrack

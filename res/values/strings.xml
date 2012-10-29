@@ -8,7 +8,12 @@
     <string name="menu_save">Sauver</string>
     <string name="menu_delete">Supprimer</string>
     <string name="cancel_button">Annuler</string>
-
+    
+    <!-- Temp -->
+    <string name="title_section3">Section 3</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section1">Section 1</string>
+    
     <!-- Encryption -->
     <string name="no_geoping_description">Please install \'GeoPing\' from the Market (https://play.google.com/store/apps/details?id=eu.ttbox.geoping)</string>
     <string name="geoping_encrypted_message">GeoPing encrypted message</string>
@@ -43,7 +48,7 @@
     <string name="menu.geoTracker">Geo Tacker</string>
     <string name="menu_geoping">GeoPing</string>
 
-    <string name="menu_options">Options</string>
+    <string name="menu_settings">Settings</string>
     <string name="menu_map">Map</string>
     <string name="menu_quit">Quit</string>
     <string name="menu_person">Personnes</string>
