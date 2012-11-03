@@ -1,78 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp" >
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:overScrollMode="ifContentScrolls"
+    android:scrollbars="none" >
 
-    <EditText
-        android:id="@+id/pairing_name"
-        style="@style/entity_edit"
-        android:layout_width="fill_parent"
-        android:hint="@string/pairing_name" />
-
-    <EditText
-        android:id="@+id/pairing_phone"
-        style="@style/entity_edit"
-        android:layout_width="fill_parent"
-        android:layout_below="@id/pairing_name"
-        android:hint="@string/pairing_phone" />
-
-    <TextView
-        android:id="@+id/pairing_authorize_type"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pairing_phone"
-        android:layout_marginRight="32dp"
-        android:ems="10"
-        android:text="Authorize Type" />
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" >
 
-    <Button
-        android:id="@+id/select_contact_button"
-        style="@style/entity_edit"
-        android:layout_alignParentBottom="true"
-        android:onClick="onSelectContactClick"
-        android:text="@string/menu_select_contact" />
+        <EditText
+            android:id="@+id/pairing_name"
+            style="@style/entity_edit"
+            android:layout_width="fill_parent"
+            android:hint="@string/pairing_name" />
 
-    <RadioGroup
-        android:id="@+id/pairing_authorize_type_radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/pairing_authorize_type"
-        android:layout_marginTop="17dp"
-        android:text="RadioButton" >
+        <EditText
+            android:id="@+id/pairing_phone"
+            style="@style/entity_edit"
+            android:layout_width="fill_parent"
+            android:layout_below="@id/pairing_name"
+            android:hint="@string/pairing_phone" />
 
-        <RadioButton
-            android:id="@+id/pairing_authorize_type_radio_never"
+        <TextView
+            android:id="@+id/pairing_authorize_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRadioAuthorizeTypeButtonClicked"
-            android:text="Never" />
+            android:layout_below="@id/pairing_phone"
+            android:layout_marginRight="32dp"
+            android:ems="10"
+            android:text="Authorize Type" />
 
-        <RadioButton
-            android:id="@+id/pairing_authorize_type_radio_ask"
+        <RadioGroup
+            android:id="@+id/pairing_authorize_type_radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRadioAuthorizeTypeButtonClicked"
-            android:text="Ask" />
+            android:layout_below="@+id/pairing_authorize_type"
+            android:layout_marginTop="17dp"
+            android:text="RadioButton" >
 
-        <RadioButton
-            android:id="@+id/pairing_authorize_type_radio_always"
+            <RadioButton
+                android:id="@+id/pairing_authorize_type_radio_never"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioAuthorizeTypeButtonClicked"
+                android:text="Never" />
+
+            <RadioButton
+                android:id="@+id/pairing_authorize_type_radio_ask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioAuthorizeTypeButtonClicked"
+                android:text="Ask" />
+
+            <RadioButton
+                android:id="@+id/pairing_authorize_type_radio_always"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioAuthorizeTypeButtonClicked"
+                android:text="Always" />
+        </RadioGroup>
+
+        <CheckBox
+            android:id="@+id/paring_show_notification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRadioAuthorizeTypeButtonClicked"
-            android:text="Always" />
-    </RadioGroup>
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/pairing_authorize_type_radioGroup"
+            android:layout_marginTop="21dp"
+            android:onClick="onShowNotificationClick"
+            android:text="@string/pairing_show_notification" />
+ 
+        <Button
+            android:id="@+id/select_contact_button"
+            style="@style/entity_edit"
+            android:layout_below="@id/paring_show_notification"
+            android:layout_alignParentBottom="true"
+            android:onClick="onSelectContactClick"
+            android:text="@string/menu_select_contact" />
+        
+    </RelativeLayout>
 
-    <CheckBox
-        android:id="@+id/paring_show_notification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/pairing_authorize_type_radioGroup"
-        android:layout_marginTop="21dp"
-        android:onClick="onShowNotificationClick"
-        android:text="@string/pairing_show_notification" />
-
-</RelativeLayout>
+</ScrollView>

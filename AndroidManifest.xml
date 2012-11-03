@@ -138,6 +138,15 @@
           </intent-filter>
         </activity>
         
+         <!-- WebView -->
+          <activity android:name=".ui.about.AboutActivity"  android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="eu.ttbox.geoping.ui.about.ACTION_VIEW_ABOUT" />
+                <action android:name="eu.ttbox.geoping.ui.about.ACTION_VIEW_LICENCE" />
+            </intent-filter>
+        </activity>
+        
         <!-- Sms service -->
         <service android:exported="false" android:name=".service.slave.GeoPingSlaveService">
             	<intent-filter>

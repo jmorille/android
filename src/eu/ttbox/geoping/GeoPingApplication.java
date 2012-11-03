@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -31,42 +30,51 @@ public class GeoPingApplication extends Application {
 
     /**
      * Get Application Version
+     * 
      * @return
      */
     public String version() {
         return String.format("Version : %s/%s", getPackageName(), versionName());
-    }  
+    }
 
-    private String versionName() {
+    public String versionPackageName() {
+        return String.format("Version : %s/%s", getPackageName(), versionName());
+    }
+
+    public String versionName() {
         try {
             final PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
             return info.versionName;
         } // try
-        catch (PackageManager.NameNotFoundException nnfe) { 
+        catch (PackageManager.NameNotFoundException nnfe) {
             return "Unknown";
-        } 
+        }
     }
 
-    
     private class DelayedInitializer extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
             final Context context = GeoPingApplication.this;
-            // Increment Counter Lauch
+            // Increment Counter Laught
             int laugthCount = incrementApplicationLaunchCounter(context);
             Log.i(TAG, "Laugth count " + laugthCount);
             return null;
-        } 
+        }
     }
 
     private int incrementApplicationLaunchCounter(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         // Read previous values
         int counter = settings.getInt(AppConstants.PREFS_APP_COUNT_LAUGHT, 0);
+        long firstDateLaugth = settings.getLong(AppConstants.PREFS_APP_FIRSTDATE_LAUGHT, Long.MIN_VALUE);
         counter++;
         // Edit
         SharedPreferences.Editor prefEditor = settings.edit();
         prefEditor.putInt(AppConstants.PREFS_APP_COUNT_LAUGHT, counter);
+        if (Long.MIN_VALUE == firstDateLaugth) {
+            long now = System.currentTimeMillis();
+            prefEditor.putLong(AppConstants.PREFS_APP_FIRSTDATE_LAUGHT, now);
+        }
         prefEditor.commit();
         return counter;
     }

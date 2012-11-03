@@ -7,8 +7,20 @@
     <ListView
         android:id="@android:id/list"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- empty view -->
+
+    <LinearLayout
+        android:id="@android:id/empty"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
-    </ListView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="No Results" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/add_track_person_button"

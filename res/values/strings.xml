@@ -75,6 +75,7 @@
     <string name="prefs_geoPoint_geocoding_auto">Geocoding automatique</string>
     
     <string name="prefs_info">Information</string>
+    <string name="prefs_version">Version</string>
     <string name="prefs_help">Aide</string>
     <string name="prefs_licence">Licence</string>
     <string name="prefs_about">Crédit</string>

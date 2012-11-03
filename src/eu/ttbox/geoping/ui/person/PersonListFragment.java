@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
@@ -36,7 +37,6 @@ public class PersonListFragment extends Fragment {
 
     // binding
     private ListView listView;
-    private Button addPersonButton;
 
     // init
     private PersonListAdapter listAdapter;
@@ -52,27 +52,32 @@ public class PersonListFragment extends Fragment {
     };
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View v=  inflater.inflate(R.layout.track_person_list, container, false);
-        
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.track_person_list, container, false);
+
         // Bindings
         listView = (ListView) v.findViewById(android.R.id.list);
-        addPersonButton = (Button) v.findViewById(R.id.add_track_person_button);
+        listView.setEmptyView(v.findViewById(android.R.id.empty));
+        // Button
+        Button addPersonButton = (Button) v.findViewById(R.id.add_track_person_button);
         addPersonButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 onAddEntityClick(v);
             }
         });
+       
         // init
         listAdapter = new PersonListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(mOnClickListener);
+        // Empty List
+        // emptyListView = (TextView) v.findViewById(android.R.id.empty);
+        // listView.setEmptyView(emptyListView);
         Log.d(TAG, "Binding end");
         // Intents
-        getActivity(). getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
-        
+        getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+
         return v;
     }
 
@@ -86,9 +91,6 @@ public class PersonListFragment extends Fragment {
         startActivityForResult(intent, EDIT_ENTITY);
     }
 
-    
-   
-    
     @Override
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
@@ -96,14 +98,14 @@ public class PersonListFragment extends Fragment {
         switch (reqCode) {
         case (EDIT_ENTITY):
             if (resultCode == Activity.RESULT_OK) {
-                reloadDataList() ;
+                reloadDataList();
             }
         }
     }
-    
+
     public void reloadDataList() {
-        getActivity(). getSupportLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
-     }
+        getActivity().getSupportLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+    }
 
     // ===========================================================
     // Loader

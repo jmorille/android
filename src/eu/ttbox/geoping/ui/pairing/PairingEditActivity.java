@@ -3,10 +3,12 @@ package eu.ttbox.geoping.ui.pairing;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -23,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.PairingProvider;
@@ -30,7 +33,7 @@ import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 
-public class PairingEditActivity extends FragmentActivity {
+public class PairingEditActivity extends FragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "PairingEditActivity";
 
@@ -38,6 +41,13 @@ public class PairingEditActivity extends FragmentActivity {
     private static final int PAIRING_EDIT_LOADER = R.id.config_id_pairing_edit_loader;
 
     private static final int PICK_CONTACT = 0;
+
+    // Service
+    private SharedPreferences sharedPreferences;
+
+    // Config
+    private static final boolean DEFAULT_PREFS_SHOW_GEOPING_NOTIFICATION = false;
+    private boolean showNotifDefault = DEFAULT_PREFS_SHOW_GEOPING_NOTIFICATION;
 
     // Paint
     Paint mPaint = new Paint();
@@ -47,16 +57,19 @@ public class PairingEditActivity extends FragmentActivity {
     private EditText phoneEditText;
     private CheckBox showNotificationCheckBox;
     private TextView authorizeTypeTextView;
-    
+
     private RadioGroup authorizeTypeRadioGroup;
-    
+
     private RadioButton authorizeTypeAskRadioButton;
     private RadioButton authorizeTypeNeverRadioButton;
     private RadioButton authorizeTypeAlwaysRadioButton;
-    
-//    private static final int UI_ID_AUTHORIZE_REQUEST = R.id.pairing_authorize_type_radio_ask;
-//    private static final int UI_ID_AUTHORIZE_ALWAYS= R.id.pairing_authorize_type_radio_always;
-//    private static final int UI_ID_AUTHORIZE_NEVER= R.id.pairing_authorize_type_radio_never;
+
+    // private static final int UI_ID_AUTHORIZE_REQUEST =
+    // R.id.pairing_authorize_type_radio_ask;
+    // private static final int UI_ID_AUTHORIZE_ALWAYS=
+    // R.id.pairing_authorize_type_radio_always;
+    // private static final int UI_ID_AUTHORIZE_NEVER=
+    // R.id.pairing_authorize_type_radio_never;
 
     // Instance
     // private String entityId;
@@ -70,21 +83,77 @@ public class PairingEditActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pairing_edit);
+        // Prefs
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        // Config
+        showNotifDefault = sharedPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, DEFAULT_PREFS_SHOW_GEOPING_NOTIFICATION);
+     
         // binding
         nameEditText = (EditText) findViewById(R.id.pairing_name);
         phoneEditText = (EditText) findViewById(R.id.pairing_phone);
         showNotificationCheckBox = (CheckBox) findViewById(R.id.paring_show_notification);
         authorizeTypeTextView = (TextView) findViewById(R.id.pairing_authorize_type);
-        
-        authorizeTypeRadioGroup = (RadioGroup)findViewById(R.id.pairing_authorize_type_radioGroup);
-        authorizeTypeAskRadioButton = (RadioButton)findViewById(R.id.pairing_authorize_type_radio_ask);
-        authorizeTypeNeverRadioButton = (RadioButton)findViewById(R.id.pairing_authorize_type_radio_never);
-        authorizeTypeAlwaysRadioButton = (RadioButton)findViewById(R.id.pairing_authorize_type_radio_always);
 
+        authorizeTypeRadioGroup = (RadioGroup) findViewById(R.id.pairing_authorize_type_radioGroup);
+        authorizeTypeAskRadioButton = (RadioButton) findViewById(R.id.pairing_authorize_type_radio_ask);
+        authorizeTypeNeverRadioButton = (RadioButton) findViewById(R.id.pairing_authorize_type_radio_never);
+        authorizeTypeAlwaysRadioButton = (RadioButton) findViewById(R.id.pairing_authorize_type_radio_always);
+
+        // default value
+        showNotificationCheckBox.setChecked(showNotifDefault);
         
         // Intents
         handleIntent(getIntent());
     }
+
+    // ===========================================================
+    // Preferences
+    // ===========================================================
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION)) {
+              showNotifDefault = sharedPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, DEFAULT_PREFS_SHOW_GEOPING_NOTIFICATION);
+        }
+    }
+
+
+    // ===========================================================
+    // Intent Handler
+    // ===========================================================
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    protected void handleIntent(Intent intent) {
+        if (intent == null) {
+            return;
+        }
+        String action = intent.getAction();
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "handleIntent for action : " + action);
+        }
+        if (Intent.ACTION_EDIT.equals(action)) {
+            Uri data = intent.getData();
+            loadEntity(data.getLastPathSegment());
+        } else if (Intent.ACTION_DELETE.equals(action)) {
+            // TODO
+        } else if (Intent.ACTION_INSERT.equals(action)) {
+            this.entityUri = null;
+            showNotificationCheckBox.setChecked(showNotifDefault);
+            // Open Selection contact Diallog
+            onSelectContactClick(null);
+        }
+
+    }
+
+    // ===========================================================
+    // Menu
+    // ===========================================================
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -114,35 +183,6 @@ public class PairingEditActivity extends FragmentActivity {
         return false;
     }
 
-    // ===========================================================
-    // Intent Handler
-    // ===========================================================
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }
-
-    protected void handleIntent(Intent intent) {
-        if (intent == null) {
-            return;
-        }
-        String action = intent.getAction();
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "handleIntent for action : " + action);
-        }
-        if (Intent.ACTION_EDIT.equals(action)) {
-            Uri data = intent.getData();
-            loadEntity(data.getLastPathSegment());
-        } else if (Intent.ACTION_DELETE.equals(action)) {
-            // TODO
-        } else if (Intent.ACTION_INSERT.equals(action)) {
-            this.entityUri = null;
-            onSelectContactClick(null);
-        }
-
-    }
-
     private void loadEntity(String entityId) {
         this.entityUri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI, entityId);
         Bundle bundle = new Bundle();
@@ -170,12 +210,12 @@ public class PairingEditActivity extends FragmentActivity {
         PairingAuthorizeTypeEnum authType = null;
         if (authorizeTypeAlwaysRadioButton.isChecked()) {
             authType = PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS;
-        } else   if (authorizeTypeNeverRadioButton.isChecked()) {
+        } else if (authorizeTypeNeverRadioButton.isChecked()) {
             authType = PairingAuthorizeTypeEnum.AUTHORIZE_NEVER;
-         } else {
-             authType = PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST; 
+        } else {
+            authType = PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
         }
-      
+
         // Do Save
         Uri uri = doSavePairing(name, phone, authType);
         setResult(Activity.RESULT_OK);
@@ -194,8 +234,9 @@ public class PairingEditActivity extends FragmentActivity {
      * @param v
      */
     public void onSelectContactClick(View v) {
-//        String phoneNumber = phoneEditText.getText().toString();
-//        Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        // String phoneNumber = phoneEditText.getText().toString();
+        // Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
+        // Uri.encode(phoneNumber));
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
         // run
@@ -263,34 +304,38 @@ public class PairingEditActivity extends FragmentActivity {
     }
 
     public void onRadioAuthorizeTypeButtonClicked(View view) {
- 	   // Is the button now checked?
-     boolean checked = ((RadioButton) view).isChecked();
-     PairingAuthorizeTypeEnum authType = null;
-     // Check which radio button was clicked
-     switch(view.getId()) {
-         case R.id.pairing_authorize_type_radio_ask:
-             if (checked)
-             	authType = PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
-             break;
-         case R.id.pairing_authorize_type_radio_always:
-             if (checked)
-             	authType = PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS;
-             break;
-         case R.id.pairing_authorize_type_radio_never:
-             if (checked)
-             	authType = PairingAuthorizeTypeEnum.AUTHORIZE_NEVER;
-             break;
-     }
-     if (authType!=null && entityUri!=null ) {
-         ContentValues values = authType.writeTo(null);
-    	 getContentResolver().update(entityUri, values, null, null);
-     }
- }
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+        PairingAuthorizeTypeEnum authType = null;
+        // Check which radio button was clicked
+        switch (view.getId()) {
+        case R.id.pairing_authorize_type_radio_ask:
+            if (checked)
+                authType = PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
+            showNotificationCheckBox.setVisibility(View.GONE);
+            break;
+        case R.id.pairing_authorize_type_radio_always:
+            if (checked)
+                authType = PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS;
+            showNotificationCheckBox.setVisibility(View.VISIBLE);
+            break;
+        case R.id.pairing_authorize_type_radio_never:
+            if (checked)
+                authType = PairingAuthorizeTypeEnum.AUTHORIZE_NEVER;
+            showNotificationCheckBox.setVisibility(View.VISIBLE);
+            break;
+        }
+        if (authType != null && entityUri != null) {
+            ContentValues values = authType.writeTo(null);
+            getContentResolver().update(entityUri, values, null, null);
+        }
+    }
+
     // ===========================================================
     // Data Model Management
     // ===========================================================
 
-    private String cleanPhone(String phone) { 
+    private String cleanPhone(String phone) {
         String cleanPhone = phone;
         if (cleanPhone != null) {
             cleanPhone = PhoneNumberUtils.normalizeNumber(phone);
@@ -305,8 +350,8 @@ public class PairingEditActivity extends FragmentActivity {
         ContentValues values = new ContentValues();
         values.put(PairingColumns.COL_NAME, name);
         values.put(PairingColumns.COL_PHONE, phone);
-        if (authorizeType!=null) {
-             authorizeType.writeTo(values);
+        if (authorizeType != null) {
+            authorizeType.writeTo(values);
         }
         // Content
         Uri uri;
@@ -353,32 +398,30 @@ public class PairingEditActivity extends FragmentActivity {
                 PairingHelper helper = new PairingHelper().initWrapper(cursor);
                 helper.setTextPairingName(nameEditText, cursor)//
                         .setTextPairingPhone(phoneEditText, cursor)//
-                         .setTextPairingAuthorizeType(authorizeTypeTextView, cursor)//
+                        .setTextPairingAuthorizeType(authorizeTypeTextView, cursor)//
                         .setCheckBoxPairingShowNotif(showNotificationCheckBox, cursor);
                 // Pairing
                 PairingAuthorizeTypeEnum authType = helper.getPairingAuthorizeTypeEnum(cursor);
                 switch (authType) {
-				case AUTHORIZE_REQUEST:
-					authorizeTypeAskRadioButton.setChecked(true);
-					break;
-				case AUTHORIZE_NEVER:
-					authorizeTypeNeverRadioButton.setChecked(true);
-					break;
-				case AUTHORIZE_ALWAYS:
-					authorizeTypeAlwaysRadioButton.setChecked(true);
-					break;
+                case AUTHORIZE_REQUEST:
+                    authorizeTypeAskRadioButton.setChecked(true);
+                    break;
+                case AUTHORIZE_NEVER:
+                    authorizeTypeNeverRadioButton.setChecked(true);
+                    break;
+                case AUTHORIZE_ALWAYS:
+                    authorizeTypeAlwaysRadioButton.setChecked(true);
+                    break;
 
-				default:
-					break;
-				}
-                // Notif 
+                default:
+                    break;
+                }
+                // Notif
                 if (PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST.equals(authType)) {
                     showNotificationCheckBox.setVisibility(View.GONE);
                 }
             }
         }
-        
-
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {

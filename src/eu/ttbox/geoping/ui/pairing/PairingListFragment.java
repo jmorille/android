@@ -35,8 +35,8 @@ public class PairingListFragment extends Fragment {
     private static final int EDIT_ENTITY = 0;
 
     // binding
-    private ListView listView;
-    private Button addEntityButton;
+    private ListView listView; 
+    
     // init
     private PairingListAdapter listAdapter;
 
@@ -56,7 +56,8 @@ public class PairingListFragment extends Fragment {
         View v=  inflater.inflate(R.layout.pairing_list, container, false); 
         // Bindings
         listView = (ListView) v.findViewById(android.R.id.list);
-        addEntityButton = (Button) v.findViewById(R.id.add_pairing_button);
+        listView.setEmptyView(v.findViewById(android.R.id.empty));
+        Button  addEntityButton = (Button) v.findViewById(R.id.add_pairing_button);
         // init
         listAdapter = new PairingListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         listView.setAdapter(listAdapter);
