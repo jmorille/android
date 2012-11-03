@@ -1,5 +1,10 @@
 package eu.ttbox.geoping;
 
+import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
+import eu.ttbox.geoping.ui.map.ShowMapFragment;
+import eu.ttbox.geoping.ui.pairing.PairingListFragment;
+import eu.ttbox.geoping.ui.person.PersonListFragment;
+import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,11 +14,14 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
+
+    private static final String TAG = "MainActivity";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
@@ -27,6 +35,10 @@ public class MainActivity extends FragmentActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,15 +54,38 @@ public class MainActivity extends FragmentActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
     }
+    
+    // ===========================================================
+    // Menu
+    // ===========================================================
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
-    
+  
+     
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean isConsume = MenuOptionsItemSelectionHelper.onOptionsItemSelected(this, item);
+        if (isConsume) {
+            return isConsume;
+        } else {
+            switch (item.getItemId()) {
+            case R.id.menuQuitter:
+                // Pour fermer l'application il suffit de faire finish()
+                finish();
+                return true;
+            }
+        }
+        return false;
+    }
 
+    // ===========================================================
+    // Pages Adapter
+    // ===========================================================
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
@@ -58,16 +93,32 @@ public class MainActivity extends FragmentActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+       static final int PERSON = 0;
+       static final int PAIRING = 1;
+       static final int LOG = 2;
+       
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public Fragment getItem(int i) {
-            Fragment fragment = new DummySectionFragment();
-            Bundle args = new Bundle();
-            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
-            fragment.setArguments(args);
+        public Fragment getItem(int position) {
+            Fragment fragment = null;
+            switch (position) {
+            case PERSON: 
+                fragment=new PersonListFragment();
+                break;
+            case PAIRING: 
+                fragment=new PairingListFragment();
+                break;
+            case LOG: 
+                fragment=new SmsLogListFragment();
+                break;
+        }
+//            fragment = new DummySectionFragment();
+//            Bundle args = new Bundle();
+//            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+//            fragment.setArguments(args);
             return fragment;
         }
 
@@ -79,9 +130,9 @@ public class MainActivity extends FragmentActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0: return getString(R.string.title_section1).toUpperCase();
-                case 1: return getString(R.string.title_section2).toUpperCase();
-                case 2: return getString(R.string.title_section3).toUpperCase();
+                case PERSON: return getString(R.string.menu_person).toUpperCase();
+                case PAIRING: return getString(R.string.menu_pairing).toUpperCase();
+                case LOG: return getString(R.string.menu_smslog).toUpperCase();
             }
             return null;
         }

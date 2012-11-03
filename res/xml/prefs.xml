@@ -36,4 +36,37 @@
         
     </PreferenceCategory>
     
+    
+    <PreferenceCategory android:title="@string/prefs_info" android:icon="@drawable/ic_action_about">
+        <eu.ttbox.geoping.ui.prefs.comp.version.AppVersionPreference
+            android:defaultValue="0" 
+            android:key="APP_COUNT_LAUGHT"
+            android:summary="@string/prefs_count_laught_summary"
+            android:title="@string/prefs_count_laught" >
+        </eu.ttbox.geoping.ui.prefs.comp.version.AppVersionPreference>
+
+<!--        <Preference  -->
+<!--             android:title="@string/prefs_about" > -->
+<!--             <intent -->
+<!--                 android:action="eu.ttbox.velib.ui.about.ACTION_VIEW_ABOUT" -->
+<!--                 android:targetClass="eu.ttbox.velib.ui.about.AboutActivity" -->
+<!--                 android:targetPackage="eu.ttbox.velib" /> -->
+<!--         </Preference> -->
+<!--        <Preference  -->
+<!--             android:title="@string/prefs_licence" > -->
+<!--             <intent -->
+<!--                 android:action="eu.ttbox.velib.ui.about.ACTION_VIEW_LICENCE" -->
+<!--                 android:targetClass="eu.ttbox.velib.ui.about.AboutActivity" -->
+<!--                 android:targetPackage="eu.ttbox.velib" /> -->
+<!--         </Preference> -->
+                 
+<!--         <Preference -->
+<!--             android:icon="@drawable/ic_action_help" -->
+<!--             android:title="@string/prefs_help" > -->
+<!--             <intent -->
+<!--                 android:action="android.intent.action.VIEW" -->
+<!--                 android:targetClass="eu.ttbox.velib.ui.help.HelpTabLayoutActivity" -->
+<!--                 android:targetPackage="eu.ttbox.velib" /> -->
+<!--         </Preference>  -->
+    </PreferenceCategory>
 </PreferenceScreen>

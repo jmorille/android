@@ -3,6 +3,8 @@ package eu.ttbox.geoping;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.StrictMode;
@@ -27,6 +29,25 @@ public class GeoPingApplication extends Application {
 
     }
 
+    /**
+     * Get Application Version
+     * @return
+     */
+    public String version() {
+        return String.format("Version : %s/%s", getPackageName(), versionName());
+    }  
+
+    private String versionName() {
+        try {
+            final PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            return info.versionName;
+        } // try
+        catch (PackageManager.NameNotFoundException nnfe) { 
+            return "Unknown";
+        } 
+    }
+
+    
     private class DelayedInitializer extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -35,14 +56,7 @@ public class GeoPingApplication extends Application {
             int laugthCount = incrementApplicationLaunchCounter(context);
             Log.i(TAG, "Laugth count " + laugthCount);
             return null;
-        }
-
-        public void execute() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                // executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[])
-                // null);
-            }
-        }
+        } 
     }
 
     private int incrementApplicationLaunchCounter(Context context) {

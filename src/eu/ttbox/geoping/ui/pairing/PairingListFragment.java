@@ -12,8 +12,10 @@ import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -34,7 +36,7 @@ public class PairingListFragment extends Fragment {
 
     // binding
     private ListView listView;
-  
+    private Button addEntityButton;
     // init
     private PairingListAdapter listAdapter;
 
@@ -54,13 +56,20 @@ public class PairingListFragment extends Fragment {
         View v=  inflater.inflate(R.layout.pairing_list, container, false); 
         // Bindings
         listView = (ListView) v.findViewById(android.R.id.list);
-        
+        addEntityButton = (Button) v.findViewById(R.id.add_pairing_button);
         // init
         listAdapter = new PairingListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(mOnClickListener);
-        Log.d(TAG, "Binding end");
+        // Listener
+        addEntityButton.setOnClickListener(new OnClickListener() {
+             @Override
+            public void onClick(View v) {
+               onAddEntityClick(v);
+             }
+        });
         // Intents
+        Log.d(TAG, "Binding end");
         getActivity(). getSupportLoaderManager().initLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
        return v;
     }

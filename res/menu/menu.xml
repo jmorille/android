@@ -18,7 +18,7 @@
         android:title="@string/menu_pairing"/>
     <item
         android:id="@+id/menu_smslog"
-        android:icon="@drawable/ic_device_access_secure"
+        android:icon="@drawable/ic_collections_go_to_today"
         android:showAsAction="ifRoom"
         android:title="@string/menu_smslog"/>
     <item

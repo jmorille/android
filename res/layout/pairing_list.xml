@@ -10,5 +10,10 @@
         android:layout_height="wrap_content" >
     </ListView>
  
-
+   <Button
+        android:id="@+id/add_pairing_button"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="@string/add_pairing" />
+    
 </LinearLayout>

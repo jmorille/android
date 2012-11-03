@@ -2,18 +2,18 @@
 <resources>
 
     <string name="hello">Hello World, GeoPing!</string>
+    
     <string name="add_track_person">Ajouter une personne</string>
+    <string name="add_pairing">Authoriser un GeoPing</string>
+    
     <string name="geoping">Geo Ping</string>
     <string name="menu_select_contact">Contacts</string>
     <string name="menu_save">Sauver</string>
     <string name="menu_delete">Supprimer</string>
+    <string name="menu_cancel">Annuler</string>
     <string name="cancel_button">Annuler</string>
     
-    <!-- Temp -->
-    <string name="title_section3">Section 3</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section1">Section 1</string>
-    
+     
     <!-- Encryption -->
     <string name="no_geoping_description">Please install \'GeoPing\' from the Market (https://play.google.com/store/apps/details?id=eu.ttbox.geoping)</string>
     <string name="geoping_encrypted_message">GeoPing encrypted message</string>
@@ -74,6 +74,13 @@
     <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
     <string name="prefs_geoPoint_geocoding_auto">Geocoding automatique</string>
     
+    <string name="prefs_info">Information</string>
+    <string name="prefs_help">Aide</string>
+    <string name="prefs_licence">Licence</string>
+    <string name="prefs_about">Crédit</string>
+    <string name="prefs_relasenotes">Quoi de neuf ?</string> 
+    <string name="prefs_count_laught">Nombre de lancement</string>
+    <string name="prefs_count_laught_summary">Nombre d\'utilisation de l\'application</string>
     
     <!-- Map -->
     <string name="ask_activate_gps">Voulez-vous activer le GPS ?</string>
