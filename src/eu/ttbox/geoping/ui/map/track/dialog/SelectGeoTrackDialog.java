@@ -95,9 +95,22 @@ public class SelectGeoTrackDialog extends AlertDialog {
                 cancel();
             }
         });
-        // Query
-        loaderManager.initLoader(GEOTRACK_SELECT_LOADER, null, geoTrackPersonLoaderCallback);
+//        Log.d(TAG, "########################################################");
+//        Log.d(TAG, "### Constructor SelectGeoTrackDialog");
+      
     }
+
+    // ===========================================================
+    // Life Cycle
+    // ===========================================================
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         // Query
+         loaderManager.initLoader(GEOTRACK_SELECT_LOADER, null, geoTrackPersonLoaderCallback);
+    }
+    
 
     // ===========================================================
     // Service
@@ -111,6 +124,8 @@ public class SelectGeoTrackDialog extends AlertDialog {
     // ===========================================================
     // Loader
     // ===========================================================
+
+   
 
     private final LoaderManager.LoaderCallbacks<Cursor> geoTrackPersonLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
@@ -129,7 +144,8 @@ public class SelectGeoTrackDialog extends AlertDialog {
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             int resultCount = cursor.getCount();
             Log.d(TAG, String.format("onLoadFinished with %s results", resultCount));
-            listAdapter.swapCursor(cursor);
+            listAdapter.swapCursor(cursor); 
+            cursor.setNotificationUri(getContext().getContentResolver(), PersonProvider.Constants.CONTENT_URI);
             // check
             if (resultCount<1) {
                 onNoPerson() ;
