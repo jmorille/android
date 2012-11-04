@@ -105,12 +105,43 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
         showNotificationCheckBox.setChecked(showNotifDefault);
         
         // Intents
-        handleIntent(getIntent());
+        handleIntent(getIntent()); 
     }
 
+    @Override
+    protected void onDestroy() {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
+    }
+    
+    // ===========================================================
+    // Life Cycle
+    // ===========================================================
+
+
+
+    @Override
+    protected void onPause() { 
+        super.onPause();
+    }
+
+
+
+    @Override
+    protected void onResume() { 
+        super.onResume();
+    }
+
+ 
+
+ 
+
+     
     // ===========================================================
     // Preferences
     // ===========================================================
+
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -397,8 +428,7 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
                 // Data
                 PairingHelper helper = new PairingHelper().initWrapper(cursor);
                 helper.setTextPairingName(nameEditText, cursor)//
-                        .setTextPairingPhone(phoneEditText, cursor)//
-                        .setTextPairingAuthorizeType(authorizeTypeTextView, cursor)//
+                        .setTextPairingPhone(phoneEditText, cursor)// 
                         .setCheckBoxPairingShowNotif(showNotificationCheckBox, cursor);
                 // Pairing
                 PairingAuthorizeTypeEnum authType = helper.getPairingAuthorizeTypeEnum(cursor);

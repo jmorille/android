@@ -2,6 +2,7 @@ package eu.ttbox.geoping.domain.pairing;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import eu.ttbox.geoping.core.AppConstants;
@@ -10,6 +11,8 @@ import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 
 public class PairingHelper {
+
+    private static final String TAG = "PairingHelper";
 
     boolean isNotInit = true;
     public int idIdx = -1;
@@ -38,15 +41,14 @@ public class PairingHelper {
             initWrapper(cursor);
         }
         Pairing user = new Pairing();
-        user.setId(idIdx > -1 ? cursor.getLong(idIdx) :  AppConstants.UNSET_ID);
+        user.setId(idIdx > -1 ? cursor.getLong(idIdx) : AppConstants.UNSET_ID);
         user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
-        user.setAuthorizeType(authorizeTypeIdx > -1 ? getPairingAuthorizeTypeEnum(cursor ) : null);
+        user.setAuthorizeType(authorizeTypeIdx > -1 ? getPairingAuthorizeTypeEnum(cursor) : null);
         user.setShowNotification(showNotificationIdx > -1 ? cursor.getInt(showNotificationIdx) == 1 ? true : false : false);
-        user.setPairingTime(pairingTimeIdx > -1 ? cursor.getLong(pairingTimeIdx)  : AppConstants.UNSET_TIME );
+        user.setPairingTime(pairingTimeIdx > -1 ? cursor.getLong(pairingTimeIdx) : AppConstants.UNSET_TIME);
         return user;
     }
-
 
     private PairingHelper setTextWithIdx(TextView view, Cursor cursor, int idx) {
         view.setText(cursor.getString(idx));
@@ -77,11 +79,26 @@ public class PairingHelper {
         return setTextWithIdx(view, cursor, phoneIdx);
     }
 
-    public PairingHelper setTextPairingAuthorizeType(TextView authorizeTypeTextView, Cursor cursor) {
-        PairingAuthorizeTypeEnum type = getPairingAuthorizeTypeEnum(cursor);
-        authorizeTypeTextView.setText(type.name());
+    public PairingHelper setTextPairingAuthorizeType(TextView view, Cursor cursor) {
+        PairingAuthorizeTypeEnum authType = getPairingAuthorizeTypeEnum(cursor);
+        switch (authType) {
+        case AUTHORIZE_REQUEST:
+            view.setText(eu.ttbox.geoping.R.string.pairing_authorize_type_ask);
+            break;
+        case AUTHORIZE_NEVER:
+            view.setText(eu.ttbox.geoping.R.string.pairing_authorize_type_never);
+            break;
+        case AUTHORIZE_ALWAYS:
+            view.setText(eu.ttbox.geoping.R.string.pairing_authorize_type_always);
+            break;
+        default:
+            view.setText(authType.name());
+            Log.w(TAG, "No traduction for enum PairingAuthorizeTypeEnum : " + authType.name());
+            break;
+        } 
         return this;
     }
+
     public PairingHelper setCheckBoxPairingShowNotif(CheckBox view, Cursor cursor) {
         boolean showNotif = cursor.getInt(showNotificationIdx) == 1;
         view.setChecked(showNotif);
@@ -90,8 +107,8 @@ public class PairingHelper {
 
     public PairingAuthorizeTypeEnum getPairingAuthorizeTypeEnum(Cursor cursor) {
         return PairingAuthorizeTypeEnum.getByCode(cursor.getInt(authorizeTypeIdx));
-     }
-    
+    }
+
     public String getPairingPhone(Cursor cursor) {
         return cursor.getString(phoneIdx);
     }
@@ -99,7 +116,7 @@ public class PairingHelper {
     public String getDisplayName(Cursor cursor) {
         return cursor.getString(nameIdx);
     }
-    
+
     public static ContentValues getContentValues(Pairing vo) {
         ContentValues initialValues = new ContentValues();
         if (vo.id > -1) {
@@ -114,9 +131,5 @@ public class PairingHelper {
         initialValues.put(PairingColumns.COL_AUTHORIZE_TYPE, authorizeType.getCode());
         return initialValues;
     }
-
-
-
-  
 
 }

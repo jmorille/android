@@ -38,7 +38,7 @@ public class GeoPingApplication extends Application {
     }
 
     public String versionPackageName() {
-        return String.format("Version : %s/%s", getPackageName(), versionName());
+        return String.format("%s/%s", getPackageName(), versionName());
     }
 
     public String versionName() {
