@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
@@ -147,6 +148,17 @@ public class Intents {
                 .setAction(SmsMessageActionEnum.GEOPING_REQUEST.intentAction)//
                 .putExtra(EXTRA_SMS_PHONE, phoneNumber);
     }
+    
+    // ===========================================================
+    // Navigation
+    // ===========================================================
+    public static Intent activityMain(Context context ) {
+        return new Intent(context, MainActivity.class) //
+                .setAction(Intent.ACTION_VIEW )//
+                // TODO Select Page
+                 ;
+    }
+
     
     // Sms Consumer
 

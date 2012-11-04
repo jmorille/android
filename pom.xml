@@ -23,7 +23,7 @@
 		<!-- Frameworks -->
 		<jackson.version>2.0.5</jackson.version>
 		<!-- Release -->
-		<android-maven-plugin.version>3.3.2</android-maven-plugin.version>
+		<android-maven-plugin.version>3.4.0</android-maven-plugin.version>
 		<android.sdk.platform>16</android.sdk.platform>
 		<sign.alias>android</sign.alias>
 	</properties>
@@ -194,6 +194,7 @@
 								<debug>false</debug>
 							</sign>
 							<zipalign>
+ 						    	<skip>false</skip>
 								<verbose>true</verbose>
 								<inputApk>${project.build.directory}/${project.artifactId}.apk</inputApk>
 								<outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk</outputApk>

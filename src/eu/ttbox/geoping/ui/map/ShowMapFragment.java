@@ -297,6 +297,13 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         public void onSelectPerson(Person person) {
             geoTrackOverlayAnimateToLastKnowPosition(person.phone);
         }
+
+        @Override
+        public void onNoPerson(SelectGeoTrackDialog dialog) {  
+            // Open the Creation Person
+            Intent intent = Intents.activityMain(getActivity());
+            startActivity(intent);
+        }
     };
 
     

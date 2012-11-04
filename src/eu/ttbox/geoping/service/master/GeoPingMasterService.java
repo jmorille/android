@@ -31,6 +31,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.telephony.SmsManager;
 import android.util.Log;
+import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.SmsTrakerActivity;
 import eu.ttbox.geoping.core.AppConstants;
@@ -274,7 +275,7 @@ public class GeoPingMasterService extends IntentService {
         PendingIntent pendingIntent = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             pendingIntent = PendingIntent.getActivities(this, 0, //
-                    new Intent[] { new Intent(this, SmsTrakerActivity.class), Intents.showOnMap(this, geoTrackData, values) }, //
+                    new Intent[] { new Intent(this, MainActivity.class), Intents.showOnMap(this, geoTrackData, values) }, //
                     PendingIntent.FLAG_CANCEL_CURRENT);
         } else {
             pendingIntent = PendingIntent.getActivity(this, 0, //

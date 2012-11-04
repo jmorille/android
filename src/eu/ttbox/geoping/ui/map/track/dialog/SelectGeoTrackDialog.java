@@ -52,6 +52,7 @@ public class SelectGeoTrackDialog extends AlertDialog {
      */
     public interface OnSelectPersonListener extends OnActivatedPersonListener {
         void onSelectPerson(Person person);
+        void onNoPerson(SelectGeoTrackDialog dialog );
     }
 
     public SelectGeoTrackDialog(Context context, LoaderManager loaderManager, OnSelectPersonListener callBack, HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser) {
@@ -102,8 +103,9 @@ public class SelectGeoTrackDialog extends AlertDialog {
     // Service
     // ===========================================================
 
-    private void onSelectPerson() {
-
+    private void onNoPerson() {
+        dismiss();
+        mCallBack.onNoPerson( this );
     }
 
     // ===========================================================
@@ -128,7 +130,11 @@ public class SelectGeoTrackDialog extends AlertDialog {
             int resultCount = cursor.getCount();
             Log.d(TAG, String.format("onLoadFinished with %s results", resultCount));
             listAdapter.swapCursor(cursor);
-        }
+            // check
+            if (resultCount<1) {
+                onNoPerson() ;
+            }
+         }
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {

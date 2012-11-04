@@ -91,8 +91,7 @@
  
     <!-- GeoTrack -->
     <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
-  
-    
+   
     
     <!-- Person model -->
     <string name="person_name">Nom</string>
