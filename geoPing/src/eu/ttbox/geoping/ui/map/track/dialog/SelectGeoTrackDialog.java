@@ -28,8 +28,6 @@ import eu.ttbox.geoping.ui.map.track.dialog.GeoTrackSelectPersonListAdapter.OnAc
  * 
  * @see http
  *      ://developer.android.com/resources/tutorials/views/hello-gridview.html
- * @author jmorille
- * 
  */
 public class SelectGeoTrackDialog extends AlertDialog {
 

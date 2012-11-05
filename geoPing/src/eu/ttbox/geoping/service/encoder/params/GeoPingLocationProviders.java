@@ -2,8 +2,6 @@ package eu.ttbox.geoping.service.encoder.params;
 
 import java.util.BitSet;
 
-import eu.ttbox.geoping.service.encoder.params.BitSetHelper;
-
 public class GeoPingLocationProviders {
 
     public enum ProviderEnum {

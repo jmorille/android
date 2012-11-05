@@ -41,9 +41,6 @@ import eu.ttbox.geoping.R;
 
 /**
  * {link https://github.com/erikwt/ParandroidMessaging}
- * 
- * @author jmorille
- * 
  */
 public abstract class MessageEncryptionFactory {
 

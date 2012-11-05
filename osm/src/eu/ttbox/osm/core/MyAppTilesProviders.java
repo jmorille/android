@@ -25,7 +25,6 @@ import android.content.Context;
  *      http://wiki.openstreetmap.org/wiki/Tile_Disk_Usage
  * 
  *      Somes Tiles @see http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
- * @author jmorille
  * 
  */
 public class MyAppTilesProviders {

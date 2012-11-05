@@ -17,8 +17,6 @@ import android.util.Log;
 
 /**
  * @see Woking With Contact {link http://www.higherpass.com/Android/Tutorials/Working-With-Android-Contacts/}
- * @author a000cqp
- *
  */
 public class ContactHelper {
 

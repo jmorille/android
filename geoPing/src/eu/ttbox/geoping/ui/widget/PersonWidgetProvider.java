@@ -21,9 +21,6 @@ import eu.ttbox.geoping.domain.PersonProvider;
 
 /**
  * {link http://www.vogella.com/articles/AndroidWidgets/article.html}
- * 
- * @author jmorille
- * 
  */
 @TargetApi(14)
 public class PersonWidgetProvider extends AppWidgetProvider {

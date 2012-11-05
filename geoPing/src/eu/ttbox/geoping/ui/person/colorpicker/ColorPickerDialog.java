@@ -21,8 +21,6 @@ import eu.ttbox.geoping.R;
  * {link http://www.yougli.net/android/a-photoshop-like-color-picker-for-your-
  * android-application/}
  * 
- * @author jmorille
- * 
  */
 public class ColorPickerDialog extends Dialog {
 

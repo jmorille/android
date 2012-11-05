@@ -17,6 +17,7 @@
 		<google.maps.version>16_r2</google.maps.version>
 		<!-- Google Api -->
 		<gcm.version>3</gcm.version>
+        <admob.version>6.2.1-r8</admob.version>
 		<!-- Osm -->
 		<osmdroid.version>3.0.8</osmdroid.version>
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
@@ -44,12 +45,7 @@
 			<version>${android.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>com.google.android.maps</groupId> -->
-		<!-- <artifactId>maps</artifactId> -->
-		<!-- <version>${google.maps.version}</version> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
+	 
 
 		<!-- Compatibility -->
 		<dependency>
@@ -70,28 +66,17 @@
 			<artifactId>gcm-client</artifactId>
 			<version>${gcm.version}</version>
 		</dependency>
-
-		<!-- Open Street Map -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.osmdroid</groupId> -->
-<!-- 			<artifactId>osmdroid-android</artifactId> -->
-<!-- 			<version>${osmdroid.version}</version> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.osmdroid</groupId> -->
-<!-- 			<artifactId>osmdroid-third-party</artifactId> -->
-<!-- 			<version>${osmdroid.version}</version> -->
-<!-- 		</dependency> -->
- 
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.slf4j</groupId> -->
-<!-- 			<artifactId>slf4j-android</artifactId> -->
-<!-- 			<version>${slf4j-android.version}</version> -->
-<!-- 		</dependency> -->
-
-
+  
+		<dependency>
+			<groupId>com.google.android.admob</groupId>
+			<artifactId>admob</artifactId>
+			<version>${admob.version}</version>
+		</dependency>
+  
 	</dependencies>
-	<!-- <modules> <module>tests</module> </modules> -->
+	
+	<!-- <modules> <module>geoPing-tests</module> </modules> -->
+	
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<sourceDirectory>src</sourceDirectory>

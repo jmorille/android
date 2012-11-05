@@ -18,5 +18,7 @@
     <!-- Job 77:1C:8F:04:AA:5A:94:B9:E6:54:AC:E2:15:B9:1E:35 -->
 <!--     <string name="map_apiKey">0NYLmB1F2IOBrANcWAodyGo86CktsPoN6FgKSzw</string> -->
   
+    <!-- Backup Api Key For eu.ttbox.geoping -->
+ 	<string name="admob_key">a14dba5ee6f0b5f</string>
 
 </resources>

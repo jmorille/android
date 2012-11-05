@@ -1,17 +1,15 @@
 package eu.ttbox.geoping;
 
-import com.google.android.gcm.GCMRegistrar;
-
 import android.os.Bundle;
 import android.util.Log;
+
+import com.google.android.gcm.GCMRegistrar;
+
 import eu.ttbox.geoping.service.GCMIntentService;
 import eu.ttbox.geoping.ui.AbstractSmsTrackerActivity;
 
 /**
  * TODO {link http://www.e-nature.ch/tech/?tag=android-support-v4}
- * 
- * @author jmorille
- * 
  */
 public class SmsTrakerActivity extends AbstractSmsTrackerActivity {
 

@@ -12,8 +12,6 @@ import eu.ttbox.osm.R;
 
 /**
  * All Setting @see http://developer.android.com/reference/android/provider/Settings.html
- * @author jmorille
- *
  */
 public class GpsActivateAskDialog extends AlertDialog implements OnClickListener {
  

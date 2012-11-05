@@ -1,10 +1,5 @@
 package eu.ttbox.geoping;
 
-import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
-import eu.ttbox.geoping.ui.map.ShowMapFragment;
-import eu.ttbox.geoping.ui.pairing.PairingListFragment;
-import eu.ttbox.geoping.ui.person.PersonListFragment;
-import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
+import eu.ttbox.geoping.ui.pairing.PairingListFragment;
+import eu.ttbox.geoping.ui.person.PersonListFragment;
+import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class MainActivity extends FragmentActivity {
 

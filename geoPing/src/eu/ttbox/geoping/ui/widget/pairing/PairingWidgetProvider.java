@@ -22,9 +22,6 @@ import eu.ttbox.geoping.domain.PairingProvider;
 
 /**
  * {link http://www.vogella.com/articles/AndroidWidgets/article.html}
- * 
- * @author jmorille
- * 
  */
 @TargetApi(14)
 public class PairingWidgetProvider extends AppWidgetProvider {
@@ -92,9 +89,6 @@ public class PairingWidgetProvider extends AppWidgetProvider {
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         for (int widgetId : allWidgetIds) {
              updateAppWidget(  context,   appWidgetManager,   widgetId);
-             //[jmorille@X5 ~/javadev/app/android-sdk-macosx/sources/android-16]$
-             // edit ./android/appwidget/AppWidgetManager.java 
-             // edit ./com/android/server/AppWidgetServiceImpl.java
 //             Bundle options =  appWidgetManager.getAppWidgetOptions(widgetId);
 //             appWidgetManager.updateAppWidgetOptions(widgetId, options);
 //             appWidgetManager.getAppWidgetInfo(appWidgetId)

@@ -1,14 +1,5 @@
 package eu.ttbox.geoping.service.master;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-
 import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.Notification;
@@ -33,7 +24,6 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.SmsTrakerActivity;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;

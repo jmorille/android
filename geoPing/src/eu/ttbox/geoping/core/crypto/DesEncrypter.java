@@ -14,9 +14,6 @@ import android.util.Log;
 
 /**
  * {link http://exampledepot.com/egs/javax.crypto/DesString.html}
- * 
- * @author jmorille
- * 
  */
 public class DesEncrypter {
 

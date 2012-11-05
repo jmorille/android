@@ -3,10 +3,7 @@ package eu.ttbox.geoping.service.encoder.params;
 /**
  * {link
  * http://javasourcecode.org/html/open-source/jdk/jdk-6u23/java.lang/Long.java
- * .html}
- * 
- * @author jmorille
- * 
+ * .html}  
  */
 public class LongEncoded {
 

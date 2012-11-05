@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.os.Bundle;
-import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 
 public enum SmsMessageLocEnum {

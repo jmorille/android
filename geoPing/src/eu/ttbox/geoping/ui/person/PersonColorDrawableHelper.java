@@ -1,15 +1,11 @@
 package eu.ttbox.geoping.ui.person;
 
-import android.graphics.AvoidXfermode.Mode;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ComposeShader;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Shader;
-import android.graphics.Xfermode;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -40,8 +36,7 @@ public class PersonColorDrawableHelper {
     
     /**
      * {link http://www.betaful.com/2012/01/programmatic-shapes-in-android/}
-     * 
-     * @author jmorille
+     *  
      * 
      */
     public static class BorderShapeDrawable extends ShapeDrawable {

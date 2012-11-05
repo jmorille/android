@@ -12,7 +12,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.NotifToasts;
 

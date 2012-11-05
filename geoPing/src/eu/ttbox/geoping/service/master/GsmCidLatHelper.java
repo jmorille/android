@@ -12,7 +12,6 @@ import java.net.URLConnection;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
 import android.util.Log;
 
 public class GsmCidLatHelper {

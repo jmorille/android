@@ -15,8 +15,6 @@ import eu.ttbox.geoping.domain.person.PersonHelper;
 
 /**
  * {link http://www.java2s.com/Code/Android/UI/WeatherListWidget.htm}
- * @author jmorille
- *
  */
 @TargetApi(11)
 public class PersonWidgetService extends RemoteViewsService {
