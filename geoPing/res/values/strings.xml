@@ -112,6 +112,6 @@
     <!-- Help -->
     <string name="person_help">Liste des personnes auquelles vous pouvez demander un GeoPing.\n\nLa fonction d\'appariement permet de demander à l\'application Geoping distante quels seront vos droits de demande de GeoPing</string>
     <string name="pairing_help">Liste des personnes auquelles vous accepter (ou pas) d\'envoyer votre GeoPing (Votre position géographique obtenu grace aux GPS de votre Android)</string>
-    <string name="smslog_help">Liste des messages Envoyé ou recu par cette application</string>
+    <string name="smslog_help">Liste des messages envoyés ou recu par l\'application GeoPing.</string>
     
 </resources>

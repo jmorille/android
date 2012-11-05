@@ -53,6 +53,8 @@ public class SmsLogListFragment extends Fragment {
 
         // Bindings
         listView = (ListView) v.findViewById(android.R.id.list);
+        listView.setEmptyView(v.findViewById(android.R.id.empty));
+        
         // init
         listAdapter = new SmsLogListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         listView.setAdapter(listAdapter);
