@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.ttbox.android.osm</groupId>
-	<artifactId>osmlib</artifactId>
+	<artifactId>osm-lib</artifactId>
 	<version>0.0.9</version>
 	<packaging>apklib</packaging>
 
