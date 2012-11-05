@@ -87,6 +87,9 @@
         <activity android:name=".ui.pairing.PairingEditActivity">
         </activity>
         
+        <!-- Admob -->
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" 
+            android:name="com.google.ads.AdActivity"/>
         
         <!-- Receiver -->
         <receiver android:name=".service.slave.receiver.SMSReceiver">

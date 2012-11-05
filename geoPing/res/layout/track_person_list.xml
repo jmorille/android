@@ -28,4 +28,10 @@
         android:layout_height="50dp"
         android:text="@string/add_track_person" />
 
+    <fragment
+        android:id="@+id/fragment_admob"
+        android:name="eu.ttbox.geoping.ui.admob.AdmobFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>
