@@ -11,6 +11,21 @@ mvn install:install-file -DgroupId=org.mapsforge -DartifactId=mapsforge-map -Dve
 Quick Contact badge
 http://mobile.tutsplus.com/tutorials/android/android-sdk_contact-badge/
 
+### The fly-in app menu 
+##################
+Présentation
+* https://speakerdeck.com/cyrilmottier/the-fly-in-app-menu-for-designers-and-developers
+
+Librairies
+* https://github.com/eddieringle/android-undergarment
+* https://github.com/jfeinstein10/SlidingMenu
+** SlidingMenu Demos : https://play.google.com/store/apps/details?id=com.slidingmenu.example
+* https://github.com/SimonVT/android-menudrawer
+
+# Install SlidingMenu (ex http://kayrnt.wordpress.com/2012/11/02/520/)
+1. Downlaod http://actionbarsherlock.com/
+2. 
+
 ### Icon tools
 ##################
 https://code.google.com/p/android-ui-utils/
