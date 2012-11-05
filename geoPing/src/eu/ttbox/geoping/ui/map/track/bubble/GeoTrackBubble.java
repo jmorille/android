@@ -12,11 +12,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.ExternalIntents;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
-import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
+import eu.ttbox.osm.core.ExternalIntents;
 
 public class GeoTrackBubble extends FrameLayout {
 

@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.map.mylocation.sensor;
+package eu.ttbox.osm.ui.map.mylocation.sensor;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import eu.ttbox.geoping.ui.map.core.GeoLocHelper;
+import eu.ttbox.osm.core.GeoLocHelper;
 
 public class MyLocationListenerProxy implements LocationListener {
 

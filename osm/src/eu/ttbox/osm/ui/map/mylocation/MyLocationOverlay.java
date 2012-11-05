@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.map.mylocation;
+package eu.ttbox.osm.ui.map.mylocation;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -50,11 +50,11 @@ import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
-import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.AppConstants;
-import eu.ttbox.geoping.ui.map.mylocation.bubble.MyLocationBubble;
-import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
-import eu.ttbox.geoping.ui.map.mylocation.sensor.OrientationSensorEventListenerProxy;
+import eu.ttbox.osm.R;
+import eu.ttbox.osm.core.AppConstants;
+import eu.ttbox.osm.ui.map.mylocation.bubble.MyLocationBubble;
+import eu.ttbox.osm.ui.map.mylocation.sensor.MyLocationListenerProxy;
+import eu.ttbox.osm.ui.map.mylocation.sensor.OrientationSensorEventListenerProxy;
 
 public class MyLocationOverlay extends Overlay implements SensorEventListener, LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
 

@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.core;
+package eu.ttbox.osm.core;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;

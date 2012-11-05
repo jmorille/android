@@ -83,15 +83,15 @@
     <string name="prefs_count_laught">Nombre de lancement</string>
     <string name="prefs_count_laught_summary">Nombre d\'utilisation de l\'application</string>
     
-    <!-- Map -->
-    <string name="ask_activate_gps">Voulez-vous activer le GPS ?</string>
-    
+
     <!-- Dialog -->
     <string name="color_picker">Sélectionner une couleur</string>
  
     <!-- GeoTrack -->
     <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
-   
+       <!-- Map My Location Dialog -->
+    <string name="accuracy_separator">+/-</string> <!-- +/- &#8723; -->
+    <string name="altitude">Altitude</string>
     
     <!-- Person model -->
     <string name="person_name">Nom</string>

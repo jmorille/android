@@ -37,11 +37,11 @@ import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
-import eu.ttbox.geoping.ui.map.core.MyAppTilesProviders;
-import eu.ttbox.geoping.ui.map.mylocation.MyLocationOverlay;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
+import eu.ttbox.osm.core.MyAppTilesProviders;
+import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 
 /**
  * @see http://mobiforge.com/developing/story/using-google-maps-android

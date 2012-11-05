@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.map.mylocation.sensor;
+package eu.ttbox.osm.ui.map.mylocation.sensor;
 
 import java.util.Date;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.osmdroid.util.GeoPoint;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
-import eu.ttbox.geoping.ui.map.core.GeoLocHelper;
+import eu.ttbox.osm.core.GeoLocHelper;
 
 public class LocationUtils {
 

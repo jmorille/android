@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.map.core;
+package eu.ttbox.osm.core;
 
 import org.osmdroid.util.GeoPoint;
 

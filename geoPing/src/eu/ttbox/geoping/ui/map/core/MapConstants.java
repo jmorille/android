@@ -2,7 +2,7 @@ package eu.ttbox.geoping.ui.map.core;
 
 public class MapConstants {
 
-    public static final String PREFS_NAME = "eu.ttbox.velib.ui.map.prefs";
+    public static final String PREFS_NAME = "eu.ttbox.geoping.ui.map.prefs";
 
     public static final String PREFS_TILE_SOURCE = "tilesource";
     public static final String PREFS_SCROLL_X = "scrollX";

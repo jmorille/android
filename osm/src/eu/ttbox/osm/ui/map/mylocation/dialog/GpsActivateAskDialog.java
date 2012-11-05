@@ -1,12 +1,13 @@
-package eu.ttbox.geoping.ui.map.mylocation.dialog;
+package eu.ttbox.osm.ui.map.mylocation.dialog;
 
-import android.R;
+ 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.provider.Settings;
+import eu.ttbox.osm.R;
  
 
 /**
@@ -25,12 +26,12 @@ public class GpsActivateAskDialog extends AlertDialog implements OnClickListener
 		super(context, theme); 
 		// Init
 		Context themeContext = getContext();
-		setTitle(eu.ttbox.geoping.R.string.ask_activate_gps);
+		setTitle(R.string.ask_activate_gps);
 		setCancelable(true);
 		setIcon(0);
 		setCanceledOnTouchOutside(true);
-		setButton(BUTTON_POSITIVE, themeContext.getText(R.string.yes), this);
-		setButton(BUTTON_NEGATIVE, themeContext.getText(R.string.no), (OnClickListener) null);
+		setButton(BUTTON_POSITIVE, themeContext.getText(android.R.string.yes), this);
+		setButton(BUTTON_NEGATIVE, themeContext.getText(android.R.string.no), (OnClickListener) null);
  
 	}
 	

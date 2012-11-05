@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.map.mylocation.sensor;
+package eu.ttbox.osm.ui.map.mylocation.sensor;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

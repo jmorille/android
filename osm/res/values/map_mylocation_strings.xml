@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="osmLib_name">OSM Lib</string>
+    
+     <!-- Dialog -->
+    <string name="ask_activate_gps">Voulez-vous activer le GPS ?</string>
+    
+    
     <!-- Map My Location Dialog -->
     <string name="accuracy_separator">+/-</string> <!-- +/- &#8723; -->
     <string name="altitude">Altitude</string>

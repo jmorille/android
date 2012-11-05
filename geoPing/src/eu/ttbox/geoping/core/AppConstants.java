@@ -30,7 +30,7 @@ public class AppConstants {
     public static final String PREFS_LOCAL_SAVE = "localSave";
     
     // Map
-    public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = "myLocationDisplayLatlng";
+    public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = eu.ttbox.osm.core.AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC;
     public static final String PREFS_GEOPOINT_GEOCODING_AUTO = "geoPointGeocodingAuto";
     
     

@@ -58,7 +58,7 @@ import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.slave.receiver.AuthorizePhoneTypeEnum;
-import eu.ttbox.geoping.ui.map.mylocation.sensor.MyLocationListenerProxy;
+import eu.ttbox.osm.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
 public class GeoPingSlaveService extends WorkerService {
 

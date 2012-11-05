@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.map.mylocation;
+package eu.ttbox.osm.ui.map.mylocation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

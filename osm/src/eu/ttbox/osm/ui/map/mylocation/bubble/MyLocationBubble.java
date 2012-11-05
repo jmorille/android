@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.map.mylocation.bubble;
+package eu.ttbox.osm.ui.map.mylocation.bubble;
 
 import java.util.Locale;
 
@@ -12,8 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.ExternalIntents;
+import eu.ttbox.osm.R;
+import eu.ttbox.osm.core.ExternalIntents;
 
 public class MyLocationBubble extends FrameLayout {
 
