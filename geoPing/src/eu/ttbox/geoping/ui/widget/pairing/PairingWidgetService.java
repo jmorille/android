@@ -11,6 +11,7 @@ import android.widget.RemoteViewsService;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PairingProvider;
+import eu.ttbox.geoping.domain.WidgetProvider;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
  
 @TargetApi(11)
@@ -96,6 +97,7 @@ public class PairingWidgetService extends RemoteViewsService {
             if (mCursor != null) {
                 mCursor.close();
             }
+            // TODO WidgetProvider.Constants.CONTENT_URI_PAIRING
             mCursor = mContext.getContentResolver().query(PairingProvider.Constants.CONTENT_URI, null, null,
                     null, null);
             helper.initWrapper(mCursor);

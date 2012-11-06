@@ -11,6 +11,7 @@ import android.widget.RemoteViewsService;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
+import eu.ttbox.geoping.domain.WidgetProvider;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 
 /**
@@ -100,6 +101,7 @@ public class PersonWidgetService extends RemoteViewsService {
             if (mCursor != null) {
                 mCursor.close();
             }
+            // TODO WidgetProvider.Constants.CONTENT_URI_PERSON
             mCursor = mContext.getContentResolver().query(PersonProvider.Constants.CONTENT_URI, null, null,
                     null, null);
             helper.initWrapper(mCursor);

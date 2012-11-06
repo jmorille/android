@@ -141,6 +141,9 @@ public class PersonWidgetProvider extends AppWidgetProvider {
 
         @Override
         public void onChange(boolean selfChange) {
+        	
+        	Log.w(TAG, "*******************************************");
+        	Log.w(TAG, "*** PersonWidget onChange DataProvider Observer");
             // The data has changed, so notify the widget that the collection
             // view needs to be updated.
             // In response, the factory's onDataSetChanged() will be called

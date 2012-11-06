@@ -124,7 +124,8 @@
             </intent-filter> 
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_person_info"/>
         </receiver>
-        <service android:exported="false" android:name=".ui.widget.PersonWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service android:exported="false" android:name=".ui.widget.PersonWidgetService" 
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <!-- Widget Pairing -->
           <receiver android:label="@string/sms_action_geoping_response" android:name=".ui.widget.pairing.PairingWidgetProvider" android:permission="eu.ttbox.geoping.PAIRING_READ">
@@ -169,18 +170,33 @@
 		  </intent-filter>
 		</receiver>        
 		<service android:name=".service.GCMIntentService"/>
-		        
-        
-<!--         android:readPermission="eu.ttbox.geoping.PERSON_READ"  -->
-<!-- android:readPermission="eu.ttbox.geoping.PAIRING_READ" -->
-        <provider android:authorities="eu.ttbox.geoping.PersonProvider" android:name=".domain.PersonProvider" android:writePermission="eu.ttbox.geoping.PERSON_WRITE"/>
-        <provider android:authorities="eu.ttbox.geoping.GeoTrackerProvider" android:name=".domain.GeoTrackerProvider" android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ" android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE"/>
-        <provider android:authorities="eu.ttbox.geoping.SmsLogProvider" android:name=".domain.SmsLogProvider" android:readPermission="eu.ttbox.geoping.SMSLOG_READ" android:writePermission="eu.ttbox.geoping.SMSLOG_WRITE"/>
-        <provider android:authorities="eu.ttbox.geoping.PairingProvider" android:name=".domain.PairingProvider" android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
-        <provider android:authorities="eu.ttbox.geoping.MessageProvider" android:name=".domain.MessageProvider" android:readPermission="eu.ttbox.geoping.MESSAGE_READ" android:writePermission="eu.ttbox.geoping.MESSAGE_WRITE"/>
-        
-		<uses-library android:name="com.google.android.maps" android:required="true"/>
+		
+		
+		
+<!--        Permission Denial: reading eu.ttbox.geoping.domain.WidgetProvider 
+uri content://eu.ttbox.geoping.WidgetProvider/pairing from pid=2264, uid=10040 requires eu.ttbox.geoping.PERSON_READ
+		  android:readPermission="eu.ttbox.geoping.PERSON_READ"
+		 android:readPermission="eu.ttbox.geoping.PAIRING_READ" 
+		 
+		  -->
 
+        <provider android:authorities="eu.ttbox.geoping.WidgetProvider"     android:name=".domain.WidgetProvider"    
+             android:writePermission="eu.ttbox.geoping.WIDGET_WRITE" >
+  		      <grant-uri-permission android:path="content://eu.ttbox.geoping.PersonProvider" />
+	     	  <grant-uri-permission android:path="content://eu.ttbox.geoping.PairingProvider" />
+		 </provider> 
+
+        <provider android:authorities="eu.ttbox.geoping.PersonProvider"     android:name=".domain.PersonProvider"     
+                android:writePermission="eu.ttbox.geoping.PERSON_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.PairingProvider"    android:name=".domain.PairingProvider"    
+                android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
+        
+        <provider android:authorities="eu.ttbox.geoping.GeoTrackerProvider" android:name=".domain.GeoTrackerProvider" android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ" android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.SmsLogProvider"     android:name=".domain.SmsLogProvider"     android:readPermission="eu.ttbox.geoping.SMSLOG_READ"    android:writePermission="eu.ttbox.geoping.SMSLOG_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.MessageProvider"    android:name=".domain.MessageProvider"    android:readPermission="eu.ttbox.geoping.MESSAGE_READ"   android:writePermission="eu.ttbox.geoping.MESSAGE_WRITE"/>
+        <!--  
+		<uses-library android:name="com.google.android.maps" android:required="true"/>
+		-->
 		
 </application>
 
