@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -41,6 +42,7 @@ import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
 import eu.ttbox.osm.tiles.MyAppTilesProviders;
+import eu.ttbox.osm.ui.map.MapViewFactory;
 import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 
 /**
@@ -95,18 +97,20 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         // Config
         geocodingAuto = sharedPreferences.getBoolean(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO, true);
 
-        // Map
-        mapView = (MapView) v.findViewById(R.id.mapview);
-        mapView.setMultiTouchControls(true);
-        mapView.setHapticFeedbackEnabled(true);
+        // Osm
+        // ----------
+        this.mResourceProxy = new DefaultResourceProxyImpl(getActivity());
+        // Maps
+        ITileSource tileSource = getPrefITileSource();
+        mapView = MapViewFactory.createOsmMapView(getActivity(), mResourceProxy, tileSource); 
+        ViewGroup mapViewContainer = (ViewGroup)v.findViewById(R.id.mapViewContainer);
+        mapViewContainer.addView((View) mapView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         // Map Controler
         mapController = mapView.getController();
         // mapController.setZoom(17); // Zoon 1 is world view
-        this.mResourceProxy = new DefaultResourceProxyImpl(getActivity());
-        // Tiles
-        MyAppTilesProviders.initTilesSource(getActivity());
-
+         
         // Overlay
+        // ----------
         this.myLocation = new MyLocationOverlay(getActivity(), this.mapView);
         mapView.getOverlays().add(myLocation);
         // Service
@@ -128,6 +132,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         }
     }
 
+
     @Override
     public void onResume() {
         if (Log.isLoggable(TAG, Log.INFO)) {
@@ -137,12 +142,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         super.onResume();
 
         // read preference
-        final String tileSourceName = privateSharedPreferences.getString(AppConstants.PREFS_KEY_TILE_SOURCE, TileSourceFactory.DEFAULT_TILE_SOURCE.name());
-        try {
-            final ITileSource tileSource = TileSourceFactory.getTileSource(tileSourceName);
-            mapView.setTileSource(tileSource);
-        } catch (final IllegalArgumentException ignore) {
-        }
+        ITileSource tileSource = getPrefITileSource();
+        mapView.setTileSource(tileSource);
+
         // Zoon 1 is world view
         mapView.getController().setZoom(privateSharedPreferences.getInt(MapConstants.PREFS_ZOOM_LEVEL, 17));
         // Center
@@ -175,6 +177,17 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         }
     }
 
+
+    private ITileSource getPrefITileSource() {
+        final String tileSourceName = privateSharedPreferences.getString(MapConstants.PREFS_TILE_SOURCE, TileSourceFactory.DEFAULT_TILE_SOURCE.name());
+        ITileSource tileSource = null;
+        try {
+            tileSource = TileSourceFactory.getTileSource(tileSourceName); 
+        } catch (final IllegalArgumentException ignore) {
+        }
+        return tileSource;
+    }
+    
     @Override
     public void onPause() {
         if (Log.isLoggable(TAG, Log.INFO)) {
@@ -232,9 +245,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     }
 
     public void setMapTileSource(ITileSource tileSource) {
-          mapView.setTileSource(tileSource);
+        mapView.setTileSource(tileSource);
     }
-    
+
     public ArrayList<ITileSource> getMapTileSources() {
         return TileSourceFactory.getTileSources();
     }
@@ -242,9 +255,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     public String getMapTileSourceName(ITileSource tileSource) {
         return tileSource.localizedName(mResourceProxy);
     }
-    
+
     public void centerOnMyPosition() {
-        myLocation.enableFollowLocation(); 
+        myLocation.enableFollowLocation();
         myLocation.runOnFirstFix(new Runnable() {
 
             @Override
@@ -255,7 +268,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         });
     }
 
-    public void centerOnPersonPhone(final String phone,final int latE6 , final int lngE6) {
+    public void centerOnPersonPhone(final String phone, final int latE6, final int lngE6) {
         if (myLocation != null) {
             myLocation.disableFollowLocation();
         }
@@ -271,6 +284,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
             }
         });
     }
+
     // ===========================================================
     // Select Person Dialog
     // ===========================================================
@@ -280,7 +294,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         SelectGeoTrackDialog personListDialod = new SelectGeoTrackDialog(getActivity(), loaderManager, onSelectPersonListener, geoTrackOverlayByUser);
         personListDialod.show();
     }
-    
+
     private OnSelectPersonListener onSelectPersonListener = new OnSelectPersonListener() {
 
         @Override
@@ -299,53 +313,59 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         }
 
         @Override
-        public void onNoPerson(SelectGeoTrackDialog dialog) {  
+        public void onNoPerson(SelectGeoTrackDialog dialog) {
             // Open the Creation Person
             Intent intent = Intents.activityMain(getActivity());
             startActivity(intent);
         }
     };
 
-    
     // ===========================================================
     // Handle Intent
     // ===========================================================
 
-//    protected void onNewIntent(Intent intent) {
-//        handleIntent(intent);
-//    }
-//
-//    private void handleIntent(Intent intent) {
-//        if (intent == null) {
-//            return;
-//        }
-//        String action = intent.getAction();
-//        Log.d(TAG, String.format("Handle Intent for action %s : %s", action, intent));
-//        if (Intent.ACTION_VIEW.equals(action)) {
-//            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-//            int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
-//            int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
-//            Log.w(TAG, String.format("Show on Map Phone [%s] (%s, %s) ", phone, latE6, lngE6));
-//            if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
-//               centerOnPersonPhone(phone, latE6, lngE6);
-//             }
-//        }
-//    }
+    // protected void onNewIntent(Intent intent) {
+    // handleIntent(intent);
+    // }
+    //
+    // private void handleIntent(Intent intent) {
+    // if (intent == null) {
+    // return;
+    // }
+    // String action = intent.getAction();
+    // Log.d(TAG, String.format("Handle Intent for action %s : %s", action,
+    // intent));
+    // if (Intent.ACTION_VIEW.equals(action)) {
+    // String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+    // int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6,
+    // Integer.MIN_VALUE);
+    // int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6,
+    // Integer.MIN_VALUE);
+    // Log.w(TAG, String.format("Show on Map Phone [%s] (%s, %s) ", phone,
+    // latE6, lngE6));
+    // if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
+    // centerOnPersonPhone(phone, latE6, lngE6);
+    // }
+    // }
+    // }
 
-//    private void annimateToPersonPhone(final String phone, final int latE6, final int lngE6) {
-//        mapController.animateTo(latE6, lngE6, AnimationType.HALFCOSINUSALDECELERATING);
-//        executor.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                // Animate to
-//                if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
-//                    mapController.animateTo(latE6, lngE6, AnimationType.HALFCOSINUSALDECELERATING);
-//                }
-//                // Display GeoPoints for person
-//                GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
-//            }
-//        });
-//    }
+    // private void annimateToPersonPhone(final String phone, final int latE6,
+    // final int lngE6) {
+    // mapController.animateTo(latE6, lngE6,
+    // AnimationType.HALFCOSINUSALDECELERATING);
+    // executor.execute(new Runnable() {
+    // @Override
+    // public void run() {
+    // // Animate to
+    // if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
+    // mapController.animateTo(latE6, lngE6,
+    // AnimationType.HALFCOSINUSALDECELERATING);
+    // }
+    // // Display GeoPoints for person
+    // GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
+    // }
+    // });
+    // }
 
     // ===========================================================
     // GeoTrack Overlay

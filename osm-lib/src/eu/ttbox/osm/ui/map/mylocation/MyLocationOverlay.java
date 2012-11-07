@@ -13,9 +13,10 @@ import microsoft.mappoint.TileSystem;
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.api.IMapView;
 import org.osmdroid.tileprovider.modules.ConfigurablePriorityThreadFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.Overlay;
@@ -69,8 +70,8 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     static final Object[] sDataLock = new Object[0];
 
     private Context context;
-    protected final MapView mMapView;
-    private final MapController mMapController;
+    protected final IMapView mMapView;
+    private final IMapController mMapController;
     private final Display mDisplay;
 
     // Sensor
@@ -147,11 +148,11 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // Constructors
     // ===========================================================
 
-    public MyLocationOverlay(final Context ctx, final MapView mapView) {
+    public MyLocationOverlay(final Context ctx, final IMapView mapView) {
         this(ctx, mapView, new DefaultResourceProxyImpl(ctx));
     }
 
-    public MyLocationOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy) {
+    public MyLocationOverlay(final Context ctx, final IMapView mapView, final ResourceProxy pResourceProxy) {
         super(pResourceProxy);
         this.context = ctx;
         this.mMapView = mapView;
@@ -276,7 +277,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     public void onSensorChanged(final SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
             if (event.values != null) {
-                mMapView.postInvalidate();
+               mapViewInvalidate();
             }
         }
     }
@@ -289,6 +290,22 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // GPS Sensor
     // ===========================================================
      
+
+    private void mapViewInvalidate() {
+        if (mMapView != null) {
+            if (mMapView instanceof  MapView) {
+                MapView osmMapView = (MapView)mMapView;
+                osmMapView.postInvalidate();
+            } else  if (mMapView instanceof org.osmdroid.google.wrapper.MapView) {
+//                org.osmdroid.google.wrapper.MapView googleMapView = (org.osmdroid.google.wrapper.MapView)mMapView;
+//     TODO           googleMapView.postInvalidate();
+            } else {
+                
+            }
+           
+        }  
+    }
+    
     public void animateToLastFix() {
          mMapController.animateTo(  mLocationListener.getLastFixAsGeoPoint());
     }
@@ -297,9 +314,10 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     public void onLocationChanged(final Location location) {
 
         if (mFollow) {
-            mMapController.animateTo(location.getLatitude(), location.getLongitude());
+//            mMapController.animateTo( location.getLatitude(), location.getLongitude());
+            mMapController.animateTo( mLocationListener.getLastFixAsGeoPoint() );
         } else {
-            mMapView.postInvalidate(); // redraw the my location icon
+            mapViewInvalidate(); // redraw the my location icon
         }
         // Update Bubble
 
@@ -443,11 +461,10 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         }
 
         // Update the screen to see changes take effect
-        if (mMapView != null) {
-            mMapView.postInvalidate();
-        }
+        mapViewInvalidate();
     }
 
+    
     /**
      * Disables "follow" functionality.
      */

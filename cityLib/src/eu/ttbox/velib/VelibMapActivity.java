@@ -6,13 +6,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
+import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.bing.BingMapTileSource;
 import org.osmdroid.tileprovider.util.CloudmadeUtil;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.TilesOverlay;
@@ -42,13 +42,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import eu.ttbox.osm.ui.map.MapViewFactory;
+import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
+import eu.ttbox.osm.ui.map.mylocation.dialog.GpsActivateAskDialog;
 import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.core.Intents;
+import eu.ttbox.velib.map.osm.GoogleMapView;
 import eu.ttbox.velib.map.osm.MapQuestTilesProviders;
+import eu.ttbox.velib.map.osm.tiles.MapTileProviderTTbox;
 import eu.ttbox.velib.map.provider.VeloProviderItemizedOverlay;
 import eu.ttbox.velib.map.station.StationDispoOverlay;
 import eu.ttbox.velib.model.Station;
@@ -60,8 +67,6 @@ import eu.ttbox.velib.service.geo.GeoUtils;
 import eu.ttbox.velib.ui.map.MapConstants;
 import eu.ttbox.velib.ui.map.VelibMapPresenter;
 import eu.ttbox.velib.ui.map.VelibMapView;
-import eu.ttbox.osm.ui.map.mylocation.dialog.GpsActivateAskDialog;
-import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
 import eu.ttbox.velib.ui.search.SearchableVeloActivity;
 
@@ -90,7 +95,7 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
 
     private ResourceProxy mResourceProxy;
 
-    private MapController mapController;
+    private IMapController mapController;
     private MapView mapView;
     private ToggleButton myPositionButton;
 
@@ -163,6 +168,16 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         handleIntent(intent);
     }
 
+    private MapView createMapView(ITileSource tileSource, boolean google, String gooleApiKey) {
+        MapView mapView = null;
+        if (google) {
+            GoogleMapView mapView2 = new GoogleMapView(this, gooleApiKey);
+        } else {
+            mapView = MapViewFactory.createOsmMapView(this, mResourceProxy, tileSource);
+        }
+        return mapView;
+    }
+
     @Override
     public void onCreate(Bundle bundle) {
         if (Log.isLoggable(TAG, Log.INFO)) {
@@ -171,15 +186,23 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         }
         isThreadRunnning.set(true);
         super.onCreate(bundle);
+
+        // Service
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        privateSharedPreferences = getSharedPreferences(MapConstants.PREFS_NAME, MODE_PRIVATE);
+
+        // OSM
         mResourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
 
         // only do static initialisation if needed
         // http://developers.cloudmade.com/projects/web-maps-api/examples
         if (CloudmadeUtil.getCloudmadeKey().length() == 0) {
-            CloudmadeUtil.retrieveCloudmadeKey(getApplicationContext());
+            CloudmadeUtil.retrieveCloudmadeKey(this);
         }
         if (BingMapTileSource.getBingKey().length() == 0) {
-            BingMapTileSource.retrieveBingKey(getApplicationContext());
+            BingMapTileSource.retrieveBingKey(this);
         }
         final BingMapTileSource bmts = new BingMapTileSource(null);
         if (!TileSourceFactory.containsTileSource(bmts.name())) {
@@ -193,12 +216,18 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         // Init handler
         timer = new ScheduledThreadPoolExecutor(1);
 
-        // Init View
-        mapView = (MapView) findViewById(R.id.mapview);
-        mapView.setMultiTouchControls(true);
-        mapView.setHapticFeedbackEnabled(true);
-        // mapView.setBuiltInZoomControls(true);
-
+        // Osm
+        // -------------
+        // Map
+        ITileSource tileSource = getPrefTileSource();
+        Handler tileRequestCompleteHandler = null;
+        MapTileProviderBase aTileProvider = new MapTileProviderTTbox(this, tileSource);
+        String googleApiKey = getResources().getString(R.string.map_apiKey);
+        mapView = createMapView(tileSource, false, googleApiKey); 
+        
+        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.mapViewContainer);
+        mapViewContainer.addView((View) mapView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        // Controler
         mapController = mapView.getController();
         mapController.setZoom(17); // Zoon 1 is world view
 
@@ -222,12 +251,6 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         } else {
             myPositionButton.setVisibility(View.VISIBLE);
         }
-
-        // Service
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-        privateSharedPreferences = getSharedPreferences(MapConstants.PREFS_NAME, MODE_PRIVATE);
 
         // Init My Last position
         // myLocation = new MyLocationDirectionOverlay(getApplicationContext(),
@@ -371,6 +394,17 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         }
     }
 
+    private ITileSource getPrefTileSource() {
+        final String tileSourceName = privateSharedPreferences.getString(MapConstants.PREFS_TILE_SOURCE, TileSourceFactory.DEFAULT_TILE_SOURCE.name());
+        ITileSource tileSource = null;
+        try {
+            tileSource = TileSourceFactory.getTileSource(tileSourceName);
+        } catch (final IllegalArgumentException ignore) {
+            Log.e(TAG, "Error in reading TileSource : " + tileSourceName);
+        }
+        return tileSource;
+    }
+
     @Override
     protected void onPause() {
         if (Log.isLoggable(TAG, Log.INFO)) {
@@ -424,12 +458,8 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         super.onResume();
 
         // read preference
-        final String tileSourceName = privateSharedPreferences.getString(AppConstants.PREFS__KEY_TILE_SOURCE, TileSourceFactory.DEFAULT_TILE_SOURCE.name());
-        try {
-            final ITileSource tileSource = TileSourceFactory.getTileSource(tileSourceName);
-            mapView.setTileSource(tileSource);
-        } catch (final IllegalArgumentException ignore) {
-        }
+        ITileSource tileSource = getPrefTileSource();
+        mapView.setTileSource(tileSource);
 
         if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, false)) {
             this.myLocation.enableMyLocation();
@@ -666,30 +696,37 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         }
         case R.id.menuDownloadTiles: {
             MapTileProviderBase tileProvider = mapView.getTileProvider();
-            ITileSource tileSource =  tileProvider.getTileSource();
+            ITileSource tileSource = tileProvider.getTileSource();
 
             int minZoom = mapView.getZoomLevel(); // tileSource.getMinimumZoomLevel()
             int maxZoom = mapView.getZoomLevel(); // tileSource.getMaximumZoomLevel()
-//            double[] boundyBoxE6 = velibProvider.getBoundyBoxE6();
+            // double[] boundyBoxE6 = velibProvider.getBoundyBoxE6();
             double[] boundyBox = velibProvider.getBoundyBox();
-//            Log.w(TAG, String.format("Velib Map BoundyBox (%s, %s)  (%s, %s)", boundyBox[0],boundyBox[1],boundyBox[2],boundyBox[3]));
-//            Log.w(TAG, String.format("Velib Map boundyBoxE6 (%s, %s)  (%s, %s)", boundyBoxE6[0],boundyBoxE6[1],boundyBoxE6[2],boundyBoxE6[3]));
-            Log.i(TAG, "startService downloadMapTiles for "+ minZoom+ "<=zoom<="+maxZoom);
+            // Log.w(TAG,
+            // String.format("Velib Map BoundyBox (%s, %s)  (%s, %s)",
+            // boundyBox[0],boundyBox[1],boundyBox[2],boundyBox[3]));
+            // Log.w(TAG,
+            // String.format("Velib Map boundyBoxE6 (%s, %s)  (%s, %s)",
+            // boundyBoxE6[0],boundyBoxE6[1],boundyBoxE6[2],boundyBoxE6[3]));
+            Log.i(TAG, "startService downloadMapTiles for " + minZoom + "<=zoom<=" + maxZoom);
             startService(Intents.downloadMapTiles(this, tileSource, minZoom, maxZoom, boundyBox));
-            
-//            OsmDowloader download = new OsmDowloader();
-           
-//            download.download(this, tileSource, minZoom, maxZoom, boundyBox);
-//            double[] boxE6 = velibProvider.getBoundyBoxE6();
-//            double latNorth = Math.max(boxE6[0], boxE6[2]) / AppConstants.E6;
-//            double latSouth = Math.min(boxE6[0], boxE6[2]) / AppConstants.E6;
-//            double lngWest = Math.min(boxE6[1], boxE6[3] ) / AppConstants.E6;
-//            double lngEast =  Math.max(boxE6[1], boxE6[3] ) / AppConstants.E6;
+
+            // OsmDowloader download = new OsmDowloader();
+
+            // download.download(this, tileSource, minZoom, maxZoom, boundyBox);
+            // double[] boxE6 = velibProvider.getBoundyBoxE6();
+            // double latNorth = Math.max(boxE6[0], boxE6[2]) / AppConstants.E6;
+            // double latSouth = Math.min(boxE6[0], boxE6[2]) / AppConstants.E6;
+            // double lngWest = Math.min(boxE6[1], boxE6[3] ) / AppConstants.E6;
+            // double lngEast = Math.max(boxE6[1], boxE6[3] ) / AppConstants.E6;
 
             // double north = 52.4244;double south=52.3388 ;double east= 4.6746
             // ; double west= 4.5949;
-//            Log.d(TAG, String.format("north =  %s /  south= %s / east= %s / west=  %s", latNorth, latSouth, lngEast, lngWest));
-//            download.download(this, tileSource, minZoom, maxZoom, latNorth, lngWest, latSouth, lngEast);
+            // Log.d(TAG,
+            // String.format("north =  %s /  south= %s / east= %s / west=  %s",
+            // latNorth, latSouth, lngEast, lngWest));
+            // download.download(this, tileSource, minZoom, maxZoom, latNorth,
+            // lngWest, latSouth, lngEast);
             return true;
 
         }

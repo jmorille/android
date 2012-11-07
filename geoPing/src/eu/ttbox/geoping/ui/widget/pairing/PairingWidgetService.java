@@ -11,7 +11,6 @@ import android.widget.RemoteViewsService;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PairingProvider;
-import eu.ttbox.geoping.domain.WidgetProvider;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
  
 @TargetApi(11)

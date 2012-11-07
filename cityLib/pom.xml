@@ -40,12 +40,12 @@
 	<dependencies>
 	
     	<!-- Internal -->
-		<dependency>
-			<groupId>eu.ttbox.android.osm</groupId>
-			<artifactId>osm-lib</artifactId>
-			<version>${osm-lib.version}</version>
-			<type>apklib</type>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>eu.ttbox.android.osm</groupId> -->
+<!-- 			<artifactId>osm-lib</artifactId> -->
+<!-- 			<version>${osm-lib.version}</version> -->
+<!-- 			<type>apklib</type> -->
+<!-- 		</dependency> -->
 
 		<!-- Android -->
 		<dependency>
@@ -71,12 +71,12 @@
 <!-- 		</dependency> -->
 
 		<!-- Google Map Api -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.google.android.maps</groupId> -->
-<!-- 			<artifactId>maps</artifactId> -->
-<!-- 			<version>${google.maps.version}</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>com.google.android.maps</groupId>
+			<artifactId>maps</artifactId>
+			<version>${google.maps.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
 		
 
@@ -93,11 +93,11 @@
 		</dependency>
 
 		<!-- Svg Android : http://code.google.com/p/svg-android/ -->
-		<dependency>
-			<groupId>com.larvalabs.svgandroid</groupId>
-			<artifactId>svg-android</artifactId>
-			<version>1.1</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.larvalabs.svgandroid</groupId> -->
+<!-- 			<artifactId>svg-android</artifactId> -->
+<!-- 			<version>1.1</version> -->
+<!-- 		</dependency> -->
 
 		<!-- Open Street Map -->
 <!-- 		<dependency> -->

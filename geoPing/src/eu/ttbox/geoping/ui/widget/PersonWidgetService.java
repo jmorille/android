@@ -11,7 +11,6 @@ import android.widget.RemoteViewsService;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.domain.WidgetProvider;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 
 /**

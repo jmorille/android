@@ -36,7 +36,7 @@ public class AppConstants {
     
     // TODO in prefs
 
-    public static final String PREFS_KEY_TILE_SOURCE = "KEY_TILE_SOURCE";
+//    public static final String PREFS_KEY_TILE_SOURCE = "KEY_TILE_SOURCE";
 
     public static final String PREFS_APP_COUNT_LAUGHT = "APP_COUNT_LAUGHT";
     public static final String PREFS_APP_FIRSTDATE_LAUGHT = "APP_FIRSTDATE_LAUGHT";

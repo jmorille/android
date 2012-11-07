@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.api.IMapView;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
@@ -27,6 +28,7 @@ import android.view.View;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.map.geo.BoundingE6Box;
+import eu.ttbox.velib.map.osm.GoogleMapView;
 import eu.ttbox.velib.map.station.bubble.BubbleOverlayView;
 import eu.ttbox.velib.map.station.drawable.StationDispoDrawable;
 import eu.ttbox.velib.map.station.drawable.StationDispoIcDrawable;
@@ -41,10 +43,10 @@ import eu.ttbox.velib.service.VelibService;
  */
 public class StationDispoOverlay extends Overlay implements OnStationDispoUpdated, SharedPreferences.OnSharedPreferenceChangeListener {
 
-	private String TAG = getClass().getSimpleName();
+	private String TAG = "StationDispoOverlay";
 
 	private Context context;
-	private MapView mapView;
+	private IMapView mapView;
 	private ArrayList<Station> stations;
 
 	private Handler handler;
@@ -345,7 +347,7 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 		return hitMapLocation;
 	}
 
-	private boolean isDisplayStationDetail(Station station, long nowInMs, MapView mapView) {
+	private boolean isDisplayStationDetail(Station station, long nowInMs, IMapView mapView) {
 		int zoomLevel = mapView.getZoomLevel();
 		boolean isSelectedStation = selectedStation != null && (selectedStation.getId() == station.getId());
 		boolean isDisplayStationDetail = station.getVeloUpdated() + stationDispoDataAvaibilityInMs > nowInMs;
@@ -418,7 +420,7 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 					Rect dirty = new Rect(-selectRadius, -selectRadius, selectRadius, selectRadius);
 					mapView.getProjection().toPixels(updatedStaion.asGeoPoint(), screenCoords);
 					dirty.offset(screenCoords.x, screenCoords.y);
-					mapView.invalidate(dirty);
+					mapViewInvalidate(dirty);
 					if (Log.isLoggable(TAG, Log.DEBUG))
 						Log.d(TAG, "mapView invalidate for 1 station");
 				}
@@ -494,7 +496,26 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 			}
 		}
 	}
+	private void mapViewInvalidate() {
+	    if (mapView instanceof MapView) {
+	        MapView osmMapView = (MapView)mapView;
+	        osmMapView.invalidate();
+	    } else  if (mapView instanceof GoogleMapView) {
+	        GoogleMapView googleMapView = (GoogleMapView)mapView;
+	        googleMapView.invalidate();
+	    }
+	}
 
+	private void mapViewInvalidate(Rect dirty) {
+        if (mapView instanceof MapView) {
+            MapView osmMapView = (MapView)mapView;
+            osmMapView.invalidate();
+        } else  if (mapView instanceof GoogleMapView) {
+            GoogleMapView googleMapView = (GoogleMapView)mapView;
+            googleMapView.invalidate();
+        }
+    }
+	
 	@Override
 	public void stationDispoUpdated(final ArrayList<Station> stations) {
 		// Use An handler to use the main thread for update
@@ -502,7 +523,7 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				mapView.invalidate();
+			    mapViewInvalidate();
 				if (Log.isLoggable(TAG, Log.DEBUG))
 					Log.d(TAG, String.format("mapView invalidate for stations count %s", stations.size()));
 			}
