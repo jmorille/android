@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/balloon_main_layout"
+    style="@style/station_balloon_bubbleBackground2" >
+
+    <!-- http://www.tutos-android.com/comprendre-relativelayout-android -->
+
+    <TextView
+        android:id="@+id/balloon_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/balloon_streetview_image"
+        android:layout_toLeftOf="@+id/veloDispoBulleFavorite"
+        android:gravity="center_horizontal" 
+        android:text="18042 - PIGALLE GERMAN PILLON"
+        android:textColor="@color/station_balloon_item_title"
+        android:textSize="14dip" >
+    </TextView>
+ 
+    <TextView
+        android:id="@+id/balloon_item_snippet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/balloon_item_title" 
+        android:layout_marginLeft="5dp"
+        android:text="xx addreses station"
+        android:textColor="@color/station_balloon_item_snippet"
+        android:textSize="12dip" />
+
+    <TextView
+        android:id="@+id/balloon_item_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/balloon_item_snippet"
+        android:textColor="@color/station_balloon_item_snippet"
+        android:gravity="left"
+        android:paddingLeft="10dip"
+        android:text="xx velos"
+        android:textSize="12dip" />
+
+    <LinearLayout
+        android:id="@+id/balloon_block_panneau_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/balloon_item_address"
+        android:layout_centerHorizontal="true"
+        android:baselineAligned="false"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+
+        <LinearLayout
+            android:id="@+id/balloon_block_panneau_velo"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/balloon_block_panneau_velo_image"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="Disponible"
+                android:src="@drawable/panneau_obligation_cycles" />
+
+            <TextView
+                android:id="@+id/balloon_block_panneau_velo_textdispo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@drawable/panonceau_vide"
+                android:gravity="center_horizontal"
+                android:text="0 (+0)"
+                android:textColor="@color/station_balloon_panonceau_text"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/balloon_block_panneau_parking"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="9dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/balloon_block_panneau_parking_image"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="Parking"
+                android:src="@drawable/panneau_parking" />
+
+            <TextView
+                android:id="@+id/balloon_block_panneau_parking_textdispo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/panonceau_vide"
+                android:gravity="center_horizontal"
+                android:text="0 (+0)"
+                android:textColor="@color/station_balloon_panonceau_text"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/balloon_block_panneau_ticket"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/balloon_block_panneau_ticket_image"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="Indisponible"
+                android:src="@drawable/panneau_travaux" />
+
+            <TextView
+                android:id="@+id/balloon_block_panneau_ticket_textdispo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/panonceau_vide"
+                android:gravity="center_horizontal"
+                android:text="0 (+0)"
+                android:textColor="@color/station_balloon_panonceau_text"
+                android:textSize="14dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/balloon_item_updated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/balloon_block_panneau_layout"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="12 min"
+        android:textSize="12dip" />
+
+
+    <CheckBox
+        android:id="@+id/veloDispoBulleFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:button="@android:drawable/btn_star" />
+
+        <ImageView
+            android:id="@+id/balloon_bonus_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="7dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/balloon_block_panneau_layout"
+            android:layout_below="@+id/veloDispoBulleFavorite"
+            android:contentDescription="vplus"
+            android:src="@drawable/vplus" />
+
+        <ImageView
+            android:id="@+id/balloon_streetview_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:minHeight="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/balloon_item_snippet"
+            android:contentDescription="StreetView" 
+            android:src="@android:drawable/ic_menu_view" />
+
+        <ImageView
+            android:id="@+id/balloon_navigation_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/balloon_item_address"
+            android:contentDescription="Navigation"
+            android:paddingRight="5dp"
+            android:src="@android:drawable/ic_menu_directions" />
+    
+</RelativeLayout>

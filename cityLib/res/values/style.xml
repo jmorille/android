@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="station_balloon_bubbleBackground">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/velodispo_overlay_bubble2</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:minHeight">80dip</item>
+        <item name="android:minWidth">50dip</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingBottom">25dip</item>
+        <item name="android:paddingLeft">0dip</item>
+        <item name="android:paddingRight">0dip</item>
+        <item name="android:paddingTop">10dip</item>
+    </style>
+
+    <style name="station_balloon_bubbleBackground2">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/station_ballon_overlay_background</item>
+    </style>
+
+    <style name="mylocation_dialog_bubbleBackground">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item> 
+        <item name="android:background">@drawable/mylocation_dialog_background</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">10</item>
+        <item name="android:shadowColor">#FF000000</item>
+        </style>
+
+    <style name="mylocation_dialog_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12dip</item>
+        <item name="android:textColor">#e0f1f8</item>
+        <item name="android:gravity">center</item>
+    </style>
+        
+ 
+    <style name="help_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18dip</item>
+    </style>
+
+    <style name="help_station_dispo">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fadingEdge">vertical</item>
+        <item name="android:minHeight">160dp</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:textSize">12dip</item>
+    </style>
+
+</resources>

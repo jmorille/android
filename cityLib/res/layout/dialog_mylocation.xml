@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_mylocationView"
+    style="@style/mylocation_dialog_bubbleBackground"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/dialog_mylocationView_coord"
+            style="@style/mylocation_dialog_text"
+            android:text="Wsg84" />
+
+        <TextView
+            style="@style/mylocation_dialog_text"
+            android:text="@string/accuracy_separator" />
+
+        <TextView
+            android:id="@+id/dialog_mylocationView_accuracy"
+            style="@style/mylocation_dialog_text"
+            android:text="accuracy" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog_mylocationView_block_altitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@style/mylocation_dialog_text"
+            android:text="@string/altitude" />
+
+        <TextView
+            android:id="@+id/dialog_mylocationView_altitude"
+            style="@style/mylocation_dialog_text"
+            android:text="00m" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/dialog_mylocationView_speed"
+        style="@style/mylocation_dialog_text"
+        android:text="speed" />
+
+    <TextView
+        android:id="@+id/dialog_mylocationView_address"
+        style="@style/mylocation_dialog_text"
+        android:text="address" />
+
+</LinearLayout>

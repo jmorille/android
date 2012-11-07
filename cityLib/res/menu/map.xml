@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_search"
+        android:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/ic_action_search"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_search"/>
+    <item
+        android:id="@+id/menuMap.mypositoncenter"
+        android:icon="@drawable/ic_action_locate"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_map_mypositioncenter"/>
+    
+    <item
+        android:id="@+id/menuMap_mapmode"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/map_mode">
+        <menu>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menuMap_favorite"
+        android:icon="@drawable/ic_action_star"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_favorite"/>
+    <item
+        android:id="@+id/menuOptions"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_options"/>
+    
+     <item      android:id="@+id/menuDownloadTiles"
+        android:icon="@android:drawable/ic_menu_upload"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_download_tiles"/>
+
+</menu>

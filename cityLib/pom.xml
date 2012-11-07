@@ -3,57 +3,129 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>eu.ttbox.android</groupId>
-	<artifactId>android-root</artifactId>
-	<version>0.0.9</version>
-	<packaging>pom</packaging>
+	<parent>
+		<groupId>eu.ttbox.android.androlib</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.1.4</version>
+	</parent>
 
-	<name>Android Pom Reactor</name>
 
- 
-	<scm>
-		<url>https://github.com/jmorille/androidSmsTracker</url>
-		<connection>scm:git:ssh://git@github.com/jmorille/androidSmsTracker</connection>
-		<developerConnection>scm:git:ssh://git@github.com/jmorille/androidSmsTracker</developerConnection>
-	</scm>
+	<groupId>eu.ttbox.android.androlib</groupId>
+	<artifactId>androlib</artifactId>
+
+	<packaging>apk</packaging>
+
+	<name>AndroLib</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- Android -->
-		<android.version>4.1_r2</android.version> <!-- 2.3.3 -->
 		<google.maps.version>16_r2</google.maps.version>
-		<!-- Google Api -->
-		<gcm.version>3</gcm.version>
-		<!-- Osm -->
 		<osmdroid.version>3.0.8</osmdroid.version>
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
-		<!-- Frameworks -->
-		<jackson.version>2.0.5</jackson.version>
+		<!-- Google Api -->
+		<gcm.version>r3</gcm.version>
+
 		<!-- Release -->
-		<android-maven-plugin.version>3.4.0</android-maven-plugin.version>
-		<android.sdk.platform>16</android.sdk.platform>
+		<android-maven-plugin.version>3.3.0</android-maven-plugin.version>
 		<sign.alias>android</sign.alias>
 	</properties>
 
 	<dependencies>
-		 
-		<!-- Android -->
+	
+		<!--Android Api -->
 		<dependency>
-			<groupId>android</groupId>
+			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<version>${android.version}</version>
 			<scope>provided</scope>
 		</dependency>
-	    
 
+		<!-- Google Map Api -->
+		<dependency>
+			<groupId>com.google.android.maps</groupId>
+			<artifactId>maps</artifactId>
+			<version>${google.maps.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		
+
+		<!-- Google Api -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.google.android.gcm</groupId> -->
+		<!-- <artifactId>gcm-server</artifactId> -->
+		<!-- <version>${gcm.version}</version> -->
+		<!-- </dependency> -->
+		<dependency>
+			<groupId>com.google.android.gcm</groupId>
+			<artifactId>gcm-client</artifactId>
+			<version>${gcm.version}</version>
+		</dependency>
+
+		<!-- Svg Android : http://code.google.com/p/svg-android/ -->
+		<dependency>
+			<groupId>com.larvalabs.svgandroid</groupId>
+			<artifactId>svg-android</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<!-- Open Street Map -->
+		<dependency>
+			<groupId>org.osmdroid</groupId>
+			<artifactId>osmdroid-android</artifactId>
+			<version>${osmdroid.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.osmdroid</groupId>
+			<artifactId>osmdroid-third-party</artifactId>
+			<version>${osmdroid.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.osmdroid</groupId>
+			<artifactId>osmdroid-packager</artifactId>
+			<version>${osmdroid.version}</version>
+		</dependency>
+		<!-- Logging Api needed by osmdroid -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-android</artifactId>
+			<version>${slf4j-android.version}</version>
+		</dependency>
 	</dependencies>
-  
-  <modules>
-    <module>osm</module>
-    <module>geoPing</module>
-  </modules>
-  
-  
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<sourceDirectory>src</sourceDirectory>
+		<!-- <testSourceDirectory>test</testSourceDirectory> -->
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<version>${android-maven-plugin.version}</version>  
+				<configuration>
+					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
+					<resourceDirectory>${project.basedir}/res</resourceDirectory>
+					<nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
+					<sdk>
+						<platform>15</platform>
+						<path>${env.ANDROID_HOME}</path>
+					</sdk>
+					<deleteConflictingFiles>true</deleteConflictingFiles>
+					<undeployBeforeDeploy>true</undeployBeforeDeploy>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>oss.sonatype.org-jayway-releases</id>
@@ -72,10 +144,13 @@
 			</snapshots>
 		</repository>
 	</repositories>
-  
-  
+<!--
+	<modules>
+		<module>androLib-tests</module>
+	</modules>
+-->
 	<profiles>
-		<!-- https://github.com/jayway/android-maven-plugin-samples/blob/stable/morseflash/morseflash-app/pom.xml -->
+		<!-- https://github.com/jayway/maven-android-plugin-samples/blob/stable/morseflash/morseflash-app/pom.xml -->
 		<profile>
 			<id>release</id>
 			<!-- via this activation the profile is automatically used when the release 
@@ -120,17 +195,17 @@
 					<plugin>
 						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 						<artifactId>android-maven-plugin</artifactId>
-						<version>${android-maven-plugin.version}</version>
+						<version>${android-maven-plugin.version}</version>  
 						<inherited>true</inherited>
 						<configuration>
 							<sign>
 								<debug>false</debug>
 							</sign>
 							<zipalign>
-								<skip>false</skip>
 								<verbose>true</verbose>
 								<inputApk>${project.build.directory}/${project.artifactId}.apk</inputApk>
-								<outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk</outputApk>
+								<outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk
+								</outputApk>
 							</zipalign>
 							<manifest>
 								<debuggable>false</debuggable>

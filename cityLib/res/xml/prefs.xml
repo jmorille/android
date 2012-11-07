@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/prefs_person" >
+        <eu.ttbox.velib.ui.preference.comp.IntEditTextPreference
+            android:defaultValue="2"
+            android:key="personCountExpected"
+            android:numeric="integer"
+            android:title="@string/prefs_person_nb" />
+        <eu.ttbox.velib.ui.preference.comp.IntEditTextPreference
+            android:defaultValue="30"
+            android:key="personRentDurationInMin"
+            android:numeric="integer"
+            android:title="@string/prefs_rent_duration_in_min" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_renter" >
+        <ListPreference
+            android:key="providerSelect"
+            android:negativeButtonText="@string/cancel"
+            android:title="@string/prefs_providerSelect" />
+
+        <PreferenceScreen android:title="@string/prefs_synchro_dispo" >
+            <eu.ttbox.velib.ui.preference.comp.IntEditTextPreference
+                android:defaultValue="15"
+                android:key="minMapZoomLevelStationDetail"
+                android:numeric="integer"
+                android:title="@string/prefs_min_mapzoom_station_details" />
+
+            <eu.ttbox.velib.ui.preference.comp.LongEditTextPreference
+                android:defaultValue="240"
+                android:key="checkDispoDeltaDelayInMs"
+                android:numeric="integer"
+                android:title="@string/prefs_dispo_refresh_period_s" />
+            <eu.ttbox.velib.ui.preference.comp.LongEditTextPreference
+                android:defaultValue="60"
+                android:key="checkDispoBubbleDeltaDelayInMs"
+                android:numeric="integer"
+                android:title="@string/prefs_dispo_bubble_refresh_period_s" />
+            <eu.ttbox.velib.ui.preference.comp.LongEditTextPreference
+                android:defaultValue="250"
+                android:key="boundyBoxFixDelayInMs"
+                android:numeric="integer"
+                android:title="@string/prefs_fix_delay_before_refresh_period_ms" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_myLocation" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="myLocationDisplayGeoLoc"
+            android:title="@string/prefs_myLocation_display_geoloc" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_info" android:icon="@drawable/ic_action_about">
+        <eu.ttbox.velib.ui.preference.comp.AppVersionPreference
+            android:defaultValue="0" 
+            android:key="AppLaughtCounter"
+            android:summary="@string/prefs_count_laught_summary"
+            android:title="@string/prefs_count_laught" >
+        </eu.ttbox.velib.ui.preference.comp.AppVersionPreference>
+
+       <Preference 
+            android:title="@string/prefs_about" >
+            <intent
+                android:action="eu.ttbox.velib.ui.about.ACTION_VIEW_ABOUT"
+                android:targetClass="eu.ttbox.velib.ui.about.AboutActivity"
+                android:targetPackage="eu.ttbox.velib" />
+        </Preference>
+       <Preference 
+            android:title="@string/prefs_licence" >
+            <intent
+                android:action="eu.ttbox.velib.ui.about.ACTION_VIEW_LICENCE"
+                android:targetClass="eu.ttbox.velib.ui.about.AboutActivity"
+                android:targetPackage="eu.ttbox.velib" />
+        </Preference>
+                 
+        <Preference
+            android:icon="@drawable/ic_action_help"
+            android:title="@string/prefs_help" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="eu.ttbox.velib.ui.help.HelpTabLayoutActivity"
+                android:targetPackage="eu.ttbox.velib" />
+        </Preference>
+        <!-- http://stackoverflow.com/questions/5298370/how-to-add-a-button-to-a-preferencescreen-android -->
+        <!-- <Preference  android:title="Clear Cache" -->
+        <!-- android:icon="@android:drawable/ic_dialog_info" > -->
+
+
+        <!-- </Preference> -->
+    </PreferenceCategory>
+
+</PreferenceScreen>

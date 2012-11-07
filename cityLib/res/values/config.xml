@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+      
+    
+    <string name="app_name">CityLib</string>
+    
+    <string name="backup_api_key">AEdPqrEAAAAIyRPxpmKUM1mUzyoCGeNvfAGfQ9iFwwmwauTHaA</string>
+    
+    <!-- Release 67:BA:EF:23:0F:CA:87:24:23:0B:51:20:13:2C:C2:83 -->
+<!--   <string name="map_apiKey">0y6tr0VPcaTbOfp-tmd-cOq2NLpewl6dzMA9IuA</string> -->
+  
+    <!-- Home -->
+    <!-- <string name="map_apiKey">0NYLmB1F2IOC1Rbd-c0uhxt5s5qtS_MEASI3VnQ</string> -->
+    <!-- Mac 95:A3:F6:38:01:EB:76:C8:9D:BE:9B:43:D7:8A:31:7D -->
+<!--     <string name="map_apiKey">0NYLmB1F2IOBAfo9XuRdZUfaLNsuyvp0aSAhauA</string> -->
+    <!-- Job 77:1C:8F:04:AA:5A:94:B9:E6:54:AC:E2:15:B9:1E:35 -->
+    <string name="map_apiKey">0NYLmB1F2IOBrANcWAodyGo86CktsPoN6FgKSzw</string>
+     
+    <integer name="fling_animation_duration">350</integer>
+    
+    
+</resources>

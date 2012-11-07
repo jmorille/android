@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Traduction -->
+
+    <string name="valid">Valider</string>
+    <string name="cancel">Annuler</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="loading">Loading…</string>
+
+    <!-- Dialog -->
+    <string name="ask_activate_gps">Voulez-vous activer le GPS ?</string>
+    <string name="dialog_custum_favorite_icon">Mon icône favori</string>
+    <string name="dialog_custum_alias">Alias</string>
+    <string name="dialog_custum_alias_hint">Saisissez votre alias</string>
+
+    <!-- Countdown -->
+    <string name="countdown_service_label">AndroLib Countdown Timer Service</string>
+    <string name="countdown_stop_all">Stop all timers</string>
+    <string name="countdown_add_timer">+ Add timer</string>
+    <string name="countdown_remove_timer">- Remove timer</string>
+    <string name="countdown_notif_msg_title">Compte à rebourt déclenché</string>
+    <string name="countdown_notif_msg_body">Pour stopper ou démarrer le chronomètre  ;.</string>
+    <string name="countdown_notif_timeup_body">Time is up! Touch the timer to stop the alarm.</string>
+    <string name="countdown_notif_timeup_title">Time is up!</string>
+    <string name="countdown_how_to_stop">To stop the timer touch and hold.</string>
+    <string name="countdown_enter_higher">Please enter a higher number. Surely you can count to one yourself?</string>
+
+    <!-- Search -->
+ 
+    <string name="search_label">Recherche</string>
+    <string name="search_hint">Rechercher un vélo</string>
+    <string name="settings_description">Recherche de vélos</string>
+
+   <string name="searchStation_resultCount_none">Aucun résultat</string>
+    
+        
+    <!-- Menu -->
+    <string name="menu_options">Options</string>
+    <string name="menu_search">Rechercher</string>
+    <string name="menu_map">Map</string>
+    <string name="menu_quit">Quit</string>
+    <string name="map_mode">Type de Map</string>
+    <string name="menu_favorite">Favoris</string>
+    
+    <string name="menu_download_tiles">Download Map Tiles</string>
+    
+    
+    <string name="menu_map_mypositioncenter">Ma position</string>
+    <string name="set_mode_offline">Mode Hors Connection</string>
+    <string name="set_mode_online">Mode Connecter</string>
+
+    <!-- Prefs -->
+    <string name="prefs_myLocation">Ma Position</string>
+    <string name="prefs_myLocation_display_geoloc">Affichage Coord GPS</string>
+    <string name="prefs_renter">Loueur</string>
+    <string name="prefs_providerSelect">Sélection du loueur</string>
+    <string name="prefs_synchro_dispo">Synchronisation (Avancé)</string>
+    <string name="prefs_dispo_refresh_period_s">Maj Dispo vélo en s</string>
+    <string name="prefs_dispo_bubble_refresh_period_s">Maj Bulle d\'info Velo en s</string>
+    <string name="prefs_min_mapzoom_station_details">Carte Zoom Min pour détail stations</string>
+    <string name="prefs_fix_delay_before_refresh_period_ms">Fix avant MAJ en ms</string>
+    <string name="prefs_person">Préférence utilisateur</string>
+    <string name="prefs_person_nb">Nombre de personnes</string>
+    <string name="prefs_rent_duration_in_min">Durée de location en min</string>
+    <string name="prefs_info">Information</string>
+    <string name="prefs_help">Aide</string>
+    <string name="prefs_licence">Licence</string>
+    <string name="prefs_about">Crédit</string>
+    <string name="prefs_relasenotes">Quoi de neuf ?</string> 
+    <string name="prefs_count_laught">Nombre de lancement</string>
+    <string name="prefs_count_laught_summary">Nombre d\'utilisation de l\'application</string>
+
+    <plurals name="numberOfStationAvailable">
+        <item quantity="zero">Aucune station chargée.</item>
+        <item quantity="one">Une station chargée.</item>
+        <item quantity="other">%d stations chargées.</item>
+    </plurals>
+    <plurals name="numberOfVeloTotal">
+        <item quantity="zero">Aucun vélo.</item>
+        <item quantity="one">Un vélo.</item>
+        <item quantity="other">%d vélos.</item>
+    </plurals>
+    <plurals name="search_station_results">
+        <item quantity="zero">Aucune station trouvée pour \"%2$s\".</item>
+        <item quantity="one">Une station trouvée pour \"%2$s\" : </item>
+        <item quantity="other">%1$d stations trouvées pour \"%2$s\": </item>
+    </plurals>
+
+    <!-- Help -->
+    <string name="help_tab_circle_code">Cercle</string>
+    <string name="help_tab_color_code">Couleur</string>
+    <string name="help_tab_bubble_dispo">Bulle d\'info</string>
+    <string name="help_tab_conduit_code">Vétickette</string>
+    <string name="help_start_application">Démarrer l\'application</string>
+    <string name="help_station_circle">Les disponibilités des vélos et des places de parking dans une station sont représentées par 2 cercles</string>
+    <string name="help_station_circle_int">Le cercle intérieur représente le nombre de vélos disponibles</string>
+    <string name="help_station_circle_ext">Le cercle extérieur représente les places disponible pour ranger un vélo</string>
+    <string name="help_station_circle_color_code">Le code couleur donne un aperçu visuel des différentes disponibilités</string>
+    <string name="help_station_circle_color_unexpected">La couleur supplémentaire indique que le nombre de place est limité</string>
+    <string name="help_station_preson_expected_config">Le nombre de personnes attendu est configurable dans le menu des options</string>
+    <string name="help_station_dispo_cycle_none">Aucun vélo disponible</string>
+    <string name="help_station_dispo_cycle_unexpected">Un vélo  pour 2</string>
+
+    <plurals name="help_station_dispo_cycle_count">
+        <item quantity="zero">Aucun vélo disponible</item>
+        <item quantity="other">%d vélos disponible</item>
+    </plurals>
+
+    <string name="help_station_dispo_parking_none">Aucune place de parking</string>
+    <string name="help_station_dispo_parking_unexpected">Un parking pour deux !</string>
+
+    <plurals name="help_station_dispo_parking_count">
+        <item quantity="zero">Aucun parking</item>
+        <item quantity="other">%d places de parking</item>
+    </plurals>
+
+    <string name="help_tab_bubbledispo_desc">Un click sur les cercles de disponibilité permet d\'afficher une bulle d\'information, apportant des fonctions supplémentaires</string>
+    <string name="help_tab_bubbledispo_streetview">Lancer l\'application StreetView</string>
+    <string name="help_tab_bubbledispo_navigation">Lancer l\'application Navigation</string>
+    <string name="help_tab_bubbledispo_bonus">Signale cette station comme une station bonus</string>
+    <string name="help_tab_bubbledispo_favory">Définissez cette station comme favori</string>
+    <string name="help_tab_bubbledispo_favory_longclick">Une pression prolongée ouvre un menu secondaire permettant de personnaliser l\'icône de favori</string>
+    <string name="help_tab_bubbledispo_name_longclick">Essayez une pression prolongée sur le nom de la station pour personnaliser son nom</string>
+    <string name="help_conduitecode_half_saddle">¼ de tour pour les problèmes plus légers qui n’empêchent pas de rouler</string>
+    <string name="help_conduitecode_half_saddle_snippet">(vitesse qui passe mal ou qui ne tient pas, roue voilée…)</string>
+    <string name="help_conduitecode_revert_saddle">½ tour pour les problèmes rédhibitoires</string>
+    <string name="help_conduitecode_revert_saddle_snippet">(chaîne déraillée, pneu à plat…)</string>
+
+</resources>

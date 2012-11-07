@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/eu.ttbox.velib"
+    android:id="@+id/help_station_page1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/help_text"
+            android:text="@string/help_station_circle" />
+
+        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView
+            android:id="@+id/help_station_02"
+            style="@style/help_station_dispo"       
+            app:station_cycles="0"
+            app:station_parking="15" 
+  >
+        </eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView>
+        
+        
+        <TextView
+            style="@style/help_text"
+            android:text="@string/help_station_circle_ext" />
+
+        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView
+            android:id="@+id/help_station_02"
+            style="@style/help_station_dispo"       
+            app:station_cycles="0"
+            app:station_parking="73" 
+            app:draw_cycles="false" >
+        </eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView>
+ 
+        
+        <TextView
+           style="@style/help_text"
+             android:text="@string/help_station_circle_int" />
+
+        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView 
+            android:id="@+id/help_station_01"
+            style="@style/help_station_dispo"       
+            app:station_cycles="42"
+            app:station_parking="0" 
+            app:draw_parking="false" >
+        </eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView>
+
+    </LinearLayout>
+
+</ScrollView>

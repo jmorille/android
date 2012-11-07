@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="filling_text">Choose a sandwich filling:</string>
+  <string name="bacon_label">Bacon</string>
+  <string name="pastrami_label">Pastrami</string>
+  <string name="hummus_label">Hummus</string>
+
+  <string name="extras_text">Extras:</string>
+  <string name="mayo_text">Mayonnaise\?</string>
+  <string name="tomato_text">Tomato\?</string>
+
+  <string name="restore_text">Restore last data</string>
+
+  
+    <!-- Traduction -->
+ 
+    <string name="valid">Valid</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="loading">Loading…</string>
+
+
+    <!-- Dialog -->
+    <string name="ask_activate_gps">Would you like to activate GPS ?</string>
+    <string name="dialog_custum_favorite_icon">My favourite icon</string>
+    <string name="dialog_custum_alias">Alias</string>
+    <string name="dialog_custum_alias_hint">Indicate your alias</string>
+    
+    
+    <!-- Dialog My Location-->
+    <string name="accuracy_separator">+/-</string> <!-- +/- &#8723; -->
+    <string name="altitude">Altitude</string> 
+    
+    
+    <!-- Countdown -->
+    <string name="countdown_service_label">AndroLib Countdown Timer Service</string>
+    
+     <string name="countdown_stop_all">Stop all timers</string>
+     <string name="countdown_add_timer">+ Add timer</string>
+      <string name="countdown_remove_timer">- Remove timer</string>
+      
+    <string name="countdown_notif_msg_title">Countdown started</string>
+    <string name="countdown_notif_msg_body">To stop or start the countdown</string>
+    <string name="countdown_notif_timeup_body">Time is up! Touch the timer to stop the alarm.</string>
+    <string name="countdown_notif_timeup_title">Time is up!</string>
+    
+    <string name="countdown_how_to_stop">To stop the timer touch and hold.</string>
+    <string name="countdown_enter_higher">Please enter a higher number. Surely you can count to one yourself?</string>
+    
+    <!-- Search -->
+ 
+    <string name="search_label">Search</string>
+    <string name="search_hint">Search bike</string>
+    <string name="settings_description">Looking for bikes</string>
+
+    <string name="searchStation_resultCount_none">No result</string>
+    
+    <!-- Notification Progress -->
+    <string name="notif_download_tiles_status">Download Tiles</string>
+    <string name="notif_download_tiles_status_progress">%1$d / %2$d Tiles (%3$d%%) %4$d errors</string>
+    <string name="notif_download_tiles_status_end">Download %1$d Tiles with %2$d errors</string>
+    
+     <!-- Menu -->
+    <string name="menu_options">Options</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_map">Map</string>
+    <string name="menu_quit">Quit</string>
+    <string name="map_mode">Map Mode</string>
+    <string name="menu_favorite">Favorite</string>
+    
+    <string name="menu_download_tiles">Download Map Tiles</string>
+    
+    
+    
+    <string name="menu_map_mypositioncenter">My location</string>
+    <string name="set_mode_offline">Set to offline mode</string>
+    <string name="set_mode_online">Set to online mode</string>
+    
+     <!-- Prefs -->
+    <string name="prefs_myLocation">My Location</string>
+    <string name="prefs_myLocation_display_geoloc">Display GPS Coord</string>
+    <string name="prefs_renter">Renter</string>
+    <string name="prefs_providerSelect">Selection of the renter</string>
+    <string name="prefs_synchro_dispo">Synchronization (Advanced)</string>
+    <string name="prefs_min_mapzoom_station_details">Station Details Min Map Zoom Level</string>
+    <string name="prefs_dispo_refresh_period_s">Update of the availibility bike in s</string>
+    <string name="prefs_dispo_bubble_refresh_period_s">Update of bike information bubble in s</string>
+    <string name="prefs_fix_delay_before_refresh_period_ms">Fix before update IN ms</string>
+    <string name="prefs_person">Favourites of user</string>
+    <string name="prefs_person_nb">Number of persons</string>
+    <string name="prefs_rent_duration_in_min">Time of rent in min</string>
+    <string name="prefs_info">Information</string>
+    <string name="prefs_help">Help</string>
+    <string name="prefs_licence">Licence</string>
+    <string name="prefs_about">About</string>
+    <string name="prefs_relasenotes">What new ?</string>
+    <string name="prefs_count_laught">Number of launch</string>
+    <string name="prefs_count_laught_summary">Number of usesr of the application</string> 
+
+    <plurals name="numberOfStationAvailable">
+        <item quantity="zero">Not any station loaded.</item>
+        <item quantity="one">One station loaded.</item>
+        <item quantity="other">%d stations loaded.</item>
+    </plurals>
+    <plurals name="numberOfVeloTotal">
+        <item quantity="zero">No bike.</item>
+        <item quantity="one">One bike.</item>
+        <item quantity="other">%d bikes.</item>
+    </plurals>
+    <plurals name="search_station_results">
+        <item quantity="zero">No station found for \"%2$s\".</item>
+        <item quantity="one">One station found for \"%2$s\" : </item>
+        <item quantity="other">%1$d stations found for \"%2$s\": </item>
+    </plurals>
+
+    <!-- Help -->
+      <string name="help_tab_circle_code">Circle</string>
+      <string name="help_tab_color_code">Color</string>
+      <string name="help_tab_bubble_dispo">Bubble information</string>
+      <string name="help_tab_conduit_code">Biket</string>
+      
+       <string name="help_start_application">Start the application</string>
+      
+      
+    <string name="help_station_circle">The availability of bikes and parking place in a station are shown by 2 circles</string>
+    <string name="help_station_circle_int">The inner circle shows the number of available bike</string>
+    <string name="help_station_circle_ext">The outer circle  shows the available places to put away a bike</string>
+    <string name="help_station_circle_color_code">The colour code shows the different availabilities</string>
+    <string name="help_station_circle_color_unexpected">The additional colour indicates that the number of place is limited</string>
+    <string name="help_station_preson_expected_config">The number of persons expected is configurable in menu Options</string>
+    
+    <string name="help_station_dispo_cycle_none">No available bike</string>
+    <string name="help_station_dispo_cycle_unexpected">One bike for 2</string>
+     <plurals name="help_station_dispo_cycle_count">
+        <item quantity="zero">No available bike</item>
+        <item quantity="other">%d available bikes</item>
+    </plurals>
+
+    <string name="help_station_dispo_parking_none">No parking place</string>
+    <string name="help_station_dispo_parking_unexpected">One parking for  two!</string>
+     <plurals name="help_station_dispo_parking_count">
+        <item quantity="zero">No parking</item>
+        <item quantity="other">%d parking places</item>
+    </plurals>
+
+    <string name="help_tab_bubbledispo_desc">A click above the circles of availability allows to post an information bubble which provide additional functions</string>
+
+    <string name="help_tab_bubbledispo_streetview">Start the StreetView application</string>
+    <string name="help_tab_bubbledispo_navigation">Start the Navigation application</string>
+    <string name="help_tab_bubbledispo_bonus">Indicate this station as a bonus station</string>
+    <string name="help_tab_bubbledispo_favory">Define this station as your favourite station</string>
+    <string name="help_tab_bubbledispo_favory_longclick">A long pressure opens a second menu which alllow to personalize the favourite icon</string>
+    <string name="help_tab_bubbledispo_name_longclick">Try a long pressure above the name of the station to  personalize its name</string>
+    
+     
+    
+    <string name="help_conduitecode_half_saddle">¼ ride for the lightest problems which no prevent to ride </string>
+    <string name="help_conduitecode_half_saddle_snippet">(speed which no run, wheel buckled&#8230;)</string>
+    <string name="help_conduitecode_revert_saddle">½ ride for the crippling problems</string>
+    <string name="help_conduitecode_revert_saddle_snippet"> (chain derailed, flat tyre&#8230;)</string>
+    
+</resources>

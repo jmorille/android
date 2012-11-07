@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyTheme" parent="@android:style/Theme.Holo"> 
+     </style>
+
+    <style name="MyActionBar" parent="android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/background_map_actionbar</item> 
+    </style>
+
+    <style name="MapActionBar" parent="MyTheme">
+        <item name="android:windowActionBar">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+     </style>
+
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ 
+
+    <declare-styleable name="StationDispoView">
+        <attr name="station_parking" format="string" />
+        <attr name="station_cycles" format="string" />
+        <attr name="draw_cycles" format="boolean" />
+        <attr name="draw_parking" format="boolean" />
+    </declare-styleable>
+ 
+</resources>

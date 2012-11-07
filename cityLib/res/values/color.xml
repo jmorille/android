@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <color name="map_actionbar_color">#4B000000</color>
+    
+    <color name="station_select_border">#4B000000</color>
+    <color name="station_dispo_unknown">#64FF0000</color> <!-- blue #640093FF -->
+    
+    <color name="station_dispo_ok">#4B00FF00</color>
+    <color name="station_dispo_ok_border">#6400FF00</color>
+    <color name="station_dispo_ko">#4BFF0000</color>
+    <color name="station_dispo_ko_border">#64FF0000</color>
+    <color name="station_dispo_warning">#4BFF00FF</color>
+    <color name="station_dispo_warning_border">#64FF00FF</color>
+
+    <color name="station_balloon_item_title">#FF000000</color>
+    <color name="station_balloon_item_snippet">#FF848484</color>
+    
+    <color name="station_balloon_panonceau_text">#FF000000</color>
+    
+    <!-- Countdown -->
+    <color name="red">#FF0000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#808080</color>
+    
+</resources>
