@@ -14,7 +14,7 @@ public class Station implements GeoPointProvider, LatLngE6Provider, LatLngProvid
 
 	private final static double E6 = AppConstants.E6;
 
-	// Velo Dada
+	// Velo Data
 	int id;
 	int provider;
 	String number;// ="901"
@@ -51,6 +51,10 @@ public class Station implements GeoPointProvider, LatLngE6Provider, LatLngProvid
 	// Runtile value transient
 	boolean askRefreshDispo = false;
 
+	// ===========================================================
+	// Lat / Lng Accessor
+	// ===========================================================
+
 	public GeoPoint asGeoPoint() {
 		if (cachedGeoPoint == null) {
 			GeoPoint point = new GeoPoint((int) latitudeE6, (int) longitudeE6);
@@ -58,6 +62,50 @@ public class Station implements GeoPointProvider, LatLngE6Provider, LatLngProvid
 		}
 		return cachedGeoPoint;
 	}
+
+	@Override
+	public double getLatitude() {
+		return latitudeE6 / E6;
+	}
+
+	public void setLatitude(double lat) {
+		this.latitudeE6 = (int) (lat * E6);
+		this.cachedGeoPoint = null;
+	}
+
+	@Override
+	public double getLongitude() {
+		return longitudeE6 / E6;
+	}
+
+	public void setLongitude(double lng) {
+		this.longitudeE6 = (int) (lng * E6);
+		this.cachedGeoPoint = null;
+	}
+
+	@Override
+	public double getLatitudeE6() {
+		return latitudeE6;
+	}
+
+	public void setLatitudeE6(int latitudeE6) {
+		this.latitudeE6 = latitudeE6;
+		this.cachedGeoPoint = null;
+	}
+
+	@Override
+	public double getLongitudeE6() {
+		return longitudeE6;
+	}
+
+	public void setLongitudeE6(int longitudeE6) {
+		this.longitudeE6 = longitudeE6;
+		this.cachedGeoPoint = null;
+	}
+
+	// ===========================================================
+	// Accessor
+	// ===========================================================
 
 	public String getName() {
 		return name;
@@ -105,36 +153,6 @@ public class Station implements GeoPointProvider, LatLngE6Provider, LatLngProvid
 
 	public void setFullAddress(String fullAddress) {
 		this.fullAddress = fullAddress;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see eu.ttbox.velib.model.LatLngProvider#getLatitude()
-	 */
-	@Override
-	public double getLatitude() {
-		return latitudeE6 / E6;
-	}
-
-	public void setLatitude(double lat) {
-		this.latitudeE6 = (int) (lat * E6);
-		this.cachedGeoPoint = null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see eu.ttbox.velib.model.LatLngProvider#getLongitude()
-	 */
-	@Override
-	public double getLongitude() {
-		return longitudeE6 / E6;
-	}
-
-	public void setLongitude(double lng) {
-		this.longitudeE6 = (int) (lng * E6);
-		this.cachedGeoPoint = null;
 	}
 
 	public boolean getOpen() {
@@ -212,34 +230,6 @@ public class Station implements GeoPointProvider, LatLngE6Provider, LatLngProvid
 		this.cachedVeloUpdatedDate = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see eu.ttbox.velib.model.LatLngE6Provider#getLatitudeE6()
-	 */
-	@Override
-	public double getLatitudeE6() {
-		return latitudeE6;
-	}
-
-	public void setLatitudeE6(int latitudeE6) {
-		this.latitudeE6 = latitudeE6;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see eu.ttbox.velib.model.LatLngE6Provider#getLongitudeE6()
-	 */
-	@Override
-	public double getLongitudeE6() {
-		return longitudeE6;
-	}
-
-	public void setLongitudeE6(int longitudeE6) {
-		this.longitudeE6 = longitudeE6;
-	}
-
 	public boolean isFavory() {
 		return favory;
 	}
@@ -283,11 +273,11 @@ public class Station implements GeoPointProvider, LatLngE6Provider, LatLngProvid
 	}
 
 	public void setFavoriteType(String favoriteTypeId) {
-		if (favoriteTypeId!=null && favoriteTypeId.length() > 0) {
+		if (favoriteTypeId != null && favoriteTypeId.length() > 0) {
 			favoriteType = FavoriteIconEnum.getFromName(favoriteTypeId);
 		}
 	}
-	
+
 	public String getFavoriteTypeId() {
 		String favId = null;
 		if (this.favoriteType != null && this.favoriteType != FavoriteIconEnum.DEFAULT_ICON) {

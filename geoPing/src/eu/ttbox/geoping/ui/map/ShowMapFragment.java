@@ -40,7 +40,7 @@ import eu.ttbox.geoping.ui.map.core.MapConstants;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
-import eu.ttbox.osm.core.MyAppTilesProviders;
+import eu.ttbox.osm.tiles.MyAppTilesProviders;
 import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 
 /**

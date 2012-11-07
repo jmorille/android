@@ -9,8 +9,7 @@
     <string name="no">Non</string>
     <string name="loading">Loading…</string>
 
-    <!-- Dialog -->
-    <string name="ask_activate_gps">Voulez-vous activer le GPS ?</string>
+    <!-- Dialog --> 
     <string name="dialog_custum_favorite_icon">Mon icône favori</string>
     <string name="dialog_custum_alias">Alias</string>
     <string name="dialog_custum_alias_hint">Saisissez votre alias</string>

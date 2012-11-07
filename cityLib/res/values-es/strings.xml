@@ -10,7 +10,7 @@
     <string name="loading">Carga</string>
 
     <!-- Dialog -->
-    <string name="ask_activate_gps">Usted quiere activar el GPS ?</string>
+   
     <string name="dialog_custum_favorite_icon">Mi icono favorito</string>
     <string name="dialog_custum_alias">Alias</string>
     <string name="dialog_custum_alias_hint">Escribe su alias</string>

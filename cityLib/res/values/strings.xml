@@ -22,8 +22,7 @@
     <string name="loading">Loading…</string>
 
 
-    <!-- Dialog -->
-    <string name="ask_activate_gps">Would you like to activate GPS ?</string>
+    <!-- Dialog --> 
     <string name="dialog_custum_favorite_icon">My favourite icon</string>
     <string name="dialog_custum_alias">Alias</string>
     <string name="dialog_custum_alias_hint">Indicate your alias</string>

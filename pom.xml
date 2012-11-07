@@ -12,10 +12,22 @@
 
  
 	<scm>
-		<url>https://github.com/jmorille/androidSmsTracker</url>
-		<connection>scm:git:ssh://git@github.com/jmorille/androidSmsTracker</connection>
-		<developerConnection>scm:git:ssh://git@github.com/jmorille/androidSmsTracker</developerConnection>
+           <url>https://github.com/jmorille/androidSmsTracker</url>
+           <connection>scm:git:ssh://git@github.com/jmorille/androidSmsTracker</connection>
+           <developerConnection>scm:git:ssh://git@github.com/jmorille/androidSmsTracker</developerConnection>
 	</scm>
+
+	 <distributionManagement>
+	    <repository>
+	      <id>ttbox-repository-release</id>
+	      <url>https://github.com/jmorille/maven-repo/</url>
+	    </repository>
+	    <snapshotRepository>
+	      <id>ttbox-repository-snapshots</id>
+	      <name>Snapshots Repository</name>
+	      <url>https://github.com/jmorille/maven-repo/</url>
+	    </snapshotRepository>
+         </distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,12 +35,13 @@
 		<android.version>4.1_r2</android.version> <!-- 2.3.3 -->
 		<google.maps.version>16_r2</google.maps.version>
 		<!-- Google Api -->
+                <compatibility-v13.version>10</compatibility-v13.version>
 		<gcm.version>3</gcm.version>
+                <admob.version>6.2.1-r8</admob.version>
 		<!-- Osm -->
 		<osmdroid.version>3.0.8</osmdroid.version>
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
-		<!-- Frameworks -->
-		<jackson.version>2.0.5</jackson.version>
+		 
 		<!-- Release -->
 		<android-maven-plugin.version>3.4.0</android-maven-plugin.version>
 		<android.sdk.platform>16</android.sdk.platform>
@@ -51,6 +64,7 @@
   <modules>
     <module>osm</module>
     <module>geoPing</module>
+    <module>cityLib</module>
   </modules>
   
   
@@ -63,6 +77,15 @@
 	</pluginRepositories>
 
 	<repositories>
+		<repository>
+			<id>ttbox-repository</id>
+			<name>TTBox maven repository</name>
+			<url>https://github.com/jmorille/maven-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<!-- OSM -->
 		<repository>
 			<id>osmdroid-repository</id>
 			<name>OSMDroid maven repository</name>

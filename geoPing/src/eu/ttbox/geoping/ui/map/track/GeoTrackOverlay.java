@@ -168,6 +168,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         onResume();
     }
 
+    // ===========================================================
+    // Life Cycle
+    // ===========================================================
+
+
+    
     private void onResume() {
         Log.d(TAG, "##### onResume #### " + person);
         // context.getContentResolver().registerContentObserver(GeoTrackerProvider.Constants.CONTENT_URI,

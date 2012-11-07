@@ -26,6 +26,6 @@ public class AppConstants {
 
 	public static final String PREFS__KEY_TILE_SOURCE = "tilesource";
 
-	public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = "myLocationDisplayGeoLoc";
+	public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC  = eu.ttbox.osm.core.AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC;
 	
 }

@@ -60,8 +60,8 @@ import eu.ttbox.velib.service.geo.GeoUtils;
 import eu.ttbox.velib.ui.map.MapConstants;
 import eu.ttbox.velib.ui.map.VelibMapPresenter;
 import eu.ttbox.velib.ui.map.VelibMapView;
-import eu.ttbox.velib.ui.map.dialog.GpsActivateAskDialog;
-import eu.ttbox.velib.ui.map.mylocation.MyLocationOverlay;
+import eu.ttbox.osm.ui.map.mylocation.dialog.GpsActivateAskDialog;
+import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
 import eu.ttbox.velib.ui.search.SearchableVeloActivity;
 

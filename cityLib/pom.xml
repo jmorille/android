@@ -8,23 +8,30 @@
 		<artifactId>parent</artifactId>
 		<version>0.1.4</version>
 	</parent>
-
-
-	<groupId>eu.ttbox.android.androlib</groupId>
-	<artifactId>androlib</artifactId>
+ 
+	<groupId>eu.ttbox.android.cityLib</groupId>
+	<artifactId>cityLib</artifactId>
 
 	<packaging>apk</packaging>
 
-	<name>AndroLib</name>
+	<name>City Lib</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		 <!-- Internal Api -->
+		 <osm-lib.version>0.0.9</osm-lib.version>
+		 
+		 <!-- Android -->
+		<android.version>4.1_r2</android.version> <!-- 2.3.3 -->
 		<google.maps.version>16_r2</google.maps.version>
-		<osmdroid.version>3.0.8</osmdroid.version>
-		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
+		 
 		<!-- Google Api -->
-		<gcm.version>r3</gcm.version>
-
+		<compatibility-v13.version>10</compatibility-v13.version>
+		<gcm.version>r3</gcm.version> 
+		
+		<!-- Osm -->
+		<osmdroid.version>3.0.8</osmdroid.version>
+		
 		<!-- Release -->
 		<android-maven-plugin.version>3.3.0</android-maven-plugin.version>
 		<sign.alias>android</sign.alias>
@@ -32,20 +39,44 @@
 
 	<dependencies>
 	
-		<!--Android Api -->
+    	<!-- Internal -->
 		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android</artifactId>
-			<scope>provided</scope>
+			<groupId>eu.ttbox.android.osm</groupId>
+			<artifactId>osm-lib</artifactId>
+			<version>${osm-lib.version}</version>
+			<type>apklib</type>
 		</dependency>
 
-		<!-- Google Map Api -->
+		<!-- Android -->
 		<dependency>
-			<groupId>com.google.android.maps</groupId>
-			<artifactId>maps</artifactId>
-			<version>${google.maps.version}</version>
+			<groupId>android</groupId>
+			<artifactId>android</artifactId>
+			<version>${android.version}</version>
 			<scope>provided</scope>
 		</dependency>
+	 
+
+		<!-- Compatibility -->
+		<dependency>
+			<groupId>android.support</groupId>
+			<artifactId>compatibility-v13</artifactId>
+			<version>${compatibility-v13.version}</version>
+		</dependency>
+		
+		<!--Android Api -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.google.android</groupId> -->
+<!-- 			<artifactId>android</artifactId> -->
+<!-- 			<scope>provided</scope> -->
+<!-- 		</dependency> -->
+
+		<!-- Google Map Api -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.google.android.maps</groupId> -->
+<!-- 			<artifactId>maps</artifactId> -->
+<!-- 			<version>${google.maps.version}</version> -->
+<!-- 			<scope>provided</scope> -->
+<!-- 		</dependency> -->
 
 		
 
@@ -69,11 +100,11 @@
 		</dependency>
 
 		<!-- Open Street Map -->
-		<dependency>
-			<groupId>org.osmdroid</groupId>
-			<artifactId>osmdroid-android</artifactId>
-			<version>${osmdroid.version}</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.osmdroid</groupId> -->
+<!-- 			<artifactId>osmdroid-android</artifactId> -->
+<!-- 			<version>${osmdroid.version}</version> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.osmdroid</groupId>
 			<artifactId>osmdroid-third-party</artifactId>
@@ -85,11 +116,12 @@
 			<version>${osmdroid.version}</version>
 		</dependency>
 		<!-- Logging Api needed by osmdroid -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-android</artifactId>
-			<version>${slf4j-android.version}</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.slf4j</groupId> -->
+<!-- 			<artifactId>slf4j-android</artifactId> -->
+<!-- 			<version>${slf4j-android.version}</version> -->
+<!-- 		</dependency> -->
+
 	</dependencies>
 
 	<build>

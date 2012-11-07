@@ -31,7 +31,7 @@
     <!-- android:backupAgent=".service.backup.MyBackupAgent" -->
     <application
         android:name="AndroLibApplication"
-        android:debuggable="false"
+        android:debuggable="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/panneau_obligation_cycles"
         android:label="@string/app_name"
@@ -51,10 +51,10 @@
 
 
         <!-- Service -->
-        <service
+        <service android:exported="false"
             android:name=".service.VelibService"
             android:enabled="true" />
-        <service
+        <service android:exported="false"
             android:name=".service.osm.OsmMapTilesDownloadService"
             android:enabled="true" >
             <intent-filter>
@@ -102,19 +102,19 @@
                 android:name="android.app.searchable.default_searchable"
                 android:value=".ui.search.SearchableVeloActivity" />
         </activity>
-        <activity android:name=".ui.about.AboutActivity" >
+        <activity android:name=".ui.about.AboutActivity" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="eu.ttbox.velib.ui.about.ACTION_VIEW_ABOUT" />
                 <action android:name="eu.ttbox.velib.ui.about.ACTION_VIEW_LICENCE" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.about.VelibAccountActivity" >
+        <activity android:name=".ui.about.VelibAccountActivity" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity
+        <activity android:exported="false"
             android:name=".ui.search.SearchableVeloActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask" >
@@ -127,7 +127,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity
+        <activity android:exported="false"
             android:name=".ui.search.SearchableGeocoderActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask" >
@@ -141,10 +141,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/geocoder_searchable" />
         </activity>
-        <activity
+        <activity android:exported="false"
             android:name=".ui.preference.VelibPreferenceActivity"
             android:label="@string/app_name" />
-        <activity
+        <activity android:exported="false"
             android:name=".VelibMapActivity"
             uiOptions="splitActionBarWhenNarrow"
             android:label="@string/app_name"
@@ -156,9 +156,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ui.search.SearchableGeocoderActivity" />
+<!--             <meta-data -->
+<!--                 android:name="android.app.default_searchable" -->
+<!--                 android:value=".ui.search.SearchableGeocoderActivity" /> -->
         </activity>
 
         <!-- Provides search suggestions for words and their definitions. -->
