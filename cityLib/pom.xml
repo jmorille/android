@@ -93,6 +93,7 @@
 		</dependency>
 
 		<!-- Svg Android : http://code.google.com/p/svg-android/ -->
+<!-- 		http://code.google.com/p/svg-android-2/ -->
 <!-- 		<dependency> -->
 <!-- 			<groupId>com.larvalabs.svgandroid</groupId> -->
 <!-- 			<artifactId>svg-android</artifactId> -->

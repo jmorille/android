@@ -34,6 +34,11 @@ public class MapTileProviderTTbox extends MapTileProviderArray implements IMapTi
                 pTileSource);
     }
 
+    @Override
+    public void detach() { 
+        super.detach();
+    }
+    
     /**
      * Creates a {@link MapTileProviderTTbox}.
      */

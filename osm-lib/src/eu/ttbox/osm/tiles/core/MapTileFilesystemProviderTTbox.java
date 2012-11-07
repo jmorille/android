@@ -71,6 +71,12 @@ public class MapTileFilesystemProviderTTbox  extends MapTileFileStorageProviderB
     // Methods from SuperClass/Interfaces
     // ===========================================================
 
+
+    @Override
+    public void detach() { 
+        super.detach();
+    }
+    
     @Override
     public boolean getUsesDataConnection() {
         return false;
