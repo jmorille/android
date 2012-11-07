@@ -62,7 +62,7 @@
 	</dependencies>
   
   <modules>
-    <module>osm</module>
+    <module>osm-lib</module>
     <module>geoPing</module>
     <module>cityLib</module>
   </modules>

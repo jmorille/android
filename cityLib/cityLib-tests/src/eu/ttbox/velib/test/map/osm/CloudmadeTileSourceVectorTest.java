@@ -31,38 +31,40 @@ public class CloudmadeTileSourceVectorTest extends AndroidTestCase {
 	// return service;
 	// }
 
-	@SmallTest
-	public void testSvg2DrawableShapesFromAssets() throws SVGParseException, IOException {
-		AssetManager assets = getContext().getAssets();
-		SVG svg = SVGParser.getSVGFromAsset(assets, "svg/shapes.svg");
-		Log.d(TAG, "Open To SVG file : " + svg);
-		Drawable img = svg.createPictureDrawable();
-		Log.d(TAG, "Open Drawable img : " + img);
-	}
-	@SmallTest
-	public void testSvg2DrawableShapesFromAssetsIs() throws SVGParseException, IOException {
-		AssetManager assets = getContext().getAssets();
-		InputStream is =  assets.open("svg/shapes.svg");
-		SVG svg = SVGParser.getSVGFromInputStream(is);
-		Log.d(TAG, "Open To SVG file : " + svg);
-		Drawable img = svg.createPictureDrawable();
-		Log.d(TAG, "Open Drawable img : " + img);
-	}
-
-	@SmallTest
-	public void testSvg2Drawableandroid() {
-		Context testContext = getContext();
-		InputStream is = testContext.getResources().openRawResource(eu.ttbox.velib.test.R.raw.shapes); // getClass().getResourceAsStream(resName);
-		SVG svg = SVGParser.getSVGFromInputStream(is);
-		Drawable img = svg.createPictureDrawable();
-		Log.d(TAG, "Open Drawable img : " + img);
-	}
+//	@SmallTest
+//	public void testSvg2DrawableShapesFromAssets() throws SVGParseException, IOException {
+//		AssetManager assets = getContext().getAssets();
+//		SVG svg = SVGParser.getSVGFromAsset(assets, "svg/shapes.svg");
+//		Log.d(TAG, "Open To SVG file : " + svg);
+//		Drawable img = svg.createPictureDrawable();
+//		Log.d(TAG, "Open Drawable img : " + img);
+//	}
+//	@SmallTest
+//	public void testSvg2DrawableShapesFromAssetsIs() throws SVGParseException, IOException {
+//		AssetManager assets = getContext().getAssets();
+//		InputStream is =  assets.open("svg/shapes.svg");
+//		SVG svg = SVGParser.getSVGFromInputStream(is);
+//		Log.d(TAG, "Open To SVG file : " + svg);
+//		Drawable img = svg.createPictureDrawable();
+//		Log.d(TAG, "Open Drawable img : " + img);
+//	}
+//
+//	@SmallTest
+//	public void testSvg2Drawableandroid() {
+//		Context testContext = getContext();
+//		InputStream is = testContext.getResources().openRawResource(eu.ttbox.velib.test.R.raw.shapes); // getClass().getResourceAsStream(resName);
+//		SVG svg = SVGParser.getSVGFromInputStream(is);
+//		Drawable img = svg.createPictureDrawable();
+//		Log.d(TAG, "Open Drawable img : " + img);
+//	}
 
 	@SmallTest
 	public void testSvg2Drawable() {
 		Context testContext = getContext();
 		InputStream is = testContext.getResources().openRawResource(eu.ttbox.velib.test.R.raw.tiles_svg_45100); // getClass().getResourceAsStream(resName);
+	
 		SVG svg = SVGParser.getSVGFromInputStream(is);
+		
 		Drawable img = svg.createPictureDrawable();
 		Log.d(TAG, "Open Drawable img : " + img);
 	}

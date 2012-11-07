@@ -45,7 +45,7 @@ public class MapQuestTilesProviders {
             "CloudMadeVectorTiles", ResourceProxy.string.cloudmade_small, 0, 21, 256, ".svg", // svgz
             "http://alpha.vectors.cloudmade.com/%s/%d/%d/%d/%d/%d%s?token=%s" //
     );
-
+    
     public static void initTilesSource() {
         // Remove Tiles
         TileSourceFactory.getTileSources().remove(TileSourceFactory.TOPO);
