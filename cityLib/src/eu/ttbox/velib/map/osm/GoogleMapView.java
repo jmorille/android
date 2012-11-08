@@ -10,11 +10,11 @@ import org.osmdroid.google.wrapper.GeoPoint;
 import org.osmdroid.google.wrapper.MapController;
 import org.osmdroid.google.wrapper.Projection;
 
-import com.google.android.maps.Overlay;
-
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+
+import com.google.android.maps.Overlay;
 
 public class GoogleMapView implements IMapView {
 

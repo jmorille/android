@@ -66,7 +66,7 @@ public class StationDispoDrawable extends View {
 		circleUnkwonPaint.setColor(r.getColor(R.color.station_dispo_unknown));
 		// Selected
 		selectedBorderPaint = new Paint();
-		selectedBorderPaint.setColor((R.color.station_select_border));
+		selectedBorderPaint.setColor(r.getColor(R.color.station_select_border));
 		selectedBorderPaint.setAntiAlias(true);
 		selectedBorderPaint.setStrokeWidth(CIRCLE_BORDER_STROKE_WIDTH);
 		selectedBorderPaint.setStyle(Paint.Style.STROKE);

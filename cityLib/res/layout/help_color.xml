@@ -14,15 +14,13 @@
             style="@style/help_text"
             android:text="@string/help_station_circle_color_code" />
 
-        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView
-            android:id="@+id/help_station_03"
+        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView 
             style="@style/help_station_dispo"
             app:station_cycles="14"
             app:station_parking="27" >
         </eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView>
 
-        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView
-            android:id="@+id/help_station_04"
+        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView 
             style="@style/help_station_dispo"
             app:station_cycles="0"
             app:station_parking="0" >
@@ -32,8 +30,7 @@
             style="@style/help_text"
             android:text="@string/help_station_circle_color_unexpected" />
 
-        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView
-            android:id="@+id/help_station_05"
+        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView 
             style="@style/help_station_dispo"
             app:station_cycles="1"
             app:station_parking="1" >

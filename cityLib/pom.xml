@@ -28,7 +28,8 @@
 		<!-- Google Api -->
 		<compatibility-v13.version>10</compatibility-v13.version>
 		<gcm.version>r3</gcm.version> 
-		
+		 <admob.version>6.2.1-r8</admob.version>
+		   
 		<!-- Osm -->
 		<osmdroid.version>3.0.8</osmdroid.version>
 		
@@ -90,6 +91,12 @@
 			<groupId>com.google.android.gcm</groupId>
 			<artifactId>gcm-client</artifactId>
 			<version>${gcm.version}</version>
+		</dependency>
+		
+	   <dependency>
+			<groupId>com.google.android.admob</groupId>
+			<artifactId>admob</artifactId>
+			<version>${admob.version}</version>
 		</dependency>
 
 		<!-- Svg Android : http://code.google.com/p/svg-android/ -->

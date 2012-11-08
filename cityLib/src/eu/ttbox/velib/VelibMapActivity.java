@@ -7,11 +7,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.tileprovider.tilesource.bing.BingMapTileSource;
-import org.osmdroid.tileprovider.util.CloudmadeUtil;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
@@ -36,6 +33,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -49,7 +47,6 @@ import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import eu.ttbox.osm.tiles.MapTileProviderTTbox;
 import eu.ttbox.osm.ui.map.MapViewFactory;
 import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 import eu.ttbox.osm.ui.map.mylocation.dialog.GpsActivateAskDialog;
@@ -65,7 +62,6 @@ import eu.ttbox.velib.service.VelibService.LocalBinder;
 import eu.ttbox.velib.service.database.Velo.VeloColumns;
 import eu.ttbox.velib.service.geo.GeoUtils;
 import eu.ttbox.velib.ui.map.MapConstants;
-import eu.ttbox.velib.ui.map.VelibMapPresenter;
 import eu.ttbox.velib.ui.map.VelibMapView;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
 import eu.ttbox.velib.ui.search.SearchableVeloActivity;
@@ -85,13 +81,12 @@ import eu.ttbox.velib.ui.search.SearchableVeloActivity;
  * @author deostem
  * 
  */
-public class VelibMapActivity extends Activity implements VelibMapView, SharedPreferences.OnSharedPreferenceChangeListener {
+public class VelibMapActivity extends FragmentActivity implements VelibMapView, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "VelibMapActivity";
 
     int MENU_LAST_ID = 3;
-
-    VelibMapPresenter presenter;
+  
 
     private ResourceProxy mResourceProxy;
 
@@ -156,28 +151,12 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
             }
         }
     };
+ 
+  
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
-    public VelibMapActivity() {
-        super();
-        presenter = new VelibMapPresenter(this);
-    }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        handleIntent(intent);
-    }
-
-    private MapView createMapView(ITileSource tileSource, boolean google, String gooleApiKey) {
-        MapView mapView = null;
-        if (google) {
-            GoogleMapView mapView2 = new GoogleMapView(this, gooleApiKey);
-        } else {
-        	ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            mapView = MapViewFactory.createOsmMapView(this, mResourceProxy, tileSource, activityManager);
-        }
-        return mapView;
-    }
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -297,6 +276,29 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         }
     }
 
+    private MapView createMapView(ITileSource tileSource, boolean google, String gooleApiKey) {
+        MapView mapView = null;
+        if (google) {
+            GoogleMapView mapView2 = new GoogleMapView(this, gooleApiKey);
+        } else {
+            ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            mapView = MapViewFactory.createOsmMapView(this, mResourceProxy, tileSource, activityManager);
+        }
+        return mapView;
+    }
+    
+    
+    // ===========================================================
+    // Handle Intent
+    // ===========================================================
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    
     private GeoPoint handleIntent(Intent intent) {
 
         GeoPoint point = null;

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -19,6 +18,7 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import eu.ttbox.velib.CountDownTimerActivity;
 import eu.ttbox.velib.R;
@@ -139,7 +139,7 @@ public class CountdownTimerService extends Service {
 		mTimers.get(timerId).startTimer(millisInFuture);
 
 		// Notification Bar
-		Notification.Builder builder = new Notification.Builder(this)//
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)//
 				.setSmallIcon(R.drawable.icon_notification)//
 				.setTicker(getString(R.string.countdown_notif_msg_title))//
 				.setContentTitle(getString(R.string.countdown_notif_msg_title))//
@@ -190,7 +190,7 @@ public class CountdownTimerService extends Service {
 		// notification.defaults |= Notification.FLAG_INSISTENT;
 		// notification.defaults |= Notification.FLAG_AUTO_CANCEL;
 
-		Notification.Builder builder = new Notification.Builder(this)//
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)//
 				.setSmallIcon(R.drawable.icon_notification)//
 				.setTicker(getString(R.string.countdown_notif_timeup_title))//
 				.setContentTitle(getString(R.string.countdown_notif_timeup_title))//

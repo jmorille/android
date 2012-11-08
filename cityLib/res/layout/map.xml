@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/maplayout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-<!--     <org.osmdroid.views.MapView -->
-<!--         android:id="@+id/mapview" -->
-<!--         android:layout_width="fill_parent" -->
-<!--         android:layout_height="fill_parent" -->
-<!--         android:clickable="true" /> -->
-	<LinearLayout android:id="@+id/mapViewContainer" 
-	      android:layout_width="match_parent"
-        android:layout_height="match_parent"
-	    />
+    <fragment
+        android:id="@+id/fragment_admob"
+        android:name="eu.ttbox.velib.ui.admob.AdmobFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+ 
+
+    <LinearLayout
+        android:id="@+id/mapViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <ToggleButton
         android:id="@+id/map_button_myposition"
         android:layout_width="32dip"
@@ -22,7 +25,6 @@
         android:background="@android:drawable/ic_menu_mylocation"
         android:textOff=""
         android:textOn=""
-        android:visibility="gone" >
-    </ToggleButton>
-
+        android:visibility="gone" />
+ 
 </FrameLayout>
