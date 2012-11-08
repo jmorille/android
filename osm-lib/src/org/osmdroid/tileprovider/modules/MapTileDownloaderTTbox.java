@@ -174,28 +174,12 @@ public class MapTileDownloaderTTbox extends MapTileModuleProviderBase {
 				urlConnection.setConnectTimeout(CONNECTION_TIMEOUT);
 				urlConnection.addRequestProperty(HTTP_HEADER_ACCEPT_ENCODING, "gzip");
 
-				try {
-
-					// final HttpUriRequest head = new HttpGet(tileURLString);
-					// final HttpResponse response = client.execute(head);
-
-//					 Check to see if we got success
-//					final org.apache.http.StatusLine line = response.getStatusLine();
-//					int responseCode = line.getStatusCode();
-							
+				try { 
 					int responseCode = urlConnection.getResponseCode();
 					if (responseCode !=  HttpURLConnection.HTTP_OK) {
 						logger.warn("Problem downloading MapTile: " + tile + " HTTP response: " +responseCode);
 						return null;
-					}
-//
-//					final HttpEntity entity = response.getEntity();
-//					if (entity == null) {
-//						logger.warn("No content downloading MapTile: " + tile);
-//						return null;
-//					}
-//					in = entity.getContent();
-
+					} 
 					in = new BufferedInputStream(urlConnection.getInputStream(), 1240);
 					
 					final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
