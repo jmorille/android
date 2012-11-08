@@ -3,26 +3,32 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+       <groupId>eu.ttbox.android</groupId>
+       <artifactId>android-root</artifactId>
+	   <version>0.0.9</version>	
+	</parent>
+	
 	<groupId>eu.ttbox.android.geoping</groupId>
 	<artifactId>geoPing</artifactId>
-	<version>0.0.9</version>
+<!-- 	<version>0.0.9</version> -->
 	<packaging>apk</packaging>
 
 	<name>GeoPing</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<!-- 	<properties> -->
+<!-- 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
 		 <!-- Internal Api -->
-		 <osm-lib.version>0.0.9</osm-lib.version>
+<!-- 		 <osm-lib.version>0.0.9</osm-lib.version> -->
 		 
 		<!-- Android -->
-		<android.version>4.1_r2</android.version> <!-- 2.3.3 -->
+<!-- 		<android.version>4.1_r2</android.version> 2.3.3 -->
 <!-- 		<google.maps.version>16_r2</google.maps.version> -->
 
 		<!-- Google Api -->
-		<compatibility-v13.version>10</compatibility-v13.version>
-		<gcm.version>3</gcm.version>
-        <admob.version>6.2.1-r8</admob.version>
+<!-- 		<compatibility-v13.version>10</compatibility-v13.version> -->
+<!-- 		<gcm.version>3</gcm.version> -->
+<!--         <admob.version>6.2.1-r8</admob.version> -->
         
 		<!-- Osm -->
 <!-- 		<osmdroid.version>3.0.8</osmdroid.version> -->
@@ -30,10 +36,10 @@
 		<!-- Frameworks -->
 <!-- 		<jackson.version>2.0.5</jackson.version> -->
 		<!-- Release -->
-		<android-maven-plugin.version>3.4.0</android-maven-plugin.version>
-		<android.sdk.platform>16</android.sdk.platform>
-		<sign.alias>android</sign.alias>
-	</properties>
+<!-- 		<android-maven-plugin.version>3.4.0</android-maven-plugin.version> -->
+<!-- 		<android.sdk.platform>16</android.sdk.platform> -->
+<!-- 		<sign.alias>android</sign.alias> -->
+<!-- 	</properties> -->
 
 	<dependencies>
 		<!-- Internal -->

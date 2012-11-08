@@ -14,6 +14,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.TilesOverlay;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -87,12 +88,12 @@ public class VelibMapActivity extends FragmentActivity implements VelibMapView, 
 
     int MENU_LAST_ID = 3;
   
+    private ToggleButton myPositionButton;
 
     private ResourceProxy mResourceProxy;
 
     private IMapController mapController;
     private MapView mapView;
-    private ToggleButton myPositionButton;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences privateSharedPreferences;
@@ -330,6 +331,11 @@ public class VelibMapActivity extends FragmentActivity implements VelibMapView, 
         }
         return point;
     }
+
+    
+    // ===========================================================
+    // Handle Intent
+    // ===========================================================
 
     @Override
     protected void onStop() {
@@ -600,6 +606,7 @@ public class VelibMapActivity extends FragmentActivity implements VelibMapView, 
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
