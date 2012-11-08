@@ -32,9 +32,9 @@
         android:showAsAction="ifRoom|collapseActionView"
         android:title="@string/menu_options"/>
     
-     <item      android:id="@+id/menuDownloadTiles"
-        android:icon="@android:drawable/ic_menu_upload"
-        android:showAsAction="ifRoom|collapseActionView"
-        android:title="@string/menu_download_tiles"/>
+<!--      <item      android:id="@+id/menuDownloadTiles" -->
+<!--         android:icon="@android:drawable/ic_menu_upload" -->
+<!--         android:showAsAction="ifRoom|collapseActionView" -->
+<!--         android:title="@string/menu_download_tiles"/> -->
 
 </menu>

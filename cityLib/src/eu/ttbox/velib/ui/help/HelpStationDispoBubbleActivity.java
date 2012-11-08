@@ -1,27 +1,29 @@
 package eu.ttbox.velib.ui.help;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.core.DateUtils;
 import eu.ttbox.velib.map.station.bubble.BubbleOverlayView;
 import eu.ttbox.velib.model.Station;
 
-public class HelpStationDispoBubbleActivity extends Activity {
+public class HelpStationDispoBubbleActivity extends Fragment {
 
 	private BubbleOverlayView balloonView;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.help_station_dispo_bubble);
-		initStationDispoHelp();
-
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.help_station_dispo_bubble, container, false);
+		initStationDispoHelp(v);
+		return v;
 	}
 
-	private void initStationDispoHelp() {
-		balloonView = new BubbleOverlayView<Station>(this, null, 0);
+	private void initStationDispoHelp(View v) {
+		balloonView = new BubbleOverlayView<Station>(this.getActivity(), null, 0);
 		// Define Data
 		Station station = new Station();
 		station.setName("PLACE DE L'HOTEL DE VILLE");
@@ -40,7 +42,7 @@ public class HelpStationDispoBubbleActivity extends Activity {
 		balloonView.setData(station, now);
 
 		// Insert into screen
-		LinearLayout container = (LinearLayout) findViewById(R.id.help_station_dispobubble_container);
+		LinearLayout container = (LinearLayout) v.findViewById(R.id.help_station_dispobubble_container);
 		container.addView(balloonView);
 	}
 

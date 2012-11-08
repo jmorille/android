@@ -7,7 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import eu.ttbox.velib.core.AppConstants;
-import eu.ttbox.velib.ui.help.HelpTabLayoutActivity;
+import eu.ttbox.velib.ui.help.HelpMainActivity;
 
 public class AndroLibApplication extends Application {
 
@@ -28,7 +28,7 @@ public class AndroLibApplication extends Application {
 	}
 
 	private void startHelpActivity() {
-		Intent intent = new Intent(getBaseContext(), HelpTabLayoutActivity.class);
+		Intent intent = new Intent(getBaseContext(), HelpMainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		getBaseContext().startActivity(intent);
 	}

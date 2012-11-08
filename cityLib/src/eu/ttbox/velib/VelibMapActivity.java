@@ -19,6 +19,7 @@ import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -48,14 +49,13 @@ import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import eu.ttbox.osm.tiles.MapTileProviderTTbox;
 import eu.ttbox.osm.ui.map.MapViewFactory;
 import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 import eu.ttbox.osm.ui.map.mylocation.dialog.GpsActivateAskDialog;
 import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.core.Intents;
 import eu.ttbox.velib.map.osm.GoogleMapView;
-import eu.ttbox.velib.map.osm.MapQuestTilesProviders;
-import eu.ttbox.velib.map.osm.tiles.MapTileProviderTTbox;
 import eu.ttbox.velib.map.provider.VeloProviderItemizedOverlay;
 import eu.ttbox.velib.map.station.StationDispoOverlay;
 import eu.ttbox.velib.model.Station;
@@ -173,7 +173,8 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         if (google) {
             GoogleMapView mapView2 = new GoogleMapView(this, gooleApiKey);
         } else {
-            mapView = MapViewFactory.createOsmMapView(this, mResourceProxy, tileSource);
+        	ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            mapView = MapViewFactory.createOsmMapView(this, mResourceProxy, tileSource, activityManager);
         }
         return mapView;
     }
@@ -186,6 +187,7 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         }
         isThreadRunnning.set(true);
         super.onCreate(bundle);
+        setContentView(R.layout.map); // bind the layout to the activity
 
         // Service
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -196,32 +198,13 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
         // OSM
         mResourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
 
-        // only do static initialisation if needed
-        // http://developers.cloudmade.com/projects/web-maps-api/examples
-        if (CloudmadeUtil.getCloudmadeKey().length() == 0) {
-            CloudmadeUtil.retrieveCloudmadeKey(this);
-        }
-        if (BingMapTileSource.getBingKey().length() == 0) {
-            BingMapTileSource.retrieveBingKey(this);
-        }
-        final BingMapTileSource bmts = new BingMapTileSource(null);
-        if (!TileSourceFactory.containsTileSource(bmts.name())) {
-            TileSourceFactory.addTileSource(bmts);
-        }
-        // init map Quest
-        MapQuestTilesProviders.initTilesSource();
-
-        setContentView(R.layout.map); // bind the layout to the activity
-
         // Init handler
         timer = new ScheduledThreadPoolExecutor(1);
 
         // Osm
         // -------------
         // Map
-        ITileSource tileSource = getPrefTileSource();
-        Handler tileRequestCompleteHandler = null;
-        MapTileProviderBase aTileProvider = new MapTileProviderTTbox(this, tileSource);
+        ITileSource tileSource = getPrefTileSource();  
         String googleApiKey = getResources().getString(R.string.map_apiKey);
         mapView = createMapView(tileSource, false, googleApiKey); 
         
@@ -694,42 +677,16 @@ public class VelibMapActivity extends Activity implements VelibMapView, SharedPr
             startActivity(intentOption);
             return true;
         }
-        case R.id.menuDownloadTiles: {
-            MapTileProviderBase tileProvider = mapView.getTileProvider();
-            ITileSource tileSource = tileProvider.getTileSource();
-
-            int minZoom = mapView.getZoomLevel(); // tileSource.getMinimumZoomLevel()
-            int maxZoom = mapView.getZoomLevel(); // tileSource.getMaximumZoomLevel()
-            // double[] boundyBoxE6 = velibProvider.getBoundyBoxE6();
-            double[] boundyBox = velibProvider.getBoundyBox();
-            // Log.w(TAG,
-            // String.format("Velib Map BoundyBox (%s, %s)  (%s, %s)",
-            // boundyBox[0],boundyBox[1],boundyBox[2],boundyBox[3]));
-            // Log.w(TAG,
-            // String.format("Velib Map boundyBoxE6 (%s, %s)  (%s, %s)",
-            // boundyBoxE6[0],boundyBoxE6[1],boundyBoxE6[2],boundyBoxE6[3]));
-            Log.i(TAG, "startService downloadMapTiles for " + minZoom + "<=zoom<=" + maxZoom);
-            startService(Intents.downloadMapTiles(this, tileSource, minZoom, maxZoom, boundyBox));
-
-            // OsmDowloader download = new OsmDowloader();
-
-            // download.download(this, tileSource, minZoom, maxZoom, boundyBox);
-            // double[] boxE6 = velibProvider.getBoundyBoxE6();
-            // double latNorth = Math.max(boxE6[0], boxE6[2]) / AppConstants.E6;
-            // double latSouth = Math.min(boxE6[0], boxE6[2]) / AppConstants.E6;
-            // double lngWest = Math.min(boxE6[1], boxE6[3] ) / AppConstants.E6;
-            // double lngEast = Math.max(boxE6[1], boxE6[3] ) / AppConstants.E6;
-
-            // double north = 52.4244;double south=52.3388 ;double east= 4.6746
-            // ; double west= 4.5949;
-            // Log.d(TAG,
-            // String.format("north =  %s /  south= %s / east= %s / west=  %s",
-            // latNorth, latSouth, lngEast, lngWest));
-            // download.download(this, tileSource, minZoom, maxZoom, latNorth,
-            // lngWest, latSouth, lngEast);
-            return true;
-
-        }
+//        case R.id.menuDownloadTiles: {
+//            MapTileProviderBase tileProvider = mapView.getTileProvider();
+//            ITileSource tileSource = tileProvider.getTileSource(); 
+//            int minZoom = mapView.getZoomLevel(); // tileSource.getMinimumZoomLevel()
+//            int maxZoom = mapView.getZoomLevel(); // tileSource.getMaximumZoomLevel() 
+//            double[] boundyBox = velibProvider.getBoundyBox(); 
+//            Log.i(TAG, "startService downloadMapTiles for " + minZoom + "<=zoom<=" + maxZoom);
+//            startService(Intents.downloadMapTiles(this, tileSource, minZoom, maxZoom, boundyBox)); 
+//            return true; 
+//        }
         default: {
             // Map click
             final int menuId = item.getItemId() - MENU_LAST_ID;

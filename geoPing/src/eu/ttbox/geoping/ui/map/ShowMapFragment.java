@@ -13,6 +13,7 @@ import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapController.AnimationType;
 import org.osmdroid.views.MapView;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -41,7 +42,6 @@ import eu.ttbox.geoping.ui.map.core.MapConstants;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
-import eu.ttbox.osm.tiles.MyAppTilesProviders;
 import eu.ttbox.osm.ui.map.MapViewFactory;
 import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 
@@ -100,9 +100,10 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         // Osm
         // ----------
         this.mResourceProxy = new DefaultResourceProxyImpl(getActivity());
+        ActivityManager activityManager = (ActivityManager)getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         // Maps
         ITileSource tileSource = getPrefITileSource();
-        mapView = MapViewFactory.createOsmMapView(getActivity(), mResourceProxy, tileSource); 
+        mapView = MapViewFactory.createOsmMapView(getActivity(), mResourceProxy, tileSource, activityManager); 
         ViewGroup mapViewContainer = (ViewGroup)v.findViewById(R.id.mapViewContainer);
         mapViewContainer.addView((View) mapView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         // Map Controler
@@ -117,8 +118,16 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         mStatusReceiver = new StatusReceiver();
         // Query
         getActivity().getSupportLoaderManager().initLoader(GEOTRACK_PERSON_LOADER, null, geoTrackPersonLoaderCallback);
+      
         return v;
     }
+
+    @Override
+    public void onLowMemory() {
+    	// TODO
+    }
+
+    
 
     @Override
     public void onDestroy() {

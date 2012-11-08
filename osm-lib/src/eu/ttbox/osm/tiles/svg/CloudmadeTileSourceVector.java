@@ -1,4 +1,4 @@
-package eu.ttbox.velib.map.osm;
+package eu.ttbox.osm.tiles.svg;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,9 +8,6 @@ import org.osmdroid.ResourceProxy;
 import org.osmdroid.ResourceProxy.string;
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.CloudmadeTileSource;
-import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -18,13 +15,12 @@ import android.graphics.Picture;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import eu.ttbox.velib.core.svg.SVG;
-import eu.ttbox.velib.core.svg.SVGParser;
+import eu.ttbox.osm.tiles.svg.parser.SVG;
+import eu.ttbox.osm.tiles.svg.parser.SVGParser;
 
 public class CloudmadeTileSourceVector extends CloudmadeTileSource {
 
-    private static final String TAG = "CloudmadeTileSourceVector";
-    private static final Logger logger = LoggerFactory.getLogger(CloudmadeTileSourceVector.class);
+    private static final String TAG = "CloudmadeTileSourceVector"; 
 
     public CloudmadeTileSourceVector(String pName, string pResourceId, int pZoomMinLevel, int pZoomMaxLevel, int pTileSizePixels, String pImageFilenameEnding, String... pBaseUrl) {
         super(pName, pResourceId, pZoomMinLevel, pZoomMaxLevel, pTileSizePixels, pImageFilenameEnding, pBaseUrl);
@@ -37,13 +33,14 @@ public class CloudmadeTileSourceVector extends CloudmadeTileSource {
     @Override
     public String getTileURLString(final MapTile pTile) {
         final String tileUrl = super.getTileURLString(pTile);
-        Log.d(TAG, "Tile URL : " + tileUrl);
+//        Log.d(TAG, "Tile URL : " + tileUrl);
         return tileUrl;
     }
 
     @Override
     public String localizedName(final ResourceProxy proxy) {
-        return "Vector Tiles";
+//    	String localizedName = super.localizedName(proxy);
+        return  "Cloudmade Vector Alpha";
     }
     
  

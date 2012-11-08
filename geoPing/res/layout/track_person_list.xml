@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <fragment
-        android:id="@+id/fragment_admob"
+        android:id="@+id/fragment_admob_person"
         android:name="eu.ttbox.geoping.ui.admob.AdmobFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

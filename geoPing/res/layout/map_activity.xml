@@ -4,11 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+      <fragment
+        android:id="@+id/fragment_admob_map"
+        android:name="eu.ttbox.geoping.ui.admob.AdmobFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    
+    
     <fragment
         android:id="@+id/fragment_geoping_map"
         android:name="eu.ttbox.geoping.ui.map.ShowMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </fragment>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">GeoPing</string>
+    <string name="empty_string"></string>
     
     <!-- Backup Api Key For eu.ttbox.geoping -->
  	<string name="backup_api_key">AEdPqrEAAAAI-ahoBk8qEhuAhuOd2Kecta_y7N3aCgBOFAHenA</string>

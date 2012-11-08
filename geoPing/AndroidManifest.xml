@@ -68,7 +68,8 @@
         </activity>
 
         <!-- Map -->
-        <activity android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">
+        <activity android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar"
+            android:label="@string/empty_string">
             <intent-filter>
                 <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED"/> 
             </intent-filter>

@@ -54,16 +54,16 @@ public class StationDownloadService {
 				// if (Log.isLoggable(TAG, Log.DEBUG)) Log.d(TAG, String.format( "HttpURLConnection for url %s" , url ));
 //				urlConnection.connect();
 				int responseCode = urlConnection.getResponseCode();
-				if (Log.isLoggable(TAG, Log.DEBUG)) {
-					Log.d(TAG, String.format("Connect to url %s : %s", url, responseCode));
-					Map<String,List<String>> headers = urlConnection.getHeaderFields();
-					if(headers!=null) {
-						for (String key : headers.keySet()) {
-							List<String> header = headers.get(key);
-							Log.d(TAG, String.format("Http Response header %s : %s", key, header));
-						}
-					}
-				}
+//				if (Log.isLoggable(TAG, Log.DEBUG)) {
+//					Log.d(TAG, String.format("Connect to url %s : %s", url, responseCode));
+//					Map<String,List<String>> headers = urlConnection.getHeaderFields();
+//					if(headers!=null) {
+//						for (String key : headers.keySet()) {
+//							List<String> header = headers.get(key);
+//							Log.d(TAG, String.format("Http Response header %s : %s", key, header));
+//						}
+//					}
+//				}
 				ArrayList<Station> stations = null;
 				if (responseCode == HttpURLConnection.HTTP_OK) {
 					InputStream content = new BufferedInputStream(urlConnection.getInputStream(), 10240);

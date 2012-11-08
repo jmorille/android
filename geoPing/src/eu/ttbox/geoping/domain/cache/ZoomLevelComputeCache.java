@@ -2,6 +2,10 @@ package eu.ttbox.geoping.domain.cache;
 
 import microsoft.mappoint.TileSystem;
 
+ 
+
+ 
+
 public class ZoomLevelComputeCache {
 
     private double latitude;

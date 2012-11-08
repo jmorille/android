@@ -8,6 +8,7 @@ import org.osmdroid.tileprovider.tilesource.bing.BingMapTileSource;
 import org.osmdroid.tileprovider.util.CloudmadeUtil;
 
 import android.content.Context;
+import eu.ttbox.osm.tiles.svg.CloudmadeTileSourceVector;
 
 /**
  * @see http://code.google.com/p/osmdroid/issues/detail?id=135
@@ -42,10 +43,10 @@ public class MyAppTilesProviders {
             "http://tiles2.openpistemap.org/landshaded//");
 
     /** {link  http://developers.cloudmade.com/wiki/vector-stream-server/Documentation} **/
-//    public static final OnlineTileSourceBase CLOUDMADE_VECTOR_TILES = new CloudmadeTileSourceVector( //
-//            "CloudMadeVectorTiles", ResourceProxy.string.cloudmade_small, 0, 21, 256, ".svg", // svgz
-//            "http://alpha.vectors.cloudmade.com/%s/%d/%d/%d/%d/%d%s?token=%s" //
-//    );
+    public static final OnlineTileSourceBase CLOUDMADE_VECTOR_TILES = new CloudmadeTileSourceVector( //
+            "CloudMadeVectorTiles", ResourceProxy.string.cloudmade_standard, 0, 21, 256, ".svg", // svgz
+            "http://alpha.vectors.cloudmade.com/%s/%d/%d/%d/%d/%d%s?token=%s" //
+    );
     
     public static void initTilesSource(Context context) {
         // Remove Tiles
@@ -68,7 +69,7 @@ public class MyAppTilesProviders {
             TileSourceFactory.addTileSource(bmts);
         }
         // Add Other Tiles
-        // TileSourceFactory.addTileSource(CLOUDMADE_VECTOR_TILES);
+         TileSourceFactory.addTileSource(CLOUDMADE_VECTOR_TILES);
         // TileSourceFactory.addTileSource(PISTEMAP);
 
     }
