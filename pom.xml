@@ -19,13 +19,14 @@
 
 	 <distributionManagement>
 	    <repository>
+ 	    <!-- http://cemerick.com/2010/08/24/hosting-maven-repos-on-github/ -->
 	      <id>ttbox-repository-release</id>
-	      <url>https://github.com/jmorille/maven-repo/</url>
+	      <url>https://github.com/jmorille/maven-repo/raw/master/</url>
 	    </repository>
 	    <snapshotRepository>
 	      <id>ttbox-repository-snapshots</id>
 	      <name>Snapshots Repository</name>
-	      <url>https://github.com/jmorille/maven-repo/</url>
+	      <url>https://github.com/jmorille/maven-repo/raw/master/</url>
 	    </snapshotRepository>
          </distributionManagement>
 
