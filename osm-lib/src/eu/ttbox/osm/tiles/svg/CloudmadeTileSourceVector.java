@@ -73,7 +73,7 @@ public class CloudmadeTileSourceVector extends CloudmadeTileSource {
         // try {
         // default implementation will load the file as a bitmap and create
         // a BitmapDrawable from it
-        Log.d(TAG, "Get Drawable Vector");
+//        Log.d(TAG, "Get Drawable Vector");
         SVG svg = SVGParser.getSVGFromInputStream(aFileInputStream);
        Picture pic = svg.getPicture();
        Bitmap bm = Bitmap.createBitmap(pic.getWidth(), pic.getHeight(), Bitmap.Config.ARGB_8888);

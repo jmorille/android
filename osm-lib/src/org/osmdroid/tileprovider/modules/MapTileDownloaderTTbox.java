@@ -196,7 +196,7 @@ public class MapTileDownloaderTTbox extends MapTileModuleProviderBase {
 //					}
 //					in = entity.getContent();
 
-					in = new BufferedInputStream(urlConnection.getInputStream(), 10240);
+					in = new BufferedInputStream(urlConnection.getInputStream(), 1240);
 					
 					final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
 					out = new BufferedOutputStream(dataStream, StreamUtils.IO_BUFFER_SIZE);
@@ -204,7 +204,7 @@ public class MapTileDownloaderTTbox extends MapTileModuleProviderBase {
 					if (contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip")) {
 						Log.i(TAG, String.format("Http Response header Content-Encoding : %s",  contentEncoding));
 						in = new GZIPInputStream(in, 1024);
-					}
+					}  
 					
 					StreamUtils.copy(in, out);
 					out.flush();

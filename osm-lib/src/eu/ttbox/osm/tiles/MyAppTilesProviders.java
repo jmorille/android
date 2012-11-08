@@ -44,7 +44,7 @@ public class MyAppTilesProviders {
 
     /** {link  http://developers.cloudmade.com/wiki/vector-stream-server/Documentation} **/
     public static final OnlineTileSourceBase CLOUDMADE_VECTOR_TILES = new CloudmadeTileSourceVector( //
-            "CloudMadeVectorTiles", ResourceProxy.string.cloudmade_standard, 0, 21, 256, ".svg", // svgz
+            "CloudMadeVectorTiles", ResourceProxy.string.cloudmade_standard, 0, 21, 256, ".svgz", // svg
             "http://alpha.vectors.cloudmade.com/%s/%d/%d/%d/%d/%d%s?token=%s" //
     );
     
