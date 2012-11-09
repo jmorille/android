@@ -1,22 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/maplayout"
+<?xml version="1.0" encoding="utf-8"?> 
+<FrameLayout   xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" > 
+    
+<LinearLayout
+    android:id="@+id/mapViewContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
 
-    <fragment
-        android:id="@+id/fragment_admob"
-        android:name="eu.ttbox.velib.ui.admob.AdmobFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
- 
-
-    <LinearLayout
-        android:id="@+id/mapViewContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <ToggleButton
+  <ToggleButton
         android:id="@+id/map_button_myposition"
         android:layout_width="32dip"
         android:layout_height="32dip"
@@ -28,3 +20,4 @@
         android:visibility="gone" />
  
 </FrameLayout>
+    

@@ -4,7 +4,9 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 
 import android.content.Context;
 import android.content.Intent;
+import eu.ttbox.velib.model.VelibProvider;
 import eu.ttbox.velib.service.osm.OsmMapTilesDownloadService;
+import eu.ttbox.velib.ui.search.SearchableVeloActivity;
 
 public class Intents {
 
@@ -32,5 +34,12 @@ public class Intents {
     public static Intent downloadMapTilesStop(Context context) {
         return new Intent(context, OsmMapTilesDownloadService.class) //
                 .setAction(ACTION_OSM_MAPTILES_DOWNLOAD_STOP);
+    }
+    
+    
+    public static Intent searchVelo(Context context, VelibProvider velibProvider) {
+        return  new Intent(context, SearchableVeloActivity.class) //
+         .setAction(SearchableVeloActivity.ACTION_VIEW_FAVORITE) //
+         .putExtra(EXTRA_VELIB_PROVIDER, velibProvider.ordinal());
     }
 }

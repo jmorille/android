@@ -23,6 +23,7 @@ import android.widget.TextView;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.VeloContentProvider;
+import eu.ttbox.velib.core.Intents;
 import eu.ttbox.velib.model.VelibProvider;
 import eu.ttbox.velib.search.StationRecentSearchRecentSuggestionsProvider;
 import eu.ttbox.velib.service.database.Velo.VeloColumns;
@@ -103,7 +104,7 @@ public class SearchableVeloActivity extends ListActivity {
 			startMapActivityWithData(data);
 		} else if (ACTION_VIEW_FAVORITE.equals((intent.getAction()))) {
 			setTitle(R.string.menu_favorite);
-			Integer velibProvider = intent.getIntExtra(VelibProvider.class.getSimpleName(), -1);
+			Integer velibProvider = intent.getIntExtra( Intents.EXTRA_VELIB_PROVIDER , -1);
  			doSearchFavorite(velibProvider);
 		} else {
 			Log.w(TAG, "Not Handle Intent for for Action : " + intent.getAction());

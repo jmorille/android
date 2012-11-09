@@ -59,45 +59,17 @@ public class ShowMapActivity extends FragmentActivity  {
     // Life cycle
     // ===========================================================
 
-    
-    @Override
-    protected void onDestroy() { 
-        super.onDestroy();
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### onDestroy call ### ### ### ### ###");
-            Log.i(TAG, "### ### ### ### ### ### ### ### ### ### ### ### ###");
-        }
-    }
-
+     
     @Override
     protected void onResume() {
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ###  ### ### ###  ### ### ### ### ###");
+        if (Log.isLoggable(TAG, Log.INFO)) { 
             Log.i(TAG, "### ### ### ### ### onResume call ### ### ### ### ###");
         }
-        super.onResume();
-  
-        handleIntent(getIntent());
-
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### onResume call ### ### ### ### ###");
-            Log.i(TAG, "### ### ### ### ###  ### ### ###  ### ### ### ### ###");
-        }
+        super.onResume(); 
+        handleIntent(getIntent()); 
     }
 
-    @Override
-    protected void onPause() {
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### ### ### ### ### ### ### ### ###");
-            Log.i(TAG, "### ### ### ### ### onPause call ### ### ### ### ###");
-        }
-          
-        super.onPause(); 
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### onPause call ### ### ### ### ###");
-            Log.i(TAG, "### ### ### ### ### ### ### ### ### ### ### ### ###");
-        }
-    }
+    
 
     // ===========================================================
     // Menu
@@ -120,7 +92,7 @@ public class ShowMapActivity extends FragmentActivity  {
         boolean prepare = super.onPrepareOptionsMenu(menu);
 
         // Current Tile Source
-        ITileSource currentTileSrc = mapFragment.getMapTileSource();
+        ITileSource currentTileSrc = mapFragment.getMapViewTileSource();
         // Create Map
         MenuItem mapTypeItem = menu.findItem(R.id.menuMap_mapmode);
         final SubMenu mapTypeMenu = mapTypeItem.getSubMenu();
@@ -128,11 +100,11 @@ public class ShowMapActivity extends FragmentActivity  {
         int MENU_MAP_GROUP = MENU_LAST_ID;
         // int MENU_TILE_SOURCE_STARTING_ID =
         // TilesOverlay.MENU_TILE_SOURCE_STARTING_ID;
-        ArrayList<ITileSource> tiles = mapFragment.getMapTileSources() ;
+        ArrayList<ITileSource> tiles = mapFragment.getMapViewTileSources() ;
         int tileSize = tiles.size();
         for (int a = 0; a < tileSize; a++) {
             final ITileSource tileSource = tiles.get(a);
-            String tileName = mapFragment.getMapTileSourceName(tileSource);
+            String tileName = mapFragment.getMapViewTileSourceName(tileSource);
             MenuItem tileMenuItem = mapTypeMenu.add(MENU_MAP_GROUP, TilesOverlay.MENU_TILE_SOURCE_STARTING_ID + MENU_MAP_GROUP + a, Menu.NONE, tileName);
             if (currentTileSrc != null && currentTileSrc.ordinal() == tileSource.ordinal()) {
                 tileMenuItem.setChecked(true);
@@ -156,10 +128,10 @@ public class ShowMapActivity extends FragmentActivity  {
         default: {
             // Map click
             final int menuId = item.getItemId() - MENU_LAST_ID;
-            ArrayList<ITileSource>  tiles = mapFragment.getMapTileSources();
+            ArrayList<ITileSource>  tiles = mapFragment.getMapViewTileSources();
             int  tileSize = tiles.size();
             if ((menuId >= TilesOverlay.MENU_TILE_SOURCE_STARTING_ID) && (menuId < TilesOverlay.MENU_TILE_SOURCE_STARTING_ID +tileSize)) {
-                mapFragment.setMapTileSource(tiles.get(menuId - TilesOverlay.MENU_TILE_SOURCE_STARTING_ID));
+                mapFragment.setMapViewTileSource(tiles.get(menuId - TilesOverlay.MENU_TILE_SOURCE_STARTING_ID));
                 // Compatibility
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     invalidateOptionsMenu();
