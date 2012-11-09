@@ -43,7 +43,7 @@
 		<gcm.version>3</gcm.version>
                 <admob.version>6.2.1-r8</admob.version>
 		<!-- Osm -->
-		<osmdroid.version>3.0.8</osmdroid.version>
+		<osmdroid.version>3.0.9-20121109</osmdroid.version> <!-- 3.0.8 -->
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
 		 
 		<!-- Release -->

@@ -19,8 +19,8 @@ public class MyLocationListenerProxy implements LocationListener {
     private LocationListener mListener = null;
 
     // Config Data
-    private long pUpdateTime = 0L;
-    private float pUpdateDistance = 0f;
+    private long updateTimeInMs = 0L;
+    private float updateDistanceInM = 0f;
 
     // Instance Data
     private Location lastFix;
@@ -43,7 +43,7 @@ public class MyLocationListenerProxy implements LocationListener {
                 // if (LocationManager.GPS_PROVIDER.equals(provider)
                 // || LocationManager.NETWORK_PROVIDER.equals(provider)) {
                 result = true;
-                locationManager.requestLocationUpdates(provider, pUpdateTime, pUpdateDistance, this);
+                locationManager.requestLocationUpdates(provider, updateTimeInMs, updateDistanceInM, this);
                 if (Log.isLoggable(TAG, Log.DEBUG))
                     Log.d(TAG, String.format("requestLocationUpdates for provider : [%s]", provider));
                 // }pLocationManager
@@ -124,7 +124,8 @@ public class MyLocationListenerProxy implements LocationListener {
 
     private void defineLocation(Location location) {
         this.lastFix = location;
-        this.lastFixAsGeoPoint = GeoLocHelper.convertLocationAsGeoPoint(location, this.lastFixAsGeoPoint);
+        // Not thread Safe with (location, this.lastFixAsGeoPoint)
+        this.lastFixAsGeoPoint = GeoLocHelper.convertLocationAsGeoPoint(location,null);
     }
 
     // ===========================================================
