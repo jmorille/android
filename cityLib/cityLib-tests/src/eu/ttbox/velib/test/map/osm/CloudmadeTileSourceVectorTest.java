@@ -1,18 +1,14 @@
 package eu.ttbox.velib.test.map.osm;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
-
-import eu.ttbox.velib.core.svg.SVG;
-import eu.ttbox.velib.core.svg.SVGParseException;
-import eu.ttbox.velib.core.svg.SVGParser;
+import eu.ttbox.osm.tiles.svg.parser.SVG;
+import eu.ttbox.osm.tiles.svg.parser.SVGParser;
 
 //import com.larvalabs.svgandroid.SVG;
 //import com.larvalabs.svgandroid.SVGParseException;
