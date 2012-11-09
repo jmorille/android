@@ -16,7 +16,6 @@ import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -53,7 +52,6 @@ import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 import eu.ttbox.osm.ui.map.mylocation.dialog.GpsActivateAskDialog;
 import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.core.Intents;
-import eu.ttbox.velib.map.osm.GoogleMapView;
 import eu.ttbox.velib.map.provider.VeloProviderItemizedOverlay;
 import eu.ttbox.velib.map.station.StationDispoOverlay;
 import eu.ttbox.velib.model.Station;
@@ -159,7 +157,8 @@ public class VelibMapActivity extends FragmentActivity implements VelibMapView, 
     // ===========================================================
 
 
-    @Override
+    @SuppressLint("NewApi")
+	@Override
     public void onCreate(Bundle bundle) {
         if (Log.isLoggable(TAG, Log.INFO)) {
             Log.i(TAG, "### ### ### ### ###  ### ### ###  ### ### ### ### ###");
@@ -280,7 +279,7 @@ public class VelibMapActivity extends FragmentActivity implements VelibMapView, 
     private MapView createMapView(ITileSource tileSource, boolean google, String gooleApiKey) {
         MapView mapView = null;
         if (google) {
-            GoogleMapView mapView2 = new GoogleMapView(this, gooleApiKey);
+//            GoogleMapView mapView2 = new GoogleMapView(this, gooleApiKey);
         } else {
             ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             mapView = MapViewFactory.createOsmMapView(this, mResourceProxy, tileSource, activityManager);

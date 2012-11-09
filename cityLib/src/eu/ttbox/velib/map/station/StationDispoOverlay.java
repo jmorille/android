@@ -28,7 +28,6 @@ import android.view.View;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.map.geo.BoundingE6Box;
-import eu.ttbox.velib.map.osm.GoogleMapView;
 import eu.ttbox.velib.map.station.bubble.BubbleOverlayView;
 import eu.ttbox.velib.map.station.drawable.StationDispoDrawable;
 import eu.ttbox.velib.map.station.drawable.StationDispoIcDrawable;
@@ -500,9 +499,13 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 	    if (mapView instanceof MapView) {
 	        MapView osmMapView = (MapView)mapView;
 	        osmMapView.invalidate();
-	    } else  if (mapView instanceof GoogleMapView) {
-	        GoogleMapView googleMapView = (GoogleMapView)mapView;
-	        googleMapView.invalidate();
+	    } 
+//	    else  if (mapView instanceof GoogleMapView) {
+//	        GoogleMapView googleMapView = (GoogleMapView)mapView;
+//	        googleMapView.invalidate();
+//	    }
+	    else {
+	    	Log.e(TAG, "Nedd to add implementation for class : " + mapView.getClass());
 	    }
 	}
 
@@ -510,10 +513,14 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
         if (mapView instanceof MapView) {
             MapView osmMapView = (MapView)mapView;
             osmMapView.invalidate();
-        } else  if (mapView instanceof GoogleMapView) {
-            GoogleMapView googleMapView = (GoogleMapView)mapView;
-            googleMapView.invalidate();
-        }
+        } 
+//        else  if (mapView instanceof GoogleMapView) {
+//            GoogleMapView googleMapView = (GoogleMapView)mapView;
+//            googleMapView.invalidate();
+//        }
+	    else {
+	    	Log.e(TAG, "Nedd to add implementation for class : " + mapView.getClass());
+	    }
     }
 	
 	@Override
