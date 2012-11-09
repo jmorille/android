@@ -78,8 +78,7 @@ public class VelibMapActivity extends FragmentActivity { // implements
 		// {@link
 		// http://developer.android.com/guide/topics/search/search-dialog.html}
 		if (Log.isLoggable(TAG, Log.INFO)) {
-			Log.i(TAG, "### ### ### ### ### onCreate call ### ### ### ### ###");
-			Log.i(TAG, "### ### ### ### ###  ### ### ###  ### ### ### ### ###");
+			Log.i(TAG, "### ### ### ### ### onCreate call ### ### ### ### ###"); 
 		}
 	}
 
