@@ -15,7 +15,7 @@ public class Station implements GeoPointProvider, LatLngE6Provider, LatLngProvid
 	private final static double E6 = AppConstants.E6;
 
 	// Velo Data
-	int id;
+	int id = AppConstants.UNSET_ID;
 	int provider;
 	String number;// ="901"
 	String name;// ="00901 - STATION MOBILE 1"

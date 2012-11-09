@@ -12,7 +12,7 @@ import android.os.IBinder;
  */
 public class VelibBDDService extends Service {
 
-	private VelibDatabase veloDatabase;
+	private StationDatabase veloDatabase;
 
 	// This is the object that receives interactions from clients. See
 	// RemoteService for a more complete example.
@@ -31,7 +31,7 @@ public class VelibBDDService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		// init
-		veloDatabase = new VelibDatabase(this);
+		veloDatabase = new StationDatabase(this);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class VelibBDDService extends Service {
 		return mBinder;
 	}
 
-	public VelibDatabase getVeloDatabase() {
+	public StationDatabase getVeloDatabase() {
 		return veloDatabase;
 	}
 

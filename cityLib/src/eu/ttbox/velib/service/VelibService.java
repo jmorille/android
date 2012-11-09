@@ -7,16 +7,19 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import eu.ttbox.velib.VeloContentProvider.Constants;
 import eu.ttbox.velib.model.Station;
 import eu.ttbox.velib.model.VelibProvider;
-import eu.ttbox.velib.service.database.VelibDatabase;
+import eu.ttbox.velib.service.database.StationDatabase;
 import eu.ttbox.velib.service.download.StationDownloadService;
 import eu.ttbox.velib.service.geo.GeoUtils;
 import eu.ttbox.velib.service.ws.direction.DirectionDownloadService;
@@ -46,7 +49,7 @@ public class VelibService extends Service {
 		}
 	}
 
-	VelibDatabase velibBDD;
+	StationDatabase velibBDD;
 
 	StationDownloadService downloadService;
 	DirectionDownloadService googleDirectionDownloadService;
@@ -61,7 +64,7 @@ public class VelibService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		// init
-		this.velibBDD = new VelibDatabase(getBaseContext());
+		this.velibBDD = new StationDatabase(getBaseContext());
 		this.downloadService = new StationDownloadService(getBaseContext());
 		this.googleDirectionDownloadService = new DirectionDownloadService(context);
 		this.context = getBaseContext();
@@ -219,8 +222,11 @@ public class VelibService extends Service {
 			// Persist in Db
 			long beginTime = System.currentTimeMillis();
 			SQLiteDatabase bdd = velibBDD.beginTransaction();
+			ContentResolver contentResolver =  getContentResolver();
 			for (final Station station : stations) {
-				velibBDD.insertStation(station);
+				long entityId = velibBDD.insertStation(station);
+				Uri entityUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(entityId));
+				contentResolver.notifyChange(entityUri, null);
 			}
 			velibBDD.commit(bdd);
 			long endTime = System.currentTimeMillis();
@@ -274,8 +280,11 @@ public class VelibService extends Service {
 				SQLiteDatabase bdd = velibBDD.beginTransaction();
 				Station station;
 				int stationUpdated = 0;
+				ContentResolver contentResolver =  getContentResolver();
 				while ((station = databaseUpdateQueue.pollFirst()) != null) {
 					velibBDD.updateStationnDispo(bdd, station);
+					Uri entityUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(station.getId()));
+					contentResolver.notifyChange(entityUri, null);
 					stationUpdated++;
 				}
 				velibBDD.commit(bdd);

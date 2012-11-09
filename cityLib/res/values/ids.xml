@@ -4,4 +4,6 @@
     <item type="id" name="osm_download_service_notification_started" />  
     <item type="id" name="config_id_myPoi_list_loader" />
     
+    <item type="id" name="config_id_search_velib_list_loader" />
+     
 </resources>

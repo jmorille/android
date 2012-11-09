@@ -21,6 +21,8 @@ public class Velo {
 
 	public interface VeloColumns {
 
+	    
+	    
 		public static final String COL_ID = BaseColumns._ID;// "_ID";
 		public static final int NUM_COL_ID = 0;
 
@@ -78,6 +80,7 @@ public class Velo {
 		// Alias
 		public static final String ALIAS_COL_DISPO_CYCLE_PARKING = "AGG_COL_DISPO";
 		public static final String ALIAS_COL_LAT_LNG_E6 = "AGG_COL_LAT_LNG_E6";
+        
 	}
 
 }

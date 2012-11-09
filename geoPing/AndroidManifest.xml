@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="18" android:versionName="0.0.8" package="eu.ttbox.geoping">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="25" android:versionName="0.0.9" package="eu.ttbox.geoping">
 
     
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="16"/>
@@ -13,7 +13,7 @@
    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
    
    <!-- Billing Service -->
-   <uses-permission android:name="com.android.vending.BILLING" />
+   <uses-permission android:name="com.android.vending.BILLING"/>
      
     	
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -39,7 +39,7 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <uses-feature android:name="android.hardware.telephony" android:required="false"/>
     
-    <application android:backupAgent=".service.backup.GeoPingBackupAgent" android:debuggable="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:theme="@style/AppTheme">
+    <application android:backupAgent=".service.backup.GeoPingBackupAgent" android:debuggable="false" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:theme="@style/AppTheme">
 	    <meta-data android:name="com.google.android.backup.api_key" android:value="@string/backup_api_key"/>
 	    
         <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
@@ -68,8 +68,7 @@
         </activity>
 
         <!-- Map -->
-        <activity android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar"
-            android:label="@string/empty_string">
+        <activity android:label="@string/empty_string" android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">
             <intent-filter>
                 <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED"/> 
             </intent-filter>
@@ -89,8 +88,7 @@
         </activity>
         
         <!-- Admob -->
-        <activity android:name="com.google.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.google.ads.AdActivity"/>
         
         <!-- Receiver -->
         <receiver android:name=".service.slave.receiver.SMSReceiver">
@@ -125,8 +123,7 @@
             </intent-filter> 
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_person_info"/>
         </receiver>
-        <service android:exported="false" android:name=".ui.widget.PersonWidgetService" 
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service android:exported="false" android:name=".ui.widget.PersonWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <!-- Widget Pairing -->
           <receiver android:label="@string/sms_action_geoping_response" android:name=".ui.widget.pairing.PairingWidgetProvider" android:permission="eu.ttbox.geoping.PAIRING_READ">
@@ -187,14 +184,12 @@ uri content://eu.ttbox.geoping.WidgetProvider/pairing from pid=2264, uid=10040 r
 <!-- 	     	  <grant-uri-permission android:path="content://eu.ttbox.geoping.PairingProvider" /> -->
 <!-- 		 </provider>  -->
 
-        <provider android:authorities="eu.ttbox.geoping.PersonProvider"     android:name=".domain.PersonProvider"     
-                android:writePermission="eu.ttbox.geoping.PERSON_WRITE"/>
-        <provider android:authorities="eu.ttbox.geoping.PairingProvider"    android:name=".domain.PairingProvider"    
-                android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.PersonProvider" android:name=".domain.PersonProvider" android:writePermission="eu.ttbox.geoping.PERSON_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.PairingProvider" android:name=".domain.PairingProvider" android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
         
         <provider android:authorities="eu.ttbox.geoping.GeoTrackerProvider" android:name=".domain.GeoTrackerProvider" android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ" android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE"/>
-        <provider android:authorities="eu.ttbox.geoping.SmsLogProvider"     android:name=".domain.SmsLogProvider"     android:readPermission="eu.ttbox.geoping.SMSLOG_READ"    android:writePermission="eu.ttbox.geoping.SMSLOG_WRITE"/>
-        <provider android:authorities="eu.ttbox.geoping.MessageProvider"    android:name=".domain.MessageProvider"    android:readPermission="eu.ttbox.geoping.MESSAGE_READ"   android:writePermission="eu.ttbox.geoping.MESSAGE_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.SmsLogProvider" android:name=".domain.SmsLogProvider" android:readPermission="eu.ttbox.geoping.SMSLOG_READ" android:writePermission="eu.ttbox.geoping.SMSLOG_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.MessageProvider" android:name=".domain.MessageProvider" android:readPermission="eu.ttbox.geoping.MESSAGE_READ" android:writePermission="eu.ttbox.geoping.MESSAGE_WRITE"/>
         <!--  
 		<uses-library android:name="com.google.android.maps" android:required="true"/>
 		-->

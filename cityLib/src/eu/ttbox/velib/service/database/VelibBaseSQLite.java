@@ -8,7 +8,7 @@ import eu.ttbox.velib.service.database.Velo.VeloColumns;
 
 public class VelibBaseSQLite extends SQLiteOpenHelper {
 
-	private static final String CREATE_BDD = new StringBuffer(512).append("CREATE TABLE ").append(VelibDatabase.TABLE_VELIB).append(" (")//
+	private static final String CREATE_BDD = new StringBuffer(512).append("CREATE TABLE ").append(StationDatabase.TABLE_VELIB).append(" (")//
 			.append(VeloColumns.COL_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")//
 			.append(VeloColumns.COL_PROVIDER).append(" TEXT NOT NULL, ")// /
 			.append(VeloColumns.COL_NUMBER).append(" TEXT NOT NULL, ")// /
@@ -30,7 +30,7 @@ public class VelibBaseSQLite extends SQLiteOpenHelper {
 			.append(" );").toString();
 
 	// Index
-	private static final String CREATE_INDEX_PATTERN = "CREATE INDEX IF NOT EXISTS %s on " + VelibDatabase.TABLE_VELIB + " (%s);";
+	private static final String CREATE_INDEX_PATTERN = "CREATE INDEX IF NOT EXISTS %s on " + StationDatabase.TABLE_VELIB + " (%s);";
 
 	private static final String INDEX_VELIB_ADDRESS = "IDX_VELIB_ADDRES";
 	private static final String INDEX_VELIB_NAME = "IDX_VELIB_ADDRES";
@@ -51,7 +51,7 @@ public class VelibBaseSQLite extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL(String.format("DROP TABLE %s ;", VelibDatabase.TABLE_VELIB));
+		db.execSQL(String.format("DROP TABLE %s ;", StationDatabase.TABLE_VELIB));
 		for (String idxName : new String[] { INDEX_VELIB_ADDRESS, INDEX_VELIB_NAME, INDEX_VELIB_ALIASNAME }) {
 			db.execSQL(String.format("DROP INDEX IF EXISTS %s ;", idxName));
 		}

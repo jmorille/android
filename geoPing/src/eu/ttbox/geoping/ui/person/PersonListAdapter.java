@@ -20,8 +20,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
     private boolean isNotBinding = true;
 
     public PersonListAdapter(Context context, Cursor c, int flags) {
-        super(context, R.layout.track_person_list_item, c, flags); // if >10 add
-                                                                   // ", flags"
+        super(context, R.layout.track_person_list_item, c, flags);  
     }
 
     private void intViewBinding(View view, Context context, Cursor cursor) {

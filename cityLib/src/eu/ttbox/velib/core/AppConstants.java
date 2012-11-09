@@ -8,6 +8,9 @@ public class AppConstants {
 	
 	public static final int CONNECTION_TIMEOUT = 30000;
 	
+    public static final int UNSET_ID = -1;
+
+    
 	public static final String PREFS_KEY_APP_COUNT_LAUGHT = "AppLaughtCounter";
 
 	public static final String PREFS_KEY_USER_NUMBER_EXPECTED = "personCountExpected";
@@ -27,5 +30,6 @@ public class AppConstants {
 //	public static final String PREFS__KEY_TILE_SOURCE = "tilesource";
 
 	public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC  = eu.ttbox.osm.core.AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC;
+
 	
 }
