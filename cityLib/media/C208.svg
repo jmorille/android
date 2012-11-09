@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 13.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="576px" height="576px" viewBox="-0.322 -0.549 576 576" enable-background="new -0.322 -0.549 576 576"
+	 xml:space="preserve">
+<path fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M41.496,574.438h491.946
+	c10.872,0,21.3-4.318,28.988-12.007c7.688-7.688,12.007-18.115,12.007-28.988V41.496c0-10.873-4.319-21.302-12.007-28.988
+	C554.742,4.819,544.314,0.5,533.442,0.5H41.496c-10.873,0-21.301,4.317-28.988,12.007C4.818,20.195,0.5,30.623,0.5,41.496v491.945
+	c0,10.873,4.318,21.3,12.008,28.988C20.195,570.117,30.623,574.438,41.496,574.438z"/>
+<path fill="#0000FF" d="M544.921,529.72c0,6.744-5.47,12.214-12.216,12.214H42.658c-6.745,0-12.213-5.47-12.213-12.214V41.173
+	c0-6.746,5.468-12.214,12.213-12.214h490.047c6.746,0,12.216,5.469,12.216,12.214V529.72L544.921,529.72z"/>
+<g>
+	<g id="LWPOLYLINE_1_">
+		<polyline fill="#FFFFFF" stroke="#0000FF" stroke-width="0.7087" stroke-linecap="round" stroke-linejoin="round" points="
+			308.704,263.968 401.308,263.968 453.257,522.823 317.516,522.823 308.704,263.968 		"/>
+	</g>
+	<g id="LWPOLYLINE_2_">
+		<polyline fill="#FFFFFF" stroke="#0000FF" stroke-width="0.7087" stroke-linecap="round" stroke-linejoin="round" points="
+			298.805,52.647 367.886,52.647 392.324,180.221 306.812,180.221 298.805,52.647 		"/>
+	</g>
+	<g id="LWPOLYLINE_3_">
+		<polyline fill="#FFFFFF" stroke="#0000FF" stroke-width="0.7087" stroke-linecap="round" stroke-linejoin="round" points="
+			275.297,263.968 182.691,263.968 130.743,522.823 266.482,522.823 275.297,263.968 		"/>
+	</g>
+	<g id="LWPOLYLINE_4_">
+		<polyline fill="#FFFFFF" stroke="#0000FF" stroke-width="0.7087" stroke-linecap="round" stroke-linejoin="round" points="
+			285.194,52.647 216.113,52.647 191.676,180.221 277.187,180.221 285.194,52.647 		"/>
+	</g>
+	<g id="LWPOLYLINE">
+		<polyline fill="#FFFFFF" stroke="#0000FF" stroke-width="0.7087" stroke-linecap="round" stroke-linejoin="round" points="
+			292,202.383 534.222,202.383 534.222,240.873 489.104,240.873 489.104,309.705 432.562,309.705 432.562,246.58 292,246.007 
+			151.437,246.58 151.437,309.705 94.895,309.705 94.895,240.873 49.778,240.873 49.778,202.383 292,202.383 		"/>
+	</g>
+</g>
+<path fill="#FF0000" d="M546.45,41.728c0-6.758-5.479-12.238-12.238-12.238h-24.727L30.974,499.405v31.823
+	c0,6.757,5.479,12.237,12.239,12.237h38.189L546.45,79.832V41.728z"/>
+</svg>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 13.0.0, SVG Export Plug-In  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   x="0px"
+   y="0px"
+   width="576px"
+   height="576px"
+   viewBox="-0.531 -0.531 576 576"
+   enable-background="new -0.531 -0.531 576 576"
+   xml:space="preserve"
+   id="svg3100"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="panneau_parking_fin.svg"><metadata
+   id="metadata3116"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1920"
+   inkscape:window-height="1018"
+   id="namedview3114"
+   showgrid="false"
+   inkscape:zoom="0.81944444"
+   inkscape:cx="796.5379"
+   inkscape:cy="415.12606"
+   inkscape:window-x="-8"
+   inkscape:window-y="-8"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="svg3100" />
+<defs
+   id="defs3102">
+</defs>
+<path
+   fill="#FFFFFF"
+   stroke="#000000"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   d="M41.496,574.438h491.947  c10.872,0,21.3-4.318,28.988-12.007c7.688-7.688,12.007-18.115,12.007-28.988V41.496c0-10.873-4.319-21.3-12.007-28.988  C554.742,4.819,544.314,0.5,533.442,0.5H41.496c-10.873,0-21.3,4.319-28.988,12.007C4.819,20.195,0.5,30.623,0.5,41.496v491.947  c0,10.873,4.319,21.3,12.007,28.988C20.195,570.119,30.623,574.438,41.496,574.438z"
+   id="path3104" />
+<path
+   d="M544.919,529.72c0,6.744-5.468,12.214-12.214,12.214H42.659  c-6.746,0-12.214-5.47-12.214-12.214V41.173c0-6.746,5.468-12.214,12.214-12.214h490.046c6.746,0,12.214,5.469,12.214,12.214V529.72  z"
+   id="path3106"
+   stroke="#000000"
+   fill="#0000FF" />
+<path
+   fill="none"
+   stroke="#0000FF"
+   stroke-width="0.1764"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   d="M235.025,447.142  v2.841h-68.984V123.755h132.196c65.001,0,117.695,52.693,117.695,117.695s-52.694,117.695-117.695,117.695h-63.212V447.142z"
+   id="path3108" />
+<path
+   fill="none"
+   stroke="#0000FF"
+   stroke-width="0.1764"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   d="M238.703,288.582  v-86.777h38.406c24.271,0,43.945,19.675,43.945,43.946s-19.675,43.945-43.945,43.945  C264.299,289.696,251.492,289.325,238.703,288.582z"
+   id="path3110" />
+<path
+   fill="#FFFFFF"
+   d="M415.933,241.45c0,65.001-52.694,117.695-117.695,117.695h-63.212v87.997v2.841h-68.984V123.755h132.196  C363.238,123.755,415.933,176.448,415.933,241.45z M321.055,245.751c0-24.271-19.675-43.946-43.945-43.946h-38.406v86.777  c12.789,0.743,25.596,1.114,38.406,1.114C301.38,289.696,321.055,270.021,321.055,245.751z"
+   id="path3112" />
+<path
+   style="fill:#ff0000"
+   inkscape:connector-curvature="0"
+   d="m 544.5587,41.531847 c 0,-6.733932 -5.46238,-12.194415 -12.20087,-12.194415 H 507.70582 L 30.646253,497.57884 v 31.70967 c 0,6.73293 5.462381,12.19341 12.201876,12.19341 H 80.921294 L 544.5587,79.50014 V 41.531847 z"
+   id="path3247" /></svg>
