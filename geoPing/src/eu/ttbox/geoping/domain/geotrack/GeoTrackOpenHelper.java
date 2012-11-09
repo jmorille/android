@@ -8,7 +8,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 public class GeoTrackOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "geoping.db";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 5;
 
     // ===========================================================
     // Table
