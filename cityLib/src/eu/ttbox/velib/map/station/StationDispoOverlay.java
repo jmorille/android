@@ -45,7 +45,7 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 	private String TAG = "StationDispoOverlay";
 
 	private Context context;
-	private IMapView mapView;
+	private MapView mapView;
 	private ArrayList<Station> stations;
 
 	private Handler handler;
@@ -104,6 +104,12 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 	private UpdateStationDispoTimerTask updateStationDispoTimerTask = new UpdateStationDispoTimerTask();
 	private ScheduledFuture updateDispoFutur;
 
+	
+
+    // ===========================================================
+    // Preferences
+    // ===========================================================
+
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Log.i(TAG, "------------------------------------------------");
@@ -127,6 +133,12 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 		
  
 	}
+	
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
 
 	// Other
 	public StationDispoOverlay(Context context, MapView mapView, ArrayList<Station> trackPoints, VelibService velibService, Handler handler,
@@ -208,6 +220,12 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 		circleUnkwonPaint.setColor(r.getColor(R.color.station_dispo_unknown));
 
 	}
+	
+
+    // ===========================================================
+    // Map Draw
+    // ===========================================================
+
 
 	/**
 	 * @see http ://stackoverflow.com/questions/2176397/drawing-a-line-path-on -google-maps
@@ -241,6 +259,12 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 	// boundyBox.updateBoundingE6Box(p1, p2, nowInMs);
 	// return boundyBox;
 	// }
+	
+
+    // ===========================================================
+    // Map Event
+    // ===========================================================
+
 
 	/**
 	 * @see http ://code.google.com/p/osmdroid/source/browse/trunk/osmdroid-android /src /org/andnav/osm/views/overlay/OpenStreetMapViewItemizedOverlay.java
@@ -274,35 +298,12 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 		// return selectedStation != null;
 		return onHandleEvent;
 	}
-
-	// @Override
-	// public boolean onTap(GeoPoint p, MapView mapView) {
-	// // Store whether prior popup was displayed so we can call invalidate() &
-	// // remove it if necessary.
-	// boolean onHandleEvent = false;
-	// boolean isRemovePriorPopup = selectedStation != null;
-	// int idPriorStation = -1;
-	// if (isRemovePriorPopup) {
-	// idPriorStation = selectedStation.getId();
-	// }
-	// // Next test whether a new popup should be displayed
-	// selectedStation = getHitMapLocation(mapView, p);
-	// if (isRemovePriorPopup && selectedStation != null && idPriorStation ==
-	// selectedStation.getId()) {
-	// selectedStation = null;
-	// onHandleEvent = true;
-	// }
-	// if (isRemovePriorPopup || selectedStation != null) {
-	// hideBubble();
-	// mapView.invalidate();
-	// onHandleEvent = true;
-	// }
-	// // Lastly return true if we handled this onTap()
-	// // return selectedStation != null;
-	// return onHandleEvent;
-	// // return super.onTap(p, mapView);
-	// }
-
+	
+	@Override
+    public boolean onDoubleTap(final MotionEvent event, final MapView mapView) {
+	   return super.onDoubleTap(event, mapView);
+	}
+ 
 	/**
 	 * Test whether an information balloon should be displayed or a prior balloon hidden.
 	 * 
@@ -357,6 +358,7 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 
 	}
 
+	
 	private void drawMapLocations(Canvas canvas, MapView mapView, boolean shadow, int zoomLevel, long nowInMs) {
 		if (!shadow) {
 			// int zoomLevel = mapView.getZoomLevel();
@@ -496,31 +498,13 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 		}
 	}
 	private void mapViewInvalidate() {
-	    if (mapView instanceof MapView) {
-	        MapView osmMapView = (MapView)mapView;
-	        osmMapView.invalidate();
-	    } 
-//	    else  if (mapView instanceof GoogleMapView) {
-//	        GoogleMapView googleMapView = (GoogleMapView)mapView;
-//	        googleMapView.invalidate();
-//	    }
-	    else {
-	    	Log.e(TAG, "Nedd to add implementation for class : " + mapView.getClass());
-	    }
+//	    mapView.invalidate(); 
+	    mapView.postInvalidate();  
 	}
 
 	private void mapViewInvalidate(Rect dirty) {
-        if (mapView instanceof MapView) {
-            MapView osmMapView = (MapView)mapView;
-            osmMapView.invalidate();
-        } 
-//        else  if (mapView instanceof GoogleMapView) {
-//            GoogleMapView googleMapView = (GoogleMapView)mapView;
-//            googleMapView.invalidate();
-//        }
-	    else {
-	    	Log.e(TAG, "Nedd to add implementation for class : " + mapView.getClass());
-	    }
+//	    mapView.invalidate(dirty); 
+	    mapView.postInvalidate(dirty.left, dirty.top, dirty.right, dirty.bottom ); 
     }
 	
 	@Override

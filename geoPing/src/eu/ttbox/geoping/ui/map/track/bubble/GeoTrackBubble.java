@@ -16,6 +16,7 @@ import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
 import eu.ttbox.osm.core.ExternalIntents;
+import eu.ttbox.osm.ui.map.mylocation.CompassEnum;
 
 public class GeoTrackBubble extends FrameLayout {
 
@@ -38,7 +39,8 @@ public class GeoTrackBubble extends FrameLayout {
 	private TextView altitudeTextView;
 	private View altitudeBlock;
 	private TextView speedTextView;
-
+	private TextView bearingTextView;
+	
 	private ImageView navigationImg;
 	private ImageView streetviewImg;
 
@@ -62,7 +64,7 @@ public class GeoTrackBubble extends FrameLayout {
 		this.altitudeTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_altitude);
 		this.altitudeBlock = v.findViewById(R.id.map_geotrack_bubbleView_block_altitude);
 		this.speedTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_speed);
-
+		this.bearingTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_bearing);
 		// Button
 		streetviewImg = (ImageView) v.findViewById(R.id.map_geotrack_bubbleView_streetview_image);
 		streetviewImg.setOnClickListener(new OnClickListener() {
@@ -120,6 +122,7 @@ public class GeoTrackBubble extends FrameLayout {
 		boolean hasSpeed = false;
 		boolean hasAddress = false;
 		boolean hasProvider = false;
+		boolean hasBearing = false;
 		boolean hasTime = false;
 		if (geoTrack != null) {
 			hasLatLng = geoTrack.hasLatLng();
@@ -128,6 +131,7 @@ public class GeoTrackBubble extends FrameLayout {
 			hasSpeed = geoTrack.hasSpeed();
 			hasAddress = geoTrack.hasAddress();
 			hasProvider = geoTrack.hasProvider();
+			hasBearing = geoTrack.hasBearing();
 			hasTime = geoTrack.hasTime();
 		}
 		// Color
@@ -178,11 +182,27 @@ public class GeoTrackBubble extends FrameLayout {
 		}
 		// Speed
 		if (hasSpeed) {
-			speedTextView.setText(String.format("%s m/s",(int) geoTrack.getSpeed()));
-			speedTextView.setVisibility(GONE);
+		    int speedMs = geoTrack.getSpeed();
+		    int speedKh = (int)( speedMs * 3.6);
+			speedTextView.setText(String.format("%s km/h", speedKh));
+			speedTextView.setVisibility(VISIBLE);
 		} else {
 			speedTextView.setText("");
 			speedTextView.setVisibility(GONE);
+		}
+		// Bearing
+		if (hasBearing) {
+            String compassAsString = null;
+		    float bearing = (float) geoTrack.getBearing();
+		    CompassEnum compass = CompassEnum.getCardinalPoint(bearing);
+		    if (compass!=null) {
+		        compassAsString = compass.getI18nLabelShort(getContext());
+		    }
+		    bearingTextView.setText(String.format("%s° %s", (int) bearing, compassAsString));
+		    bearingTextView.setVisibility(VISIBLE);
+		} else {
+		    bearingTextView.setText("");
+		    bearingTextView.setVisibility(GONE);
 		}
 		// Address
 		if (hasAddress) {
@@ -191,7 +211,7 @@ public class GeoTrackBubble extends FrameLayout {
 			 setAddress("");
 		}  	
 	}
-
+ 
 	public void setAddress(String addr) {
 		if (addr != null && addr.length() > 0) {
 			addressTextView.setText(addr);

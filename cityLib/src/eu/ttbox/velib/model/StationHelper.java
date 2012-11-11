@@ -128,7 +128,15 @@ public class StationHelper {
     public int getStationParking(Cursor cursor) {
         return cursor.getInt(stationParkingIdx);
     }
+ 
+    public int getLatitudeE6(Cursor cursor) {
+        return cursor.getInt(latitudeE6Idx);
+    }
 
+    public int getLongitudeE6(Cursor cursor) {
+        return cursor.getInt(longitudeE6Idx);
+    }
+ 
     public  FavoriteIconEnum getFavoriteIconEnum(Cursor cursor) {
         return favoriteTypeIdx>-1 ? FavoriteIconEnum.getFromName(  cursor.getString(favoriteTypeIdx)) : null;
     }
@@ -160,5 +168,6 @@ public class StationHelper {
 
         return initialValues;
     }
+
 
 }

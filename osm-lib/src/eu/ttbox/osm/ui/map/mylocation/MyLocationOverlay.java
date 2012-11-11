@@ -70,7 +70,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     static final Object[] sDataLock = new Object[0];
 
     private Context context;
-    protected final IMapView mMapView;
+    protected final MapView mMapView;
     private final IMapController mMapController;
     private final Display mDisplay;
 
@@ -148,11 +148,11 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // Constructors
     // ===========================================================
 
-    public MyLocationOverlay(final Context ctx, final IMapView mapView) {
+    public MyLocationOverlay(final Context ctx, final MapView mapView) {
         this(ctx, mapView, new DefaultResourceProxyImpl(ctx));
     }
 
-    public MyLocationOverlay(final Context ctx, final IMapView mapView, final ResourceProxy pResourceProxy) {
+    public MyLocationOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy) {
         super(pResourceProxy);
         this.context = ctx;
         this.mMapView = mapView;
@@ -292,19 +292,14 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
      
 
     private void mapViewInvalidate() {
-        if (mMapView != null) {
-            if (mMapView instanceof  MapView) {
-                MapView osmMapView = (MapView)mMapView;
-                osmMapView.postInvalidate();
-            } else  if (mMapView instanceof org.osmdroid.google.wrapper.MapView) {
-//                org.osmdroid.google.wrapper.MapView googleMapView = (org.osmdroid.google.wrapper.MapView)mMapView;
-//     TODO           googleMapView.postInvalidate();
-            } else {
-                
-            }
-           
-        }  
+        mMapView.postInvalidate(); 
     }
+    
+    private void mapViewInvalidate(Rect dirty) {
+//        mMapView.invalidate(dirty); 
+        mMapView.postInvalidate(dirty.left, dirty.top, dirty.right, dirty.bottom ); 
+    }
+    
     
     public void animateToLastFix() {
          mMapController.animateTo(  mLocationListener.getLastFixAsGeoPoint());

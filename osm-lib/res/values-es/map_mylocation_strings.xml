@@ -11,4 +11,16 @@
     <string name="accuracy_separator">+/-</string> <!-- +/- &#8723; -->
     <string name="altitude">Altitude</string>
 
+       
+    <!-- Cardinal Point -->
+    <string name="cardinal_point_nord">Norte</string>
+    <string name="cardinal_point_sud">Sur</string>
+    <string name="cardinal_point_est">Este</string>
+    <string name="cardinal_point_west">Oeste</string>
+ 
+    <string name="cardinal_point_short_nord">N</string>
+    <string name="cardinal_point_short_sud">S</string>
+    <string name="cardinal_point_short_est">E</string>
+    <string name="cardinal_point_short_west">O</string>
+   
 </resources>

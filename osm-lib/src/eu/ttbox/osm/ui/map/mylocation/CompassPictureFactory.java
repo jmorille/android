@@ -10,7 +10,7 @@ import android.graphics.Picture;
 
 public class CompassPictureFactory {
 
-    public static Picture createCompassRosePicture(int mCompassRadius, final float mScale) {
+    public static Picture createCompassRosePicture(final int mCompassRadius, final float displayDensity) {
         // Paint design of north triangle (it's common to paint north in red
         // color)
         final Paint northPaint = new Paint();
@@ -44,19 +44,19 @@ public class CompassPictureFactory {
 
         // Blue triangle pointing north
         final Path pathNorth = new Path();
-        pathNorth.moveTo(center, center - (mCompassRadius - 3) * mScale);
-        pathNorth.lineTo(center + 4 * mScale, center);
-        pathNorth.lineTo(center - 4 * mScale, center);
-        pathNorth.lineTo(center, center - (mCompassRadius - 3) * mScale);
+        pathNorth.moveTo(center, center - (mCompassRadius - 3) * displayDensity);
+        pathNorth.lineTo(center + 4 * displayDensity, center);
+        pathNorth.lineTo(center - 4 * displayDensity, center);
+        pathNorth.lineTo(center, center - (mCompassRadius - 3) * displayDensity);
         pathNorth.close();
         canvas.drawPath(pathNorth, northPaint);
 
         // Red triangle pointing south
         final Path pathSouth = new Path();
-        pathSouth.moveTo(center, center + (mCompassRadius - 3) * mScale);
-        pathSouth.lineTo(center + 4 * mScale, center);
-        pathSouth.lineTo(center - 4 * mScale, center);
-        pathSouth.lineTo(center, center + (mCompassRadius - 3) * mScale);
+        pathSouth.moveTo(center, center + (mCompassRadius - 3) * displayDensity);
+        pathSouth.lineTo(center + 4 * displayDensity, center);
+        pathSouth.lineTo(center - 4 * displayDensity, center);
+        pathSouth.lineTo(center, center + (mCompassRadius - 3) * displayDensity);
         pathSouth.close();
         canvas.drawPath(pathSouth, southPaint);
 
@@ -68,8 +68,14 @@ public class CompassPictureFactory {
 
     }
 
-    public static Bitmap createCompassRoseBitmap(int mCompassRadius, final float mScale) {
-        Picture mCompassRose = createCompassRosePicture(mCompassRadius, mScale);
+    /**
+     * 
+     * @param mCompassRadius
+     * @param displayDensity  ctx.getResources().getDisplayMetrics().density;
+     * @return
+     */
+    public static Bitmap createCompassRoseBitmap(int mCompassRadius, final float displayDensity) {
+        Picture mCompassRose = createCompassRosePicture(mCompassRadius, displayDensity);
         // Convert As BitMap
         Bitmap bm = Bitmap.createBitmap(mCompassRose.getWidth(), mCompassRose.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bm);

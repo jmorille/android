@@ -3,17 +3,20 @@ package eu.ttbox.velib.ui.search.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
+import android.location.LocationListener;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.core.AppConstants;
+import eu.ttbox.velib.map.station.drawable.StationCompassView;
 import eu.ttbox.velib.map.station.drawable.StationDispoIcView;
 import eu.ttbox.velib.model.FavoriteIconEnum;
 import eu.ttbox.velib.model.StationHelper;
 
-public class StationItemCurAdapter extends android.support.v4.widget.ResourceCursorAdapter {
+public class StationItemCurAdapter extends android.support.v4.widget.ResourceCursorAdapter implements LocationListener {
 
     private static final String TAG = "StationItemCurAdapter";
 
@@ -22,12 +25,22 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
     private boolean isNotBinding = true;
 
     // Config
+    
     public Location lastLoc;
 
-    public StationItemCurAdapter(Context context, Cursor c, int flags, Location lastLoc) { 
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    public StationItemCurAdapter(Context context, Cursor c, int flags, Location lastLoc) {
         super(context, R.layout.stations_list_item, c, flags);
+        
         this.lastLoc = lastLoc;
     }
+
+    // ===========================================================
+    // Bindings
+    // ===========================================================
 
     private void intViewBinding(View view, Context context, Cursor cursor) {
         // Init Cursor
@@ -49,8 +62,14 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
         long stationUpdated = helper.getStationUpdated(cursor);
         int cycleCount = helper.getStationCycle(cursor);
         int parkingCount = helper.getStationParking(cursor);
-        setViewStationDispo(holder.dispoIcView,    stationUpdated, cycleCount, parkingCount);
+        setViewStationDispo(holder.dispoIcView, stationUpdated, cycleCount, parkingCount);
         setViewFavoriteImage(holder.iconFavorite, helper.getFavoriteIconEnum(cursor));
+        // Location
+        int latE6 = helper.getLatitudeE6(cursor);
+        int lngE6 = helper.getLongitudeE6(cursor);
+        holder.location.setLatitude(latE6);
+        holder.location.setLongitude(lngE6);
+
     }
 
     public void setViewFavoriteImage(ImageView v, FavoriteIconEnum favoriteType) {
@@ -62,7 +81,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
         }
     }
 
-    private void setViewStationDispo(StationDispoIcView v, long stationUpdated,  int cycleCount, int parkingCount) {
+    private void setViewStationDispo(StationDispoIcView v, long stationUpdated, int cycleCount, int parkingCount) {
         if (cycleCount > -1 && parkingCount > -1) {
             // FIXME stationUpdated
             v.setStationCycle(cycleCount);
@@ -74,6 +93,10 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
         }
     }
 
+    // ===========================================================
+    // holder
+    // ===========================================================
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = super.newView(context, cursor, parent);
@@ -84,6 +107,10 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
         holder.adressText = (TextView) view.findViewById(R.id.station_list_item_adress);
         holder.dispoIcView = (StationDispoIcView) view.findViewById(R.id.station_list_item_dispo);
         holder.iconFavorite = (ImageView) view.findViewById(R.id.station_list_item_icon_favorite);
+//        holder.stationCompass = (StationCompassView)view.findViewById(R.id.station_list_item_compass);
+        // Cache
+        holder.location = new Location("gps");
+        
         // and store it inside the layout.
         view.setTag(holder);
         return view;
@@ -91,12 +118,21 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
     }
 
     static class ViewHolder {
+        Location location;
+      
+        // Binding
         TextView distanceText;
         TextView ocupationText;
         StationDispoIcView dispoIcView;
         TextView adressText;
         ImageView iconFavorite;
+        StationCompassView stationCompass;
+      
     }
+
+    // ===========================================================
+    // Bussiness
+    // ===========================================================
 
     private long getDistanceInMeter(int latE6, int lngE6) {
         long distInM = -1;
@@ -108,17 +144,39 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
         return distInM;
     }
 
-    private long getDistanceInMeter(String latLngE6) {
-        long distInM = -1;
-        int separatorIdx = latLngE6.indexOf("#");
-        if (separatorIdx > 0) {
-            int textSize = latLngE6.length();
-            String latE6String = latLngE6.substring(0, separatorIdx);
-            String lngE6String = latLngE6.substring(separatorIdx + 1, textSize);
-            int latE6 = Integer.parseInt(latE6String);
-            int lngE6 = Integer.parseInt(lngE6String);
-            return getDistanceInMeter(latE6, lngE6);
+    private float getBearing(Location dest) {
+        float result = 0;
+        if (lastLoc != null) {
+            result = lastLoc.bearingTo(dest);
         }
-        return distInM;
+        return result;
     }
+
+    // ===========================================================
+    // Listener
+    // ===========================================================
+
+    @Override
+    public void onLocationChanged(Location location) {
+        lastLoc = location;
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
 }
