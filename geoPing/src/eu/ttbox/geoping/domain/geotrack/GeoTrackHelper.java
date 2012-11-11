@@ -140,7 +140,7 @@ public class GeoTrackHelper {
         }
         if (geoTrack.hasSpeed()) {
             initialValues.putInt(GeoTrackColumns.COL_SPEED, geoTrack.speed);
-        }
+        }  
         if (geoTrack.hasAddress()) {
             initialValues.putString(GeoTrackColumns.COL_ADDRESS, geoTrack.address);
         }
