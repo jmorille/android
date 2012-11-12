@@ -67,9 +67,8 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
         // Location
         int latE6 = helper.getLatitudeE6(cursor);
         int lngE6 = helper.getLongitudeE6(cursor);
-        holder.location.setLatitude(latE6);
-        holder.location.setLongitude(lngE6);
-
+        holder.location.setLatitude(latE6/AppConstants.E6);
+        holder.location.setLongitude(lngE6/AppConstants.E6);
     }
 
     public void setViewFavoriteImage(ImageView v, FavoriteIconEnum favoriteType) {

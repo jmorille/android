@@ -1,6 +1,9 @@
 package eu.ttbox.osm.tiles;
 
+import java.util.ArrayList;
+
 import org.osmdroid.ResourceProxy;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
@@ -50,10 +53,11 @@ public class MyAppTilesProviders {
     
     public static void initTilesSource(Context context) {
         // Remove Tiles
-        TileSourceFactory.getTileSources().remove(TileSourceFactory.TOPO);
-        TileSourceFactory.getTileSources().remove(TileSourceFactory.MAPQUESTAERIAL);
-        TileSourceFactory.getTileSources().remove(TileSourceFactory.BASE);
-        TileSourceFactory.getTileSources().remove(TileSourceFactory.HILLS);
+    	ArrayList<ITileSource>  tileSources =  TileSourceFactory.getTileSources();
+       tileSources.remove(TileSourceFactory.TOPO);
+       tileSources.remove(TileSourceFactory.MAPQUESTAERIAL);
+       tileSources.remove(TileSourceFactory.BASE);
+       tileSources.remove(TileSourceFactory.HILLS);
         // Add Licence Tiles
         // ------------------
         // only do static initialisation if needed
@@ -69,7 +73,9 @@ public class MyAppTilesProviders {
             TileSourceFactory.addTileSource(bmts);
         }
         // Add Other Tiles
+        if (!tileSources.contains(CLOUDMADE_VECTOR_TILES)) {
          TileSourceFactory.addTileSource(CLOUDMADE_VECTOR_TILES);
+        }
         // TileSourceFactory.addTileSource(PISTEMAP);
 
     }
