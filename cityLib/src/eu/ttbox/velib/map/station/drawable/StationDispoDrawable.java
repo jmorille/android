@@ -246,6 +246,13 @@ public class StationDispoDrawable extends View {
 	// ### Config ### //
 	// ############## //
 
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+       //TODO 
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
+    
 	public void setExpectedVelo(int expectedVelo) {
 		this.expectedVelo = expectedVelo;
 	}

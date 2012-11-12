@@ -15,7 +15,12 @@ public class StationCompassView extends View {
 
     private static final String TAG = "StationDirectionView";
 
+    
     // Config
+    final int northTriangleColor = CompassPictureFactory.DEFAULT_NORTH_TRIANGLE_COLOR;
+    final int southTriangleColor= CompassPictureFactory.DEFAULT_DOT_MIDDLE_COLOR;
+    final int dotMiddleColor= CompassPictureFactory.DEFAULT_SOUTH_TRIANGLE_COLOR;
+    //Data
     private float displayDensity;
     Location location;
     float bearing = 0;
@@ -66,6 +71,8 @@ public class StationCompassView extends View {
 
     public void setBearing(float bearing) {
         this.bearing = bearing;
+        postInvalidate();
+        Log.i(TAG, "###### setBearing : " + bearing);
     }
 
     
@@ -106,7 +113,8 @@ public class StationCompassView extends View {
         centerX = w / 2;
         centerY = h / 2;
         int radius = Math.min(centerX, centerY);
-        compassRose = CompassPictureFactory.createCompassRoseBitmap(radius, displayDensity);
+        compassRose = CompassPictureFactory.createCompassRoseBitmap(radius, displayDensity,
+                northTriangleColor,    southTriangleColor, dotMiddleColor);
         COMPASS_ROSE_CENTER_X = compassRose.getWidth() / 2;
         COMPASS_ROSE_CENTER_Y = compassRose.getHeight() / 2;
         super.onSizeChanged(w, h, oldw, oldh);

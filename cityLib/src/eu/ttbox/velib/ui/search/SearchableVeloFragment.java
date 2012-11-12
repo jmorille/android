@@ -3,21 +3,27 @@ package eu.ttbox.velib.ui.search;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -25,6 +31,7 @@ import android.widget.TextView;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.VeloContentProvider;
+import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.service.database.Velo.VeloColumns;
 import eu.ttbox.velib.ui.search.adapter.StationItemCurAdapter;
 
@@ -44,8 +51,16 @@ public class SearchableVeloFragment extends Fragment {
             , SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID //
     };
 
-    // Service
+    // Config
+    private static final long DEFAULT_DISPO_DELTA_DELAY_IN_S = 60 * 5; 
+    
+    long  checkDispoDeltaDelayInMs =AppConstants.ONE_SECOND_IN_MS *DEFAULT_DISPO_DELTA_DELAY_IN_S ;
+    
+//     // Service
     private LocationManager locationManager;
+    private SensorManager mSensorManager;
+    private SharedPreferences sharedPreferences;
+    
     private StationItemCurAdapter listAdapter;
 
     // Binding
@@ -60,10 +75,18 @@ public class SearchableVeloFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.search_station, container, false);
         // Service
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+         // Config
+         checkDispoDeltaDelayInMs = sharedPreferences.getLong(AppConstants.PREFS_KEY_CHEK_DISPO_DELTA_DELAY_IN_S, DEFAULT_DISPO_DELTA_DELAY_IN_S)  * AppConstants.ONE_SECOND_IN_MS;
+         
         // Adpater
-        Location lastLoc = null;
-        listAdapter = new StationItemCurAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER, lastLoc);
+        Location lastLoc = getLastKnownLocation();
+        final WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        Display mDisplay = windowManager.getDefaultDisplay();
+      
+        listAdapter = new StationItemCurAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER, lastLoc, mDisplay, checkDispoDeltaDelayInMs);
          // Binding
         resultStatus = (TextView) v.findViewById(R.id.searchStation_resultStatus);
         mListView = (ListView) v.findViewById(android.R.id.list);
@@ -83,6 +106,26 @@ public class SearchableVeloFragment extends Fragment {
     // ===========================================================
     // Life Cycle
     // ===========================================================
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Service
+        for (String provider : locationManager.getAllProviders() ) {
+            locationManager.requestLocationUpdates(provider, 1000l, 0l, listAdapter);
+        }
+        final Sensor sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        if (sensor != null) {
+              mSensorManager.registerListener(listAdapter, sensor, SensorManager.SENSOR_DELAY_UI);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        locationManager.removeUpdates(listAdapter);
+        mSensorManager.unregisterListener(listAdapter);
+        super.onPause();
+    }
 
     // ===========================================================
     // Location

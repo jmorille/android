@@ -79,9 +79,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/station_list_item_square"
+    <LinearLayout  
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:gravity="center"
@@ -99,9 +97,14 @@
             android:id="@+id/station_list_item_dispo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:gravity="center" >
-        </eu.ttbox.velib.map.station.drawable.StationDispoIcView>
-
+            android:gravity="center" />
+ 
+          <eu.ttbox.velib.map.station.drawable.StationCompassView
+             android:id="@+id/station_list_item_compass" 
+           android:layout_height="40dp"
+           android:layout_width="40dp"
+         />
+          
         <!-- <CheckBox -->
         <!-- android:id="@+id/station_list_item_favorite" -->
         <!-- android:layout_width="wrap_content" -->

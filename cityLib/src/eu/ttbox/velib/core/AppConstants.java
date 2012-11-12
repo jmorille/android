@@ -3,7 +3,9 @@ package eu.ttbox.velib.core;
 public class AppConstants {
 
 	public final static double E6 = 1000000d;
-	           
+
+    public static final long ONE_SECOND_IN_MS = 1000;
+    
 	public final static double GOLD_NUMBER_Phi = 1.6180339887d;
 	
 	public static final int CONNECTION_TIMEOUT = 30000;

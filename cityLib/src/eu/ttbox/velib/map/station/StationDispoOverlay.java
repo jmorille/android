@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -58,9 +59,10 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 	// Paint
 
 	private Paint circleUnkwonPaint;
+    private Paint circleExpiredPaint;
 
 	// Static values
-	private static final long ONE_SECOND_IN_MS = 1000;
+	private static final long ONE_SECOND_IN_MS = AppConstants.ONE_SECOND_IN_MS;
 	private static final long ONE_MINUTE_IN_MS = 60 * 1000;
 	private static final long HALF_MINUTE_IN_MS = 30 * 1000;
 
@@ -218,6 +220,10 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 		circleUnkwonPaint = new Paint();
 		circleUnkwonPaint.setAntiAlias(true);
 		circleUnkwonPaint.setColor(r.getColor(R.color.station_dispo_unknown));
+		// Expired values
+		circleExpiredPaint= new Paint();
+		circleExpiredPaint.setAntiAlias(true);
+		circleExpiredPaint.setColor( Color.BLUE);
 
 	}
 	
@@ -383,7 +389,7 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
 					}
 				} else if (zoomLevel > zoomLevelDisplayStation) {
 					// Station Loc
-					canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, zoomLevel - 9, circleUnkwonPaint);
+					canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, zoomLevel - 9, circleExpiredPaint);
 				} else {
 					canvas.drawCircle(myScreenCoords.x, myScreenCoords.y, 2, circleUnkwonPaint);
 				}

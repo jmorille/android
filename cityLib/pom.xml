@@ -6,13 +6,13 @@
     <parent>
        <groupId>eu.ttbox.android</groupId>
        <artifactId>android-root</artifactId>
-	   <version>0.0.9</version>	
+	   <version>0.1.0</version>	
 	</parent>
 	  
  
 	<groupId>eu.ttbox.android.cityLib</groupId>
 	<artifactId>cityLib</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.6</version>
 
 	<packaging>apk</packaging>
 
