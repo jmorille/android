@@ -18,8 +18,7 @@ public class CompassPictureFactory {
         return createCompassRosePicture(mCompassRadius, displayDensity, DEFAULT_NORTH_TRIANGLE_COLOR, DEFAULT_SOUTH_TRIANGLE_COLOR, DEFAULT_DOT_MIDDLE_COLOR);
     }
 
-    public static Picture createCompassRosePicture(final int mCompassRadius, final float displayDensity,
-            final int northTriangleColor, final int southTriangleColor, final int dotMiddleColor) {
+    public static Picture createCompassRosePicture(final int mCompassRadius, final float displayDensity, final int northTriangleColor, final int southTriangleColor, final int dotMiddleColor) {
         // Paint design of north triangle (it's common to paint north in red
         // color)
         final Paint northPaint = new Paint();
@@ -41,6 +40,13 @@ public class CompassPictureFactory {
         centerPaint.setAntiAlias(true);
         centerPaint.setStyle(Style.FILL);
         centerPaint.setAlpha(220);
+        // Create Compass
+        return createCompassRosePicture(mCompassRadius, displayDensity, northPaint, southPaint, centerPaint);
+    }
+
+    
+    
+    public static Picture createCompassRosePicture(final int mCompassRadius, final float displayDensity, final Paint northPaint, final Paint southPaint, final Paint centerPaint) {
 
         // final int picBorderWidthAndHeight = (int) ((mCompassRadius + 5) * 2 *
         // mScale);
@@ -77,9 +83,14 @@ public class CompassPictureFactory {
 
     }
 
-
     public static Bitmap createCompassRoseBitmap(final int mCompassRadius, final float displayDensity) {
         return createCompassRoseBitmap(mCompassRadius, displayDensity, DEFAULT_NORTH_TRIANGLE_COLOR, DEFAULT_SOUTH_TRIANGLE_COLOR, DEFAULT_DOT_MIDDLE_COLOR);
+    }
+
+    public static Bitmap createCompassRoseBitmap(int mCompassRadius, final float displayDensity, final Paint northPaint, final Paint southPaint, final Paint centerPaint) {
+        Picture mCompassRose = createCompassRosePicture(mCompassRadius, displayDensity, northPaint, southPaint, centerPaint);
+        // Convert As BitMap
+        return convertPictureToBitmap(mCompassRose);
     }
 
     /**
@@ -89,11 +100,13 @@ public class CompassPictureFactory {
      *            ctx.getResources().getDisplayMetrics().density;
      * @return
      */
-    public static Bitmap createCompassRoseBitmap(int mCompassRadius, final float displayDensity,
-            final int northTriangleColor, final int southTriangleColor, final int dotMiddleColor) {
-        Picture mCompassRose = createCompassRosePicture(mCompassRadius, displayDensity,
-                 northTriangleColor,  southTriangleColor,   dotMiddleColor);
+    public static Bitmap createCompassRoseBitmap(int mCompassRadius, final float displayDensity, final int northTriangleColor, final int southTriangleColor, final int dotMiddleColor) {
+        Picture mCompassRose = createCompassRosePicture(mCompassRadius, displayDensity, northTriangleColor, southTriangleColor, dotMiddleColor);
         // Convert As BitMap
+        return convertPictureToBitmap(mCompassRose);
+    }
+
+    private static Bitmap convertPictureToBitmap(Picture mCompassRose) {
         Bitmap bm = Bitmap.createBitmap(mCompassRose.getWidth(), mCompassRose.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bm);
         mCompassRose.draw(c);

@@ -31,7 +31,7 @@ public class StationDispoIcView extends View {
     // Config
     private int centerX;
     private int centerY;
-    private int delta = 5;
+    private int delta =  0;//5;
     private int externalRadius;
 
     // Instance
@@ -105,23 +105,19 @@ public class StationDispoIcView extends View {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, String.format(" width = %s  // height = %s", getWidth(), getHeight()));
         }
-
-        // int width = getWidth() - getPaddingLeft() - getPaddingRight();// 25;
-        // int height = getHeight() - getPaddingBottom() - getPaddingTop();
-
-        // TODO zoomLevel
-        // int centerX = (width / 2);
-        // int centerY = (height / 2);
         point.x = centerX;
         point.y = centerY;
-        // int delta = 5;
-        // int externalRadius = Math.min(centerX - delta, centerY - delta);
-        // Draw Station
+         // Draw Station
         canvas.drawCircle(point.x, point.y, externalRadius, paintBackground);
+        onSubBackground(canvas);
         stationDispo.drawForExternalRadius(canvas, externalRadius, station, point);
+     }
 
+    public void onSubBackground(Canvas canvas) {
+        
     }
-
+           
+    
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         centerX = (w / 2);

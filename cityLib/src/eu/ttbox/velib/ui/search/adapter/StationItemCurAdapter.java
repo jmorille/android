@@ -82,6 +82,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
         int cycleCount = helper.getStationCycle(cursor);
         int parkingCount = helper.getStationParking(cursor);
         setViewStationDispo(holder.dispoIcView, stationUpdated, cycleCount, parkingCount);
+       
         setViewFavoriteImage(holder.iconFavorite, helper.getFavoriteIconEnum(cursor));
         // Location
         int latE6 = helper.getLatitudeE6(cursor);
@@ -89,6 +90,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
         holder.location.setLatitude(latE6 / AppConstants.E6);
         holder.location.setLongitude(lngE6 / AppConstants.E6);
         // Compute Bearing
+        setViewStationDispo(holder.stationCompass, stationUpdated, cycleCount, parkingCount);
          viewHolders.add(holder);
         computeBearing( holder);
         // Update

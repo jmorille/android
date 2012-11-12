@@ -101,8 +101,8 @@
  
           <eu.ttbox.velib.map.station.drawable.StationCompassView
              android:id="@+id/station_list_item_compass" 
-           android:layout_height="40dp"
-           android:layout_width="40dp"
+           android:layout_height="50dp"
+           android:layout_width="50dp"
          />
           
         <!-- <CheckBox -->
