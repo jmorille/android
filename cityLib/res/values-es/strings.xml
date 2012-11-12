@@ -92,6 +92,8 @@
     <string name="help_tab_color_code">El codigo Color</string>
     <string name="help_tab_bubble_dispo">Burbuja de informacion</string>
     <string name="help_tab_conduit_code">Bicicletiquet</string>
+    <string name="help_tab_map_code">Mapa</string>
+    
     <string name="help_start_application">Poner en marcha la aplicacion</string>
     <string name="help_station_circle">Las disponibilidades de las bicicletas y los sitios de parking en una estacion estan reprensentados por 2 circulos</string>
     <string name="help_station_circle_int">El circulo interior representa el numero de bicicletas disponibles</string>

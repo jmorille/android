@@ -92,6 +92,8 @@
     <string name="help_tab_color_code">Couleur</string>
     <string name="help_tab_bubble_dispo">Bulle d\'info</string>
     <string name="help_tab_conduit_code">Vétickette</string>
+    <string name="help_tab_map_code">Carte</string>
+    
     <string name="help_start_application">Démarrer l\'application</string>
     <string name="help_station_circle">Les disponibilités des vélos et des places de parking dans une station sont représentées par 2 cercles</string>
     <string name="help_station_circle_int">Le cercle intérieur représente le nombre de vélos disponibles</string>

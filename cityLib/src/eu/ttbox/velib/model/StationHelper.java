@@ -143,17 +143,16 @@ public class StationHelper {
 
     public static ContentValues getContentValues(Station point) {
         ContentValues initialValues = new ContentValues();
-        if (point.id > -1) {
-            initialValues.put(VeloColumns.COL_ID, Long.valueOf(point.id));
-        }
-        initialValues.put(VeloColumns.COL_ID, point.getId());
+        if (point.id > AppConstants.UNSET_ID ) {
+            initialValues.put(VeloColumns.COL_ID, Integer.valueOf(point.id));
+        } 
         initialValues.put(VeloColumns.COL_PROVIDER, point.getProvider());
         initialValues.put(VeloColumns.COL_NUMBER, point.getNumber());
         initialValues.put(VeloColumns.COL_NAME, point.getName());
         initialValues.put(VeloColumns.COL_ADDRESS, point.getAddress());
+        initialValues.put(VeloColumns.COL_FULLADDRESS, point.getFullAddress());
         initialValues.put(VeloColumns.COL_LATITUDE_E6, point.getLatitudeE6());
         initialValues.put(VeloColumns.COL_LONGITUDE_E6, point.getLongitudeE6());
-        initialValues.put(VeloColumns.COL_FULLADDRESS, point.getFullAddress());
         initialValues.put(VeloColumns.COL_OPEN, point.getOpen());
         initialValues.put(VeloColumns.COL_BONUS, point.getBonus());
         initialValues.put(VeloColumns.COL_FAVORY, point.isFavory());
@@ -166,6 +165,20 @@ public class StationHelper {
         initialValues.put(VeloColumns.COL_STATION_TICKET, point.getVeloTicket());
         initialValues.put(VeloColumns.COL_STATION_UPDATE_TIME, point.getVeloUpdated());
 
+        
+        // values.put(VeloColumns.COL_PROVIDER, point.getProvider());
+        // values.put(VeloColumns.COL_NUMBER, point.getNumber());
+        // values.put(VeloColumns.COL_NAME, point.getName());
+        // values.put(VeloColumns.COL_ADDRESS, point.getAddress());
+        // values.put(VeloColumns.COL_FULLADDRESS, point.getFullAddress());
+        // values.put(VeloColumns.COL_LATITUDE_E6, point.getLatitudeE6());
+        // values.put(VeloColumns.COL_LONGITUDE_E6, point.getLongitudeE6());
+        // values.put(VeloColumns.COL_OPEN, point.getOpen());
+        // values.put(VeloColumns.COL_BONUS, point.getBonus());
+        // values.put(VeloColumns.COL_FAVORY, point.isFavory());
+        // values.put(VeloColumns.COL_FAVORY_TYPE, point.getFavoriteTypeId());
+        // values.put(VeloColumns.COL_ALIAS_NAME, point.getNameAlias());
+        
         return initialValues;
     }
 

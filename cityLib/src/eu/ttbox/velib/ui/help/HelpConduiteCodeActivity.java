@@ -29,8 +29,8 @@ public class HelpConduiteCodeActivity extends Fragment	 {
 				startActivity(startMap);
 			}
 		};
-		startMap01.setOnClickListener(startListener);
-		startMap02.setOnClickListener(startListener);
+//		startMap01.setOnClickListener(startListener);
+//		startMap02.setOnClickListener(startListener);
 		
 		return v;
 	}

@@ -27,7 +27,8 @@ public class MapViewFactory {
     
     public static MapView createOsmMapView(Context context, ResourceProxy mResourceProxy, ITileSource tileSource, int cacheSizeInBytes) {
         Handler tileRequestCompleteHandler = null;
-        MapTileProviderBase aTileProvider = new MapTileProviderTTbox(context, tileSource,   cacheSizeInBytes);
+        MapTileProviderBase aTileProvider  =  new MapTileProviderTTbox(context, tileSource,   cacheSizeInBytes); 
+    	 
         MapView mapView = new MapView(context, 256, mResourceProxy, aTileProvider, tileRequestCompleteHandler);
         mapView.setMultiTouchControls(true);
         mapView.setHapticFeedbackEnabled(true);

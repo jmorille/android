@@ -38,7 +38,7 @@ public class SearchableVeloFragment extends Fragment {
     private static final String[] SEARCH_PROJECTION_COLOMN = new String[] { //
     VeloColumns.COL_ID, VeloColumns.COL_NUMBER, VeloColumns.COL_NAME, VeloColumns.COL_ADDRESS//
             , VeloColumns.COL_FAVORY, VeloColumns.COL_FAVORY_TYPE//
-            , VeloColumns.COL_ALIAS_NAME//
+            , VeloColumns.COL_ALIAS_NAME, VeloColumns.COL_STATION_UPDATE_TIME//
             , VeloColumns.COL_STATION_CYCLE, VeloColumns.COL_STATION_PARKING//
             , VeloColumns.COL_LATITUDE_E6, VeloColumns.COL_LONGITUDE_E6//
             , SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID //

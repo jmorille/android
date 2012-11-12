@@ -59,7 +59,7 @@ public class VelibMapActivity extends FragmentActivity { // implements
 	// Constructors
 	// ===========================================================
 
-	@SuppressLint("NewApi")
+	 
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);

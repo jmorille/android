@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/eu.ttbox.velib"
+    android:id="@+id/help_station_page1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="214dp"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/help_text"
+            android:text="@string/help_station_circle_color_code" />
+
+        <eu.ttbox.velib.map.station.drawable.StationCompassView
+            style="@style/help_station_dispo"
+            android:background="@android:color/white"
+           android:layout_height="150dp"
+           android:layout_width="180dp"
+         />
+   
+        
+    </LinearLayout>
+
+</ScrollView>

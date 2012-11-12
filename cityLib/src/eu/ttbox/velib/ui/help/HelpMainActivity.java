@@ -99,6 +99,16 @@ public class HelpMainActivity  extends FragmentActivity {
 		return false;
 	}
 
+	// ===========================================================
+    // Action  Adapter
+    // ===========================================================
+
+ 
+	public void onStartMapActivityClick(View v) {
+		Intent startMap = new Intent(this, VelibMapActivity.class);
+		startActivity(startMap);
+	}
+	
     // ===========================================================
     // Pages Adapter
     // ===========================================================
@@ -113,6 +123,7 @@ public class HelpMainActivity  extends FragmentActivity {
        static final int COLOR_CODE = 1;
        static final int BUBBLE_CODE = 2;
        static final int CONDUIT_CODE = 3;
+       static final int MAP_CODE = 4;
        
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -146,6 +157,15 @@ public class HelpMainActivity  extends FragmentActivity {
             case CONDUIT_CODE: 
          	   fragment=new HelpConduiteCodeActivity();
              break;
+            case MAP_CODE: 
+         	   fragment=new Fragment() {
+              	  @Override
+              	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+              	        View v = inflater.inflate(R.layout.help_map, container, false);
+              	        return v;
+              	  }
+              };
+             break;
         }
 //            fragment = new DummySectionFragment();
 //            Bundle args = new Bundle();
@@ -167,6 +187,7 @@ public class HelpMainActivity  extends FragmentActivity {
                 case COLOR_CODE: return getString(R.string.help_tab_color_code).toUpperCase();
                 case BUBBLE_CODE: return getString(R.string.help_tab_bubble_dispo).toUpperCase();
                 case CONDUIT_CODE: return getString(R.string.help_tab_conduit_code).toUpperCase();
+                case MAP_CODE: return getString(R.string.help_tab_map_code).toUpperCase();
             }
             return null;
         }
