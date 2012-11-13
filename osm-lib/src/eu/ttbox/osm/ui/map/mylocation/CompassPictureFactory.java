@@ -106,7 +106,7 @@ public class CompassPictureFactory {
         return convertPictureToBitmap(mCompassRose);
     }
 
-    private static Bitmap convertPictureToBitmap(Picture mCompassRose) {
+    public static Bitmap convertPictureToBitmap(Picture mCompassRose) {
         Bitmap bm = Bitmap.createBitmap(mCompassRose.getWidth(), mCompassRose.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bm);
         mCompassRose.draw(c);

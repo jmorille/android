@@ -10,9 +10,10 @@ import android.graphics.Picture;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import eu.ttbox.osm.ui.map.mylocation.CompassPictureFactory;
 
-public class StationCompassView extends StationDispoIcView {
+public class StationCompassView2 extends View {
 
     private static final String TAG = "StationDirectionView";
 
@@ -43,16 +44,16 @@ public class StationCompassView extends StationDispoIcView {
     // Constructors
     // ===========================================================
 
-    public StationCompassView(Context context) {
+    public StationCompassView2(Context context) {
         super(context);
         initStationDispoView();
     }
 
-    public StationCompassView(Context context, AttributeSet attrs) {
+    public StationCompassView2(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public StationCompassView(Context context, AttributeSet attrs, int defStyle) {
+    public StationCompassView2(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         //
         initStationDispoView();
@@ -101,11 +102,12 @@ public class StationCompassView extends StationDispoIcView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        onSubBackground(canvas);
         // Compute Draw
 
     }
 
-    @Override
+//    @Override
     public void onSubBackground(Canvas canvas) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, String.format(" width = %s  // height = %s", getWidth(), getHeight()));
@@ -150,18 +152,18 @@ public class StationCompassView extends StationDispoIcView {
 
         // final int picBorderWidthAndHeight = (int) ((mCompassRadius + 5) * 2 *
         // mScale);
-        final int picBorderWidthAndHeight = (int) ((mCompassRadius + 5) * 2);
+        final int picBorderWidthAndHeight = (int)mCompassRadius*2; // ((mCompassRadius +5) * 2);
         final int center = picBorderWidthAndHeight / 2;
 
         // Record Rose
         Picture mCompassRose = new Picture();
         final Canvas canvas = mCompassRose.beginRecording(picBorderWidthAndHeight, picBorderWidthAndHeight);
-
+Log.w(TAG, "Display Density : "+ displayDensity);
         // Blue triangle pointing north
-        final float topY = mCompassRadius* displayDensity; //(mCompassRadius - 3) * displayDensity;
-        final float arrowX =  (mCompassRadius/10) * displayDensity;
-        final float arrowY =  (mCompassRadius * .5f) * displayDensity;
-        final float baseX = 4 * displayDensity;
+        final float topY = mCompassRadius;//(mCompassRadius-3)* displayDensity; //(mCompassRadius - 3) * displayDensity;
+        final float arrowX =  (mCompassRadius*.1f) ;//* displayDensity;
+        final float arrowY =  (mCompassRadius * .8f) ;//* displayDensity;
+        final float baseX = (mCompassRadius*.05f) ; // 4 * displayDensity;
  
         
         canvas.drawText("X", center + arrowX, center - arrowY, northPaint);
@@ -184,10 +186,10 @@ public class StationCompassView extends StationDispoIcView {
 
         // Red triangle pointing south
         final Path pathSouth = new Path();
-        pathSouth.moveTo(center, center + (mCompassRadius - 3) * displayDensity);
-        pathSouth.lineTo(center + 4 * displayDensity, center);
-        pathSouth.lineTo(center - 4 * displayDensity, center);
-        pathSouth.lineTo(center, center + (mCompassRadius - 3) * displayDensity);
+        pathSouth.moveTo(center, center + topY);
+        pathSouth.lineTo(center + baseX, center);
+        pathSouth.lineTo(center - baseX, center);
+        pathSouth.lineTo(center, center + topY);
         pathSouth.close();
         canvas.drawPath(pathSouth, southPaint);
 

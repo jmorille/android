@@ -37,6 +37,15 @@
             android:gravity="center"
             android:text="150m"
             android:textSize="14dip" />
+
+        <TextView
+            android:id="@+id/station_list_item_bearing"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="5dip"
+            android:gravity="center"
+            android:text=""
+            android:textSize="14dip" />        
     </LinearLayout>
 
     <LinearLayout

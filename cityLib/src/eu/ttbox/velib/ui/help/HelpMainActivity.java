@@ -155,7 +155,13 @@ public class HelpMainActivity  extends FragmentActivity {
             	   fragment=new HelpStationDispoBubbleActivity();
                 break;
             case CONDUIT_CODE: 
-         	   fragment=new HelpConduiteCodeActivity();
+            	fragment=new Fragment() {
+               	  @Override
+               	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+               	        View v = inflater.inflate(R.layout.help_conduite_code, container, false);
+               	        return v;
+               	  }
+               };
              break;
             case MAP_CODE: 
          	   fragment=new Fragment() {
@@ -177,7 +183,7 @@ public class HelpMainActivity  extends FragmentActivity {
         
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         @Override

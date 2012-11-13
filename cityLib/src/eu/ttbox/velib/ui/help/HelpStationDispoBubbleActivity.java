@@ -13,7 +13,7 @@ import eu.ttbox.velib.model.Station;
 
 public class HelpStationDispoBubbleActivity extends Fragment {
 
-	private BubbleOverlayView balloonView;
+ 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class HelpStationDispoBubbleActivity extends Fragment {
 	}
 
 	private void initStationDispoHelp(View v) {
-		balloonView = new BubbleOverlayView<Station>(this.getActivity(), null, 0);
+		BubbleOverlayView balloonView = new BubbleOverlayView<Station>(this.getActivity(), null, 0);
 		// Define Data
 		Station station = new Station();
 		station.setName("PLACE DE L'HOTEL DE VILLE");

@@ -95,7 +95,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 	boolean askToEnableGps = true;
 
 	// Manage Thread
-	/** * Le AtomicBoolean pour lancer et stopper la Thread */
+	/** * Le AtomicBoolean pour lancer et stopper la Thread : http://mathias-seguy.developpez.com/cours/android/handler_async_memleak/#L4-1 */
 	private AtomicBoolean isThreadRunnning = new AtomicBoolean();
 	private AtomicBoolean isThreadPausing = new AtomicBoolean();
 
@@ -106,28 +106,31 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 
 	private Handler uiHandler = new Handler() {
 		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case UI_MSG_ANIMATE_TO_GEOPOINT: {
-				GeoPoint geoPoint = (GeoPoint) msg.obj;
-				if (geoPoint != null) {
-					if (myLocation != null) {
-						myLocation.disableFollowLocation();
+			super.handleMessage(msg);
+			if (isThreadRunnning.get()) { 
+				switch (msg.what) {
+				case UI_MSG_ANIMATE_TO_GEOPOINT: {
+					GeoPoint geoPoint = (GeoPoint) msg.obj;
+					if (geoPoint != null) {
+						if (myLocation != null) {
+							myLocation.disableFollowLocation();
+						}
+						mapController.animateTo(geoPoint);
+						mapController.setZoom(17);
 					}
-					mapController.animateTo(geoPoint);
-					mapController.setZoom(17);
+					break;
 				}
-				break;
-			}
-			case UI_MSG_TOAST: {
-				String msgToast = (String) msg.obj;
-				Toast.makeText(getActivity(), msgToast, Toast.LENGTH_SHORT).show();
-				break;
-			}
-			case UI_MSG_TOAST_ERROR: {
-				String msgToastError = (String) msg.obj;
-				Toast.makeText(getActivity(), msgToastError, Toast.LENGTH_SHORT).show();
-				break;
-			}
+				case UI_MSG_TOAST: {
+					String msgToast = (String) msg.obj;
+					Toast.makeText(getActivity(), msgToast, Toast.LENGTH_SHORT).show();
+					break;
+				}
+				case UI_MSG_TOAST_ERROR: {
+					String msgToastError = (String) msg.obj;
+					Toast.makeText(getActivity(), msgToastError, Toast.LENGTH_SHORT).show();
+					break;
+				}
+				}
 			}
 		}
 	};
@@ -162,7 +165,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 
 		// Binding
 		// -------------
-		
+
 		// Action bar and compatibility
 		// -----------------------------
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -176,7 +179,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 			});
 			myPositionButton.setVisibility(View.VISIBLE);
 		}
-		
+
 		// Map Overlay
 		// -------------
 		// MyLocation Overlay
@@ -205,7 +208,8 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 		if (askToEnableGps && !enableGPS) {
 			new GpsActivateAskDialog(getActivity()).show();
 		}
-
+		// Initialiser le booléen isThreadRunning
+		isThreadRunnning.set(true);
 		return v;
 	}
 
@@ -246,6 +250,8 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 		if (Log.isLoggable(TAG, Log.INFO)) {
 			Log.i(TAG, "### ### ### ### ### onDestroy call ### ### ### ### ###");
 		}
+		// Tuer la Thread
+		isThreadRunnning.set(false);
 		timer.shutdownNow();
 		myLocation.disableCompass();
 		myLocation.disableMyLocation();
@@ -262,6 +268,8 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 		if (Log.isLoggable(TAG, Log.INFO)) {
 			Log.i(TAG, "### ### ### ### ### onPause call ### ### ### ### ###");
 		}
+		// Mettre la Thread en pause
+		isThreadPausing.set(true);
 
 		// Priavte Preference
 		final SharedPreferences.Editor localEdit = privateSharedPreferences.edit();
@@ -294,6 +302,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 		if (Log.isLoggable(TAG, Log.INFO)) {
 			Log.i(TAG, "### ### ### ### ### onResume call ### ### ### ### ###");
 		}
+		// Relancer la Thread
 		isThreadPausing.set(false);
 		super.onResume();
 
