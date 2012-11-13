@@ -111,6 +111,8 @@ public enum CompassEnum {
         float angle = angleInDegres;
         if (angle>=360) {
             angle = angle % 360;
+        } else if (angle<0) {
+            angle+=360;
         }
         for (CompassEnum  compass : CompassEnum.values()) {
             float delta =  Math.abs(  compass.angle - angle);

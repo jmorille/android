@@ -66,6 +66,7 @@ public class StationCompassView extends StationDispoIcView {
         northPaint.setColor(northTriangleColor);
         northPaint.setAntiAlias(true);
         northPaint.setStyle(Style.FILL);
+//        northPaint.setStyle(Style.STROKE);
         northPaint.setAlpha(220);
 
         // Paint design of south triangle (black)
@@ -145,35 +146,31 @@ public class StationCompassView extends StationDispoIcView {
 
     
 
-    
     public  Picture createCompassRosePicture(final int mCompassRadius, final float displayDensity, final Paint northPaint, final Paint southPaint, final Paint centerPaint) {
 
         // final int picBorderWidthAndHeight = (int) ((mCompassRadius + 5) * 2 *
         // mScale);
-        final int picBorderWidthAndHeight = (int) ((mCompassRadius + 5) * 2);
+        final int picBorderWidthAndHeight = (int)mCompassRadius*2; // ((mCompassRadius +5) * 2);
         final int center = picBorderWidthAndHeight / 2;
 
         // Record Rose
         Picture mCompassRose = new Picture();
         final Canvas canvas = mCompassRose.beginRecording(picBorderWidthAndHeight, picBorderWidthAndHeight);
-
-        // Blue triangle pointing north
-        final float topY = mCompassRadius* displayDensity; //(mCompassRadius - 3) * displayDensity;
-        final float arrowX =  (mCompassRadius/10) * displayDensity;
-        final float arrowY =  (mCompassRadius * .5f) * displayDensity;
-        final float baseX = 4 * displayDensity;
  
-        
-        canvas.drawText("X", center + arrowX, center - arrowY, northPaint);
-        canvas.drawText("Y", center - arrowX,  center - arrowY, northPaint);
+        // Blue triangle pointing north
+        final float topY = mCompassRadius;//(mCompassRadius-3)* displayDensity; //(mCompassRadius - 3) * displayDensity;
+        final float arrowX =  (mCompassRadius*.4f) ;//* displayDensity;
+        final float arrowY =  (mCompassRadius * .6f) ;//* displayDensity;
+        final float baseX = (mCompassRadius*.2f) ; // 4 * displayDensity;
+        final float baseY = mCompassRadius * .5f;// arrowY;//(mCompassRadius * .2f); 
         
         final Path pathNorth = new Path();
         pathNorth.moveTo(center, center - topY);
         pathNorth.lineTo(center+arrowX , center- arrowY);
         pathNorth.lineTo(center+baseX, center- arrowY );
 //        
-        pathNorth.lineTo(center+baseX, center);
-        pathNorth.lineTo(center-baseX, center);
+        pathNorth.lineTo(center+baseX, center-baseY);
+        pathNorth.lineTo(center-baseX, center-baseY);
         
         pathNorth.lineTo(center-baseX, center- arrowY );
         pathNorth.lineTo(center-arrowX , center- arrowY);
@@ -184,12 +181,65 @@ public class StationCompassView extends StationDispoIcView {
 
         // Red triangle pointing south
         final Path pathSouth = new Path();
-        pathSouth.moveTo(center, center + (mCompassRadius - 3) * displayDensity);
-        pathSouth.lineTo(center + 4 * displayDensity, center);
-        pathSouth.lineTo(center - 4 * displayDensity, center);
-        pathSouth.lineTo(center, center + (mCompassRadius - 3) * displayDensity);
+        pathSouth.moveTo(center+ baseX, center + topY);
+        pathSouth.lineTo(center + baseX, center-baseY);
+        pathSouth.lineTo(center - baseX, center-baseY);
+        pathSouth.lineTo(center- baseX, center + topY);
+        pathSouth.lineTo(center+ baseX, center + topY);
         pathSouth.close();
         canvas.drawPath(pathSouth, southPaint);
+
+        // Draw a little white dot in the middle
+        canvas.drawCircle(center, center, 2, centerPaint);
+
+        mCompassRose.endRecording();
+        return mCompassRose;
+
+    }
+    
+
+    public  Picture createCompassRosePictureV2(final int mCompassRadius, final float displayDensity, final Paint northPaint, final Paint southPaint, final Paint centerPaint) {
+
+        // final int picBorderWidthAndHeight = (int) ((mCompassRadius + 5) * 2 *
+        // mScale);
+        final int picBorderWidthAndHeight = (int)mCompassRadius*2; // ((mCompassRadius +5) * 2);
+        final int center = picBorderWidthAndHeight / 2;
+
+        // Record Rose
+        Picture mCompassRose = new Picture();
+        final Canvas canvas = mCompassRose.beginRecording(picBorderWidthAndHeight, picBorderWidthAndHeight);
+ 
+        // Blue triangle pointing north
+        final float topY = mCompassRadius;//(mCompassRadius-3)* displayDensity; //(mCompassRadius - 3) * displayDensity;
+        final float arrowX =  (mCompassRadius*.4f) ;//* displayDensity;
+        final float arrowY =  (mCompassRadius * .6f) ;//* displayDensity;
+        final float baseX = (mCompassRadius*.2f) ; // 4 * displayDensity;
+  
+        
+        final Path pathNorth = new Path();
+        pathNorth.moveTo(center, center - topY);
+        pathNorth.lineTo(center+arrowX , center- arrowY);
+        pathNorth.lineTo(center+baseX, center- arrowY );
+//        
+        pathNorth.lineTo(center+baseX, center+ topY);
+        pathNorth.lineTo(center-baseX, center+ topY);
+        
+        pathNorth.lineTo(center-baseX, center- arrowY );
+        pathNorth.lineTo(center-arrowX , center- arrowY);
+        
+        pathNorth.lineTo(center, center - topY);
+        pathNorth.close();
+        canvas.drawPath(pathNorth, southPaint);
+
+        // Red triangle pointing south
+        final Path pathSouth = new Path();
+        pathSouth.moveTo(center+ baseX, center + topY);
+        pathSouth.lineTo(center + baseX, center);
+        pathSouth.lineTo(center - baseX, center);
+        pathSouth.lineTo(center- baseX, center + topY);
+        pathSouth.lineTo(center+ baseX, center + topY);
+        pathSouth.close();
+//        canvas.drawPath(pathSouth, southPaint);
 
         // Draw a little white dot in the middle
         canvas.drawCircle(center, center, 2, centerPaint);

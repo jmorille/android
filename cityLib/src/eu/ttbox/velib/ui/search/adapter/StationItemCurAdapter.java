@@ -255,7 +255,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 	private String convertDistanceMeterInDisplayUnit(int distInM) {
 		String distInUnit = "";
 		if (distInM < 1000) {
-			distInUnit = String.format("% sm", distInM);
+			distInUnit = String.format("%s m", distInM);
 		} else {
 			double distInKm = distInM / 1000d;
 			distInUnit = String.format("%.2f Km", distInKm);

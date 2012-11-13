@@ -186,10 +186,11 @@ Log.w(TAG, "Display Density : "+ displayDensity);
 
         // Red triangle pointing south
         final Path pathSouth = new Path();
-        pathSouth.moveTo(center, center + topY);
+        pathSouth.moveTo(center+ baseX, center + topY);
         pathSouth.lineTo(center + baseX, center);
         pathSouth.lineTo(center - baseX, center);
-        pathSouth.lineTo(center, center + topY);
+        pathSouth.lineTo(center- baseX, center + topY);
+        pathSouth.lineTo(center+ baseX, center + topY);
         pathSouth.close();
         canvas.drawPath(pathSouth, southPaint);
 
