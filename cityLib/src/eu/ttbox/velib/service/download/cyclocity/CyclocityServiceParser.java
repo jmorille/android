@@ -13,10 +13,12 @@ import javax.xml.parsers.SAXParserFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import android.content.ContentValues;
 import android.util.Log;
 import eu.ttbox.velib.model.Arrondissement;
 import eu.ttbox.velib.model.Station;
 import eu.ttbox.velib.model.VelibProvider;
+import eu.ttbox.velib.service.database.Velo.VeloColumns;
 import eu.ttbox.velib.service.download.VeloServiceParser;
 import eu.ttbox.velib.service.geo.GeoUtils;
 
@@ -97,5 +99,41 @@ public class CyclocityServiceParser implements VeloServiceParser {
 		}
 
 	}
+	
+	
+	public ContentValues parseInputStreamForStationDispo(InputStream content ) {
+        DocumentBuilderFactory fabrique = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder docBuilder = fabrique.newDocumentBuilder();
+            Document d = docBuilder.parse(content);
+            // NodeList rootNode = d.getElementsByTagName("station");
+            String availableString = d.getElementsByTagName("available").item(0).getTextContent();
+            String totalString = d.getElementsByTagName("total").item(0).getTextContent();
+            String freeString = d.getElementsByTagName("free").item(0).getTextContent();
+            String ticketString = d.getElementsByTagName("ticket").item(0).getTextContent();
+            // Result
+            ContentValues values = new ContentValues(6);
+            if (availableString != null && availableString.length() > 0) {
+                values.put(VeloColumns.COL_STATION_CYCLE, Integer.valueOf(availableString));
+             }
+            if (totalString != null && totalString.length() > 0) {
+                values.put(VeloColumns.COL_STATION_TOTAL, Integer.valueOf(totalString)); 
+            }
+            if (freeString != null && freeString.length() > 0) {
+                values.put(VeloColumns.COL_STATION_PARKING, Integer.valueOf(freeString));  
+            }
+            if (ticketString != null && ticketString.length() > 0) {
+                values.put(VeloColumns.COL_STATION_TICKET, Integer.valueOf(ticketString));   
+            } else {
+                values.put(VeloColumns.COL_STATION_TICKET, Integer.valueOf(0));    
+            }
+            // Manage Version Date
+            values.put(VeloColumns.COL_STATION_TICKET, Long.valueOf(System.currentTimeMillis()));  
+            return values;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 }

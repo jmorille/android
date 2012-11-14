@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:id="@+id/help_station_page1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -9,13 +10,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-           <Button
-                android:id="@+id/help_button1_start_application"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onStartMapActivityClick"
-                android:text="@string/help_start_application" />
-           
+        <Button
+            android:id="@+id/help_button1_start_application"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onStartMapActivityClick"
+            android:text="@string/help_start_application" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,10 +25,11 @@
             <TextView
                 style="@style/help_text"
                 android:text="@string/help_conduitecode_revert_saddle" />
+
             <TextView
                 style="@style/help_text"
                 android:text="@string/help_conduitecode_revert_saddle_snippet" />
-            
+
             <ImageView
                 style="@style/help_text"
                 android:layout_marginLeft="20dp"
@@ -44,27 +46,39 @@
                 style="@style/help_text"
                 android:layout_marginTop="20dp"
                 android:text="@string/help_conduitecode_half_saddle" />
+
             <TextView
                 style="@style/help_text"
                 android:layout_marginTop="20dp"
                 android:text="@string/help_conduitecode_half_saddle_snippet" />
-            
+
             <ImageView
                 style="@style/help_text"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:src="@drawable/help_photo_velo_problem" />
-
-
         </LinearLayout>
-         
-            <Button
-                android:id="@+id/help_button2_start_application"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                 android:onClick="onStartMapActivityClick"
-                android:text="@string/help_start_application" />
-        
+
+        <Button
+            android:id="@+id/help_button2_start_application"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onStartMapActivityClick"
+            android:text="@string/help_start_application" />
+
+        <!-- <fragment -->
+        <!-- android:id="@+id/fragment_admob_help_conduitcode" -->
+        <!-- android:name="eu.ttbox.velib.ui.admob.AdmobFragment" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" /> -->
+
+        <com.google.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/admob_key"
+            ads:loadAdOnCreate="true" />
     </LinearLayout>
 
 </ScrollView>

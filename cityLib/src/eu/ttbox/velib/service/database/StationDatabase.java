@@ -62,8 +62,8 @@ public class StationDatabase {
         addColumnMapAlias(map, SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, VeloColumns.COL_ID);
         addColumnMapAlias(map, SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, VeloColumns.COL_ID);
 
-        addColumnMapAlias(map, VeloColumns.ALIAS_COL_DISPO_CYCLE_PARKING, String.format("%s || '#' || %s", VeloColumns.COL_STATION_CYCLE, VeloColumns.COL_STATION_PARKING));
-        addColumnMapAlias(map, VeloColumns.ALIAS_COL_LAT_LNG_E6, String.format("%s || '#' || %s", VeloColumns.COL_LATITUDE_E6, VeloColumns.COL_LONGITUDE_E6));
+//        addColumnMapAlias(map, VeloColumns.ALIAS_COL_DISPO_CYCLE_PARKING, String.format("%s || '#' || %s", VeloColumns.COL_STATION_CYCLE, VeloColumns.COL_STATION_PARKING));
+//        addColumnMapAlias(map, VeloColumns.ALIAS_COL_LAT_LNG_E6, String.format("%s || '#' || %s", VeloColumns.COL_LATITUDE_E6, VeloColumns.COL_LONGITUDE_E6));
 
         return map;
     }

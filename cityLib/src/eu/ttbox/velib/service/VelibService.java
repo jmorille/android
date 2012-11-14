@@ -258,6 +258,7 @@ public class VelibService extends Service {
 					Log.d(TAG, String.format("DownloadTaskQueue with %s stations waiting", downloadUpdateDispoQueue.size()));
 				Station station;
 				while ((station = downloadUpdateDispoQueue.pollFirst()) != null) {
+//				    int stationId = station.getId();
 					int updatedStation = downloadService.downloadStationDispo(station, checkDeltaInMs);
 					if (updatedStation > 0) {
 						// Queue for Save In Db
@@ -266,14 +267,14 @@ public class VelibService extends Service {
 					}
 				}
 				// Ask To Persist
-				timerDatabase.submit(new ConsumeDatabaseUpdateQueue());
+				timerDatabase.submit(consumeDatabaseUpdateQueue);
 			}
 
 			return null;
 		}
 	}
 
-	private class ConsumeDatabaseUpdateQueue implements Callable<Void> {
+	private Callable<Void>  consumeDatabaseUpdateQueue =new  Callable<Void>() {
 		@Override
 		public Void call() throws Exception {
 			if (!databaseUpdateQueue.isEmpty()) {
@@ -294,5 +295,5 @@ public class VelibService extends Service {
 			}
 			return null;
 		}
-	}
+	};
 }

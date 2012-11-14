@@ -155,6 +155,9 @@ public class VelibMapActivity extends FragmentActivity { // implements
 	// Menu
 	// ===========================================================
 
+	/**
+	 * http://stackoverflow.com/questions/9327826/searchviews-oncloselistener-doesnt-work
+	 */
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,24 +166,55 @@ public class VelibMapActivity extends FragmentActivity { // implements
 		inflater.inflate(R.menu.map, menu);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			MenuItem searchitem = menu.findItem(R.id.menu_search);
+			final MenuItem searchitem = menu.findItem(R.id.menu_search);
 			// TODO searchitem.collapseActionView();
 			// Configure Search View
 			final SearchView searchView = (SearchView) searchitem.getActionView();
 			// searchView.setSearchableInfo(searchable)
 			searchView.setIconifiedByDefault(true);
-			 searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-
-	                @Override
-	                public boolean onClose() { 
-	                    Log.e(TAG, "******************** searchView.setOnCloseListener");
-                        Log.e(TAG, "******************** searchView.setOnCloseListener");
-                        Log.e(TAG, "******************** searchView.setOnCloseListener");
-                        searchView.onActionViewCollapsed();  //collapse your ActionView
-                        searchView.setQuery("",false); 
-	                    return true;
-	                }
-	            });
+			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+	            @Override
+	            public boolean onQueryTextChange(String newText) {
+	               
+	                return false;
+	            }
+	            @Override
+	            public boolean onQueryTextSubmit(String query) { 
+	                Log.e(TAG, "########### onQueryTextSubmit "  );
+	                searchitem.collapseActionView();
+	                return false; }
+	        });
+//			searchitem.setOnActionExpandListener(new MenuItem.OnActionExpandListener()
+//	        {
+//
+//	            @Override
+//	            public boolean onMenuItemActionCollapse(MenuItem item)
+//	            {
+//	                // Do something when collapsed
+//	                Log.e(TAG, "########### onMenuItemActionCollapse " + item.getItemId());
+//	                return true; // Return true to collapse action view
+//	            }
+//
+//	            @Override
+//	            public boolean onMenuItemActionExpand(MenuItem item)
+//	            {
+//	                // TODO Auto-generated method stub
+//	                Log.e(TAG, "########### onMenuItemActionExpand " + item.getItemId());
+//	                return true;
+//	            }
+//	        });
+//			 searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+//
+//	                @Override
+//	                public boolean onClose() { 
+//	                    Log.e(TAG, "******************** searchView.setOnCloseListener");
+//                        Log.e(TAG, "******************** searchView.setOnCloseListener");
+//                        Log.e(TAG, "******************** searchView.setOnCloseListener");
+//                        searchView.onActionViewCollapsed();  //collapse your ActionView
+//                        searchView.setQuery("",false); 
+//	                    return false;
+//	                }
+//	            });
 		}
 
 		return true;

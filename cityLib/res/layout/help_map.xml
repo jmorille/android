@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/eu.ttbox.velib"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:id="@+id/help_station_page1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -16,12 +16,23 @@
 
         <eu.ttbox.velib.map.station.drawable.StationCompassView2
             style="@style/help_station_dispo"
-            android:background="@android:color/white"
-           android:layout_height="250dp"
-           android:layout_width="250dp"
-         />
-   
-        
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:background="@android:color/white" />
+
+        <!-- <fragment -->
+        <!-- android:id="@+id/fragment_admob_help_map" -->
+        <!-- android:name="eu.ttbox.velib.ui.admob.AdmobFragment" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" /> -->
+
+        <com.google.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/admob_key"
+            ads:loadAdOnCreate="true" />
     </LinearLayout>
 
 </ScrollView>

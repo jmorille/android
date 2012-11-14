@@ -551,7 +551,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 
         @Override
         protected void onPostExecute(ArrayList<Station> stations) {
-            if (stations != null && !stations.isEmpty()) {
+            if (stations != null && !stations.isEmpty() && isThreadRunnning.get()) {
                 if (Log.isLoggable(TAG, Log.INFO))
                     Log.i(TAG, String.format("DownloadVeloStationsTask result of stations count %s", stations.size()));
                 int stationSize = stations.size();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:id="@+id/help_station_page1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -131,6 +132,20 @@
                 style="@style/help_text"
                 android:text="@string/help_tab_bubbledispo_bonus" />
         </LinearLayout>
+
+        <!-- <fragment -->
+        <!-- android:id="@+id/fragment_station_dispo_bubble" -->
+        <!-- android:name="eu.ttbox.velib.ui.admob.AdmobFragment" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" /> -->
+
+        <com.google.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/admob_key"
+            ads:loadAdOnCreate="true" />
     </LinearLayout>
 
 </ScrollView>

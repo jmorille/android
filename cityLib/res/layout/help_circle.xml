@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/eu.ttbox.velib"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:id="@+id/help_station_page1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -14,37 +15,44 @@
             style="@style/help_text"
             android:text="@string/help_station_circle" />
 
-        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView 
-            style="@style/help_station_dispo"       
+        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView
+            style="@style/help_station_dispo"
             app:station_cycles="0"
-            app:station_parking="15" 
-  >
-        </eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView>
-        
-        
+            app:station_parking="15" />
+
         <TextView
             style="@style/help_text"
             android:text="@string/help_station_circle_ext" />
 
-        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView 
-            style="@style/help_station_dispo"       
+        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView
+            style="@style/help_station_dispo"
+            app:draw_cycles="false"
             app:station_cycles="0"
-            app:station_parking="73" 
-            app:draw_cycles="false" >
-        </eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView>
- 
-        
+            app:station_parking="73" />
+
         <TextView
-           style="@style/help_text"
-             android:text="@string/help_station_circle_int" />
+            style="@style/help_text"
+            android:text="@string/help_station_circle_int" />
 
-        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView  
-            style="@style/help_station_dispo"       
+        <eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView
+            style="@style/help_station_dispo"
+            app:draw_parking="false"
             app:station_cycles="42"
-            app:station_parking="0" 
-            app:draw_parking="false" >
-        </eu.ttbox.velib.ui.help.wrapper.StationDispoHelpView>
+            app:station_parking="0" />
 
+        <!-- <fragment -->
+        <!-- android:id="@+id/fragment_admob_help_circle" -->
+        <!-- android:name="eu.ttbox.velib.ui.admob.AdmobFragment" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" /> -->
+
+        <com.google.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/admob_key"
+            ads:loadAdOnCreate="true" />
     </LinearLayout>
 
 </ScrollView>
