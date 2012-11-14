@@ -34,6 +34,9 @@ public class StationDispoIcView extends View {
     private int delta =  0;//5;
     private int externalRadius;
 
+    private boolean drawStationDispo = false;;
+ 
+    
     // Instance
     private StationDispoDrawable stationDispo;
     private Station station;
@@ -91,11 +94,13 @@ public class StationDispoIcView extends View {
     public void setStationParking(int parkingCount) {
         this.parkingCount = parkingCount;
         station.setStationParking(parkingCount);
+        drawStationDispo = true;
     }
 
     public void setStationCycle(int cycleCount) {
         this.cycleCount = cycleCount;
         station.setStationCycle(cycleCount);
+        drawStationDispo = true;
     }
 
     @Override
@@ -108,9 +113,13 @@ public class StationDispoIcView extends View {
         point.x = centerX;
         point.y = centerY;
          // Draw Station
-        canvas.drawCircle(point.x, point.y, externalRadius, paintBackground);
+//        if (drawStationDispo) {
+          canvas.drawCircle(point.x, point.y, externalRadius, paintBackground);
+//        }
         onSubBackground(canvas);
-        stationDispo.drawForExternalRadius(canvas, externalRadius, station, point);
+        if (drawStationDispo) {
+        	stationDispo.drawForExternalRadius(canvas, externalRadius, station, point);
+        }
      }
 
     public void onSubBackground(Canvas canvas) {

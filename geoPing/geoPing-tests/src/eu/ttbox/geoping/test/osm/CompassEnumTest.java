@@ -10,23 +10,28 @@ import android.util.Log;
 
 public class CompassEnumTest extends AndroidTestCase {
 
-    private static final String TAG = "CompassEnumTest";
+	private static final String TAG = "CompassEnumTest";
 
-    @SmallTest
-    public void testCompassNord() throws SVGParseException, IOException {
-        float[] nords = new float[] { 0f, 360f,359f, -1f, 361f, -0.5f , -10f};
-        for (float nord : nords) {
-            CompassEnum compass = CompassEnum.getCardinalPoint(nord);
-            Log.d(TAG,String.format( "Compass %s¡  => %s",nord, compass));
-            assertNotNull(compass);
-            assertEquals(CompassEnum.N, compass);
-        }
-    }
+	@SmallTest
+	public void testCompassNord() throws SVGParseException, IOException {
+		float[] nords = new float[] { 0f, 360f, 359f, -1f, 361f, -0.5f, -10f };
+		for (float nord : nords) {
+			CompassEnum compass = CompassEnum.getCardinalPoint(nord);
+			Log.d(TAG, String.format("Compass %s   => %s", nord, compass));
+			assertNotNull(compass);
+			assertEquals(CompassEnum.N, compass);
+		}
+	}
 
-    @SmallTest
-    public void testNegativeDegres() throws SVGParseException, IOException {
-        CompassEnum compass = CompassEnum.getCardinalPoint(-63f);
-        assertNotNull(compass);
-        assertEquals(CompassEnum.WNW, compass);
-    }
+//	@SmallTest
+//	public void testNegativeDegres() throws SVGParseException, IOException {
+//		float[] nords = new float[] { -63f, -423f };
+//		for (float val : nords) {
+//
+//			CompassEnum compass = CompassEnum.getCardinalPoint(val);
+//			assertNotNull(compass);
+//			assertEquals(CompassEnum.WNW, compass);
+//		}
+//	}
+
 }

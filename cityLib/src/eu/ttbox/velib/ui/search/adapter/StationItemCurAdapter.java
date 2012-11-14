@@ -48,32 +48,33 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 
 	// Instance
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
-	 
+
 	CopyOnWriteArrayList<ViewHolder> viewHolders = new CopyOnWriteArrayList<StationItemCurAdapter.ViewHolder>();
 
-	private static final int UI_MSG_SET_DISTANCE = 1 ;
+
+	// ===========================================================
+	// UI Handler
+	// ===========================================================
+
 	
-	 private Handler uiHandler = new Handler() {
-	        public void handleMessage(Message msg) {
-	            switch (msg.what) {
-	            case UI_MSG_SET_DISTANCE:
-	            	ViewHolder holder = (ViewHolder) msg.obj;
-	            	int distInM = msg.arg1;
-	            	int bearing = msg.arg2;
-	            	// Display Distance
-	    			String distInUnit = convertDistanceMeterInDisplayUnit(distInM);
-	    			holder.distanceText.setText(distInUnit);
-	    			// Display Bearing
-	    			 CompassEnum compass = CompassEnum.getCardinalPoint(bearing);
-	    			 String compassAsString = null;
-	    	            if (compass != null) {
-	    	                compassAsString = compass.getI18nLabelShort(context);
-	    	            }
-	    	            holder.bearingTextView.setText(String.format("%s° %s", (int) bearing, compassAsString));
-	                break;
-	            }
-	        }
-	    };
+	private static final int UI_MSG_SET_DISTANCE = 1;
+
+	private Handler uiHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case UI_MSG_SET_DISTANCE:
+				ViewHolder holder = (ViewHolder) msg.obj;
+				int distInM = msg.arg1;
+				int bearing = msg.arg2;
+				// Display Distance
+				setDistanceBearing(holder, distInM, bearing);
+
+				break;
+			}
+		}
+	};
+
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -82,9 +83,15 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 		super(context, R.layout.stations_list_item, c, flags);
 		this.context = context;
 		this.mDisplay = mDisplay;
-		this.lastLoc = lastLoc;
+		this.lastLoc = lastLoc; 
 	}
 
+
+	// ===========================================================
+	// Lifez Cycle
+	// ===========================================================
+
+	
 	// ===========================================================
 	// Bindings
 	// ===========================================================
@@ -93,7 +100,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 		// Init Cursor
 		helper = new StationHelper().initWrapper(cursor);
 		isNotBinding = false;
-	} 
+	}
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
@@ -109,7 +116,8 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 		long stationUpdated = helper.getStationUpdated(cursor);
 		int cycleCount = helper.getStationCycle(cursor);
 		int parkingCount = helper.getStationParking(cursor);
-		setViewStationDispo(holder.dispoIcView, stationUpdated, cycleCount, parkingCount);
+		// setViewStationDispo(holder.dispoIcView, stationUpdated, cycleCount,
+		// parkingCount);
 
 		setViewFavoriteImage(holder.iconFavorite, helper.getFavoriteIconEnum(cursor));
 		// Location
@@ -121,10 +129,9 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 		setViewStationDispo(holder.stationCompass, stationUpdated, cycleCount, parkingCount);
 		viewHolders.add(holder);
 		if (lastLoc != null) {
-			computeBearing(holder);
+			int bearing  = (int)computeBearing(holder);
 			int distInM = getDistanceInMeter(holder.location);
-			String distInUnit = convertDistanceMeterInDisplayUnit(distInM);
-			holder.distanceText.setText(distInUnit);
+			setDistanceBearing(holder, distInM, bearing); 
 		} else {
 			helper.setTextWithIdx(holder.distanceText, cursor, helper.numberIdx);
 		}
@@ -152,10 +159,23 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 			// v.setStationFavory(true);
 			v.setVisibility(View.VISIBLE);
 		} else {
-			v.setVisibility(View.INVISIBLE);
+//			v.setVisibility(View.INVISIBLE);
 		}
 	}
 
+
+	private void setDistanceBearing(ViewHolder holder, int distInM, int bearing) {
+		String distInUnit = convertDistanceMeterInDisplayUnit(distInM);
+		holder.distanceText.setText(distInUnit);
+		// Display Bearing
+		CompassEnum compass = CompassEnum.getCardinalPoint(bearing);
+		String compassAsString = null;
+		if (compass != null) {
+			compassAsString = compass.getI18nLabelShort(context);
+		}
+		holder.bearingTextView.setText(String.format("%s° %s", (int) bearing, compassAsString));
+	}
+	
 	// ===========================================================
 	// holder
 	// ===========================================================
@@ -168,7 +188,8 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 		holder.distanceText = (TextView) view.findViewById(R.id.station_list_item_distance);
 		holder.ocupationText = (TextView) view.findViewById(R.id.station_list_item_ocupation);
 		holder.adressText = (TextView) view.findViewById(R.id.station_list_item_adress);
-		holder.dispoIcView = (StationDispoIcView) view.findViewById(R.id.station_list_item_dispo);
+		// holder.dispoIcView = (StationDispoIcView)
+		// view.findViewById(R.id.station_list_item_dispo);
 		holder.iconFavorite = (ImageView) view.findViewById(R.id.station_list_item_icon_favorite);
 		holder.stationCompass = (StationCompassView) view.findViewById(R.id.station_list_item_compass);
 		holder.bearingTextView = (TextView) view.findViewById(R.id.station_list_item_bearing);
@@ -187,7 +208,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 		// Binding
 		TextView distanceText;
 		TextView ocupationText;
-		StationDispoIcView dispoIcView;
+		// StationDispoIcView dispoIcView;
 		TextView adressText;
 		ImageView iconFavorite;
 		StationCompassView stationCompass;
@@ -217,17 +238,18 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 		public void run() {
 			if (lastLoc != null) {
 				for (ViewHolder holder : viewHolders) {
-					float bearing =computeBearing(holder);
+					float bearing = computeBearing(holder);
 					// Distance
 					int distInM = getDistanceInMeter(holder.location);
-					Message msg = 	uiHandler.obtainMessage(UI_MSG_SET_DISTANCE,holder);
+					Message msg = uiHandler.obtainMessage(UI_MSG_SET_DISTANCE, holder);
 					msg.arg1 = distInM;
-					msg.arg2 = (int)bearing;
+					msg.arg2 = (int) bearing;
 					uiHandler.sendMessage(msg);
 				}
 			}
 		}
 	};
+
 	public void updateholderBearing() {
 		executor.execute(computeBearingRunnable);
 	}
@@ -235,7 +257,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 	public float computeBearing(ViewHolder holder) {
 		float bearing = -1;
 		if (lastLoc != null) {
-			  bearing = lastLoc.bearingTo(holder.location);
+			bearing = lastLoc.bearingTo(holder.location);
 			holder.stationCompass.setBearing(getDisplayRotation() + azimuth - bearing);
 		}
 		return bearing;
@@ -243,15 +265,14 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 
 	private int getDistanceInMeter(Location stationLoc) {
 		int distInM = -1;
-		if (lastLoc != null) { 
+		if (lastLoc != null) {
 			float[] results = new float[3];
-			Location.distanceBetween(lastLoc.getLatitude(), lastLoc.getLongitude(), stationLoc.getLatitude(),stationLoc.getLongitude(), results);
-		    distInM = (int) results[0]; 
+			Location.distanceBetween(lastLoc.getLatitude(), lastLoc.getLongitude(), stationLoc.getLatitude(), stationLoc.getLongitude(), results);
+			distInM = (int) results[0];
 		}
 		return distInM;
 	}
 
-	
 	private String convertDistanceMeterInDisplayUnit(int distInM) {
 		String distInUnit = "";
 		if (distInM < 1000) {
@@ -262,7 +283,6 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 		}
 		return distInUnit;
 	}
- 
 
 	// ===========================================================
 	// Location Listener
@@ -272,7 +292,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 	public void onLocationChanged(Location location) {
 		if (LocationUtils.isBetterLocation(location, lastLoc)) {
 			lastLoc = location;
-			executor.execute(computeDistancegRunnable); 
+			executor.execute(computeDistancegRunnable);
 		}
 	}
 

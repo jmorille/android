@@ -3,6 +3,7 @@ package eu.ttbox.velib.map.station.drawable;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -65,16 +66,19 @@ public class StationCompassView extends StationDispoIcView {
         northPaint = new Paint();
         northPaint.setColor(northTriangleColor);
         northPaint.setAntiAlias(true);
-        northPaint.setStyle(Style.FILL);
+        northPaint.setStyle(Style.FILL_AND_STROKE);
 //        northPaint.setStyle(Style.STROKE);
         northPaint.setAlpha(220);
 
         // Paint design of south triangle (black)
         southPaint = new Paint();
-        southPaint.setColor(southTriangleColor);
+        southPaint.setColor(southTriangleColor); 
         southPaint.setAntiAlias(true);
         southPaint.setStyle(Style.STROKE);
         southPaint.setAlpha(220);
+
+//        southPaint.setColor(northTriangleColor); 
+//        southPaint.setStyle(Style.FILL_AND_STROKE);
 
         // Create a little white dot in the middle of the compass rose
         centerPaint = new Paint();
