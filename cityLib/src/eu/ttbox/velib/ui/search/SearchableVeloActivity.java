@@ -1,8 +1,11 @@
 package eu.ttbox.velib.ui.search;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
@@ -11,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.core.Intents;
@@ -111,6 +115,7 @@ public class SearchableVeloActivity extends FragmentActivity {
     // Menu
     // ===========================================================
 
+    @SuppressLint("NewApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Création d'un MenuInflater qui va permettre d'instancier un Menu XML
@@ -118,14 +123,22 @@ public class SearchableVeloActivity extends FragmentActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
 
-        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        // SearchManager searchManager = (SearchManager)
-        // getSystemService(Context.SEARCH_SERVICE);
-        // SearchView searchView = (SearchView)
-        // menu.findItem(R.id.menu_search).getActionView();
-        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        // searchView.setIconifiedByDefault(false);
-        // }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            // SearchManager searchManager = (SearchManager)
+            // getSystemService(Context.SEARCH_SERVICE);
+            final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+            searchView.setOnQueryTextListener(searchFragment.getOnQueryTextListener());
+            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+
+                @Override
+                public boolean onClose() { 
+                       
+                    return false;
+                }
+            });
+            // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            // searchView.setIconifiedByDefault(false);
+        }
 
         return true;
     }

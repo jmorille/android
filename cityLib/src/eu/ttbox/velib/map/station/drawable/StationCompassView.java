@@ -15,7 +15,7 @@ import eu.ttbox.osm.ui.map.mylocation.CompassPictureFactory;
 
 public class StationCompassView extends StationDispoIcView {
 
-    private static final String TAG = "StationDirectionView";
+    private static final String TAG = "StationCompassView";
 
     // Config
     final int northTriangleColor = CompassPictureFactory.DEFAULT_NORTH_TRIANGLE_COLOR;
@@ -96,7 +96,7 @@ public class StationCompassView extends StationDispoIcView {
     public void setBearing(float bearing) {
         this.bearing = bearing;
         postInvalidate();
-        Log.i(TAG, "###### setBearing : " + bearing);
+//        Log.i(TAG, "###### setBearing : " + bearing);
     }
 
     // ===========================================================

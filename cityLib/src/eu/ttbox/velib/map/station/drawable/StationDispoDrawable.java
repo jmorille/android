@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.view.View;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.model.Station;
@@ -38,7 +39,7 @@ public class StationDispoDrawable extends View {
 	// Cache
 	private int cacheZoomLevel, cacheZoomLevelRadiusExternal;
 	private int radiusExternal, radiusInternal, radiusExternalEffectifWidth, radiusExternalEffectifRadius, radiusInternalBorder, radiusExternalBorder;
-	protected int textPaintSize = 14;
+	protected int textPaintSize = 16;
 
 	// Other
 	protected float densityMultiplier = 1f;
@@ -58,6 +59,8 @@ public class StationDispoDrawable extends View {
 		textPaint.setColor(Color.BLACK);
 		textPaint.setAntiAlias(true);
 		textPaint.setTextSize(textPaintSize);
+		textPaint.setTypeface(Typeface.DEFAULT_BOLD); 
+		 
 		// textPaint.setTextSize(20*densityMultiplier);
 		textPaint.setTextAlign(Align.CENTER);
 		// Unkon values

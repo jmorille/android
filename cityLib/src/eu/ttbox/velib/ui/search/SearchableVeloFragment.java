@@ -1,5 +1,6 @@
 package eu.ttbox.velib.ui.search;
 
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
@@ -178,9 +180,41 @@ public class SearchableVeloFragment extends Fragment {
         getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
     }
 
+    @TargetApi(11)
+    public OnQueryTextListener getOnQueryTextListener() {
+        return onQueryTextListener;
+    }
+    
     // ===========================================================
     // Loader
     // ===========================================================
+
+    private Bundle getLastQueryParam() {
+        Bundle args = new Bundle();
+        args.putBoolean(SEARCH_KEY_IS_FAVORITE, false);
+       return args;
+    }
+    
+    private final OnQueryTextListener onQueryTextListener = new OnQueryTextListener() {
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            Bundle args = getLastQueryParam();
+            args.putString(SEARCH_KEY_QUERY, query);
+            getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            Bundle args = getLastQueryParam();
+            args.putString(SEARCH_KEY_QUERY, newText);
+            getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
+            return true;
+        }
+        
+    };
+
 
     private final LoaderManager.LoaderCallbacks<Cursor> searchLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 

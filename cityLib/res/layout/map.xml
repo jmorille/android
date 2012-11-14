@@ -8,11 +8,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
 
+ <ToggleButton
+        android:id="@+id/map_button_parking_cycle_switch"
+        android:layout_width="32dip"
+        android:layout_height="32dip"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="55dp"
+        android:background="@drawable/panneau_parking" 
+        android:textOff=""
+        android:textOn="" />
+ 
   <ToggleButton
         android:id="@+id/map_button_myposition"
         android:layout_width="32dip"
         android:layout_height="32dip"
-        android:layout_gravity="right|top"
+        android:layout_gravity="left|top"
         android:layout_margin="5dp"
         android:background="@android:drawable/ic_menu_mylocation"
         android:textOff=""

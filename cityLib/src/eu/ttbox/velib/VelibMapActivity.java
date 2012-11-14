@@ -6,7 +6,6 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -20,10 +19,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.SearchView;
-import android.widget.ToggleButton;
 import eu.ttbox.velib.core.Intents;
 import eu.ttbox.velib.model.VelibProvider;
 import eu.ttbox.velib.service.database.Velo.VeloColumns;
@@ -169,9 +166,21 @@ public class VelibMapActivity extends FragmentActivity { // implements
 			MenuItem searchitem = menu.findItem(R.id.menu_search);
 			// TODO searchitem.collapseActionView();
 			// Configure Search View
-			SearchView searchView = (SearchView) searchitem.getActionView();
+			final SearchView searchView = (SearchView) searchitem.getActionView();
 			// searchView.setSearchableInfo(searchable)
 			searchView.setIconifiedByDefault(true);
+			 searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+
+	                @Override
+	                public boolean onClose() { 
+	                    Log.e(TAG, "******************** searchView.setOnCloseListener");
+                        Log.e(TAG, "******************** searchView.setOnCloseListener");
+                        Log.e(TAG, "******************** searchView.setOnCloseListener");
+                        searchView.onActionViewCollapsed();  //collapse your ActionView
+                        searchView.setQuery("",false); 
+	                    return true;
+	                }
+	            });
 		}
 
 		return true;
