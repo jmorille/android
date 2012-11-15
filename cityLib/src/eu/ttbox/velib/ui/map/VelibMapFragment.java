@@ -88,6 +88,11 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 
     private ScheduledThreadPoolExecutor timer;
 
+    // Binding
+      Drawable packing = getResources().getDrawable(R.drawable.panneau_parking);
+      Drawable cycle = getResources().getDrawable(R.drawable.panneau_obligation_cycles);
+      Drawable all = getResources().getDrawable(R.drawable.marker_velib_circle);
+    
     // Instance Value
     private VelibServiceConnection velibServiceConnection;
     private VelibProvider velibProvider;
@@ -95,6 +100,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 
     // Config
     boolean askToEnableGps = true;
+    private StationDispoModeSwitch stationDispoModeSwitch = new StationDispoModeSwitch();
 
     // Manage Thread
     /**
@@ -144,7 +150,9 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
     // ===========================================================
     // Constructors
     // ===========================================================
-
+    
+     
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.map, container, false);
@@ -172,38 +180,13 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
         // Binding
         // -------------
         swtichMode = (ToggleButton) v.findViewById(R.id.map_button_parking_cycle_switch);
-        if (swtichMode != null) {
-            final Drawable packing = getResources().getDrawable(R.drawable.panneau_parking);
-            final Drawable cycle = getResources().getDrawable(R.drawable.panneau_obligation_cycles);
-            final Drawable all = getResources().getDrawable(R.drawable.marker_velib_circle);
-            swtichMode.setBackgroundDrawable(all);
-            swtichMode.setOnClickListener(new View.OnClickListener() {
-
-                private int status = 0;
-
-                @Override
-                public void onClick(View v) {
-                    if (stationOverlay != null) {
-                        status = (status + 1) % 3;
-                        switch (status) {
-                        case 0:
-                            swtichMode.setBackgroundDrawable(all);
-                            stationOverlay.setDrawDisplayCycleParking(true,true);
-                            break;
-                        case 1:
-                            swtichMode.setBackgroundDrawable(cycle);
-                            stationOverlay.setDrawDisplayCycleParking(true,false);
-                            break;
-                        case 2:
-                            swtichMode.setBackgroundDrawable(packing);
-                            stationOverlay.setDrawDisplayCycleParking(false,true);
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-            });
+        packing = getResources().getDrawable(R.drawable.panneau_parking);
+         cycle = getResources().getDrawable(R.drawable.panneau_obligation_cycles);
+         all = getResources().getDrawable(R.drawable.marker_velib_circle);
+         
+        if (swtichMode != null) { 
+            stationDispoModeSwitch.displayToMode(0);
+            swtichMode.setOnClickListener(stationDispoModeSwitch);
         }
         // Action bar and compatibility
         // -----------------------------
@@ -574,7 +557,44 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
     }
 
     // ===========================================================
+    // UI Listener
+    // ===========================================================
+
+    private class StationDispoModeSwitch implements View.OnClickListener  {
+    	private int status = 0;
+
+        @Override
+        public void onClick(View v) {
+            if (stationOverlay != null) {
+            	displayToMode(status+1); 
+            }
+        }
+        
+        public void displayToMode(int pMode) {
+        	int mode =pMode>3? pMode%3 : pMode;
+        	switch (mode) {
+            case 0:
+                swtichMode.setBackgroundDrawable(all);
+                stationOverlay.setDrawDisplayCycleParking(true,true);
+                break;
+            case 1:
+                swtichMode.setBackgroundDrawable(cycle);
+                stationOverlay.setDrawDisplayCycleParking(true,false);
+                break;
+            case 2:
+                swtichMode.setBackgroundDrawable(packing);
+                stationOverlay.setDrawDisplayCycleParking(false,true);
+                break;
+            default:
+                break;
+            }
+        	this.status = mode;
+        }
+    }
+    
+    // ===========================================================
     // Other
     // ===========================================================
 
+    
 }
