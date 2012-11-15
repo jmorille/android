@@ -41,7 +41,8 @@
 		<!-- Google Api -->
                 <compatibility-v13.version>10</compatibility-v13.version>
 		<gcm.version>3</gcm.version>
-                <admob.version>6.2.1-r8</admob.version>
+        <admob.version>6.2.1-r8</admob.version>
+        <analytics.version>2</analytics.version>
 		<!-- Osm -->
 		<osmdroid.version>3.0.9-20121109</osmdroid.version> <!-- 3.0.8 -->
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
