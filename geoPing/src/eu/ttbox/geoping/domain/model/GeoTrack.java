@@ -27,6 +27,10 @@ public class GeoTrack implements Comparable<GeoTrack>{
     private boolean hasLlongitude = false;
 
     // Optionnal
+    public int batteryLevelInPercent = -1;
+    public String requesterPersonPhone ;
+    
+    // Optionnal
     private int altitude;
     public int accuracy = -1;
     public int bearing = -1;
@@ -243,9 +247,30 @@ public class GeoTrack implements Comparable<GeoTrack>{
         return this;
     }
 
+    
+
+    public int getBatteryLevelInPercent() {
+        return batteryLevelInPercent;
+    }
+
+    public GeoTrack setBatteryLevelInPercent(int batteryLevelInPercent) {
+        this.batteryLevelInPercent = batteryLevelInPercent;
+        return this;
+    }
+
+    public String getRequesterPersonPhone() {
+        return requesterPersonPhone;
+    }
+
+    public GeoTrack setRequesterPersonPhone(String requesterPersonPhone) {
+        this.requesterPersonPhone = requesterPersonPhone;
+        return this;
+    }
+    
     // ===========================================================
     // Setter Value Test
     // ===========================================================
+
 
     public boolean hasTime() {
         return  time != AppConstants.UNSET_TIME;
@@ -297,6 +322,13 @@ public class GeoTrack implements Comparable<GeoTrack>{
     public boolean hasAddress() {
         return this.address != null && this.address.length() > 0;
     }
+    
+    public boolean hasRequesterPersonPhone() {  
+        return this.requesterPersonPhone != null && this.requesterPersonPhone.length() > 0;
+    }
+    public boolean hasBatteryLevelInPercent() { 
+        return this.batteryLevelInPercent != -1;
+    }
 
     // ===========================================================
     // Business
@@ -310,7 +342,7 @@ public class GeoTrack implements Comparable<GeoTrack>{
     public float computeGroundResolutionInMForZoomLevel(int zoomLevel) {
         if (cachedZoomLevelComputeCache == null) {
             cachedZoomLevelComputeCache = new ZoomLevelComputeCache(getLatitude());
-        }
+         }
         return cachedZoomLevelComputeCache.computeGroundResolutionInMForZoomLevel(zoomLevel);
     }
 
@@ -338,5 +370,8 @@ public class GeoTrack implements Comparable<GeoTrack>{
         long rhs = another.time;
         return time < rhs ? -1 : (time == rhs ? 0 : 1);
      }
+
+  
+
 
 }

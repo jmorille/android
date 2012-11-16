@@ -36,11 +36,11 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
         addHelper(BACKUP_KEY_PREFS, helperPrefs);
 
         // Database Pairing
-        DbBackupHelper helperDbPairing = new DbBackupHelper(this, FILENAME_PAIRING_DB);
-        addHelper(BACKUP_KEY_PAIRING_DB, helperDbPairing);
+//        DbBackupHelper helperDbPairing = new DbBackupHelper(this, FILENAME_PAIRING_DB);
+//        addHelper(BACKUP_KEY_PAIRING_DB, helperDbPairing);
         // Database Person
-        DbBackupHelper helperDbPerson = new DbBackupHelper(this, FILENAME_PERSON_DB);
-        addHelper(BACKUP_KEY_PERSON_DB, helperDbPerson);
+//        DbBackupHelper helperDbPerson = new DbBackupHelper(this, FILENAME_PERSON_DB);
+//        addHelper(BACKUP_KEY_PERSON_DB, helperDbPerson);
     }
 
     @Override

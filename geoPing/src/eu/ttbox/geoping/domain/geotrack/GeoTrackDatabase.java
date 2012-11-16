@@ -36,8 +36,10 @@ public class GeoTrackDatabase {
         public static final String COL_BEARING = "BEARING";
         public static final String COL_SPEED = "SPEED";
         public static final String COL_ADDRESS = "ADDRESS";
+        public static final String COL_BATTERY_LEVEL = "BATTERY_LEVEL";
+        public static final String COL_REQUESTER_PERSON = "REQUESTER_PERSON";
         public static final String[] ALL_COLS = new String[] { COL_ID, COL_PERSON_ID, COL_PHONE, COL_PHONE_MIN_MATCH, COL_TIME, COL_PROVIDER, COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_ACCURACY,
-                COL_ALTITUDE, COL_BEARING, COL_SPEED, COL_ADDRESS };
+                COL_ALTITUDE, COL_BEARING, COL_SPEED, COL_ADDRESS, COL_BATTERY_LEVEL , COL_REQUESTER_PERSON};
 
     }
 

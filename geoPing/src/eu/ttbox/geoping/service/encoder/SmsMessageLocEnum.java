@@ -20,6 +20,7 @@ public enum SmsMessageLocEnum {
     PARAM_ACCURACY('a', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ACCURACY), //
     PARAM_BEARING('b', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BEARING), //
     PARAM_SPEAD('c', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED), //
+    PARAM_BATTERY('w', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BATTERY_LEVEL), //
 
     // Person
     PARAM_PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID); //

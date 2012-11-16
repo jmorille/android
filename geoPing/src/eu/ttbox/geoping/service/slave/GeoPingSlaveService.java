@@ -23,6 +23,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -76,7 +77,7 @@ public class GeoPingSlaveService extends WorkerService {
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private SharedPreferences appPreferences;
     private TelephonyManager telephonyManager;
-    
+
     // Instance Data
     private List<GeoPingRequest> geoPingRequestList;
     private MultiGeoRequestLocationListener multiGeoRequestListener;
@@ -105,7 +106,7 @@ public class GeoPingSlaveService extends WorkerService {
         this.appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         this.mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        this.telephonyManager =  (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
+        this.telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         this.myLocation = new MyLocationListenerProxy(locationManager);
         this.geoPingRequestList = new ArrayList<GeoPingRequest>();
         this.multiGeoRequestListener = new MultiGeoRequestLocationListener(geoPingRequestList);
@@ -228,7 +229,7 @@ public class GeoPingSlaveService extends WorkerService {
         // Cancel Notification
         int notifId = extras.getInt(Intents.EXTRA_NOTIF_ID, -1);
         if (notifId != -1) {
-            mNotificationManager.cancel(notifId); 
+            mNotificationManager.cancel(notifId);
         }
         // Read Pairing
         Pairing pairing = getPairingByPhone(phone);
@@ -358,16 +359,15 @@ public class GeoPingSlaveService extends WorkerService {
      * {link http://www.devx.com/wireless/Article/40524/0/page/2}
      */
     private void getCellId() {
-    	CellLocation  cellLoc =	telephonyManager.getCellLocation(); 
-    	if (cellLoc instanceof GsmCellLocation) {
-    		GsmCellLocation gsmLoc = (GsmCellLocation)cellLoc;
-    		int lac = gsmLoc.getLac();
-    		int cellId = gsmLoc.getCid();
-    		Log.d(TAG, String.format("Cell Id : %s  / Lac : %s", cellId, lac));
-    	}
+        CellLocation cellLoc = telephonyManager.getCellLocation();
+        if (cellLoc instanceof GsmCellLocation) {
+            GsmCellLocation gsmLoc = (GsmCellLocation) cellLoc;
+            int lac = gsmLoc.getLac();
+            int cellId = gsmLoc.getCid();
+            Log.d(TAG, String.format("Cell Id : %s  / Lac : %s", cellId, lac));
+        }
     }
- 
-    
+
     // ===========================================================
     // Other
     // ===========================================================
@@ -405,19 +405,21 @@ public class GeoPingSlaveService extends WorkerService {
 
     private void sendSmsLocation(String phone, Location location) {
         GeoTrack geotrack = new GeoTrack(null, location);
+        geotrack.batteryLevelInPercent = batterLevelInPercent;
         Bundle params = GeoTrackHelper.getBundleValues(geotrack);
         sendSms(phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
         if (saveInLocalDb) {
-            saveInLocalDb(geotrack); 
+            geotrack.requesterPersonPhone = phone;
+            saveInLocalDb(geotrack);
         }
     }
-    
+
     private void saveInLocalDb(GeoTrack geotrack) {
-        if (geotrack==null) {
+        if (geotrack == null) {
             return;
         }
         ContentValues values = GeoTrackHelper.getContentValues(geotrack);
-        values.put(GeoTrackColumns.COL_PHONE , AppConstants.KEY_DB_LOCAL);
+        values.put(GeoTrackColumns.COL_PHONE, AppConstants.KEY_DB_LOCAL);
         getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
     }
 
@@ -447,20 +449,21 @@ public class GeoPingSlaveService extends WorkerService {
 
     /**
      * Computes the battery level by registering a receiver to the intent
-     * triggered by a battery status/level change. {link
-     * http://mobile.dzone.com/news/getting-battery-level-android}
+     * triggered by a battery status/level change. <br/>
+     * {@link http ://developer.android.com/training/monitoring-device-state/battery-monitoring.html}
      */
 
     private void batteryLevel() {
         BroadcastReceiver batteryLevelReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 context.unregisterReceiver(this);
-                int rawlevel = intent.getIntExtra("level", -1);
-                int scale = intent.getIntExtra("scale", -1);
+                int rawlevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
                 int level = -1;
                 if (rawlevel >= 0 && scale > 0) {
                     level = (rawlevel * 100) / scale;
                 }
+                Log.d(TAG, "Battery Level Remaining: " + level + "%");
                 batterLevelInPercent = level;
             }
         };
@@ -482,6 +485,7 @@ public class GeoPingSlaveService extends WorkerService {
             super();
             this.smsPhoneNumber = phoneNumber;
             this.params = params;
+            batteryLevel();
         }
 
         @Override
@@ -519,7 +523,7 @@ public class GeoPingSlaveService extends WorkerService {
     // ===========================================================
 
     private void showNotificationGeoPing(String phone, Bundle params, boolean authorizeIt) {
-       
+
         // Contact Name
         ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
         String contactDisplayName = phone;
@@ -558,7 +562,7 @@ public class GeoPingSlaveService extends WorkerService {
     }
 
     private void showNotificationNewPingRequestConfirm(String phone, Bundle params, GeopingNotifSlaveTypeEnum onlyPairing) {
-        String contactDisplayName = phone; 
+        String contactDisplayName = phone;
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
         // Contact Name
         ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
