@@ -33,51 +33,55 @@ import eu.ttbox.osm.tiles.svg.CloudmadeTileSourceVector;
  */
 public class MyAppTilesProviders {
 
-    public static final OnlineTileSourceBase MAPQUESTOSM = new XYTileSource( //
-            "MapquestOSM", ResourceProxy.string.mapquest_osm, 0, 18, 256, ".png", //
-            "http://otile1.mqcdn.com/tiles/1.0.0/osm/", //
-            "http://otile2.mqcdn.com/tiles/1.0.0/osm/", //
-            "http://otile3.mqcdn.com/tiles/1.0.0/osm/", //
-            "http://otile4.mqcdn.com/tiles/1.0.0/osm/");
+	public static final OnlineTileSourceBase MAPQUESTOSM = new XYTileSource( //
+			"MapquestOSM", ResourceProxy.string.mapquest_osm, 0, 18, 256, ".png", //
+			"http://otile1.mqcdn.com/tiles/1.0.0/osm/", //
+			"http://otile2.mqcdn.com/tiles/1.0.0/osm/", //
+			"http://otile3.mqcdn.com/tiles/1.0.0/osm/", //
+			"http://otile4.mqcdn.com/tiles/1.0.0/osm/");
 
-    public static final OnlineTileSourceBase PISTEMAP = new XYTileSource( //
-            "OpenPisteMap", ResourceProxy.string.cyclemap, 0, 17, 256, ".png", //
-            "http://tiles.openpistemap.org/contours-only", //
-            "http://tiles2.openpistemap.org/landshaded//");
+	public static final OnlineTileSourceBase PISTEMAP = new XYTileSource( //
+			"OpenPisteMap", ResourceProxy.string.cyclemap, 0, 17, 256, ".png", //
+			"http://tiles.openpistemap.org/contours-only", //
+			"http://tiles2.openpistemap.org/landshaded//");
 
-    /** {link  http://developers.cloudmade.com/wiki/vector-stream-server/Documentation} **/
-    public static final OnlineTileSourceBase CLOUDMADE_VECTOR_TILES = new CloudmadeTileSourceVector( //
-            "CloudMadeVectorTiles", ResourceProxy.string.cloudmade_standard, 0, 21, 256, ".svgz", // svg
-            "http://alpha.vectors.cloudmade.com/%s/%d/%d/%d/%d/%d%s?token=%s" //
-    );
-    
-    public static void initTilesSource(Context context) {
-        // Remove Tiles
-    	ArrayList<ITileSource>  tileSources =  TileSourceFactory.getTileSources();
-       tileSources.remove(TileSourceFactory.TOPO);
-       tileSources.remove(TileSourceFactory.MAPQUESTAERIAL);
-       tileSources.remove(TileSourceFactory.BASE);
-       tileSources.remove(TileSourceFactory.HILLS);
-        // Add Licence Tiles
-        // ------------------
-        // only do static initialisation if needed
-        // http://developers.cloudmade.com/projects/web-maps-api/examples
-        if (CloudmadeUtil.getCloudmadeKey().length() == 0) {
-            CloudmadeUtil.retrieveCloudmadeKey(context);
-        }
-        if (BingMapTileSource.getBingKey().length() == 0) {
-            BingMapTileSource.retrieveBingKey(context);
-        }
-        final BingMapTileSource bmts = new BingMapTileSource(null);
-        if (!TileSourceFactory.containsTileSource(bmts.name())) {
-            TileSourceFactory.addTileSource(bmts);
-        }
-        // Add Other Tiles
-        if (!tileSources.contains(CLOUDMADE_VECTOR_TILES)) {
-         TileSourceFactory.addTileSource(CLOUDMADE_VECTOR_TILES);
-        }
-        // TileSourceFactory.addTileSource(PISTEMAP);
+	/**
+	 * {link
+	 * http://developers.cloudmade.com/wiki/vector-stream-server/Documentation}
+	 **/
+	public static final OnlineTileSourceBase CLOUDMADE_VECTOR_TILES = new CloudmadeTileSourceVector( //
+			"CloudMadeVectorTiles", ResourceProxy.string.cloudmade_standard, 0, 21, 256, ".svgz", // svg
+			"http://alpha.vectors.cloudmade.com/%s/%d/%d/%d/%d/%d%s?token=%s" //
+	);
 
-    }
+	public static void initTilesSource(Context context) {
+		// Remove Tiles
+		ArrayList<ITileSource> tileSources = TileSourceFactory.getTileSources();
+		tileSources.remove(TileSourceFactory.TOPO);
+		tileSources.remove(TileSourceFactory.MAPQUESTAERIAL);
+		tileSources.remove(TileSourceFactory.BASE);
+		tileSources.remove(TileSourceFactory.HILLS);
+		// Add Licence Tiles
+		// ------------------
+		// only do static initialisation if needed
+		// http://developers.cloudmade.com/projects/web-maps-api/examples
+		if (CloudmadeUtil.getCloudmadeKey().length() == 0) {
+			CloudmadeUtil.retrieveCloudmadeKey(context);
+		}
+		if (BingMapTileSource.getBingKey().length() == 0) {
+			BingMapTileSource.retrieveBingKey(context);
+		}
+		final BingMapTileSource bmts = new BingMapTileSource(null);
+		if (!TileSourceFactory.containsTileSource(bmts.name())) {
+			TileSourceFactory.addTileSource(bmts);
+		}
+		// Add Other Tiles
+		// if (!tileSources.contains(CLOUDMADE_VECTOR_TILES)) {
+		if (!TileSourceFactory.containsTileSource(CLOUDMADE_VECTOR_TILES.name())) {
+			TileSourceFactory.addTileSource(CLOUDMADE_VECTOR_TILES);
+		}
+		// TileSourceFactory.addTileSource(PISTEMAP);
+
+	}
 
 }

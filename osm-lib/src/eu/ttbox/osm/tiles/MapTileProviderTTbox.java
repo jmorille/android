@@ -21,8 +21,8 @@ import android.os.Build;
 import android.util.Log;
 import eu.ttbox.osm.tiles.chains.MapTileProviderArrayTTbox;
 
-public class MapTileProviderTTbox extends MapTileProviderArrayTTbox implements IMapTileProviderCallback 
-{
+public class MapTileProviderTTbox   extends MapTileProviderArrayTTbox //
+		implements IMapTileProviderCallback {
 
 	private static final String TAG = "MapTileProviderTTbox";
 
@@ -52,11 +52,11 @@ public class MapTileProviderTTbox extends MapTileProviderArrayTTbox implements I
 	/**
 	 * Creates a {@link MapTileProviderTTbox}.
 	 */
-	
+
 	public MapTileProviderTTbox(final Context pContext, final IRegisterReceiver pRegisterReceiver, final INetworkAvailablityCheck aNetworkAvailablityCheck, final ITileSource pTileSource,
 			int cacheSizeInBytes) {
 		super(pTileSource, pRegisterReceiver, cacheSizeInBytes);
-
+//		super(pTileSource, pRegisterReceiver);
 		final TileWriter tileWriter = new TileWriter();
 
 		final MapTileFilesystemProvider fileSystemProvider = new MapTileFilesystemProvider(pRegisterReceiver, pTileSource, OpenStreetMapTileProviderConstants.ONE_WEEK * 26);
@@ -70,37 +70,34 @@ public class MapTileProviderTTbox extends MapTileProviderArrayTTbox implements I
 		final MapTileDownloaderTTbox downloaderProvider = new MapTileDownloaderTTbox(pTileSource, tileWriter, aNetworkAvailablityCheck);
 		mTileProviderList.add(downloaderProvider);
 		// Memory Management
-		initMemoryListener(pContext);
+//		initMemoryListener(pContext);
 	}
-	
 
 	@SuppressLint("NewApi")
 	public void initMemoryListener(final Context pContext) {
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) { 
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			pContext.registerComponentCallbacks(new MemoryCleanerCallback2());
 		} else {
 			// FIXME How to register onLowMemory ?
 		}
 	}
-	
-	
 
-	 public  class MemoryCleanerCallback implements ComponentCallbacks  {
+	public class MemoryCleanerCallback implements ComponentCallbacks {
 
 		@Override
-		public void onConfigurationChanged(Configuration newConfig) { 
+		public void onConfigurationChanged(Configuration newConfig) {
 		}
 
 		@Override
-		public void onLowMemory() { 
+		public void onLowMemory() {
 			cacheEvictAll();
 		}
 
-	 }
+	}
 
-	 public  class MemoryCleanerCallback2 extends MemoryCleanerCallback implements ComponentCallbacks2  {
-  
+	public class MemoryCleanerCallback2 extends MemoryCleanerCallback implements ComponentCallbacks2 {
+
 		@Override
 		public void onTrimMemory(int level) {
 			if (level >= TRIM_MEMORY_MODERATE) { // 60
@@ -113,10 +110,10 @@ public class MapTileProviderTTbox extends MapTileProviderArrayTTbox implements I
 				Log.i(TAG, "### Clear 1/2 cache on TrimMemory Event " + level);
 				Log.i(TAG, "###############################################");
 				cacheTrimToSize(cacheSize() / 2);
-			} 
-		} 
+			}
+		}
 	}
-	
+
 	public void cacheEvictAll() {
 		cache.evictAll();
 	}
@@ -124,12 +121,9 @@ public class MapTileProviderTTbox extends MapTileProviderArrayTTbox implements I
 	public void cacheTrimToSize(int maxSize) {
 		cache.trimToSize(maxSize);
 	}
-	
+
 	public int cacheSize() {
 		return cache.size();
 	}
- 
-
-	
 
 }

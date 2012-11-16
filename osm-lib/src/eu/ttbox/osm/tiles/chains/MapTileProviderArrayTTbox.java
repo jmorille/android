@@ -26,61 +26,57 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 
 	private final ConcurrentHashMap<MapTile, MapTileRequestState> mWorking;
 
-	private static final Logger logger = LoggerFactory.getLogger(MapTileProviderArray.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(TAG);
 
 	protected final List<MapTileModuleProviderBase> mTileProviderList;
 
 	public final TilesLruCacheTTbox cache;
-	
-	// ===========================================================
-    // Cache Helper
-    // ===========================================================
 
-    public static int getCacheSizeSuggested(ActivityManager activityManager) {
-    	int memoryClassBytes = activityManager.getMemoryClass() *1024*1024;
-    	return memoryClassBytes / 8;
-    }
-	
-	
-    // ===========================================================
-    // Constructors
-    // ===========================================================
+	// ===========================================================
+	// Cache Helper
+	// ===========================================================
+
+	public static int getCacheSizeSuggested(ActivityManager activityManager) {
+		int memoryClassBytes = activityManager.getMemoryClass() * 1024 * 1024;
+		return memoryClassBytes / 8;
+	}
+
+	// ===========================================================
+	// Constructors
+	// ===========================================================
 
 	/**
 	 * Creates an {@link MapTileProviderArray} with no tile providers.
-	 *
+	 * 
 	 * @param aRegisterReceiver
 	 *            a {@link IRegisterReceiver}
 	 */
-	protected MapTileProviderArrayTTbox(final ITileSource pTileSource,
-			final IRegisterReceiver pRegisterReceiver, int cacheSizeInBytes) {
+	protected MapTileProviderArrayTTbox(final ITileSource pTileSource, final IRegisterReceiver pRegisterReceiver, int cacheSizeInBytes) {
 		this(pTileSource, pRegisterReceiver, new MapTileModuleProviderBase[0], cacheSizeInBytes);
 	}
 
 	/**
-	 * Creates an {@link MapTileProviderArray} with the specified tile providers.
-	 *
+	 * Creates an {@link MapTileProviderArray} with the specified tile
+	 * providers.
+	 * 
 	 * @param aRegisterReceiver
 	 *            a {@link IRegisterReceiver}
 	 * @param tileProviderArray
 	 *            an array of {@link MapTileModuleProviderBase}
 	 */
-	public MapTileProviderArrayTTbox(final ITileSource pTileSource,
-			final IRegisterReceiver aRegisterReceiver,
-			final MapTileModuleProviderBase[] pTileProviderArray, int cacheSizeInBytes) {
+	public MapTileProviderArrayTTbox(final ITileSource pTileSource, final IRegisterReceiver aRegisterReceiver, final MapTileModuleProviderBase[] pTileProviderArray, int cacheSizeInBytes) {
 		super(pTileSource);
 
 		mWorking = new ConcurrentHashMap<MapTile, MapTileRequestState>();
 		cache = new TilesLruCacheTTbox(cacheSizeInBytes);
-		
+
 		mTileProviderList = new ArrayList<MapTileModuleProviderBase>();
 		Collections.addAll(mTileProviderList, pTileProviderArray);
 	}
 
-    // ===========================================================
-    // List Provider
-    // ===========================================================
+	// ===========================================================
+	// List Provider
+	// ===========================================================
 
 	@Override
 	public void detach() {
@@ -101,9 +97,9 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 			return tile;
 		} else {
 			boolean alreadyInProgress = false;
-//			synchronized (mWorking) {
-				alreadyInProgress = mWorking.containsKey(pTile);
-//			}
+			// synchronized (mWorking) {
+			alreadyInProgress = mWorking.containsKey(pTile);
+			// }
 
 			if (!alreadyInProgress) {
 				if (DEBUGMODE) {
@@ -111,22 +107,20 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 				}
 
 				final MapTileRequestState state;
-//				synchronized (mTileProviderList) {
-					final MapTileModuleProviderBase[] providerArray =
-						new MapTileModuleProviderBase[mTileProviderList.size()];
-					state = new MapTileRequestState(pTile,
-							mTileProviderList.toArray(providerArray), this);
-//				}
+				// synchronized (mTileProviderList) {
+				final MapTileModuleProviderBase[] providerArray = new MapTileModuleProviderBase[mTileProviderList.size()];
+				state = new MapTileRequestState(pTile, mTileProviderList.toArray(providerArray), this);
+				// }
 
-//				synchronized (mWorking) {
-					// Check again
-					alreadyInProgress = mWorking.containsKey(pTile);
-					if (alreadyInProgress) {
-						return null;
-					}
+				// synchronized (mWorking) {
+				// Check again
+				alreadyInProgress = mWorking.containsKey(pTile);
+				if (alreadyInProgress) {
+					return null;
+				}
 
-					mWorking.put(pTile,state );
-//				}
+				mWorking.put(pTile, state);
+				// }
 
 				final MapTileModuleProviderBase provider = findNextAppropriateProvider(state);
 				if (provider != null) {
@@ -142,19 +136,19 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 	@Override
 	public void mapTileRequestCompleted(final MapTileRequestState pState, final Drawable pDrawable) {
 		final MapTile tile = pState.getMapTile();
-//		synchronized (mWorking) {
-			mWorking.remove(tile);
-//		}
-			if (pDrawable != null) {
-				mTileCache.putTile(tile, pDrawable);
-			}
+		// synchronized (mWorking) {
+		mWorking.remove(tile);
+		// }
+		if (pDrawable != null) {
+			mTileCache.putTile(tile, pDrawable);
+		}
 
-			// tell our caller we've finished and it should update its view
-			if (mTileRequestCompleteHandler != null) {
-				mTileRequestCompleteHandler.sendEmptyMessage(MapTile.MAPTILE_SUCCESS_ID);
-			}
-//			NOT	 ??
-super.mapTileRequestCompleted(pState, pDrawable);
+		// tell our caller we've finished and it should update its view
+		if (mTileRequestCompleteHandler != null) {
+			mTileRequestCompleteHandler.sendEmptyMessage(MapTile.MAPTILE_SUCCESS_ID);
+		}
+		// NOT ??
+		super.mapTileRequestCompleted(pState, pDrawable);
 	}
 
 	@Override
@@ -164,24 +158,25 @@ super.mapTileRequestCompleted(pState, pDrawable);
 			nextProvider.loadMapTileAsync(pState);
 		} else {
 			final MapTile tile = pState.getMapTile();
-//			synchronized (mWorking) {
-				mWorking.remove(tile);
-//			}
-				
-				if (mTileRequestCompleteHandler != null) {
-					mTileRequestCompleteHandler.sendEmptyMessage(MapTile.MAPTILE_FAIL_ID);
-				}
+			// synchronized (mWorking) {
+			mWorking.remove(tile);
+			// }
 
-				if (DEBUGMODE) {
-					logger.debug("MapTile request failed: " + tile);
-				}
+			if (mTileRequestCompleteHandler != null) {
+				mTileRequestCompleteHandler.sendEmptyMessage(MapTile.MAPTILE_FAIL_ID);
+			}
+
+			if (DEBUGMODE) {
+				logger.debug("MapTile request failed: " + tile);
+			}
 			super.mapTileRequestFailed(pState);
 		}
 	}
 
 	/**
-	 * We want to not use a provider that doesn't exist anymore in the chain, and we want to not use
-	 * a provider that requires a data connection when one is not available.
+	 * We want to not use a provider that doesn't exist anymore in the chain,
+	 * and we want to not use a provider that requires a data connection when
+	 * one is not available.
 	 */
 	protected MapTileModuleProviderBase findNextAppropriateProvider(final MapTileRequestState aState) {
 		MapTileModuleProviderBase provider = null;
@@ -189,9 +184,7 @@ super.mapTileRequestCompleted(pState, pDrawable);
 		// "Keep looping until you get null, or a provider that still exists and has a data connection if it needs one,"
 		do {
 			provider = aState.getNextProvider();
-		} while ((provider != null)
-				&& (!getProviderExists(provider) || (!useDataConnection() && provider
-						.getUsesDataConnection())));
+		} while ((provider != null) && (!getProviderExists(provider) || (!useDataConnection() && provider.getUsesDataConnection())));
 		return provider;
 	}
 
@@ -236,10 +229,10 @@ super.mapTileRequestCompleted(pState, pDrawable);
 		clearTileCache();
 
 	}
-	
+
 	// ===========================================================
-    // Cache
-    // ===========================================================
+	// Cache
+	// ===========================================================
 
 	@Override
 	public void ensureCapacity(final int pCapacity) {
@@ -249,9 +242,10 @@ super.mapTileRequestCompleted(pState, pDrawable);
 
 	@Override
 	public void clearTileCache() {
-		Log.i(TAG, "Cleau All Tiles Cache");
+		Log.i(TAG, "Clean All Tiles Cache");
 		cache.evictAll();
+		Log.i(TAG, "Clean All Tiles Cache : " + cache.size());
 		super.clearTileCache();
 	}
-	
+
 }

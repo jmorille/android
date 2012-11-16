@@ -25,7 +25,7 @@ public class MapTileFilesystemProviderTTbox  extends MapTileFileStorageProviderB
     // Constants
     // ===========================================================
 
-    private static final Logger logger = LoggerFactory.getLogger(MapTileFilesystemProviderTTbox.class);
+    private static final Logger logger = LoggerFactory.getLogger(TAG);
 
     // ===========================================================
     // Fields

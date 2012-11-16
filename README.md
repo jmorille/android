@@ -35,3 +35,11 @@ https://code.google.com/p/android-ui-utils/
 -- Git revert
 http://www.alexgirard.com/git-book/4_r%25C3%25A9paration_avec_git_%25E2%2580%2594_reset%252C_checkout_et_revert.html
 
+
+
+### Memory Leak
+##################
+http://stackoverflow.com/questions/8174140/android-memory-leak
+# What Android tools and methods work best to find memory/resource leaks?
+http://stackoverflow.com/questions/1147172/what-android-tools-and-methods-work-best-to-find-memory-resource-leaks
+
