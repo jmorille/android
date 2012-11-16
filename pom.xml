@@ -49,7 +49,7 @@
 		 
 		<!-- Release -->
 		<android-maven-plugin.version>3.4.0</android-maven-plugin.version>
-		<android.sdk.platform>16</android.sdk.platform>
+		<android.sdk.platform>17</android.sdk.platform>
 		<sign.alias>android</sign.alias>
 	</properties>
 

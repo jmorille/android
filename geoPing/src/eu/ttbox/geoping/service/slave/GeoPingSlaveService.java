@@ -34,6 +34,7 @@ import android.telephony.CellLocation;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -157,7 +158,7 @@ public class GeoPingSlaveService extends WorkerService {
                 Log.i(TAG, "Ignore Geoping (Never Authorize) request from phone " + phone);
                 // Show Blocking Notification
                 if (pairing.showNotification) {
-                    showNotificationGeoPing(phone, params, false);
+                    showNotificationGeoPing(pairing, params, false);
                 }
                 break;
             case AUTHORIZE_ALWAYS:
@@ -165,7 +166,7 @@ public class GeoPingSlaveService extends WorkerService {
                 registerGeoPingRequest(phone, params);
                 // Display Notification GeoPing
                 if (pairing.showNotification) {
-                    showNotificationGeoPing(phone, params, true);
+                    showNotificationGeoPing(pairing, params, true);
                 }
                 break;
             case AUTHORIZE_REQUEST:
@@ -173,7 +174,7 @@ public class GeoPingSlaveService extends WorkerService {
                 if (AppConstants.UNSET_ID == pairing.id) {
                     type = GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM_FIRST;
                 }
-                showNotificationNewPingRequestConfirm(phone, params, GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM);
+                showNotificationNewPingRequestConfirm(pairing, params, GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM);
                 break;
             default:
                 break;
@@ -211,7 +212,7 @@ public class GeoPingSlaveService extends WorkerService {
             break;
         case AUTHORIZE_REQUEST:
             // Open the Notification For asking Yes or fuck
-            showNotificationNewPingRequestConfirm(phone, params, GeopingNotifSlaveTypeEnum.PAIRING);
+            showNotificationNewPingRequestConfirm(pairing, params, GeopingNotifSlaveTypeEnum.PAIRING);
             break;
         default:
             break;
@@ -225,7 +226,7 @@ public class GeoPingSlaveService extends WorkerService {
         long personId = SmsMessageLocEnum.PARAM_PERSON_ID.readLong(params, -1l);
         GeopingNotifSlaveTypeEnum notifType = GeopingNotifSlaveTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL, -1));
         AuthorizePhoneTypeEnum type = AuthorizePhoneTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL));
-
+        String personNewName = extras.getString(Intents.EXTRA_PERSON_NAME);
         // Cancel Notification
         int notifId = extras.getInt(Intents.EXTRA_NOTIF_ID, -1);
         if (notifId != -1) {
@@ -233,7 +234,9 @@ public class GeoPingSlaveService extends WorkerService {
         }
         // Read Pairing
         Pairing pairing = getPairingByPhone(phone);
-
+        if (TextUtils.isEmpty(pairing.name) && personNewName != null) {
+            pairing.name = personNewName;
+        }
         // ### Manage Pairing Type
         // #############################
         Log.d(TAG, String.format("manageAuthorizeIntent for phone %s with User security choice %s", phone, type));
@@ -450,7 +453,9 @@ public class GeoPingSlaveService extends WorkerService {
     /**
      * Computes the battery level by registering a receiver to the intent
      * triggered by a battery status/level change. <br/>
-     * {@link http ://developer.android.com/training/monitoring-device-state/battery-monitoring.html}
+     * {@link http 
+     * ://developer.android.com/training/monitoring-device-state/battery
+     * -monitoring.html}
      */
 
     private void batteryLevel() {
@@ -522,8 +527,8 @@ public class GeoPingSlaveService extends WorkerService {
     // Notification
     // ===========================================================
 
-    private void showNotificationGeoPing(String phone, Bundle params, boolean authorizeIt) {
-
+    private void showNotificationGeoPing(Pairing pairing, Bundle params, boolean authorizeIt) {
+        String phone = pairing.phone;
         // Contact Name
         ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
         String contactDisplayName = phone;
@@ -531,6 +536,9 @@ public class GeoPingSlaveService extends WorkerService {
         if (contact != null) {
             if (contact.displayName != null && contact.displayName.length() > 0) {
                 contactDisplayName = contact.displayName;
+                if (TextUtils.isEmpty(pairing.name)) {
+                    pairing.name = contactDisplayName;
+                }
             }
             photo = ContactHelper.openPhotoBitmap(this, contact.id);
         }
@@ -561,18 +569,26 @@ public class GeoPingSlaveService extends WorkerService {
         mNotificationManager.notify(SHOW_GEOPING_REQUEST_NOTIFICATION_ID, notification);
     }
 
-    private void showNotificationNewPingRequestConfirm(String phone, Bundle params, GeopingNotifSlaveTypeEnum onlyPairing) {
+    private void showNotificationNewPingRequestConfirm(Pairing pairing, Bundle params, GeopingNotifSlaveTypeEnum onlyPairing) {
+        String phone = pairing.phone;
         String contactDisplayName = phone;
+        String contactNewName = null;
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notif_geoping_request_register);
         // Contact Name
         ContactVo contact = ContactHelper.searchContactForPhone(this, phone);
         Bitmap photo = null;
         if (contact != null) {
             if (contact.displayName != null && contact.displayName.length() > 0) {
+
                 contactDisplayName = contact.displayName;
+                if (TextUtils.isEmpty(pairing.name)) {
+                    contactNewName = contact.displayName;
+                    pairing.name = contact.displayName;
+                }
             }
             photo = ContactHelper.openPhotoBitmap(this, contact.id);
         }
+
         // Title
         String title;
         switch (onlyPairing) {
@@ -606,16 +622,16 @@ public class GeoPingSlaveService extends WorkerService {
         contentView.setTextViewText(R.id.notif_geoping_phone, contactDisplayName);
         // Manage Button Confirmation
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_no, PendingIntent.getService(this, 0, //
-                Intents.authorizePhone(this, phone, params, AuthorizePhoneTypeEnum.NO, notifId, onlyPairing),//
+                Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.NO, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_never, PendingIntent.getService(this, 1, //
-                Intents.authorizePhone(this, phone, params, AuthorizePhoneTypeEnum.NEVER, notifId, onlyPairing),//
+                Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.NEVER, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_yes, PendingIntent.getService(this, 2, //
-                Intents.authorizePhone(this, phone, params, AuthorizePhoneTypeEnum.YES, notifId, onlyPairing),//
+                Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.YES, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_always, PendingIntent.getService(this, 3, //
-                Intents.authorizePhone(this, phone, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
+                Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
 
         // Create Notifiation

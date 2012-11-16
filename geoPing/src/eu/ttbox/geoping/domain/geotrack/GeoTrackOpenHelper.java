@@ -56,18 +56,16 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d(TAG, CREATE_BDD);
+//        Log.d(TAG, CREATE_BDD);
         db.execSQL(CREATE_BDD);
-        Log.d(TAG, CREATE_INDEX_AK);
+//        Log.d(TAG, CREATE_INDEX_AK);
          db.execSQL(CREATE_INDEX_AK);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d(TAG, "DROP INDEX IF EXISTS " + INDEX_TRACK_POINT_AK + ";");
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { 
         db.execSQL("DROP INDEX IF EXISTS " + INDEX_TRACK_POINT_AK + ";");
-        db.execSQL("DROP TABLE " + GeoTrackDatabase.TABLE_TRACK_POINT + ";");
-        Log.d(TAG, "DROP TABLE " + GeoTrackDatabase.TABLE_TRACK_POINT + ";");
+        db.execSQL("DROP TABLE IF EXISTS " + GeoTrackDatabase.TABLE_TRACK_POINT + ";"); 
         onCreate(db);
     }
 

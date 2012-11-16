@@ -43,12 +43,12 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
     // ===========================================================
  
 	private static final String INDEX_PERSON_AK = "IDX_PERSON_AK";
-	private static final String CREATE_INDEX_PERSON_AK = "CREATE INDEX " + INDEX_PERSON_AK + " on " + PersonDatabase.TABLE_PERSON_FTS + "(" //
+	private static final String CREATE_INDEX_PERSON_AK = "CREATE INDEX IF NOT EXISTS " + INDEX_PERSON_AK + " on " + PersonDatabase.TABLE_PERSON_FTS + "(" //
 			+ PersonDatabase.PersonColumns.COL_PHONE //
 			+ ");";
 
 	private static final String INDEX_MESSAGE_AK = "IDX_MESSAGE_AK";
-	private static final String CREATE_INDEX_MESSAGE_AK = "CREATE INDEX " + INDEX_MESSAGE_AK + " on " + MessageDatabase.TABLE_MESSAGE_FTS + "(" //
+	private static final String CREATE_INDEX_MESSAGE_AK = "CREATE INDEX IF NOT EXISTS " + INDEX_MESSAGE_AK + " on " + MessageDatabase.TABLE_MESSAGE_FTS + "(" //
 			+ MessageDatabase.MessageColumns.COL_PHONE //
 			+ ");";
 
