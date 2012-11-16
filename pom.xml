@@ -37,7 +37,7 @@
 		 		
 		<!-- Android -->
 		<android.version>4.2_r1</android.version> <!-- 4.1.2_r3 2.3.3 -->
-		<google.maps.version>16_r3</google.maps.version>
+		<google.maps.version>17_r1</google.maps.version>
 		<!-- Google Api -->
         <compatibility-v13.version>10</compatibility-v13.version>
 		<gcm.version>3</gcm.version>

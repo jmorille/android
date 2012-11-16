@@ -241,10 +241,10 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 	}
 
 	@Override
-	public void clearTileCache() {
-		Log.i(TAG, "Clean All Tiles Cache");
+	public void clearTileCache() { 
+		int beforeCacheSize = cache.size();
 		cache.evictAll();
-		Log.i(TAG, "Clean All Tiles Cache : " + cache.size());
+		Log.i(TAG, "Clean All Tiles Cache of Size " + beforeCacheSize);
 		super.clearTileCache();
 	}
 

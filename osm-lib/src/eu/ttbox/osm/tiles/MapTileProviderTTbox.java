@@ -18,112 +18,127 @@ import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import eu.ttbox.osm.tiles.chains.MapTileProviderArrayTTbox;
 
-public class MapTileProviderTTbox   extends MapTileProviderArrayTTbox //
-		implements IMapTileProviderCallback {
+public class MapTileProviderTTbox extends MapTileProviderArrayTTbox //
+        implements IMapTileProviderCallback {
 
-	private static final String TAG = "MapTileProviderTTbox";
+    private static final String TAG = "MapTileProviderTTbox";
 
-	// private static final Logger logger =
-	// LoggerFactory.getLogger(MapTileProviderTtbox.class);
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(MapTileProviderTtbox.class);
 
-	/**
-	 * Creates a {@link MapTileProviderTTbox}.
-	 */
-	public MapTileProviderTTbox(final Context pContext, int cacheSizeInBytes) {
-		this(pContext, TileSourceFactory.DEFAULT_TILE_SOURCE, cacheSizeInBytes);
-	}
+    private ComponentCallbacks memoryCleanerCallback2;
+    private Context context;
 
-	/**
-	 * Creates a {@link MapTileProviderTTbox}.
-	 */
-	public MapTileProviderTTbox(final Context pContext, final ITileSource pTileSource, int cacheSizeInBytes) {
-		this(pContext, new SimpleRegisterReceiver(pContext), new NetworkAvailabliltyCheck(pContext), pTileSource, cacheSizeInBytes);
+    /**
+     * Creates a {@link MapTileProviderTTbox}.
+     */
+    public MapTileProviderTTbox(final Context pContext, int cacheSizeInBytes) {
+        this(pContext, TileSourceFactory.DEFAULT_TILE_SOURCE, cacheSizeInBytes);
+    }
 
-	}
+    /**
+     * Creates a {@link MapTileProviderTTbox}.
+     */
+    public MapTileProviderTTbox(final Context pContext, final ITileSource pTileSource, int cacheSizeInBytes) {
+        this(pContext, new SimpleRegisterReceiver(pContext), new NetworkAvailabliltyCheck(pContext), pTileSource, cacheSizeInBytes);
 
-	@Override
-	public void detach() {
-		super.detach();
-	}
+    }
 
-	/**
-	 * Creates a {@link MapTileProviderTTbox}.
-	 */
+    /**
+     * Creates a {@link MapTileProviderTTbox}.
+     */
 
-	public MapTileProviderTTbox(final Context pContext, final IRegisterReceiver pRegisterReceiver, final INetworkAvailablityCheck aNetworkAvailablityCheck, final ITileSource pTileSource,
-			int cacheSizeInBytes) {
-		super(pTileSource, pRegisterReceiver, cacheSizeInBytes);
-//		super(pTileSource, pRegisterReceiver);
-		final TileWriter tileWriter = new TileWriter();
+    public MapTileProviderTTbox(final Context pContext, final IRegisterReceiver pRegisterReceiver, final INetworkAvailablityCheck aNetworkAvailablityCheck, final ITileSource pTileSource,
+            int cacheSizeInBytes) {
+        super(pTileSource, pRegisterReceiver, cacheSizeInBytes);
+        this.context = pContext;
+        // super(pTileSource, pRegisterReceiver);
+        final TileWriter tileWriter = new TileWriter();
 
-		final MapTileFilesystemProvider fileSystemProvider = new MapTileFilesystemProvider(pRegisterReceiver, pTileSource, OpenStreetMapTileProviderConstants.ONE_WEEK * 26);
-		mTileProviderList.add(fileSystemProvider);
+        final MapTileFilesystemProvider fileSystemProvider = new MapTileFilesystemProvider(pRegisterReceiver, pTileSource, OpenStreetMapTileProviderConstants.ONE_WEEK * 26);
+        mTileProviderList.add(fileSystemProvider);
 
-		// final MapTileFileArchiveProvider archiveProvider = new
-		// MapTileFileArchiveProvider(
-		// pRegisterReceiver, pTileSource);
-		// mTileProviderList.add(archiveProvider);
+        // final MapTileFileArchiveProvider archiveProvider = new
+        // MapTileFileArchiveProvider(
+        // pRegisterReceiver, pTileSource);
+        // mTileProviderList.add(archiveProvider);
 
-		final MapTileDownloaderTTbox downloaderProvider = new MapTileDownloaderTTbox(pTileSource, tileWriter, aNetworkAvailablityCheck);
-		mTileProviderList.add(downloaderProvider);
-		// Memory Management
-//		initMemoryListener(pContext);
-	}
+        final MapTileDownloaderTTbox downloaderProvider = new MapTileDownloaderTTbox(pTileSource, tileWriter, aNetworkAvailablityCheck);
+        mTileProviderList.add(downloaderProvider);
+        // Memory Management
+         initMemoryListener(pContext);
+    }
 
-	@SuppressLint("NewApi")
-	public void initMemoryListener(final Context pContext) {
+    @SuppressLint("NewApi")
+    public void initMemoryListener(final Context pContext) { 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            memoryCleanerCallback2 = new MemoryCacheCleanerCallback2();
+            pContext.registerComponentCallbacks(memoryCleanerCallback2); 
+        } else {
+            // FIXME How to register onLowMemory ?
+//            memoryCleanerCallback2 = new MemoryCacheCleanerCallback();
+//            pContext.registerComponentCallbacks(memoryCleanerCallback2); 
+        }
+    }
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			pContext.registerComponentCallbacks(new MemoryCleanerCallback2());
-		} else {
-			// FIXME How to register onLowMemory ?
-		}
-	}
+    @SuppressLint("NewApi")
+    private void detachMemoryListener() {
+        if (memoryCleanerCallback2 != null) {
+            context.unregisterComponentCallbacks(memoryCleanerCallback2);
+        }
+    }
 
-	public class MemoryCleanerCallback implements ComponentCallbacks {
+    @Override
+    public void detach() {
+        super.detach();
+        detachMemoryListener(); 
+    }
 
-		@Override
-		public void onConfigurationChanged(Configuration newConfig) {
-		}
+    public class MemoryCacheCleanerCallback implements ComponentCallbacks {
 
-		@Override
-		public void onLowMemory() {
-			cacheEvictAll();
-		}
+        @Override
+        public void onConfigurationChanged(Configuration newConfig) {
+        }
 
-	}
+        @Override
+        public void onLowMemory() {
+            cacheEvictAll();
+        }
 
-	public class MemoryCleanerCallback2 extends MemoryCleanerCallback implements ComponentCallbacks2 {
+    }
 
-		@Override
-		public void onTrimMemory(int level) {
-			if (level >= TRIM_MEMORY_MODERATE) { // 60
-				Log.i(TAG, "###############################################");
-				Log.i(TAG, "### Clear all cache on TrimMemory Event " + level);
-				Log.i(TAG, "###############################################");
-				cacheEvictAll();
-			} else if (level >= TRIM_MEMORY_BACKGROUND) { // 40
-				Log.i(TAG, "###############################################");
-				Log.i(TAG, "### Clear 1/2 cache on TrimMemory Event " + level);
-				Log.i(TAG, "###############################################");
-				cacheTrimToSize(cacheSize() / 2);
-			}
-		}
-	}
+    public class MemoryCacheCleanerCallback2 extends MemoryCacheCleanerCallback implements ComponentCallbacks2 {
 
-	public void cacheEvictAll() {
-		cache.evictAll();
-	}
+        @Override
+        public void onTrimMemory(int level) {
+            if (level >= TRIM_MEMORY_MODERATE) { // 60
+                Log.i(TAG, "###############################################");
+                Log.i(TAG, "### Clear all cache on TrimMemory Event " + level);
+                Log.i(TAG, "###############################################");
+                cacheEvictAll();
+            } else if (level >= TRIM_MEMORY_BACKGROUND) { // 40
+                Log.i(TAG, "###############################################");
+                Log.i(TAG, "### Clear 1/2 cache on TrimMemory Event " + level);
+                Log.i(TAG, "###############################################");
+                cacheTrimToSize(cacheSize() / 2);
+            }
+        }
+    }
 
-	public void cacheTrimToSize(int maxSize) {
-		cache.trimToSize(maxSize);
-	}
+    public void cacheEvictAll() {
+        cache.evictAll();
+    }
 
-	public int cacheSize() {
-		return cache.size();
-	}
+    public void cacheTrimToSize(int maxSize) {
+        cache.trimToSize(maxSize);
+    }
+
+    public int cacheSize() {
+        return cache.size();
+    }
 
 }

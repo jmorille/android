@@ -13,7 +13,6 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 
-import android.app.ActionBar;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -89,10 +88,10 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
     private ScheduledThreadPoolExecutor timer;
 
     // Binding
-      Drawable packing = getResources().getDrawable(R.drawable.panneau_parking);
-      Drawable cycle = getResources().getDrawable(R.drawable.panneau_obligation_cycles);
-      Drawable all = getResources().getDrawable(R.drawable.marker_velib_circle);
-    
+    private Drawable packing;
+    private Drawable cycle;
+    private Drawable all;
+
     // Instance Value
     private VelibServiceConnection velibServiceConnection;
     private VelibProvider velibProvider;
@@ -100,7 +99,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 
     // Config
     boolean askToEnableGps = true;
-    private StationDispoModeSwitch stationDispoModeSwitch = new StationDispoModeSwitch();
+    private StationDispoModeSwitch stationDispoModeSwitch;
 
     // Manage Thread
     /**
@@ -150,9 +149,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
     // ===========================================================
     // Constructors
     // ===========================================================
-    
-     
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.map, container, false);
@@ -165,7 +162,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 
         // Osm
         // -------------
-        mResourceProxy = new DefaultResourceProxyImpl(getActivity());
+        mResourceProxy = new DefaultResourceProxyImpl(getActivity().getApplicationContext());
         // Map
         ITileSource tileSource = getPreferenceMapViewTileSource();
         String googleApiKey = getResources().getString(R.string.map_apiKey);
@@ -181,10 +178,10 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
         // -------------
         swtichMode = (ToggleButton) v.findViewById(R.id.map_button_parking_cycle_switch);
         packing = getResources().getDrawable(R.drawable.panneau_parking);
-         cycle = getResources().getDrawable(R.drawable.panneau_obligation_cycles);
-         all = getResources().getDrawable(R.drawable.marker_velib_circle);
-         
-        if (swtichMode != null) { 
+        cycle = getResources().getDrawable(R.drawable.panneau_obligation_cycles);
+        all = getResources().getDrawable(R.drawable.marker_velib_circle);
+        stationDispoModeSwitch = new StationDispoModeSwitch();
+        if (swtichMode != null) {
             stationDispoModeSwitch.displayToMode(0);
             swtichMode.setOnClickListener(stationDispoModeSwitch);
         }
@@ -193,7 +190,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             // No Action bar => Activate Map Button Overlay
             ToggleButton myPositionButton = (ToggleButton) v.findViewById(R.id.map_button_myposition);
-             if (myPositionButton != null) {
+            if (myPositionButton != null) {
                 myPositionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -207,7 +204,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
         // Map Overlay
         // -------------
         // MyLocation Overlay
-        myLocation = new MyLocationOverlay(getActivity(), this.mapView, mResourceProxy);
+        myLocation = new MyLocationOverlay(getActivity().getBaseContext(), this.mapView, mResourceProxy);
         myLocation.enableMyLocation();
         myLocation.enableCompass();
         mapView.getOverlays().add((Overlay) myLocation);
@@ -260,7 +257,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
             // GoogleMapView mapView2 = new GoogleMapView(this, gooleApiKey);
         } else {
             ActivityManager activityManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-            mapView = MapViewFactory.createOsmMapView(getActivity(), mResourceProxy, tileSource, activityManager);
+            mapView = MapViewFactory.createOsmMapView(getActivity().getApplicationContext(), mResourceProxy, tileSource, activityManager);
         }
         return mapView;
     }
@@ -560,41 +557,46 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
     // UI Listener
     // ===========================================================
 
-    private class StationDispoModeSwitch implements View.OnClickListener  {
-    	private int status = 0;
+    private class StationDispoModeSwitch implements View.OnClickListener {
+        private int status = 0;
 
         @Override
         public void onClick(View v) {
             if (stationOverlay != null) {
-            	displayToMode(status+1); 
+                displayToMode(status + 1);
             }
         }
-        
+
         public void displayToMode(int pMode) {
-        	int mode =pMode>3? pMode%3 : pMode;
-        	switch (mode) {
+            int mode = pMode > 3 ? pMode % 3 : pMode;
+            switch (mode) {
             case 0:
                 swtichMode.setBackgroundDrawable(all);
-                stationOverlay.setDrawDisplayCycleParking(true,true);
+                if (stationOverlay != null) {
+                    stationOverlay.setDrawDisplayCycleParking(true, true);
+                }
                 break;
             case 1:
                 swtichMode.setBackgroundDrawable(cycle);
-                stationOverlay.setDrawDisplayCycleParking(true,false);
+                if (stationOverlay != null) {
+                    stationOverlay.setDrawDisplayCycleParking(true, false);
+                }
                 break;
             case 2:
                 swtichMode.setBackgroundDrawable(packing);
-                stationOverlay.setDrawDisplayCycleParking(false,true);
+                if (stationOverlay != null) {
+                    stationOverlay.setDrawDisplayCycleParking(false, true);
+                }
                 break;
             default:
                 break;
             }
-        	this.status = mode;
+            this.status = mode;
         }
     }
-    
+
     // ===========================================================
     // Other
     // ===========================================================
 
-    
 }
