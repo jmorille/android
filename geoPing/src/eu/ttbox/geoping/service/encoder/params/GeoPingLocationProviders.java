@@ -1,55 +1,101 @@
 package eu.ttbox.geoping.service.encoder.params;
 
+import java.util.ArrayList;
 import java.util.BitSet;
+
+import android.util.Log;
 
 public class GeoPingLocationProviders {
 
-    public enum ProviderEnum {
-        passive(0), network(1), gps(2), other(3);
+	private static final int SPLIT_LIMIT = 4;
+	private static final int MAX_LIMIT = SPLIT_LIMIT * 2;
 
-        public final int id;
+	public enum ProviderEnum {
+		passive(0), network(1), gps(2), other(3);
 
-        ProviderEnum(int id) {
-            this.id = id;
-        }
-    }
+		public final int id;
 
-    private final BitSet bits;
+		ProviderEnum(int id) {
+			this.id = id;
+		}
+	}
 
-    public GeoPingLocationProviders() {
-        super();
-        this.bits = new BitSet();
-    }
+	private final BitSet bits;
 
-    public GeoPingLocationProviders(long bitsAsLong) {
-        super();
-        this.bits = BitSetHelper.convert(bitsAsLong);
-    }
+	public GeoPingLocationProviders() {
+		super();
+		this.bits = new BitSet();
+	}
 
-    public void set(ProviderEnum provider) {
-        set(provider, true);
-    }
-    public void set(ProviderEnum provider, boolean state) {
-        bits.set(provider.id, state);
-    }
+	public GeoPingLocationProviders(long bitsAsLong) {
+		super();
+		this.bits = BitSetHelper.convert(bitsAsLong);
+	}
 
-    public void set2(ProviderEnum provider) {
-        set2(provider, true);
-    }
+	public void setSelected(ProviderEnum provider) {
+		for (ProviderEnum pv : ProviderEnum.values()) {
+			if (pv == provider) {
+				setSelected(pv, true);
+			} else {
+				setSelected(pv, false);
+			}
+		}
+	}
 
-    public void set2(ProviderEnum provider, boolean state) {
-        bits.set(provider.id+4, state);
-    }
+	public ProviderEnum getSelected() {
+		ProviderEnum selected = null;
+		if (bits != null) {
+			int idxBit = bits.nextSetBit(0);
+			if (idxBit > -1 && idxBit < SPLIT_LIMIT) {
+				selected = ProviderEnum.values()[idxBit];
+			}
+		}
+		return selected;
+	}
 
-    public long getBitSetAsLong() {
-        return BitSetHelper.convert(bits);
-    }
+	private void setSelected(ProviderEnum provider, boolean state) {
+		bits.set(provider.id, state);
+	}
 
-    @Override
-    public String toString() {
-        return "GeoPingLocationProviders [bits=" + bits + "]";
-    }
+	public void setAvailable(ProviderEnum provider) {
+		setAvailable(provider, true);
+	}
 
-    
-    
+	public void setAvailable(ProviderEnum[] providers) {
+		for (ProviderEnum provider : providers) {
+			setAvailable(provider, true);
+		}
+	}
+	
+	private void setAvailable(ProviderEnum provider, boolean state) {
+		bits.set(provider.id + SPLIT_LIMIT, state);
+	}
+
+	public ArrayList<ProviderEnum> getAvailables() {
+		ArrayList<ProviderEnum> availables = new ArrayList<GeoPingLocationProviders.ProviderEnum>();
+
+		int idxBit = bits.nextSetBit(SPLIT_LIMIT);
+		do {
+			Log.d("GeoPingLocationProviders", "getAvailables  idxBit=" + idxBit);
+			if (idxBit > -1) {
+				int idxEnum = idxBit - SPLIT_LIMIT;
+				ProviderEnum val =  ProviderEnum.values()[idxEnum];
+				availables.add(val);
+			}
+			idxBit = bits.nextSetBit(idxBit+1);
+		} while (idxBit > -1 && idxBit < MAX_LIMIT);
+
+		 
+		return availables;
+	}
+
+	public long getBitSetAsLong() {
+		return BitSetHelper.convert(bits);
+	}
+
+	@Override
+	public String toString() {
+		return "GeoPingLocationProviders [bits=" + bits + "]";
+	}
+
 }

@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.ui.prefs;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.app.backup.BackupManager;
 import android.app.backup.RestoreObserver;
 import android.content.SharedPreferences;
@@ -12,6 +14,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.util.Log;
 import android.view.View;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.NotifToasts;
 
@@ -27,6 +30,9 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
         initSummaries(this.getPreferenceScreen());
         // Register change listener
         this.getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        // Tracker
+        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).getTracker();
+        tracker.trackPageView("/"+TAG);
     }
 
     /**

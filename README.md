@@ -35,7 +35,10 @@ https://code.google.com/p/android-ui-utils/
 -- Git revert
 http://www.alexgirard.com/git-book/4_r%25C3%25A9paration_avec_git_%25E2%2580%2594_reset%252C_checkout_et_revert.html
 
+### I18N
+##################
 
+https://github.com/4e6/android-localization-helper
 
 ### Memory Leak
 ##################

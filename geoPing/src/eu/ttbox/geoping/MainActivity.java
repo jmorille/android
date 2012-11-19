@@ -1,5 +1,7 @@
 package eu.ttbox.geoping;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -51,6 +53,9 @@ public class MainActivity extends FragmentActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        // Tracker
+        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).getTracker();
+        tracker.trackPageView("/"+TAG);
 
     }
     

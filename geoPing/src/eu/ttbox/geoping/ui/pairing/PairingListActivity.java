@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.ui.pairing;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 
 public class PairingListActivity extends FragmentActivity {
@@ -28,6 +31,9 @@ public class PairingListActivity extends FragmentActivity {
         setContentView(R.layout.pairing_list_activity);
         // Intents
         handleIntent(getIntent());
+        // Tracker
+        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).getTracker();
+        tracker.trackPageView("/"+TAG);
     }
 
     @Override

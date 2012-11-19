@@ -84,6 +84,12 @@
 			<artifactId>admob</artifactId>
 			<version>${admob.version}</version>
 		</dependency>
+  		<dependency>
+  			<groupId>com.google.android.analytics</groupId>
+  			<artifactId>analytics</artifactId>
+  			<version>${analytics.version}</version>
+  		</dependency>
+  
   
 	</dependencies>
 	

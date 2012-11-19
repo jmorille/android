@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.service.master;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.Notification;
@@ -22,6 +24,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.telephony.SmsManager;
 import android.util.Log;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
@@ -53,7 +56,8 @@ public class GeoPingMasterService extends IntentService {
 
     // Service
     private SharedPreferences appPreferences;
-
+    private GoogleAnalyticsTracker tracker;
+    
     // config
     boolean notifyGeoPingResponse = false;
 
@@ -73,7 +77,9 @@ public class GeoPingMasterService extends IntentService {
         // service
         this.appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         this.notifyGeoPingResponse = appPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, false);
-
+        // Google Analytics
+        tracker = ((GeoPingApplication)getApplication()).getTracker();
+     
         Log.d(TAG, "#################################");
         Log.d(TAG, "### GeoPingMasterService Service Started.");
         Log.d(TAG, "#################################");
@@ -106,18 +112,27 @@ public class GeoPingMasterService extends IntentService {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             sendSmsGeoPingRequest(phone, params);
+            // Tracker
+            tracker.trackPageView("/action/SMS_GEOPING_REQUEST");
         } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
             sendSmsPairingRequest(phone, userId);
+            // Tracker
+            tracker.trackPageView("/action/SMS_PAIRING_RESQUEST");
         } else if (Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER.equals(action)) {
             consumeGeoPingResponse(intent.getExtras());
+            // Tracker
+            tracker.trackPageView("/action/SMS_GEOPING_RESPONSE");
         } else if (Intents.ACTION_SMS_PAIRING_RESPONSE.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
             long userId = SmsMessageLocEnum.PARAM_PERSON_ID.readLong(params, -1);
             consumeSmsPairingResponse(phone, userId);
+            // Tracker
+            tracker.trackPageView("/action/SMS_PAIRING_RESPONSE");
         }
+     
 
     }
 

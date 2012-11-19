@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.ui.smslog;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.SmsLogProvider;
 
@@ -28,6 +31,9 @@ public class SmsLogListActivity extends FragmentActivity {
         setContentView(R.layout.smslog_list_activity);
         // Intents
         handleIntent(getIntent());
+        // Tracker
+        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).getTracker();
+        tracker.trackPageView("/"+TAG);
     }
 
     @Override

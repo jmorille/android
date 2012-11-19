@@ -7,6 +7,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,6 +40,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -78,7 +81,8 @@ public class GeoPingSlaveService extends WorkerService {
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private SharedPreferences appPreferences;
     private TelephonyManager telephonyManager;
-
+    // Google Analytics
+    private GoogleAnalyticsTracker tracker;
     // Instance Data
     private List<GeoPingRequest> geoPingRequestList;
     private MultiGeoRequestLocationListener multiGeoRequestListener;
@@ -111,6 +115,10 @@ public class GeoPingSlaveService extends WorkerService {
         this.myLocation = new MyLocationListenerProxy(locationManager);
         this.geoPingRequestList = new ArrayList<GeoPingRequest>();
         this.multiGeoRequestListener = new MultiGeoRequestLocationListener(geoPingRequestList);
+        // Google Analytics
+         tracker = ((GeoPingApplication)getApplication()).getTracker();
+       
+
         loadPrefConfig();
         Log.d(TAG, "#################################");
         Log.d(TAG, "### GeoPing Service Started.");
@@ -179,6 +187,7 @@ public class GeoPingSlaveService extends WorkerService {
             default:
                 break;
             }
+          
         } else if (Intents.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE.equals(action)) {
             // GeoPing Pairing User ressponse
             manageNotificationAuthorizeIntent(intent.getExtras());
@@ -490,6 +499,7 @@ public class GeoPingSlaveService extends WorkerService {
             super();
             this.smsPhoneNumber = phoneNumber;
             this.params = params;
+            // register Listener for Battery Level
             batteryLevel();
         }
 

@@ -8,6 +8,8 @@
  	<string name="backup_api_key">AEdPqrEAAAAI-ahoBk8qEhuAhuOd2Kecta_y7N3aCgBOFAHenA</string>
      <!-- Money-->
  	<string name="admob_key">a1509acb46a10d6</string> 
+ 	<!-- Analytics -->
+ 	<string name="analytics_key">UA-36410991-1</string> 
  	
    	<!-- ### Google Map ### -->
     <!-- ################## --> 	

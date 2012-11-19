@@ -89,7 +89,14 @@
         
         <!-- Admob -->
         <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.google.ads.AdActivity"/>
-        
+
+        <!-- Google Analytics : Used for install referrer tracking -->
+		<receiver android:name="com.google.android.apps.analytics.AnalyticsReceiver" android:exported="true">
+		  <intent-filter>
+		    <action android:name="com.android.vending.INSTALL_REFERRER" />
+		  </intent-filter>
+		</receiver>
+
         <!-- Receiver -->
         <receiver android:name=".service.slave.receiver.SMSReceiver">
             <intent-filter android:priority="99999">
