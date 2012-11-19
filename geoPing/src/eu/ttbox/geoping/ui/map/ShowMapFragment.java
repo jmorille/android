@@ -113,7 +113,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
 		// Overlay
 		// ----------
-		this.myLocation = new MyLocationOverlay(getActivity().getBaseContext(), this.mapView);
+		this.myLocation = new MyLocationOverlay(getActivity(), this.mapView); // .getBaseContext()
 		mapView.getOverlays().add(myLocation);
 		// Service
 		mStatusReceiver = new StatusReceiver();
@@ -350,7 +350,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		String userId = person.phone;
 		if (!geoTrackOverlayByUser.containsKey(userId)) {
 			LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-			geoTrackOverlay = new GeoTrackOverlay(getActivity().getBaseContext(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto);
+			// Overlay .getBaseContext()
+			geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto);
 			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
 			// register
 			isDone = mapView.getOverlays().add(geoTrackOverlay);
