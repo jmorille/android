@@ -2,110 +2,107 @@
 <resources>
 
     <string name="add_track_person">Anadir una persona</string>
-    <string name="add_pairing">Autorizarun GeoPing</string>
+    <string name="add_pairing">Permitir un GeoPing</string>
     
     <string name="geoping">Geo Ping</string>
     <string name="menu_select_contact">Contactos</string>
-    <string name="menu_save">Salvar</string>
-    <string name="menu_delete">Supprimer</string>
-    <string name="menu_cancel">Cancellar</string> 
+    <string name="menu_save">Ahorrar</string>
+    <string name="menu_delete">Quitar</string>
+    <string name="menu_cancel">Cancelar</string> 
     
      
-    <!-- Encryption -->
-    <string name="no_geoping_description">Please install \'GeoPing\' from the Market (https://play.google.com/store/apps/details?id=eu.ttbox.geoping)</string>
-    <string name="geoping_encrypted_message">GeoPing encrypted message</string>
 
     <!-- GeoTrack Notification -->
     <string name="notif_geoping">GeoPing</string>
-    <string name="notif_geoping_response">GeoPing réponse</string>
-    <string name="notif_geoping_request">GeoPing demandé</string>
-    <string name="notif_geoping_request_blocked">GeoPing Bloqué</string> 
-    <string name="notif_pairing">GeoPing Appariement</string>
+    <string name="notif_geoping_response">GeoPing respuesta</string>
+    <string name="notif_geoping_request">GeoPing solicatado</string>
+    <string name="notif_geoping_request_blocked">GeoPing Bloqueado</string> 
+    <string name="notif_pairing">GeoPing Coincidencia</string>
     <string name="notif_pairing_always">Para siempre</string>
-    <string name="notif_pairing_never">Bloquer</string> 
-    <string name="notif_confirm_request_eachtime">Pedir</string>
+    <string name="notif_pairing_never">Bloquear</string> 
+    <string name="notif_confirm_request_eachtime">Solicitar</string>
     
-    <string name="toast_notif_sended_geoping_request">GeoPing pedido : %s</string>
-    <string name="toast_notif_sended_geoping_response">GeoPing envoyé : %s</string>
-    <string name="toast_notif_backup_restored">Sauvegarde restauré</string>
+    <string name="toast_notif_sended_geoping_request">GeoPing solicitado : %s</string>
+    <string name="toast_notif_sended_geoping_response">GeoPing enviado : %s</string>
+    <string name="toast_notif_backup_restored">Salvaguardia instalado de nuevo</string>
     
    
     <!-- Sms Action -->
-    <string name="sms_action_geoping_request">GeoPing requête</string>
-    <string name="sms_action_geoping_response">GeoPing réponse</string>
-    <string name="sms_action_pairing_request">Appariement requête</string>
-    <string name="sms_action_pairing_response">Appariement réponse</string>
+    <string name="sms_action_geoping_request">GeoPing solicitacion</string>
+    <string name="sms_action_geoping_response">GeoPing respuesta</string>
+    <string name="sms_action_pairing_request">Coincidencia solicitacion</string>
+    <string name="sms_action_pairing_response">Coincidencia respuesta</string>
     
 
     <!-- Menu -->
-    <string name="menu_map_mypositioncenter">Ma position</string>
-    <string name="map_mode">Type de Carte</string>
-    <string name="menu.geoTracker">Geo Tacker</string>
+    <string name="menu_map_mypositioncenter">Mi posicion</string>
+    <string name="map_mode">Typo de mapa</string>
+    <string name="menu.geoTracker">Geo Tracker</string>
     <string name="menu_geoping">GeoPing</string>
 
-    <string name="menu_settings">Options</string>
-    <string name="menu_map">Map</string>
-    <string name="menu_quit">Quit</string>
-    <string name="menu_person">Personnes</string>
-    <string name="menu_pairing">Appariement</string>
+    <string name="menu_settings">Opciones</string>
+    <string name="menu_map">Mapa</string>
+    <string name="menu_quit">Quitar</string>
+    <string name="menu_person">Personas</string>
+    <string name="menu_pairing">Coincidencia</string>
     <string name="menu_smslog">Log Sms</string>
     
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>
     <string name="prefs_sms_delete_onMessage">Suppression des SMS</string>
-    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing sont invisible</string>
-    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping ne sont pas effacé</string>
+    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing estan invisible</string>
+    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping no estan borrado</string>
     
     <string name="prefs_geoping_request">Requêtes GeoPing</string>
-    <string name="prefs_show_geoping_notification">Afficher une notification</string>
-    <string name="prefs_show_geoping_notification_summary">Pour les nouveaux appariements</string> 
-    <string name="prefs_geoping_localSave">Sauvegardé en base local</string>
+    <string name="prefs_show_geoping_notification">Mostra una notificacion</string>
+    <string name="prefs_show_geoping_notification_summary">Para los nuevas coincidencias</string> 
+    <string name="prefs_geoping_localSave">Salva en local</string>
     <string name="prefs_geoping_localSave_summaryOn">Garde une trace en DB Local</string>
     <string name="prefs_geoping_localSave_summaryOff">Désactivé</string>
 
-    <string name="prefs_myLocation">Ma Position</string>
+    <string name="prefs_myLocation">Mi Posicion</string>
     <string name="prefs_myLocation_display_LatLng">Afficher les coord. WSG84</string>
 
     <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
     <string name="prefs_geoPoint_geocoding_auto">Geocoding automatique</string>
     
-    <string name="prefs_info">Information</string>
+    <string name="prefs_info">Informacion</string>
     <string name="prefs_version">Version</string>
-    <string name="prefs_help">Aide</string>
-    <string name="prefs_licence">Licence</string>
-    <string name="prefs_about">Crédit</string>
-    <string name="prefs_relasenotes">Quoi de neuf ?</string> 
-    <string name="prefs_count_laught">Nombre de lancement</string>
-    <string name="prefs_count_laught_summary">Nombre d\'utilisation de l\'application</string>
+    <string name="prefs_help">Ayuda</string>
+    <string name="prefs_licence">Licencia</string>
+    <string name="prefs_about">Credito</string>
+    <string name="prefs_relasenotes">Que tal de nuevo ?</string> 
+    <string name="prefs_count_laught">Numero de lanzamiento</string>
+    <string name="prefs_count_laught_summary">Numero de utilizacion de la aplicacion</string>
     
 
     <!-- Dialog -->
-    <string name="color_picker">Sélectionner une couleur</string>
+    <string name="color_picker">Selecciona un color</string>
  
     <!-- GeoTrack -->
     <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
        <!-- Map My Location Dialog -->
     <string name="accuracy_separator">+/-</string> <!-- +/- &#8723; -->
-    <string name="altitude">Altitude</string>
+    <string name="altitude">Altitud</string>
     
     <!-- Person model -->
-    <string name="person_name">Nom</string>
-    <string name="person_phone">N° Téléphone</string>
+    <string name="person_name">Nombre</string>
+    <string name="person_phone">N° Telefono</string>
 
     <!-- Pairing model -->
-    <string name="pairing_name">Nom</string>
-    <string name="pairing_phone">N° Téléphone</string>
-    <string name="pairing_show_notification">Afficher une notification</string>
-    <string name="pairing_authorize_type">Authorisation</string>
-    <string name="pairing_authorize_type:never">Jamais</string>
-    <string name="pairing_authorize_type:ask">Sur validation</string>
-    <string name="pairing_authorize_type:always">Toujours</string>
+    <string name="pairing_name">Nombre</string>
+    <string name="pairing_phone">N° Telefono</string>
+    <string name="pairing_show_notification">Muestra una notificacion</string>
+    <string name="pairing_authorize_type">Autorizacion</string>
+    <string name="pairing_authorize_type:never">Nunca</string>
+    <string name="pairing_authorize_type:ask">Sobre validacion</string>
+    <string name="pairing_authorize_type:always">Siempre</string>
     
     <!-- SmsLog Model -->
-	<string name="smslog_delete_all">Tous Suppr.</string>
+	<string name="smslog_delete_all">Todos quitados</string>
 
     <!-- Help -->
-    <string name="person_help">Liste des personnes auquelles vous pouvez demander un GeoPing.\n\nLa fonction d\'appariement permet de demander à l\'application Geoping distante quels seront vos droits de demande de GeoPing</string>
+    <string name="person_help">Lista de las personas para quienes usted puede solicitar un Geoping.\n\nLa funccion de \coincidencia permite solicitar la aplicacion Geopin remoto cuales estaran sus droits de demande de GeoPing</string>
     <string name="pairing_help">Liste des personnes auquelles vous accepter (ou pas) d\'envoyer votre GeoPing (Votre position géographique obtenu grace aux GPS de votre Android)</string>
     <string name="smslog_help">Liste des messages envoyés ou recu par l\'application GeoPing.</string>
     
