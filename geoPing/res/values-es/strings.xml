@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, GeoPing!</string>
-    
-    <string name="add_track_person">Ajouter une personne</string>
-    <string name="add_pairing">Authoriser un GeoPing</string>
+    <string name="add_track_person">Anadir una persona</string>
+    <string name="add_pairing">Autorizarun GeoPing</string>
     
     <string name="geoping">Geo Ping</string>
-    <string name="menu_select_contact">Contacts</string>
-    <string name="menu_save">Sauver</string>
+    <string name="menu_select_contact">Contactos</string>
+    <string name="menu_save">Salvar</string>
     <string name="menu_delete">Supprimer</string>
-    <string name="menu_cancel">Annuler</string> 
+    <string name="menu_cancel">Cancellar</string> 
     
      
     <!-- Encryption -->
@@ -23,11 +21,11 @@
     <string name="notif_geoping_request">GeoPing demandé</string>
     <string name="notif_geoping_request_blocked">GeoPing Bloqué</string> 
     <string name="notif_pairing">GeoPing Appariement</string>
-    <string name="notif_pairing_always">Toujours</string>
+    <string name="notif_pairing_always">Para siempre</string>
     <string name="notif_pairing_never">Bloquer</string> 
-    <string name="notif_confirm_request_eachtime">Ask</string>
+    <string name="notif_confirm_request_eachtime">Pedir</string>
     
-    <string name="toast_notif_sended_geoping_request">GeoPing demandé : %s</string>
+    <string name="toast_notif_sended_geoping_request">GeoPing pedido : %s</string>
     <string name="toast_notif_sended_geoping_response">GeoPing envoyé : %s</string>
     <string name="toast_notif_backup_restored">Sauvegarde restauré</string>
     
