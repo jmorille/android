@@ -107,7 +107,7 @@
 	<string name="smslog_delete_all">Del all.</string>
 
     <!-- Help -->
-    <string name="person_help">List of people that you can request a GeoPing coordinate.\n\nThe Geoping pairing functionnality permit to manage the security with authorize or block some GeoPing requesut</string>
+    <string name="person_help">List of people that you can request a GeoPing GPSv coordinates.\n\nThe Geoping pairing functionnality permit to manage the security with authorize or block some GeoPing request</string>
     <string name="pairing_help">List of pairing person that you accept to send your GeoPing coordinate (Your GPS position)</string>
     <string name="smslog_help">Lisf of Sms message, send or received by GeoPiong application.</string>
     

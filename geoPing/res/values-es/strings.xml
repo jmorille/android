@@ -102,8 +102,8 @@
 	<string name="smslog_delete_all">Todos quitados</string>
 
     <!-- Help -->
-    <string name="person_help">Lista de las personas para quienes usted puede solicitar un Geoping.\n\nLa funccion de \coincidencia permite solicitar la aplicacion Geopin remoto cuales estaran sus droits de demande de GeoPing</string>
-    <string name="pairing_help">Liste des personnes auquelles vous accepter (ou pas) d\'envoyer votre GeoPing (Votre position géographique obtenu grace aux GPS de votre Android)</string>
-    <string name="smslog_help">Liste des messages envoyés ou recu par l\'application GeoPing.</string>
+    <string name="person_help">Lista de las personas para quienes usted puede solicitar un Geoping.\n\n La funccion de \coincidencia permite solicitar la aplicacion Geoping remoto cuales estaran sus derechos de solicitacion de GeoPing</string>
+    <string name="pairing_help">Lista de las personas para quienes usted permite (o no) enviar su Geoping (Su posicion geografico gracias al GPS de su Android)</string>
+    <string name="smslog_help">Lista d los mensajes enviados o recibido por la aplicacion GeoPing.</string>
     
 </resources>
