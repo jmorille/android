@@ -27,6 +27,7 @@
     <string name="notif_pairing_never">Block</string> 
     <string name="notif_confirm_request_eachtime">Ask</string>
     
+    <string name="toast_notif_sended_geoping_pairing">GeoPing pairing request send : %s</string>
     <string name="toast_notif_sended_geoping_request">GeoPing requested : %s</string>
     <string name="toast_notif_sended_geoping_response">GeoPing send : %s</string>
     <string name="toast_notif_backup_restored">Backup restored</string>

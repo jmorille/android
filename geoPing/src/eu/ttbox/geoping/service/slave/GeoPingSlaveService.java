@@ -7,8 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -40,7 +38,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -70,6 +67,8 @@ public class GeoPingSlaveService extends WorkerService {
     private static final String TAG = "GeoPingSlaveService";
 
     private static final int SHOW_GEOPING_REQUEST_NOTIFICATION_ID = AppConstants.PER_PERSON_ID_MULTIPLICATOR * R.id.show_notification_new_geoping_request_confirm;
+
+    private static final int SHOW_PAIRING_NOTIFICATION_ID = AppConstants.PER_PERSON_ID_MULTIPLICATOR * R.id.show_pairing_request;
 
     private final IBinder binder = new LocalBinder();
     // Constant
@@ -610,6 +609,7 @@ public class GeoPingSlaveService extends WorkerService {
         String title;
         switch (onlyPairing) {
         case PAIRING:
+        	notifId = SHOW_PAIRING_NOTIFICATION_ID + phone.hashCode();
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_no, View.GONE);
             contentView.setTextViewText(R.id.notif_geoping_confirm_button_yes, getText(R.string.notif_confirm_request_eachtime));
             title = getString(R.string.notif_pairing);
@@ -668,6 +668,7 @@ public class GeoPingSlaveService extends WorkerService {
                 .setContentTitle(title) //
                 .setContentText(contactDisplayName) //
                 .setContentIntent(contentIntent) //
+//                .setNumber(5) // 
                 .setContent(contentView); //
         if (photo != null) {
             notificationBuilder.setLargeIcon(photo);
@@ -676,7 +677,7 @@ public class GeoPingSlaveService extends WorkerService {
             notificationBuilder.setLargeIcon(icon);
         }
         Notification notification = notificationBuilder.build();
-        
+        notification.contentView  = contentView;
         // Show
         mNotificationManager.notify(notifId, notification);
     }

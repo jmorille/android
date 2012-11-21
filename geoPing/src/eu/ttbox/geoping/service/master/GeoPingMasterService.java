@@ -82,7 +82,7 @@ public class GeoPingMasterService extends IntentService {
 
 			default:
 				break;
-			} 
+			}
 		}
 	};
 
@@ -196,14 +196,24 @@ public class GeoPingMasterService extends IntentService {
 
 	private void sendSmsPairingRequest(String phone, long userId) {
 		Bundle params = SmsMessageLocEnum.PARAM_PERSON_ID.writeToBundle(null, userId);
-		sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
-
+		boolean isSend = sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
+		if (isSend) {
+			final String formatStr = getResources().getString(R.string.toast_notif_sended_geoping_pairing, phone);
+			Message msg = new Message();
+			msg.what = UI_MSG_TOAST;
+			msg.obj = formatStr;
+			uiHandler.sendMessage(msg);
+		}
 	}
 
 	private void sendSmsGeoPingRequest(String phone, Bundle params) {
-		sendSms(phone, SmsMessageActionEnum.GEOPING_REQUEST, params);
+		boolean isSend = sendSms(phone, SmsMessageActionEnum.GEOPING_REQUEST, params);
 		Log.d(TAG, String.format("Send SMS GeoPing %s : %s", phone, params));
 		// Display Notif
+		if (isSend) {
+			Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, getResources().getString(R.string.toast_notif_sended_geoping_request, phone));
+			uiHandler.sendMessage(msg);
+		}
 		// final String formatStr =
 		// getResources().getString(R.string.toast_notif_sended_geoping_request,
 		// phone);
@@ -211,19 +221,19 @@ public class GeoPingMasterService extends IntentService {
 		// Toast.LENGTH_SHORT).show();
 	}
 
-	private void sendSms(String phone, SmsMessageActionEnum action, Bundle params) {
+	private boolean sendSms(String phone, SmsMessageActionEnum action, Bundle params) {
+		boolean isSend = false;
 		String encodeddMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
 		if (encodeddMsg != null && encodeddMsg.length() > 0 && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
-			boolean isSend = false;
 			try {
 				SmsManager.getDefault().sendTextMessage(phone, null, encodeddMsg, null, null);
 				isSend = true;
-			
 			} catch (NullPointerException e) {
 				Message msg = new Message();
 				msg.what = UI_MSG_TOAST;
 				msg.obj = "Error in sending message to " + phone;
-//				Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, "Error in sending message to " + phone);
+				// Message msg = uiHandler.obtainMessage(UI_MSG_TOAST,
+				// "Error in sending message to " + phone);
 				uiHandler.sendMessage(msg);
 			}
 			if (isSend) {
@@ -233,6 +243,7 @@ public class GeoPingMasterService extends IntentService {
 		} else if (encodeddMsg != null && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
 			// TODO display Too long messsage
 		}
+		return isSend;
 	}
 
 	// ===========================================================

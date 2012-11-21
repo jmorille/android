@@ -11,6 +11,7 @@
     <item name="show_notification_new_geoping_response" type="id"/>
     <!-- Slave -->
     <item name="show_notification_new_geoping_request_confirm" type="id"/>
+    <item name="show_pairing_request" type="id"/>
     <item name="config_id_pairing_list_loader" type="id"/>
     <item name="config_id_pairing_edit_loader" type="id"/>
     
