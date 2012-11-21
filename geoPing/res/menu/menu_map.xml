@@ -10,7 +10,7 @@
         android:id="@+id/menuMap_track_person"
         android:icon="@drawable/ic_action_user"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_geoping"/>    
+        android:title="@string/menu_person"/>    
     <item
         android:id="@+id/menuMap_mapmode"
         android:icon="@android:drawable/ic_menu_mapmode"

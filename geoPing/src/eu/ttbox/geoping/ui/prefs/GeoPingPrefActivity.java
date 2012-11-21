@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.ui.prefs;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.app.backup.BackupManager;
 import android.app.backup.RestoreObserver;
 import android.content.SharedPreferences;
@@ -14,6 +12,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.util.Log;
 import android.view.View;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.NotifToasts;

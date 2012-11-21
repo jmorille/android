@@ -3,7 +3,6 @@ package eu.ttbox.geoping.domain.geotrack;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 
 public class GeoTrackOpenHelper extends SQLiteOpenHelper {

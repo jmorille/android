@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.ui.person;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +9,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 

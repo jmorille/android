@@ -91,7 +91,7 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
 
         // Config
         showNotifDefault = sharedPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, DEFAULT_PREFS_SHOW_GEOPING_NOTIFICATION);
-     
+
         // binding
         nameEditText = (EditText) findViewById(R.id.pairing_name);
         phoneEditText = (EditText) findViewById(R.id.pairing_phone);
@@ -105,9 +105,9 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
 
         // default value
         showNotificationCheckBox.setChecked(showNotifDefault);
-        
+
         // Intents
-        handleIntent(getIntent()); 
+        handleIntent(getIntent());
     }
 
     @Override
@@ -115,43 +115,31 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
     }
-    
+
     // ===========================================================
     // Life Cycle
     // ===========================================================
 
-
-
     @Override
-    protected void onPause() { 
+    protected void onPause() {
         super.onPause();
     }
 
-
-
     @Override
-    protected void onResume() { 
+    protected void onResume() {
         super.onResume();
     }
 
- 
-
- 
-
-     
     // ===========================================================
     // Preferences
     // ===========================================================
 
-
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION)) {
-              showNotifDefault = sharedPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, DEFAULT_PREFS_SHOW_GEOPING_NOTIFICATION);
+            showNotifDefault = sharedPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, DEFAULT_PREFS_SHOW_GEOPING_NOTIFICATION);
         }
     }
-
 
     // ===========================================================
     // Intent Handler
@@ -283,10 +271,12 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
     }
 
     public void onShowNotificationClick(View v) {
-        boolean isCheck = showNotificationCheckBox.isChecked();
-        ContentValues values = new ContentValues();
-        values.put(PairingColumns.COL_SHOW_NOTIF, isCheck);
-        int count = getContentResolver().update(entityUri, values, null, null);
+        if (entityUri != null) {
+            boolean isCheck = showNotificationCheckBox.isChecked();
+            ContentValues values = new ContentValues();
+            values.put(PairingColumns.COL_SHOW_NOTIF, isCheck);
+            int count = getContentResolver().update(entityUri, values, null, null);
+        }
     }
 
     // ===========================================================
@@ -328,7 +318,7 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
                 String name = c.getString(0);
                 String phone = c.getString(1);
                 int type = c.getInt(2);
-                Uri uri=  doSavePairing(name, phone, null);
+                Uri uri = doSavePairing(name, phone, null);
                 // showSelectedNumber(type, number);
             }
         } finally {
@@ -381,21 +371,21 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
         }
         return cleanPhone;
     }
+
     private String trimToNull(String nameDirty) {
         String name = nameDirty;
-        if (name !=null) {
+        if (name != null) {
             name = name.trim();
-            if (name.length()<1) {
+            if (name.length() < 1) {
                 name = null;
             }
         }
         return name;
     }
-        
-        
+
     private Uri doSavePairing(String nameDirty, String phoneDirty, PairingAuthorizeTypeEnum authorizeType) {
         String phone = cleanPhone(phoneDirty);
-        String name =trimToNull(nameDirty);
+        String name = trimToNull(nameDirty);
         setPairing(name, phone);
         if (TextUtils.isEmpty(phone)) {
             NotifToasts.validateMissingPhone(this);
@@ -452,7 +442,7 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
                 // Data
                 PairingHelper helper = new PairingHelper().initWrapper(cursor);
                 helper.setTextPairingName(nameEditText, cursor)//
-                        .setTextPairingPhone(phoneEditText, cursor)// 
+                        .setTextPairingPhone(phoneEditText, cursor)//
                         .setCheckBoxPairingShowNotif(showNotificationCheckBox, cursor);
                 // Pairing
                 PairingAuthorizeTypeEnum authType = helper.getPairingAuthorizeTypeEnum(cursor);
