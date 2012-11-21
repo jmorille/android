@@ -61,7 +61,7 @@
     
     <string name="prefs_geoping_request">GeoPing Request</string>
     <string name="prefs_show_geoping_notification">Show an notification</string>
-    <string name="prefs_show_geoping_notification_summary">Pour les nouveaux appariements</string> 
+    <string name="prefs_show_geoping_notification_summary">For new pairing</string> 
     <string name="prefs_geoping_localSave">Save in a local DB</string>
     <string name="prefs_geoping_localSave_summaryOn">Keep a record in a local DB</string>
     <string name="prefs_geoping_localSave_summaryOff">Desactivated</string>
@@ -93,7 +93,7 @@
     
     <!-- Person model -->
     <string name="person_name">Name</string>
-    <string name="person_phone">Phone Numbe</string>
+    <string name="person_phone">Phone Number</string>
 
     <!-- Pairing model -->
     <string name="pairing_name">Name</string>
@@ -105,11 +105,11 @@
     <string name="pairing_authorize_type:always">Always</string>
     
     <!-- SmsLog Model -->
-	<string name="smslog_delete_all">Del all.</string>
+	<string name="smslog_delete_all">Del all</string>
 
     <!-- Help -->
     <string name="person_help">List of people that you can request a GeoPing GPSv coordinates.\n\nThe Geoping pairing functionnality permit to manage the security with authorize or block some GeoPing request</string>
     <string name="pairing_help">List of pairing person that you accept to send your GeoPing coordinate (Your GPS position)</string>
-    <string name="smslog_help">Lisf of Sms message, send or received by GeoPiong application.</string>
+    <string name="smslog_help">Lisf of Sms message, send or received by GeoPing application.</string>
     
 </resources>

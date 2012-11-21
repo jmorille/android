@@ -76,8 +76,7 @@
         android:layout_height="wrap_content"
        android:layout_below="@id/map_geotrack_bubbleView_block_altitude"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal" >
-        
+        android:orientation="horizontal" > 
     <TextView
         android:id="@+id/map_geotrack_bubbleView_speed"
         style="@style/map_geotrack_dialog_text" 
@@ -87,8 +86,7 @@
         android:id="@+id/map_geotrack_bubbleView_bearing"
         style="@style/map_geotrack_dialog_text" 
         android:paddingLeft="5dip"
-        android:text="bearing" />
-     
+        android:text="bearing" /> 
     </LinearLayout>
        
     <TextView
