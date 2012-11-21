@@ -81,8 +81,7 @@ public class GeoPingSlaveService extends WorkerService {
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private SharedPreferences appPreferences;
     private TelephonyManager telephonyManager;
-    // Google Analytics
-    private GoogleAnalyticsTracker tracker;
+ 
     // Instance Data
     private List<GeoPingRequest> geoPingRequestList;
     private MultiGeoRequestLocationListener multiGeoRequestListener;
@@ -115,10 +114,7 @@ public class GeoPingSlaveService extends WorkerService {
         this.myLocation = new MyLocationListenerProxy(locationManager);
         this.geoPingRequestList = new ArrayList<GeoPingRequest>();
         this.multiGeoRequestListener = new MultiGeoRequestLocationListener(geoPingRequestList);
-        // Google Analytics
-         tracker = ((GeoPingApplication)getApplication()).getTracker();
-       
-
+    
         loadPrefConfig();
         Log.d(TAG, "#################################");
         Log.d(TAG, "### GeoPing Service Started.");
@@ -580,6 +576,9 @@ public class GeoPingSlaveService extends WorkerService {
     }
 
     private void showNotificationNewPingRequestConfirm(Pairing pairing, Bundle params, GeopingNotifSlaveTypeEnum onlyPairing) {
+//    	Log.d(TAG,"******************************************************");
+//    	Log.d(TAG,"*****  showNotificationNewPingRequestConfirm  ****");
+//    	Log.d(TAG,"******************************************************");
         String phone = pairing.phone;
         String contactDisplayName = phone;
         String contactNewName = null;
@@ -598,6 +597,14 @@ public class GeoPingSlaveService extends WorkerService {
             }
             photo = ContactHelper.openPhotoBitmap(this, contact.id);
         }
+        
+        // Generate Notification ID per Person
+        int notifId = SHOW_GEOPING_REQUEST_NOTIFICATION_ID + phone.hashCode();
+        Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
+
+         // Content Intent In android 2.3 no Custun View displayble
+        //TODO Propose a choice
+        PendingIntent contentIntent =  null;
 
         // Title
         String title;
@@ -606,6 +613,9 @@ public class GeoPingSlaveService extends WorkerService {
             contentView.setViewVisibility(R.id.notif_geoping_confirm_button_no, View.GONE);
             contentView.setTextViewText(R.id.notif_geoping_confirm_button_yes, getText(R.string.notif_confirm_request_eachtime));
             title = getString(R.string.notif_pairing);
+            contentIntent =  PendingIntent.getService(this, 0, //
+                    Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
+                    PendingIntent.FLAG_UPDATE_CURRENT);
             break;
         case GEOPING_REQUEST_CONFIRM:
             title = getString(R.string.notif_geoping_request);
@@ -623,9 +633,6 @@ public class GeoPingSlaveService extends WorkerService {
             break;
         }
 
-        // Generate Notification ID per Person
-        int notifId = SHOW_GEOPING_REQUEST_NOTIFICATION_ID + phone.hashCode();
-        Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
 
         // View
         contentView.setTextViewText(R.id.notif_geoping_title, title);
@@ -643,7 +650,15 @@ public class GeoPingSlaveService extends WorkerService {
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_always, PendingIntent.getService(this, 3, //
                 Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
+        
+        // Content Intent
+        if (contentIntent==null) {
+	        contentIntent =  PendingIntent.getService(this, 0, //
+	                Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.YES, notifId, onlyPairing),//
+	                PendingIntent.FLAG_UPDATE_CURRENT);
+        }
 
+        
         // Create Notifiation
         Builder notificationBuilder = new NotificationCompat.Builder(this) //
                 .setDefaults(Notification.DEFAULT_ALL) //
@@ -652,6 +667,7 @@ public class GeoPingSlaveService extends WorkerService {
                 .setAutoCancel(true) //
                 .setContentTitle(title) //
                 .setContentText(contactDisplayName) //
+                .setContentIntent(contentIntent) //
                 .setContent(contentView); //
         if (photo != null) {
             notificationBuilder.setLargeIcon(photo);
@@ -660,6 +676,7 @@ public class GeoPingSlaveService extends WorkerService {
             notificationBuilder.setLargeIcon(icon);
         }
         Notification notification = notificationBuilder.build();
+        
         // Show
         mNotificationManager.notify(notifId, notification);
     }
