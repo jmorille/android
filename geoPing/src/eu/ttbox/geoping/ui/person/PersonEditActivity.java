@@ -292,7 +292,7 @@ public class PersonEditActivity extends FragmentActivity implements ColorPickerD
         setPerson(name, phone, contactId);
         if (TextUtils.isEmpty(phone)) {
             NotifToasts.validateMissingPhone(this);
-//            return null;
+            return null;
         }
         // Prepare db insert
         ContentValues values = new ContentValues();
