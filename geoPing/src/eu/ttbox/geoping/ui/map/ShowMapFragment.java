@@ -26,6 +26,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -348,7 +349,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		GeoTrackOverlay geoTrackOverlay = null;
 		boolean isDone = false;
 		String userId = person.phone;
-		if (!geoTrackOverlayByUser.containsKey(userId)) {
+		if (!TextUtils.isEmpty(userId) && !geoTrackOverlayByUser.containsKey(userId)) {
 			LoaderManager loaderManager = getActivity().getSupportLoaderManager();
 			// Overlay .getBaseContext()
 			geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto);
@@ -408,8 +409,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 			Log.d(TAG, "onCreateLoader");
-			String sortOrder = String.format("%s ASC", PersonColumns.COL_NAME);
-			String selection = null;
+			String sortOrder = PersonColumns.ORDER_NAME_ASC;
+			String selection = PersonColumns.SELECT_BYPHONE_NUMBER_NOT_NULL;//  null;
 			String[] selectionArgs = null;
 			// Loader
 			CursorLoader cursorLoader = new CursorLoader(getActivity(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);

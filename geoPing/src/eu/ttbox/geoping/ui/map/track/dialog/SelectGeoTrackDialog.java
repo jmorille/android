@@ -130,8 +130,8 @@ public class SelectGeoTrackDialog extends AlertDialog {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
-            String sortOrder = String.format("%s ASC", PersonColumns.COL_NAME);
-            String selection = null;
+            String sortOrder =  PersonColumns.ORDER_NAME_ASC;  
+            String selection = PersonColumns.SELECT_BYPHONE_NUMBER_NOT_NULL;
             String[] selectionArgs = null;
             // Loader
             CursorLoader cursorLoader = new CursorLoader(getContext(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);

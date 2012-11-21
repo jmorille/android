@@ -24,6 +24,7 @@
             style="@style/entity_edit"
             android:layout_width="fill_parent"
             android:layout_below="@id/person_name"
+             android:inputType="phone"
             android:hint="@string/person_phone" />
 
         <Button

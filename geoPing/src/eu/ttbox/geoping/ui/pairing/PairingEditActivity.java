@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
@@ -326,7 +328,7 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
                 String name = c.getString(0);
                 String phone = c.getString(1);
                 int type = c.getInt(2);
-                doSavePairing(name, phone, null);
+                Uri uri=  doSavePairing(name, phone, null);
                 // showSelectedNumber(type, number);
             }
         } finally {
@@ -371,12 +373,34 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
         if (cleanPhone != null) {
             cleanPhone = PhoneNumberUtils.normalizeNumber(phone);
         }
+        if (cleanPhone != null) {
+            cleanPhone = cleanPhone.trim();
+            if (cleanPhone.length() < 1) {
+                cleanPhone = null;
+            }
+        }
         return cleanPhone;
     }
-
-    private Uri doSavePairing(String name, String phoneDirty, PairingAuthorizeTypeEnum authorizeType) {
+    private String trimToNull(String nameDirty) {
+        String name = nameDirty;
+        if (name !=null) {
+            name = name.trim();
+            if (name.length()<1) {
+                name = null;
+            }
+        }
+        return name;
+    }
+        
+        
+    private Uri doSavePairing(String nameDirty, String phoneDirty, PairingAuthorizeTypeEnum authorizeType) {
         String phone = cleanPhone(phoneDirty);
+        String name =trimToNull(nameDirty);
         setPairing(name, phone);
+        if (TextUtils.isEmpty(phone)) {
+            NotifToasts.validateMissingPhone(this);
+            return null;
+        }
         // Prepare db insert
         ContentValues values = new ContentValues();
         values.put(PairingColumns.COL_NAME, name);

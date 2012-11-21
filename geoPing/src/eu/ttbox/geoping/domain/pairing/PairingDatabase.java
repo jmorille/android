@@ -26,18 +26,17 @@ public class PairingDatabase {
         public static final String COL_NAME = "NAME";
         public static final String COL_PHONE = "PHONE";
         public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
-		public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
+        public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
         public static final String COL_AUTHORIZE_TYPE = "AUTHORIZE_TYPE";
         public static final String COL_SHOW_NOTIF = "SHOW_NOTIF";
         public static final String COL_PAIRING_TIME = "COL_PAIRING_TIME";
         // All Cols
-        public static final String[] ALL_COLS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH,  COL_AUTHORIZE_TYPE, COL_SHOW_NOTIF, COL_PAIRING_TIME };
+        public static final String[] ALL_COLS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH, COL_AUTHORIZE_TYPE, COL_SHOW_NOTIF, COL_PAIRING_TIME };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);
     }
 
-    
     private final PairingOpenHelper mDatabaseOpenHelper;
     private static final HashMap<String, String> mPairingColumnMap = buildUserColumnMap();
 
@@ -87,12 +86,12 @@ public class PairingDatabase {
 
     public long insertEntity(ContentValues values) throws SQLException {
         long result = -1;
-    	fillNormalizedNumber(values);
+        fillNormalizedNumber(values);
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
             db.beginTransaction();
             try {
-                 result = db.insertOrThrow(TABLE_PAIRING_FTS, null, values);
+                result = db.insertOrThrow(TABLE_PAIRING_FTS, null, values);
                 // commit
                 db.setTransactionSuccessful();
             } finally {
@@ -104,8 +103,6 @@ public class PairingDatabase {
         return result;
     }
 
-    
-    
     public Cursor searchForPhoneNumber(String number, String[] _projection, String pSelection, String[] pSelectionArgs, String sortOrder) {
         String[] projection = _projection == null ? PairingColumns.ALL_COLS : _projection;
         // Normalise For search
@@ -120,40 +117,39 @@ public class PairingDatabase {
         } else {
             selection = String.format("%s = ? and (%s)", PairingColumns.COL_PHONE_MIN_MATCH, pSelection);
             int pSelectionArgSize = pSelectionArgs.length;
-            selectionArgs = new String[   pSelectionArgSize+1 ] ;
+            selectionArgs = new String[pSelectionArgSize + 1];
             System.arraycopy(pSelectionArgs, 0, selectionArgs, 1, pSelectionArgSize);
             selectionArgs[0] = minMatch;
         }
         return queryEntities(projection, selection, selectionArgs, sortOrder);
     }
 
-
-    
     private void fillNormalizedNumber(ContentValues values) {
         // No NUMBER? Also ignore NORMALIZED_NUMBER
         if (!values.containsKey(PairingColumns.COL_PHONE)) {
             values.remove(PairingColumns.COL_PHONE_NORMALIZED);
-            values.remove(PairingColumns.COL_PHONE_MIN_MATCH); 
+            values.remove(PairingColumns.COL_PHONE_MIN_MATCH);
             return;
         }
 
         // NUMBER is given. Try to extract NORMALIZED_NUMBER from it, unless it
         // is also given
         String number = values.getAsString(PairingColumns.COL_PHONE);
-        
-//      final String newNumberE164 = PhoneNumberUtils.formatNumberToE164(number,
-//              mDbHelper.getCurrentCountryIso());
-        String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
-        if (!TextUtils.isEmpty(normalizedNumber)) {
-            String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
-            values.put(PairingColumns.COL_PHONE_NORMALIZED, normalizedNumber);
-            values.put(PairingColumns.COL_PHONE_MIN_MATCH, minMatch);
-        } 
+        if (!TextUtils.isEmpty(number)) {
+            // final String newNumberE164 =
+            // PhoneNumberUtils.formatNumberToE164(number,
+            // mDbHelper.getCurrentCountryIso());
+            String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+            if (!TextUtils.isEmpty(normalizedNumber)) {
+                String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+                values.put(PairingColumns.COL_PHONE_NORMALIZED, normalizedNumber);
+                values.put(PairingColumns.COL_PHONE_MIN_MATCH, minMatch);
+            }
+        }
     }
-    
-    
+
     public int deleteEntity(String selection, String[] selectionArgs) {
-        int result = -1; 
+        int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
             db.beginTransaction();
@@ -171,7 +167,7 @@ public class PairingDatabase {
 
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
-    	fillNormalizedNumber(values);
+        fillNormalizedNumber(values);
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
             db.beginTransaction();

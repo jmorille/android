@@ -35,7 +35,9 @@ public class PersonDatabase {
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
         public static final String SELECT_BY_PHONE_NUMBER = String.format("%s = ?", COL_PHONE);
-
+        public static final String SELECT_BYPHONE_NUMBER_NOT_NULL = String.format("ifnull(length(%s), 0) > 0", COL_PHONE);
+        // Order Clause
+        public static final String ORDER_NAME_ASC = String.format("%s ASC", PersonColumns.COL_NAME);
     }
 
     private final PersonOpenHelper mDbHelper;
@@ -84,8 +86,7 @@ public class PersonDatabase {
         Cursor cursor = builder.query(mDbHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
         return cursor;
     }
-     
-    
+
     public Cursor searchForPhoneNumber(String number, String[] _projection, String pSelection, String[] pSelectionArgs, String sortOrder) {
         String[] projection = _projection == null ? PersonColumns.ALL_COLS : _projection;
         // Normalise For search
@@ -100,34 +101,35 @@ public class PersonDatabase {
         } else {
             selection = String.format("%s = ? and (%s)", PersonColumns.COL_PHONE_MIN_MATCH, pSelection);
             int pSelectionArgSize = pSelectionArgs.length;
-            selectionArgs = new String[   pSelectionArgSize+1 ] ;
+            selectionArgs = new String[pSelectionArgSize + 1];
             System.arraycopy(pSelectionArgs, 0, selectionArgs, 1, pSelectionArgSize);
             selectionArgs[0] = minMatch;
         }
         return queryEntities(projection, selection, selectionArgs, sortOrder);
     }
 
-    
-
     private void fillNormalizedNumber(ContentValues values) {
         // No NUMBER? Also ignore NORMALIZED_NUMBER
         if (!values.containsKey(PersonColumns.COL_PHONE)) {
             values.remove(PersonColumns.COL_PHONE_NORMALIZED);
-            values.remove(PersonColumns.COL_PHONE_MIN_MATCH); 
+            values.remove(PersonColumns.COL_PHONE_MIN_MATCH);
             return;
         }
 
         // NUMBER is given. Try to extract NORMALIZED_NUMBER from it, unless it
         // is also given
         String number = values.getAsString(PersonColumns.COL_PHONE);
-        
-//      final String newNumberE164 = PhoneNumberUtils.formatNumberToE164(number,
-//              mDbHelper.getCurrentCountryIso());
-        String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
-        if (!TextUtils.isEmpty(normalizedNumber)) {
-            String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
-            values.put(PersonColumns.COL_PHONE_NORMALIZED, normalizedNumber);
-            values.put(PersonColumns.COL_PHONE_MIN_MATCH, minMatch);
+
+        // final String newNumberE164 =
+        // PhoneNumberUtils.formatNumberToE164(number,
+        // mDbHelper.getCurrentCountryIso());
+        if (!TextUtils.isEmpty(number)) {
+            String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+            if (!TextUtils.isEmpty(normalizedNumber)) {
+                String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+                values.put(PersonColumns.COL_PHONE_NORMALIZED, normalizedNumber);
+                values.put(PersonColumns.COL_PHONE_MIN_MATCH, minMatch);
+            }
         }
 
     }
@@ -151,9 +153,6 @@ public class PersonDatabase {
         return result;
     }
 
-    
-    
-
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
         fillNormalizedNumber(values);
@@ -171,7 +170,6 @@ public class PersonDatabase {
         }
         return result;
     }
-    
 
     public int deleteEntity(String selection, String[] selectionArgs) {
         int result = -1;

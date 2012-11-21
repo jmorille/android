@@ -224,10 +224,16 @@ public class GeoPingMasterService extends IntentService {
 	private boolean sendSms(String phone, SmsMessageActionEnum action, Bundle params) {
 		boolean isSend = false;
 		String encodeddMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
+		if (phone==null || phone.length()<1) {
+		    return false;
+		}
 		if (encodeddMsg != null && encodeddMsg.length() > 0 && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
 			try {
 				SmsManager.getDefault().sendTextMessage(phone, null, encodeddMsg, null, null);
-				isSend = true;
+				isSend = true; 
+            } catch (IllegalArgumentException e) {
+                Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, "Error Sending message to " +phone);
+                uiHandler.sendMessage(msg);
 			} catch (NullPointerException e) {
 				Message msg = new Message();
 				msg.what = UI_MSG_TOAST;
