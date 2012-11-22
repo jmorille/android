@@ -36,6 +36,8 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
         tracker.trackPageView("/"+TAG);
     }
 
+ 
+    
     /**
      * Set the summaries of all preferences
      */
@@ -67,7 +69,10 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Preference pref = findPreference(key);
+    	// Ask Backup
+    	BackupManager.dataChanged(getPackageName());
+    	 // Update Display
+    	Preference pref = findPreference(key);
         setSummary(pref);
     }
 

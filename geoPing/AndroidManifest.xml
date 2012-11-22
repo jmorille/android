@@ -39,8 +39,10 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <uses-feature android:name="android.hardware.telephony" android:required="false"/>
     
-    <application android:backupAgent=".service.backup.GeoPingBackupAgent" android:debuggable="false" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:theme="@style/AppTheme">
-	    <meta-data android:name="com.google.android.backup.api_key" android:value="@string/backup_api_key"/>
+ 
+    <application android:backupAgent=".service.backup.GeoPingBackupAgent" android:restoreAnyVersion="false"
+         android:debuggable="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:theme="@style/AppTheme">
+ 	    <meta-data android:name="com.google.android.backup.api_key" android:value="@string/backup_api_key"/>
 	    
         <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
         <meta-data android:name="CLOUDMADE_KEY" android:value="75b3a96b94c74eb0b7f1450ed5235a78"/>

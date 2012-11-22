@@ -349,7 +349,7 @@ public class GeoPingMasterService extends IntentService {
 				.setDefaults(Notification.DEFAULT_ALL) //
 				.setSmallIcon(R.drawable.ic_stat_notif_icon) //
 				.setWhen(System.currentTimeMillis()) //
-				.setAutoCancel(true) //
+				.setAutoCancel(true) // 
 				.setContentIntent(pendingIntent)//
 				.setContentTitle(getString(R.string.notif_geoping)) //
 				.setContentText(contactDisplayName); //
@@ -363,8 +363,9 @@ public class GeoPingMasterService extends IntentService {
 		// Show
 		int notifId = SHOW_ON_NOTIFICATION_ID + phone.hashCode();
 		Log.d(TAG, String.format("GeoPing Notification Id : %s for phone %s", notifId, phone));
-
+		 
 		mNotificationManager.notify(notifId, notification);
+		 
 	}
 
 	// ===========================================================

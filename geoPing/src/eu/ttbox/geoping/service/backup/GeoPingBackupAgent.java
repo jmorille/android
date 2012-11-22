@@ -46,18 +46,18 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
     @Override
     public void onBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) throws IOException {
         synchronized (GeoPingBackupAgent.sDataLock) {
-            Log.i(TAG, "----- onBackup Begin Backup data station");
+            Log.i(TAG, "----- onBackup Begin Backup --- GeoPing"); 
             super.onBackup(oldState, data, newState);
-            Log.i(TAG, "----- onBackup End   Backup data station");
+            Log.i(TAG, "----- onBackup End   Backup --- GeoPing");
         }
     }
 
     @Override
     public void onRestore(BackupDataInput data, int appVersionCode, ParcelFileDescriptor newState) throws IOException {
         synchronized (GeoPingBackupAgent.sDataLock) {
-            Log.i(TAG, "----- onRestore Begin Backup data station");
+            Log.i(TAG, "----- onRestore Begin Backup --- GeoPing");
             super.onRestore(data, appVersionCode, newState);
-            Log.i(TAG, "----- onRestore Begin End   data station");
+            Log.i(TAG, "----- onRestore Begin End --- GeoPing");
         }
     }
 
