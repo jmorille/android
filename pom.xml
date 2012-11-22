@@ -5,7 +5,7 @@
 
 	<groupId>eu.ttbox.android</groupId>
 	<artifactId>android-root</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 	<packaging>pom</packaging>
 
 	<name>Android Pom Reactor</name>
@@ -33,13 +33,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Internal Api -->
-        <osm-lib.version>0.1.0</osm-lib.version> 
+        <osm-lib.version>0.1.1</osm-lib.version> 
 		 		
 		<!-- Android -->
 		<android.version>4.2_r1</android.version> <!-- 4.1.2_r3 2.3.3 -->
 		<google.maps.version>17_r1</google.maps.version>
 		<!-- Google Api -->
-        <compatibility-v13.version>10</compatibility-v13.version>
+        <compatibility-v13.version>11</compatibility-v13.version>
 		<gcm.version>3</gcm.version>
         <admob.version>6.2.1-r8</admob.version>
         <analytics.version>2</analytics.version>

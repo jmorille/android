@@ -202,6 +202,9 @@ public class GeoPingSlaveService extends WorkerService {
 
     private void managePairingRequest(String phone, Bundle params) {
         PairingAuthorizeTypeEnum authorizeType = PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
+        Log.i(TAG, "########## pairing request : " + authorizeType);
+        Log.i(TAG, "########## pairing request : " + authorizeType);
+        Log.i(TAG, "########## pairing request : " + authorizeType);
         Pairing pairing = getPairingByPhone(phone);
         if (pairing != null && pairing.authorizeType != null) {
             authorizeType = pairing.authorizeType;
@@ -654,7 +657,7 @@ public class GeoPingSlaveService extends WorkerService {
         // Content Intent
         if (contentIntent==null) {
 	        contentIntent =  PendingIntent.getService(this, 0, //
-	                Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.YES, notifId, onlyPairing),//
+	                Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
 	                PendingIntent.FLAG_UPDATE_CURRENT);
         }
 
@@ -677,7 +680,10 @@ public class GeoPingSlaveService extends WorkerService {
             notificationBuilder.setLargeIcon(icon);
         }
         Notification notification = notificationBuilder.build();
+        notification.contentIntent = contentIntent;
         notification.contentView  = contentView;
+        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_ONLY_ALERT_ONCE;
+
         // Show
         mNotificationManager.notify(notifId, notification);
     }
