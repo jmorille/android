@@ -14,7 +14,6 @@ import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import eu.ttbox.osm.tiles.svg.parser.SVG;
 import eu.ttbox.osm.tiles.svg.parser.SVGParser;
 

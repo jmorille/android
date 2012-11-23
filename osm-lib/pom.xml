@@ -45,13 +45,13 @@
 <!-- 			<scope>provided</scope> -->
 <!-- 		</dependency> -->
 
-		<!-- Compatibility -->
+		<!-- Compatibility 
 		<dependency>
 			<groupId>android.support</groupId>
 			<artifactId>compatibility-v13</artifactId>
-			<version>10</version>
+			<version>${compatibility-v13.version}</version>
 		</dependency>
- 
+ -->
 		<!-- Open Street Map -->
 		<dependency>
 			<groupId>org.osmdroid</groupId>

@@ -18,7 +18,6 @@ import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import eu.ttbox.osm.tiles.chains.MapTileProviderArrayTTbox;
 
