@@ -17,7 +17,7 @@
     <string name="notif_geoping_response">GeoPing respuesta</string>
     <string name="notif_geoping_request">GeoPing solicatado</string>
     <string name="notif_geoping_request_blocked">GeoPing Bloqueado</string> 
-    <string name="notif_pairing">GeoPing Coincidencia</string>
+    <string name="notif_pairing">Acceptar la GeoPing Coincidencia</string>
     <string name="notif_pairing_always">Para siempre</string>
     <string name="notif_pairing_never">Bloquear</string> 
     <string name="notif_confirm_request_eachtime">Solicitar</string>

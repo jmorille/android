@@ -615,7 +615,7 @@ public class GeoPingSlaveService extends WorkerService {
             contentView.setTextViewText(R.id.notif_geoping_confirm_button_yes, getText(R.string.notif_confirm_request_eachtime));
             title = getString(R.string.notif_pairing);
             contentIntent =  PendingIntent.getService(this, 0, //
-                    Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.YES, notifId, onlyPairing),//
+                    Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
                     PendingIntent.FLAG_UPDATE_CURRENT);
             break;
         case GEOPING_REQUEST_CONFIRM:

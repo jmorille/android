@@ -22,7 +22,7 @@
     <string name="notif_geoping_response">GeoPing response</string>
     <string name="notif_geoping_request">GeoPing requested</string>
     <string name="notif_geoping_request_blocked">GeoPing block</string> 
-    <string name="notif_pairing">GeoPing pairing</string>
+    <string name="notif_pairing">Clik to accept GeoPing pairing</string>
     <string name="notif_pairing_always">Always</string>
     <string name="notif_pairing_never">Block</string> 
     <string name="notif_confirm_request_eachtime">Ask</string>
