@@ -122,12 +122,7 @@ public class GeoPingSlaveService extends WorkerService {
 
     private void loadPrefConfig() {
         this.displayGeopingRequestNotification = appPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, false);
-        this.saveInLocalDb = appPreferences.getBoolean(AppConstants.PREFS_LOCAL_SAVE, false);
-        // Read Security Set
-        // this.secuAuthorizeNeverPhoneSet =
-        // readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_NEVER);
-        // this.secuAuthorizeAlwaysPhoneSet =
-        // readPrefPhoneSet(AppConstants.PREFS_PHONES_SET_AUTHORIZE_ALWAYS);
+        this.saveInLocalDb = appPreferences.getBoolean(AppConstants.PREFS_LOCAL_SAVE, false); 
     }
 
     @Override
@@ -147,9 +142,10 @@ public class GeoPingSlaveService extends WorkerService {
     @Override
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
+        Log.d(TAG, "##################################");
         Log.d(TAG, String.format("onHandleIntent for action %s : %s", action, intent));
-
-        if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
+        Log.d(TAG, "##################################");
+         if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
             // GeoPing Request
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
@@ -233,6 +229,7 @@ public class GeoPingSlaveService extends WorkerService {
         long personId = SmsMessageLocEnum.PARAM_PERSON_ID.readLong(params, -1l);
         GeopingNotifSlaveTypeEnum notifType = GeopingNotifSlaveTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL, -1));
         AuthorizePhoneTypeEnum type = AuthorizePhoneTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL));
+        Log.d(TAG, "******* AuthorizePhoneTypeEnum : "  + type);
         String personNewName = extras.getString(Intents.EXTRA_PERSON_NAME);
         // Cancel Notification
         int notifId = extras.getInt(Intents.EXTRA_NOTIF_ID, -1);
@@ -569,6 +566,7 @@ public class GeoPingSlaveService extends WorkerService {
             notificationBuilder.setLargeIcon(icon);
         }
         Notification notification = notificationBuilder.build();
+        notification.number += 1;
         // Show
         // int notifId = SHOW_GEOPING_REQUEST_NOTIFICATION_ID +
         // phone.hashCode();
@@ -617,7 +615,7 @@ public class GeoPingSlaveService extends WorkerService {
             contentView.setTextViewText(R.id.notif_geoping_confirm_button_yes, getText(R.string.notif_confirm_request_eachtime));
             title = getString(R.string.notif_pairing);
             contentIntent =  PendingIntent.getService(this, 0, //
-                    Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
+                    Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.YES, notifId, onlyPairing),//
                     PendingIntent.FLAG_UPDATE_CURRENT);
             break;
         case GEOPING_REQUEST_CONFIRM:
@@ -653,21 +651,21 @@ public class GeoPingSlaveService extends WorkerService {
         contentView.setOnClickPendingIntent(R.id.notif_geoping_confirm_button_always, PendingIntent.getService(this, 3, //
                 Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
                 PendingIntent.FLAG_UPDATE_CURRENT));
-        
+    
         // Content Intent
         if (contentIntent==null) {
 	        contentIntent =  PendingIntent.getService(this, 0, //
-	                Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.ALWAYS, notifId, onlyPairing),//
+	                Intents.authorizePhone(this, phone, contactNewName, params, AuthorizePhoneTypeEnum.YES, notifId, onlyPairing),//
 	                PendingIntent.FLAG_UPDATE_CURRENT);
         }
-
-        
+  
         // Create Notifiation
         Builder notificationBuilder = new NotificationCompat.Builder(this) //
                 .setDefaults(Notification.DEFAULT_ALL) //
                 .setSmallIcon(R.drawable.ic_stat_notif_icon) //
                 .setWhen(System.currentTimeMillis()) //
                 .setAutoCancel(true) //
+                .setOngoing(true) //
                 .setContentTitle(title) //
                 .setContentText(contactDisplayName) //
                 .setContentIntent(contentIntent) //
@@ -680,10 +678,10 @@ public class GeoPingSlaveService extends WorkerService {
             notificationBuilder.setLargeIcon(icon);
         }
         Notification notification = notificationBuilder.build();
-        notification.contentIntent = contentIntent;
+//        notification.contentIntent = contentIntent;
         notification.contentView  = contentView;
-        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_ONLY_ALERT_ONCE;
-
+//        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_ONLY_ALERT_ONCE;
+//        notification.flags = Notification.FLAG_SHOW_LIGHTS;
         // Show
         mNotificationManager.notify(notifId, notification);
     }

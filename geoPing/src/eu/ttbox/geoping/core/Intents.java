@@ -135,7 +135,8 @@ public class Intents {
     public static Intent authorizePhone(Context context, String phone,  String contactNewName ,Bundle params, AuthorizePhoneTypeEnum authorizePhoneType, int notificationId, GeopingNotifSlaveTypeEnum notifType) {
         // create
         Intent intent = new Intent(context, GeoPingSlaveService.class);
-        intent.setAction(ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE);
+        intent.setData(Uri.parse("AuthorizePhoneTypeEnum:"+authorizePhoneType.name()));
+        intent.setAction(ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE+"_"+authorizePhoneType.name());
         intent.putExtra(EXTRA_SMS_PHONE, phone);
         intent.putExtra(EXTRA_SMS_PARAMS, params);
         intent.putExtra(EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL, notifType.ordinal());
