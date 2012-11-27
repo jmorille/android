@@ -56,6 +56,11 @@ import eu.ttbox.osm.ui.map.mylocation.bubble.MyLocationBubble;
 import eu.ttbox.osm.ui.map.mylocation.sensor.MyLocationListenerProxy;
 import eu.ttbox.osm.ui.map.mylocation.sensor.OrientationSensorEventListenerProxy;
 
+/**
+ * {@link http://android-developers.blogspot.fr/2011/06/deep-dive-into-location.html}
+ * @author jmorille
+ *
+ */
 public class MyLocationOverlay extends Overlay implements SensorEventListener, LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "MyLocationOverlay";

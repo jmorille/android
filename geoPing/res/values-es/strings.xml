@@ -23,7 +23,9 @@
     <string name="notif_pairing_never">Bloquear</string> 
     <string name="notif_confirm_request_eachtime">Solicitar</string>
     
-    <string name="toast_notif_sended_geoping_request">GeoPing solicitado : %s</string>
+    <string name="toast_notif_sended_geoping_smsError">Error Sending message to %s</string>
+    <string name="toast_notif_sended_geoping_pairing">GeoPing pairing request send : %s</string>
+     <string name="toast_notif_sended_geoping_request">GeoPing solicitado : %s</string>
     <string name="toast_notif_sended_geoping_response">GeoPing enviado : %s</string>
     <string name="toast_notif_backup_restored">Salvaguardia instalado de nuevo</string>
     
@@ -56,8 +58,8 @@
     
     <string name="prefs_geoping_request">Requêtes GeoPing</string>
     <string name="prefs_block_geoping_pairing">Block new Geoping pairing</string>
-    <string name="prefs_block_geoping_pairing_summaryOn">Block new Geoping pairing</string>
-    <string name="prefs_block_geoping_pairing_summaryOff">Authorize new Geoping pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOff">Block new Geoping pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOn">Authorize new Geoping pairing</string>
     
     <string name="prefs_show_geoping_notification">Mostra una notificacion</string>
     <string name="prefs_show_geoping_notification_summary">Para los nuevas coincidencias</string> 

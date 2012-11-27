@@ -23,6 +23,8 @@
     <string name="notif_pairing_never">Bloquer</string> 
     <string name="notif_confirm_request_eachtime">\?</string>
     
+    <string name="toast_notif_sended_geoping_smsError">Erreur durant l\'envoie du SMS vers %s</string>
+    <string name="toast_notif_sended_geoping_pairing">GeoPing Appariement demandé : %s</string>
     <string name="toast_notif_sended_geoping_request">GeoPing demandé : %s</string>
     <string name="toast_notif_sended_geoping_response">GeoPing envoyé : %s</string>
     <string name="toast_notif_backup_restored">Sauvegarde restauré</string>
@@ -56,8 +58,8 @@
     
     <string name="prefs_geoping_request">Requêtes GeoPing</string>
     <string name="prefs_block_geoping_pairing">Appariement</string>
-    <string name="prefs_block_geoping_pairing_summaryOn">Bloquer les nouveaux appariement</string>
-    <string name="prefs_block_geoping_pairing_summaryOff">Authoriser les nouveaux appariement</string>
+    <string name="prefs_block_geoping_pairing_summaryOff">Bloquer les nouveaux appariement</string>
+    <string name="prefs_block_geoping_pairing_summaryOn">Authoriser les nouveaux appariement</string>
     
     <string name="prefs_show_geoping_notification">Afficher une notification</string>
     <string name="prefs_show_geoping_notification_summary">Pour les nouveaux appariements</string> 

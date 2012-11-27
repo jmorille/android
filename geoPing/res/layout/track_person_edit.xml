@@ -30,22 +30,19 @@
         <Button
             android:id="@+id/select_contact_button"
             style="@style/entity_edit"
-            android:layout_below="@id/person_phone"
-            android:onClick="onSelectContactClick"
+            android:layout_below="@id/person_phone" 
             android:text="@string/menu_select_contact" />
 
         <Button
             android:id="@+id/person_color_picker_button"
             style="@style/entity_edit"
-            android:layout_below="@id/select_contact_button"
-            android:onClick="onColorPickerClick"
+            android:layout_below="@id/select_contact_button" 
             android:text="@string/color_picker" />
 
         <Button
             android:id="@+id/person_pairing_button"
             style="@style/entity_edit"
-            android:layout_below="@id/person_color_picker_button"
-            android:onClick="onPairingClick"
+            android:layout_below="@id/person_color_picker_button" 
             android:text="@string/menu_pairing"
             android:visibility="gone" />
     </RelativeLayout>

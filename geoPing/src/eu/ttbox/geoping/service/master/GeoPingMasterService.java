@@ -76,7 +76,7 @@ public class GeoPingMasterService extends IntentService {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case UI_MSG_TOAST:
-				String msgText = (String) msg.obj;
+				String msgText = (String) msg.obj; 
 				Toast.makeText(getApplicationContext(), msgText, Toast.LENGTH_SHORT).show();
 				break;
 
@@ -198,10 +198,7 @@ public class GeoPingMasterService extends IntentService {
 		Bundle params = SmsMessageLocEnum.PARAM_PERSON_ID.writeToBundle(null, userId);
 		boolean isSend = sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
 		if (isSend) {
-			final String formatStr = getResources().getString(R.string.toast_notif_sended_geoping_pairing, phone);
-			Message msg = new Message();
-			msg.what = UI_MSG_TOAST;
-			msg.obj = formatStr;
+			Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, getResources().getString(R.string.toast_notif_sended_geoping_pairing, phone));
 			uiHandler.sendMessage(msg);
 		}
 	}
@@ -232,14 +229,10 @@ public class GeoPingMasterService extends IntentService {
 				SmsManager.getDefault().sendTextMessage(phone, null, encodeddMsg, null, null);
 				isSend = true; 
             } catch (IllegalArgumentException e) {
-                Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, "Error Sending message to " +phone);
+                Message msg = uiHandler.obtainMessage(UI_MSG_TOAST,  getResources().getString(R.string.toast_notif_sended_geoping_smsError, phone + " : " + e.getMessage()));
                 uiHandler.sendMessage(msg);
-			} catch (NullPointerException e) {
-				Message msg = new Message();
-				msg.what = UI_MSG_TOAST;
-				msg.obj = "Error in sending message to " + phone;
-				// Message msg = uiHandler.obtainMessage(UI_MSG_TOAST,
-				// "Error in sending message to " + phone);
+			} catch (NullPointerException e) { 
+                Message msg = uiHandler.obtainMessage(UI_MSG_TOAST,  getResources().getString(R.string.toast_notif_sended_geoping_smsError, phone + " : " + e.getMessage()));
 				uiHandler.sendMessage(msg);
 			}
 			if (isSend) {

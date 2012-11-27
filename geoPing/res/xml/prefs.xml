@@ -11,8 +11,8 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefs_geoping_request" >
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="blockGeopingPairing" 
+            android:defaultValue="true"
+            android:key="authorizeNewGeopingPairing" 
              android:summaryOff="@string/prefs_block_geoping_pairing_summaryOff"
             android:summaryOn="@string/prefs_block_geoping_pairing_summaryOn"
             android:title="@string/prefs_block_geoping_pairing" />

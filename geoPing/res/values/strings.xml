@@ -14,7 +14,7 @@
      
      
     <!-- Encryption -->
-    <string name="no_geoping_description">Please install \'GeoPing\' from the Market (https://play.google.com/store/apps/details?id=eu.ttbox.geoping)</string>
+    <string name="no_geoping_description">Please install \'GeoPingtoast_notif_sended_geoping_pairing\' from the Market (https://play.google.com/store/apps/details?id=eu.ttbox.geoping)</string>
     <string name="geoping_encrypted_message">GeoPing encrypted message</string>
 
     <!-- GeoTrack Notification -->
@@ -28,6 +28,7 @@
     <string name="notif_pairing_never">Block</string> 
     <string name="notif_confirm_request_eachtime">Ask</string>
     
+    <string name="toast_notif_sended_geoping_smsError">Error Sending message to %s</string>
     <string name="toast_notif_sended_geoping_pairing">GeoPing pairing request send : %s</string>
     <string name="toast_notif_sended_geoping_request">GeoPing requested : %s</string>
     <string name="toast_notif_sended_geoping_response">GeoPing send : %s</string>
@@ -62,8 +63,8 @@
     
     <string name="prefs_geoping_request">GeoPing Request</string> 
     <string name="prefs_block_geoping_pairing">Pairing</string>
-    <string name="prefs_block_geoping_pairing_summaryOn">Block new Geoping pairing</string>
-    <string name="prefs_block_geoping_pairing_summaryOff">Authorize new Geoping pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOff">Block new Geoping pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOn">Authorize new Geoping pairing</string>
     
     <string name="prefs_show_geoping_notification">Show an notification</string>
     <string name="prefs_show_geoping_notification_summary">For new pairing</string> 

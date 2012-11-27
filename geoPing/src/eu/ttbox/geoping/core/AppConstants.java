@@ -28,7 +28,7 @@ public class AppConstants {
     public static final String PREFS_SMS_DELETE_ON_MESSAGE = "smsDeleteOnMessage";
     public static final String PREFS_SHOW_GEOPING_NOTIFICATION = "showGeopingNotification";
     public static final String PREFS_LOCAL_SAVE = "localSave";
-    public static final String PREFS_BLOCK_GEOPING_PAIRING = "blockGeopingPairing";
+    public static final String PREFS_AUTHORIZE_GEOPING_PAIRING = "authorizeNewGeopingPairing";
     
     // Map
     public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = eu.ttbox.osm.core.AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC;

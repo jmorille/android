@@ -131,8 +131,9 @@
         </service>
        
          <!-- Widget Person -->
-          <receiver android:label="@string/sms_action_geoping_request" android:name=".ui.widget.PersonWidgetProvider">
-            <intent-filter>
+          <receiver android:label="@string/sms_action_geoping_request" android:name=".ui.widget.PersonWidgetProvider"
+              android:enabled="@bool/postHoneycomb">
+             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_person_info"/>
@@ -140,7 +141,8 @@
         <service android:name=".ui.widget.PersonWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <!-- Widget Pairing -->
-          <receiver android:label="@string/sms_action_geoping_response" android:name=".ui.widget.pairing.PairingWidgetProvider" android:permission="eu.ttbox.geoping.PAIRING_READ">
+          <receiver android:label="@string/sms_action_geoping_response" android:name=".ui.widget.pairing.PairingWidgetProvider"  
+               android:enabled="@bool/postHoneycomb"  >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
