@@ -18,6 +18,7 @@
     <string name="geoping_encrypted_message">GeoPing encrypted message</string>
 
     <!-- GeoTrack Notification -->
+    <string name="notif_click_to_accept">(Click to accept)</string>
     <string name="notif_geoping">GeoPing</string>
     <string name="notif_geoping_response">GeoPing response</string>
     <string name="notif_geoping_request">GeoPing requested</string>
@@ -59,7 +60,11 @@
     <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing are invisible</string>
     <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping don\'t deleted</string>
     
-    <string name="prefs_geoping_request">GeoPing Request</string>
+    <string name="prefs_geoping_request">GeoPing Request</string> 
+    <string name="prefs_block_geoping_pairing">Pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOn">Block new Geoping pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOff">Authorize new Geoping pairing</string>
+    
     <string name="prefs_show_geoping_notification">Show an notification</string>
     <string name="prefs_show_geoping_notification_summary">For new pairing</string> 
     <string name="prefs_geoping_localSave">Save in a local DB</string>

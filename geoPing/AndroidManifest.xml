@@ -69,12 +69,10 @@
 <!--                 <category android:name="android.intent.category.LAUNCHER"/> -->
 <!--             </intent-filter> -->
         </activity>
-        <activity android:name=".GeoTrakerActivity">
-        </activity>
+        <activity android:name=".GeoTrakerActivity" /> 
 
         <!-- Pref -->
-        <activity android:name=".ui.prefs.GeoPingPrefActivity">
-        </activity>
+        <activity android:name=".ui.prefs.GeoPingPrefActivity" />
 
         <!-- Map -->
         <activity android:label="@string/empty_string" android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">

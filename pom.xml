@@ -48,7 +48,7 @@
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
 		 
 		<!-- Release -->
-		<android-maven-plugin.version>3.4.0</android-maven-plugin.version>
+		<android-maven-plugin.version>3.4.1</android-maven-plugin.version>
 		<android.sdk.platform>17</android.sdk.platform>
 		<sign.alias>android</sign.alias>
 	</properties>

@@ -14,10 +14,11 @@
 
     <!-- GeoTrack Notification -->
     <string name="notif_geoping">GeoPing</string>
+    <string name="notif_click_to_accept">(Acceptar)</string>
     <string name="notif_geoping_response">GeoPing respuesta</string>
     <string name="notif_geoping_request">GeoPing solicatado</string>
     <string name="notif_geoping_request_blocked">GeoPing Bloqueado</string> 
-    <string name="notif_pairing">Acceptar la GeoPing Coincidencia</string>
+    <string name="notif_pairing">GeoPing Coincidencia</string>
     <string name="notif_pairing_always">Para siempre</string>
     <string name="notif_pairing_never">Bloquear</string> 
     <string name="notif_confirm_request_eachtime">Solicitar</string>
@@ -54,6 +55,10 @@
     <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping no estan borrado</string>
     
     <string name="prefs_geoping_request">Requêtes GeoPing</string>
+    <string name="prefs_block_geoping_pairing">Block new Geoping pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOn">Block new Geoping pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOff">Authorize new Geoping pairing</string>
+    
     <string name="prefs_show_geoping_notification">Mostra una notificacion</string>
     <string name="prefs_show_geoping_notification_summary">Para los nuevas coincidencias</string> 
     <string name="prefs_geoping_localSave">Salva en local</string>

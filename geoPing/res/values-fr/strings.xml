@@ -14,6 +14,7 @@
   
     <!-- GeoTrack Notification -->
     <string name="notif_geoping">GeoPing</string>
+    <string name="notif_click_to_accept">(Accepter)</string>
     <string name="notif_geoping_response">GeoPing réponse</string>
     <string name="notif_geoping_request">GeoPing demandé</string>
     <string name="notif_geoping_request_blocked">GeoPing Bloqué</string> 
@@ -54,6 +55,10 @@
     <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping ne sont pas effacés</string>
     
     <string name="prefs_geoping_request">Requêtes GeoPing</string>
+    <string name="prefs_block_geoping_pairing">Appariement</string>
+    <string name="prefs_block_geoping_pairing_summaryOn">Bloquer les nouveaux appariement</string>
+    <string name="prefs_block_geoping_pairing_summaryOff">Authoriser les nouveaux appariement</string>
+    
     <string name="prefs_show_geoping_notification">Afficher une notification</string>
     <string name="prefs_show_geoping_notification_summary">Pour les nouveaux appariements</string> 
     <string name="prefs_geoping_localSave">Sauvegardé en base local</string>
