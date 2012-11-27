@@ -137,16 +137,31 @@ public class GeoPingMasterService extends IntentService {
 			sendSmsGeoPingRequest(phone, params);
 			// Tracker
 			tracker.trackPageView("/action/SMS_GEOPING_REQUEST");
+			 tracker.trackEvent(
+			            "Intents",  // Category
+			            "HandleIntent",  // Action
+			            "SMS_GEOPING_REQUEST", // Label
+			            1);       // Value
 		} else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
 			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
 			long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
 			sendSmsPairingRequest(phone, userId);
 			// Tracker
 			tracker.trackPageView("/action/SMS_PAIRING_RESQUEST");
+			tracker.trackEvent(
+		            "Intents",  // Category
+		            "HandleIntent",  // Action
+		            "SMS_PAIRING_RESQUEST", // Label
+		            1);       // Value
 		} else if (Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER.equals(action)) {
 			consumeGeoPingResponse(intent.getExtras());
 			// Tracker
 			tracker.trackPageView("/action/SMS_GEOPING_RESPONSE");
+			tracker.trackEvent(
+		            "Intents",  // Category
+		            "HandleIntent",  // Action
+		            "SMS_GEOPING_RESPONSE", // Label
+		            1);       // Value
 		} else if (Intents.ACTION_SMS_PAIRING_RESPONSE.equals(action)) {
 			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
 			Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
@@ -154,6 +169,11 @@ public class GeoPingMasterService extends IntentService {
 			consumeSmsPairingResponse(phone, userId);
 			// Tracker
 			tracker.trackPageView("/action/SMS_PAIRING_RESPONSE");
+			tracker.trackEvent(
+		            "Intents",  // Category
+		            "HandleIntent",  // Action
+		            "SMS_PAIRING_RESPONSE", // Label
+		            1);       // Value
 		}
 
 	}

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.google.ads.Ad;
 import com.google.ads.AdListener;
+import com.google.ads.AdRequest;
 import com.google.ads.AdRequest.ErrorCode;
 import com.google.ads.AdView;
 
@@ -32,6 +33,10 @@ public class AdmobFragment extends Fragment  implements AdListener  {
      // Create the adView
         adView = ( AdView)v.findViewById(R.id.adView);
         adView.setAdListener(this);
+        // Request
+//        AdRequest request = new AdRequest();
+//        request.setLocation(location);
+//        adView.loadAd(request);
         return v;
     }
 
