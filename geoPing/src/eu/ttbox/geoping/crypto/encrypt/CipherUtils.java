@@ -3,6 +3,7 @@ package eu.ttbox.geoping.crypto.encrypt;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
@@ -16,6 +17,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+ 
 
 /**
  * Static helper for working with the Cipher API.
@@ -71,21 +73,21 @@ class CipherUtils {
     /**
      * Initializes the Cipher for use.
      */
-    public static void initCipher(Cipher cipher, int mode, SecretKey secretKey) {
+    public static void initCipher(Cipher cipher, int mode, Key secretKey) {
         initCipher(cipher, mode, secretKey, null);
     }
 
     /**
      * Initializes the Cipher for use.
      */
-    public static void initCipher(Cipher cipher, int mode, SecretKey secretKey, byte[] salt, int iterationCount) {
+    public static void initCipher(Cipher cipher, int mode, Key secretKey, byte[] salt, int iterationCount) {
         initCipher(cipher, mode, secretKey, new PBEParameterSpec(salt, iterationCount));
     }
 
     /**
      * Initializes the Cipher for use.
      */
-    public static void initCipher(Cipher cipher, int mode, SecretKey secretKey, AlgorithmParameterSpec parameterSpec) {
+    public static void initCipher(Cipher cipher, int mode, Key secretKey, AlgorithmParameterSpec parameterSpec) {
         try {
             if (parameterSpec != null) {
                 cipher.init(mode, secretKey, parameterSpec);

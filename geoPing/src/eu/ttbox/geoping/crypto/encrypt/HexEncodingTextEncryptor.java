@@ -12,7 +12,7 @@ import eu.ttbox.geoping.crypto.codec.Utf8;
  */
 public final class HexEncodingTextEncryptor implements TextEncryptor {
 
-    private final BytesEncryptor encryptor;
+    public final BytesEncryptor encryptor;
 
     public HexEncodingTextEncryptor(BytesEncryptor encryptor) {
         this.encryptor = encryptor;
