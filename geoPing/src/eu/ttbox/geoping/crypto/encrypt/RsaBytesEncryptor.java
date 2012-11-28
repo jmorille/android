@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.crypto.encrypt;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
@@ -10,9 +12,13 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.RSAKeyGenParameterSpec;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
 
+// http://www.bouncycastle.org/java.html
 public class RsaBytesEncryptor implements BytesEncryptor {
 
 	/**
@@ -41,7 +47,10 @@ public class RsaBytesEncryptor implements BytesEncryptor {
 
 	}
 
-	public static final String RSA_ALGORITHM =  "RSA/ECB/PKCS1Padding"; //"RSA"; // // "RSA/NONE/NoPadding"; //; 
+	public static final String RSA_ALGORITHM = "RSA/ECB/PKCS1Padding"; // "RSA";
+																		// // //
+																		// "RSA/NONE/NoPadding";
+																		// //;
 
 	private String algorithm = RSA_ALGORITHM;
 	private String provider = "BC";
@@ -50,7 +59,7 @@ public class RsaBytesEncryptor implements BytesEncryptor {
 	private PrivateKey privateKey;
 
 	public RsaBytesEncryptor() {
-		this(RSA_ALGORITHM, RsaBytesEncryptor.generateKey(2048, RSAKeyGenParameterSpec.F4));
+		this(RSA_ALGORITHM, RsaBytesEncryptor.generateKey(128, RSAKeyGenParameterSpec.F4));
 	}
 
 	public RsaBytesEncryptor(String algorithm, KeyPair keyPair) {
@@ -81,23 +90,81 @@ public class RsaBytesEncryptor implements BytesEncryptor {
 		this.privateKey = privateKey;
 	}
 
+	// http://nyal.developpez.com/tutoriel/java/bouncycastle/
+	// 5.2. Chiffrement
+	// par clé asymétrique (format CMS/PKCS#7)
 	@Override
 	public byte[] encrypt(byte[] byteArray) {
 		Cipher cipher = newCipher(algorithm, provider);
 		CipherUtils.initCipher(cipher, Cipher.ENCRYPT_MODE, pubKey, null);
- 		byte[] cipherData = CipherUtils.doFinal(cipher, byteArray);
-		return cipherData;
+
+		int blockSize = cipher.getBlockSize();
+		int outputSize = cipher.getOutputSize(byteArray.length);
+		int leavedSize = byteArray.length % blockSize;
+		int blocksSize = leavedSize != 0 ? byteArray.length / blockSize + 1 : byteArray.length / blockSize;
+		byte[] raw = new byte[outputSize * blocksSize];
+		int i = 0;
+		while (byteArray.length - i * blockSize > 0) {
+			if (byteArray.length - i * blockSize > blockSize)
+				doFinal(cipher, byteArray, i * blockSize, blockSize, raw, i * outputSize);
+			else
+				doFinal(cipher, byteArray, i * blockSize, byteArray.length - i * blockSize, raw, i * outputSize);
+			i++;
+		}
+
+		// byte[] cipherData = CipherUtils.doFinal(cipher, byteArray);
+		return raw;
 	}
 
 	@Override
 	public byte[] decrypt(byte[] encryptedByteArray) {
 		Cipher cipher = newCipher(algorithm, provider);
 		CipherUtils.initCipher(cipher, Cipher.DECRYPT_MODE, privateKey, null);
-		byte[] cipherData = CipherUtils.doFinal(cipher, encryptedByteArray);
+		int blockSize = cipher.getBlockSize();
+		ByteArrayOutputStream bout = new ByteArrayOutputStream(64);
+		int j = 0;
+		try {
+			while (encryptedByteArray.length - j * blockSize > 0) {
+				bout.write(doFinal(cipher, encryptedByteArray, j * blockSize, blockSize));
+				j++;
+			}
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to decrypt Cipher due to IO exception", e);
+		}
+		byte[] cipherData = bout.toByteArray();
+		// byte[] cipherData = CipherUtils.doFinal(cipher, encryptedByteArray);
 		return cipherData;
 	}
 
- 
+	/**
+	 * Invokes the Cipher to perform encryption or decryption (depending on the
+	 * initialized mode).
+	 */
+	public static byte[] doFinal(Cipher cipher, byte[] input, int inputOffSet, int inputLen) {
+		try {
+			return cipher.doFinal(input, inputOffSet, inputLen);
+		} catch (IllegalBlockSizeException e) {
+			throw new IllegalStateException("Unable to invoke Cipher due to illegal block size", e);
+		} catch (BadPaddingException e) {
+			throw new IllegalStateException("Unable to invoke Cipher due to bad padding", e);
+		}
+	}
+
+	/**
+	 * Invokes the Cipher to perform encryption or decryption (depending on the
+	 * initialized mode).
+	 */
+	public static int doFinal(Cipher cipher, byte[] input, int inputOffSet, int inputLen, byte[] ouput, int outputOffSet) {
+		try {
+			return cipher.doFinal(input, inputOffSet, inputLen, ouput, outputOffSet);
+		} catch (IllegalBlockSizeException e) {
+			throw new IllegalStateException("Unable to invoke Cipher due to illegal block size", e);
+		} catch (BadPaddingException e) {
+			throw new IllegalStateException("Unable to invoke Cipher due to bad padding", e);
+		} catch (ShortBufferException e) {
+			throw new IllegalStateException("Short Buffer Exception", e);
+		}
+	}
 
 	/**
 	 * Constructs a new Cipher.
