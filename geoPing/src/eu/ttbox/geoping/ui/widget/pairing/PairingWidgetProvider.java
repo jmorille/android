@@ -66,10 +66,10 @@ public class PairingWidgetProvider extends AppWidgetProvider {
             final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
             final String phoneNumber = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             // Send it
-            Intent intentGeoPing = Intents.sendSmsGeoPingResponse(context, phoneNumber);
+            Intent intentGeoPing = Intents.sendSmsGeoPingResponse(context, phoneNumber, true);
             context.startService(intentGeoPing);
             // Display Notif
-            NotifToasts.showToastSendGeoPingResponse(context, phoneNumber);
+//            NotifToasts.showToastSendGeoPingResponse(context, phoneNumber);
          }else if (AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED.equals(action)) {
              // TODO
              Bundle extras = intent.getExtras();

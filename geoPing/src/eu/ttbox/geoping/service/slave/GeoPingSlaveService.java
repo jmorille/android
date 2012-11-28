@@ -169,6 +169,9 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 			// GeoPing Request
 			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
 			Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
+			 if (params.containsKey(Intents.EXTRA_INTERNAL_BOOL)) {
+				 boolean internalRequest = params.getBoolean(Intents.EXTRA_INTERNAL_BOOL, false);
+			 }
 			// Request
 			// registerGeoPingRequest(phone, params);
 			Pairing pairing = getPairingByPhone(phone);
@@ -193,7 +196,7 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 				if (AppConstants.UNSET_ID == pairing.id) {
 					type = GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM_FIRST;
 				}
-				showNotificationNewPingRequestConfirm(pairing, params, GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM);
+				showNotificationNewPingRequestConfirm(pairing, params, type);
 				break;
 			default:
 				break;

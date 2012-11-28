@@ -58,7 +58,7 @@ public class MapTileProviderTTbox extends MapTileProviderArrayTTbox //
         // super(pTileSource, pRegisterReceiver);
         final TileWriter tileWriter = new TileWriter();
 
-        final MapTileFilesystemProvider fileSystemProvider = new MapTileFilesystemProvider(pRegisterReceiver, pTileSource, OpenStreetMapTileProviderConstants.ONE_WEEK * 26);
+        final MapTileFilesystemProvider fileSystemProvider = new MapTileFilesystemProvider(pRegisterReceiver, pTileSource, OpenStreetMapTileProviderConstants.ONE_WEEK  );
         mTileProviderList.add(fileSystemProvider);
 
         // final MapTileFileArchiveProvider archiveProvider = new

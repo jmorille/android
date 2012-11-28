@@ -43,6 +43,8 @@ public class Intents {
     public static final String EXTRA_NOTIF_ID = "EXTRA_NOTIF_ID";
     public static final String EXTRA_PERSON_NAME = "EXTRA_PERSON_NAME";
     
+    public static final String EXTRA_INTERNAL_BOOL = "EXTRA_INTERNAL_BOOL";
+
     public static final String EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL = "EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL";
 
     public static final String EXTRA_EXPECTED_ACCURACY = "EXPECTED_ACCURACY";
@@ -148,10 +150,14 @@ public class Intents {
         return intent;
     }
 
-    public static Intent sendSmsGeoPingResponse(Context context, String phoneNumber) {
-        return new Intent(context, GeoPingSlaveService.class) //
+    public static Intent sendSmsGeoPingResponse(Context context, String phoneNumber, boolean internalNotif) {
+    	Intent intent =  new Intent(context, GeoPingSlaveService.class) //
                 .setAction(SmsMessageActionEnum.GEOPING_REQUEST.intentAction)//
                 .putExtra(EXTRA_SMS_PHONE, phoneNumber);
+        if (internalNotif) {
+        	intent.putExtra(EXTRA_INTERNAL_BOOL, true); 
+        }
+        return intent;
     }
     
     // ===========================================================
