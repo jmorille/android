@@ -327,7 +327,7 @@ public class GeoTrack implements Comparable<GeoTrack>{
         return this.requesterPersonPhone != null && this.requesterPersonPhone.length() > 0;
     }
     public boolean hasBatteryLevelInPercent() { 
-        return this.batteryLevelInPercent != -1;
+        return this.batteryLevelInPercent > -1;
     }
 
     // ===========================================================

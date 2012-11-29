@@ -168,18 +168,26 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 		if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
 			// GeoPing Request
 			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-			Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-			 if (params.containsKey(Intents.EXTRA_INTERNAL_BOOL)) {
-				 boolean internalRequest = params.getBoolean(Intents.EXTRA_INTERNAL_BOOL, false);
-			 }
+			Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS); 
+ 
 			// Request
 			// registerGeoPingRequest(phone, params);
 			Pairing pairing = getPairingByPhone(phone);
-			switch (pairing.authorizeType) {
+			PairingAuthorizeTypeEnum authorizeType = pairing.authorizeType;
+			boolean showNotification = pairing.showNotification; 
+			 if (intent.getBooleanExtra(Intents.EXTRA_INTERNAL_BOOL, false)) { 
+				 // Is Internal Direct Order
+				 showNotification = false;
+				 authorizeType = PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS;
+				 Log.i(TAG, "Internal Order, bypass user preference and Hide Notif and Authorize anyway");
+				 // Show Toast
+				 
+			 }
+			switch ( authorizeType) {
 			case AUTHORIZE_NEVER:
 				Log.i(TAG, "Ignore Geoping (Never Authorize) request from phone " + phone);
 				// Show Blocking Notification
-				if (pairing.showNotification) {
+				if ( showNotification) {
 					showNotificationGeoPing(pairing, params, false);
 				}
 				break;
@@ -187,7 +195,7 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 				Log.i(TAG, "Accept Geoping (always Authorize) request from phone " + phone);
 				registerGeoPingRequest(phone, params);
 				// Display Notification GeoPing
-				if (pairing.showNotification) {
+				if ( showNotification) {
 					showNotificationGeoPing(pairing, params, true);
 				}
 				break;

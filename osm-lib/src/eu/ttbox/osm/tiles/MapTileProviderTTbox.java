@@ -5,7 +5,6 @@ import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.modules.INetworkAvailablityCheck;
 import org.osmdroid.tileprovider.modules.MapTileDownloaderTTbox;
-import org.osmdroid.tileprovider.modules.MapTileFilesystemProvider;
 import org.osmdroid.tileprovider.modules.NetworkAvailabliltyCheck;
 import org.osmdroid.tileprovider.modules.TileWriter;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -20,6 +19,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.util.Log;
 import eu.ttbox.osm.tiles.chains.MapTileProviderArrayTTbox;
+import eu.ttbox.osm.tiles.core.MapTileFilesystemProviderTTbox;
 
 public class MapTileProviderTTbox extends MapTileProviderArrayTTbox //
         implements IMapTileProviderCallback {
@@ -58,7 +58,8 @@ public class MapTileProviderTTbox extends MapTileProviderArrayTTbox //
         // super(pTileSource, pRegisterReceiver);
         final TileWriter tileWriter = new TileWriter();
 
-        final MapTileFilesystemProvider fileSystemProvider = new MapTileFilesystemProvider(pRegisterReceiver, pTileSource, OpenStreetMapTileProviderConstants.ONE_WEEK  );
+        final MapTileFilesystemProviderTTbox fileSystemProvider = new MapTileFilesystemProviderTTbox(pRegisterReceiver, pTileSource, 
+        		OpenStreetMapTileProviderConstants.ONE_WEEK , aNetworkAvailablityCheck );
         mTileProviderList.add(fileSystemProvider);
 
         // final MapTileFileArchiveProvider archiveProvider = new

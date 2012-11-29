@@ -3,10 +3,10 @@ package eu.ttbox.geoping.test.service.encoder;
 import java.util.ArrayList;
 
 import android.content.ContentValues;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
+import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
@@ -41,6 +41,11 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
         return PlaceTestHelper.getMessageLoc(provider, place);
     }
 
+    
+    public TextEncryptor getEncryptorService() {
+        return null;
+    }
+    
     private GeoPingMessage getGeoPingMessage01(String provider) {
         GeoTrack geoTrack = new GeoTrack() //
                 .setProvider(provider)//
@@ -75,35 +80,23 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
         return result;
     }
 
-    private Bundle convertAsBundle(GeoTrack geoTrack) {
-        ContentValues values = GeoTrackHelper.getContentValues(geoTrack);
-        Bundle bundle = new Bundle(values.size());
-        for (String key : values.keySet()) {
-            Object val = values.get(key);
-            if (val instanceof String) {
-                bundle.putString(key, (String) val);
-            } else if (val instanceof Integer) {
-                bundle.putInt(key, (Integer) val);
-            } else if (val instanceof Long) {
-                bundle.putLong(key, (Long) val);
-            } else if (val instanceof Double) {
-                bundle.putDouble(key, (Double) val);
-            }
-        }
+    private Bundle convertAsBundle(GeoTrack geoTrack) { 
+        Bundle bundle = GeoTrackHelper.getBundleValues(geoTrack); 
         return bundle;
     }
 
     public void testEncodeDecodeMessageGpsPlace() {
+        TextEncryptor encryptor = getEncryptorService(); 
         for (WorldGeoPoint place : WorldGeoPoint.values()) {
             ArrayList<GeoTrack> geoTracks = new ArrayList<GeoTrack>();
             geoTracks.add(getMessageLoc("network", place));
-            geoTracks.add(getMessageLoc("gps", place));
+//            geoTracks.add(getMessageLoc("gps", place));
 
             for (GeoTrack geoTrack : geoTracks) {
                 Bundle params = convertAsBundle(geoTrack);
                 GeoPingMessage msg = new GeoPingMessage("+33612131415", SmsMessageActionEnum.ACTION_GEO_LOC, params);
                 for (int radix : new int[] { 10, 36, IntegerEncoded.MAX_RADIX }) {
-                    doEncodeDecodeTest(msg, String.format("Encoded Place %s %s radix=%s", place.name(), geoTrack.provider, radix), radix);
+                    doEncodeDecodeTest(msg, String.format("Encoded Place %s %s radix=%s", place.name(), geoTrack.provider, radix), radix, encryptor);
                 }
             }
         }
@@ -116,15 +109,16 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
                 , getGeoPingMessage02(PROVIDER_NETWORK) //
                 , getGeoPingMessage02(PROVIDER_GPS) //
         };
+        TextEncryptor encryptor = getEncryptorService(); 
         for (GeoPingMessage msg : messages) {
-            doEncodeDecodeTest(msg, "Fix", SmsParamEncoderHelper.NUMBER_ENCODER_RADIX);
+            doEncodeDecodeTest(msg, "Fix", SmsParamEncoderHelper.NUMBER_ENCODER_RADIX, encryptor);
         }
     }
 
-    private void doEncodeDecodeTest(GeoPingMessage msg, String logTitle, int radix) {
-        String encryped = SmsMessageEncoderHelper.encodeSmsMessage(msg.action, msg.params);
+    private void doEncodeDecodeTest(GeoPingMessage msg, String logTitle, int radix,  TextEncryptor encryptor) {
+        String encryped = SmsMessageEncoderHelper.encodeSmsMessage(msg.action, msg.params, encryptor);
         Log.d(TAG, String.format("Sms Encoded Message %s (%s chars) : %s", logTitle, encryped.length(), encryped));
-        GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage(msg.phone, encryped);
+        GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage(msg.phone, encryped, encryptor);
         // Log.d(TAG,
         // String.format("Sms Decoded Message %s (action: %s)",logTitle,
         // msg.action));

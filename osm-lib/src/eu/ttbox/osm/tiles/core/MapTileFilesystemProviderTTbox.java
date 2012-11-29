@@ -6,6 +6,7 @@ import org.osmdroid.tileprovider.ExpirableBitmapDrawable;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.MapTileRequestState;
+import org.osmdroid.tileprovider.modules.INetworkAvailablityCheck;
 import org.osmdroid.tileprovider.modules.MapTileFileStorageProviderBase;
 import org.osmdroid.tileprovider.modules.MapTileModuleProviderBase;
 import org.osmdroid.tileprovider.tilesource.BitmapTileSourceBase.LowMemoryException;
@@ -36,19 +37,26 @@ public class MapTileFilesystemProviderTTbox  extends MapTileFileStorageProviderB
     private ITileSource mTileSource;
 
    
+
+    // ===========================================================
+    // Service
+    // ===========================================================
+
+    private INetworkAvailablityCheck networkAvailablityCheck;
+    private TileLoader tileLoader;
     
     
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    public MapTileFilesystemProviderTTbox(final IRegisterReceiver pRegisterReceiver) {
-        this(pRegisterReceiver, TileSourceFactory.DEFAULT_TILE_SOURCE);
+    public MapTileFilesystemProviderTTbox(final IRegisterReceiver pRegisterReceiver, INetworkAvailablityCheck aNetworkAvailablityCheck) {
+        this(pRegisterReceiver, TileSourceFactory.DEFAULT_TILE_SOURCE,   aNetworkAvailablityCheck);
     }
 
     public MapTileFilesystemProviderTTbox(final IRegisterReceiver pRegisterReceiver,
-            final ITileSource aTileSource) {
-        this(pRegisterReceiver, aTileSource, DEFAULT_MAXIMUM_CACHED_FILE_AGE);
+            final ITileSource aTileSource, INetworkAvailablityCheck aNetworkAvailablityCheck) {
+        this(pRegisterReceiver, aTileSource, DEFAULT_MAXIMUM_CACHED_FILE_AGE,   aNetworkAvailablityCheck);
     }
 
     /**
@@ -58,12 +66,13 @@ public class MapTileFilesystemProviderTTbox  extends MapTileFileStorageProviderB
      * @param pRegisterReceiver
      */
     public MapTileFilesystemProviderTTbox(final IRegisterReceiver pRegisterReceiver,
-            final ITileSource pTileSource, final long pMaximumCachedFileAge) {
+            final ITileSource pTileSource, final long pMaximumCachedFileAge, INetworkAvailablityCheck aNetworkAvailablityCheck) {
         super(pRegisterReceiver, NUMBER_OF_TILE_FILESYSTEM_THREADS,
                 TILE_FILESYSTEM_MAXIMUM_QUEUE_SIZE);
-        mTileSource = pTileSource;
-
+        mTileSource = pTileSource; 
         mMaximumCachedFileAge = pMaximumCachedFileAge;
+        this.networkAvailablityCheck = aNetworkAvailablityCheck;
+        this.tileLoader =  new TileLoader();
     }
 
     // ===========================================================
@@ -97,7 +106,7 @@ public class MapTileFilesystemProviderTTbox  extends MapTileFileStorageProviderB
 
     @Override
     protected Runnable getTileLoader() {
-        return new TileLoader();
+        return  this.tileLoader ; 
     };
 
     @Override
@@ -151,8 +160,11 @@ public class MapTileFilesystemProviderTTbox  extends MapTileFileStorageProviderB
                     // Check to see if file has expired
                     final long now = System.currentTimeMillis();
                     final long lastModified = file.lastModified();
-                    final boolean fileExpired = lastModified < now - mMaximumCachedFileAge;
+                    boolean fileExpired = lastModified < now - mMaximumCachedFileAge;
 
+                    if (fileExpired) {
+                    	fileExpired = !networkAvailablityCheck.getWiFiNetworkAvailable();
+                    }
                     if (fileExpired) {
                         if (DEBUGMODE) {
                             logger.debug("Tile expired: " + tile);

@@ -67,10 +67,10 @@ public class SmsMessageIntentEncoderHelperTest extends AndroidTestCase {
     }
 
     public void testDecodeGeopingResponse() {
-        String encryped = "geoPing?LOC!(th7lhawmo,h31,y1e14h,xt3jbc,aa,s0,pg,b1p)";
+        String encryped = "geoPing?LOC(d-BNOL,h31,g2V5vD;1HOuK;20,s0,pg,b1p,aa)";
         Intent decoded = SmsMessageIntentEncoderHelper.decodeAsIntent(getContext(), PHONE, encryped);
-        GeoTrack geoTrack = GeoTrackHelper.getEntityFromIntent(decoded);
-        // has
+        GeoTrack geoTrack = GeoTrackHelper.getEntityFromIntent(decoded); 
+
         assertTrue(geoTrack.hasTime());
         assertTrue(geoTrack.hasAccuracy());
         assertTrue(geoTrack.hasBearing());
