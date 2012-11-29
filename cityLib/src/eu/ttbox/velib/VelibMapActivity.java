@@ -21,6 +21,9 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.WindowManager;
 import android.widget.SearchView;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import eu.ttbox.velib.core.Intents;
 import eu.ttbox.velib.model.VelibProvider;
 import eu.ttbox.velib.service.database.Velo.VeloColumns;
@@ -73,6 +76,9 @@ public class VelibMapActivity extends FragmentActivity { // implements
         // Get the intent, verify the action and get the query
         // {@link
         // http://developer.android.com/guide/topics/search/search-dialog.html}
+        GoogleAnalyticsTracker tracker = ((AndroLibApplication)getApplication()).getTracker();
+        tracker.trackPageView("/Map");
+        
         if (Log.isLoggable(TAG, Log.INFO)) {
             Log.i(TAG, "### ### ### ### ### onCreate call ### ### ### ### ###");
         }

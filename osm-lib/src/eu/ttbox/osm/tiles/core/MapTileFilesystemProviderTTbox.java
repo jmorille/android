@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class MapTileFilesystemProviderTTbox  extends MapTileFileStorageProviderBase {
 
@@ -156,15 +157,16 @@ public class MapTileFilesystemProviderTTbox  extends MapTileFileStorageProviderB
 
                 try {
                     final Drawable drawable = mTileSource.getDrawable(file.getPath());
-//                    Log.d(TAG, "mTileSource getDrawable : " + mTileSource.getClass());
+ 
                     // Check to see if file has expired
                     final long now = System.currentTimeMillis();
                     final long lastModified = file.lastModified();
                     boolean fileExpired = lastModified < now - mMaximumCachedFileAge;
-
+                    
                     if (fileExpired) {
-                    	fileExpired = !networkAvailablityCheck.getWiFiNetworkAvailable();
-                    }
+                    	fileExpired = networkAvailablityCheck.getWiFiNetworkAvailable();
+                    	Log.d(TAG, "File Expired with Wifi " + networkAvailablityCheck.getWiFiNetworkAvailable() +" ==> Expired " + fileExpired );
+                    } 
                     if (fileExpired) {
                         if (DEBUGMODE) {
                             logger.debug("Tile expired: " + tile);

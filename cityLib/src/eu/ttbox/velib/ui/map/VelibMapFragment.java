@@ -204,7 +204,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
         // Map Overlay
         // -------------
         // MyLocation Overlay
-        myLocation = new MyLocationOverlay(getActivity().getBaseContext(), this.mapView, mResourceProxy);
+        myLocation = new MyLocationOverlay(getActivity() , this.mapView, mResourceProxy);
         myLocation.enableMyLocation();
         myLocation.enableCompass();
         mapView.getOverlays().add((Overlay) myLocation);
@@ -568,7 +568,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
         }
 
         public void displayToMode(int pMode) {
-            int mode = pMode > 3 ? pMode % 3 : pMode;
+            int mode = pMode % 3;// pMode > 3 ? pMode % 3 : pMode;
             switch (mode) {
             case 0:
                 swtichMode.setBackgroundDrawable(all);

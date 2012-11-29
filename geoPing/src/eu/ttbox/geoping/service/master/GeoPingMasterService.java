@@ -136,23 +136,23 @@ public class GeoPingMasterService extends IntentService {
 			Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
 			sendSmsGeoPingRequest(phone, params);
 			// Tracker
-			tracker.trackPageView("/action/SMS_GEOPING_REQUEST");
+//			tracker.trackPageView("/action/SMS_GEOPING_REQUEST");
 			 tracker.trackEvent(
 			            "Intents",  // Category
 			            "HandleIntent",  // Action
 			            "SMS_GEOPING_REQUEST", // Label
-			            1);       // Value
+			            0);       // Value
 		} else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
 			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
 			long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
 			sendSmsPairingRequest(phone, userId);
 			// Tracker
-			tracker.trackPageView("/action/SMS_PAIRING_RESQUEST");
+//			tracker.trackPageView("/action/SMS_PAIRING_RESQUEST");
 			tracker.trackEvent(
 		            "Intents",  // Category
 		            "HandleIntent",  // Action
 		            "SMS_PAIRING_RESQUEST", // Label
-		            1);       // Value
+		            0);       // Value
 		} else if (Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER.equals(action)) {
 			consumeGeoPingResponse(intent.getExtras());
 			// Tracker
@@ -161,19 +161,19 @@ public class GeoPingMasterService extends IntentService {
 		            "Intents",  // Category
 		            "HandleIntent",  // Action
 		            "SMS_GEOPING_RESPONSE", // Label
-		            1);       // Value
+		            0);       // Value
 		} else if (Intents.ACTION_SMS_PAIRING_RESPONSE.equals(action)) {
 			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
 			Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
 			long userId = SmsMessageLocEnum.PARAM_PERSON_ID.readLong(params, -1);
 			consumeSmsPairingResponse(phone, userId);
 			// Tracker
-			tracker.trackPageView("/action/SMS_PAIRING_RESPONSE");
+//			tracker.trackPageView("/action/SMS_PAIRING_RESPONSE");
 			tracker.trackEvent(
 		            "Intents",  // Category
 		            "HandleIntent",  // Action
 		            "SMS_PAIRING_RESPONSE", // Label
-		            1);       // Value
+		            0);       // Value
 		}
 
 	}

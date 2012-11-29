@@ -1,21 +1,33 @@
 package eu.ttbox.geoping.ui.person;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.MainActivity.SectionsPagerAdapter;
+import eu.ttbox.geoping.ui.pairing.PairingListFragment;
+import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class PersonEditActivity extends FragmentActivity {
 
 	private static final String TAG = "PersonEditActivity";
 
 	private PersonEditFragment editFragment;
+
+	SectionsPagerAdapter mSectionsPagerAdapter;
+	ViewPager mViewPager;
 
 	// ===========================================================
 	// Constructors
@@ -25,18 +37,26 @@ public class PersonEditActivity extends FragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.track_person_edit_activity);
-
+		// Pagers
+		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		// Fragment
+		
+		// Analytic
+		mViewPager.setAdapter(mSectionsPagerAdapter);
+		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).getTracker();
+		tracker.trackPageView("/" + TAG);
 		// Intents
 		handleIntent(getIntent());
 	}
 
-	@Override
-	public void onAttachFragment(Fragment fragment) {
-		super.onAttachFragment(fragment);
-		if (fragment instanceof PersonEditFragment) {
-			editFragment = (PersonEditFragment) fragment;
-		}
-	}
+//	@Override
+//	public void onAttachFragment(Fragment fragment) {
+//		super.onAttachFragment(fragment);
+//		if (fragment instanceof PersonEditFragment) {
+//			editFragment = (PersonEditFragment) fragment;
+//		}
+//	}
 
 	// ===========================================================
 	// Menu
@@ -55,7 +75,7 @@ public class PersonEditActivity extends FragmentActivity {
 			finish();
 			return true;
 		case R.id.menu_delete:
-			editFragment.onDeleteClick(); 
+			editFragment.onDeleteClick();
 			return true;
 		case R.id.menu_select_contact:
 			editFragment.onSelectContactClick(null);
@@ -97,6 +117,57 @@ public class PersonEditActivity extends FragmentActivity {
 
 	}
 
+	// ===========================================================
+	// Pages Adapter
+	// ===========================================================
+
+	/**
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+	 * one of the primary sections of the app.
+	 */
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+		static final int PERSON = 0;
+//		static final int PAIRING = 1;
+		static final int LOG = 1;
+
+		public SectionsPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			Fragment fragment = null;
+			switch (position) {
+			case PERSON:
+				editFragment = new PersonEditFragment();
+				fragment = editFragment;
+				break;
+			case LOG:
+				fragment = new SmsLogListFragment();
+				break;
+			}
+			return fragment;
+		}
+
+		@Override
+		public int getCount() {
+			return 2;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			switch (position) {
+			case PERSON:
+				return getString(R.string.menu_person).toUpperCase();
+//			case PAIRING:
+//				return getString(R.string.menu_pairing).toUpperCase();
+			case LOG:
+				return getString(R.string.menu_smslog).toUpperCase();
+			}
+			return null;
+		}
+	}
 	// ===========================================================
 	// Listener
 	// ===========================================================

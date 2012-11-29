@@ -11,12 +11,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import eu.ttbox.osm.core.ExternalIntents;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.core.DateUtils;
 import eu.ttbox.velib.model.FavoriteIconEnum;
 import eu.ttbox.velib.model.Station;
 import eu.ttbox.velib.service.VelibService;
-import eu.ttbox.velib.ui.map.GeoIntentHelper;
 import eu.ttbox.velib.ui.map.dialog.AliasInputDialog;
 import eu.ttbox.velib.ui.map.dialog.SelectFavoriteIconDialog;
 
@@ -173,7 +173,7 @@ public class BubbleOverlayView<ITEM> extends FrameLayout {
 	 */
 	private void startNavigationTo() {
 		if (station != null) { 
-			GeoIntentHelper.startActivityNavigationTo(getContext(), station.getLatitude(), station.getLongitude());
+			ExternalIntents.startActivityNavigationTo(getContext(), station.getLatitude(), station.getLongitude());
  		}
 	}
 
@@ -185,7 +185,7 @@ public class BubbleOverlayView<ITEM> extends FrameLayout {
 	 */
 	private void startStreetView() {
 		if (station != null) {
- 			GeoIntentHelper.startActivityStreetView(getContext(), station.getLatitude(), station.getLongitude());
+			ExternalIntents.startActivityStreetView(getContext(), station.getLatitude(), station.getLongitude());
  		}
 	}
 

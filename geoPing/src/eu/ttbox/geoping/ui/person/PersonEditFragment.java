@@ -31,8 +31,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class PersonEditFragment extends Fragment implements
-		ColorPickerDialog.OnColorChangedListener {
+public class PersonEditFragment extends Fragment implements ColorPickerDialog.OnColorChangedListener {
 
 	private static final String TAG = "PersonEditFragment";
 
@@ -60,14 +59,12 @@ public class PersonEditFragment extends Fragment implements
 	// ===========================================================
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.track_person_edit, container, false);
 		// binding
 		nameEditText = (EditText) v.findViewById(R.id.person_name);
 		phoneEditText = (EditText) v.findViewById(R.id.person_phone);
-		colorPickerButton = (Button) v
-				.findViewById(R.id.person_color_picker_button);
+		colorPickerButton = (Button) v.findViewById(R.id.person_color_picker_button);
 		colorPickerButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -75,8 +72,7 @@ public class PersonEditFragment extends Fragment implements
 				onColorPickerClick(v);
 			}
 		});
-		personPairingButton = (Button) v
-				.findViewById(R.id.person_pairing_button);
+		personPairingButton = (Button) v.findViewById(R.id.person_pairing_button);
 		personPairingButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -84,8 +80,7 @@ public class PersonEditFragment extends Fragment implements
 				onPairingClick(v);
 			}
 		});
-		contactSelectButton = (Button) v
-				.findViewById(R.id.select_contact_button);
+		contactSelectButton = (Button) v.findViewById(R.id.select_contact_button);
 		contactSelectButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -93,27 +88,46 @@ public class PersonEditFragment extends Fragment implements
 				onSelectContactClick(v);
 			}
 		});
+		// Menu
+		// setHasOptionsMenu(true);
 		return v;
 	}
+
+//	@Override
+//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//		inflater.inflate(R.menu.myfragment_options, menu);
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case R.id.menu_first_info:
+//			// Handle fragment menu item
+//			return true;
+//		default:
+//			// Not one of ours. Perform default menu processing
+//			return super.onOptionsItemSelected(item);
+//		}
+//	}
 
 	// ===========================================================
 	// Accessor
 	// ===========================================================
 
 	public void loadEntity(String entityId) {
+		Log.d(TAG, "loadEntity : " + entityId);
+		Log.d(TAG, "getActivity : " + (getActivity() != null));
+		Log.d(TAG, "getSupportLoaderManager : " + (getActivity().getSupportLoaderManager() != null));
 		this.entityId = entityId;
 		Bundle bundle = new Bundle();
 		bundle.putString(Intents.EXTRA_SMS_PHONE, entityId);
-		getActivity().getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER,
-				bundle, personLoaderCallback);
+		getActivity().getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER, bundle, personLoaderCallback);
 	}
 
 	public void onDeleteClick() {
 		if (!TextUtils.isEmpty(entityId)) {
-			Uri entityUri = Uri.withAppendedPath(
-					PersonProvider.Constants.CONTENT_URI, entityId);
-			int deleteCount = getActivity().getContentResolver().delete(
-					entityUri, null, null);
+			Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, entityId);
+			int deleteCount = getActivity().getContentResolver().delete(entityUri, null, null);
 			Log.d(TAG, "Delete %s entity successuf");
 			if (deleteCount > 0) {
 				getActivity().setResult(Activity.RESULT_OK);
@@ -139,8 +153,7 @@ public class PersonEditFragment extends Fragment implements
 	}
 
 	public void onPairingClick(View v) {
-		Intent intent = Intents.pairingRequest(getActivity(), phoneEditText
-				.getText().toString(), entityId);
+		Intent intent = Intents.pairingRequest(getActivity(), phoneEditText.getText().toString(), entityId);
 		getActivity().startService(intent);
 	}
 
@@ -149,8 +162,7 @@ public class PersonEditFragment extends Fragment implements
 	// ===========================================================
 
 	public void onColorPickerClick(View v) {
-		ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), this,
-				mPaint.getColor());
+		ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), this, mPaint.getColor());
 		dialog.show();
 	}
 
@@ -163,8 +175,7 @@ public class PersonEditFragment extends Fragment implements
 			// Direct Persist Change
 			ContentValues values = new ContentValues();
 			values.put(PersonColumns.COL_COLOR, color);
-			getActivity().getContentResolver().update(getUriEntity(), values,
-					null, null);
+			getActivity().getContentResolver().update(getUriEntity(), values, null, null);
 		}
 	}
 
@@ -211,13 +222,10 @@ public class PersonEditFragment extends Fragment implements
 		String selection = null;
 		String[] selectionArgs = null;
 		String contactId = contactData.getLastPathSegment();
-		Cursor c = getActivity().getContentResolver().query(
-				contactData,
-				new String[] { //
+		Cursor c = getActivity().getContentResolver().query(contactData, new String[] { //
 				ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, //
 						ContactsContract.CommonDataKinds.Phone.NUMBER, //
-						ContactsContract.CommonDataKinds.Phone.TYPE },
-				selection, selectionArgs, null);
+						ContactsContract.CommonDataKinds.Phone.TYPE }, selection, selectionArgs, null);
 		try {
 			// Read value
 			if (c != null && c.moveToFirst()) {
@@ -261,8 +269,7 @@ public class PersonEditFragment extends Fragment implements
 		return name;
 	}
 
-	private Uri doSavePerson(String nameDirty, String phoneDirty,
-			String contactId) {
+	private Uri doSavePerson(String nameDirty, String phoneDirty, String contactId) {
 		String phone = cleanPhone(phoneDirty);
 		String name = trimToNull(nameDirty);
 		setPerson(name, phone, contactId);
@@ -281,8 +288,7 @@ public class PersonEditFragment extends Fragment implements
 		// Content
 		Uri uri;
 		if (entityId == null) {
-			uri = getActivity().getContentResolver().insert(
-					PersonProvider.Constants.CONTENT_URI, values);
+			uri = getActivity().getContentResolver().insert(PersonProvider.Constants.CONTENT_URI, values);
 			if (uri != null) {
 				this.entityId = uri.getLastPathSegment();
 				personPairingButton.setVisibility(View.VISIBLE);
@@ -290,12 +296,9 @@ public class PersonEditFragment extends Fragment implements
 			}
 		} else {
 			uri = getUriEntity();
-			int count = getActivity().getContentResolver().update(uri, values,
-					null, null);
+			int count = getActivity().getContentResolver().update(uri, values, null, null);
 			if (count != 1) {
-				Log.e(TAG, String.format(
-						"Error, %s entities was updates for Expected One",
-						count));
+				Log.e(TAG, String.format("Error, %s entities was updates for Expected One", count));
 			}
 		}
 		return uri;
@@ -308,8 +311,7 @@ public class PersonEditFragment extends Fragment implements
 	}
 
 	private Uri getUriEntity() {
-		return Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI,
-				entityId);
+		return Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, entityId);
 	}
 
 	public void prepareInsert() {
@@ -327,21 +329,16 @@ public class PersonEditFragment extends Fragment implements
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 			Log.d(TAG, "onCreateLoader");
-			String entityId = args.getCharSequence(Intents.EXTRA_SMS_PHONE)
-					.toString();
-			Uri entityUri = Uri.withAppendedPath(
-					PersonProvider.Constants.CONTENT_URI, entityId);
+			String entityId = args.getCharSequence(Intents.EXTRA_SMS_PHONE).toString();
+			Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, entityId);
 			// Loader
-			CursorLoader cursorLoader = new CursorLoader(getActivity(),
-					entityUri, null, null, null, null);
+			CursorLoader cursorLoader = new CursorLoader(getActivity(), entityUri, null, null, null, null);
 			return cursorLoader;
 		}
 
 		@Override
 		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-			Log.d(TAG,
-					"onLoadFinished with cursor result count : "
-							+ cursor.getCount());
+			Log.d(TAG, "onLoadFinished with cursor result count : " + cursor.getCount());
 			// Display List
 			if (cursor.moveToFirst()) {
 				// Data

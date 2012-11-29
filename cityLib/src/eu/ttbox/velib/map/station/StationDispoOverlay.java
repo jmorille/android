@@ -474,7 +474,7 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
             if (selectedStation != null) {
                 boolean isRecycled = true;
                 if (balloonView == null) {
-                    balloonView = new BubbleOverlayView<Station>(mapView.getContext(), velibService, balloonBottomOffset);
+                    balloonView = new BubbleOverlayView<Station>(context, velibService, balloonBottomOffset);
                     balloonView.setVisibility(View.GONE);
                     isRecycled = false;
                     // Todo add click listener

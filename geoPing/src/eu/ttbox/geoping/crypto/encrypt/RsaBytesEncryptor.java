@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.RSAKeyGenParameterSpec;
 
 import javax.crypto.BadPaddingException;
@@ -21,6 +22,9 @@ import javax.crypto.ShortBufferException;
 // http://www.bouncycastle.org/java.html
 public class RsaBytesEncryptor implements BytesEncryptor {
 
+	public static KeyPair generateKey(int keySize ) {
+		return generateKey(keySize, RSAKeyGenParameterSpec.F4);
+	}
 	/**
 	 * {link http://www.java2s.com/Code/Android/Security/
 	 * RSAencryptdecryptfunctionRSAECBPKCS1Padding.htm} generates RSA key pair
@@ -36,16 +40,18 @@ public class RsaBytesEncryptor implements BytesEncryptor {
 		try {
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 			RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(keySize, publicExponent);
-			keyGen.initialize(spec);
+			SecureRandom random = new SecureRandom();
+			keyGen.initialize(spec, random);
 			KeyPair keyPair = keyGen.genKeyPair();
 			return keyPair;
+//		} catch (NoSuchProviderException e) {
+//			throw new IllegalStateException("Not a valid encryption provider", e);
 		} catch (NoSuchAlgorithmException e) {
 			throw new IllegalArgumentException("Unable to initialize due to invalid secret key", e);
 		} catch (InvalidAlgorithmParameterException e) {
 			throw new IllegalStateException("Unable to initialize due to invalid decryption parameter spec", e);
 		}
-
-	}
+ 	}
 
 	public static final String RSA_ALGORITHM = "RSA/ECB/PKCS1Padding"; // "RSA";
 																		// // //

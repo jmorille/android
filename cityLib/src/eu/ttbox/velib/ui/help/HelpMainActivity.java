@@ -1,5 +1,7 @@
 package eu.ttbox.velib.ui.help;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import eu.ttbox.velib.AndroLibApplication;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
@@ -51,6 +54,9 @@ public class HelpMainActivity extends FragmentActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        // Tracker
+        GoogleAnalyticsTracker tracker = ((AndroLibApplication)getApplication()).getTracker();
+        tracker.trackPageView("/Help");
 
     }
 
@@ -202,7 +208,7 @@ public class HelpMainActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return 4;
         }
 
         @Override

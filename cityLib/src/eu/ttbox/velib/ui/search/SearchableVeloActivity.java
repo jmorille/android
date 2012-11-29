@@ -1,5 +1,7 @@
 package eu.ttbox.velib.ui.search;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
@@ -15,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.SearchView;
+import eu.ttbox.velib.AndroLibApplication;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.core.Intents;
@@ -90,6 +93,10 @@ public class SearchableVeloActivity extends FragmentActivity {
             // Log.d(TAG,
             // "---------------------------------------------------------");
             searchFragment.doSearch(query);
+            // Tracker
+            GoogleAnalyticsTracker tracker = ((AndroLibApplication)getApplication()).getTracker();
+            tracker.trackPageView("/Search/"+query);
+
         } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             setTitle(R.string.menu_search);
             // Handle a suggestions click (because the suggestions all use
@@ -106,6 +113,10 @@ public class SearchableVeloActivity extends FragmentActivity {
             setTitle(R.string.menu_favorite);
             Integer velibProvider = intent.getIntExtra(Intents.EXTRA_VELIB_PROVIDER, -1);
             searchFragment.doSearchFavorite(velibProvider);
+            // Tracker
+            GoogleAnalyticsTracker tracker = ((AndroLibApplication)getApplication()).getTracker();
+            tracker.trackPageView("/Search/Favorite");
+            
         } else {
             Log.w(TAG, "Not Handle Intent for for Action : " + intent.getAction());
         }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" android:versionCode="22" android:versionName="0.1.6" package="eu.ttbox.velib">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" android:versionCode="26" android:versionName="0.1.6" package="eu.ttbox.velib">
 
     <!-- android:minSdkVersion="9" -->
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="17"/>
