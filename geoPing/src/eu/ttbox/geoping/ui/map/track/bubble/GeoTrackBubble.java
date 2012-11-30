@@ -214,7 +214,7 @@ public class GeoTrackBubble extends FrameLayout {
 		    bearingTextView.setVisibility(GONE);
 		}
 		if (hasBattery) {
-		    batteryTextView.setText(String.format("%s %", geoTrack.batteryLevelInPercent ));
+		    batteryTextView.setText(String.format("%s \\%", geoTrack.batteryLevelInPercent ));
 		    batteryBlock.setVisibility(VISIBLE);
 		} else {
 		    batteryTextView.setText("");
