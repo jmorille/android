@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.MainActivity.SectionsPagerAdapter;
@@ -47,7 +48,7 @@ public class PersonEditActivity extends FragmentActivity {
 		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).getTracker();
 		tracker.trackPageView("/" + TAG);
 		// Intents
-		handleIntent(getIntent());
+//		handleIntent(getIntent());
 	}
 
 //	@Override
@@ -135,6 +136,13 @@ public class PersonEditActivity extends FragmentActivity {
 			super(fm);
 		}
 
+		
+	    @Override
+	    public void startUpdate(ViewGroup container) {
+	        // Intents
+//	      handleIntent(getIntent());
+	    }
+	    
 		@Override
 		public Fragment getItem(int position) {
 			Fragment fragment = null;

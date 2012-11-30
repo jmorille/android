@@ -40,7 +40,10 @@ public class GeoTrackBubble extends FrameLayout {
 	private View altitudeBlock;
 	private TextView speedTextView;
 	private TextView bearingTextView;
-	
+
+    private View batteryBlock;
+    private TextView batteryTextView;
+
 	private ImageView navigationImg;
 	private ImageView streetviewImg;
 
@@ -65,6 +68,10 @@ public class GeoTrackBubble extends FrameLayout {
 		this.altitudeBlock = v.findViewById(R.id.map_geotrack_bubbleView_block_altitude);
 		this.speedTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_speed);
 		this.bearingTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_bearing);
+		
+		this.batteryBlock = v.findViewById(R.id.map_geotrack_bubbleView_block_battery);
+		this.batteryTextView= (TextView) v.findViewById(R.id.map_geotrack_bubbleView_battery);
+
 		// Button
 		streetviewImg = (ImageView) v.findViewById(R.id.map_geotrack_bubbleView_streetview_image);
 		streetviewImg.setOnClickListener(new OnClickListener() {
@@ -124,6 +131,7 @@ public class GeoTrackBubble extends FrameLayout {
 		boolean hasProvider = false;
 		boolean hasBearing = false;
 		boolean hasTime = false;
+		boolean hasBattery = false;
 		if (geoTrack != null) {
 			hasLatLng = geoTrack.hasLatLng();
 			hasAccuracy = geoTrack.hasAccuracy();
@@ -133,6 +141,7 @@ public class GeoTrackBubble extends FrameLayout {
 			hasProvider = geoTrack.hasProvider();
 			hasBearing = geoTrack.hasBearing();
 			hasTime = geoTrack.hasTime();
+			hasBattery = geoTrack.hasBatteryLevelInPercent();
 		}
 		// Color
 		Drawable colorDrawable = PersonColorDrawableHelper.getBubbleBackgroundColor(person.color);
@@ -203,6 +212,13 @@ public class GeoTrackBubble extends FrameLayout {
 		} else {
 		    bearingTextView.setText("");
 		    bearingTextView.setVisibility(GONE);
+		}
+		if (hasBattery) {
+		    batteryTextView.setText(String.format("%s %", geoTrack.batteryLevelInPercent ));
+		    batteryBlock.setVisibility(VISIBLE);
+		} else {
+		    batteryTextView.setText("");
+            batteryBlock.setVisibility(GONE);
 		}
 		// Address
 		if (hasAddress) {
