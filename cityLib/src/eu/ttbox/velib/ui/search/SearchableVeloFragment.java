@@ -167,17 +167,22 @@ public class SearchableVeloFragment extends Fragment {
     private static final String SEARCH_KEY_IS_FAVORITE = "SEARCH_KEY_IS_FAVORITE";
 
     public void doSearch(String query) {
+        Log.d(TAG, "Ask to do Search with query : " + query);
         Bundle args = new Bundle();
         args.putBoolean(SEARCH_KEY_IS_FAVORITE, false);
         args.putString(SEARCH_KEY_QUERY, query);
-        getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
+        LoaderManager loaderManager =   getActivity().getSupportLoaderManager();
+        loaderManager.restartLoader(PERSON_LIST_LOADER, args,searchLoaderCallback);
+//       loaderManager.initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
     }
 
     public void doSearchFavorite(Integer velibProvider) {
         Bundle args = new Bundle();
         args.putBoolean(SEARCH_KEY_IS_FAVORITE, true);
         args.putString(SEARCH_KEY_VELIB_PROVIDER_ORDINAL, velibProvider.toString());
-        getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
+        LoaderManager loaderManager =   getActivity().getSupportLoaderManager();
+        loaderManager.restartLoader(PERSON_LIST_LOADER, args,searchLoaderCallback);
+//        loaderManager.initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
     }
 
     @TargetApi(11)
@@ -199,17 +204,24 @@ public class SearchableVeloFragment extends Fragment {
 
         @Override
         public boolean onQueryTextSubmit(String query) {
+            Log.d(TAG, "onQueryTextSubmit  with query : " + query);
+            
             Bundle args = getLastQueryParam();
             args.putString(SEARCH_KEY_QUERY, query);
-            getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
+            LoaderManager loaderManager =   getActivity().getSupportLoaderManager();
+            loaderManager.restartLoader(PERSON_LIST_LOADER, args,searchLoaderCallback);
+//            getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
             return true;
         }
 
         @Override
         public boolean onQueryTextChange(String newText) {
+            Log.d(TAG, "onQueryTextChange  with query : " + newText);
             Bundle args = getLastQueryParam();
             args.putString(SEARCH_KEY_QUERY, newText);
-            getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
+            LoaderManager loaderManager =   getActivity().getSupportLoaderManager();
+            loaderManager.restartLoader(PERSON_LIST_LOADER, args,searchLoaderCallback);
+//            getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
             return true;
         }
         

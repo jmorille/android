@@ -158,14 +158,13 @@ public class VeloContentProvider extends ContentProvider //
         builder.setTables(StationDatabase.TABLE_VELIB);
         builder.setProjectionMap(StationDatabase.MAP_PROJECTION_COLUMN);
         // Where
-        // builder.appendWhere(whereClause);
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "################################################################################");
-            Log.i(TAG, "#################### ContentProvider Select " + Arrays.toString(columns));
-            Log.i(TAG, "#################### ContentProvider WhereClause " + whereCriteria);
-            Log.i(TAG, "#################### ContentProvider WhereArgs " + Arrays.toString(whereCriteriaArgs));
-            Log.i(TAG, "################################################################################");
-        }
+        // builder.appendWhere(whereClause); 
+//            Log.d(TAG, "################################################################################");
+//            Log.d(TAG, "#################### ContentProvider Select " + Arrays.toString(columns));
+//            Log.d(TAG, "#################### ContentProvider WhereClause " + whereCriteria);
+//            Log.d(TAG, "#################### ContentProvider WhereArgs " + Arrays.toString(whereCriteriaArgs));
+//            Log.d(TAG, "################################################################################");
+       
         // Open Database
         SQLiteDatabase bdd = stationDatabase.getReadableDatabase();
         // cursor=builder.query(db.getReadableDatabase(), projection,

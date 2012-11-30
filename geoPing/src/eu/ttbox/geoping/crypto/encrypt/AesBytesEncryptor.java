@@ -22,7 +22,7 @@ import eu.ttbox.geoping.crypto.codec.Hex;
  *
  * @author Keith Donald
  */
-final class AesBytesEncryptor implements BytesEncryptor {
+public final class AesBytesEncryptor implements BytesEncryptor {
 
     private final SecretKey secretKey;
 

@@ -1,10 +1,7 @@
 package eu.ttbox.velib.ui.search;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -16,7 +13,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MenuItem.OnActionExpandListener;
 import android.widget.SearchView;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import eu.ttbox.velib.AndroLibApplication;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
@@ -134,22 +135,37 @@ public class SearchableVeloActivity extends FragmentActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // SearchManager searchManager = (SearchManager)
-            // getSystemService(Context.SEARCH_SERVICE);
-            final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-            searchView.setOnQueryTextListener(searchFragment.getOnQueryTextListener());
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-
-                @Override
-                public boolean onClose() { 
-                       
-                    return false;
-                }
-            });
-            // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            // searchView.setIconifiedByDefault(false);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            // SearchManager searchManager = (SearchManager)
+//            // getSystemService(Context.SEARCH_SERVICE);
+//            MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
+//            final SearchView searchView = (SearchView)searchMenuItem.getActionView();
+//            searchView.setIconifiedByDefault(false); 
+//            searchView.setQueryRefinementEnabled(true);
+//            searchView.setOnQueryTextListener(searchFragment.getOnQueryTextListener());
+//            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+//
+//                @Override
+//                public boolean onClose() { 
+//                       Log.d(TAG, "************* searchView OnCloseListener");
+//                    return false;
+//                }
+//            });
+//            // Expannd
+//            searchMenuItem.setOnActionExpandListener(new OnActionExpandListener() {
+//                @Override
+//                public boolean onMenuItemActionCollapse(MenuItem item) {
+//                    Log.d(TAG, "************* searchView onMenuItemActionCollapse");
+//                    return true;  // Return true to collapse action view
+//                }
+//
+//                @Override
+//                public boolean onMenuItemActionExpand(MenuItem item) {
+//                    Log.d(TAG, "************* searchView onMenuItemActionExpand");
+//                    return true;  // Return true to expand action view
+//                }
+//            }); 
+//        }
 
         return true;
     }

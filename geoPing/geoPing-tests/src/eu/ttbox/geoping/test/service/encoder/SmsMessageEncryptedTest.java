@@ -15,7 +15,7 @@ public class SmsMessageEncryptedTest extends SmsMessageEncoderHelperTest  {
     
     public RsaBytesEncryptor getBytesEncryptor() {
         RsaBytesEncryptor bytesEncryptor = new RsaBytesEncryptor();
-        PublicKey pubKey = bytesEncryptor.getPubKey();
+        PublicKey pubKey = bytesEncryptor.getPublicKey();
         PrivateKey privateKey = bytesEncryptor.getPrivateKey();
         Log.d(TAG, "PublicKey : " + pubKey);
         Log.d(TAG, "PrivateKey : " + privateKey);

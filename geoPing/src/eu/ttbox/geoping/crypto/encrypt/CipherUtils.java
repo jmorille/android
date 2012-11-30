@@ -5,6 +5,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
@@ -15,6 +16,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.ShortBufferException;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
  
@@ -58,6 +60,24 @@ class CipherUtils {
             throw new IllegalStateException("Should not happen", e);
         }
     }
+    
+
+    /**
+     * Constructs a new Cipher.
+     */
+    public static Cipher newCipher(String algorithm, String provider) {
+        try {
+            return Cipher.getInstance(algorithm, provider);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException("Not a valid encryption algorithm", e);
+        } catch (NoSuchPaddingException e) {
+            throw new IllegalStateException("Should not happen", e);
+        } catch (NoSuchProviderException e) {
+            throw new IllegalStateException("Not a valid encryption provider", e);
+        } 
+    }
+
+    
 
     /**
      * Initializes the Cipher for use.
@@ -111,6 +131,36 @@ class CipherUtils {
             throw new IllegalStateException("Unable to invoke Cipher due to illegal block size", e);
         } catch (BadPaddingException e) {
             throw new IllegalStateException("Unable to invoke Cipher due to bad padding", e);
+        }
+    }
+
+    /**
+     * Invokes the Cipher to perform encryption or decryption (depending on the
+     * initialized mode).
+     */
+    public static byte[] doFinal(Cipher cipher, byte[] input, int inputOffSet, int inputLen) {
+        try {
+            return cipher.doFinal(input, inputOffSet, inputLen);
+        } catch (IllegalBlockSizeException e) {
+            throw new IllegalStateException("Unable to invoke Cipher due to illegal block size", e);
+        } catch (BadPaddingException e) {
+            throw new IllegalStateException("Unable to invoke Cipher due to bad padding", e);
+        }
+    }
+
+    /**
+     * Invokes the Cipher to perform encryption or decryption (depending on the
+     * initialized mode).
+     */
+    public static int doFinal(Cipher cipher, byte[] input, int inputOffSet, int inputLen, byte[] ouput, int outputOffSet) {
+        try {
+            return cipher.doFinal(input, inputOffSet, inputLen, ouput, outputOffSet);
+        } catch (IllegalBlockSizeException e) {
+            throw new IllegalStateException("Unable to invoke Cipher due to illegal block size", e);
+        } catch (BadPaddingException e) {
+            throw new IllegalStateException("Unable to invoke Cipher due to bad padding", e);
+        } catch (ShortBufferException e) {
+            throw new IllegalStateException("Short Buffer Exception", e);
         }
     }
 

@@ -137,9 +137,8 @@ public class VelibMapActivity extends FragmentActivity { // implements
             try {
                 while (cursor.moveToNext()) {
                     int latitudeE6 = cursor.getInt(1);
-                    int longitudeE6 = cursor.getInt(2);
-                    if (Log.isLoggable(TAG, Log.INFO))
-                        Log.i(TAG, String.format("handleIntent Request for coord(%s, %s)", latitudeE6, longitudeE6));
+                    int longitudeE6 = cursor.getInt(2); 
+                        Log.d(TAG, String.format("handleIntent Request for coord(%s, %s)", latitudeE6, longitudeE6));
                     point = new GeoPoint(latitudeE6, longitudeE6);
                 }
                 if (point != null) {
@@ -171,62 +170,62 @@ public class VelibMapActivity extends FragmentActivity { // implements
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map, menu);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            final MenuItem searchitem = menu.findItem(R.id.menu_search);
-            // TODO searchitem.collapseActionView();
-            // Configure Search View
-            final SearchView searchView = (SearchView) searchitem.getActionView();
-            // searchView.setSearchableInfo(searchable)
-            searchView.setIconifiedByDefault(true);
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextChange(String newText) {
-
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    Log.e(TAG, "########### onQueryTextSubmit ");
-                    searchitem.collapseActionView();
-                    return false;
-                }
-            });
-            // searchitem.setOnActionExpandListener(new
-            // MenuItem.OnActionExpandListener()
-            // {
-            //
-            // @Override
-            // public boolean onMenuItemActionCollapse(MenuItem item)
-            // {
-            // // Do something when collapsed
-            // Log.e(TAG, "########### onMenuItemActionCollapse " +
-            // item.getItemId());
-            // return true; // Return true to collapse action view
-            // }
-            //
-            // @Override
-            // public boolean onMenuItemActionExpand(MenuItem item)
-            // {
-            // // TODO Auto-generated method stub
-            // Log.e(TAG, "########### onMenuItemActionExpand " +
-            // item.getItemId());
-            // return true;
-            // }
-            // });
-            // searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            //
-            // @Override
-            // public boolean onClose() {
-            // Log.e(TAG, "******************** searchView.setOnCloseListener");
-            // Log.e(TAG, "******************** searchView.setOnCloseListener");
-            // Log.e(TAG, "******************** searchView.setOnCloseListener");
-            // searchView.onActionViewCollapsed(); //collapse your ActionView
-            // searchView.setQuery("",false);
-            // return false;
-            // }
-            // });
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            final MenuItem searchitem = menu.findItem(R.id.menu_search);
+//            // TODO searchitem.collapseActionView();
+//            // Configure Search View
+//            final SearchView searchView = (SearchView) searchitem.getActionView();
+//            // searchView.setSearchableInfo(searchable)
+//            searchView.setIconifiedByDefault(true);
+//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextChange(String newText) {
+//
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextSubmit(String query) {
+//                    Log.e(TAG, "########### onQueryTextSubmit ");
+//                    searchitem.collapseActionView();
+//                    return false;
+//                }
+//            });
+//            // searchitem.setOnActionExpandListener(new
+//            // MenuItem.OnActionExpandListener()
+//            // {
+//            //
+//            // @Override
+//            // public boolean onMenuItemActionCollapse(MenuItem item)
+//            // {
+//            // // Do something when collapsed
+//            // Log.e(TAG, "########### onMenuItemActionCollapse " +
+//            // item.getItemId());
+//            // return true; // Return true to collapse action view
+//            // }
+//            //
+//            // @Override
+//            // public boolean onMenuItemActionExpand(MenuItem item)
+//            // {
+//            // // TODO Auto-generated method stub
+//            // Log.e(TAG, "########### onMenuItemActionExpand " +
+//            // item.getItemId());
+//            // return true;
+//            // }
+//            // });
+//            // searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+//            //
+//            // @Override
+//            // public boolean onClose() {
+//            // Log.e(TAG, "******************** searchView.setOnCloseListener");
+//            // Log.e(TAG, "******************** searchView.setOnCloseListener");
+//            // Log.e(TAG, "******************** searchView.setOnCloseListener");
+//            // searchView.onActionViewCollapsed(); //collapse your ActionView
+//            // searchView.setQuery("",false);
+//            // return false;
+//            // }
+//            // });
+//        }
 
         return true;
     }

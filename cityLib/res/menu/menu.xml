@@ -5,9 +5,10 @@
         android:id="@+id/menuOptions"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/menu_options"/>
+<!--      android:actionViewClass="android.widget.SearchView" -->
     <item
         android:id="@+id/menu_search"
-        android:actionViewClass="android.widget.SearchView"
+       
         android:icon="@drawable/ic_menu_search"
         android:showAsAction="collapseActionView|ifRoom"
         android:title="@string/menu_search"/>
