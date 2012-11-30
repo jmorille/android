@@ -90,35 +90,55 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		});
 		// Menu
 		// setHasOptionsMenu(true);
+		Log.w(TAG, "----------------------- Fragment onCreateView ");
 		return v;
 	}
 
-//	@Override
-//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//		inflater.inflate(R.menu.myfragment_options, menu);
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//		case R.id.menu_first_info:
-//			// Handle fragment menu item
-//			return true;
-//		default:
-//			// Not one of ours. Perform default menu processing
-//			return super.onOptionsItemSelected(item);
-//		}
-//	}
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		Log.w(TAG, "----------------------- Fragment onAttach ");
+		if (!TextUtils.isEmpty(entityId)) {
+			loadEntity(entityId);
+		}
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+	    super.onActivityCreated(savedInstanceState);
+		Log.w(TAG, "----------------------- Fragment onActivityCreated ");
+	}
+
+	// @Override
+	// public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	// inflater.inflate(R.menu.myfragment_options, menu);
+	// }
+	//
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// switch (item.getItemId()) {
+	// case R.id.menu_first_info:
+	// // Handle fragment menu item
+	// return true;
+	// default:
+	// // Not one of ours. Perform default menu processing
+	// return super.onOptionsItemSelected(item);
+	// }
+	// }
 
 	// ===========================================================
 	// Accessor
 	// ===========================================================
 
+	public void setEntityId(String entityId) {
+		this.entityId = entityId;
+	}
+
 	public void loadEntity(String entityId) {
 		Log.d(TAG, "loadEntity : " + entityId);
 		Log.d(TAG, "getActivity : " + (getActivity() != null));
 		Log.d(TAG, "getSupportLoaderManager : " + (getActivity().getSupportLoaderManager() != null));
-		this.entityId = entityId;
+		setEntityId(entityId);
 		Bundle bundle = new Bundle();
 		bundle.putString(Intents.EXTRA_SMS_PHONE, entityId);
 		getActivity().getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER, bundle, personLoaderCallback);

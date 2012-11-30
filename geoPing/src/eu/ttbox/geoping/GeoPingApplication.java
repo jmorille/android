@@ -20,7 +20,7 @@ public class GeoPingApplication extends Application {
 	private String TAG = "AndroGisterApp";
 
 	/* define your web property ID obtained after profile creation for the app */
-	private String analyticsKey = "UA-36410991-1";
+	private static final String analyticsKey = "UA-36410991-1";
 
 	/* Analytics tracker instance */
 	GoogleAnalyticsTracker tracker;
@@ -31,8 +31,7 @@ public class GeoPingApplication extends Application {
 		super.onCreate();
 		if (Log.isLoggable(TAG, Log.DEBUG)) {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-		}
-		 createGoogleAnalyticsTracker() ;
+		} 
 		// Perform the initialization that doesn't have to finish immediately.
 		// We use an async task here just to avoid creating a new thread.
 		(new DelayedInitializer()).execute();
@@ -43,13 +42,18 @@ public class GeoPingApplication extends Application {
 	 * Google Analytics Tracker <br>
 	 * {@link http://androidcookbook.com/Recipe.seam?recipeId=1503}
 	 */
-	private void createGoogleAnalyticsTracker() {
-		tracker = GoogleAnalyticsTracker.getInstance();
-		tracker.setCustomVar(2, "Build/Platform", Build.VERSION.RELEASE);
-		tracker.setCustomVar(3, "Build/Brand", Build.BRAND);
-		tracker.setCustomVar(4, "Build/Device", Build.DEVICE);
-		tracker.setCustomVar(1, "AppVersion", versionName());
-		tracker.startNewSession(analyticsKey, 60, getApplicationContext());
+	private GoogleAnalyticsTracker createGoogleAnalyticsTracker() {
+		synchronized (analyticsKey) {
+			if (tracker == null) {
+				tracker = GoogleAnalyticsTracker.getInstance();
+				tracker.setCustomVar(2, "Build/Platform", Build.VERSION.RELEASE);
+				tracker.setCustomVar(3, "Build/Brand", Build.BRAND);
+				tracker.setCustomVar(4, "Build/Device", Build.DEVICE);
+				tracker.setCustomVar(1, "AppVersion", versionName());
+				tracker.startNewSession(analyticsKey, 60, getApplicationContext());
+			}
+		}
+		return tracker;
 	}
 
 	@Override
@@ -66,6 +70,9 @@ public class GeoPingApplication extends Application {
 	 * reference to tracker instance.
 	 */
 	public GoogleAnalyticsTracker getTracker() {
+		if (tracker == null) {
+			tracker = createGoogleAnalyticsTracker();
+		}
 		return tracker;
 	}
 

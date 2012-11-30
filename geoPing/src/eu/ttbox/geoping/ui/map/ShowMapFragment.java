@@ -155,7 +155,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		int scrollX = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X, Integer.MIN_VALUE);
 		int scrollY = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, Integer.MIN_VALUE);
 		if (Integer.MIN_VALUE != scrollX && Integer.MIN_VALUE != scrollY) {
-			mapView.scrollTo(scrollX, scrollY);
+//			mapView.scrollTo(scrollX, scrollY);
 			// mapView.scrollTo(privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X,
 			// 0), privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y,
 			// 0));
@@ -258,12 +258,13 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 	// ===========================================================
 
 	public void centerOnMyPosition() {
+		mapView.getScroller().forceFinished(true);
 		myLocation.enableFollowLocation();
 		myLocation.runOnFirstFix(new Runnable() {
 
 			@Override
-			public void run() {
-				myLocation.animateToLastFix();
+			public void run() { 
+//				myLocation.animateToLastFix();
 				mapController.setZoom(17);
 			}
 		});

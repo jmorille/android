@@ -36,28 +36,50 @@ public class PersonEditActivity extends FragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		Log.w(TAG, "----------------------- Activity onCreate Begin ");
+ 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.track_person_edit_activity);
 		// Pagers
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		// Fragment
-		
+		editFragment = new PersonEditFragment();
+		Bundle fragArgs = new Bundle();
+		Intent intent = getIntent();
+		fragArgs.putParcelable("data", intent.getData());
+		editFragment.setArguments(fragArgs);
 		// Analytic
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).getTracker();
 		tracker.trackPageView("/" + TAG);
 		// Intents
+		Log.w(TAG, "----------------------- Activity onCreate ");
+//		 handleIntent(getIntent());
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.w(TAG, "----------------------- Activity onResume ");
 //		handleIntent(getIntent());
 	}
 
-//	@Override
-//	public void onAttachFragment(Fragment fragment) {
-//		super.onAttachFragment(fragment);
-//		if (fragment instanceof PersonEditFragment) {
-//			editFragment = (PersonEditFragment) fragment;
-//		}
-//	}
+ 
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.w(TAG, "----------------------- Activity onStart ");
+//		handleIntent(getIntent());
+	}
+
+	// @Override
+	// public void onAttachFragment(Fragment fragment) {
+	// super.onAttachFragment(fragment);
+	// if (fragment instanceof PersonEditFragment) {
+	// editFragment = (PersonEditFragment) fragment;
+	// }
+	// }
 
 	// ===========================================================
 	// Menu
@@ -108,11 +130,15 @@ public class PersonEditActivity extends FragmentActivity {
 		String action = intent.getAction();
 		Log.d(TAG, "handleIntent for action : " + action);
 		if (Intent.ACTION_EDIT.equals(action)) {
+			mViewPager.setCurrentItem(0);
 			Uri data = intent.getData();
-			editFragment.loadEntity(data.getLastPathSegment());
+			editFragment.setEntityId(data.getLastPathSegment());
+//			editFragment.loadEntity(data.getLastPathSegment());
 		} else if (Intent.ACTION_DELETE.equals(action)) {
+			mViewPager.setCurrentItem(0);
 			// TODO
 		} else if (Intent.ACTION_INSERT.equals(action)) {
+			mViewPager.setCurrentItem(0);
 			editFragment.prepareInsert();
 		}
 
@@ -129,26 +155,18 @@ public class PersonEditActivity extends FragmentActivity {
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		static final int PERSON = 0;
-//		static final int PAIRING = 1;
+		// static final int PAIRING = 1;
 		static final int LOG = 1;
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
 
-		
-	    @Override
-	    public void startUpdate(ViewGroup container) {
-	        // Intents
-//	      handleIntent(getIntent());
-	    }
-	    
 		@Override
 		public Fragment getItem(int position) {
 			Fragment fragment = null;
 			switch (position) {
 			case PERSON:
-				editFragment = new PersonEditFragment();
 				fragment = editFragment;
 				break;
 			case LOG:
@@ -168,8 +186,8 @@ public class PersonEditActivity extends FragmentActivity {
 			switch (position) {
 			case PERSON:
 				return getString(R.string.menu_person).toUpperCase();
-//			case PAIRING:
-//				return getString(R.string.menu_pairing).toUpperCase();
+				// case PAIRING:
+				// return getString(R.string.menu_pairing).toUpperCase();
 			case LOG:
 				return getString(R.string.menu_smslog).toUpperCase();
 			}
