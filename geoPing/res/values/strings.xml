@@ -57,9 +57,6 @@
     
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>
-    <string name="prefs_sms_delete_onMessage">Delete des SMS</string>
-    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing are invisible</string>
-    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping don\'t deleted</string>
     
     <string name="prefs_geoping_request">GeoPing Request</string> 
     <string name="prefs_block_geoping_pairing">Pairing</string>
@@ -77,6 +74,12 @@
 
     <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
     <string name="prefs_geoPoint_geocoding_auto">Geocoding automatique</string>
+   
+    <string name="prefs_developement">Development</string>
+    <string name="prefs_sms_delete_onMessage">Delete des SMS</string>
+    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing are invisible</string>
+    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping don\'t deleted</string>
+    
     
     <string name="prefs_info">Information</string>
     <string name="prefs_version">Version</string>

@@ -52,9 +52,6 @@
     
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>
-    <string name="prefs_sms_delete_onMessage">Suppression des SMS</string>
-    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing estan invisible</string>
-    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping no estan borrado</string>
     
     <string name="prefs_geoping_request">Requêtes GeoPing</string>
     <string name="prefs_block_geoping_pairing">Block new Geoping pairing</string>
@@ -72,6 +69,12 @@
 
     <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
     <string name="prefs_geoPoint_geocoding_auto">Geocoding automatique</string>
+
+    <string name="prefs_developement">Desarrollo</string>
+    <string name="prefs_sms_delete_onMessage">Eliminación de SMS</string>
+    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing están invisible</string>
+    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping no están borrado</string>
+    
     
     <string name="prefs_info">Informacion</string>
     <string name="prefs_version">Version</string>
@@ -109,8 +112,25 @@
 	<string name="smslog_delete_all">Todos quitados</string>
 
     <!-- Help -->
-    <string name="person_help">Lista de las personas para quienes usted puede solicitar un Geoping.\n\n La funccion de coincidencia permite solicitar la aplicacion Geoping remoto cuales estaran sus derechos de solicitacion de GeoPing</string>
-    <string name="pairing_help">Lista de las personas para quienes usted permite (o no) enviar su Geoping (Su posicion geografico gracias al GPS de su Android)</string>
-    <string name="smslog_help">Lista de los mensajes enviados o recibidos por la aplicacion GeoPing.</string>
-    
+   <string name="person_help">Lista de las personas para quienes usted puede pedir un Geoping.\n  \n
+        Varios pasos para asociar una persona : \n
+        <b> 1- </b> Anade una persona al ingresar su numero de telefono (o seleccionarlo en la lista de contactos) \n
+        <b> 2- </b> Instala la aplicacion Geoping sobre el segundo telefono (para cual usted quiere conocer su posicion) \n
+        <b> 3- </b> Enviar una solicitud de coincidencia para solamente autorizar su numero de telefono\n
+        <b> 4- </b> Espera la llegada del mensagje SMS sobre el segundo telefono para acceptar la coincidencia en la barra de notificacion \n
+        <b> 5- </b> Optional : Usted puede bloquear cualquier nuevo emparejamiento en el menu <i>opciones</i> \n
+       \n Ahora usted puede conocer la posicion de este segundo telefono\n 
+    </string>
+    <string name="pairing_help">
+        La lista de los emparejamientos representa la lista de las personas associadas para lo cuales usted puede aceptar (o no) envia su Geoping.\n 
+        Su posicion geografico obtenida mediante su GPS o cualquier sensor que esta en su telefono. \n\n
+        3 opciones de asociacion son possible : \n 
+         <b>   * Bloquear : </b> Impide cualquier GeoPing \n 
+         <b>   * Siempre :</b> Acepta sitematicamente el Geoping.\n 
+         <b>   * Sobre validacion :</b>  Una notificacion le preguntara sistematicamente la aceptación del GeoPing \n 
+         \n 
+         Una notificacion puede estar configurada para avisarle.\n 
+        </string>
+    <string name="smslog_help">Lista de los mensajes enviados o recibidos por la aplicacion Geoping.</string>
+        
 </resources>

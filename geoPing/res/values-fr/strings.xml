@@ -52,9 +52,6 @@
     
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>
-    <string name="prefs_sms_delete_onMessage">Suppression des SMS</string>
-    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing sont invisibles</string>
-    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping ne sont pas effacés</string>
     
     <string name="prefs_geoping_request">Requêtes GeoPing</string>
     <string name="prefs_block_geoping_pairing">Appariement</string>
@@ -73,6 +70,12 @@
     <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
     <string name="prefs_geoPoint_geocoding_auto">Geocoding automatique</string>
     
+    <string name="prefs_developement">Développement</string>
+    <string name="prefs_sms_delete_onMessage">Suppression des SMS</string>
+    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing sont invisibles</string>
+    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping ne sont pas effacés</string>
+     
+        
     <string name="prefs_info">Information</string>
     <string name="prefs_version">Version</string>
     <string name="prefs_help">Aide</string>
@@ -100,32 +103,32 @@
     <string name="pairing_name">Nom</string>
     <string name="pairing_phone">N° Téléphone</string>
     <string name="pairing_show_notification">Afficher une notification</string>
-    <string name="pairing_authorize_type">Authorisation</string>
+    <string name="pairing_authorize_type">Autorisation</string>
     <string name="pairing_authorize_type:never">Bloqué</string>
     <string name="pairing_authorize_type:ask">Sur validation</string>
     <string name="pairing_authorize_type:always">Toujours</string>
      
     <!-- SmsLog Model -->
-	<string name="smslog_delete_all">Tous Suppr.</string>
+	<string name="smslog_delete_all">Tout Suppr.</string>
 
     <!-- Help -->
 <!--     <string name="person_help">Liste des personnes auquelles vous pouvez demander un GeoPing.\n\nLa fonction d\'appariement permet de demander à l\'application Geoping distante quels seront vos droits de demande de GeoPing</string> -->
     <string name="person_help">Liste des personnes auquelles vous pouvez demander un GeoPing.\n  \n
         Différentes étapes pour associer une personne : \n
-        <b> 1- </b> Ajouter une personne en saisissant son numéro de téléphone (ou en le sélectionnant dans la liste de contacts) \n
-        <b> 2- </b> Installer l\'application GeoPing sur le deuxième téléphone (Auquel vous souhaitez obtenir sa localisation) \n
-        <b> 3- </b> Envoyer une requêtes d\'appariement pour autoriser seulement votre numéro de téléphone \n
-        <b> 4- </b> Attendez l\'arrivé du SMS sur le deuxième téléphone pour accepter l\'appariement dans la bare de notification \n
-        <b> 5- </b> Optionnel : Vous pouvez vérouiller tous nouveaux appariement dans le menu d\'<i>options</i> \n
+        <b> 1- </b> Ajoutez une personne en saisissant son numéro de téléphone (ou en le sélectionnant dans la liste de contacts) \n
+        <b> 2- </b> Installez l\'application GeoPing sur le deuxième téléphone (pour lequel vous souhaitez obtenir sa localisation) \n
+        <b> 3- </b> Envoyez une requête d\'appariement pour autoriser seulement votre numéro de téléphone \n
+        <b> 4- </b> Attendez l\'arrivée du SMS sur le deuxième téléphone pour accepter l\'appariement dans la barre de notification \n
+        <b> 5- </b> Optionnel : Vous pouvez verrouiller tout nouveau appariement dans le menu d\'<i>options</i> \n
        \n Vous pouvez maintenant obtenir la position de ce deuxième téléphone \n 
     </string>
     <string name="pairing_help">
-        La liste des appariements représente la liste des personnes associées auquelles vous accepter (ou pas) d\'envoyer votre GeoPing.\n 
-        Votre position géographique obtenu grace aux GPS, ou tous autres capteurs présent sur votre téléphone. \n\n
-        3 options d\'asociation sont disponibles : \n 
-         <b>   * Bloquer : </b> Empêche tous GeoPing \n 
-         <b>   * Toujours :</b> Accepte Systématique le Geoping.\n 
-         <b>   * Sur Validation :</b>  Une notification vous demandera systématique l\'acceptation du GeoPing \n 
+        La liste des appariements représente la liste des personnes associées auquelles vous acceptez (ou pas) d\'envoyer votre GeoPing.\n 
+        Votre position géographique obtenue grâce au GPS ou tout autre capteur présent sur votre téléphone. \n\n
+        3 options d\'association sont disponibles : \n 
+         <b>   * Bloquer : </b> Empêche tout GeoPing \n 
+         <b>   * Toujours :</b> Accepte systématiquement le Geoping.\n 
+         <b>   * Sur validation :</b>  Une notification vous demandera systématiquement l\'acceptation du GeoPing \n 
          \n 
          Une Notification peut être configuré pour vous le signaler.\n 
         </string>

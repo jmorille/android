@@ -65,14 +65,14 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		View v = inflater.inflate(R.layout.track_person_edit, container, false);
 		// binding
 		nameEditText = (EditText) v.findViewById(R.id.person_name);
-		nameEditText.setOnLongClickListener(new OnLongClickListener(){
-
-			@Override
-			public boolean onLongClick(View v) {
-				onSelectContactClick(v);
-				return true;
-			}
- 		});
+//		nameEditText.setOnLongClickListener(new OnLongClickListener(){
+//
+//			@Override
+//			public boolean onLongClick(View v) {
+//				onSelectContactClick(v);
+//				return true;
+//			}
+// 		});
 		phoneEditText = (EditText) v.findViewById(R.id.person_phone);
 		colorPickerButton = (Button) v.findViewById(R.id.person_color_picker_button);
 		colorPickerButton.setOnClickListener(new View.OnClickListener() {
