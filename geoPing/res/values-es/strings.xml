@@ -116,15 +116,15 @@
         Varios pasos para asociar una persona : \n
         <b> 1- </b> Anade una persona al ingresar su numero de telefono (o seleccionarlo en la lista de contactos) \n
         <b> 2- </b> Instala la aplicacion Geoping sobre el segundo telefono (para cual usted quiere conocer su posicion) \n
-        <b> 3- </b> Enviar una solicitud de coincidencia para solamente autorizar su numero de telefono\n
-        <b> 4- </b> Espera la llegada del mensagje SMS sobre el segundo telefono para acceptar la coincidencia en la barra de notificacion \n
+        <b> 3- </b> Envia una solicitud de coincidencia para solamente autorizar su numero de telefono\n
+        <b> 4- </b> Espera la llegada del mensaje SMS sobre el segundo telefono para aceptar la coincidencia en la barra de notificacion \n
         <b> 5- </b> Optional : Usted puede bloquear cualquier nuevo emparejamiento en el menu <i>opciones</i> \n
-       \n Ahora usted puede conocer la posicion de este segundo telefono\n 
+       \n Ahora usted puede conocer la posicion del segundo telefono\n 
     </string>
     <string name="pairing_help">
-        La lista de los emparejamientos representa la lista de las personas associadas para lo cuales usted puede aceptar (o no) envia su Geoping.\n 
-        Su posicion geografico obtenida mediante su GPS o cualquier sensor que esta en su telefono. \n\n
-        3 opciones de asociacion son possible : \n 
+        La lista de los emparejamientos representa la lista de las personas asociadas para lo cuales usted puede aceptar (o no) enviar su Geoping.\n 
+        Su posicion geografico esta obtenida mediante su GPS o cualquier sensor que esta en su telefono. \n\n
+        3 opciones de asociacion están disponibles: \n 
          <b>   * Bloquear : </b> Impide cualquier GeoPing \n 
          <b>   * Siempre :</b> Acepta sitematicamente el Geoping.\n 
          <b>   * Sobre validacion :</b>  Una notificacion le preguntara sistematicamente la aceptación del GeoPing \n 

@@ -1,3 +1,4 @@
+
 package eu.ttbox.geoping.service.slave;
 
 import java.util.ArrayList;
@@ -602,6 +603,7 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 			notificationBuilder.setLargeIcon(icon);
 		}
 		Notification notification = notificationBuilder.build();
+		notification.contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
 		// notification.number += 1;
 		// Show
 		// int notifId = SHOW_GEOPING_REQUEST_NOTIFICATION_ID +

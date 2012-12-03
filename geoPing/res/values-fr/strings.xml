@@ -119,18 +119,18 @@
         <b> 2- </b> Installez l\'application GeoPing sur le deuxième téléphone (pour lequel vous souhaitez obtenir sa localisation) \n
         <b> 3- </b> Envoyez une requête d\'appariement pour autoriser seulement votre numéro de téléphone \n
         <b> 4- </b> Attendez l\'arrivée du SMS sur le deuxième téléphone pour accepter l\'appariement dans la barre de notification \n
-        <b> 5- </b> Optionnel : Vous pouvez verrouiller tout nouveau appariement dans le menu d\'<i>options</i> \n
+        <b> 5- </b> Optionnel : Vous pouvez verrouiller tout nouveau appariement dans le menu <i>Options</i> \n
        \n Vous pouvez maintenant obtenir la position de ce deuxième téléphone \n 
     </string>
     <string name="pairing_help">
         La liste des appariements représente la liste des personnes associées auquelles vous acceptez (ou pas) d\'envoyer votre GeoPing.\n 
-        Votre position géographique obtenue grâce au GPS ou tout autre capteur présent sur votre téléphone. \n\n
+        Votre position géographique est obtenue grâce au GPS ou tout autre capteur présent sur votre téléphone, comme la triangulation des antennes GSM. \n\n
         3 options d\'association sont disponibles : \n 
          <b>   * Bloquer : </b> Empêche tout GeoPing \n 
          <b>   * Toujours :</b> Accepte systématiquement le Geoping.\n 
          <b>   * Sur validation :</b>  Une notification vous demandera systématiquement l\'acceptation du GeoPing \n 
          \n 
-         Une Notification peut être configuré pour vous le signaler.\n 
+         Une notification peut être configurée pour vous le signaler.\n 
         </string>
     <string name="smslog_help">Liste des messages envoyés ou reçus par l\'application GeoPing.</string>
     

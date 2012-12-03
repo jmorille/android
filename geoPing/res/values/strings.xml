@@ -122,17 +122,17 @@
          <b> 1 - </b> Add a new person by entering the phone number (or select it from the list of contacts) \n
          <b> 2 - </b> Install the application GeoPing on the second phone (for which you want to get its location) \n
          <b> 3 - </b> Send a request for matching to allow only your phone number \n
-         <b> 4 - </b> Wait arrival on the second SMS phone to accept the matching in the notification bar \n
+         <b> 4 - </b> Wait to receive an SMS on the second phone to accept the matching in the notification bar \n
          <b> 5 - </b> Optional: You can lock in the new pairing menu \ <i> options </i> \n
           \n You can now get the position of the second phone \n
      </string>
      <string name="pairing_help">
          The list of matches is the list of persons associated for which you agree (or not) to send your GeoPing. \n
-         Obtained your location using GPS or other sensor present on your phone. \n \n
+         Your location is get by using GPS or other sensor present on your phone. \n \n
          3 options Association are available: \n
            <b>  * Block :</b> Prevents GeoPing \n
            <b>  * Always : </b> Accepts systematically Geoping. \n
-           <b>  * On validation: </b> A notification will ask systematically acceptance of GeoPing \ n
+           <b>  * On validation: </b> A notification will ask systematically acceptance of GeoPing \ 
           \n
           A notification can be configured to alert you.
          </string>
