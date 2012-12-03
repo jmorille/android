@@ -3,20 +3,21 @@ package eu.ttbox.geoping.ui.person;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
-public class PersonEditActivity extends FragmentActivity {
+public class PersonEditActivity extends SherlockFragmentActivity {
 
 	private static final String TAG = "PersonEditActivity";
 
@@ -76,9 +77,8 @@ public class PersonEditActivity extends FragmentActivity {
 	// Menu
 	// ===========================================================
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_person_edit, menu);
+	public boolean onCreateOptionsMenu(Menu menu) { 
+		getSupportMenuInflater().inflate(R.menu.menu_person_edit, menu);
 		return true;
 	}
 
@@ -121,7 +121,7 @@ public class PersonEditActivity extends FragmentActivity {
 		String action = intent.getAction();
 		Log.d(TAG, "handleIntent for action : " + action);
 		if (Intent.ACTION_EDIT.equals(action) || Intent.ACTION_DELETE.equals(action) ) {
-			mViewPager.setCurrentItem(0);
+			mViewPager.setCurrentItem(SectionsPagerAdapter.PERSON);
 			// Prepare Edit
  	   		String entityId = intent.getData().getLastPathSegment();
 	   		// Set Fragment
@@ -131,7 +131,7 @@ public class PersonEditActivity extends FragmentActivity {
 			// Tracker
 			GeoPingApplication.getInstance().tracker().trackPageView("/Person/edit");
  		} else if (Intent.ACTION_INSERT.equals(action)) {
-			mViewPager.setCurrentItem(0);
+			mViewPager.setCurrentItem(SectionsPagerAdapter.PERSON);
             // Tracker
             GeoPingApplication.getInstance().tracker().trackPageView("/Person/insert");
 		}
@@ -172,7 +172,7 @@ public class PersonEditActivity extends FragmentActivity {
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 1;
 		}
 
 		@Override

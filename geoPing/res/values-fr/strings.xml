@@ -101,7 +101,7 @@
     <string name="pairing_phone">N° Téléphone</string>
     <string name="pairing_show_notification">Afficher une notification</string>
     <string name="pairing_authorize_type">Authorisation</string>
-    <string name="pairing_authorize_type:never">Jamais</string>
+    <string name="pairing_authorize_type:never">Bloqué</string>
     <string name="pairing_authorize_type:ask">Sur validation</string>
     <string name="pairing_authorize_type:always">Toujours</string>
      
@@ -119,7 +119,16 @@
         <b> 5- </b> Optionnel : Vous pouvez vérouiller tous nouveaux appariement dans le menu d\'<i>options</i> \n
        \n Vous pouvez maintenant obtenir la position de ce deuxième téléphone \n 
     </string>
-    <string name="pairing_help">Liste des personnes auquelles vous accepter (ou pas) d\'envoyer votre GeoPing (Votre position géographique obtenu grace aux GPS de votre Android)</string>
+    <string name="pairing_help">
+        La liste des appariements représente la liste des personnes associées auquelles vous accepter (ou pas) d\'envoyer votre GeoPing.\n 
+        Votre position géographique obtenu grace aux GPS, ou tous autres capteurs présent sur votre téléphone. \n\n
+        3 options d\'asociation sont disponibles : \n 
+         <b>   * Bloquer : </b> Empêche tous GeoPing \n 
+         <b>   * Toujours :</b> Accepte Systématique le Geoping.\n 
+         <b>   * Sur Validation :</b>  Une notification vous demandera systématique l\'acceptation du GeoPing \n 
+         \n 
+         Une Notification peut être configuré pour vous le signaler.\n 
+        </string>
     <string name="smslog_help">Liste des messages envoyés ou reçus par l\'application GeoPing.</string>
     
 </resources>

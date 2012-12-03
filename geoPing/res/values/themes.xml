@@ -3,28 +3,30 @@
 
     <style name="AppTheme" parent="Theme.Sherlock" />
 
-    
-     <style name="MyActionBar" parent="Theme.Sherlock.Light.DarkActionBar">
-        <item name="android:background">@drawable/map_actionbar_background</item> 
-    </style>
 
     <style name="MapActionBar" parent="AppTheme">
         <item name="android:windowActionBar">true</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-     </style>
-  
-    
-<!--     <style name="Theme.Styled" parent="Theme.Sherlock.Light.DarkActionBar"> -->
-<!--         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item> -->
-<!--         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item> -->
-<!--     </style> -->
+        <item name="android:actionBarStyle">@style/MyActionBar</item> 
+    </style>
 
-<!--     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse"> -->
-<!--         <item name="background">@drawable/bg_striped</item> -->
-<!--         <item name="android:background">@drawable/bg_striped</item> -->
-<!--         <item name="backgroundSplit">@drawable/bg_striped_split</item> -->
-<!--         <item name="android:backgroundSplit">@drawable/bg_striped_split</item> -->
-<!--     </style> -->
+        <style name="MyActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/map_actionbar_background</item>
+        <item name="android:background">@drawable/map_actionbar_background</item>
+    </style>
+    
+        
+    <!-- <style name="Theme.Styled" parent="Theme.Sherlock.Light.DarkActionBar"> -->
+    <!-- <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item> -->
+    <!-- <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item> -->
+    <!-- </style> -->
+
+
+    <!-- <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse"> -->
+    <!-- <item name="background">@drawable/bg_striped</item> -->
+    <!-- <item name="android:background">@drawable/bg_striped</item> -->
+    <!-- <item name="backgroundSplit">@drawable/bg_striped_split</item> -->
+    <!-- <item name="android:backgroundSplit">@drawable/bg_striped_split</item> -->
+    <!-- </style> -->
 
 </resources>

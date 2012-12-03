@@ -6,12 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -21,7 +15,7 @@ import eu.ttbox.geoping.ui.pairing.PairingListFragment;
 import eu.ttbox.geoping.ui.person.PersonListFragment;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
-public class MainActivity extends  SherlockFragmentActivity { //
+public class MainActivity extends SherlockFragmentActivity { //
 
 	private static final String TAG = "MainActivity";
 
@@ -52,18 +46,18 @@ public class MainActivity extends  SherlockFragmentActivity { //
 		// primary sections
 		// of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-		
+
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		// Tracker
 		GeoPingApplication.getInstance().tracker().trackPageView("/" + TAG);
-//		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
-//		if (tracker != null) {
-//			tracker.trackPageView("/" + TAG);
-//		}
-		Log.d(TAG,"--------------- " + getPackageName()  + "_preferences");
-		
+		// GoogleAnalyticsTracker tracker = ((GeoPingApplication)
+		// getApplication()).tracker();
+		// if (tracker != null) {
+		// tracker.trackPageView("/" + TAG);
+		// }
+		Log.d(TAG, "--------------- " + getPackageName() + "_preferences");
 
 	}
 
@@ -78,6 +72,21 @@ public class MainActivity extends  SherlockFragmentActivity { //
 	}
 
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_track_person: {
+			mViewPager.setCurrentItem(SectionsPagerAdapter.PERSON);
+			return true;
+		}
+		case R.id.menu_pairing: {
+			mViewPager.setCurrentItem(SectionsPagerAdapter.PAIRING);
+			return true;
+		}
+		case     R.id.menu_smslog:
+			mViewPager.setCurrentItem(SectionsPagerAdapter.LOG);
+			return	 true;
+		default: 
+			break;
+ 		}
 		boolean isConsume = MenuOptionsItemSelectionHelper.onOptionsItemSelected(this, item);
 		if (isConsume) {
 			return isConsume;
@@ -151,23 +160,4 @@ public class MainActivity extends  SherlockFragmentActivity { //
 		}
 	}
 
-	/**
-	 * A dummy fragment representing a section of the app, but that simply
-	 * displays dummy text.
-	 */
-	public static class DummySectionFragment extends Fragment {
-		public DummySectionFragment() {
-		}
-
-		public static final String ARG_SECTION_NUMBER = "section_number";
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			TextView textView = new TextView(getActivity());
-			textView.setGravity(Gravity.CENTER);
-			Bundle args = getArguments();
-			textView.setText(Integer.toString(args.getInt(ARG_SECTION_NUMBER)));
-			return textView;
-		}
-	}
 }

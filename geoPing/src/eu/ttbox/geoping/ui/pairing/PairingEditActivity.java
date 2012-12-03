@@ -10,21 +10,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -35,7 +36,7 @@ import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 
-public class PairingEditActivity extends FragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class PairingEditActivity extends SherlockFragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "PairingEditActivity";
 
@@ -177,8 +178,7 @@ public class PairingEditActivity extends FragmentActivity implements SharedPrefe
     // ===========================================================
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_pairing_edit, menu);
+        getSupportMenuInflater().inflate(R.menu.menu_pairing_edit, menu);
         return true;
     }
 

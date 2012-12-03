@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -15,7 +18,7 @@ import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.SmsLogProvider;
 
-public class SmsLogListActivity extends FragmentActivity {
+public class SmsLogListActivity extends SherlockFragmentActivity {
 
     private static final String TAG = "SmsLogListActivity";
 
@@ -65,8 +68,7 @@ public class SmsLogListActivity extends FragmentActivity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_smslog_list, menu);
+        getSupportMenuInflater().inflate(R.menu.menu_smslog_list, menu);
         return true;
     }
 
