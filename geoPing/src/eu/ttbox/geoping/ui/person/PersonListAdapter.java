@@ -6,7 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -64,7 +65,10 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
         ViewHolder holder = new ViewHolder();
         holder.nameText = (TextView) view.findViewById(R.id.person_list_item_name);
         holder.phoneText = (TextView) view.findViewById(R.id.person_list_item_phone);
-        holder.pingButton = (Button) view.findViewById(R.id.person_list_item_geoping_button);
+        holder.pingButton = (ImageButton) view.findViewById(R.id.person_list_item_geoping_button);
+        // Bug 
+        holder.pingButton.setFocusable(false);
+        holder.pingButton.setFocusableInTouchMode(false);
         // and store it inside the layout.
         view.setTag(holder);
         return view;
@@ -72,7 +76,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
     }
 
     static class ViewHolder {
-        Button pingButton;
+        ImageButton pingButton;
         TextView nameText;
         TextView phoneText;
     }

@@ -32,8 +32,7 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
         // Register change listener
         this.getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         // Tracker
-        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).tracker();
-        tracker.trackPageView("/"+TAG);
+        GeoPingApplication.getInstance().tracker().trackPageView("/Pref");
     }
 
  
@@ -74,6 +73,9 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
     	 // Update Display
     	Preference pref = findPreference(key);
         setSummary(pref);
+        // Tracker
+        GeoPingApplication.getInstance().tracker().trackPageView("/Pref/"+key);
+
     }
 
     // ===========================================================

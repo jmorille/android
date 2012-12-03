@@ -1,9 +1,6 @@
 package eu.ttbox.geoping.ui.person;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,12 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.MainActivity.SectionsPagerAdapter;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.ui.pairing.PairingListFragment;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class PersonEditActivity extends FragmentActivity {
@@ -47,8 +41,8 @@ public class PersonEditActivity extends FragmentActivity {
 		editFragment = new PersonEditFragment();
 		// Analytic
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
-		tracker.trackPageView("/" + TAG);
+		// Tracker
+		
 		// Intents
 		Log.w(TAG, "----------------------- Activity onCreate ");
 		 handleIntent(getIntent());
@@ -134,9 +128,12 @@ public class PersonEditActivity extends FragmentActivity {
 	   		Bundle fragArgs = new Bundle();
 			fragArgs.putString(Intents.EXTRA_PERSON_ID,entityId) ;
 			editFragment.setArguments(fragArgs);
+			// Tracker
+			GeoPingApplication.getInstance().tracker().trackPageView("/Person/edit");
  		} else if (Intent.ACTION_INSERT.equals(action)) {
 			mViewPager.setCurrentItem(0);
-//			editFragment.prepareInsert();
+            // Tracker
+            GeoPingApplication.getInstance().tracker().trackPageView("/Person/insert");
 		}
 
 	}

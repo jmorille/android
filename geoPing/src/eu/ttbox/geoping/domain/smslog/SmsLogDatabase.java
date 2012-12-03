@@ -10,6 +10,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
+import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class SmsLogDatabase {
@@ -25,12 +27,13 @@ public class SmsLogDatabase {
         public static final String COL_ACTION = "ACTION";
         public static final String COL_PHONE = "PHONE";
         public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
+        public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
         public static final String COL_MESSAGE = "MSG";
         public static final String COL_SMSLOG_TYPE = "SMSLOG_TYPE";
         public static final String COL_TIME = "TIME";
 
         // All Cols
-        public static final String[] ALL_KEYS = new String[] { COL_ID, COL_TIME, COL_ACTION, COL_PHONE, COL_SMSLOG_TYPE,  COL_MESSAGE };
+        public static final String[] ALL_COLS = new String[] { COL_ID, COL_TIME, COL_ACTION, COL_PHONE,COL_PHONE_NORMALIZED,COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
 
@@ -47,7 +50,7 @@ public class SmsLogDatabase {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Identity Column
         map.put(PersonColumns.COL_ID, "rowid AS " + BaseColumns._ID);
-        for (String col : SmsLogColumns.ALL_KEYS) {
+        for (String col : SmsLogColumns.ALL_COLS) {
             if (!col.equals(SmsLogColumns.COL_ID)) {
                 map.put(col, col);
             }
@@ -90,14 +93,64 @@ public class SmsLogDatabase {
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
         return cursor;
     }
+    
 
-    public long insertEntity(ContentValues userValues) throws SQLException {
+    public Cursor searchForPhoneNumber(String number, String[] _projection, String pSelection, String[] pSelectionArgs, String sortOrder) {
+        String[] projection = _projection == null ? SmsLogColumns.ALL_COLS : _projection;
+        // Normalise For search
+        String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+        String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+        // Prepare Query
+        String selection = null;
+        String[] selectionArgs = null;
+        if (TextUtils.isEmpty(pSelection)) {
+            selection = String.format("%s = ?", SmsLogColumns.COL_PHONE_MIN_MATCH);
+            selectionArgs = new String[] { minMatch };
+        } else {
+            selection = String.format("%s = ? and (%s)", SmsLogColumns.COL_PHONE_MIN_MATCH, pSelection);
+            int pSelectionArgSize = pSelectionArgs.length;
+            selectionArgs = new String[pSelectionArgSize + 1];
+            System.arraycopy(pSelectionArgs, 0, selectionArgs, 1, pSelectionArgSize);
+            selectionArgs[0] = minMatch;
+        }
+        return queryEntities(projection, selection, selectionArgs, sortOrder);
+    }
+
+    private void fillNormalizedNumber(ContentValues values) {
+        // No NUMBER? Also ignore NORMALIZED_NUMBER
+        if (!values.containsKey(SmsLogColumns.COL_PHONE)) {
+            values.remove(SmsLogColumns.COL_PHONE_NORMALIZED);
+            values.remove(SmsLogColumns.COL_PHONE_MIN_MATCH);
+            return;
+        }
+
+        // NUMBER is given. Try to extract NORMALIZED_NUMBER from it, unless it
+        // is also given
+        String number = values.getAsString(SmsLogColumns.COL_PHONE);
+
+        // final String newNumberE164 =
+        // PhoneNumberUtils.formatNumberToE164(number,
+        // mDbHelper.getCurrentCountryIso());
+        if (!TextUtils.isEmpty(number)) {
+            String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
+            if (!TextUtils.isEmpty(normalizedNumber)) {
+                String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
+                values.put(SmsLogColumns.COL_PHONE_NORMALIZED, normalizedNumber);
+                values.put(SmsLogColumns.COL_PHONE_MIN_MATCH, minMatch);
+            }
+        }
+
+    }
+
+    
+    public long insertEntity(ContentValues values) throws SQLException {
         long result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
+            fillNormalizedNumber(values);
             db.beginTransaction();
             try {
-                result = db.insertOrThrow(TABLE_SMSLOG_FTS, null, userValues);
+                result = db.insertOrThrow(TABLE_SMSLOG_FTS, null, values);
                 // commit
                 db.setTransactionSuccessful();
             } finally {
@@ -130,6 +183,7 @@ public class SmsLogDatabase {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
+            fillNormalizedNumber(values);
             db.beginTransaction();
             try {
                 result = db.update(TABLE_SMSLOG_FTS, values, selection, selectionArgs);
@@ -142,4 +196,6 @@ public class SmsLogDatabase {
         }
         return result;
     }
+
+
 }

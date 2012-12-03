@@ -1,11 +1,14 @@
 package eu.ttbox.geoping.ui.pairing;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -19,8 +22,12 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
 
     private boolean isNotBinding = true;
 
+    private String contentDescAuthAlways;
+    private String contentDescAuthRequest;
+    private String contentDescAuthNever;
+    
     public PairingListAdapter(Context context, Cursor c, int flags) {
-        super(context, R.layout.track_person_list_item, c, flags); // if >10 add
+        super(context, R.layout.pairing_list_item, c, flags); // if >10 add
                                                                    // ", flags"
     }
 
@@ -28,6 +35,12 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
         // Init Cursor
         helper = new PairingHelper().initWrapper(cursor);
         isNotBinding = false;
+        // Image
+        Resources r = context.getResources();
+        contentDescAuthAlways = r.getString(R.id.pairing_authorize_type_radio_always);
+        contentDescAuthNever = r.getString(R.id.pairing_authorize_type_radio_never);
+        contentDescAuthRequest = r.getString(R.id.pairing_authorize_type_radio_ask);
+        
     }
 
     @Override
@@ -54,16 +67,24 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
         PairingAuthorizeTypeEnum authType =  helper.getPairingAuthorizeTypeEnum(cursor);
         switch (authType) {
         case AUTHORIZE_ALWAYS:
-            view.setBackgroundResource(R.color.pairing_authorize_type_always);
+//            view.setBackgroundResource(R.color.pairing_authorize_type_always);
+//            holder.authType.setImageDrawable(  drawableAuthAlways);
+            holder.authType.setImageResource(R.drawable.ic_cadenas_ouvert_vert);
+            holder.authType.setContentDescription(contentDescAuthAlways);
             break;
         case AUTHORIZE_NEVER:
-            view.setBackgroundResource(R.color.pairing_authorize_type_never);
+//            view.setBackgroundResource(R.color.pairing_authorize_type_never);
+            holder.authType.setImageResource( R.drawable.ic_cadenas_ferme_rouge);
+            holder.authType.setContentDescription(contentDescAuthNever);
              break;
         case AUTHORIZE_REQUEST:
-            view.setBackgroundResource(R.color.pairing_authorize_type_request);
+//            view.setBackgroundResource(R.color.pairing_authorize_type_request);
+            holder.authType.setImageResource( R.drawable.ic_cadenas_entrouvert_jaune);
+            holder.authType.setContentDescription(contentDescAuthRequest);
              break; 
         default:
-            view.setBackgroundResource(android.R.color.transparent);
+            holder.authType.setImageDrawable( null);
+//            view.setBackgroundResource(android.R.color.transparent);
             break;
         }
     }
@@ -73,9 +94,12 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
         View view = super.newView(context, cursor, parent);
         // Then populate the ViewHolder
         ViewHolder holder = new ViewHolder();
-        holder.nameText = (TextView) view.findViewById(R.id.person_list_item_name);
-        holder.phoneText = (TextView) view.findViewById(R.id.person_list_item_phone);
-        holder.pingButton = (Button) view.findViewById(R.id.person_list_item_geoping_button);
+        holder.nameText = (TextView) view.findViewById(R.id.pairing_list_item_name);
+        holder.phoneText = (TextView) view.findViewById(R.id.pairing_list_item_phone);
+        holder.pingButton = (ImageButton) view.findViewById(R.id.pairing_list_item_geoping_button);
+        holder.pingButton.setFocusable(false);
+        holder.pingButton.setFocusableInTouchMode(false);
+        holder.authType = (ImageView) view.findViewById(R.id.pairing_list_item_authType);
         // and store it inside the layout.
         view.setTag(holder);
         return view;
@@ -83,8 +107,9 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
     }
 
     static class ViewHolder {
-        Button pingButton;
+        ImageButton pingButton;
         TextView nameText;
         TextView phoneText;
+        ImageView authType;
     }
 }

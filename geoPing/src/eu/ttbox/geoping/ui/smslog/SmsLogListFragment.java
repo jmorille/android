@@ -3,6 +3,7 @@ package eu.ttbox.geoping.ui.smslog;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
@@ -61,10 +64,17 @@ public class SmsLogListFragment extends Fragment {
         listView.setOnItemClickListener(mOnClickListener);
         Log.d(TAG, "Binding end");
         // Intents
-        getActivity().getSupportLoaderManager().initLoader(PAIRING_LIST_LOADER, null, smsLogLoaderCallback);
+        loadEntity( getArguments());
+
         return v;
     }
 
+    private void loadEntity(Bundle agrs) {
+        Bundle loaderArgs = agrs;
+     
+        getActivity().getSupportLoaderManager().initLoader(PAIRING_LIST_LOADER, loaderArgs, smsLogLoaderCallback);
+    }
+    
     public void onViewEntityClick(String entityId) {
         // TODO View
         // Intent intent = Intents.editSmsLog(SmsLogListActivity.this,
@@ -103,8 +113,24 @@ public class SmsLogListFragment extends Fragment {
             String selection = null;
             String[] selectionArgs = null;
             String queryString = null;
+            Uri searchUri = SmsLogProvider.Constants.CONTENT_URI;
+            // Check for Entity Binding
+            if (args!=null && args.containsKey(Intents.EXTRA_SMS_PHONE)) {
+                String phoneNumber = args.getString(Intents.EXTRA_SMS_PHONE);
+                searchUri=Uri.withAppendedPath(SmsLogProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+            } 
+//            else  if (args!=null && args.containsKey(Intents.EXTRA_DATA_URI)) {
+//                Uri entityUri = (Uri)args.getParcelable(Intents.EXTRA_DATA_URI);
+//                Cursor entityCursor = getActivity().getContentResolver().query(entityUri, new String[] {} , null, null, null);
+//                try {
+//                    
+//                } finally {
+//                    entityCursor.close();
+//                }
+//            }  
+            
             // Loader
-            CursorLoader cursorLoader = new CursorLoader(getActivity(), SmsLogProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(getActivity(), searchUri, null, selection, selectionArgs, sortOrder);
             return cursorLoader;
         }
 

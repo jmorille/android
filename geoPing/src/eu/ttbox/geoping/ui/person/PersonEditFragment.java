@@ -2,6 +2,7 @@ package eu.ttbox.geoping.ui.person;
 
 import java.util.Random;
 
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.NotifToasts;
@@ -146,7 +147,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		this.entityId = entityId;
 	}
 
-	public void loadEntity(Bundle agrs) {
+	private void loadEntity(Bundle agrs) {
 		if (agrs!=null && agrs.containsKey(Intents.EXTRA_PERSON_ID)) {
 			String entityId = agrs.getString(Intents.EXTRA_PERSON_ID);
 			loadEntity(entityId);
@@ -174,6 +175,9 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 			Log.d(TAG, "Delete %s entity successuf");
 			if (deleteCount > 0) {
 				getActivity().setResult(Activity.RESULT_OK);
+	            // Tracker
+	            GeoPingApplication.getInstance().tracker().trackPageView("/Person/delete");
+
 			}
 			getActivity().finish();
 		}

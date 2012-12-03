@@ -7,6 +7,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import eu.ttbox.geoping.domain.PersonProvider.Constants;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 
@@ -21,6 +22,8 @@ public class SmsLogProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.SmsLogProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/smslog");
+        
+        public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");
      }
 
     private SmsLogDatabase smslogDatabase;
@@ -28,6 +31,7 @@ public class SmsLogProvider extends ContentProvider {
     // UriMatcher stuff
     private static final int SMSLOGS = 0;
     private static final int SMSLOG_ID = 1;
+    private static final int PHONE_FILTER = 2;
 
     private static final UriMatcher sURIMatcher = buildUriMatcher();
 
@@ -40,6 +44,8 @@ public class SmsLogProvider extends ContentProvider {
         // to get definitions...
         matcher.addURI(Constants.AUTHORITY, "smslog", SMSLOGS);
         matcher.addURI(Constants.AUTHORITY, "smslog/#", SMSLOG_ID);
+        
+        matcher.addURI(Constants.AUTHORITY, "smslog/phone_lookup/*", PHONE_FILTER);
         return matcher;
     }
 
@@ -66,13 +72,17 @@ public class SmsLogProvider extends ContentProvider {
             return search(projection, selection, selectionArgs, sortOrder);
         case SMSLOG_ID:
             return getSmsLog(uri);
+        case PHONE_FILTER:
+            String phone = uri.getLastPathSegment();
+            String phoneDecoder = Uri.decode(phone);
+            return smslogDatabase.searchForPhoneNumber(phoneDecoder, projection, selection,  selectionArgs, sortOrder);            
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
     }
 
     private Cursor search(String[] _projection, String _selection, String[] _selectionArgs, String _sortOrder) {
-        String[] projection = _projection == null ? SmsLogDatabase.SmsLogColumns.ALL_KEYS : _projection;
+        String[] projection = _projection == null ? SmsLogDatabase.SmsLogColumns.ALL_COLS : _projection;
         String selection = _selection;
         String[] selectionArgs = _selectionArgs;
         String sortOrder = _sortOrder;
@@ -81,7 +91,7 @@ public class SmsLogProvider extends ContentProvider {
 
     private Cursor getSmsLog(Uri uri) {
         String rowId = uri.getLastPathSegment();
-        String[] columns = SmsLogDatabase.SmsLogColumns.ALL_KEYS;
+        String[] columns = SmsLogDatabase.SmsLogColumns.ALL_COLS;
         return smslogDatabase.getEntityById(rowId, columns);
     }
 

@@ -10,7 +10,7 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "SmsLogOpenHelper";
 
     public static final String DATABASE_NAME = "smsLog.db";
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
 
     // ===========================================================
     // Table
@@ -29,6 +29,7 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
             + ", " + SmsLogDatabase.SmsLogColumns.COL_ACTION //
             + ", " + SmsLogDatabase.SmsLogColumns.COL_PHONE //
             + ", " + SmsLogDatabase.SmsLogColumns.COL_PHONE_NORMALIZED // 
+            + ", " + SmsLogDatabase.SmsLogColumns.COL_PHONE_MIN_MATCH // 
             + ", " + SmsLogDatabase.SmsLogColumns.COL_MESSAGE //
             + ");";
 

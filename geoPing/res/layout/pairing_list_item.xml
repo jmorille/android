@@ -5,24 +5,38 @@
     android:orientation="horizontal"
     android:padding="10dip" >
 
+    <ImageButton
+        android:id="@+id/pairing_list_item_geoping_button"
+        style="@style/entity_list_item"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" 
+        android:minWidth="60dip"
+        android:text="@string/geoping" 
+        android:src="@drawable/ic_launcher" 
+        android:width="20dp" />
+<!--         android:background="@android:color/transparent" --> 
+    
+    <ImageView
+        android:id="@+id/pairing_list_item_authType"
+        style="@style/entity_list_item" 
+        android:layout_centerVertical="true" 
+        android:layout_alignParentLeft="true" 
+        android:src="@drawable/ic_cadenas_ferme_rouge" />
+
     <TextView
         android:id="@+id/pairing_list_item_name"
-        style="@style/entity_list_item" />
+        style="@style/entity_list_item"
+        android:layout_alignTop="@id/pairing_list_item_geoping_button"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/pairing_list_item_authType"
+          android:layout_toLeftOf="@id/pairing_list_item_geoping_button"
+        android:text="Person Name" />
 
     <TextView
         android:id="@+id/pairing_list_item_phone"
         style="@style/entity_list_item"
-        android:layout_below="@id/pairing_list_item_name" />
-
-    <Button
-        android:id="@+id/pairing_list_item_geoping_button"
-        style="@style/entity_list_item"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:minWidth="60dip"
-        android:text="@string/geoping"
-        android:width="20dp" />
+        android:layout_alignLeft="@id/pairing_list_item_name"
+        android:layout_below="@id/pairing_list_item_name"
+        android:text="+33011256883" />
 
 </RelativeLayout>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar" />
+<!--   <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar" /> -->
 
   
-   <style name="MyActionBar" parent="Theme.Sherlock.Light.DarkActionBar">
-        <item name="android:background">@drawable/map_actionbar_background</item> 
-    </style>
+<!--    <style name="MyActionBar" parent="Theme.Sherlock.Light.DarkActionBar"> -->
+<!--         <item name="android:background">@drawable/map_actionbar_background</item>  -->
+<!--     </style> -->
 
-    <style name="MapActionBar" parent="AppTheme">
-        <item name="android:windowActionBar">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-     </style>
+<!--     <style name="MapActionBar" parent="AppTheme"> -->
+<!--         <item name="android:windowActionBar">true</item> -->
+<!--         <item name="android:windowActionBarOverlay">true</item> -->
+<!--         <item name="android:actionBarStyle">@style/MyActionBar</item> -->
+<!--      </style> -->
   
     
 </resources>

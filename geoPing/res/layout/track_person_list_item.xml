@@ -7,22 +7,25 @@
 
     <TextView
         android:id="@+id/person_list_item_name"
+          android:focusable="false"
+        android:focusableInTouchMode="false"
         style="@style/entity_list_item" />
 
     <TextView
         android:id="@+id/person_list_item_phone"
         style="@style/entity_list_item"
+          android:focusable="false"
+        android:focusableInTouchMode="false"
         android:layout_below="@id/person_list_item_name" />
 
-    <Button
+    <ImageButton
         android:id="@+id/person_list_item_geoping_button"
         style="@style/entity_list_item"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
+        android:layout_centerVertical="true" 
         android:minWidth="60dip"
         android:text="@string/geoping"
+        android:src="@drawable/ic_launcher" 
         android:width="20dp" />
 
 </RelativeLayout>
