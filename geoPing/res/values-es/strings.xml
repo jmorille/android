@@ -31,9 +31,9 @@
     
    
     <!-- Sms Action -->
-    <string name="sms_action_geoping_request">GeoPing solicitacion</string>
+    <string name="sms_action_geoping_request">GeoPing solicitud</string>
     <string name="sms_action_geoping_response">GeoPing respuesta</string>
-    <string name="sms_action_pairing_request">Coincidencia solicitacion</string>
+    <string name="sms_action_pairing_request">Coincidencia solicitud</string>
     <string name="sms_action_pairing_response">Coincidencia respuesta</string>
     
 
@@ -53,8 +53,8 @@
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>
     
-    <string name="prefs_geoping_request">Requêtes GeoPing</string>
-    <string name="prefs_block_geoping_pairing">Block new Geoping pairing</string>
+    <string name="prefs_geoping_request">Preguntas GeoPing</string>
+    <string name="prefs_block_geoping_pairing">Bloquear nuevo Geoping emparejamiento</string>
     <string name="prefs_block_geoping_pairing_summaryOff">Block new Geoping pairing</string>
     <string name="prefs_block_geoping_pairing_summaryOn">Authorize new Geoping pairing</string>
     

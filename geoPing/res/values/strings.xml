@@ -108,7 +108,7 @@
     <string name="pairing_name">Name</string>
     <string name="pairing_phone">Phone Number</string>
     <string name="pairing_show_notification">Show notification</string>
-    <string name="pairing_authorize_type">GeoPing Authorisazion</string>
+    <string name="pairing_authorize_type">GeoPing Authorization</string>
     <string name="pairing_authorize_type:never">Block</string>
     <string name="pairing_authorize_type:ask">On validation</string>
     <string name="pairing_authorize_type:always">Always</string>
@@ -117,8 +117,28 @@
 	<string name="smslog_delete_all">Del all</string>
 
     <!-- Help -->
-    <string name="person_help">List of people that you can request a GeoPing GPS coordinates.\n\nThe Geoping pairing functionnality permit to manage the security which authorize or block some GeoPing request</string>
-    <string name="pairing_help">List of pairing person that you accept to send your GeoPing coordinate (Your GPS position)</string>
-    <string name="smslog_help">Lisf of Sms message, sent or received by GeoPing application.</string>
-    
+  <string name="person_help"> List of persons for whom you can request a GeoPing. \n \n
+         Various steps to associate a person: \n
+         <b> 1 - </b> Add a new person by entering the phone number (or select it from the list of contacts) \n
+         <b> 2 - </b> Install the application GeoPing on the second phone (for which you want to get its location) \n
+         <b> 3 - </b> Send a request for matching to allow only your phone number \n
+         <b> 4 - </b> Wait arrival on the second SMS phone to accept the matching in the notification bar \n
+         <b> 5 - </b> Optional: You can lock in the new pairing menu \ <i> options </i> \n
+          \n You can now get the position of the second phone \n
+     </string>
+     <string name="pairing_help">
+         The list of matches is the list of persons associated for which you agree (or not) to send your GeoPing. \n
+         Obtained your location using GPS or other sensor present on your phone. \n \n
+         3 options Association are available: \n
+           <b>  * Block :</b> Prevents GeoPing \n
+           <b>  * Always : </b> Accepts systematically Geoping. \n
+           <b>  * On validation: </b> A notification will ask systematically acceptance of GeoPing \ n
+          \n
+          A notification can be configured to alert you.
+         </string>
+     <string name="smslog_help"> List of messages sent or received by the GeoPing application. </string>    
 </resources>
+
+    
+    
+    
