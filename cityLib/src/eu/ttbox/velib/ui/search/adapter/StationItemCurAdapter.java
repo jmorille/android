@@ -72,6 +72,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 				break;
 			}
 		}
+		
 	};
 
 
@@ -88,9 +89,14 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 
 
 	// ===========================================================
-	// Lifez Cycle
+	// Life Cycle
 	// ===========================================================
 
+	public void close() {
+		executor.shutdownNow();
+		viewHolders.clear();
+		
+	}
 	
 	// ===========================================================
 	// Bindings

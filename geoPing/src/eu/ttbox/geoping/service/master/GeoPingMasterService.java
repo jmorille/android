@@ -101,7 +101,7 @@ public class GeoPingMasterService extends IntentService {
 		this.appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		this.notifyGeoPingResponse = appPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, false);
 		// Google Analytics
-		tracker = ((GeoPingApplication) getApplication()).getTracker();
+		tracker = ((GeoPingApplication) getApplication()).tracker();
 
 		Log.d(TAG, "#################################");
 		Log.d(TAG, "### GeoPingMasterService Service Started.");

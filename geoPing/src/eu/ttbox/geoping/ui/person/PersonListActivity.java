@@ -32,7 +32,7 @@ public class PersonListActivity extends FragmentActivity {
 
         handleIntent(getIntent());
         // Tracker
-        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).getTracker();
+        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).tracker();
         tracker.trackPageView("/"+TAG);
     }
 

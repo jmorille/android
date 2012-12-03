@@ -22,14 +22,12 @@ public class LocationUtils {
     public static Location getLastKnownLocation(LocationManager locationManager) {
         Location lastKnownLocation = null;
         // Check all localisation Provider
-        List<String> providers = locationManager.getProviders(true);
+        List<String> providers = locationManager.getProviders(false);
         if (providers != null && !providers.isEmpty()) {
             for (final String provider : providers) {
                 Location providerLoc = locationManager.getLastKnownLocation(provider);
                 if (providerLoc != null) {
-                    if (Log.isLoggable(TAG, Log.DEBUG))
-                        Log.d(TAG, String.format("Test LastKnownLocation of provider [%s] : %s - %s", provider, new Date(providerLoc.getTime()), providerLoc));
-                    if (isBetterLocation(providerLoc, lastKnownLocation)) {
+                     if (isBetterLocation(providerLoc, lastKnownLocation)) {
                         lastKnownLocation = providerLoc;
                     }
                 }

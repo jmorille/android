@@ -31,6 +31,7 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
     // Allocate a helper and add it to the backup agent
     @Override
     public void onCreate() {
+    
         // Prefs
         SharedPreferencesBackupHelper helperPrefs = new SharedPreferencesBackupHelper(this, PREFS);
         addHelper(BACKUP_KEY_PREFS, helperPrefs);
@@ -46,7 +47,8 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
     @Override
     public void onBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) throws IOException {
         synchronized (GeoPingBackupAgent.sDataLock) {
-            Log.i(TAG, "----- onBackup Begin Backup --- GeoPing"); 
+            Log.i(TAG, "----- onBackup Begin Backup --- GeoPing");
+           
             super.onBackup(oldState, data, newState);
             Log.i(TAG, "----- onBackup End   Backup --- GeoPing");
         }

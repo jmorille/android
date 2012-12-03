@@ -14,6 +14,8 @@ import java.util.zip.GZIPInputStream;
 import org.apache.http.impl.cookie.DateUtils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.model.Station;
@@ -32,13 +34,20 @@ public class StationDownloadService {
     private final String TAG = "StationDownloadService";
 
 	private Context context;
+	
+	private ConnectivityManager connectivityManager;
 
 	public StationDownloadService(Context context) {
 		super();
 		this.context = context;
+		this.connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 
 	public ArrayList<Station> donwloadStationsByProvider(VelibProvider velibProvider) {
+		NetworkInfo activeNW = connectivityManager.getActiveNetworkInfo();
+		if (!activeNW.isConnectedOrConnecting()) {
+			return null;
+		}
 		// Log.i(TAG, String.format( "Starting downloading stations for Provider %s" , velibProvider));
 		String urlString = velibProvider.getUrlCarto();
 		if (Log.isLoggable(TAG, Log.DEBUG))
@@ -93,7 +102,11 @@ public class StationDownloadService {
 	}
 
 	public int updateStationDispo(VelibProvider velibProvider, ArrayList<Station> stations) {
-		ArrayList<Station> updatedStations = donwloadStationsByProvider(velibProvider);
+		NetworkInfo activeNW = connectivityManager.getActiveNetworkInfo();
+		if (!activeNW.isConnectedOrConnecting()) {
+			return 0;
+		}
+ 		ArrayList<Station> updatedStations = donwloadStationsByProvider(velibProvider);
 		HashMap<Integer, Station> dispoStations = new HashMap<Integer, Station>(stations.size());
 		for (Station station : updatedStations) {
 			Integer id = Integer.valueOf(station.getId());

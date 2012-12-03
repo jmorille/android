@@ -9,13 +9,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import eu.ttbox.geoping.GeoPingApplication;
@@ -27,159 +26,150 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
  * @see http://mobiforge.com/developing/story/using-google-maps-android
  * 
  */
-public class ShowMapActivity extends FragmentActivity  {
+public class ShowMapActivity extends SherlockFragmentActivity {
 
-    private static final String TAG = "ShowMapActivity";
- 
-    // Constant
-    /**
-     * This number depend of previous menu
-     */
-    private int MENU_LAST_ID = 3;
-    
-    // Map
-    private ShowMapFragment mapFragment;
+	private static final String TAG = "ShowMapActivity";
 
-   
-    // ===========================================================
-    // Constructors
-    // ===========================================================
+	private static final boolean IS_POST_HONEYCOMB = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 
-    @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        setContentView(R.layout.map_activity);
-        // Google Analytics
-        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).getTracker();
-        tracker.trackPageView("/"+TAG);
-    }
+	// Constant
+	/**
+	 * This number depend of previous menu
+	 */
+	private int MENU_LAST_ID = 3;
 
-    @Override
-    public void onAttachFragment(Fragment fragment) {
-        super.onAttachFragment(fragment);
-        if (fragment instanceof ShowMapFragment) {
-            mapFragment = (ShowMapFragment) fragment;
-        }
-    }
- 
-    // ===========================================================
-    // Life cycle
-    // ===========================================================
+	// Map
+	private ShowMapFragment mapFragment;
 
-     
-    @Override
-    protected void onResume() {
-        if (Log.isLoggable(TAG, Log.INFO)) { 
-            Log.i(TAG, "### ### ### ### ### onResume call ### ### ### ### ###");
-        }
-        super.onResume(); 
-        handleIntent(getIntent()); 
-    }
+	// ===========================================================
+	// Constructors
+	// ===========================================================
 
-    
+	@Override
+	public void onCreate(Bundle bundle) {
+		super.onCreate(bundle);
+		setContentView(R.layout.map_activity);
+		// Google Analytics
+		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
+		tracker.trackPageView("/" + TAG);
+	}
 
-    // ===========================================================
-    // Menu
-    // ===========================================================
+	@Override
+	public void onAttachFragment(Fragment fragment) {
+		super.onAttachFragment(fragment);
+		if (fragment instanceof ShowMapFragment) {
+			mapFragment = (ShowMapFragment) fragment;
+		}
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_map, menu);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	// ===========================================================
+	// Life cycle
+	// ===========================================================
 
-        }
-        return true;
-    }
+	@Override
+	protected void onResume() {
+		if (Log.isLoggable(TAG, Log.INFO)) {
+			Log.i(TAG, "### ### ### ### ### onResume call ### ### ### ### ###");
+		}
+		super.onResume();
+		handleIntent(getIntent());
+	}
 
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        // mapView.getOverlayManager().onPrepareOptionsMenu(menu, MENU_LAST_ID,
-        // mapView);
-        boolean prepare = super.onPrepareOptionsMenu(menu);
+	// ===========================================================
+	// Menu
+	// ===========================================================
 
-        // Current Tile Source
-        ITileSource currentTileSrc = mapFragment.getMapViewTileSource();
-        // Create Map
-        MenuItem mapTypeItem = menu.findItem(R.id.menuMap_mapmode);
-        final SubMenu mapTypeMenu = mapTypeItem.getSubMenu();
-        mapTypeMenu.clear();
-        int MENU_MAP_GROUP = MENU_LAST_ID;
-        // int MENU_TILE_SOURCE_STARTING_ID =
-        // TilesOverlay.MENU_TILE_SOURCE_STARTING_ID;
-        ArrayList<ITileSource> tiles = mapFragment.getMapViewTileSources() ;
-        int tileSize = tiles.size();
-        for (int a = 0; a < tileSize; a++) {
-            final ITileSource tileSource = tiles.get(a);
-            String tileName = mapFragment.getMapViewTileSourceName(tileSource);
-            MenuItem tileMenuItem = mapTypeMenu.add(MENU_MAP_GROUP, TilesOverlay.MENU_TILE_SOURCE_STARTING_ID + MENU_MAP_GROUP + a, Menu.NONE, tileName);
-            if (currentTileSrc != null && currentTileSrc.ordinal() == tileSource.ordinal()) {
-                tileMenuItem.setChecked(true);
-            }
-        }
-        mapTypeMenu.setGroupCheckable(MENU_MAP_GROUP, true, true);
-        return prepare;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_map, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case R.id.menuMap_mypositoncenter: {
-            mapFragment.centerOnMyPosition(); 
-            return true;
-        }
-        case R.id.menuMap_track_person: {
-            mapFragment.showSelectPersonDialog();
-            return true;
-         }
-        default: {
-            // Map click
-            final int menuId = item.getItemId() - MENU_LAST_ID;
-            ArrayList<ITileSource>  tiles = mapFragment.getMapViewTileSources();
-            int  tileSize = tiles.size();
-            if ((menuId >= TilesOverlay.MENU_TILE_SOURCE_STARTING_ID) && (menuId < TilesOverlay.MENU_TILE_SOURCE_STARTING_ID +tileSize)) {
-                mapFragment.setMapViewTileSource(tiles.get(menuId - TilesOverlay.MENU_TILE_SOURCE_STARTING_ID));
-                // Compatibility
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    invalidateOptionsMenu();
-                }
-                return true;
-            }
-        }
-        }
-        return false;
-    }
- 
+	@Override
+	public boolean onPrepareOptionsMenu(final Menu menu) {
+		// mapView.getOverlayManager().onPrepareOptionsMenu(menu, MENU_LAST_ID,
+		// mapView);
+		boolean prepare = super.onPrepareOptionsMenu(menu);
 
-    // ===========================================================
-    // Handle Intent
-    // ===========================================================
+		// Current Tile Source
+		ITileSource currentTileSrc = mapFragment.getMapViewTileSource();
+		// Create Map
+		MenuItem mapTypeItem = menu.findItem(R.id.menuMap_mapmode);
+		final SubMenu mapTypeMenu = mapTypeItem.getSubMenu();
+		mapTypeMenu.clear();
+		int MENU_MAP_GROUP = MENU_LAST_ID;
+		// int MENU_TILE_SOURCE_STARTING_ID =
+		// TilesOverlay.MENU_TILE_SOURCE_STARTING_ID;
+		ArrayList<ITileSource> tiles = mapFragment.getMapViewTileSources();
+		int tileSize = tiles.size();
+		for (int a = 0; a < tileSize; a++) {
+			final ITileSource tileSource = tiles.get(a);
+			String tileName = mapFragment.getMapViewTileSourceName(tileSource);
+			MenuItem tileMenuItem = mapTypeMenu.add(MENU_MAP_GROUP, TilesOverlay.MENU_TILE_SOURCE_STARTING_ID + MENU_MAP_GROUP + a, Menu.NONE, tileName);
+			if (currentTileSrc != null && currentTileSrc.ordinal() == tileSource.ordinal()) {
+				tileMenuItem.setChecked(true);
+			}
+		}
+		mapTypeMenu.setGroupCheckable(MENU_MAP_GROUP, true, true);
+		return prepare;
+	}
 
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menuMap_mypositoncenter: {
+			mapFragment.centerOnMyPosition();
+			return true;
+		}
+		case R.id.menuMap_track_person: {
+			mapFragment.showSelectPersonDialog();
+			return true;
+		}
+		default: {
+			// Map click
+			final int menuId = item.getItemId() - MENU_LAST_ID;
+			ArrayList<ITileSource> tiles = mapFragment.getMapViewTileSources();
+			int tileSize = tiles.size();
+			if ((menuId >= TilesOverlay.MENU_TILE_SOURCE_STARTING_ID) && (menuId < TilesOverlay.MENU_TILE_SOURCE_STARTING_ID + tileSize)) {
+				mapFragment.setMapViewTileSource(tiles.get(menuId - TilesOverlay.MENU_TILE_SOURCE_STARTING_ID));
+				// Compatibility
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					invalidateOptionsMenu();
+				}
+				return true;
+			}
+		}
+		}
+		return false;
+	}
 
-    private void handleIntent(Intent intent) {
-        if (intent == null) {
-            return;
-        }
-        String action = intent.getAction();
-        Log.d(TAG, String.format("Handle Intent for action %s : %s", action, intent));
-        if (Intent.ACTION_VIEW.equals(action)) {
-            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-            int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
-            int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
-            Log.w(TAG, String.format("Show on Map Phone [%s] (%s, %s) ", phone, latE6, lngE6));
-            if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
-                mapFragment. centerOnPersonPhone(phone, latE6, lngE6); 
-            }
-        }
-    }
+	// ===========================================================
+	// Handle Intent
+	// ===========================================================
 
-   
- 
-    // ===========================================================
-    // Others
-    // ===========================================================
+	protected void onNewIntent(Intent intent) {
+		handleIntent(intent);
+	}
+
+	private void handleIntent(Intent intent) {
+		if (intent == null) {
+			return;
+		}
+		String action = intent.getAction();
+		Log.d(TAG, String.format("Handle Intent for action %s : %s", action, intent));
+		if (Intent.ACTION_VIEW.equals(action)) {
+			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+			int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
+			int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
+			Log.w(TAG, String.format("Show on Map Phone [%s] (%s, %s) ", phone, latE6, lngE6));
+			if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
+				mapFragment.centerOnPersonPhone(phone, latE6, lngE6);
+			}
+		}
+	}
+
+	// ===========================================================
+	// Others
+	// ===========================================================
 
 }

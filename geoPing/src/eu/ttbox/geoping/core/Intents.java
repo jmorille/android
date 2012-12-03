@@ -42,6 +42,7 @@ public class Intents {
     public static final String EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL = "EXTRA_NOTIFICATION_TYPE";
     public static final String EXTRA_NOTIF_ID = "EXTRA_NOTIF_ID";
     public static final String EXTRA_PERSON_NAME = "EXTRA_PERSON_NAME";
+    public static final String EXTRA_PERSON_ID = "EXTRA_PERSON_ID";
     
     public static final String EXTRA_INTERNAL_BOOL = "EXTRA_INTERNAL_BOOL";
 

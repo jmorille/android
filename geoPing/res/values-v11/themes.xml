@@ -4,7 +4,7 @@
   <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar" />
 
   
-   <style name="MyActionBar" parent="android:style/Widget.Holo.ActionBar">
+   <style name="MyActionBar" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="android:background">@drawable/map_actionbar_background</item> 
     </style>
 

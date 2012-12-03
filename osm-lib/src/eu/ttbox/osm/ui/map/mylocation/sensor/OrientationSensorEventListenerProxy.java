@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.Display;
 
 public class OrientationSensorEventListenerProxy implements SensorEventListener {
 
@@ -57,6 +58,8 @@ public class OrientationSensorEventListenerProxy implements SensorEventListener 
         return Math.round(eventVal);
     }
 
+    
+    
     /**
      * @see http
      *      ://developer.android.com/reference/android/hardware/SensorEvent.html

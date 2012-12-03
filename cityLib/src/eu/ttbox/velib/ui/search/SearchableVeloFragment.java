@@ -30,6 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import eu.ttbox.osm.ui.map.mylocation.sensor.LocationUtils;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.VeloContentProvider;
@@ -56,7 +57,7 @@ public class SearchableVeloFragment extends Fragment {
     // Config
     private static final long DEFAULT_DISPO_DELTA_DELAY_IN_S = 60 * 5; 
     
-    long  checkDispoDeltaDelayInMs =AppConstants.ONE_SECOND_IN_MS *DEFAULT_DISPO_DELTA_DELAY_IN_S ;
+    long  checkDispoDeltaDelayInMs = AppConstants.ONE_SECOND_IN_MS *DEFAULT_DISPO_DELTA_DELAY_IN_S ;
     
 //     // Service
     private LocationManager locationManager;
@@ -113,6 +114,10 @@ public class SearchableVeloFragment extends Fragment {
     public void onResume() {
         super.onResume();
         // Service
+        Location lastLoc = LocationUtils.getLastKnownLocation(locationManager);
+        if (lastLoc!=null) {
+        	listAdapter.onLocationChanged(lastLoc);
+        }
         for (String provider : locationManager.getAllProviders() ) {
             locationManager.requestLocationUpdates(provider, 1000l, 0l, listAdapter);
         }

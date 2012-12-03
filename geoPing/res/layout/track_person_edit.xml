@@ -17,32 +17,33 @@
             android:id="@+id/person_name"
             style="@style/entity_edit"
             android:layout_width="fill_parent"
-            android:hint="@string/person_name" />
+            android:hint="@string/person_name"
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/person_phone"
             style="@style/entity_edit"
             android:layout_width="fill_parent"
             android:layout_below="@id/person_name"
-             android:inputType="phone"
-            android:hint="@string/person_phone" />
+            android:hint="@string/person_phone"
+            android:inputType="phone" />
 
         <Button
             android:id="@+id/select_contact_button"
             style="@style/entity_edit"
-            android:layout_below="@id/person_phone" 
+            android:layout_below="@id/person_phone"
             android:text="@string/menu_select_contact" />
 
         <Button
             android:id="@+id/person_color_picker_button"
             style="@style/entity_edit"
-            android:layout_below="@id/select_contact_button" 
+            android:layout_below="@id/select_contact_button"
             android:text="@string/color_picker" />
 
         <Button
             android:id="@+id/person_pairing_button"
             style="@style/entity_edit"
-            android:layout_below="@id/person_color_picker_button" 
+            android:layout_below="@id/person_color_picker_button"
             android:text="@string/menu_pairing"
             android:visibility="gone" />
     </RelativeLayout>

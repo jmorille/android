@@ -2,26 +2,26 @@ package eu.ttbox.geoping;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 
 import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
 import eu.ttbox.geoping.ui.pairing.PairingListFragment;
 import eu.ttbox.geoping.ui.person.PersonListFragment;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends  SherlockFragmentActivity { //
 
 	private static final String TAG = "MainActivity";
 
@@ -52,15 +52,18 @@ public class MainActivity extends FragmentActivity {
 		// primary sections
 		// of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
+		
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		// Tracker
-		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).getTracker();
-		if (tracker != null) {
-			tracker.trackPageView("/" + TAG);
-		}
+		GeoPingApplication.getInstance().tracker().trackPageView("/" + TAG);
+//		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
+//		if (tracker != null) {
+//			tracker.trackPageView("/" + TAG);
+//		}
+		Log.d(TAG,"--------------- " + getPackageName()  + "_preferences");
+		
 
 	}
 
@@ -70,11 +73,11 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu, menu);
+		getSupportMenuInflater().inflate(R.menu.menu, menu);
 		return true;
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		boolean isConsume = MenuOptionsItemSelectionHelper.onOptionsItemSelected(this, item);
 		if (isConsume) {
 			return isConsume;

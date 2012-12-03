@@ -27,6 +27,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,6 +64,14 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		View v = inflater.inflate(R.layout.track_person_edit, container, false);
 		// binding
 		nameEditText = (EditText) v.findViewById(R.id.person_name);
+		nameEditText.setOnLongClickListener(new OnLongClickListener(){
+
+			@Override
+			public boolean onLongClick(View v) {
+				onSelectContactClick(v);
+				return true;
+			}
+ 		});
 		phoneEditText = (EditText) v.findViewById(R.id.person_phone);
 		colorPickerButton = (Button) v.findViewById(R.id.person_color_picker_button);
 		colorPickerButton.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +98,9 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 			}
 		});
 		// Menu
+		// Load Data
+		
+		loadEntity(getArguments());
 		// setHasOptionsMenu(true);
 		Log.w(TAG, "----------------------- Fragment onCreateView ");
 		return v;
@@ -102,10 +114,10 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 			loadEntity(entityId);
 		}
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-	    super.onActivityCreated(savedInstanceState);
+		super.onActivityCreated(savedInstanceState);
 		Log.w(TAG, "----------------------- Fragment onActivityCreated ");
 	}
 
@@ -134,13 +146,24 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		this.entityId = entityId;
 	}
 
-	public void loadEntity(String entityId) {
+	public void loadEntity(Bundle agrs) {
+		if (agrs!=null && agrs.containsKey(Intents.EXTRA_PERSON_ID)) {
+			String entityId = agrs.getString(Intents.EXTRA_PERSON_ID);
+			loadEntity(entityId);
+		} else {
+			// prepare for insert
+			prepareInsert();
+		}
+
+	}
+
+	private void loadEntity(String entityId) {
 		Log.d(TAG, "loadEntity : " + entityId);
 		Log.d(TAG, "getActivity : " + (getActivity() != null));
 		Log.d(TAG, "getSupportLoaderManager : " + (getActivity().getSupportLoaderManager() != null));
 		setEntityId(entityId);
 		Bundle bundle = new Bundle();
-		bundle.putString(Intents.EXTRA_SMS_PHONE, entityId);
+		bundle.putString(Intents.EXTRA_PERSON_ID, entityId);
 		getActivity().getSupportLoaderManager().initLoader(PERSON_EDIT_LOADER, bundle, personLoaderCallback);
 	}
 
@@ -349,7 +372,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 			Log.d(TAG, "onCreateLoader");
-			String entityId = args.getCharSequence(Intents.EXTRA_SMS_PHONE).toString();
+			String entityId = args.getCharSequence(Intents.EXTRA_PERSON_ID).toString();
 			Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, entityId);
 			// Loader
 			CursorLoader cursorLoader = new CursorLoader(getActivity(), entityUri, null, null, null, null);

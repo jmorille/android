@@ -1,5 +1,6 @@
 package eu.ttbox.geoping;
 
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,19 +24,42 @@ public class GeoPingApplication extends Application {
 	private static final String analyticsKey = "UA-36410991-1";
 
 	/* Analytics tracker instance */
-	GoogleAnalyticsTracker tracker;
+	private GoogleAnalyticsTracker tracker;
+
+	private static GeoPingApplication APP_INSTANCE;
+
+	private static final boolean DEVELOPPER_MODE = true;
 
 	@Override
 	public void onCreate() {
+		// Strict Mode
+//		initStrictMode();
+
 		// Create Application
 		super.onCreate();
-		if (Log.isLoggable(TAG, Log.DEBUG)) {
-			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-		} 
+		APP_INSTANCE = this;
+ 
 		// Perform the initialization that doesn't have to finish immediately.
 		// We use an async task here just to avoid creating a new thread.
 		(new DelayedInitializer()).execute();
+	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB) 
+	private void initStrictMode() {
+		if (DEVELOPPER_MODE) {
+			StrictMode.setThreadPolicy( //
+					new StrictMode.ThreadPolicy.Builder()//
+							.detectDiskReads()//
+							.detectDiskWrites() //
+							.detectNetwork() //
+							.penaltyFlashScreen() //
+							// .penaltyLog()//
+							.build());
+		}
+	}
+
+	public static GeoPingApplication getInstance() {
+		return APP_INSTANCE;
 	}
 
 	/**
@@ -69,7 +93,7 @@ public class GeoPingApplication extends Application {
 	 * This is getter for tracker instance. This is called in activity to get
 	 * reference to tracker instance.
 	 */
-	public GoogleAnalyticsTracker getTracker() {
+	public GoogleAnalyticsTracker tracker() {
 		if (tracker == null) {
 			tracker = createGoogleAnalyticsTracker();
 		}

@@ -521,18 +521,34 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 	}
 
 	private int getDisplayRotation() {
+		int ang = 0; 
 		switch (mDisplay.getRotation()) { // .getOrientation()
-		case Surface.ROTATION_90:
-			return 90;
-		case Surface.ROTATION_180:
-			return 180;
-		case Surface.ROTATION_270:
-			return 270;
-		default:
-			return 0;
+		case Surface.ROTATION_0: break;
+		case Surface.ROTATION_90: ang = 90;break;
+		case Surface.ROTATION_180: ang = 180;break; 
+		case Surface.ROTATION_270: ang =270;break;  
+		default: break;
 		}
+		return ang;
 	}
 
+
+//	private int getDisplayRotation2() {
+//		int AXIS_X, AXIS_Y;
+//		int x = AXIS_X; 
+//		int y = AXIS_Y; 
+//		switch (mDisplay.getRotation()) { // .getOrientation()
+//		case Surface.ROTATION_0: break;
+//		case Surface.ROTATION_90: x = AXIS_Y; y= AXIS_MINUS_X;break;
+//		case Surface.ROTATION_180: y = AXIS_MINUS_Y;break; 
+//		case Surface.ROTATION_270: x =AXIS_MINUS_Y; y=AXIS_X;break;  
+//		default: break;
+//		};
+//		SensorManager.remapCoordinateSystem(inR, X, Y, outR)
+//		return ang;
+//	}
+
+	
 	public int getAzimuth() {
 		return mOrientationListener.getAzimuth();
 	}

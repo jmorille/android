@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.MainActivity.SectionsPagerAdapter;
+import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.ui.pairing.PairingListFragment;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
@@ -44,17 +45,13 @@ public class PersonEditActivity extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		// Fragment
 		editFragment = new PersonEditFragment();
-		Bundle fragArgs = new Bundle();
-		Intent intent = getIntent();
-		fragArgs.putParcelable("data", intent.getData());
-		editFragment.setArguments(fragArgs);
 		// Analytic
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).getTracker();
+		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
 		tracker.trackPageView("/" + TAG);
 		// Intents
 		Log.w(TAG, "----------------------- Activity onCreate ");
-//		 handleIntent(getIntent());
+		 handleIntent(getIntent());
 	}
 
 	@Override
@@ -129,17 +126,17 @@ public class PersonEditActivity extends FragmentActivity {
 		}
 		String action = intent.getAction();
 		Log.d(TAG, "handleIntent for action : " + action);
-		if (Intent.ACTION_EDIT.equals(action)) {
+		if (Intent.ACTION_EDIT.equals(action) || Intent.ACTION_DELETE.equals(action) ) {
 			mViewPager.setCurrentItem(0);
-			Uri data = intent.getData();
-			editFragment.setEntityId(data.getLastPathSegment());
-//			editFragment.loadEntity(data.getLastPathSegment());
-		} else if (Intent.ACTION_DELETE.equals(action)) {
+			// Prepare Edit
+ 	   		String entityId = intent.getData().getLastPathSegment();
+	   		// Set Fragment
+	   		Bundle fragArgs = new Bundle();
+			fragArgs.putString(Intents.EXTRA_PERSON_ID,entityId) ;
+			editFragment.setArguments(fragArgs);
+ 		} else if (Intent.ACTION_INSERT.equals(action)) {
 			mViewPager.setCurrentItem(0);
-			// TODO
-		} else if (Intent.ACTION_INSERT.equals(action)) {
-			mViewPager.setCurrentItem(0);
-			editFragment.prepareInsert();
+//			editFragment.prepareInsert();
 		}
 
 	}
