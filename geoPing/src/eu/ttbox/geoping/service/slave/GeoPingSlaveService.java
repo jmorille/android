@@ -648,7 +648,10 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 		switch (onlyPairing) {
 		case PAIRING:
 			notifId = SHOW_PAIRING_NOTIFICATION_ID + phone.hashCode();
+			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.VISIBLE);
 			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_no, View.GONE);
+			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_never, View.VISIBLE);
+			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.VISIBLE);
 			contentView.setTextViewText(R.id.notif_geoping_confirm_button_yes, getText(R.string.notif_confirm_request_eachtime));
 			title = getString(R.string.notif_pairing);
 			contentIntent = PendingIntent.getService(this, 0, //
@@ -657,14 +660,18 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 			break;
 		case GEOPING_REQUEST_CONFIRM:
 			title = getString(R.string.notif_geoping_request);
+			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.VISIBLE);
+			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_no, View.VISIBLE);
 			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_never, View.GONE);
 			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.GONE);
 			break;
 		case GEOPING_REQUEST_CONFIRM_FIRST:
 			title = getString(R.string.notif_geoping_request);
-			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.GONE);
+			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_yes, View.VISIBLE);
 			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_no, View.GONE);
-			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.GONE);
+			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_always, View.VISIBLE);
+			contentView.setViewVisibility(R.id.notif_geoping_confirm_button_never, View.VISIBLE);
+			contentView.setTextViewText(R.id.notif_geoping_confirm_button_yes, getText(R.string.notif_confirm_request_eachtime));
 			break;
 		default:
 			title = getString(R.string.app_name);
