@@ -129,7 +129,11 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 			fragArgs.putString(Intents.EXTRA_PERSON_ID,entityId) ;
 			editFragment.setArguments(fragArgs);
 			// Tracker
-			GeoPingApplication.getInstance().tracker().trackPageView("/Person/edit");
+			if (Intent.ACTION_DELETE.equals(action) ){
+			    GeoPingApplication.getInstance().tracker().trackPageView("/Person/delete");
+			} else {
+			    GeoPingApplication.getInstance().tracker().trackPageView("/Person/edit");
+			}
  		} else if (Intent.ACTION_INSERT.equals(action)) {
 			mViewPager.setCurrentItem(SectionsPagerAdapter.PERSON);
             // Tracker

@@ -153,6 +153,7 @@ public enum VelibProvider implements GeoPointProvider {
 			new double[] { 36.688891d, 137.208727d, 36.705842d, 137.220853d } //
 	); //
 
+	//https://montreal.bixi.com//data/bikeStations.xml
 	// CA_MONTREAL("CA, Montreal - Bixi", 45.516672d, -73.650005d, //
 	// "montreal.bixi.com", VelibServiceProviderAdpater.Bixi, Color.RED, //
 	// new String[] { "http://montreal.bixi.com/maps/statajax", null }, //

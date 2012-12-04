@@ -2,15 +2,6 @@ package eu.ttbox.geoping.ui.person;
 
 import java.util.Random;
 
-import eu.ttbox.geoping.GeoPingApplication;
-import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.core.NotifToasts;
-import eu.ttbox.geoping.core.PhoneNumberUtils;
-import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.domain.person.PersonHelper;
-import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
-import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -28,10 +19,18 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import eu.ttbox.geoping.GeoPingApplication;
+import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.NotifToasts;
+import eu.ttbox.geoping.core.PhoneNumberUtils;
+import eu.ttbox.geoping.domain.PersonProvider;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
+import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 
 public class PersonEditFragment extends Fragment implements ColorPickerDialog.OnColorChangedListener {
 
@@ -100,7 +99,6 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		});
 		// Menu
 		// Load Data
-		
 		loadEntity(getArguments());
 		// setHasOptionsMenu(true);
 		Log.w(TAG, "----------------------- Fragment onCreateView ");
@@ -110,10 +108,10 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		Log.w(TAG, "----------------------- Fragment onAttach ");
-		if (!TextUtils.isEmpty(entityId)) {
-			loadEntity(entityId);
-		}
+//		Log.w(TAG, "----------------------- Fragment onAttach ");
+//		if (!TextUtils.isEmpty(entityId)) {
+//			loadEntity(entityId);
+//		}
 	}
 
 	@Override
@@ -154,8 +152,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		} else {
 			// prepare for insert
 			prepareInsert();
-		}
-
+		} 
 	}
 
 	private void loadEntity(String entityId) {

@@ -34,7 +34,7 @@ public class PairingListActivity extends FragmentActivity {
         handleIntent(getIntent());
         // Tracker
         GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).tracker();
-        tracker.trackPageView("/"+TAG);
+        tracker.trackPageView("/pairing/list");
     }
 
     @Override

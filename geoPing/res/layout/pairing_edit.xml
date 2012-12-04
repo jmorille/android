@@ -39,7 +39,7 @@
 
         <RadioGroup
             android:id="@+id/pairing_authorize_type_radioGroup"
-            android:layout_width="wrap_content"
+           android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/pairing_authorize_type"
             android:layout_marginTop="17dp"
@@ -48,22 +48,19 @@
             <RadioButton
                 android:id="@+id/pairing_authorize_type_radio_never"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onRadioAuthorizeTypeButtonClicked"
+            android:layout_height="wrap_content"
                 android:text="@string/pairing_authorize_type:never" />
 
             <RadioButton
                 android:id="@+id/pairing_authorize_type_radio_ask"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onRadioAuthorizeTypeButtonClicked"
+                  android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
                 android:text="@string/pairing_authorize_type:ask" />
 
             <RadioButton
                 android:id="@+id/pairing_authorize_type_radio_always"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onRadioAuthorizeTypeButtonClicked"
+            android:layout_height="wrap_content"
                 android:text="@string/pairing_authorize_type:always" />
         </RadioGroup>
 
@@ -73,16 +70,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/pairing_authorize_type_radioGroup"
-            android:layout_marginTop="21dp"
-            android:onClick="onShowNotificationClick"
+            android:layout_marginTop="21dp" 
             android:text="@string/pairing_show_notification" />
 
         <Button
             android:id="@+id/select_contact_button"
             style="@style/entity_edit"
             android:layout_alignParentBottom="true"
-            android:layout_below="@id/paring_show_notification"
-            android:onClick="onSelectContactClick"
+            android:layout_below="@id/paring_show_notification" 
             android:text="@string/menu_select_contact" />
     </RelativeLayout>
 
