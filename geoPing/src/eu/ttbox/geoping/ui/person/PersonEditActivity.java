@@ -15,16 +15,39 @@ import com.actionbarsherlock.view.MenuItem;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.ui.person.PersonEditFragment.OnPersonSelectListener;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class PersonEditActivity extends SherlockFragmentActivity {
 
 	private static final String TAG = "PersonEditActivity";
 
+	// Binding
 	private PersonEditFragment editFragment;
+    private SmsLogListFragment smsLogFragment;
 
-	SectionsPagerAdapter mSectionsPagerAdapter;
-	ViewPager mViewPager;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+
+	// Instance
+    private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 2;
+	private int viewPagerPageCount = 1;
+	
+
+    // ===========================================================
+    // Listener
+    // ===========================================================
+
+    private PersonEditFragment.OnPersonSelectListener  onPersonSelectListener = new PersonEditFragment.OnPersonSelectListener() {
+
+        @Override
+        public void onPersonSelect(String id, String phone) {
+            viewPagerPageCount = VIEW_PAGER_LOADPERS_PAGE_COUNT;
+//            smsLogFragment.setArguments(args)
+            
+        }
+        
+    };
 
 	// ===========================================================
 	// Constructors
@@ -32,7 +55,6 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.w(TAG, "----------------------- Activity onCreate Begin ");
  		super.onCreate(savedInstanceState);
 		setContentView(R.layout.track_person_edit_activity);
 		// Pagers
@@ -40,19 +62,19 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		// Fragment
 		editFragment = new PersonEditFragment();
+		editFragment.setOnPersonSelectListener(onPersonSelectListener);
+		smsLogFragment = new SmsLogListFragment();
 		// Analytic
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		// Tracker
 		
 		// Intents
-		Log.w(TAG, "----------------------- Activity onCreate ");
 		 handleIntent(getIntent());
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.w(TAG, "----------------------- Activity onResume ");
 //		handleIntent(getIntent());
 	}
 
@@ -61,7 +83,6 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		Log.w(TAG, "----------------------- Activity onStart ");
 //		handleIntent(getIntent());
 	}
 
@@ -142,6 +163,8 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 
 	}
 
+
+	
 	// ===========================================================
 	// Pages Adapter
 	// ===========================================================
@@ -168,7 +191,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 				fragment = editFragment;
 				break;
 			case LOG:
-				fragment = new SmsLogListFragment();
+				fragment = smsLogFragment;
 				break;
 			}
 			return fragment;
@@ -176,7 +199,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 
 		@Override
 		public int getCount() {
-			return 1;
+			return viewPagerPageCount;
 		}
 
 		@Override
