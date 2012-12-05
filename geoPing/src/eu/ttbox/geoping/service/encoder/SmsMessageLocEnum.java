@@ -9,21 +9,21 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 public enum SmsMessageLocEnum {
 
     // Loc
-    PARAM_PROVIDER('p', SmsMessageTypeEnum.GPS_PROVIDER, GeoTrackColumns.COL_PROVIDER), //
-    PARAM_DATE('d', SmsMessageTypeEnum.DATE, GeoTrackColumns.COL_TIME), //
-    PARAM_GEO_E6('g', SmsMessageTypeEnum.MULTI, GeoTrackColumns.COL_LATITUDE_E6, new String[] { GeoTrackColumns.COL_LATITUDE_E6, GeoTrackColumns.COL_LONGITUDE_E6, GeoTrackColumns.COL_ALTITUDE }), //
+    PROVIDER('p', SmsMessageTypeEnum.GPS_PROVIDER, GeoTrackColumns.COL_PROVIDER), //
+    DATE('d', SmsMessageTypeEnum.DATE, GeoTrackColumns.COL_TIME), //
+    GEO_E6('g', SmsMessageTypeEnum.MULTI, GeoTrackColumns.COL_LATITUDE_E6, new String[] { GeoTrackColumns.COL_LATITUDE_E6, GeoTrackColumns.COL_LONGITUDE_E6, GeoTrackColumns.COL_ALTITUDE }), //
     // PARAM_LATITUDE_E6('x', SmsMessageTypeEnum.INT,
     // GeoTrackColumns.COL_LATITUDE_E6), //
     // PARAM_LONGITUDE_E6('y', SmsMessageTypeEnum.INT,
     // GeoTrackColumns.COL_LONGITUDE_E6), //
 //    PARAM_ALTITUDE('z', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ALTITUDE), //
-    PARAM_ACCURACY('a', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ACCURACY), //
-    PARAM_BEARING('b', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BEARING), //
-    PARAM_SPEAD('c', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED), //
-    PARAM_BATTERY('w', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BATTERY_LEVEL), //
+    ACCURACY('a', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ACCURACY), //
+    BEARING('b', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BEARING), //
+    SPEAD('c', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED), //
+    BATTERY('w', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BATTERY_LEVEL), //
 
     // Person
-    PARAM_PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID); //
+    PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID); //
 
     // ===========================================================
     // Constructor

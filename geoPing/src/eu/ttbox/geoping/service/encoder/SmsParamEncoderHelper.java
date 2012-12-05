@@ -125,7 +125,7 @@ public class SmsParamEncoderHelper {
 		return dateAsLong;
 	}
 
-	private static boolean writeToMultiInt(StringBuilder sb, SmsMessageLocEnum field, Bundle values, String[] colDatas, int radix) {
+	public static boolean writeToMultiInt(StringBuilder sb, SmsMessageLocEnum field, Bundle values, String[] colDatas, int radix) {
 		boolean isNotFirst = false;
 		int colDataSize = colDatas.length;
 		for (int i = 0; i < colDataSize; i++) {

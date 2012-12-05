@@ -23,6 +23,9 @@ public class Intents {
 
     public static final String TAG = "Intents";
 
+    public static final String ACTION_SMS_GEOPING_ARRIVED = "eu.ttbox.geoping.ACTION_SMS_GEOPING_ARRIVED";
+    public static final String EXTRA_SMS_GEOPING_ARRIVED = "EXTRA_SMS_GEOPING_ARRIVED";
+
     public static final String ACTION_SMS_GEOPING_REQUEST_SENDER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_REQUEST_SENDER";
     public static final String ACTION_SMS_GEOPING_REQUEST_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_REQUEST_HANDLER";
     public static final String ACTION_SMS_GEOPING_RESPONSE_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_RESPONSE_HANDLER";

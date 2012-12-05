@@ -44,6 +44,7 @@ import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
+import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
@@ -165,7 +166,7 @@ public class GeoPingMasterService extends IntentService {
 		} else if (Intents.ACTION_SMS_PAIRING_RESPONSE.equals(action)) {
 			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
 			Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-			long userId = SmsMessageLocEnum.PARAM_PERSON_ID.readLong(params, -1);
+			long userId = SmsMessageLocEnum.PERSON_ID.readLong(params, -1);
 			consumeSmsPairingResponse(phone, userId);
 			// Tracker
 //			tracker.trackPageView("/action/SMS_PAIRING_RESPONSE");
@@ -215,7 +216,7 @@ public class GeoPingMasterService extends IntentService {
 	// ===========================================================
 
 	private void sendSmsPairingRequest(String phone, long userId) {
-		Bundle params = SmsMessageLocEnum.PARAM_PERSON_ID.writeToBundle(null, userId);
+		Bundle params = SmsMessageLocEnum.PERSON_ID.writeToBundle(null, userId);
 		boolean isSend = sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
 		if (isSend) {
 			Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, getResources().getString(R.string.toast_notif_sended_geoping_pairing, phone));
@@ -257,7 +258,7 @@ public class GeoPingMasterService extends IntentService {
 			}
 			if (isSend) {
 				// Log It
-				logSmsMessage(SmsLogTypeEnum.SEND, phone, action, params);
+				logSmsMessage(SmsLogTypeEnum.SEND, phone, action, params,1);
 			}
 		} else if (encodeddMsg != null && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
 			// TODO display Too long messsage
@@ -269,8 +270,9 @@ public class GeoPingMasterService extends IntentService {
 	// Log Sms message
 	// ===========================================================
 
-	private void logSmsMessage(SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params) {
+	private void logSmsMessage(SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, int smsWeight) {
 		ContentValues values = SmsLogHelper.getContentValues(type, phone, action, params);
+		values.put(SmsLogColumns.COL_SMS_WEIGHT, smsWeight);
 		getContentResolver().insert(SmsLogProvider.Constants.CONTENT_URI, values);
 	}
 

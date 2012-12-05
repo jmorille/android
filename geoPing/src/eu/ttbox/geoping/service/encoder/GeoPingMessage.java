@@ -10,6 +10,7 @@ public class GeoPingMessage {
     public String phone;
     public SmsMessageActionEnum action;
     public Bundle params;
+    public String encodedParams;
 
     // Next Process Message
     public int nextStartIdx;
@@ -36,7 +37,11 @@ public class GeoPingMessage {
         this.multiMessages.add(msg);
     }
 
-    @Override
+    public boolean isMultiMessages() {
+		return multiMessages!=null && !multiMessages.isEmpty();
+	}
+
+	@Override
     public String toString() {
         return "GeoPingMessage [phone=" + phone + ", action=" + action + ", params=" + params + "]";
     }

@@ -29,11 +29,14 @@ public class SmsLogDatabase {
         public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
         public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
         public static final String COL_MESSAGE = "MSG";
+        public static final String COL_MESSAGE_PARAMS = "MSG_PARAMS";
         public static final String COL_SMSLOG_TYPE = "SMSLOG_TYPE";
         public static final String COL_TIME = "TIME";
+        public static final String COL_PARENT_ID = "PARENT_ID";
+        public static final String COL_SMS_WEIGHT = "SMS_WEIGHT";
 
         // All Cols
-        public static final String[] ALL_COLS = new String[] { COL_ID, COL_TIME, COL_ACTION, COL_PHONE,COL_PHONE_NORMALIZED,COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE };
+        public static final String[] ALL_COLS = new String[] { COL_ID, COL_TIME, COL_ACTION, COL_PHONE,COL_PHONE_NORMALIZED,COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE , COL_MESSAGE_PARAMS,COL_SMS_WEIGHT,COL_PARENT_ID };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
 
