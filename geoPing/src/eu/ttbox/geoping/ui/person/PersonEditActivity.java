@@ -43,8 +43,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
         @Override
         public void onPersonSelect(String id, String phone) {
             viewPagerPageCount = VIEW_PAGER_LOADPERS_PAGE_COUNT;
-//            smsLogFragment.setArguments(args)
-            
+//            smsLogFragment.setArguments(           
         }
         
     };
