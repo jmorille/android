@@ -70,20 +70,21 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 
 	private static final String TAG = "GeoPingSlaveService";
 
-	private static PowerManager.WakeLock sWakeLock;
-	private static final Object[] LOCK = new Object[0];
-
-	public static void runIntentInService(Context context, Intent intent) {
-		synchronized (LOCK) {
-			if (sWakeLock == null) {
-				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-				sWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "my_wakelock");
-			}
-		}
-		sWakeLock.acquire();
-		intent.setClassName(context, GeoPingSlaveService.class.getName());
-		context.startService(intent);
-	}
+//	private static PowerManager.WakeLock sWakeLock;
+//	private static final Object[] LOCK = new Object[0];
+//
+//	public static void runIntentInService(Context context, Intent intent) {
+//		synchronized (LOCK) {
+//			if (sWakeLock == null) {
+//				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+//				sWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "geoping_slave_wakelock");
+//				sWakeLock.setReferenceCounted(true);
+//			}
+//		}
+//		sWakeLock.acquire();
+//		intent.setClassName(context, GeoPingSlaveService.class.getName());
+//		context.startService(intent);
+//	}
 
 	private static final int SHOW_GEOPING_REQUEST_NOTIFICATION_ID = AppConstants.PER_PERSON_ID_MULTIPLICATOR * R.id.show_notification_new_geoping_request_confirm;
 
@@ -242,9 +243,9 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 
 			}
 		} finally {
-			synchronized (LOCK) {
-				sWakeLock.release();
-			}
+//			synchronized (LOCK) {
+//				sWakeLock.release();
+//			}
 		}
 	}
 

@@ -70,14 +70,14 @@ public class SmsMessageIntentEncoderHelper {
 			Log.w(TAG, String.format("Ignore for No Action the GeoPingMessage : %s", msg));
 			return null;
 		}
-		SmsMessageActionEnum action = msg.action;
 		Intent intent = convertSingleGeoPingMessageAsIntent(context, msg);
+//        SmsMessageActionEnum action = msg.action;
 		// Managing Lock
-		if (action.serviceClass.equals(GeoPingSlaveService.class)) {
-			GeoPingSlaveService.runIntentInService(context, intent);
-		} else {
+//		if (action.serviceClass.equals(GeoPingSlaveService.class)) {
+//			GeoPingSlaveService.runIntentInService(context, intent);
+//		} else {
 			context.startService(intent);
-		}
+//		}
 		return intent;
 	}
 

@@ -65,9 +65,15 @@ public class SMSReceiver extends BroadcastReceiver {
 					}
 				}
 			}
-		}
+		} 
 	}
 
+
+    // ===========================================================
+    // Consume Sms message
+    // ===========================================================
+
+	
 	private boolean consumeMessage(Context context, SmsMessage message) {
 		final String messageBody = message.getMessageBody();
 		final String phoneNumber = message.getDisplayOriginatingAddress();
