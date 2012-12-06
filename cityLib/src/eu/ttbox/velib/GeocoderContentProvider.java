@@ -20,8 +20,7 @@ import eu.ttbox.velib.model.VelibProvider;
 
 /**
  * {link http://code.google.com/p/android/issues/detail?id=8816}
- * 
- * @author a000cqp
+ *  
  * 
  */
 public class GeocoderContentProvider extends ContentProvider {

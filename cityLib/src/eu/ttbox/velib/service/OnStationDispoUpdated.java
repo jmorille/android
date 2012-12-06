@@ -6,8 +6,7 @@ import eu.ttbox.velib.model.Station;
 
 /**
  * @see http://tseng-blog.nge-web.net/blog/2009/02/17/how-implement-your-own-listener-android-java/
- * @author jmorille
- * 
+ *  
  */
 public interface OnStationDispoUpdated {
 

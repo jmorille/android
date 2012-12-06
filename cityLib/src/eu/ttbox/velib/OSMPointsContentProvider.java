@@ -23,8 +23,7 @@ import android.net.Uri;
 import android.util.Log;
 
 /**
- * @see @{link http://androidgps.blogspot.fr/2008/10/openstreetmap-contentprovider-for.html}
- * @author a000cqp
+ * @see @{link http://androidgps.blogspot.fr/2008/10/openstreetmap-contentprovider-for.html} 
  *
  */
 public class OSMPointsContentProvider extends ContentProvider {

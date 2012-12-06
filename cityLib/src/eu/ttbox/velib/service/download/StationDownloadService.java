@@ -21,8 +21,7 @@ import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.model.Station;
 import eu.ttbox.velib.model.VelibProvider;
 /**
- * @see http://developer.android.com/reference/java/net/HttpURLConnection.html
- * @author a000cqp
+ * @see http://developer.android.com/reference/java/net/HttpURLConnection.html 
  * 
  */
 public class StationDownloadService {

@@ -7,7 +7,6 @@ import android.os.IBinder;
 
 /**
  * @see http://developer.android.com/reference/android/app/Service.html
- * @author jmorille
  * 
  */
 public class VelibBDDService extends Service {

@@ -21,7 +21,6 @@ import eu.ttbox.velib.service.VelibService;
 
 /**
  * @see http ://chrisblunt.com/2010/08/12/android-map-view-double-taps-and-overlay -markers/
- * @author jmorille
  * 
  */
 public class VeloProviderItemizedOverlay extends ItemizedIconOverlay<VeloProviderOverlayItem> {

@@ -14,7 +14,6 @@ import eu.ttbox.velib.R;
  * @see http://developer.android.com/guide/webapps/webview.html
  * @see http://www.monocube.com/2011/02/08/android-tutorial-html-file-in-webview/ URIl @see
  *      http://androidbook.blogspot.fr/2009/08/referring-to-android-resources-using.html
- * @author jmorille
  * 
  */
 public class VelibAccountActivity extends Activity {

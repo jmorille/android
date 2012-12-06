@@ -19,7 +19,7 @@ import eu.ttbox.velib.service.database.Velo.VeloColumns;
  * @see http 
  *      ://developer.android.com/resources/samples/SearchableDictionary/src/com
  *      /example/android/searchabledict/DictionaryDatabase.html
- * @author jmorille Search by distance @see
+ * Search by distance @see
  *         http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates
  * 
  */

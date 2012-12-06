@@ -23,8 +23,7 @@ import eu.ttbox.velib.service.database.Velo.VeloColumns;
  * Backup dev guide @see http://developer.android.com/guide/topics/data/backup.html
  * 
  * Sample code @see http://developer.android.com/resources/samples/BackupRestore/src/com/example/android/backuprestore/ExampleAgent.html
- * 
- * @author jmorille
+ *  
  * 
  */
 public class MyBackupAgent extends BackupAgentHelper {

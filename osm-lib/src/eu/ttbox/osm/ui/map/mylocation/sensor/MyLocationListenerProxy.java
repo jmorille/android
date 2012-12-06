@@ -12,8 +12,7 @@ import android.util.Log;
 import eu.ttbox.osm.core.GeoLocHelper;
 /**
  *  {@link http://android-developers.blogspot.fr/2011/06/deep-dive-into-location.html}
- * @author jmorille
- *
+ *  
  */
 public class MyLocationListenerProxy implements LocationListener {
 

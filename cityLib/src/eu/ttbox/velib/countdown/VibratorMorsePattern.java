@@ -3,7 +3,6 @@ package eu.ttbox.velib.countdown;
 import eu.ttbox.velib.core.MorseCodeConverter;
 /**
  * @see https://github.com/jayway/maven-android-plugin-samples/blob/master/morseflash/morse-lib/src/main/java/com/simpligility/android/morse/MorseCodeConverter.java
- * @author jmorille
  *
  */
 public class VibratorMorsePattern {

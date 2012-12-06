@@ -41,8 +41,7 @@ import eu.ttbox.velib.service.VelibService;
 /**
  * @see http 
  *      ://www.java2s.com/Open-Source/Android/UnTagged/veloid/com/xirgonium/
- *      android /veloid/StationNearActivity.java.htm
- * @author jmorille
+ *      android /veloid/StationNearActivity.java.htm 
  * 
  */
 public class StationDispoOverlay extends Overlay implements OnStationDispoUpdated, SharedPreferences.OnSharedPreferenceChangeListener {

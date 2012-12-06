@@ -21,8 +21,7 @@ import eu.ttbox.velib.service.ws.direction.parser.GoogleDirectionParser;
  * Api {@link https://developers.google.com/maps/documentation/directions/?hl=fr-FR}
  * 
  * sample @see http://stackoverflow.com/questions/5608601/android-google-maps-and-drawing-route
- * 
- * @author jmorille
+ *  
  * 
  */
 public class DirectionDownloadService {

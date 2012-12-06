@@ -16,8 +16,7 @@ import eu.ttbox.velib.service.provider.VelibServiceProviderAdpater;
  * @see http://www.jcdecaux.be/fr/corporate/cyclocity-chiffres.cfm
  * @see http://www.jcdecaux.com/fr/Innovation-Design/Cyclocity-R
  * @see http://fr.wikipedia.org/wiki/Liste_des_syst%C3%A8mes_de_v%C3% A9los_en_libre_service_en_France
- * @see http://www.java2s.com/Open-Source/Android/UnTagged/veloid/com.xirgonium.android.manager.htm
- * @author jmorille
+ * @see http://www.java2s.com/Open-Source/Android/UnTagged/veloid/com.xirgonium.android.manager.htm 
  * 
  */
 public enum VelibProvider implements GeoPointProvider {

@@ -22,7 +22,6 @@ import eu.ttbox.velib.countdown.NumberPicker;
 
 /**
  * @see http://blog.sptechnolab.com/2011/02/10/android/android-countdown-timer/
- * @author jmorille
  * 
  */
 public class CountDownTimerActivity extends Activity {

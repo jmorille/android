@@ -28,7 +28,7 @@ import eu.ttbox.velib.map.geo.GeoLocHelper;
  * 
  * @see http://gitorious.org/android-maps-api/android-maps-api/blobs/42614538ffda1a6985c398933a85fcd9afc752ee/src/com/google/android/maps/MyLocationOverlay.java
  *      calculate-compass-bearing-heading-to-location-in-android
- * @see http://stackoverflow.com/questions/4308262/calculate-compass-bearing-heading-to-location-in-android author jmorille
+ * @see http://stackoverflow.com/questions/4308262/calculate-compass-bearing-heading-to-location-in-android  
  * 
  */
 @Deprecated

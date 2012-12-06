@@ -20,9 +20,8 @@ import eu.ttbox.velib.service.ws.direction.model.GoogleDirectionStep;
 /**
  * Api https://developers.google.com/maps/documentation/directions/?hl=fr-FR
  * 
- * sample reques @see http://maps.googleapis.com/maps/api/directions/json?origin=41.8781,-87.62979&destination=34.052,-118.24&sensor=false
- * 
- * @author jmorille
+ * sample request @see http://maps.googleapis.com/maps/api/directions/json?origin=41.8781,-87.62979&destination=34.052,-118.24&sensor=false
+ *  
  * 
  */
 public class GoogleDirectionParser {

@@ -13,7 +13,6 @@ import microsoft.mappoint.TileSystem;
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.modules.ConfigurablePriorityThreadFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
@@ -61,8 +60,7 @@ import eu.ttbox.osm.ui.map.mylocation.sensor.OrientationSensorEventListenerProxy
 /**
  * {@link http
  * ://android-developers.blogspot.fr/2011/06/deep-dive-into-location.html}
- * 
- * @author jmorille
+ *  
  * 
  */
 public class MyLocationOverlay extends Overlay implements SensorEventListener, LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {

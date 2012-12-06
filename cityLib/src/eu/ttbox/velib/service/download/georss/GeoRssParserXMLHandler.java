@@ -10,9 +10,7 @@ import android.util.Log;
 
 /**
  * Sample: http://earthquake.usgs.gov/earthquakes/catalogs/1day-M2.5.xml Sample: http://digital.cs.usu.edu/~vkulyukin/vkweb/earthquakes.xml
- * 
- * @author jmorille
- * 
+ *  
  */
 public class GeoRssParserXMLHandler extends DefaultHandler {
 

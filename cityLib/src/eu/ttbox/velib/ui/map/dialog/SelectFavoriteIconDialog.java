@@ -15,8 +15,7 @@ import eu.ttbox.velib.model.FavoriteIconEnum;
 
 /**
  * @see http://developer.android.com/resources/tutorials/views/hello-gridview.html
- * @author jmorille
- * 
+ *  
  */
 public class SelectFavoriteIconDialog extends AlertDialog {
 

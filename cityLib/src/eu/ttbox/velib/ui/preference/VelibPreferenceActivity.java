@@ -17,8 +17,6 @@ import eu.ttbox.velib.model.VelibProvider;
 /**
  * @see http://developer.android.com/reference/android/preference/PreferenceActivity.html cool preference On/Off @see
  *      http://stackoverflow.com/questions/9738658/how-do-i-create-one-preference-with-an-edittextpreference-and-a-togglebutton
- * @author a000cqp
- * 
  */
 public class VelibPreferenceActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 

@@ -6,9 +6,7 @@ import android.provider.BaseColumns;
 
 /**
  * #see http://www.oschina.net/code/explore/android-4.0.1/core/java/android/provider/CalendarContract.java
- * 
- * @author jmorille
- * 
+ *  
  */
 public class Velo {
 	private static String TAG = "VeloContentProvider";
