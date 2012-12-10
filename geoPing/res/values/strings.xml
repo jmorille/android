@@ -12,7 +12,9 @@
     <string name="menu_delete">Delete</string>
     <string name="menu_cancel">Cancel</string>
      
-     
+    <!-- Billing -->
+
+
     <!-- Encryption -->
     <string name="no_geoping_description">Please install \'GeoPingtoast_notif_sended_geoping_pairing\' from the Market (https://play.google.com/store/apps/details?id=eu.ttbox.geoping)</string>
     <string name="geoping_encrypted_message">GeoPing encrypted message</string>
