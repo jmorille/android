@@ -12,21 +12,21 @@
 
  
 	<scm>
-           <url>https://github.com/jmorille/androidSmsTracker</url>
-           <connection>scm:git:ssh://git@github.com/jmorille/androidSmsTracker</connection>
-           <developerConnection>scm:git:ssh://git@github.com/jmorille/androidSmsTracker</developerConnection>
+           <url>https://github.com/gabuzomeu/osmAndroid</url>
+           <connection>scm:git:ssh://git@github.com//gabuzomeu/osmAndroid</connection>
+           <developerConnection>scm:git:ssh://git@github.com//gabuzomeu/osmAndroid</developerConnection>
 	</scm>
 
 	 <distributionManagement>
 	    <repository>
  	    <!-- http://cemerick.com/2010/08/24/hosting-maven-repos-on-github/ -->
 	      <id>ttbox-repository-release</id>
-	      <url>https://github.com/jmorille/maven-repo/raw/master/</url>
+	      <url>https://github.com/gabuzomeu/maven-repo/raw/master/</url>
 	    </repository>
 	    <snapshotRepository>
 	      <id>ttbox-repository-snapshots</id>
 	      <name>Snapshots Repository</name>
-	      <url>https://github.com/jmorille/maven-repo/raw/master/</url>
+	      <url>https://github.com/gabuzomeu/maven-repo/raw/master/</url>
 	    </snapshotRepository>
          </distributionManagement>
 
