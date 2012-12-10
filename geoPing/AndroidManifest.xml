@@ -93,6 +93,17 @@
         <activity android:name=".ui.pairing.PairingEditActivity">
         </activity>
         
+        <!-- Billing Service -->
+       <service android:name=".service.billing.BillingService" />
+
+        <receiver android:name=".service.billing.BillingReceiver">
+            <intent-filter>
+                <action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
+                <action android:name="com.android.vending.billing.RESPONSE_CODE" />
+                <action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+                
         <!-- Admob -->
         <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.google.ads.AdActivity"/>
 

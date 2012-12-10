@@ -107,3 +107,4 @@ public abstract class MessageEncryption {
         return new String(text);
     }
 }
+
