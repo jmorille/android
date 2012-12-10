@@ -21,7 +21,6 @@ public class GeoPingApplication extends Application {
 	private String TAG = "AndroGisterApp";
 
 	/* define your web property ID obtained after profile creation for the app */
-	private static final String analyticsKey = "UA-36410991-1";
 
 	/* Analytics tracker instance */
 	private GoogleAnalyticsTracker tracker;
@@ -67,14 +66,14 @@ public class GeoPingApplication extends Application {
 	 * {@link http://androidcookbook.com/Recipe.seam?recipeId=1503}
 	 */
 	private GoogleAnalyticsTracker createGoogleAnalyticsTracker() {
-		synchronized (analyticsKey) {
+		synchronized (AppConstants.ANALYTICS_KEY) {
 			if (tracker == null) {
 				tracker = GoogleAnalyticsTracker.getInstance();
 				tracker.setCustomVar(2, "Build/Platform", Build.VERSION.RELEASE);
 				tracker.setCustomVar(3, "Build/Brand", Build.BRAND);
 				tracker.setCustomVar(4, "Build/Device", Build.DEVICE);
 				tracker.setCustomVar(1, "AppVersion", versionName());
-				tracker.startNewSession(analyticsKey, 60, getApplicationContext());
+				tracker.startNewSession(AppConstants.ANALYTICS_KEY, 60, getApplicationContext());
 			}
 		}
 		return tracker;

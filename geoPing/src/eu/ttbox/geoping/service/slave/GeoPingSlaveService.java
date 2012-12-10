@@ -455,7 +455,7 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 	public void unregisterGeoPingRequest(GeoPingRequest request) {
 		boolean isRemove = geoPingRequestList.remove(request);
 		if (isRemove) {
-
+		    Log.d(TAG, "Remove GeoPing Request in list, do Stop Service");
 		} else {
 			Log.e(TAG, "Could not remove expected GeoPingRequest. /!\\ Emmergency Stop Service /!\\");
 			geoPingRequestList.clear();
@@ -565,7 +565,7 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 			Location lastLocation = myLocation.getLastFix();
 			if (lastLocation != null) {
 				sendSmsLocation(smsPhoneNumber, lastLocation);
-				unregisterGeoPingRequest(this);
+				unregisterGeoPingRequest(GeoPingRequest.this);
 				return Boolean.TRUE;
 			}
 			return Boolean.FALSE;

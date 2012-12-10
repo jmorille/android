@@ -55,8 +55,8 @@ public class MyLocationListenerProxy implements LocationListener {
 	}
 
 	public void stopListening() {
-		mListener = null;
 		locationManager.removeUpdates(this);
+        mListener = null;
 	}
 
 	// ===========================================================
