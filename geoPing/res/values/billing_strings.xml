@@ -19,7 +19,7 @@
 
 <resources>
     <string name="welcome">Welcome to the Sample store!</string>
-    <string name="app_name">Dungeons &amp; Subscriptions Example</string>
+    
     <string name="billing_not_supported_title">Can\'t make purchases</string>
     <string name="billing_not_supported_message">The Market billing
      service is not available at this time.  You can continue to use this app but you
