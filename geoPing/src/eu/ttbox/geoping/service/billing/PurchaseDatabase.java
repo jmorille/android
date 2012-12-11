@@ -55,8 +55,8 @@ public class PurchaseDatabase {
     };
 
     // These are the column names for the "purchased items" table.
-    static final String PURCHASED_PRODUCT_ID_COL = "_id";
-    static final String PURCHASED_QUANTITY_COL = "quantity";
+  public  static final String PURCHASED_PRODUCT_ID_COL = "_id";
+  public   static final String PURCHASED_QUANTITY_COL = "quantity";
 
     private static final String[] PURCHASED_COLUMNS = {
         PURCHASED_PRODUCT_ID_COL, PURCHASED_QUANTITY_COL
