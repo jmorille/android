@@ -85,4 +85,10 @@ public class MockEnvironment implements ApiProxy.Environment {
     public boolean isLoggedIn() {
         throw new UnsupportedOperationException("Not implemented");
     }
+
+    @Override
+    public long getRemainingMillis() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }
