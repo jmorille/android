@@ -7,3 +7,4 @@ gen
 .classpath
 .checkstyle
 lint.xml
+.cache
