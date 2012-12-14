@@ -4,7 +4,7 @@ Linux/mac: http://www.scala-lang.org/downloads/distrib/files/scala-2.10.0-RC5.tg
 
 * Scala  IDE
 Web Site : http://scala-ide.org/download/nightly.html
-Update Site :  http://download.scala-ide.org/nightly-update-juno-master-2.10.xhttp://www.scala-lang.org/downloads/distrib/files/scala-2.10.0-RC5.tgz
+Update Site : http://download.scala-ide.org/nightly-update-juno-master-2.10.x
 
 * Scala m2e
 Website : https://github.com/sonatype/m2eclipse-scala

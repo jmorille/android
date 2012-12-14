@@ -60,7 +60,8 @@ public class ColorPickerDialog extends Dialog {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.NO_GRAVITY;
         params.height = DEFAULT_HEIGHT;
-
+        params.width = DEFAULT_HEIGHT;
+        
         ColorPickerView colorView = new ColorPickerView(getContext(), l, mInitialColor);
         setContentView(colorView, params);
         setTitle(R.string.color_picker);
