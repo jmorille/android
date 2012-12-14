@@ -5,19 +5,7 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
   id="WebApp_ID" version="2.5">
 
-    <!-- Sample -->    
-    <servlet>
-        <servlet-name>messages</servlet-name>
-        <servlet-class>
-            net.kindleit.gae.example.web.MessagesServiceImpl
-        </servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>messages</servlet-name>
-        <url-pattern>/messages/messages</url-pattern>
-    </servlet-mapping>
-
+  
     
 <!-- GCM -->    
   <listener>
@@ -26,9 +14,7 @@
 
   <servlet>
     <servlet-name>RegisterServlet</servlet-name>
-    <servlet-class>
-      eu.ttbox.geoping.server.gcm.RegisterServlet
-    </servlet-class>
+    <servlet-class>eu.ttbox.geoping.server.gcm.RegisterServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
@@ -39,9 +25,7 @@
 
   <servlet>
     <servlet-name>UnregisterServlet</servlet-name>
-    <servlet-class>
-      eu.ttbox.geoping.server.gcm.UnregisterServlet
-    </servlet-class>
+    <servlet-class>eu.ttbox.geoping.server.gcm.UnregisterServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
@@ -52,9 +36,7 @@
 
   <servlet>
     <servlet-name>SendAllMessagesServlet</servlet-name>
-    <servlet-class>
-      eu.ttbox.geoping.server.gcm.SendAllMessagesServlet
-    </servlet-class>
+    <servlet-class>eu.ttbox.geoping.server.gcm.SendAllMessagesServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
@@ -65,9 +47,7 @@
 
   <servlet>
     <servlet-name>SendMessageServlet</servlet-name>
-    <servlet-class>
-      eu.ttbox.geoping.server.gcm.SendMessageServlet
-    </servlet-class>
+    <servlet-class>eu.ttbox.geoping.server.gcm.SendMessageServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
@@ -78,9 +58,7 @@
 
   <servlet>
     <servlet-name>HomeServlet</servlet-name>
-    <servlet-class>
-      eu.ttbox.geoping.server.gcm.HomeServlet
-    </servlet-class>
+    <servlet-class>eu.ttbox.geoping.server.gcm.HomeServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
@@ -90,8 +68,8 @@
   </servlet-mapping>
     
   <!-- Standard -->
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
+<!--     <welcome-file-list> -->
+<!--         <welcome-file>index.html</welcome-file> -->
+<!--     </welcome-file-list> -->
 
 </web-app>

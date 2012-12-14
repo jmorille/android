@@ -11,153 +11,59 @@
 	<name>${gaeApplicationName}</name>
 
 
-<!--     <servers>  -->
-<!--         <server> -->
-<!--             <id>appengine.google.com</id> -->
-<!--             <username>MyEmail@gmail.com</username> -->
-<!--             <password>MyPassword</password> -->
-<!--         </server>  -->
-<!--     </servers> -->
-    
-    
+	<!-- <servers> -->
+	<!-- <server> -->
+	<!-- <id>appengine.google.com</id> -->
+	<!-- <username>MyEmail@gmail.com</username> -->
+	<!-- <password>MyPassword</password> -->
+	<!-- </server> -->
+	<!-- </servers> -->
+
+
 	<properties>
 
+        <gae.application.version>4</gae.application.version>
+		
+		<!-- Libs -->
 		<gcm.version>3</gcm.version>
-		<gae.version>1.7.3</gae.version>
-		<gaePluginVersion>0.9.5</gaePluginVersion>
-		<gwt.version>2.5.0</gwt.version>
+		<gae.version>1.7.4</gae.version>
 
 		<jdo2-api.version>2.3-eb</jdo2-api.version>
-		<datanucleus-jpa.version>1.1.5</datanucleus-jpa.version>
+		<datanucleus-api.version>3.1.3</datanucleus-api.version> <!-- 1.1.5 -->
+		<datanucleus-core.version>3.1.3</datanucleus-core.version> <!-- 1.1.5 -->
+		<datanucleus-enhancer.version>3.1.1</datanucleus-enhancer.version> <!--  1.1.4 -->
+		 
+         
 
+		<junit.version>4.5</junit.version>
+        <slf4j.version>1.6.1</slf4j.version>
+		<logback.version>0.9.24</logback.version>
+        <json-simple.version>1.1.1</json-simple.version>
+
+		<!-- Upload to http://test.latest.<applicationName>.appspot.com by default -->
+		
+		<gae.port>8080</gae.port>
+
+
+		<!-- Config -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<downloadSources>true</downloadSources>
 
-		<!-- Upload to http://test.latest.<applicationName>.appspot.com by default -->
-		<gae.application.version>geoping2</gae.application.version>
-		<gae.port>8080</gae.port>
-		<!-- Produce detailed JS during GWT compilation for development environment -->
-		<gwt.style>DETAILED</gwt.style>
+		<!-- Plugins -->
+		<maven-gae-plugin.version>0.9.5</maven-gae-plugin.version>
+		<maven-datanucleus-plugin.version>3.1.3</maven-datanucleus-plugin.version> <!-- 1.1.4 -->
 
 	</properties>
 
 
 	<dependencies>
 
-		<!-- GCM -->
-		<dependency>
-			<groupId>com.google.android.gcm</groupId>
-			<artifactId>gcm-server</artifactId>
-			<version>${gcm.version}</version>
-		</dependency>
-
-
-		<!-- Google App Engine meta-package -->
-		<!-- Google App Engine API -->
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<version>1.7.3</version>
-		</dependency>
-		<!-- Google App Engine Runtime Dependencies -->
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jta_1.1_spec</artifactId>
-			<version>1.1.1</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jpa_3.0_spec</artifactId>
-			<version>1.1.1</version>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.jdo</groupId>
-			<artifactId>jdo2-api</artifactId>
-			<version>${jdo2-api.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-core</artifactId>
-			<version>1.1.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.appengine.orm</groupId>
-			<artifactId>datanucleus-appengine</artifactId>
-			<version>1.0.10</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-jpa</artifactId>
-			<version>${datanucleus-jpa.version}</version>
-		</dependency>
-		<!-- App Engine Runtime Dependencies -->
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-tools-sdk</artifactId>
-			<version>1.7.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.transaction</groupId>
-			<artifactId>jta</artifactId>
-			<version>1.1</version>
-		</dependency>
-
-		<!-- GWT dependencies -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.google.gwt</groupId> -->
-<!-- 			<artifactId>gwt-servlet</artifactId> -->
-<!-- 			<version>${gwt.version}</version> -->
-<!-- 		</dependency> -->
-
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.google.gwt</groupId> -->
-<!-- 			<artifactId>gwt-user</artifactId> -->
-<!-- 			<version>${gwt.version}</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
-
-		<!-- J2EE Servlet API. We need it to compile IndexServlet class. You can 
-			probably remove it, if you don't explicitly use Servlets -->
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-servlet_2.5_spec</artifactId>
-			<version>1.2</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Make use of JSP tags. Remove, if you don't use JSPs -->
-		<dependency>
-			<artifactId>standard</artifactId>
-			<groupId>taglibs</groupId>
-			<version>1.1.2</version>
-			<type>jar</type>
-			<scope>runtime</scope>
-		</dependency>
-
-		<!-- These dependencies are here just for enabling logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>0.9.24</version>
-		</dependency>
 
 		<!-- Test scope -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.5</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -182,6 +88,125 @@
 			<version>${gae.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+
+		<!-- GCM -->
+		<dependency>
+			<groupId>com.google.android.gcm</groupId>
+			<artifactId>gcm-server</artifactId>
+			<version>${gcm.version}</version>
+		</dependency>
+
+
+		<!-- Google App Engine meta-package -->
+		<!-- <dependency> -->
+		<!-- <groupId>net.kindleit</groupId> -->
+		<!-- <artifactId>gae-runtime</artifactId> -->
+		<!-- <version>${gae.version}</version> -->
+		<!-- <type>pom</type> -->
+		<!-- </dependency> -->
+
+
+		<!-- Google App Engine API -->
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-1.0-sdk</artifactId>
+			<version>${gae.version}</version>
+		</dependency>
+		<!-- App Engine Runtime Dependencies -->
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-tools-sdk</artifactId>
+			<version>${gae.version}</version>
+		</dependency>
+		
+		<!-- Google App Engine Runtime Dependencies -->
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jta_1.1_spec</artifactId>
+			<version>1.1.1</version> 
+		</dependency>
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jpa_3.0_spec</artifactId>
+			<version>1.1.1</version> 
+		</dependency>
+
+		<dependency>
+			<groupId>javax.jdo</groupId>
+			<artifactId>jdo2-api</artifactId>
+			<version>${jdo2-api.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-core</artifactId>
+			<version>${datanucleus-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-api-jpa</artifactId>
+			<version>${datanucleus-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-api-jdo</artifactId>
+			<version>${datanucleus-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine.orm</groupId>
+			<artifactId>datanucleus-appengine</artifactId>
+			<version>1.0.10</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+
+
+		<!-- J2EE Servlet API. We need it to compile IndexServlet class. You can 
+			probably remove it, if you don't explicitly use Servlets -->
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-servlet_2.5_spec</artifactId>
+			<version>1.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Make use of JSP tags. Remove, if you don't use JSPs -->
+		<dependency>
+			<artifactId>standard</artifactId>
+			<groupId>taglibs</groupId>
+			<version>1.1.2</version>
+			<type>jar</type>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- JSon -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>${json-simple.version}</version>
+		</dependency>
+	
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -191,7 +216,7 @@
 			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>maven-datanucleus-plugin</artifactId>
-				<version>1.1.4</version>
+				<version>${maven-datanucleus-plugin.version}</version>
 				<configuration>
 					<!-- Make sure this path contains your persistent classes! -->
 					<mappingIncludes>**/model/*.class</mappingIncludes>
@@ -211,7 +236,7 @@
 					<dependency>
 						<groupId>org.datanucleus</groupId>
 						<artifactId>datanucleus-core</artifactId>
-						<version>1.1.5</version>
+						<version>${datanucleus-core.version}</version>
 						<exclusions>
 							<exclusion>
 								<groupId>javax.transaction</groupId>
@@ -222,17 +247,22 @@
 					<dependency>
 						<groupId>org.datanucleus</groupId>
 						<artifactId>datanucleus-rdbms</artifactId>
-						<version>1.1.5</version>
+						<version>${datanucleus-core.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.datanucleus</groupId>
 						<artifactId>datanucleus-enhancer</artifactId>
-						<version>1.1.4</version>
+						<version>${datanucleus-enhancer.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.datanucleus</groupId>
-						<artifactId>datanucleus-jpa</artifactId>
-						<version>${datanucleus-jpa.version}</version>
+						<artifactId>datanucleus-api-jpa</artifactId>
+						<version>${datanucleus-api.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.datanucleus</groupId>
+						<artifactId>datanucleus-api-jdo</artifactId>
+						<version>${datanucleus-api.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>javax.jdo</groupId>
@@ -259,13 +289,13 @@
 				</configuration>
 			</plugin>
 
-	 
+
 			<!-- The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn 
 				gae:deploy" to upload to GAE. -->
 			<plugin>
 				<groupId>net.kindleit</groupId>
 				<artifactId>maven-gae-plugin</artifactId>
-				<version>${gaePluginVersion}</version>
+				<version>${maven-gae-plugin.version}</version>
 			</plugin>
 
 			<!-- Upload application to the appspot automatically, during release:perform -->
@@ -280,53 +310,61 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0</version>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
 			</plugin>
 		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.datanucleus</groupId>
+										<artifactId>maven-datanucleus-plugin</artifactId>
+										<versionRange>[1.1.4,)</versionRange>
+										<goals>
+											<goal>enhance</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>net.kindleit</groupId>
+										<artifactId>maven-gae-plugin</artifactId>
+										<versionRange>[0.7.3,)</versionRange>
+										<goals>
+											<goal>unpack</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+
+		</pluginManagement>
 	</build>
 
 
-	<profiles>
 
-		<!-- We can configure our integration server to activate this profile and 
-			perform gae:deploy, thus uploading latest snapshot to the http://1.latest.<applicationName>.appspot.com 
-			automatically -->
-		<profile>
-			<id>integration-build</id>
-			<properties>
-				<gae.application.version>stage</gae.application.version>
-
-				<!-- Produce pretty JS during GWT compilation for test environment -->
-				<gwt.style>PRETTY</gwt.style>
-			</properties>
-		</profile>
-
-		<!-- This profile will activate automatically during release and upload 
-			application to the http://2.latest.<applicationName>.appspot.com (We might 
-			want to set the 2nd version as our applications Default version to be accessible 
-			at http://<applicationName>.appspot.com) -->
-		<profile>
-			<id>release-build</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-
-			<properties>
-				<!-- During release, set application version in appengine-web.xml to 
-					2 -->
-				<gae.application.version>release</gae.application.version>
-
-				<!-- Produce compressed JS during GWT compilation for production environment -->
-				<gwt.style>OBFUSCATED</gwt.style>
-			</properties>
-		</profile>
-	</profiles>
 
 </project>

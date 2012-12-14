@@ -44,7 +44,7 @@ public class HomeServlet extends BaseServlet {
     out.print("<html><body>");
     out.print("<head>");
     out.print("  <title>GCM Demo</title>");
-    out.print("  <link rel='icon' href='favicon.png'/>");
+    out.print("  <link rel='icon' href='/favicon.png'/>");
     out.print("</head>");
     String status = (String) req.getAttribute(ATTRIBUTE_STATUS);
     if (status != null) {
