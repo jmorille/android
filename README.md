@@ -1,3 +1,7 @@
+## Eclipse Plugin
+############################
+http://dl.google.com/eclipse/plugin/4.2
+
 
 ## mapsforge
 ############################

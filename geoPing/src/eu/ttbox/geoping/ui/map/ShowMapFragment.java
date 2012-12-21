@@ -9,6 +9,7 @@ import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapController.AnimationType;
 import org.osmdroid.views.MapView;
@@ -279,7 +280,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			public void run() {
 				// Animate to
 				if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
-					mapController.animateTo(latE6, lngE6, AnimationType.HALFCOSINUSALDECELERATING);
+					GeoPoint geoPoint = new GeoPoint(latE6, lngE6);
+					mapController.setCenter(geoPoint);
+//					mapController.animateTo(latE6, lngE6, AnimationType.HALFCOSINUSALDECELERATING);
 				}
 				// Display GeoPoints for person
 				GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
