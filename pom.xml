@@ -49,7 +49,7 @@
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
 		 
 		<!-- Release -->
-		<android-maven-plugin.version>3.4.1</android-maven-plugin.version>
+		<android-maven-plugin.version>3.5.0</android-maven-plugin.version>
 		<android.sdk.platform>17</android.sdk.platform>
 		<sign.alias>android</sign.alias>
 	</properties>
@@ -127,7 +127,43 @@
 			</snapshots>
 		</repository>
 	</repositories>
-  
+	<build>
+		<plugins>	
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>	
+ 
+      <pluginManagement>
+        <plugins>
+     		<!-- http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html -->
+		   	<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<version>${android-maven-plugin.version}</version>
+				<configuration>
+					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
+					<resourceDirectory>${project.basedir}/res</resourceDirectory>
+					<!-- <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory> -->
+					<sdk>
+						<platform>${android.sdk.platform}</platform>
+						<path>${env.ANDROID_HOME}</path>
+					</sdk>
+					<deleteConflictingFiles>true</deleteConflictingFiles>
+					<undeployBeforeDeploy>true</undeployBeforeDeploy>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+	    </plugins>
+      </pluginManagement>
+	  
+	</build>
   
 	<profiles>
 		<!-- https://github.com/jayway/android-maven-plugin-samples/blob/stable/morseflash/morseflash-app/pom.xml -->

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="35" android:versionName="0.1.4" package="eu.ttbox.geoping">
+
+    
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17"/>
+
+    <permission android:name="eu.ttbox.geoping.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="eu.ttbox.geoping.permission.C2D_MESSAGE"/>
+   
+    <!-- App receives GCM messages. -->
+   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <!-- GCM requires a Google account. -->
+   <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+   
+   <!-- Billing Service -->
+   <uses-permission android:name="com.android.vending.BILLING"/>
+     
+    	
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>		
+    
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+
+     
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+     
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
+    <uses-feature android:name="android.hardware.telephony" android:required="false"/>
+    
+ 
+    <application android:backupAgent=".service.backup.GeoPingBackupAgent" android:debuggable="false" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:restoreAnyVersion="false" android:theme="@style/AppTheme">
+ 	    <meta-data android:name="com.google.android.backup.api_key" android:value="@string/backup_api_key"/>
+	    
+        <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
+        <meta-data android:name="CLOUDMADE_KEY" android:value="75b3a96b94c74eb0b7f1450ed5235a78"/>
+        <!-- Bing Key https://www.bingmapsportal.com -->
+        <meta-data android:name="BING_KEY" android:value="Ao79Q93fhgMvZfbRgKd5xG708MsP2yhnRFedFeWVeFrjMgBOY36-HkQIYc4cQ-Ai"/>
+        
+        <activity android:label="@string/app_name" android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/> 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                 <data android:scheme="sms"/>
+                  <data android:scheme="smsto"/>
+            </intent-filter>
+
+        </activity>
+        
+        <activity android:label="@string/app_name" android:name=".SmsTrakerActivity">
+<!--             <intent-filter> -->
+<!--                 <action android:name="android.intent.action.MAIN"/>  -->
+<!--                 <category android:name="android.intent.category.LAUNCHER"/> -->
+<!--             </intent-filter> -->
+        </activity>
+        <activity android:name=".GeoTrakerActivity"/> 
+
+        <!-- Pref -->
+        <activity android:name=".ui.prefs.GeoPingPrefActivity"/>
+
+        <!-- Map -->
+        <activity android:label="@string/empty_string" android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">
+            <intent-filter>
+                <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED"/> 
+            </intent-filter>
+        </activity>
+
+        <!-- Sms Log -->
+        <activity android:label="@string/menu_smslog" android:name=".ui.smslog.SmsLogListActivity"/>
+        <!-- Person -->
+        <activity android:label="@string/menu_person" android:name=".ui.person.PersonListActivity"/>
+        <activity android:name=".ui.person.PersonEditActivity"/>
+
+        
+         <!-- Pairing -->
+        <activity android:label="@string/menu_pairing" android:name=".ui.pairing.PairingListActivity">
+        </activity>
+        <activity android:name=".ui.pairing.PairingEditActivity">
+        </activity>
+        
+        <!-- Billing Service -->
+       <service android:name=".service.billing.BillingService" />
+
+        <receiver android:name=".service.billing.BillingReceiver">
+            <intent-filter>
+                <action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
+                <action android:name="com.android.vending.billing.RESPONSE_CODE" />
+                <action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+                
+        <!-- Admob -->
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.google.ads.AdActivity"/>
+
+        <!-- Google Analytics : Used for install referrer tracking -->
+		<receiver android:exported="true" android:name="com.google.android.apps.analytics.AnalyticsReceiver">
+		  <intent-filter>
+		    <action android:name="com.android.vending.INSTALL_REFERRER"/>
+		  </intent-filter>
+		</receiver>
+
+        <!-- Receiver -->
+        <receiver android:name=".service.slave.receiver.SMSReceiver">
+            <intent-filter android:priority="99999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver">
+            <intent-filter android:priority="99999">
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+       <receiver android:enabled="false" android:name=".service.slave.receiver.BootCompleteReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <category android:name="android.intent.category.HOME"/>
+            </intent-filter>
+         </receiver>
+        <service android:enabled="true" android:name=".service.slave.BackgroudLocService">
+		 <intent-filter> 
+               <action android:name="EVENT_GSM"/> 
+           </intent-filter> 
+        </service>
+       
+         <!-- Widget Person -->
+          <receiver android:enabled="@bool/postHoneycomb" android:label="@string/sms_action_geoping_request" android:name=".ui.widget.PersonWidgetProvider">
+             <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter> 
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_person_info"/>
+        </receiver>
+        <service android:name=".ui.widget.PersonWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <!-- Widget Pairing -->
+          <receiver android:enabled="@bool/postHoneycomb" android:label="@string/sms_action_geoping_response" android:name=".ui.widget.pairing.PairingWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter> 
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_pairing_info"/>
+        </receiver>
+        <service android:name=".ui.widget.pairing.PairingWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+         
+        <activity android:label="@string/app_name" android:name=".ui.widget.pairing.PairingWidgetConfig">
+          <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+          </intent-filter>
+        </activity>
+        
+         <!-- WebView -->
+          <activity android:name=".ui.about.AboutActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="eu.ttbox.geoping.ui.about.ACTION_VIEW_ABOUT"/>
+                <action android:name="eu.ttbox.geoping.ui.about.ACTION_VIEW_LICENCE"/>
+            </intent-filter>
+        </activity>
+        
+        <!-- Sms service -->
+        <service android:name=".service.slave.GeoPingSlaveService">
+            	<intent-filter>
+            	    <action android:name="eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE"/>
+            	    <category android:name="android.intent.category.DEFAULT"/>
+            	</intent-filter>
+        </service>
+        <service android:name=".service.master.GeoPingMasterService">
+            
+            
+        </service>
+        
+        <!-- GCM Messages Service -->
+		<receiver android:name="com.google.android.gcm.GCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+		  <intent-filter>
+		    <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+		    <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+		    <category android:name="eu.ttbox.geoping"/>
+		  </intent-filter>
+		</receiver>        
+		<service android:name=".service.GCMIntentService"/>
+		
+		
+		
+<!--        Permission Denial: reading eu.ttbox.geoping.domain.WidgetProvider 
+uri content://eu.ttbox.geoping.WidgetProvider/pairing from pid=2264, uid=10040 requires eu.ttbox.geoping.PERSON_READ
+		  android:readPermission="eu.ttbox.geoping.PERSON_READ"
+		 android:readPermission="eu.ttbox.geoping.PAIRING_READ" 
+		 
+		  -->
+
+<!--         <provider android:authorities="eu.ttbox.geoping.WidgetProvider"     android:name=".domain.WidgetProvider"     -->
+<!--              android:writePermission="eu.ttbox.geoping.WIDGET_WRITE" > -->
+<!--   		      <grant-uri-permission android:path="content://eu.ttbox.geoping.PersonProvider" /> -->
+<!-- 	     	  <grant-uri-permission android:path="content://eu.ttbox.geoping.PairingProvider" /> -->
+<!-- 		 </provider>  -->
+
+        <provider android:authorities="eu.ttbox.geoping.PersonProvider" android:name=".domain.PersonProvider" android:writePermission="eu.ttbox.geoping.PERSON_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.PairingProvider" android:name=".domain.PairingProvider" android:writePermission="eu.ttbox.geoping.PAIRING_WRITE"/>
+        
+        <provider android:authorities="eu.ttbox.geoping.GeoTrackerProvider" android:name=".domain.GeoTrackerProvider" android:readPermission="eu.ttbox.geoping.GEO_TRACK_READ" android:writePermission="eu.ttbox.geoping.GEO_TRACK_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.SmsLogProvider" android:name=".domain.SmsLogProvider" android:readPermission="eu.ttbox.geoping.SMSLOG_READ" android:writePermission="eu.ttbox.geoping.SMSLOG_WRITE"/>
+        <provider android:authorities="eu.ttbox.geoping.MessageProvider" android:name=".domain.MessageProvider" android:readPermission="eu.ttbox.geoping.MESSAGE_READ" android:writePermission="eu.ttbox.geoping.MESSAGE_WRITE"/>
+        <!--  
+		<uses-library android:name="com.google.android.maps" android:required="true"/>
+		-->
+		
+</application>
+
+</manifest>

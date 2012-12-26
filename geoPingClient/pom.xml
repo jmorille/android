@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
+	<parent> 
        <groupId>eu.ttbox.android</groupId>
        <artifactId>android-root</artifactId>
-	   <version>0.1.1</version>	
+	   <version>0.1.1</version>	 
 	</parent>
 	
 	<groupId>eu.ttbox.android.geoping</groupId>
@@ -57,47 +57,45 @@
 			<version>${android.version}</version>
 			<scope>provided</scope>
 		</dependency>
-	 
+
 
 		<!-- Compatibility -->
 		<dependency>
 			<groupId>android.support</groupId>
 			<artifactId>compatibility-v13</artifactId>
-			<version>${compatibility-v13.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.actionbarsherlock</groupId>
+			<artifactId>actionbarsherlock</artifactId>
+			<type>apklib</type>
 		</dependency>
 
-
-		<!-- Google Api -->
-		<!-- <dependency> -->
-		<!-- <groupId>com.google.android.gcm</groupId> -->
-		<!-- <artifactId>gcm-server</artifactId> -->
-		<!-- <version>${gcm.version}</version> -->
-		<!-- </dependency> -->
+		<!-- Google Service --> 
 		<dependency>
 			<groupId>com.google.android.gcm</groupId>
 			<artifactId>gcm-client</artifactId>
 			<version>${gcm.version}</version>
 		</dependency>
-  
+
 		<dependency>
 			<groupId>com.google.android.admob</groupId>
 			<artifactId>admob</artifactId>
 			<version>${admob.version}</version>
 		</dependency>
-  		<dependency>
-  			<groupId>com.google.android.analytics</groupId>
-  			<artifactId>analytics</artifactId>
-  			<version>${analytics.version}</version>
-  		</dependency>
-  
-  
+		<dependency>
+			<groupId>com.google.android.analytics</groupId>
+			<artifactId>analytics</artifactId>
+			<version>${analytics.version}</version>
+		</dependency>
+
+
 	</dependencies>
 	
 	<!-- <modules> <module>geoPing-tests</module> </modules> -->
 	
 	<build>
 		<finalName>${project.artifactId}</finalName>
-		<sourceDirectory>src</sourceDirectory>
+		<sourceDirectory>../geoPing/src</sourceDirectory>
 		<!-- <testSourceDirectory>test</testSourceDirectory> -->
 		<plugins>
 			<plugin>
@@ -106,8 +104,8 @@
 				<version>${android-maven-plugin.version}</version>
 				<configuration>
 					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
-					<resourceDirectory>${project.basedir}/res</resourceDirectory>
+					<assetsDirectory>${project.basedir}/../geoPing/assets</assetsDirectory>
+					<resourceDirectory>${project.basedir}/../geoPing/res</resourceDirectory>
 					<!-- <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory> -->
 					<sdk>
 						<platform>${android.sdk.platform}</platform>
@@ -118,14 +116,7 @@
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
+			 
 		</plugins>
 	</build>
 
@@ -191,12 +182,14 @@
 					</plugin>
 					<!-- the signed apk then needs to be zipaligned and we activate proguard 
 						and we run the manifest update -->
+					<!-- http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html -->	
 					<plugin>
 						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 						<artifactId>android-maven-plugin</artifactId>
 						<version>${android-maven-plugin.version}</version>
 						<inherited>true</inherited>
 						<configuration>
+						     <release>true</release>
 							<sign>
 								<debug>false</debug>
 							</sign>
@@ -212,6 +205,7 @@
 							</manifest>
 							<proguard>
 								<skip>false</skip>
+								<config>../geoPing/proguard.cfg</config>
 							</proguard>
 						</configuration>
 						<executions>
