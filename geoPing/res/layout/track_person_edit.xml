@@ -16,15 +16,29 @@
         <EditText
             android:id="@+id/person_name"
             style="@style/entity_edit"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
             android:hint="@string/person_name"
             android:inputType="textPersonName" />
+
+        <ImageView
+            android:id="@+id/person_photo_imageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:maxWidth="80dp"
+            android:maxHeight="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="26dp"
+            android:layout_toRightOf="@+id/person_name"
+            android:src="@drawable/ic_launcher" />
 
         <EditText
             android:id="@+id/person_phone"
             style="@style/entity_edit"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_below="@id/person_name"
+            android:layout_toLeftOf="@id/person_photo_imageView"
             android:hint="@string/person_phone"
             android:inputType="phone" />
 

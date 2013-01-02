@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
@@ -15,7 +16,6 @@ import com.actionbarsherlock.view.MenuItem;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.ui.person.PersonEditFragment.OnPersonSelectListener;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class PersonEditActivity extends SherlockFragmentActivity {
@@ -27,8 +27,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
     private SmsLogListFragment smsLogFragment;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-
+    private ViewPager mViewPager; 
 	// Instance
     private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 2;
 	private int viewPagerPageCount = 1;
@@ -43,7 +42,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
         @Override
         public void onPersonSelect(String id, String phone) {
             viewPagerPageCount = VIEW_PAGER_LOADPERS_PAGE_COUNT;
-//            smsLogFragment.setArguments(           
+            mSectionsPagerAdapter.notifyDataSetChanged();        
         }
         
     };
@@ -58,7 +57,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 		setContentView(R.layout.track_person_edit_activity);
 		// Pagers
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager = (ViewPager) findViewById(R.id.pager); 
 		// Fragment
 		editFragment = new PersonEditFragment();
 		editFragment.setOnPersonSelectListener(onPersonSelectListener);
