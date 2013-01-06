@@ -96,10 +96,21 @@ public class PairingWidgetService extends RemoteViewsService {
             if (mCursor != null) {
                 mCursor.close();
             }
-            // TODO WidgetProvider.Constants.CONTENT_URI_PAIRING
-            mCursor = mContext.getContentResolver().query(PairingProvider.Constants.CONTENT_URI, null, null,
-                    null, null);
-            helper.initWrapper(mCursor);
+            //Bug  {@link http://stackoverflow.com/questions/13187284/android-permission-denial-in-widget-remoteviewsfactory-for-content}
+            Thread thread = new Thread() {
+                public void run() { 
+                    // TODO WidgetProvider.Constants.CONTENT_URI_PAIRING
+                    mCursor = mContext.getContentResolver().query(PairingProvider.Constants.CONTENT_URI, null, null,
+                            null, null);
+                    helper.initWrapper(mCursor);
+                }
+            };
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+            }
+            
         }
     }
 }

@@ -308,7 +308,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 						ContactsContract.CommonDataKinds.Phone.NUMBER, //
 						ContactsContract.Contacts.LOOKUP_KEY, //
 						ContactsContract.CommonDataKinds.Phone.TYPE }, selection, selectionArgs, null);
-		Uri contactLookupUri = ContactsContract.Data.getContactLookupUri(cr, contactData);
+//		Uri contactLookupUri = ContactsContract.Data.getContactLookupUri(cr, contactData);
 		
 		try {
 			// Read value
@@ -319,7 +319,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 				String lookupKey = c.getString(3);
 				// int type = c.getInt(3);
 				Log.d(TAG, "Select contact Uri : " + contactData + " ==> Contact Id : " + contactId);
-				Log.d(TAG, "Select contact Uri : " + contactData + " ==> Lookup Uri : " + contactLookupUri);
+//				Log.d(TAG, "Select contact Uri : " + contactData + " ==> Lookup Uri : " + contactLookupUri);
 				Uri uri = doSavePerson(name, phone, contactId);
 				// showSelectedNumber(type, number);
 			}
