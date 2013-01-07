@@ -27,10 +27,10 @@ public class SmsLogListFragment extends Fragment {
 
     private static final String TAG = "SmsLogListFragment";
 
-    private static final int PAIRING_LIST_LOADER = R.id.config_id_smsLog_list_loader;
+    private static final int SMSLOG_LIST_LOADER = R.id.config_id_smsLog_list_loader;
 
     // Constant
-    private static final String PAIRING_SORT_DEFAULT = String.format("%s DESC, %s DESC", SmsLogColumns.COL_TIME, SmsLogColumns.COL_PHONE);
+    private static final String SMSLOG_SORT_DEFAULT = String.format("%s DESC, %s DESC", SmsLogColumns.COL_TIME, SmsLogColumns.COL_PHONE);
 
     private static final int EDIT_ENTITY = 0;
 
@@ -70,9 +70,8 @@ public class SmsLogListFragment extends Fragment {
     }
 
     private void loadEntity(Bundle agrs) {
-        Bundle loaderArgs = agrs;
-     
-        getActivity().getSupportLoaderManager().initLoader(PAIRING_LIST_LOADER, loaderArgs, smsLogLoaderCallback);
+        Bundle loaderArgs = agrs; 
+        getActivity().getSupportLoaderManager().initLoader(SMSLOG_LIST_LOADER, loaderArgs, smsLogLoaderCallback);
     }
     
     public void onViewEntityClick(String entityId) {
@@ -95,11 +94,15 @@ public class SmsLogListFragment extends Fragment {
         switch (reqCode) {
         case (EDIT_ENTITY):
             if (resultCode == Activity.RESULT_OK) {
-                getActivity(). getSupportLoaderManager().restartLoader(PAIRING_LIST_LOADER, null, smsLogLoaderCallback);
+                getActivity(). getSupportLoaderManager().restartLoader(SMSLOG_LIST_LOADER, null, smsLogLoaderCallback);
             }
         }
     }
-
+    
+	 public void refreshLoader(Bundle args) {
+         getActivity(). getSupportLoaderManager().restartLoader(SMSLOG_LIST_LOADER, args, smsLogLoaderCallback);
+		 
+	 }
     // ===========================================================
     // Loader
     // ===========================================================
@@ -109,7 +112,7 @@ public class SmsLogListFragment extends Fragment {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.d(TAG, "onCreateLoader");
-            String sortOrder = PAIRING_SORT_DEFAULT;
+            String sortOrder = SMSLOG_SORT_DEFAULT;
             String selection = null;
             String[] selectionArgs = null;
             String queryString = null;

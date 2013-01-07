@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -16,6 +17,7 @@ import com.actionbarsherlock.view.MenuItem;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class PersonEditActivity extends SherlockFragmentActivity {
@@ -24,28 +26,44 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 
 	// Binding
 	private PersonEditFragment editFragment;
-    private SmsLogListFragment smsLogFragment;
+	private SmsLogListFragment smsLogFragment;
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager; 
+	private SectionsPagerAdapter mSectionsPagerAdapter;
+	private ViewPager mViewPager;
 	// Instance
-    private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 2;
+	private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 2;
 	private int viewPagerPageCount = 1;
-	
 
-    // ===========================================================
-    // Listener
-    // ===========================================================
+	private String personId;
+	private String personPhone;
 
-    private PersonEditFragment.OnPersonSelectListener  onPersonSelectListener = new PersonEditFragment.OnPersonSelectListener() {
+	// ===========================================================
+	// Listener
+	// ===========================================================
 
-        @Override
-        public void onPersonSelect(String id, String phone) {
-            viewPagerPageCount = VIEW_PAGER_LOADPERS_PAGE_COUNT;
-            mSectionsPagerAdapter.notifyDataSetChanged();        
-        }
-        
-    };
+	private PersonEditFragment.OnPersonSelectListener onPersonSelectListener = new PersonEditFragment.OnPersonSelectListener() {
+
+		@Override
+		public void onPersonSelect(String id, String phone) {
+			// Check Update Phone
+			if (!TextUtils.isEmpty(personPhone) && !TextUtils.isEmpty(phone)) {
+				if (smsLogFragment!=null && !personPhone.equals(phone)) {
+					Bundle args = new Bundle();
+					args.putString(Intents.EXTRA_SMS_PHONE, personPhone);
+					smsLogFragment.refreshLoader(args);
+					smsLogFragment.setArguments(args);
+				}
+			}
+			personId = id;
+			personPhone = phone;
+			// Update Ui Tabs
+			if (viewPagerPageCount != VIEW_PAGER_LOADPERS_PAGE_COUNT) {
+				viewPagerPageCount = VIEW_PAGER_LOADPERS_PAGE_COUNT;
+				mSectionsPagerAdapter.notifyDataSetChanged();
+			}
+		}
+
+	};
 
 	// ===========================================================
 	// Constructors
@@ -53,50 +71,40 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
- 		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.track_person_edit_activity);
 		// Pagers
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-		mViewPager = (ViewPager) findViewById(R.id.pager); 
+		mViewPager = (ViewPager) findViewById(R.id.pager);
 		// Fragment
 		editFragment = new PersonEditFragment();
 		editFragment.setOnPersonSelectListener(onPersonSelectListener);
-		smsLogFragment = new SmsLogListFragment();
+
 		// Analytic
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		// Tracker
-		
 		// Intents
-		 handleIntent(getIntent());
+		handleIntent(getIntent());
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-//		handleIntent(getIntent());
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putString(PersonColumns.COL_ID, personId);
+		outState.putString(PersonColumns.COL_PHONE, personPhone);
+		super.onSaveInstanceState(outState);
 	}
-
- 
 
 	@Override
-	public void onStart() {
-		super.onStart();
-//		handleIntent(getIntent());
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		personId = savedInstanceState.getString(PersonColumns.COL_ID);
+		personPhone = savedInstanceState.getString(PersonColumns.COL_PHONE);
+		super.onRestoreInstanceState(savedInstanceState);
 	}
-
-	// @Override
-	// public void onAttachFragment(Fragment fragment) {
-	// super.onAttachFragment(fragment);
-	// if (fragment instanceof PersonEditFragment) {
-	// editFragment = (PersonEditFragment) fragment;
-	// }
-	// }
 
 	// ===========================================================
 	// Menu
 	// ===========================================================
 
-	public boolean onCreateOptionsMenu(Menu menu) { 
+	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.menu_person_edit, menu);
 		return true;
 	}
@@ -139,33 +147,33 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 		}
 		String action = intent.getAction();
 		Log.d(TAG, "handleIntent for action : " + action);
-		if (Intent.ACTION_EDIT.equals(action) || Intent.ACTION_DELETE.equals(action) ) {
+		if (Intent.ACTION_EDIT.equals(action) || Intent.ACTION_DELETE.equals(action)) {
 			mViewPager.setCurrentItem(SectionsPagerAdapter.PERSON);
 			// Prepare Edit
- 	   		String entityId = intent.getData().getLastPathSegment();
-	   		// Set Fragment
-	   		Bundle fragArgs = new Bundle();
-			fragArgs.putString(Intents.EXTRA_PERSON_ID,entityId) ;
+			String entityId = intent.getData().getLastPathSegment();
+			// Set Fragment
+			Bundle fragArgs = new Bundle();
+			fragArgs.putString(Intents.EXTRA_PERSON_ID, entityId);
 			editFragment.setArguments(fragArgs);
 			// Tracker
-			if (Intent.ACTION_DELETE.equals(action) ){
-			    GeoPingApplication.getInstance().tracker().trackPageView("/Person/delete");
+			if (Intent.ACTION_DELETE.equals(action)) {
+				GeoPingApplication.getInstance().tracker().trackPageView("/Person/delete");
 			} else {
-			    GeoPingApplication.getInstance().tracker().trackPageView("/Person/edit");
+				GeoPingApplication.getInstance().tracker().trackPageView("/Person/edit");
 			}
- 		} else if (Intent.ACTION_INSERT.equals(action)) {
+		} else if (Intent.ACTION_INSERT.equals(action)) {
 			mViewPager.setCurrentItem(SectionsPagerAdapter.PERSON);
-            // Tracker
-            GeoPingApplication.getInstance().tracker().trackPageView("/Person/insert");
+			// Tracker
+			GeoPingApplication.getInstance().tracker().trackPageView("/Person/insert");
 		}
 
 	}
 
-
-	
 	// ===========================================================
 	// Pages Adapter
 	// ===========================================================
+
+ 
 
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -189,6 +197,12 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 				fragment = editFragment;
 				break;
 			case LOG:
+				if (smsLogFragment == null) {
+					Bundle args = new Bundle();
+					args.putString(Intents.EXTRA_SMS_PHONE, personPhone);
+					smsLogFragment = new SmsLogListFragment();
+					smsLogFragment.setArguments(args);
+				}
 				fragment = smsLogFragment;
 				break;
 			}
