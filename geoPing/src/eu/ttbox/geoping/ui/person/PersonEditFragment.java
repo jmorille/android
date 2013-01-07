@@ -473,7 +473,16 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 
 	};
 
-	
+	/**
+	 * Pour plus de details sur l'intégration dans les contacts consulter 
+	 * <ul>
+	 * <li>item_photo_editor.xml</li>
+	 * <li>com.android.contacts.editor.PhotoEditorView</li>
+	 * <li>com.android.contacts.detail.PhotoSelectionHandler</li>
+	 * <li>com.android.contacts.editor.ContactEditorFragment.PhotoHandler</li>
+	 * </ul>
+	 * @param contactId
+	 */
 	private void loadPhoto(String contactId) {
 		Bitmap photo = null; 
 		if (!TextUtils.isEmpty(contactId)) { 

@@ -23,6 +23,7 @@ public enum SmsMessageLocEnum {
     BATTERY('w', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BATTERY_LEVEL), //
 
     // Person
+    TIME_IN_S('s', SmsMessageTypeEnum.INT, "TIME_IN_S"), //
     PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID); //
 
     // ===========================================================

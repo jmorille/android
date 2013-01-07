@@ -70,21 +70,36 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 
 	private static final String TAG = "GeoPingSlaveService";
 
-//	private static PowerManager.WakeLock sWakeLock;
-//	private static final Object[] LOCK = new Object[0];
-//
-//	public static void runIntentInService(Context context, Intent intent) {
-//		synchronized (LOCK) {
-//			if (sWakeLock == null) {
-//				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-//				sWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "geoping_slave_wakelock");
-//				sWakeLock.setReferenceCounted(true);
-//			}
-//		}
-//		sWakeLock.acquire();
-//		intent.setClassName(context, GeoPingSlaveService.class.getName());
-//		context.startService(intent);
-//	}
+	// private static PowerManager.WakeLock sWakeLock;
+	// private static final Object[] LOCK = new Object[0];
+	//
+	// public static void runIntentInService(Context context, Intent intent) {
+	// synchronized (LOCK) {
+	// if (sWakeLock == null) {
+	// PowerManager pm = (PowerManager)
+	// context.getSystemService(Context.POWER_SERVICE);
+	// sWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+	// "geoping_slave_wakelock");
+	// sWakeLock.setReferenceCounted(true);
+	// }
+	// }
+	// sWakeLock.acquire();
+	// intent.setClassName(context, GeoPingSlaveService.class.getName());
+	// context.startService(intent);
+	// }
+
+	private static final String LOCK_NAME = "eu.ttbox.geoping.service.slave.GeoPingSlaveService";
+
+	private static volatile PowerManager.WakeLock lockStatic = null;
+
+	private synchronized static PowerManager.WakeLock getLock(Context context) {
+		if (lockStatic == null) {
+			PowerManager mgr = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+			lockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK_NAME);
+			lockStatic.setReferenceCounted(true);
+		}
+		return (lockStatic);
+	}
 
 	private static final int SHOW_GEOPING_REQUEST_NOTIFICATION_ID = AppConstants.PER_PERSON_ID_MULTIPLICATOR * R.id.show_notification_new_geoping_request_confirm;
 
@@ -238,14 +253,14 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 			} else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
 				// GeoPing Pairing
 				String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-				Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS); 
+				Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
 				managePairingRequest(phone, params);
 
 			}
 		} finally {
-//			synchronized (LOCK) {
-//				sWakeLock.release();
-//			}
+			// synchronized (LOCK) {
+			// sWakeLock.release();
+			// }
 		}
 	}
 
@@ -437,32 +452,48 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 	}
 
 	// ===========================================================
-	// Other
+	// Geocoding Request
 	// ===========================================================
 
 	public boolean registerGeoPingRequest(String phoneNumber, Bundle params) {
+		// Acquire Lock
+		PowerManager.WakeLock lock = getLock(this.getApplicationContext());
+		lock.acquire();
+		Log.d(TAG, "*** Lock Acquire: " + lock);
+		// Register request
 		Location initLastLoc = myLocation.getLastKnownLocation();
 		GeoPingRequest request = new GeoPingRequest(phoneNumber, params);
 		geoPingRequestList.add(request);
 		// TODO Bad for multi request
 		boolean locProviderEnabled = myLocation.startListening(multiGeoRequestListener);
 		// schedule it for time out
-		int timeOutInSeconde = 30;
+		// TODO
+		int timeOutInSeconde = SmsMessageLocEnum.TIME_IN_S.readInt(params, 30);
 		executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
+
 		return locProviderEnabled;
 	}
 
 	public void unregisterGeoPingRequest(GeoPingRequest request) {
 		boolean isRemove = geoPingRequestList.remove(request);
 		if (isRemove) {
-		    Log.d(TAG, "Remove GeoPing Request in list, do Stop Service");
+			Log.d(TAG, "Remove GeoPing Request in list, do Stop Service");
 		} else {
 			Log.e(TAG, "Could not remove expected GeoPingRequest. /!\\ Emmergency Stop Service /!\\");
 			geoPingRequestList.clear();
 		}
+		// Release Lock
+		PowerManager.WakeLock lock = getLock(this.getApplicationContext());
+		if (lock.isHeld()) {
+			lock.release();
+		}
+
+		Log.d(TAG, "*** Lock Release: " + lock);
+		// Stop Service if necessary
 		if (geoPingRequestList.isEmpty()) {
 			Log.d(TAG, "No GeoPing Request in list, do Stop Service");
 			myLocation.stopListening();
+			// Stop Service
 			stopSelf();
 		}
 	}
