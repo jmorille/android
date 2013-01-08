@@ -15,15 +15,15 @@
 -->
 
 <view
-    class="com.android.contacts.editor.PhotoEditorView"
+    class="eu.ttbox.geoping.ui.person.PhotoEditorView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     >
     <FrameLayout
-        android:layout_width="48dip"
-        android:layout_height="48dip"
+        android:layout_width="80dp"
+        android:layout_height="80dp	"
     >
         <ImageView
             android:id="@+id/photo"
@@ -40,10 +40,10 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="@string/description_contact_photo"
-            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/description_contact_photo" 
         />
-    </FrameLayout>
+<!--             android:background="?android:attr/selectableItemBackground" -->
+        </FrameLayout>
     <ImageView
         android:id="@+id/photo_triangle_affordance"
         android:src="@drawable/account_spinner_icon"

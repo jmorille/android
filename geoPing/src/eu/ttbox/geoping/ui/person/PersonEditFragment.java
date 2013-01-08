@@ -1,20 +1,17 @@
 package eu.ttbox.geoping.ui.person;
 
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.Contacts;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -26,7 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.Toast;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -35,7 +32,7 @@ import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
-import eu.ttbox.geoping.service.core.ContactHelper;
+import eu.ttbox.geoping.ui.person.PhotoEditorView.EditorListener;
 import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 
 public class PersonEditFragment extends Fragment implements ColorPickerDialog.OnColorChangedListener {
@@ -61,7 +58,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 	private Button contactSelectButton;
 
 	// Image
-	private ImageView photoImageView;
+	private PhotoEditorView photoImageView;
 
 	// Instance
 	private String entityId;
@@ -98,7 +95,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		// }
 		// });
 		phoneEditText = (EditText) v.findViewById(R.id.person_phone);
-		photoImageView = (ImageView) v.findViewById(R.id.person_photo_imageView);
+		photoImageView = (PhotoEditorView) v.findViewById(R.id.person_photo_imageView);
 		colorPickerButton = (Button) v.findViewById(R.id.person_color_picker_button);
 		colorPickerButton.setOnClickListener(new View.OnClickListener() {
 
@@ -234,15 +231,16 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 	// ===========================================================
 
 	/**
-	 * {@link http://www.higherpass.com/Android/Tutorials/Working-With-Android-Contacts/}
+	 * {@link http
+	 * ://www.higherpass.com/Android/Tutorials/Working-With-Android-Contacts/}
 	 * 
 	 * @param v
 	 */
 	public void onSelectContactClick(View v) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-		
-//		Intent intent = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
+
+		// Intent intent = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
 		startActivityForResult(intent, PICK_CONTACT);
 	}
 
@@ -293,23 +291,26 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 	// ===========================================================
 
 	/**
-	 * {@link http://developer.android.com/guide/topics/providers/contacts-provider.html}
+	 * {@link http
+	 * ://developer.android.com/guide/topics/providers/contacts-provider.html}
+	 * 
 	 * @param contactData
 	 */
 	public void saveContactData(Uri contactData) {
 		String selection = null;
 		String[] selectionArgs = null;
 		Log.d(TAG, "Select contact Uri : " + contactData);
-		ContentResolver cr =  getActivity().getContentResolver();
+		ContentResolver cr = getActivity().getContentResolver();
 		Cursor c = getActivity().getContentResolver().query(contactData, new String[] { //
 				// BaseColumns._ID , //
-				ContactsContract.Data.CONTACT_ID, //
+						ContactsContract.Data.CONTACT_ID, //
 						ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, //
 						ContactsContract.CommonDataKinds.Phone.NUMBER, //
 						ContactsContract.Contacts.LOOKUP_KEY, //
 						ContactsContract.CommonDataKinds.Phone.TYPE }, selection, selectionArgs, null);
-//		Uri contactLookupUri = ContactsContract.Data.getContactLookupUri(cr, contactData);
-		
+		// Uri contactLookupUri = ContactsContract.Data.getContactLookupUri(cr,
+		// contactData);
+
 		try {
 			// Read value
 			if (c != null && c.moveToFirst()) {
@@ -319,7 +320,8 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 				String lookupKey = c.getString(3);
 				// int type = c.getInt(3);
 				Log.d(TAG, "Select contact Uri : " + contactData + " ==> Contact Id : " + contactId);
-//				Log.d(TAG, "Select contact Uri : " + contactData + " ==> Lookup Uri : " + contactLookupUri);
+				// Log.d(TAG, "Select contact Uri : " + contactData +
+				// " ==> Lookup Uri : " + contactLookupUri);
 				Uri uri = doSavePerson(name, phone, contactId);
 				// showSelectedNumber(type, number);
 			}
@@ -394,7 +396,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 				Log.e(TAG, String.format("Error, %s entities was updates for Expected One", count));
 			}
 		}
-	 
+
 		// Notifify listenr
 		if (onPersonSelectListener != null) {
 			onPersonSelectListener.onPersonSelect(entityId, phone);
@@ -406,7 +408,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		nameEditText.setText(name);
 		phoneEditText.setText(phone);
 		this.contactId = contactId;
-		loadPhoto(contactId); 
+		loadPhoto(contactId, phone);
 
 	}
 
@@ -461,8 +463,8 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 				if (onPersonSelectListener != null) {
 					onPersonSelectListener.onPersonSelect(String.valueOf(personId), personPhone);
 				}
-				// Photo 
-				loadPhoto(contactId); 
+				// Photo
+				loadPhoto(contactId, personPhone);
 			}
 		}
 
@@ -474,27 +476,38 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 	};
 
 	/**
-	 * Pour plus de details sur l'intégration dans les contacts consulter 
+	 * Pour plus de details sur l'intégration dans les contacts consulter
 	 * <ul>
 	 * <li>item_photo_editor.xml</li>
 	 * <li>com.android.contacts.editor.PhotoEditorView</li>
 	 * <li>com.android.contacts.detail.PhotoSelectionHandler</li>
 	 * <li>com.android.contacts.editor.ContactEditorFragment.PhotoHandler</li>
 	 * </ul>
+	 * 
 	 * @param contactId
 	 */
-	private void loadPhoto(String contactId) {
-		Bitmap photo = null; 
-		if (!TextUtils.isEmpty(contactId)) { 
-			  photo = ContactHelper.loadPhotoContact(getActivity(), contactId);
-		
-		}
-		// Set Photo
-		if (photo != null) {
-			Log.d(TAG, "Photo Found for Contact Uri : " + contactId + " Photo : " + photo);
-			photoImageView.setImageBitmap(photo);
-		} else {
-			photoImageView.setImageResource(R.drawable.ic_launcher);
-		}
+	private void loadPhoto(String contactId, final String phone) {
+		photoImageView.setValues(contactId, false);
+		photoImageView.setEditorListener(new EditorListener() {
+
+			@Override
+			public void onRequest(int request) {
+				Toast.makeText(getActivity(), "Click to phone " + phone, Toast.LENGTH_SHORT).show();
+			}
+
+		});
+		// Bitmap photo = null;
+		// if (!TextUtils.isEmpty(contactId)) {
+		// photo = ContactHelper.loadPhotoContact(getActivity(), contactId);
+		//
+		// }
+		// // Set Photo
+		// if (photo != null) {
+		// Log.d(TAG, "Photo Found for Contact Uri : " + contactId + " Photo : "
+		// + photo);
+		// photoImageView.setImageBitmap(photo);
+		// } else {
+		// photoImageView.setImageResource(R.drawable.ic_launcher);
+		// }
 	}
 }
