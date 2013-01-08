@@ -22,8 +22,8 @@
     android:orientation="horizontal"
     >
     <FrameLayout
-        android:layout_width="80dp"
-        android:layout_height="80dp	"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
     >
         <ImageView
             android:id="@+id/photo"

@@ -34,8 +34,8 @@
 
         <include
             android:id="@+id/person_photo_imageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="26dp"
             layout="@layout/item_photo_editor"
