@@ -98,7 +98,8 @@
     <!-- Person model -->
     <string name="person_name">Nom</string>
     <string name="person_phone">N° Téléphone</string>
-
+    <string name="description_contact_photo">"photo du contact"</string>
+    
     <!-- Pairing model -->
     <string name="pairing_name">Nom</string>
     <string name="pairing_phone">N° Téléphone</string>

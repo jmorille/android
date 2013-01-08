@@ -105,7 +105,8 @@
     <!-- Person model -->
     <string name="person_name">Name</string>
     <string name="person_phone">Phone Number</string>
-
+    <string name="description_contact_photo">contact photo</string>
+ 
     <!-- Pairing model -->
     <string name="pairing_name">Name</string>
     <string name="pairing_phone">Phone Number</string>
