@@ -7,25 +7,37 @@
 
     <TextView
         android:id="@+id/person_list_item_name"
-          android:focusable="false"
-        android:focusableInTouchMode="false"
-        style="@style/entity_list_item" />
+        style="@style/entity_list_item"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
     <TextView
         android:id="@+id/person_list_item_phone"
         style="@style/entity_list_item"
-          android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:layout_below="@id/person_list_item_name" />
+        android:layout_below="@id/person_list_item_name"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
-    <ImageButton
+    <!-- <ImageButton -->
+    <!-- android:id="@+id/person_list_item_geoping_button" -->
+    <!-- style="@style/entity_list_item" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:layout_centerVertical="true" -->
+    <!-- android:minWidth="60dip" -->
+    <!-- android:src="@drawable/ic_launcher" -->
+    <!-- android:text="@string/geoping" -->
+    <!-- android:width="20dp" /> -->
+
+    <include
         android:id="@+id/person_list_item_geoping_button"
+         layout="@layout/item_photo_editor"
         style="@style/entity_list_item"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" 
+        android:layout_alignParentRight="true" 
+        android:layout_centerVertical="true"
         android:minWidth="60dip"
+        android:src="@drawable/ic_launcher"
         android:text="@string/geoping"
-        android:src="@drawable/ic_launcher" 
-        android:width="20dp" />
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
 
 </RelativeLayout>

@@ -29,6 +29,8 @@
             android:id="@+id/photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusable="false"
+        android:focusableInTouchMode="false" 
             android:contentDescription="@string/description_contact_photo"
             android:cropToPadding="true"
             android:gravity="left"
@@ -38,11 +40,12 @@
         <View
             android:id="@+id/frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="match_parent" 
             android:background="@android:color/transparent"
             android:clickable="true"
             android:contentDescription="@string/description_contact_photo"
-            android:focusable="true" />
+            android:focusable="false"
+        android:focusableInTouchMode="false"  />
         <!-- android:background="?android:attr/selectableItemBackground" -->
     </FrameLayout>
 
@@ -50,6 +53,8 @@
         android:id="@+id/photo_triangle_affordance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
+        android:focusableInTouchMode="false" 
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom"
