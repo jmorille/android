@@ -50,8 +50,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 				if (smsLogFragment!=null && !personPhone.equals(phone)) {
 					Bundle args = new Bundle();
 					args.putString(Intents.EXTRA_SMS_PHONE, personPhone);
-					smsLogFragment.refreshLoader(args);
-					smsLogFragment.setArguments(args);
+					smsLogFragment.refreshLoader(args); 
 				}
 			}
 			personId = id;

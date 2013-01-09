@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:overScrollMode="ifContentScrolls"
+    android:overScrollMode="ifContentScrolls" 
     android:scrollbars="none" >
 
     <RelativeLayout
@@ -17,7 +17,7 @@
             android:id="@+id/person_name"
             style="@style/entity_edit"
             android:layout_width="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentLeft="true" 
             android:layout_alignRight="@+id/person_phone"
             android:hint="@string/person_name"
             android:inputType="textPersonName" />
@@ -34,8 +34,8 @@
 
         <include
             android:id="@+id/person_photo_imageView"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="26dp"
             layout="@layout/item_photo_editor"

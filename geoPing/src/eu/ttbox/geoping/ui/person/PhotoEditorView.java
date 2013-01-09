@@ -24,13 +24,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.service.core.ContactHelper;
 
 /**
  * Simple editor for {@link Photo}.
  */
-public class PhotoEditorView extends LinearLayout //implements Editor
+public class PhotoEditorView extends RelativeLayout //implements Editor
 {
 
     private ImageView mPhotoImageView;
@@ -174,7 +175,7 @@ public class PhotoEditorView extends LinearLayout //implements Editor
         mListener = listener;
 
         final boolean isPushable = listener != null;
-        mTriangleAffordance.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
+        mTriangleAffordance.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE); 
         mFrameView.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
     }
 //
