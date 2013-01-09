@@ -182,10 +182,8 @@
             	    <category android:name="android.intent.category.DEFAULT"/>
             	</intent-filter>
         </service>
-        <service android:name=".service.master.GeoPingMasterService">
-            
-            
-        </service>
+        <service android:name=".service.slave.GeoPingSlaveLocationService" /> 
+        <service android:name=".service.master.GeoPingMasterService" /> 
         
         <!-- GCM Messages Service -->
 		<receiver android:name="com.google.android.gcm.GCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">

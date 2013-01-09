@@ -5,7 +5,7 @@ import java.util.List;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import eu.ttbox.geoping.service.slave.GeoPingSlaveService.GeoPingRequest;
+import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService.GeoPingRequest;
 
 public class MultiGeoRequestLocationListener implements LocationListener {
 

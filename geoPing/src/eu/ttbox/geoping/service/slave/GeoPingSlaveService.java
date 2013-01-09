@@ -1,40 +1,24 @@
 package eu.ttbox.geoping.service.slave;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.BatteryManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
-import android.telephony.CellLocation;
-import android.telephony.SmsManager;
-import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -42,64 +26,24 @@ import android.widget.RemoteViews;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.GeoTrackerProvider;
 import eu.ttbox.geoping.domain.PairingProvider;
-import eu.ttbox.geoping.domain.SmsLogProvider;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
-import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Pairing;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
-import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
-import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
-import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
+import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
-import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
-import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.slave.receiver.AuthorizePhoneTypeEnum;
-import eu.ttbox.osm.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
 // http://dhimitraq.wordpress.com/tag/android-intentservice/
 // https://github.com/commonsguy/cwac-wakeful
-public class GeoPingSlaveService extends WorkerService implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class GeoPingSlaveService extends IntentService implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	private static final String TAG = "GeoPingSlaveService";
-
-	// private static PowerManager.WakeLock sWakeLock;
-	// private static final Object[] LOCK = new Object[0];
-	//
-	// public static void runIntentInService(Context context, Intent intent) {
-	// synchronized (LOCK) {
-	// if (sWakeLock == null) {
-	// PowerManager pm = (PowerManager)
-	// context.getSystemService(Context.POWER_SERVICE);
-	// sWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-	// "geoping_slave_wakelock");
-	// sWakeLock.setReferenceCounted(true);
-	// }
-	// }
-	// sWakeLock.acquire();
-	// intent.setClassName(context, GeoPingSlaveService.class.getName());
-	// context.startService(intent);
-	// }
-
-	private static final String LOCK_NAME = "eu.ttbox.geoping.service.slave.GeoPingSlaveService";
-
-	private static volatile PowerManager.WakeLock lockStatic = null;
-
-	private synchronized static PowerManager.WakeLock getLock(Context context) {
-		if (lockStatic == null) {
-			PowerManager mgr = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-			lockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK_NAME);
-			lockStatic.setReferenceCounted(true);
-		}
-		return (lockStatic);
-	}
+ 
 
 	private static final int SHOW_GEOPING_REQUEST_NOTIFICATION_ID = AppConstants.PER_PERSON_ID_MULTIPLICATOR * R.id.show_notification_new_geoping_request_confirm;
 
@@ -109,22 +53,12 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 	// Constant
 
 	// Services
-	private NotificationManager mNotificationManager;
-	private LocationManager locationManager;
-	private MyLocationListenerProxy myLocation;
-	private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-	private SharedPreferences appPreferences;
-	private TelephonyManager telephonyManager;
+	private NotificationManager mNotificationManager; 
+	private SharedPreferences appPreferences; 
 
-	// Instance Data
-	private List<GeoPingRequest> geoPingRequestList;
-	private MultiGeoRequestLocationListener multiGeoRequestListener;
-
-	private int batterLevelInPercent = -1;
 
 	// Config
 	boolean displayGeopingRequestNotification = false;
-	boolean saveInLocalDb = false;
 	boolean authorizeNewPairing = true;
 
 	// Set<String> secuAuthorizeNeverPhoneSet;
@@ -144,13 +78,7 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 		// service
 		this.appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		this.mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		this.telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		this.myLocation = new MyLocationListenerProxy(locationManager);
-		this.geoPingRequestList = new ArrayList<GeoPingRequest>();
-		this.multiGeoRequestListener = new MultiGeoRequestLocationListener(geoPingRequestList);
-
-		loadPrefConfig();
+ 		loadPrefConfig();
 		// register listener
 		appPreferences.registerOnSharedPreferenceChangeListener(this);
 
@@ -161,7 +89,6 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 
 	private void loadPrefConfig() {
 		this.displayGeopingRequestNotification = appPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, false);
-		this.saveInLocalDb = appPreferences.getBoolean(AppConstants.PREFS_LOCAL_SAVE, false);
 		this.authorizeNewPairing = appPreferences.getBoolean(AppConstants.PREFS_AUTHORIZE_GEOPING_PAIRING, true);
 	}
 
@@ -169,21 +96,15 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (key.equals(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION)) {
 			this.displayGeopingRequestNotification = appPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, false);
-		}
-		if (key.equals(AppConstants.PREFS_LOCAL_SAVE)) {
-			this.saveInLocalDb = appPreferences.getBoolean(AppConstants.PREFS_LOCAL_SAVE, false);
-		}
+		} 
 		if (key.equals(AppConstants.PREFS_AUTHORIZE_GEOPING_PAIRING)) {
 			this.authorizeNewPairing = appPreferences.getBoolean(AppConstants.PREFS_AUTHORIZE_GEOPING_PAIRING, true);
-		}
-
+		} 
 	}
 
 	@Override
 	public void onDestroy() {
-		appPreferences.unregisterOnSharedPreferenceChangeListener(this);
-		this.myLocation.stopListening();
-		geoPingRequestList.clear();
+		appPreferences.unregisterOnSharedPreferenceChangeListener(this); 
 		super.onDestroy();
 		Log.d(TAG, "#################################");
 		Log.d(TAG, "### GeoPing Service Destroyed.");
@@ -229,9 +150,8 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 					break;
 				case AUTHORIZE_ALWAYS:
 					Log.i(TAG, "Accept Geoping (always Authorize) request from phone " + phone);
-					// TODO Add lock
-					registerGeoPingRequest(phone, params);
-					// Display Notification GeoPing
+					GeoPingSlaveLocationService.runFindLocationAndSendInService(this, phone, params);
+ 					// Display Notification GeoPing
 					if (showNotification) {
 						showNotificationGeoPing(pairing, params, true);
 					}
@@ -342,8 +262,8 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 		switch (notifType) {
 		case GEOPING_REQUEST_CONFIRM:
 			if (positifResponse) {
-				registerGeoPingRequest(phone, params);
-			}
+				GeoPingSlaveLocationService.runFindLocationAndSendInService(this, phone, params);
+ 			}
 			break;
 		default:
 			break;
@@ -396,7 +316,8 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 		if (personId != -1l) {
 			params = SmsMessageLocEnum.PERSON_ID.writeToBundle(null, personId);
 		}
-		sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING_RESPONSE, params);
+		ContentResolver cr = getContentResolver();
+		SmsSenderHelper.sendSms(cr, phone, SmsMessageActionEnum.ACTION_GEO_PAIRING_RESPONSE, params);
 	}
 
 	// ===========================================================
@@ -434,192 +355,10 @@ public class GeoPingSlaveService extends WorkerService implements SharedPreferen
 		return result;
 	}
 
-	// ===========================================================
-	// Cell Id
-	// ===========================================================
 
-	/**
-	 * {link http://www.devx.com/wireless/Article/40524/0/page/2}
-	 */
-	private void getCellId() {
-		CellLocation cellLoc = telephonyManager.getCellLocation();
-		if (cellLoc instanceof GsmCellLocation) {
-			GsmCellLocation gsmLoc = (GsmCellLocation) cellLoc;
-			int lac = gsmLoc.getLac();
-			int cellId = gsmLoc.getCid();
-			Log.d(TAG, String.format("Cell Id : %s  / Lac : %s", cellId, lac));
-		}
-	}
+	
+  
 
-	// ===========================================================
-	// Geocoding Request
-	// ===========================================================
-
-	public boolean registerGeoPingRequest(String phoneNumber, Bundle params) {
-		// Acquire Lock
-		PowerManager.WakeLock lock = getLock(this.getApplicationContext());
-		lock.acquire();
-		Log.d(TAG, "*** Lock Acquire: " + lock);
-		// Register request
-		Location initLastLoc = myLocation.getLastKnownLocation();
-		GeoPingRequest request = new GeoPingRequest(phoneNumber, params);
-		geoPingRequestList.add(request);
-		// TODO Bad for multi request
-		boolean locProviderEnabled = myLocation.startListening(multiGeoRequestListener);
-		// schedule it for time out
-		// TODO
-		int timeOutInSeconde = SmsMessageLocEnum.TIME_IN_S.readInt(params, 30);
-		executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
-
-		return locProviderEnabled;
-	}
-
-	public void unregisterGeoPingRequest(GeoPingRequest request) {
-		boolean isRemove = geoPingRequestList.remove(request);
-		if (isRemove) {
-			Log.d(TAG, "Remove GeoPing Request in list, do Stop Service");
-		} else {
-			Log.e(TAG, "Could not remove expected GeoPingRequest. /!\\ Emmergency Stop Service /!\\");
-			geoPingRequestList.clear();
-		}
-		// Release Lock
-		PowerManager.WakeLock lock = getLock(this.getApplicationContext());
-		if (lock.isHeld()) {
-			lock.release();
-		}
-
-		Log.d(TAG, "*** Lock Release: " + lock);
-		// Stop Service if necessary
-		if (geoPingRequestList.isEmpty()) {
-			Log.d(TAG, "No GeoPing Request in list, do Stop Service");
-			myLocation.stopListening();
-			// Stop Service
-			stopSelf();
-		}
-	}
-
-	// ===========================================================
-	// Sender Sms message
-	// ===========================================================
-
-	private void sendSmsLocation(String phone, Location location) {
-		GeoTrack geotrack = new GeoTrack(null, location);
-		geotrack.batteryLevelInPercent = batterLevelInPercent;
-		Bundle params = GeoTrackHelper.getBundleValues(geotrack);
-		sendSms(phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
-		if (saveInLocalDb) {
-			geotrack.requesterPersonPhone = phone;
-			saveInLocalDb(geotrack);
-		}
-	}
-
-	private void saveInLocalDb(GeoTrack geotrack) {
-		if (geotrack == null) {
-			return;
-		}
-		ContentValues values = GeoTrackHelper.getContentValues(geotrack);
-		values.put(GeoTrackColumns.COL_PHONE, AppConstants.KEY_DB_LOCAL);
-		getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
-	}
-
-	private void sendSms(String phone, SmsMessageActionEnum action, Bundle params) {
-		String encrypedMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
-		if (encrypedMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
-			SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
-			// Log It
-			logSmsMessage(SmsLogTypeEnum.SEND, phone, action, params, 1);
-		} else {
-			Log.e(TAG, String.format("Too long SmsMessage (%s chars, args) : %s", encrypedMsg.length(), encrypedMsg));
-		}
-	}
-
-	// ===========================================================
-	// Log Sms message
-	// ===========================================================
-
-	private void logSmsMessage(SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, int smsWeight) {
-		ContentValues values = SmsLogHelper.getContentValues(type, phone, action, params);
-		values.put(SmsLogColumns.COL_SMS_WEIGHT, smsWeight);
-		getContentResolver().insert(SmsLogProvider.Constants.CONTENT_URI, values);
-	}
-
-	// ===========================================================
-	// Sensor Listener
-	// ===========================================================
-
-	/**
-	 * Computes the battery level by registering a receiver to the intent
-	 * triggered by a battery status/level change. <br/>
-	 * {@link http
-	 * ://developer.android.com/training/monitoring-device-state/battery
-	 * -monitoring.html}
-	 */
-
-	private void batteryLevel() {
-		BroadcastReceiver batteryLevelReceiver = new BroadcastReceiver() {
-			public void onReceive(Context context, Intent intent) {
-				context.unregisterReceiver(this);
-				int rawlevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-				int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-				int level = -1;
-				if (rawlevel >= 0 && scale > 0) {
-					level = (rawlevel * 100) / scale;
-				}
-				Log.d(TAG, "Battery Level Remaining: " + level + "%");
-				batterLevelInPercent = level;
-			}
-		};
-
-		IntentFilter batteryLevelFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-		registerReceiver(batteryLevelReceiver, batteryLevelFilter);
-	}
-
-	public class GeoPingRequest implements Callable<Boolean>, LocationListener {
-
-		public String smsPhoneNumber;
-		public Bundle params;
-
-		public GeoPingRequest() {
-			super();
-		}
-
-		public GeoPingRequest(String phoneNumber, Bundle params) {
-			super();
-			this.smsPhoneNumber = phoneNumber;
-			this.params = params;
-			// register Listener for Battery Level
-			batteryLevel();
-		}
-
-		@Override
-		public Boolean call() throws Exception {
-			Location lastLocation = myLocation.getLastFix();
-			if (lastLocation != null) {
-				sendSmsLocation(smsPhoneNumber, lastLocation);
-				unregisterGeoPingRequest(GeoPingRequest.this);
-				return Boolean.TRUE;
-			}
-			return Boolean.FALSE;
-		}
-
-		@Override
-		public void onLocationChanged(Location location) {
-			// TODO check expected accuracy
-		}
-
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-		}
-
-	}
 
 	// ===========================================================
 	// Notification

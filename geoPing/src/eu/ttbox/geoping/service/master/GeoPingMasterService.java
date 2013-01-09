@@ -5,6 +5,7 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +36,6 @@ import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
 import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
@@ -43,8 +43,7 @@ import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
-import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
-import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
+import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
@@ -258,24 +257,15 @@ public class GeoPingMasterService extends IntentService {
 			}
 			if (isSend) {
 				// Log It
-				logSmsMessage(SmsLogTypeEnum.SEND, phone, action, params,1);
+				ContentResolver cr = getContentResolver();
+				SmsSenderHelper.logSmsMessage(cr,SmsLogTypeEnum.SEND, phone, action, params,1);
 			}
 		} else if (encodeddMsg != null && encodeddMsg.length() <= AppConstants.SMS_MAX_SIZE) {
 			// TODO display Too long messsage
 		}
 		return isSend;
 	}
-
-	// ===========================================================
-	// Log Sms message
-	// ===========================================================
-
-	private void logSmsMessage(SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, int smsWeight) {
-		ContentValues values = SmsLogHelper.getContentValues(type, phone, action, params);
-		values.put(SmsLogColumns.COL_SMS_WEIGHT, smsWeight);
-		getContentResolver().insert(SmsLogProvider.Constants.CONTENT_URI, values);
-	}
-
+ 
 	// ===========================================================
 	// Consume Localisation
 	// ===========================================================
