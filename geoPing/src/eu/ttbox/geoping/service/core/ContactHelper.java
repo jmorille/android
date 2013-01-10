@@ -84,13 +84,14 @@ public class ContactHelper {
 
 	public static Bitmap loadPhotoContact(ContentResolver cr, long contactId) {
 		Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
-		Log.d(TAG, "Search Photo for Contact Uri : " + contactUri);
+		Log.d(TAG, "Search Photo for ContactsContract Contact Uri : " + contactUri);
 		InputStream is = ContactsContract.Contacts.openContactPhotoInputStream(cr, contactUri);
 		if (is == null) {
-			Log.d(TAG, "No Photo found for Contact Uri : " + contactUri);
+			Log.d(TAG, "No Photo found for ContactsContract Contact Uri : " + contactUri);
 			return null;
 		}
 		Bitmap photo = BitmapFactory.decodeStream(is);
+
 		try {
 			is.close();
 		} catch (IOException e) {
@@ -99,7 +100,6 @@ public class ContactHelper {
 		return photo;
 	}
 
-	 
 	public static Bitmap loadPhotoContactByPhotoId(ContentResolver cr, long photoId) {
 		Log.d(TAG, "Search a Photo for Photo Id : " + photoId);
 
