@@ -24,6 +24,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.telephony.CellLocation;
+import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
@@ -97,6 +98,9 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Log.d(TAG, "#####################################");
+		Log.d(TAG, "### GeoPing Location Service Started.");
+		Log.d(TAG, "#####################################");
 		// service
 		this.appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -108,10 +112,6 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 		loadPrefConfig();
 		// register listener
 		appPreferences.registerOnSharedPreferenceChangeListener(this);
-
-		Log.d(TAG, "#####################################");
-		Log.d(TAG, "### GeoPing Location Service Started.");
-		Log.d(TAG, "#####################################");
 	}
 
 	private void loadPrefConfig() {
@@ -140,14 +140,16 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 	// Intent Handler
 	// ===========================================================
 
-	 public static void runFindLocationAndSendInService(Context context, String phone, Bundle params) {
-//		PowerManager.WakeLock lock = getLock(context);
-//		lock.acquire();
-		 Intent intent = new Intent(context, GeoPingSlaveLocationService.class);
-		 intent.setAction(ACTION_FIND_LOCALISATION_AND_SEND_SMS_GEOPING);
+	public static void runFindLocationAndSendInService(Context context, String phone, Bundle params) {
+		// PowerManager.WakeLock lock = getLock(context);
+		// lock.acquire();
+		Intent intent = new Intent(context, GeoPingSlaveLocationService.class);
+		intent.putExtra(Intents.EXTRA_SMS_PHONE, phone);
+		intent.putExtra(Intents.EXTRA_SMS_PARAMS, params);
+		intent.setAction(ACTION_FIND_LOCALISATION_AND_SEND_SMS_GEOPING);
 		context.startService(intent);
 	}
-		 
+
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		String action = intent.getAction();
@@ -157,7 +159,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 			Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
 			registerGeoPingRequest(phone, params);
 		}
-		
+
 	}
 
 	// ===========================================================
@@ -167,13 +169,41 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 	/**
 	 * {link http://www.devx.com/wireless/Article/40524/0/page/2}
 	 */
-	private void getCellId() {
+	private int[] getCellId() {
+		int[] cellId = new int[0];
 		CellLocation cellLoc = telephonyManager.getCellLocation();
-		if (cellLoc instanceof GsmCellLocation) {
+		if (cellLoc != null && (cellLoc instanceof GsmCellLocation)) {
 			GsmCellLocation gsmLoc = (GsmCellLocation) cellLoc;
+			gsmLoc.getPsc();
+			// gsm cell id
+			int cid = gsmLoc.getCid();
+			// gsm location area code
 			int lac = gsmLoc.getLac();
-			int cellId = gsmLoc.getCid();
-			Log.d(TAG, String.format("Cell Id : %s  / Lac : %s", cellId, lac));
+			// On a UMTS network, returns the primary scrambling code of the
+			// serving cell.
+			int psc = gsmLoc.getPsc();
+			Log.d(TAG, String.format("Cell Id : %s  / Lac : %s  / Psc : %s", cid, lac, psc));
+			if (psc>-1) {
+				cellId = new int[3];
+				cellId[2] = psc;
+			} else {
+				cellId = new int[2];
+			}
+			cellId[0] = cid;
+			cellId[1] = lac;
+		}
+		return cellId;
+	}
+
+	private void getNeighboringCellId() {
+		List<NeighboringCellInfo> neighCell = null;
+		neighCell = telephonyManager.getNeighboringCellInfo();
+		for (int i = 0; i < neighCell.size(); i++) {
+			NeighboringCellInfo thisCell = neighCell.get(i);
+			int cid = thisCell.getCid();
+			int rssi = thisCell.getRssi();
+			int psc = thisCell.getPsc();
+			Log.d(TAG, " " + cid + " - " + rssi + " - " + psc);
 		}
 	}
 
@@ -185,7 +215,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 		// Acquire Lock
 		PowerManager.WakeLock lock = getLock(this.getApplicationContext());
 		lock.acquire();
-		Log.d(TAG, "*** Lock Acquire: " + lock);
+		Log.d(TAG, "*** Lock Acquire: " + LOCK_NAME + " " + lock);
 		// Register request
 		Location initLastLoc = myLocation.getLastKnownLocation();
 		GeoPingRequest request = new GeoPingRequest(phoneNumber, params);
@@ -214,7 +244,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 			lock.release();
 		}
 
-		Log.d(TAG, "*** Lock Release: " + lock);
+		Log.d(TAG, "*** Lock Release: " + LOCK_NAME + " " + lock);
 		// Stop Service if necessary
 		if (geoPingRequestList.isEmpty()) {
 			Log.d(TAG, "No GeoPing Request in list, do Stop Service");
@@ -257,8 +287,11 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 
 	public class GeoPingRequest implements Callable<Boolean>, LocationListener {
 
-		public String smsPhoneNumber;
-		public Bundle params;
+		private String smsPhoneNumber;
+		private Bundle params;
+
+		private int accuracy = -1;
+		private boolean isAccuracyCheck = false;
 
 		public GeoPingRequest() {
 			super();
@@ -268,24 +301,37 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 			super();
 			this.smsPhoneNumber = phoneNumber;
 			this.params = params;
+			this.accuracy = SmsMessageLocEnum.ACCURACY.readInt(params, -1);
+			this.isAccuracyCheck = accuracy > -1;
 			// register Listener for Battery Level
 			batteryLevel();
 		}
 
 		@Override
 		public Boolean call() throws Exception {
-			Location lastLocation = myLocation.getLastFix();
-			if (lastLocation != null) {
-				sendSmsLocation(smsPhoneNumber, lastLocation);
+			Boolean result = Boolean.FALSE;
+			try {
+				Location lastLocation = myLocation.getLastFix();
+				int[] cellId = getCellId();
+				// TODO Cell Id
+				if (lastLocation != null) {
+					sendSmsLocation(smsPhoneNumber, lastLocation);
+					result = Boolean.TRUE;
+				}
+			} finally {
 				unregisterGeoPingRequest(GeoPingRequest.this);
-				return Boolean.TRUE;
 			}
-			return Boolean.FALSE;
+			return result;
 		}
 
 		@Override
 		public void onLocationChanged(Location location) {
-			// TODO check expected accuracy
+			if (isAccuracyCheck && location != null) {
+				// TODO check expected accuracy
+				int locAcc = (int) location.getAccuracy();
+				Log.d(TAG, "onLocationChanged with accuracy= " + locAcc + " : " + location);
+			}
+
 		}
 
 		@Override

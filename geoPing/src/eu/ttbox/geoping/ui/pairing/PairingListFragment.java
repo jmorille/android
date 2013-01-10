@@ -49,10 +49,17 @@ public class PairingListFragment extends Fragment {
             onEditEntityClick(entityId);
         }
     };
+    
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        Log.d(TAG, "onActivityCreated");
+//           }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	 Log.d(TAG, "onCreateView");
         View v=  inflater.inflate(R.layout.pairing_list, container, false); 
         // Bindings
         listView = (ListView) v.findViewById(android.R.id.list);
@@ -71,7 +78,8 @@ public class PairingListFragment extends Fragment {
         });
         // Intents
         Log.d(TAG, "Binding end");
-        getActivity(). getSupportLoaderManager().initLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
+        getActivity(). getSupportLoaderManager().restartLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
+
        return v;
     }
 
@@ -127,7 +135,7 @@ public class PairingListFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            Log.d(TAG, "onLoadFinished");
+            
             // Display List
             listAdapter.swapCursor(cursor);
             cursor.setNotificationUri(getActivity().getContentResolver(), PairingProvider.Constants.CONTENT_URI );
@@ -136,6 +144,7 @@ public class PairingListFragment extends Fragment {
             if (cursor != null) {
                 count = cursor.getCount();
             }
+			Log.d(TAG, "onLoadFinished with result count : " + count);
 
         }
 

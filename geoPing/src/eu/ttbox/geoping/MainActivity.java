@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
@@ -34,6 +35,12 @@ public class MainActivity extends SherlockFragmentActivity { //
 	 */
 	ViewPager mViewPager;
 
+	// Pages
+	private PersonListFragment personListFragment;
+	private PairingListFragment pairingListFragment;
+	private SmsLogListFragment smsLogListFragment;
+	
+	
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -105,11 +112,12 @@ public class MainActivity extends SherlockFragmentActivity { //
 	// Pages Adapter
 	// ===========================================================
 
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the primary sections of the app.
 	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 		static final int PERSON = 0;
 		static final int PAIRING = 1;
@@ -121,16 +129,29 @@ public class MainActivity extends SherlockFragmentActivity { //
 
 		@Override
 		public Fragment getItem(int position) {
+			  Log.d(TAG, "getItem : " + position);
 			Fragment fragment = null;
 			switch (position) {
 			case PERSON:
-				fragment = new PersonListFragment();
+				if (personListFragment == null) {
+					personListFragment = new PersonListFragment();
+					Log.d(TAG, "Create Fragment PersonListFragment");
+				}
+				fragment = personListFragment;
 				break;
 			case PAIRING:
-				fragment = new PairingListFragment();
+				if (pairingListFragment == null) {
+					pairingListFragment = new PairingListFragment();
+					Log.d(TAG, "Create Fragment PairingListFragment");
+				}
+				fragment = pairingListFragment; 
 				break;
 			case LOG:
-				fragment = new SmsLogListFragment();
+				if (smsLogListFragment == null) {
+					smsLogListFragment = new SmsLogListFragment();
+					Log.d(TAG, "Create Fragment SmsLogListFragment");
+				}
+				fragment = smsLogListFragment;
 				break;
 			}
 			// fragment = new DummySectionFragment();

@@ -18,9 +18,12 @@ public class SmsSenderHelper {
 	private static final String TAG = "SmsSenderHelper";
 
 	public static void sendSms(ContentResolver cr, String phone, SmsMessageActionEnum action, Bundle params) {
+		Log.d(TAG, String.format("Send Request SmsMessage to %s : %s", phone, action));
 		String encrypedMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
+		Log.d(TAG, String.format("Send Request SmsMessage to %s : %s", phone, encrypedMsg));
 		if (encrypedMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
 			SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
+			Log.d(TAG, String.format("Send SmsMessage (%s chars, args) : %s", encrypedMsg.length(), encrypedMsg));
 			// Log It
 			logSmsMessage(cr, SmsLogTypeEnum.SEND, phone, action, params, 1);
 		} else {

@@ -49,11 +49,18 @@ public class PersonListFragment extends Fragment {
             onEditEntityClick(entityId);
         }
     };
+    
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        Log.d(TAG, "onActivityCreated");
+//       
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.track_person_list, container, false);
-
+        Log.d(TAG, "onCreateView");
         // Bindings
         listView = (ListView) v.findViewById(android.R.id.list);
         listView.setEmptyView(v.findViewById(android.R.id.empty));
@@ -75,7 +82,7 @@ public class PersonListFragment extends Fragment {
         // listView.setEmptyView(emptyListView);
         Log.d(TAG, "Binding end");
         // Intents
-        getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+        getActivity().getSupportLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
 
         return v;
     }
@@ -126,7 +133,7 @@ public class PersonListFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            Log.d(TAG, "onLoadFinished");
+           
             // Display List
             listAdapter.swapCursor(cursor);
             cursor.setNotificationUri(getActivity().getContentResolver(), PersonProvider.Constants.CONTENT_URI);
@@ -135,6 +142,7 @@ public class PersonListFragment extends Fragment {
             if (cursor != null) {
                 count = cursor.getCount();
             }
+			Log.d(TAG, "onLoadFinished with result count : " + count);
 
         }
 
