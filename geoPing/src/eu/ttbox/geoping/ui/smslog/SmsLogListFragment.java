@@ -2,9 +2,11 @@ package eu.ttbox.geoping.ui.smslog;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -18,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
@@ -50,12 +51,9 @@ public class SmsLogListFragment extends Fragment {
 		}
 	};
 
-//	@Override
-//	public void onActivityCreated(Bundle savedInstanceState) {
-//		super.onActivityCreated(savedInstanceState);
-//		Log.d(TAG, "onActivityCreated");
-//		
-//	}
+	// ===========================================================
+	// Constructors
+	// ===========================================================
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,14 +69,56 @@ public class SmsLogListFragment extends Fragment {
 		listView.setOnItemClickListener(mOnClickListener);
 		Log.d(TAG, "Binding end");
 		// Intents
-				loadEntity(getArguments());
 		return v;
 	}
 
-	private void loadEntity(Bundle agrs) {
-		Bundle loaderArgs = agrs;
-		getActivity().getSupportLoaderManager().restartLoader(SMSLOG_LIST_LOADER, loaderArgs, smsLogLoaderCallback);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG, "onActivityCreated");
+		getActivity().getSupportLoaderManager().initLoader(SMSLOG_LIST_LOADER, savedInstanceState, smsLogLoaderCallback);
 	}
+
+	/**
+	 * 
+	 */
+//	@Override
+//	public void onAttach(Activity activity) {
+//		super.onAttach(activity);
+//		activity.getContentResolver().registerContentObserver(SmsLogProvider.Constants.CONTENT_URI, true, mObserver);
+//	}
+//
+//	@Override
+//	public void onDetach() {
+//		super.onDetach();
+//		getActivity().getContentResolver().unregisterContentObserver(mObserver);
+//	}
+
+	// ===========================================================
+	// Observer
+	// ===========================================================
+
+	/**
+	 * {@link https://bitbucket.org/craigleehi/google-i-o-2012-app/src/f4fd7504d43b/android/src/com/google/android/apps/iosched/ui/ExploreFragment.java}
+	 * 
+	 */
+	private final ContentObserver mObserver = new ContentObserver(new Handler()) {
+		@Override
+		public void onChange(boolean selfChange) {
+			if (getActivity() == null) {
+				return;
+			}
+
+			Loader<Cursor> loader = getLoaderManager().getLoader(SMSLOG_LIST_LOADER);
+			if (loader != null) {
+				loader.forceLoad();
+			}
+		}
+	};
+
+	// ===========================================================
+	// Other
+	// ===========================================================
 
 	public void onViewEntityClick(String entityId) {
 		// TODO View
@@ -147,7 +187,7 @@ public class SmsLogListFragment extends Fragment {
 
 		@Override
 		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-			
+
 			// Display List
 			listAdapter.swapCursor(cursor);
 			cursor.setNotificationUri(getActivity().getContentResolver(), SmsLogProvider.Constants.CONTENT_URI);
@@ -162,6 +202,7 @@ public class SmsLogListFragment extends Fragment {
 		@Override
 		public void onLoaderReset(Loader<Cursor> loader) {
 			listAdapter.swapCursor(null);
+
 		}
 
 	};

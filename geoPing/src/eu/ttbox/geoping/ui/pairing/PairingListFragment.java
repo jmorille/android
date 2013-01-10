@@ -25,134 +25,132 @@ import eu.ttbox.geoping.domain.pairing.PairingHelper;
 
 public class PairingListFragment extends Fragment {
 
-    private static final String TAG = "PairingListFragment";
+	private static final String TAG = "PairingListFragment";
 
-    private static final int PAIRING_LIST_LOADER = R.id.config_id_pairing_list_loader;
+	private static final int PAIRING_LIST_LOADER = R.id.config_id_pairing_list_loader;
 
-    // Constant
-    private static final String PAIRING_SORT_DEFAULT = String.format("%s DESC, %s DESC", PairingColumns.COL_NAME, PairingColumns.COL_PHONE);
+	// Constant
+	private static final String PAIRING_SORT_DEFAULT = String.format("%s DESC, %s DESC", PairingColumns.COL_NAME, PairingColumns.COL_PHONE);
 
-    private static final int EDIT_ENTITY = 0;
+	private static final int EDIT_ENTITY = 0;
 
-    // binding
-    private ListView listView; 
-    
-    // init
-    private PairingListAdapter listAdapter;
+	// binding
+	private ListView listView;
 
-    private final AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-            Log.w(TAG, "OnItemClickListener on Item at Position=" + position + " with id=" + id);
-            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-            PairingHelper helper = new PairingHelper().initWrapper(cursor);
-            String entityId = helper.getPairingIdAsString(cursor);
-            onEditEntityClick(entityId);
-        }
-    };
-    
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        Log.d(TAG, "onActivityCreated");
-//           }
+	// init
+	private PairingListAdapter listAdapter;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-    	 Log.d(TAG, "onCreateView");
-        View v=  inflater.inflate(R.layout.pairing_list, container, false); 
-        // Bindings
-        listView = (ListView) v.findViewById(android.R.id.list);
-        listView.setEmptyView(v.findViewById(android.R.id.empty));
-        Button  addEntityButton = (Button) v.findViewById(R.id.add_pairing_button);
-        // init
-        listAdapter = new PairingListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        listView.setAdapter(listAdapter);
-        listView.setOnItemClickListener(mOnClickListener);
-        // Listener
-        addEntityButton.setOnClickListener(new OnClickListener() {
-             @Override
-            public void onClick(View v) {
-               onAddEntityClick(v);
-             }
-        });
-        // Intents
-        Log.d(TAG, "Binding end");
-        getActivity(). getSupportLoaderManager().restartLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
+	private final AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
+		public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+			Log.w(TAG, "OnItemClickListener on Item at Position=" + position + " with id=" + id);
+			Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+			PairingHelper helper = new PairingHelper().initWrapper(cursor);
+			String entityId = helper.getPairingIdAsString(cursor);
+			onEditEntityClick(entityId);
+		}
+	};
 
-       return v;
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.d(TAG, "onCreateView");
+		View v = inflater.inflate(R.layout.pairing_list, container, false);
+		// Bindings
+		listView = (ListView) v.findViewById(android.R.id.list);
+		listView.setEmptyView(v.findViewById(android.R.id.empty));
+		Button addEntityButton = (Button) v.findViewById(R.id.add_pairing_button);
+		// init
+		listAdapter = new PairingListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+		listView.setAdapter(listAdapter);
+		listView.setOnItemClickListener(mOnClickListener);
+		// Listener
+		addEntityButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onAddEntityClick(v);
+			}
+		});
+		// Intents
+		Log.d(TAG, "Binding end");
 
-    public void onAddEntityClick(View v) {
-        Intent intent = Intents.editPairing(getActivity(), null);
-        startActivityForResult(intent, EDIT_ENTITY);
-    }
+		return v;
+	}
 
-    public void onEditEntityClick(String entityId) {
-        Intent intent = Intents.editPairing(getActivity(), entityId);
-        startActivityForResult(intent, EDIT_ENTITY);
-    }
-   
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG, "onActivityCreated");
+		getActivity().getSupportLoaderManager().initLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
+	}
 
-    protected void handleIntent(Intent intent) {
-        if (intent == null) {
-            return;
-        }
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "handleIntent for action : " + intent.getAction());
-        }
-    }
+	public void onAddEntityClick(View v) {
+		Intent intent = Intents.editPairing(getActivity(), null);
+		startActivityForResult(intent, EDIT_ENTITY);
+	}
 
-    @Override
-    public void onActivityResult(int reqCode, int resultCode, Intent data) {
-        super.onActivityResult(reqCode, resultCode, data);
+	public void onEditEntityClick(String entityId) {
+		Intent intent = Intents.editPairing(getActivity(), entityId);
+		startActivityForResult(intent, EDIT_ENTITY);
+	}
 
-        switch (reqCode) {
-        case (EDIT_ENTITY):
-            if (resultCode == Activity.RESULT_OK) {
-                getActivity().getSupportLoaderManager().restartLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
-            }
-        }
-    }
+	protected void handleIntent(Intent intent) {
+		if (intent == null) {
+			return;
+		}
+		if (Log.isLoggable(TAG, Log.DEBUG)) {
+			Log.d(TAG, "handleIntent for action : " + intent.getAction());
+		}
+	}
 
-    // ===========================================================
-    // Loader
-    // ===========================================================
+	@Override
+	public void onActivityResult(int reqCode, int resultCode, Intent data) {
+		super.onActivityResult(reqCode, resultCode, data);
 
-    private final LoaderManager.LoaderCallbacks<Cursor> pairingLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+		switch (reqCode) {
+		case (EDIT_ENTITY):
+			if (resultCode == Activity.RESULT_OK) {
+				getActivity().getSupportLoaderManager().restartLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
+			}
+		}
+	}
 
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Log.d(TAG, "onCreateLoader");
-            String sortOrder = PAIRING_SORT_DEFAULT;
-            String selection = null;
-            String[] selectionArgs = null;
-            String queryString = null;
-            // Loader
-            CursorLoader cursorLoader = new CursorLoader(getActivity(), PairingProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
-            return cursorLoader;
-        }
+	// ===========================================================
+	// Loader
+	// ===========================================================
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            
-            // Display List
-            listAdapter.swapCursor(cursor);
-            cursor.setNotificationUri(getActivity().getContentResolver(), PairingProvider.Constants.CONTENT_URI );
-            // Display Counter
-            int count = 0;
-            if (cursor != null) {
-                count = cursor.getCount();
-            }
+	private final LoaderManager.LoaderCallbacks<Cursor> pairingLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+
+		@Override
+		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			Log.d(TAG, "onCreateLoader");
+			String sortOrder = PAIRING_SORT_DEFAULT;
+			String selection = null;
+			String[] selectionArgs = null;
+			String queryString = null;
+			// Loader
+			CursorLoader cursorLoader = new CursorLoader(getActivity(), PairingProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+			return cursorLoader;
+		}
+
+		@Override
+		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+			// Display List
+			listAdapter.swapCursor(cursor);
+			cursor.setNotificationUri(getActivity().getContentResolver(), PairingProvider.Constants.CONTENT_URI);
+			// Display Counter
+			int count = 0;
+			if (cursor != null) {
+				count = cursor.getCount();
+			}
 			Log.d(TAG, "onLoadFinished with result count : " + count);
 
-        }
+		}
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            listAdapter.swapCursor(null);
-        }
+		@Override
+		public void onLoaderReset(Loader<Cursor> loader) {
+			listAdapter.swapCursor(null);
+		}
 
-    };
+	};
 
 }

@@ -106,20 +106,22 @@ public class PersonWidgetService extends RemoteViewsService {
 			if (mCursor != null) {
 				mCursor.close();
 			}
-			
-		    Thread thread = new Thread() {
-		        public void run() {
-		        	// TODO WidgetProvider.Constants.CONTENT_URI_PERSON
+
+			Thread thread = new Thread() {
+				public void run() {
+					// TODO WidgetProvider.Constants.CONTENT_URI_PERSON
 					final ContentResolver cr = mContext.getContentResolver();
 					mCursor = cr.query(PersonProvider.Constants.CONTENT_URI, null, null, null, null);
-					helper.initWrapper(mCursor); 
-		        }
-		    };
-		    thread.start();
-		    try {
-		        thread.join();
-		    } catch (InterruptedException e) {
-		    }
+					mCursor.moveToFirst();
+					helper.initWrapper(mCursor);
+				}
+			};
+			thread.start();
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+			}
 		}
+
 	}
 }

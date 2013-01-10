@@ -50,12 +50,7 @@ public class PersonListFragment extends Fragment {
         }
     };
     
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        Log.d(TAG, "onActivityCreated");
-//       
-//    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,11 +77,17 @@ public class PersonListFragment extends Fragment {
         // listView.setEmptyView(emptyListView);
         Log.d(TAG, "Binding end");
         // Intents
-        getActivity().getSupportLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
-
+      
         return v;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated");
+        getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+  
+    }
     public void onAddEntityClick(View v) {
         Intent intent = Intents.editPerson(getActivity(), null);
         startActivityForResult(intent, EDIT_ENTITY);
