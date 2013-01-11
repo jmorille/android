@@ -210,47 +210,51 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     // ===========================================================
 
     public boolean registerGeoPingRequest(String phoneNumber, Bundle params) {
-        // Acquire Lock
-        PowerManager.WakeLock lock = getLock(this.getApplicationContext());
-        lock.acquire();
-        Log.d(TAG, "*** Lock Acquire: " + LOCK_NAME + " " + lock);
-        // Register request
-        Location initLastLoc = myLocation.getLastKnownLocation();
-        GeoPingRequest request = new GeoPingRequest(phoneNumber, params);
-        multiGeoRequestListener.add(request);
-        // TODO Bad for multi request
-        boolean locProviderEnabled = myLocation.startListening(multiGeoRequestListener);
-        // schedule it for time out
-        // TODO
-        int timeOutInSeconde = SmsMessageLocEnum.TIME_IN_S.readInt(params, 30);
-
-        ScheduledFuture<Boolean> task = executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
-        request.meTask = task;
-
+        boolean locProviderEnabled = false;
+        synchronized (multiGeoRequestListener) {
+            // Acquire Lock
+            PowerManager.WakeLock lock = getLock(this.getApplicationContext());
+            lock.acquire();
+            Log.d(TAG, "*** Lock Acquire: " + LOCK_NAME + " " + lock);
+            // Register request
+            Location initLastLoc = myLocation.getLastKnownLocation();
+            GeoPingRequest request = new GeoPingRequest(phoneNumber, params); 
+            multiGeoRequestListener.add(request); 
+            
+            // TODO Bad for multi request
+            locProviderEnabled = myLocation.startListening(multiGeoRequestListener);
+            // Schedule it for the time out 
+            int timeOutInSeconde = SmsMessageLocEnum.TIME_IN_S.readInt(params, 30);
+            ScheduledFuture<Boolean> task = executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
+            request.meTask = task;
+        }
         return locProviderEnabled;
     }
 
     public void unregisterGeoPingRequest(GeoPingRequest request) {
-        boolean isRemove = multiGeoRequestListener.remove(request);
-        if (isRemove) {
-            Log.d(TAG, "Remove GeoPing Request in list, do Stop Service");
-        } else {
-            Log.e(TAG, "Could not remove expected GeoPingRequest. /!\\ Emmergency Stop Service /!\\");
-            // TODO ??? multiGeoRequestListener.clear();
-        }
-        // Release Lock
-        PowerManager.WakeLock lock = getLock(this.getApplicationContext());
-        if (lock.isHeld()) {
-            lock.release();
-        }
-
-        Log.d(TAG, "*** Lock Release: " + LOCK_NAME + " " + lock);
-        // Stop Service if necessary
-        if (multiGeoRequestListener.isEmpty()) {
-            Log.d(TAG, "No GeoPing Request in list, do Stop Service");
-            myLocation.stopListening();
-            // Stop Service
-            stopSelf();
+        synchronized (multiGeoRequestListener) {
+            boolean isRemove = multiGeoRequestListener.remove(request);
+            if (isRemove) {
+                Log.d(TAG, "Remove GeoPing Request in list, do Stop Service");
+            } else {
+                Log.e(TAG, "###################################################################################");
+                Log.e(TAG, "### Could not remove expected GeoPingRequest. /!\\ Emmergency Stop Service /!\\ ###");
+                Log.e(TAG, "###################################################################################");
+                // TODO ??? multiGeoRequestListener.clear();
+            }
+            // Release Lock
+            PowerManager.WakeLock lock = getLock(this.getApplicationContext());
+            if (lock.isHeld()) {
+                lock.release();
+            }
+            Log.d(TAG, "*** Lock Release: " + LOCK_NAME + " " + lock);
+            // Stop Service if necessary
+            if (multiGeoRequestListener.isEmpty()) {
+                Log.d(TAG, "No GeoPing Request in list, do Stop Service");
+                myLocation.stopListening();
+                // Stop Service
+                stopSelf();
+            }
         }
     }
 
