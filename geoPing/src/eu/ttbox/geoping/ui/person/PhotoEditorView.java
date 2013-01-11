@@ -86,9 +86,15 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 		setValues(photo, readOnly);
 	}
 
-	public void setValues(Bitmap photo, boolean readOnly) {
-		if (photo != null) {
+	public void setValues(final Bitmap photo, boolean readOnly) {
+		if (photo != null) { 
 			mPhotoImageView.setImageBitmap(photo);
+//			mPhotoImageView.post(new Runnable() { 
+//				@Override
+//				public void run() {
+//					mPhotoImageView.setImageBitmap(photo);
+//				}
+//			});
 			mFrameView.setEnabled(isEnabled());
 			mHasSetPhoto = true;
 			// mEntry.setFromTemplate(false);

@@ -80,7 +80,7 @@ public class PersonHelper {
         return cursor.getString(phoneIdx);
     }
 
-    
+ 
     public String getPersonDisplayName(Cursor cursor) {
         return cursor.getString(displayNameIdx);
     }

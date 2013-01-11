@@ -18,15 +18,15 @@
         android:focusable="false"
         android:focusableInTouchMode="false" />
 
-    <!-- <ImageButton -->
-    <!-- android:id="@+id/person_list_item_geoping_button" -->
-    <!-- style="@style/entity_list_item" -->
-    <!-- android:layout_alignParentRight="true" -->
-    <!-- android:layout_centerVertical="true" -->
-    <!-- android:minWidth="60dip" -->
-    <!-- android:src="@drawable/ic_launcher" -->
-    <!-- android:text="@string/geoping" -->
-    <!-- android:width="20dp" /> -->
+<!--     <ImageButton -->
+<!--     android:id="@+id/person_list_item_geoping_button" -->
+<!--     style="@style/entity_list_item" -->
+<!--     android:layout_alignParentRight="true" -->
+<!--     android:layout_centerVertical="true" -->
+<!--     android:minWidth="60dip" -->
+<!--     android:src="@drawable/ic_launcher" -->
+<!--     android:text="@string/geoping" -->
+<!--     android:width="20dp" /> -->
 
     <include
         android:id="@+id/person_list_item_geoping_button"

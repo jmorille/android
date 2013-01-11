@@ -11,24 +11,40 @@
 
     <!-- empty view -->
 
-    <ScrollView
+    <LinearLayout
         android:id="@android:id/empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:overScrollMode="ifContentScrolls"
-        android:scrollbars="none" >
+        android:orientation="vertical" >
 
-        <TextView
+        <Button
+            android:id="@+id/add_track_person_button_help"
             android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:minHeight="50dp"
+            android:text="@string/add_track_person" />
+
+        <ScrollView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/person_help" />
-    </ScrollView>
+            android:fillViewport="false"
+            android:overScrollMode="ifContentScrolls"
+            android:scrollbars="none" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/person_help"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </ScrollView>
+ 
+    </LinearLayout>
 
     <Button
         android:id="@+id/add_track_person_button"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
+        android:minHeight="50dp"
         android:text="@string/add_track_person" />
 
 </LinearLayout>

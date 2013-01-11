@@ -58,17 +58,20 @@ public class PairingListFragment extends Fragment {
 		listView = (ListView) v.findViewById(android.R.id.list);
 		listView.setEmptyView(v.findViewById(android.R.id.empty));
 		Button addEntityButton = (Button) v.findViewById(R.id.add_pairing_button);
+		Button addEntityButtonHelp = (Button) v.findViewById(R.id.add_pairing_button_help);
 		// init
 		listAdapter = new PairingListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 		listView.setAdapter(listAdapter);
 		listView.setOnItemClickListener(mOnClickListener);
 		// Listener
-		addEntityButton.setOnClickListener(new OnClickListener() {
+		OnClickListener addPairingOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onAddEntityClick(v);
 			}
-		});
+		};
+		addEntityButton.setOnClickListener(addPairingOnClickListener);
+		addEntityButtonHelp.setOnClickListener(addPairingOnClickListener);
 		// Intents
 		Log.d(TAG, "Binding end");
 

@@ -4,31 +4,45 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-<!--       <fragment -->
-<!--         android:id="@+id/fragment_admob_pairing" -->
-<!--         android:name="eu.ttbox.geoping.ui.admob.AdmobFragment" -->
-<!--         android:layout_width="wrap_content" -->
-<!--         android:layout_height="wrap_content" /> -->
-    
-    
+    <!-- <fragment -->
+    <!-- android:id="@+id/fragment_admob_pairing" -->
+    <!-- android:name="eu.ttbox.geoping.ui.admob.AdmobFragment" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" /> -->
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
- 
-       <!-- empty view -->
+
+    <!-- empty view -->
 
     <LinearLayout
         android:id="@android:id/empty"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/pairing_help" />
+        <Button
+            android:id="@+id/add_pairing_button_help"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:text="@string/add_pairing" />
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fillViewport="false"
+            android:overScrollMode="ifContentScrolls"
+            android:scrollbars="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pairing_help"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </ScrollView>
     </LinearLayout>
-     
 
     <Button
         android:id="@+id/add_pairing_button"

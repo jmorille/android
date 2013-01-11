@@ -189,7 +189,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
         // Open Selection contact Diallog
         onSelectContactClick(null);
         //Defautl value
-        authorizeTypeAskRadioButton.setChecked(true);
+        authorizeTypeAlwaysRadioButton.setChecked(true);
     }
 
     

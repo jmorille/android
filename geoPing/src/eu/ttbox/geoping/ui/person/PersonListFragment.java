@@ -1,6 +1,8 @@
 package eu.ttbox.geoping.ui.person;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -25,133 +27,172 @@ import eu.ttbox.geoping.domain.person.PersonHelper;
 
 public class PersonListFragment extends Fragment {
 
-    private static final String TAG = "PersonListFragment";
+	private static final String TAG = "PersonListFragment";
 
-    private static final int PERSON_LIST_LOADER = R.id.config_id_person_list_loader;
+	private static final int PERSON_LIST_LOADER = R.id.config_id_person_list_loader;
 
-    // Constant
-    private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.COL_NAME, PersonColumns.COL_PHONE);
+	// Constant
+	private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.COL_NAME, PersonColumns.COL_PHONE);
 
-    private static final int EDIT_ENTITY = 0;
+	private static final int EDIT_ENTITY = 0;
 
-    // binding
-    private ListView listView;
+	// binding
+	private ListView listView;
 
-    // init
-    private PersonListAdapter listAdapter;
+	// init
+	private PersonListAdapter listAdapter;
 
-    private final AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-            Log.w(TAG, "OnItemClickListener on Item at Position=" + position + " with id=" + id);
-            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-            PersonHelper helper = new PersonHelper().initWrapper(cursor);
-            String entityId = helper.getPersonIdAsString(cursor);
-            onEditEntityClick(entityId);
-        }
-    };
-    
+	PhotoThumbmailCache photoCache;
 
+	private final AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
+		public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+			Log.w(TAG, "OnItemClickListener on Item at Position=" + position + " with id=" + id);
+			Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+			PersonHelper helper = new PersonHelper().initWrapper(cursor);
+			String entityId = helper.getPersonIdAsString(cursor);
+			onEditEntityClick(entityId);
+		}
+	};
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.track_person_list, container, false);
-        Log.d(TAG, "onCreateView");
-        // Bindings
-        listView = (ListView) v.findViewById(android.R.id.list);
-        listView.setEmptyView(v.findViewById(android.R.id.empty));
-        // Button
-        Button addPersonButton = (Button) v.findViewById(R.id.add_track_person_button);
-        addPersonButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onAddEntityClick(v);
-            }
-        });
-       
-        // init
-        listAdapter = new PersonListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        listView.setAdapter(listAdapter);
-        listView.setOnItemClickListener(mOnClickListener);
-        // Empty List
-        // emptyListView = (TextView) v.findViewById(android.R.id.empty);
-        // listView.setEmptyView(emptyListView);
-        Log.d(TAG, "Binding end");
-        // Intents
-      
-        return v;
-    }
+	// ===========================================================
+	// Constructors
+	// ===========================================================
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "onActivityCreated");
-        getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
-  
-    }
-    public void onAddEntityClick(View v) {
-        Intent intent = Intents.editPerson(getActivity(), null);
-        startActivityForResult(intent, EDIT_ENTITY);
-    }
+	public PersonListFragment() {
+		super();
+		Log.i(TAG, "---------- Constructor PersonListFragment");
+	}
 
-    public void onEditEntityClick(String entityId) {
-        Intent intent = Intents.editPerson(getActivity(), entityId);
-        startActivityForResult(intent, EDIT_ENTITY);
-    }
+	public PersonListFragment(PhotoThumbmailCache photoCache) {
+		super();
+		this.photoCache = photoCache;
+		Log.i(TAG, "---------- Constructor PersonListFragment");
+	}
 
-    @Override
-    public void onActivityResult(int reqCode, int resultCode, Intent data) {
-        super.onActivityResult(reqCode, resultCode, data);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.track_person_list, container, false);
+		Log.d(TAG, "onCreateView");
+		Log.i(TAG, "---------- onCreateView PersonListFragment");
+		// Init Cache
+		if (photoCache == null) {
+			initPhotoThumbmailCache();
+		}
+		// Bindings
+		listView = (ListView) v.findViewById(android.R.id.list);
+		listView.setEmptyView(v.findViewById(android.R.id.empty));
+		// Button
+		Button addPersonButton = (Button) v.findViewById(R.id.add_track_person_button);
+		Button addPersonButtonHelp = (Button) v.findViewById(R.id.add_track_person_button_help);
+		OnClickListener addPersonOnClickListener = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onAddEntityClick(v);
+			}
+		};
+		addPersonButton.setOnClickListener(addPersonOnClickListener);
+		addPersonButtonHelp.setOnClickListener(addPersonOnClickListener);
+		// init
+		listAdapter = new PersonListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER, photoCache);
+		listView.setAdapter(listAdapter);
+		listView.setOnItemClickListener(mOnClickListener);
+		// Empty List
+		// emptyListView = (TextView) v.findViewById(android.R.id.empty);
+		// listView.setEmptyView(emptyListView);
+		Log.d(TAG, "Binding end");
+		// Intents
 
-        switch (reqCode) {
-        case (EDIT_ENTITY):
-            if (resultCode == Activity.RESULT_OK) {
-                reloadDataList();
-            }
-        }
-    }
+		return v;
+	}
 
-    public void reloadDataList() {
-        getActivity().getSupportLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
-    }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG, "onActivityCreated");
+		getActivity().getSupportLoaderManager().initLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
 
-    // ===========================================================
-    // Loader
-    // ===========================================================
+	}
 
-    private final LoaderManager.LoaderCallbacks<Cursor> personLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+	private void initPhotoThumbmailCache() {
+		ActivityManager am = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+		int memoryClassBytes = am.getMemoryClass() * 1024 * 1024;
+		int cacheSize = memoryClassBytes / 8; // 307000 * 10
+		Log.i(TAG, "Create Cache of PhotoThumbmailCache wih size " + cacheSize);
+		photoCache = new PhotoThumbmailCache(cacheSize);
+	}
 
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Log.d(TAG, "onCreateLoader");
-            String sortOrder = PERSON_SORT_DEFAULT;
-            String selection = null;
-            String[] selectionArgs = null;
-            String queryString = null;
-            // Loader
-            CursorLoader cursorLoader = new CursorLoader(getActivity(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
-            return cursorLoader;
-        }
+	// ===========================================================
+	// Click Event
+	// ===========================================================
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-           
-            // Display List
-            listAdapter.swapCursor(cursor);
-            cursor.setNotificationUri(getActivity().getContentResolver(), PersonProvider.Constants.CONTENT_URI);
-            // Display Counter
-            int count = 0;
-            if (cursor != null) {
-                count = cursor.getCount();
-            }
+	public void onAddEntityClick(View v) {
+		Intent intent = Intents.editPerson(getActivity(), null);
+		startActivityForResult(intent, EDIT_ENTITY);
+	}
+
+	public void onEditEntityClick(String entityId) {
+		Intent intent = Intents.editPerson(getActivity(), entityId);
+		startActivityForResult(intent, EDIT_ENTITY);
+	}
+
+	// ===========================================================
+	// Accessors
+	// ===========================================================
+
+	@Override
+	public void onActivityResult(int reqCode, int resultCode, Intent data) {
+		super.onActivityResult(reqCode, resultCode, data);
+
+		switch (reqCode) {
+		case (EDIT_ENTITY):
+			if (resultCode == Activity.RESULT_OK) {
+				reloadDataList();
+			}
+		}
+	}
+
+	public void reloadDataList() {
+		getActivity().getSupportLoaderManager().restartLoader(PERSON_LIST_LOADER, null, personLoaderCallback);
+	}
+
+	// ===========================================================
+	// Loader
+	// ===========================================================
+
+	private final LoaderManager.LoaderCallbacks<Cursor> personLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+
+		@Override
+		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			Log.d(TAG, "onCreateLoader");
+			String sortOrder = PERSON_SORT_DEFAULT;
+			String selection = null;
+			String[] selectionArgs = null;
+			String queryString = null;
+			// Loader
+			CursorLoader cursorLoader = new CursorLoader(getActivity(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+			return cursorLoader;
+		}
+
+		@Override
+		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+			// Display List
+			listAdapter.swapCursor(cursor);
+			cursor.setNotificationUri(getActivity().getContentResolver(), PersonProvider.Constants.CONTENT_URI);
+			// Display Counter
+			int count = 0;
+			if (cursor != null) {
+				count = cursor.getCount();
+			}
 			Log.d(TAG, "onLoadFinished with result count : " + count);
 
-        }
+		}
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            listAdapter.swapCursor(null);
-        }
+		@Override
+		public void onLoaderReset(Loader<Cursor> loader) {
+			listAdapter.swapCursor(null);
+		}
 
-    };
+	};
 
 }

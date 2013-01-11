@@ -1,5 +1,7 @@
 package eu.ttbox.geoping;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +16,7 @@ import com.actionbarsherlock.view.Menu;
 import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
 import eu.ttbox.geoping.ui.pairing.PairingListFragment;
 import eu.ttbox.geoping.ui.person.PersonListFragment;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class MainActivity extends SherlockFragmentActivity { //
@@ -39,8 +42,9 @@ public class MainActivity extends SherlockFragmentActivity { //
 	private PersonListFragment personListFragment;
 	private PairingListFragment pairingListFragment;
 	private SmsLogListFragment smsLogListFragment;
-	
-	
+
+	private PhotoThumbmailCache photoCache;
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -49,6 +53,9 @@ public class MainActivity extends SherlockFragmentActivity { //
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		// Photo Cache
+		initPhotoThumbmailCache();
+		personListFragment = new PersonListFragment(photoCache);
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
 		// of the app.
@@ -66,6 +73,30 @@ public class MainActivity extends SherlockFragmentActivity { //
 		// }
 		Log.d(TAG, "--------------- " + getPackageName() + "_preferences");
 
+	}
+
+	private void initPhotoThumbmailCache() {
+		ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		int memoryClassBytes = am.getMemoryClass() * 1024 * 1024;
+		int cacheSize = memoryClassBytes / 8; // 307000 * 10
+		Log.i(TAG, "Create Cache of PhotoThumbmailCache wih size " + cacheSize);
+		photoCache = new PhotoThumbmailCache(cacheSize); 
+	}
+
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		if (photoCache != null) {
+			photoCache.onLowMemory();
+		}
+	}
+
+	public void onTrimMemory(int level) {
+		super.onTrimMemory(level);
+		if (photoCache != null) {
+			photoCache.onTrimMemory(level);
+		}
 	}
 
 	// ===========================================================
@@ -88,12 +119,12 @@ public class MainActivity extends SherlockFragmentActivity { //
 			mViewPager.setCurrentItem(SectionsPagerAdapter.PAIRING);
 			return true;
 		}
-		case     R.id.menu_smslog:
+		case R.id.menu_smslog:
 			mViewPager.setCurrentItem(SectionsPagerAdapter.LOG);
-			return	 true;
-		default: 
+			return true;
+		default:
 			break;
- 		}
+		}
 		boolean isConsume = MenuOptionsItemSelectionHelper.onOptionsItemSelected(this, item);
 		if (isConsume) {
 			return isConsume;
@@ -112,12 +143,11 @@ public class MainActivity extends SherlockFragmentActivity { //
 	// Pages Adapter
 	// ===========================================================
 
-	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the primary sections of the app.
 	 */
-	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		static final int PERSON = 0;
 		static final int PAIRING = 1;
@@ -129,12 +159,12 @@ public class MainActivity extends SherlockFragmentActivity { //
 
 		@Override
 		public Fragment getItem(int position) {
-			  Log.d(TAG, "getItem : " + position);
+			Log.d(TAG, "getItem : " + position);
 			Fragment fragment = null;
 			switch (position) {
 			case PERSON:
 				if (personListFragment == null) {
-					personListFragment = new PersonListFragment();
+					personListFragment = new PersonListFragment(photoCache);
 					Log.d(TAG, "Create Fragment PersonListFragment");
 				}
 				fragment = personListFragment;
@@ -144,7 +174,7 @@ public class MainActivity extends SherlockFragmentActivity { //
 					pairingListFragment = new PairingListFragment();
 					Log.d(TAG, "Create Fragment PairingListFragment");
 				}
-				fragment = pairingListFragment; 
+				fragment = pairingListFragment;
 				break;
 			case LOG:
 				if (smsLogListFragment == null) {
