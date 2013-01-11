@@ -57,12 +57,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 		super.setEnabled(enabled);
 		mFrameView.setEnabled(enabled);
 	}
-
-	// @Override
-	// public void editNewlyAddedField() {
-	// // Never called, since the user never adds a new photo-editor;
-	// // you can only change the picture in an existing editor.
-	// }
+ 
 
 	/** {@inheritDoc} */
 	@Override
@@ -80,13 +75,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 			}
 		});
 	}
-
-	// /** {@inheritDoc} */
-	// @Override
-	// public void onFieldChanged(String column, String value) {
-	// throw new
-	// UnsupportedOperationException("Photos don't support direct field changes");
-	// }
+ 
 
 	public void setValues(String contactId, boolean readOnly) { 
 		mReadOnly = readOnly;
@@ -115,46 +104,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 		return mHasSetPhoto;
 	}
 
-	/**
-	 * Assign the given {@link Bitmap} as the new value, updating UI and
-	 * readying for persisting through {@link ValuesDelta}.
-	 */
-	// public void setPhotoBitmap(Bitmap photo) {
-	// if (photo == null) {
-	// // Clear any existing photo and return
-	// mEntry.put(Photo.PHOTO, (byte[])null);
-	// resetDefault();
-	// return;
-	// }
-	//
-	// mPhotoImageView.setImageBitmap(photo);
-	// mFrameView.setEnabled(isEnabled());
-	// mHasSetPhoto = true;
-	// mEntry.setFromTemplate(false);
-	//
-	// // When the user chooses a new photo mark it as super primary
-	// mEntry.put(Photo.IS_SUPER_PRIMARY, 1);
-	//
-	// // Even though high-res photos cannot be saved by passing them via
-	// // an EntityDeltaList (since they cause the Bundle size limit to be
-	// // exceeded), we still pass a low-res thumbnail. This simplifies
-	// // code all over the place, because we don't have to test whether
-	// // there is a change in EITHER the delta-list OR a changed photo...
-	// // this way, there is always a change in the delta-list.
-	// final int size = ContactsUtils.getThumbnailSize(getContext());
-	// final Bitmap scaled = Bitmap.createScaledBitmap(photo, size, size,
-	// false);
-	// final byte[] compressed = ContactPhotoUtils.compressBitmap(scaled);
-	// if (compressed != null) mEntry.put(Photo.PHOTO, compressed);
-	// }
-
-	// /**
-	// * Set the super primary bit on the photo.
-	// */
-	// public void setSuperPrimary(boolean superPrimary) {
-	// mEntry.put(Photo.IS_SUPER_PRIMARY, superPrimary ? 1 : 0);
-	// }
-
+ 
 	protected void resetDefault() {
 		// Invalid photo, show default "add photo" place-holder
 		mPhotoImageView.setImageResource(R.drawable.ic_contact_picture_holo_light);
@@ -172,27 +122,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 		mTriangleAffordance.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
 		mFrameView.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
 	}
-
-	//
-	// @Override
-	// public void setDeletable(boolean deletable) {
-	// // Photo is not deletable
-	// }
-	//
-	// @Override
-	// public boolean isEmpty() {
-	// return !mHasSetPhoto;
-	// }
-	//
-	// @Override
-	// public void deleteEditor() {
-	// // Photo is not deletable
-	// }
-	//
-	// @Override
-	// public void clearAllFields() {
-	// resetDefault();
-	// }
+ 
 
 	public interface EditorListener {
 		public void onRequest(int request);

@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.service.slave;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.location.Location;
@@ -9,11 +10,11 @@ import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService.GeoPingRequest
 
 public class MultiGeoRequestLocationListener implements LocationListener {
 
-    List<GeoPingRequest> geoPingRequestList;
+    private List<GeoPingRequest> geoPingRequestList;
 
-    public MultiGeoRequestLocationListener(List<GeoPingRequest> geoPingRequestList) {
+    public MultiGeoRequestLocationListener() {
         super();
-        this.geoPingRequestList = geoPingRequestList;
+        this.geoPingRequestList = new ArrayList<GeoPingRequest>();
     }
 
     @Override
@@ -50,6 +51,22 @@ public class MultiGeoRequestLocationListener implements LocationListener {
                 request.onProviderDisabled(provider);
             }
         }
+    }
+
+    public boolean isEmpty() {
+        return geoPingRequestList.isEmpty();
+    }
+
+    public boolean remove(GeoPingRequest request) {
+        return geoPingRequestList.remove(request);
+    }
+
+    public boolean add(GeoPingRequest request) {
+        return geoPingRequestList.add(request);
+    }
+
+    public void clear() {
+        geoPingRequestList.clear();
     }
 
 }
