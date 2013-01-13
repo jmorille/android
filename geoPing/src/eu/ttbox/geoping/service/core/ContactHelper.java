@@ -146,13 +146,19 @@ public class ContactHelper {
 		return null;
 	}
 
+	/**
+	 * {@linkplain http://developer.android.com/reference/android/provider/ContactsContract.PhoneLookup.html}
+	 * @param context
+	 * @param phoneNumber
+	 * @return
+	 */
 	public static ContactVo searchContactForPhone(Context context, String phoneNumber) {
 		String contactName = null;
 		long contactId = -1l;
 		if (isPermissionReadContact(context)) {
 			Log.d(TAG, String.format("Search Contact Name for Phone [%s]", phoneNumber));
 			Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
-			Cursor cur = context.getContentResolver().query(uri, new String[] { PhoneLookup.DISPLAY_NAME, PhoneLookup._ID }, null, null, null);
+			Cursor cur = context.getContentResolver().query(uri, new String[] { PhoneLookup.DISPLAY_NAME, PhoneLookup._ID, PhoneLookup.LOOKUP_KEY }, null, null, null);
 			try {
 				if (cur != null && cur.moveToFirst()) {
 					contactName = cur.getString(cur.getColumnIndex(PhoneLookup.DISPLAY_NAME));

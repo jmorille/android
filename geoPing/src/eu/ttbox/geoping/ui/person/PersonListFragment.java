@@ -1,8 +1,6 @@
 package eu.ttbox.geoping.ui.person;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -42,8 +40,7 @@ public class PersonListFragment extends Fragment {
 	// init
 	private PersonListAdapter listAdapter;
 
-	PhotoThumbmailCache photoCache;
-
+	 
 	private final AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 			Log.w(TAG, "OnItemClickListener on Item at Position=" + position + " with id=" + id);
@@ -63,21 +60,14 @@ public class PersonListFragment extends Fragment {
 		Log.i(TAG, "---------- Constructor PersonListFragment");
 	}
 
-	public PersonListFragment(PhotoThumbmailCache photoCache) {
-		super();
-		this.photoCache = photoCache;
-		Log.i(TAG, "---------- Constructor PersonListFragment");
-	}
+ 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.track_person_list, container, false);
 		Log.d(TAG, "onCreateView");
 		Log.i(TAG, "---------- onCreateView PersonListFragment");
-		// Init Cache
-		if (photoCache == null) {
-			initPhotoThumbmailCache();
-		}
+		 
 		// Bindings
 		listView = (ListView) v.findViewById(android.R.id.list);
 		listView.setEmptyView(v.findViewById(android.R.id.empty));
@@ -93,7 +83,7 @@ public class PersonListFragment extends Fragment {
 		addPersonButton.setOnClickListener(addPersonOnClickListener);
 		addPersonButtonHelp.setOnClickListener(addPersonOnClickListener);
 		// init
-		listAdapter = new PersonListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER, photoCache);
+		listAdapter = new PersonListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER );
 		listView.setAdapter(listAdapter);
 		listView.setOnItemClickListener(mOnClickListener);
 		// Empty List
@@ -113,14 +103,7 @@ public class PersonListFragment extends Fragment {
 
 	}
 
-	private void initPhotoThumbmailCache() {
-		ActivityManager am = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-		int memoryClassBytes = am.getMemoryClass() * 1024 * 1024;
-		int cacheSize = memoryClassBytes / 8; // 307000 * 10
-		Log.i(TAG, "Create Cache of PhotoThumbmailCache wih size " + cacheSize);
-		photoCache = new PhotoThumbmailCache(cacheSize);
-	}
-
+	 
 	// ===========================================================
 	// Click Event
 	// ===========================================================

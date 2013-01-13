@@ -27,16 +27,18 @@
 <!--     android:src="@drawable/ic_launcher" -->
 <!--     android:text="@string/geoping" -->
 <!--     android:width="20dp" /> -->
+<!---->
 
     <include
         android:id="@+id/person_list_item_geoping_button"
+          xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping" 
          layout="@layout/item_photo_editor"
         style="@style/entity_list_item"
         android:layout_alignParentRight="true" 
         android:layout_centerVertical="true"
-        android:minWidth="60dip"
-        android:src="@drawable/ic_launcher"
+        android:minWidth="60dip" 
         android:text="@string/geoping"
+        geoping:geopingType="request"
         android:layout_width="48dp"
         android:layout_height="48dp" />
 

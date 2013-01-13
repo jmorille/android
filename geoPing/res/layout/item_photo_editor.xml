@@ -1,23 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-     Copyright (C) 2007 The Android Open Source Project
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-  
-          http://www.apache.org/licenses/LICENSE-2.0
-  
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
-
-<view xmlns:android="http://schemas.android.com/apk/res/android"
+<view xmlns:android="http://schemas.android.com/apk/res/android" 
+      xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping" 
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    geoping:geopingType="request"
     class="eu.ttbox.geoping.ui.person.PhotoEditorView"
     android:orientation="horizontal" >
 
@@ -29,10 +15,10 @@
             android:id="@+id/photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="false"
-        android:focusableInTouchMode="false" 
             android:contentDescription="@string/description_contact_photo"
             android:cropToPadding="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:gravity="left"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_contact_picture_holo_light" />
@@ -40,12 +26,12 @@
         <View
             android:id="@+id/frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" 
+            android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:clickable="true"
             android:contentDescription="@string/description_contact_photo"
             android:focusable="false"
-        android:focusableInTouchMode="false"  />
+            android:focusableInTouchMode="false" />
         <!-- android:background="?android:attr/selectableItemBackground" -->
     </FrameLayout>
 
@@ -53,11 +39,11 @@
         android:id="@+id/photo_triangle_affordance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:focusable="false"
-        android:focusableInTouchMode="false" 
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:src="@drawable/account_spinner_icon" />
 
 </view>

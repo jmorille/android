@@ -11,7 +11,6 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
-import org.osmdroid.views.MapController.AnimationType;
 import org.osmdroid.views.MapView;
 
 import android.app.ActivityManager;
@@ -33,6 +32,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.SeekBar;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -44,6 +45,9 @@ import eu.ttbox.geoping.ui.map.core.MapConstants;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
+import eu.ttbox.geoping.ui.widget.comp.RangeSeekBar;
+import eu.ttbox.geoping.ui.widget.comp.RangeSeekBar.OnRangeSeekBarChangeListener;
 import eu.ttbox.osm.ui.map.MapViewFactory;
 import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 
@@ -75,12 +79,17 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 	// private GeoTrackOverlay geoTrackOverlay;
 	private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser = new HashMap<String, GeoTrackOverlay>();
 
+	// View
+	private RangeSeekBar<Integer> rangeSeekBar;
 	// Listener
 	private StatusReceiver mStatusReceiver;
 	// Service
 	private SharedPreferences sharedPreferences;
 	private SharedPreferences privateSharedPreferences;
 	private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+	// Cache
+	PhotoThumbmailCache photoCache;
 
 	// Deprecated
 	private ResourceProxy mResourceProxy;
@@ -91,6 +100,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.map, container, false);
+
+		// Cache
+		photoCache = ((GeoPingApplication) getActivity().getApplication()).getPhotoThumbmailCache();
 
 		// Prefs
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -121,6 +133,18 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		// Query
 		getActivity().getSupportLoaderManager().initLoader(GEOTRACK_PERSON_LOADER, null, geoTrackPersonLoaderCallback);
 
+		// Range Seek Bar
+		// ---------------
+		ViewGroup rangeViewContainer = (ViewGroup) v.findViewById(R.id.rangeSeekBarViewContainer);
+		RangeSeekBar<Integer> rangeSeekBar = new RangeSeekBar<Integer>(0, 86400, getActivity());
+		rangeViewContainer.addView(rangeSeekBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		rangeSeekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
+			@Override
+			public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+				// handle changed range values
+				Log.i(TAG, "User selected new date range: MIN=" + minValue + ", MAX=" + maxValue);
+			}
+		});
 		return v;
 	}
 
@@ -156,7 +180,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		int scrollX = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X, Integer.MIN_VALUE);
 		int scrollY = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, Integer.MIN_VALUE);
 		if (Integer.MIN_VALUE != scrollX && Integer.MIN_VALUE != scrollY) {
-//			mapView.scrollTo(scrollX, scrollY);
+			// mapView.scrollTo(scrollX, scrollY);
 			// mapView.scrollTo(privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X,
 			// 0), privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y,
 			// 0));
@@ -264,8 +288,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		myLocation.runOnFirstFix(new Runnable() {
 
 			@Override
-			public void run() { 
-//				myLocation.animateToLastFix();
+			public void run() {
+				// myLocation.animateToLastFix();
 				mapController.setZoom(17);
 			}
 		});
@@ -282,7 +306,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 				if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
 					GeoPoint geoPoint = new GeoPoint(latE6, lngE6);
 					mapController.setCenter(geoPoint);
-//					mapController.animateTo(latE6, lngE6, AnimationType.HALFCOSINUSALDECELERATING);
+					// mapController.animateTo(latE6, lngE6,
+					// AnimationType.HALFCOSINUSALDECELERATING);
 				}
 				// Display GeoPoints for person
 				GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
@@ -413,7 +438,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 			Log.d(TAG, "onCreateLoader");
 			String sortOrder = PersonColumns.ORDER_NAME_ASC;
-			String selection = PersonColumns.SELECT_BYPHONE_NUMBER_NOT_NULL;//  null;
+			String selection = PersonColumns.SELECT_BYPHONE_NUMBER_NOT_NULL;// null;
 			String[] selectionArgs = null;
 			// Loader
 			CursorLoader cursorLoader = new CursorLoader(getActivity(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);

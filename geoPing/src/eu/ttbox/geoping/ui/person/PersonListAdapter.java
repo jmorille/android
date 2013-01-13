@@ -6,10 +6,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.NotifToasts;
@@ -28,10 +30,16 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 	// Cache
 	private PhotoThumbmailCache photoCache;
 
-	public PersonListAdapter(Context context, Cursor c, int flags, PhotoThumbmailCache photoCache) {
+	// ===========================================================
+	// Constructors
+	// ===========================================================
+
+	public PersonListAdapter(Context context, Cursor c, int flags ) {
 		super(context, R.layout.track_person_list_item, c, flags);
-		this.context = context;
-		this.photoCache = photoCache;
+		this.context = context; 
+		// Cache
+		photoCache = ((GeoPingApplication) context.getApplicationContext()).getPhotoThumbmailCache();
+
 	}
 
 	private void intViewBinding(View view, Context context, Cursor cursor) {
@@ -47,11 +55,12 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 			intViewBinding(view, context, cursor);
 		}
 		final ViewHolder holder = (ViewHolder) view.getTag();
-		// Cancel any pending thumbnail task, since this view is now bound  to new thumbnail
-        final PhotoLoaderAsyncTask oldTask = holder.photoLoaderAsyncTask;
-        if (oldTask != null) {
-            oldTask.cancel(false);
-        }
+		// Cancel any pending thumbnail task, since this view is now bound to
+		// new thumbnail
+		final PhotoLoaderAsyncTask oldTask = holder.photoLoaderAsyncTask;
+		if (oldTask != null) {
+			oldTask.cancel(false);
+		}
 
 		// Value
 		final String phoneNumber = helper.getPersonPhone(cursor);
@@ -63,17 +72,17 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		holder.nameText.setText(personName);
 		// Color
 		Drawable stld = PersonColorDrawableHelper.getListBackgroundColor(color);
-// 
-//		if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.JELLY_BEAN) {
-//			view.setBackground(stld);
-//		} else 
-			view.setBackgroundDrawable(stld);
- 		 
-		// Photo 
-		if (contactId != null) {
-			Bitmap cachedResult = photoCache.get(contactId); 
-			if (cachedResult != null) { 
-				holder.pingButton.setValues(cachedResult, false); 
+		//
+		// if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.JELLY_BEAN) {
+		// view.setBackground(stld);
+		// } else
+		view.setBackgroundDrawable(stld);
+
+		// Photo
+		if (!TextUtils.isEmpty(contactId)) {
+			Bitmap cachedResult = photoCache.get(contactId);
+			if (cachedResult != null) {
+				holder.pingButton.setValues(cachedResult, false);
 			} else {
 				PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(holder);
 				holder.photoLoaderAsyncTask = newTask;
@@ -85,7 +94,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		holder.pingButton.setEditorListener(new EditorListener() {
 			@Override
 			public void onRequest(int request) {
-				context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber)); 
+				context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
 			}
 		});
 
@@ -105,30 +114,34 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 	}
 
 	static class ViewHolder {
-		PhotoEditorView pingButton; 
+		PhotoEditorView pingButton;
 		TextView nameText;
 		TextView phoneText;
 		PhotoLoaderAsyncTask photoLoaderAsyncTask;
 	}
 
+	// ===========================================================
+	// Listeners
+	// ===========================================================
+
 	public class PhotoLoaderAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
 		final ViewHolder holder;
- 
+
 		public PhotoLoaderAsyncTask(ViewHolder holder) {
 			super();
 			this.holder = holder;
 		}
 
 		@Override
-        protected void onPreExecute() {
+		protected void onPreExecute() {
 			holder.photoLoaderAsyncTask = this;
-        }
-		
+		}
+
 		@Override
 		protected Bitmap doInBackground(String... params) {
 			final String contactIdSearch = params[0];
-			Bitmap result = photoCache.loadPhotoLoaderAsync(context.getContentResolver(), contactIdSearch); 
+			Bitmap result = photoCache.loadPhotoLoaderFromContactId(context.getContentResolver(), contactIdSearch);
 			return result;
 		}
 
@@ -138,8 +151,11 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 				holder.pingButton.setValues(result, true);
 				holder.photoLoaderAsyncTask = null;
 			}
-
 		}
-
 	}
+
+	// ===========================================================
+	// Others
+	// ===========================================================
+
 }

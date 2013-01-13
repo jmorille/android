@@ -2,10 +2,13 @@ package eu.ttbox.geoping.ui.person;
 
 import android.content.ComponentCallbacks2;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
+import android.text.TextUtils;
 import android.util.Log;
 import eu.ttbox.geoping.service.core.ContactHelper;
+import eu.ttbox.geoping.service.core.ContactVo;
 
 public class PhotoThumbmailCache extends LruCache<String, Bitmap> {
 
@@ -20,7 +23,9 @@ public class PhotoThumbmailCache extends LruCache<String, Bitmap> {
 		return value.getRowBytes() * value.getHeight();
 	}
 
-	public Bitmap loadPhotoLoaderAsync(ContentResolver cr, String contactId) {
+	 
+ 
+	public Bitmap loadPhotoLoaderFromContactId(ContentResolver cr, String contactId) {
 		Bitmap photo = this.get(contactId);
 		if (photo == null) {
 			photo = ContactHelper.loadPhotoContact(cr, Long.valueOf(contactId).longValue());
@@ -33,6 +38,23 @@ public class PhotoThumbmailCache extends LruCache<String, Bitmap> {
 		return photo;
 	}
 
+	public Bitmap loadPhotoLoaderFromContactPhone(Context context, String phoneNumber) {
+		Bitmap photo = this.get(phoneNumber);
+		if (photo == null) {
+			ContactVo searchContact = ContactHelper.searchContactForPhone(context,phoneNumber);
+			if (searchContact != null &&  searchContact.id>0) {
+				photo = loadPhotoLoaderFromContactId(context.getContentResolver(), String.valueOf(searchContact.id));
+				if (photo != null) {
+					this.put(phoneNumber, photo);
+					Log.d(TAG, "Put in cache " + phoneNumber + " : " + photo);
+				}
+			}
+
+		}
+		return photo;
+	}
+
+	
 	public void onLowMemory() {
 		cacheEvictAll();
 	}

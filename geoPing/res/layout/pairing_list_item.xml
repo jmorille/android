@@ -5,17 +5,31 @@
     android:orientation="horizontal"
     android:padding="10dip" >
 
-    <ImageButton
-        android:id="@+id/pairing_list_item_geoping_button"
-        style="@style/entity_list_item"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" 
-        android:minWidth="60dip"
-        android:text="@string/geoping" 
-        android:src="@drawable/ic_launcher" 
-        android:width="20dp" />
+<!--     <ImageButton -->
+<!--         android:id="@+id/pairing_list_item_geoping_button" -->
+<!--         style="@style/entity_list_item" -->
+<!--         android:layout_alignParentRight="true" -->
+<!--         android:layout_centerVertical="true"  -->
+<!--         android:minWidth="60dip" -->
+<!--         android:text="@string/geoping"  -->
+<!--         android:src="@drawable/ic_launcher"  -->
+<!--         android:width="20dp" /> -->
 <!--         android:background="@android:color/transparent" --> 
     
+    
+     <include
+        android:id="@+id/pairing_list_item_geoping_button"
+          xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping" 
+         layout="@layout/item_photo_editor"
+        style="@style/entity_list_item"
+        android:layout_alignParentRight="true" 
+        android:layout_centerVertical="true"
+        android:minWidth="60dip" 
+        android:text="@string/geoping"
+        geoping:geopingType="request"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
+     
     <ImageView
         android:id="@+id/pairing_list_item_authType"
         style="@style/entity_list_item" 

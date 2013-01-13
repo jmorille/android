@@ -69,7 +69,7 @@ public class PairingWidgetProvider extends AppWidgetProvider {
             Intent intentGeoPing = Intents.sendSmsGeoPingResponse(context, phoneNumber, true);
             context.startService(intentGeoPing);
             // Display Notif
-//            NotifToasts.showToastSendGeoPingResponse(context, phoneNumber);
+            NotifToasts.showToastSendGeoPingResponse(context, phoneNumber);
          }else if (AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED.equals(action)) {
              // TODO
              Bundle extras = intent.getExtras();

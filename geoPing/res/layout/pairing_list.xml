@@ -26,19 +26,19 @@
         <Button
             android:id="@+id/add_pairing_button_help"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:text="@string/add_pairing" />
 
         <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fillViewport="false"
+            android:fillViewport="true"
             android:overScrollMode="ifContentScrolls"
             android:scrollbars="vertical" >
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/pairing_help"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </ScrollView>

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.views.overlay.TilesOverlay;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 /**
  * @see http://mobiforge.com/developing/story/using-google-maps-android
@@ -40,6 +43,8 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 
 	// Map
 	private ShowMapFragment mapFragment;
+	// Cache
+	private PhotoThumbmailCache photoCache;
 
 	// ===========================================================
 	// Constructors
@@ -49,6 +54,8 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.map_activity);
+		// Photo Cache
+				initPhotoThumbmailCache();
 		// Google Analytics
 		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
 		tracker.trackPageView("/" + TAG);
@@ -59,8 +66,34 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 		super.onAttachFragment(fragment);
 		if (fragment instanceof ShowMapFragment) {
 			mapFragment = (ShowMapFragment) fragment;
+			mapFragment.photoCache = photoCache;
 		}
 	}
+
+
+		private void initPhotoThumbmailCache() {
+			ActivityManager am = (ActivityManager)  getSystemService(Context.ACTIVITY_SERVICE);
+			int memoryClassBytes = am.getMemoryClass() * 1024 * 1024;
+			int cacheSize = memoryClassBytes / 8; // 307000 * 10
+			Log.d(TAG, "Create Cache of PhotoThumbmailCache wih size " + cacheSize);
+			photoCache = new PhotoThumbmailCache(cacheSize);
+		}
+		
+
+		@Override
+		public void onLowMemory() {
+			super.onLowMemory();
+			if (photoCache != null) {
+				photoCache.onLowMemory();
+			}
+		}
+
+		public void onTrimMemory(int level) {
+			super.onTrimMemory(level);
+			if (photoCache != null) {
+				photoCache.onTrimMemory(level);
+			}
+		}
 
 	// ===========================================================
 	// Life cycle

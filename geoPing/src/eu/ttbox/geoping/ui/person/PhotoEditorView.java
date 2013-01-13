@@ -17,13 +17,14 @@
 package eu.ttbox.geoping.ui.person;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.service.core.ContactHelper;
@@ -34,6 +35,8 @@ import eu.ttbox.geoping.service.core.ContactHelper;
 public class PhotoEditorView extends RelativeLayout // implements Editor
 {
 
+	private static final String TAG = "PhotoEditorView";
+	
 	private ImageView mPhotoImageView;
 	private View mFrameView;
 
@@ -50,6 +53,11 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 
 	public PhotoEditorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		// Read atrs
+		TypedArray a = getContext().obtainStyledAttributes(attrs,R.styleable.PhotoEditorView);
+		int geopingType = a.getInteger(R.styleable.PhotoEditorView_geopingType, 0);
+		a.recycle();
+		Log.w(TAG, "geopingType : " + geopingType);
 	}
 
 	@Override
