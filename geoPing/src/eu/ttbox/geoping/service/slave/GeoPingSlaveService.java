@@ -23,6 +23,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -37,6 +38,7 @@ import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.slave.receiver.AuthorizePhoneTypeEnum;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 // http://dhimitraq.wordpress.com/tag/android-intentservice/
 // https://github.com/commonsguy/cwac-wakeful
@@ -377,7 +379,8 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
 					pairing.name = contactDisplayName;
 				}
 			}
-			photo = ContactHelper.openPhotoBitmap(this, contact.id);
+			PhotoThumbmailCache photoCache = ((GeoPingApplication) getApplication()).getPhotoThumbmailCache();
+			photo = ContactHelper.openPhotoBitmap(this,photoCache,String.valueOf(  contact.id), phone);
 		}
 		// Create Notifiation
 		Builder notificationBuilder = new NotificationCompat.Builder(this) //
@@ -429,7 +432,8 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
 					pairing.name = contact.displayName;
 				}
 			}
-			photo = ContactHelper.openPhotoBitmap(this, contact.id);
+			PhotoThumbmailCache photoCache = ((GeoPingApplication) getApplication()).getPhotoThumbmailCache();
+			photo = ContactHelper.openPhotoBitmap(this,photoCache,String.valueOf(  contact.id), phone);
 		}
 
 		// Generate Notification ID per Person

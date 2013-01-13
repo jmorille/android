@@ -84,15 +84,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 		});
 	}
  
-
-	public void setValues(String contactId, boolean readOnly) { 
-		mReadOnly = readOnly;
-		Bitmap photo = null;
-		if (!TextUtils.isEmpty(contactId)) {
-			photo = ContactHelper.loadPhotoContact(getContext(), contactId);
-		}
-		setValues(photo, readOnly);
-	}
+ 
 
 	public void setValues(final Bitmap photo, boolean readOnly) {
 		if (photo != null) { 

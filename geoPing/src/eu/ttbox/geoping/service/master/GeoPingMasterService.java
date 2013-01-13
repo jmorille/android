@@ -49,6 +49,7 @@ import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class GeoPingMasterService extends IntentService {
 
@@ -336,7 +337,8 @@ public class GeoPingMasterService extends IntentService {
 			if (contact.displayName != null && contact.displayName.length() > 0) {
 				contactDisplayName = contact.displayName;
 			}
-			photo = ContactHelper.openPhotoBitmap(this, contact.contactId);
+			PhotoThumbmailCache photoCache = ((GeoPingApplication) getApplication()).getPhotoThumbmailCache();
+			photo = ContactHelper.openPhotoBitmap(this,photoCache,String.valueOf(  contact.id), phone);
 		}
 		// Create Notif Intent response
 		PendingIntent pendingIntent = null;

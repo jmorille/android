@@ -116,7 +116,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
 			} else {
 				PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(holder);
 				holder.photoLoaderAsyncTask = newTask;
-				newTask.execute(contactId);
+				newTask.execute(contactId, phoneNumber);
 			}
 		}
 
@@ -177,6 +177,10 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
 		protected Bitmap doInBackground(String... params) {
 			final String contactIdSearch = params[0];
 			Bitmap result = photoCache.loadPhotoLoaderFromContactId(context.getContentResolver(), contactIdSearch);
+			if (result == null && params.length > 1) {
+				String phoneSearch = params[1];
+				result = photoCache.loadPhotoLoaderFromContactPhone(context, phoneSearch);
+			}
 			return result;
 		}
 

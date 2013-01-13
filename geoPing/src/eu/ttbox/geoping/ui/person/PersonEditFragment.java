@@ -7,9 +7,11 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -23,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -32,7 +33,7 @@ import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
-import eu.ttbox.geoping.ui.person.PhotoEditorView.EditorListener;
+import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 
 public class PersonEditFragment extends Fragment implements ColorPickerDialog.OnColorChangedListener {
@@ -66,6 +67,8 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 
 	// Listener
 	private OnPersonSelectListener onPersonSelectListener;
+	// Cache
+	private PhotoThumbmailCache photoCache;
 
 	// ===========================================================
 	// Interface
@@ -84,6 +87,9 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.track_person_edit, container, false);
+		// Cache
+		photoCache = ((GeoPingApplication) getActivity().getApplicationContext()).getPhotoThumbmailCache();
+
 		// binding
 		nameEditText = (EditText) v.findViewById(R.id.person_name);
 		// nameEditText.setOnLongClickListener(new OnLongClickListener(){
@@ -475,6 +481,10 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 
 	};
 
+	// ===========================================================
+	// Photo Loader
+	// ===========================================================
+
 	/**
 	 * Pour plus de details sur l'intégration dans les contacts consulter
 	 * <ul>
@@ -487,27 +497,73 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 	 * @param contactId
 	 */
 	private void loadPhoto(String contactId, final String phone) {
-		photoImageView.setValues(contactId, false);
-		photoImageView.setEditorListener(new EditorListener() {
-
-			@Override
-			public void onRequest(int request) {
-				Toast.makeText(getActivity(), "Click to phone " + phone, Toast.LENGTH_SHORT).show();
-			}
-
-		});
-		// Bitmap photo = null;
-		// if (!TextUtils.isEmpty(contactId)) {
-		// photo = ContactHelper.loadPhotoContact(getActivity(), contactId);
+		Bitmap photo = null;
+		boolean isContactId = !TextUtils.isEmpty(contactId);
+		boolean isContactPhone = !TextUtils.isEmpty(phone);
+		// Search in cache
+		if (photo == null && isContactId) {
+			photo = photoCache.get(contactId);
+		}
+		if (photo == null && isContactPhone) {
+			photo = photoCache.get(phone);
+		}
+		// Set Photo
+		if (photo != null) {
+			photoImageView.setValues(photo, false);
+		} else if (isContactId) {
+			// Load photos
+			PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(photoImageView);
+			photoImageView.setTag(newTask);
+			newTask.execute(contactId, phone);
+		}
+		// photoImageView.setEditorListener(new EditorListener() {
 		//
+		// @Override
+		// public void onRequest(int request) {
+		// Toast.makeText(getActivity(), "Click to phone " + phone,
+		// Toast.LENGTH_SHORT).show();
 		// }
-		// // Set Photo
-		// if (photo != null) {
-		// Log.d(TAG, "Photo Found for Contact Uri : " + contactId + " Photo : "
-		// + photo);
-		// photoImageView.setImageBitmap(photo);
-		// } else {
-		// photoImageView.setImageResource(R.drawable.ic_launcher);
-		// }
+		//
+		// });
+
 	}
+
+	public class PhotoLoaderAsyncTask extends AsyncTask<String, Void, Bitmap> {
+
+		final PhotoEditorView holder;
+
+		public PhotoLoaderAsyncTask(PhotoEditorView holder) {
+			super();
+			this.holder = holder;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			holder.setTag(this);
+		}
+
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			String contactIdSearch = params[0];
+			String phoneSearch = null;
+			if (params.length > 1) {
+				phoneSearch = params[1];
+			}
+			Bitmap result =ContactHelper.openPhotoBitmap(getActivity(), photoCache, contactIdSearch, phoneSearch);
+ 			return result;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			if (holder.getTag() == this) {
+				holder.setValues(result, true);
+				holder.setTag(null);
+			}
+		}
+	}
+
+	// ===========================================================
+	// Others
+	// ===========================================================
+
 }

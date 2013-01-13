@@ -86,7 +86,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 			} else {
 				PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(holder);
 				holder.photoLoaderAsyncTask = newTask;
-				newTask.execute(contactId);
+				newTask.execute(contactId, phoneNumber);
 			}
 		}
 
@@ -121,7 +121,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 	}
 
 	// ===========================================================
-	// Listeners
+	// Photo Loader
 	// ===========================================================
 
 	public class PhotoLoaderAsyncTask extends AsyncTask<String, Void, Bitmap> {
@@ -142,6 +142,10 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		protected Bitmap doInBackground(String... params) {
 			final String contactIdSearch = params[0];
 			Bitmap result = photoCache.loadPhotoLoaderFromContactId(context.getContentResolver(), contactIdSearch);
+			if (result == null && params.length > 1) {
+				String phoneSearch = params[1];
+				result = photoCache.loadPhotoLoaderFromContactPhone(context, phoneSearch);
+			}
 			return result;
 		}
 

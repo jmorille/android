@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
+
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -15,6 +17,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
+import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -28,59 +31,81 @@ public class ContactHelper {
 
 	private static final String PERMISSION_READ_CONTACTS = "android.permission.READ_CONTACTS";
 
-	public static Bitmap openPhotoBitmap(Context context, String contactId) {
-		if (contactId == null) {
-			return null;
-		}
-		Long contactIden = Long.valueOf(contactId);
-		return openPhotoBitmap(context, contactIden);
-	}
 
-	public static Bitmap openPhotoBitmap(Context context, long contactId) {
+	public static Bitmap openPhotoBitmap(Context context,  PhotoThumbmailCache photoCache, String contactId, String phone) {
 		Bitmap photo = null;
-		InputStream is = openPhoto(context, Long.valueOf(contactId));
-		if (is != null) {
-			photo = BitmapFactory.decodeStream(is);
-			try {
-				is.close();
-			} catch (IOException e) {
-				Log.e(TAG, "Could not close Contact Photo Input Stream");
-			}
+		boolean isContactId = !TextUtils.isEmpty(contactId);
+		boolean isContactPhone = !TextUtils.isEmpty(phone);
+		// Search in cache
+		if (photo == null && isContactId) {
+			photo = photoCache.get(contactId);
+		}
+		if (photo == null &&isContactPhone) {
+			photo = photoCache.get(phone);
+		}
+		// Load Photo
+		if (photo == null && isContactId) {
+			photo = photoCache.loadPhotoLoaderFromContactId(context.getContentResolver(), contactId);
+		}
+		if (photo == null &&isContactPhone) {
+			photo = photoCache.loadPhotoLoaderFromContactPhone(context, phone);
 		}
 		return photo;
 	}
+	
+//	public static Bitmap openPhotoBitmap(Context context, String contactId) {
+//		if (contactId == null) {
+//			return null;
+//		}
+//		Long contactIden = Long.valueOf(contactId);
+//		return openPhotoBitmap(context, contactIden);
+//	}
+//
+//	public static Bitmap openPhotoBitmap(Context context, long contactId) {
+//		Bitmap photo = null;
+//		InputStream is = openPhoto(context, Long.valueOf(contactId));
+//		if (is != null) {
+//			photo = BitmapFactory.decodeStream(is);
+//			try {
+//				is.close();
+//			} catch (IOException e) {
+//				Log.e(TAG, "Could not close Contact Photo Input Stream");
+//			}
+//		}
+//		return photo;
+//	}
 
-	public static Bitmap loadPhotoContact(Context context, String contactId) {
-		if (contactId == null) {
-			return null;
-		}
-		Long contactIden = Long.valueOf(contactId);
-		return loadPhotoContact(context, contactIden);
-	}
-
-	public static Bitmap loadPhotoContact(Context context, long contactId) {
-		ContentResolver cr = context.getContentResolver();
-		Bitmap photo = loadPhotoContact(cr, contactId);
-		if (photo == null) {
-			Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
-			Log.d(TAG, "Search a PhotoId for Contact Uri : " + contactUri);
-			Cursor cursor = cr.query(contactUri, new String[] { ContactsContract.Contacts.PHOTO_ID }, null, null, null);
-
-			try {
-				if (cursor != null && cursor.moveToFirst()) {
-					long photoId = cursor.getLong(0);
-					// if (photoId != null) {
-					photo = loadPhotoContactByPhotoId(cr, photoId);
-					// }
-				}
-			} finally {
-				if (cursor != null)
-					cursor.close();
-			}
-
-		}
-		return photo;
-	}
+//	public static Bitmap loadPhotoContact(Context context, String contactId) {
+//		if (contactId == null) {
+//			return null;
+//		}
+//		Long contactIden = Long.valueOf(contactId);
+//		return loadPhotoContact(context, contactIden);
+//	}
+//
+//	public static Bitmap loadPhotoContact(Context context, long contactId) {
+//		ContentResolver cr = context.getContentResolver();
+//		Bitmap photo = loadPhotoContact(cr, contactId);
+//		if (photo == null) {
+//			Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
+//			Log.d(TAG, "Search a PhotoId for Contact Uri : " + contactUri);
+//			Cursor cursor = cr.query(contactUri, new String[] { ContactsContract.Contacts.PHOTO_ID }, null, null, null);
+//
+//			try {
+//				if (cursor != null && cursor.moveToFirst()) {
+//					long photoId = cursor.getLong(0);
+//					// if (photoId != null) {
+//					photo = loadPhotoContactByPhotoId(cr, photoId);
+//					// }
+//				}
+//			} finally {
+//				if (cursor != null)
+//					cursor.close();
+//			}
+//
+//		}
+//		return photo;
+//	}
 
 	public static Bitmap loadPhotoContact(ContentResolver cr, long contactId) {
 		Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
@@ -90,8 +115,7 @@ public class ContactHelper {
 			Log.d(TAG, "No Photo found for ContactsContract Contact Uri : " + contactUri);
 			return null;
 		}
-		Bitmap photo = BitmapFactory.decodeStream(is);
-
+		Bitmap photo = BitmapFactory.decodeStream(is); 
 		try {
 			is.close();
 		} catch (IOException e) {
@@ -100,30 +124,30 @@ public class ContactHelper {
 		return photo;
 	}
 
-	public static Bitmap loadPhotoContactByPhotoId(ContentResolver cr, long photoId) {
-		Log.d(TAG, "Search a Photo for Photo Id : " + photoId);
-
-		Uri photoUri = ContentUris.withAppendedId(ContactsContract.Data.CONTENT_URI, photoId);
-		Cursor cursor = cr.query(photoUri, new String[] { ContactsContract.CommonDataKinds.Photo.PHOTO }, null, null, null);
-		if (cursor == null) {
-			Log.d(TAG, "No Photo Found for Photo Id : " + photoId);
-
-			return null;
-		}
-		Bitmap photo = null;
-		try {
-			if (cursor != null && cursor.moveToFirst()) {
-				byte[] data = cursor.getBlob(0);
-				if (data != null) {
-					photo = BitmapFactory.decodeByteArray(data, 0, data.length);
-				}
-			}
-		} finally {
-			if (cursor != null)
-				cursor.close();
-		}
-		return photo;
-	}
+//	public static Bitmap loadPhotoContactByPhotoId(ContentResolver cr, long photoId) {
+//		Log.d(TAG, "Search a Photo for Photo Id : " + photoId);
+//
+//		Uri photoUri = ContentUris.withAppendedId(ContactsContract.Data.CONTENT_URI, photoId);
+//		Cursor cursor = cr.query(photoUri, new String[] { ContactsContract.CommonDataKinds.Photo.PHOTO }, null, null, null);
+//		if (cursor == null) {
+//			Log.d(TAG, "No Photo Found for Photo Id : " + photoId);
+//
+//			return null;
+//		}
+//		Bitmap photo = null;
+//		try {
+//			if (cursor != null && cursor.moveToFirst()) {
+//				byte[] data = cursor.getBlob(0);
+//				if (data != null) {
+//					photo = BitmapFactory.decodeByteArray(data, 0, data.length);
+//				}
+//			}
+//		} finally {
+//			if (cursor != null)
+//				cursor.close();
+//		}
+//		return photo;
+//	}
 
 	public static InputStream openPhoto(Context context, long contactId) {
 		Log.d(TAG, "Open Photo for Contact Id : " + contactId);
