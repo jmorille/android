@@ -11,12 +11,15 @@
         android:layout_height="match_parent" />
 
     <FrameLayout
-        android:id="@+id/rangeSeekBarViewContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/mapViewContainer" >
-    
-    
+
+        <include
+            android:id="@+id/map_timeline_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/map_timeline_range_seekbar" />
     </FrameLayout>
 
 </RelativeLayout>

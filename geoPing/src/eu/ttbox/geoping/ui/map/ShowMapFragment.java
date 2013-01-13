@@ -32,7 +32,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.SeekBar;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
@@ -42,12 +41,11 @@ import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
+import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
-import eu.ttbox.geoping.ui.widget.comp.RangeSeekBar;
-import eu.ttbox.geoping.ui.widget.comp.RangeSeekBar.OnRangeSeekBarChangeListener;
 import eu.ttbox.osm.ui.map.MapViewFactory;
 import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 
@@ -80,7 +78,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 	private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser = new HashMap<String, GeoTrackOverlay>();
 
 	// View
-	private RangeSeekBar<Integer> rangeSeekBar;
+	private RangeTimelineView rangeTimelineBar;
 	// Listener
 	private StatusReceiver mStatusReceiver;
 	// Service
@@ -135,16 +133,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
 		// Range Seek Bar
 		// ---------------
-		ViewGroup rangeViewContainer = (ViewGroup) v.findViewById(R.id.rangeSeekBarViewContainer);
-		RangeSeekBar<Integer> rangeSeekBar = new RangeSeekBar<Integer>(0, 86400, getActivity());
-		rangeViewContainer.addView(rangeSeekBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		rangeSeekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
-			@Override
-			public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-				// handle changed range values
-				Log.i(TAG, "User selected new date range: MIN=" + minValue + ", MAX=" + maxValue);
-			}
-		});
+		  rangeTimelineBar = (RangeTimelineView) v.findViewById(R.id.map_timeline_bar);
+		 
 		return v;
 	}
 

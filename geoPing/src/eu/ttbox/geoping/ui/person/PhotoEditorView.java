@@ -20,14 +20,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.service.core.ContactHelper;
 
 /**
  * Simple editor for {@link Photo}.
