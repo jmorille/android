@@ -322,10 +322,16 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     // Map Drawing
     // ===========================================================
 
+    private boolean seletedRangeActivated = false;
+    private long seletedRangeBeginTimeInMs = 0;
+    private long seletedRangeEndTimeInMs = Long.MAX_VALUE;
+    
     @Override
     public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine) {
-        // TODO Auto-generated method stub
-
+        seletedRangeActivated = isRangeDefine;
+        seletedRangeBeginTimeInMs = timeBeginInMs + rangeTimelineValue.minValue;
+        seletedRangeBeginTimeInMs = timeBeginInMs + rangeTimelineValue.maxValue;
+        mapView.postInvalidate();
     }
 
     @Override
@@ -337,16 +343,10 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
         int idx = 0;
         int geoTrackSize = geoTracks.size();
-        long beginTimeMs = 0;
-        long endTimeMs = 0;
-        boolean isRangeDefine = rangeTimelineValue.isRangeDefine;
-        if (isRangeDefine) {
-            beginTimeMs = timeBeginInMs + rangeTimelineValue.minValue;
-            endTimeMs = timeBeginInMs + rangeTimelineValue.maxValue;
-        }
+        
         for (GeoTrack geoTrack : geoTracks) {
             idx++;
-            if (!isRangeDefine || (isRangeDefine && geoTrack.time >= beginTimeMs && geoTrack.time <= endTimeMs)) {
+            if (!seletedRangeActivated || ( geoTrack.time >= seletedRangeBeginTimeInMs && geoTrack.time <= seletedRangeEndTimeInMs)) {
                 GeoPoint geoPoint = geoTrack.asGeoPoint();
                 p.toMapPixels(geoPoint, myScreenCoords);
                 // Line Path

@@ -86,7 +86,7 @@ public class PersonWidgetProvider extends AppWidgetProvider {
 			Intent intentGeoPing = Intents.sendSmsGeoPingRequest(ctx, phoneNumber);
 			ctx.startService(intentGeoPing);
 			// Notif
-			NotifToasts.showToastSendGeoPingRequest(ctx, phoneNumber);
+//			NotifToasts.showToastSendGeoPingRequest(ctx, phoneNumber);
 		}
 		super.onReceive(ctx, intent);
 	}

@@ -10,7 +10,7 @@ public class ExternalIntents {
 
 	public static void startActivityMarketDetails(Context context, String marketPackage) {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET | Intent.FLAG_ACTIVITY_NEW_TASK );
 		intent.setData(Uri.parse("market://details?id=" + marketPackage));
 		context.startActivity(intent); 
 	}
@@ -37,7 +37,7 @@ public class ExternalIntents {
 			// http://maps.google.com/maps?saddr=20.344,34.34&daddr=20.5666,45.345
 			Uri uri = Uri.parse(String.format("google.navigation:q=%s,%s", lat, lng));
 			Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
-			// intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TAsSK);
 			context.startActivity(intent);
 		} catch (ActivityNotFoundException e) {
 			startActivityMarketDetails(context, "com.google.android.apps.maps");

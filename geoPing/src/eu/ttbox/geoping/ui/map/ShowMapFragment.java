@@ -91,9 +91,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     // Instance value
     private RangeTimelineValue rangeTimelineValue;
 
-    // Cache
-    private PhotoThumbmailCache photoCache;
-
+    
     // Deprecated
     private ResourceProxy mResourceProxy;
 
@@ -104,9 +102,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.map, container, false);
 
-        // Cache
-        photoCache = ((GeoPingApplication) getActivity().getApplication()).getPhotoThumbmailCache();
-
+        
         // Prefs
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
