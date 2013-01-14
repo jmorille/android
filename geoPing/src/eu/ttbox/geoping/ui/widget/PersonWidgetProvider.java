@@ -17,7 +17,6 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.PersonProvider;
 
 /**

@@ -1,8 +1,6 @@
 package eu.ttbox.geoping.crypto.keygen;
 
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
 /**

@@ -16,14 +16,13 @@
 
 package eu.ttbox.geoping.service.billing;
 
-import eu.ttbox.geoping.service.billing.Consts.PurchaseState;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import eu.ttbox.geoping.service.billing.Consts.PurchaseState;
 
 /**
  * An example database that records the state of each purchase. You should use

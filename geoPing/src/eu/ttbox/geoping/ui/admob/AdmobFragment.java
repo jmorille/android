@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.google.ads.Ad;
 import com.google.ads.AdListener;
-import com.google.ads.AdRequest;
 import com.google.ads.AdRequest.ErrorCode;
 import com.google.ads.AdView;
 

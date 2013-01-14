@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.ui.pairing;
 
-import java.sql.PreparedStatement;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.Intents;
 
 public class PairingEditActivity extends SherlockFragmentActivity   {
 

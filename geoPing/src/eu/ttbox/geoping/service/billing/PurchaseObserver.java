@@ -2,10 +2,7 @@
 
 package eu.ttbox.geoping.service.billing;
 
-import eu.ttbox.geoping.service.billing.BillingService.RequestPurchase;
-import eu.ttbox.geoping.service.billing.BillingService.RestoreTransactions;
-import eu.ttbox.geoping.service.billing.Consts.PurchaseState;
-import eu.ttbox.geoping.service.billing.Consts.ResponseCode;
+import java.lang.reflect.Method;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -15,8 +12,10 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Handler;
 import android.util.Log;
-
-import java.lang.reflect.Method;
+import eu.ttbox.geoping.service.billing.BillingService.RequestPurchase;
+import eu.ttbox.geoping.service.billing.BillingService.RestoreTransactions;
+import eu.ttbox.geoping.service.billing.Consts.PurchaseState;
+import eu.ttbox.geoping.service.billing.Consts.ResponseCode;
 
 /**
  * An interface for observing changes related to purchases. The main application

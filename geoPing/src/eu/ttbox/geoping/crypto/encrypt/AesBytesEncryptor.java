@@ -14,8 +14,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import eu.ttbox.geoping.crypto.keygen.BytesKeyGenerator;
 import eu.ttbox.geoping.crypto.codec.Hex;
+import eu.ttbox.geoping.crypto.keygen.BytesKeyGenerator;
 
 /**
  * Encryptor that uses 256-bit AES encryption.

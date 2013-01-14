@@ -16,11 +16,9 @@
 
 package eu.ttbox.geoping.service.billing;
 
-import com.android.vending.billing.IMarketBillingService;
-
-import eu.ttbox.geoping.service.billing.Consts.PurchaseState;
-import eu.ttbox.geoping.service.billing.Consts.ResponseCode;
-import eu.ttbox.geoping.service.billing.Security.VerifiedPurchase;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -33,9 +31,11 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import com.android.vending.billing.IMarketBillingService;
+
+import eu.ttbox.geoping.service.billing.Consts.PurchaseState;
+import eu.ttbox.geoping.service.billing.Consts.ResponseCode;
+import eu.ttbox.geoping.service.billing.Security.VerifiedPurchase;
 
 
 /**

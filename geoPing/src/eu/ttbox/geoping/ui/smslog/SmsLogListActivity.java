@@ -3,15 +3,11 @@ package eu.ttbox.geoping.ui.smslog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-
-
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import eu.ttbox.geoping.GeoPingApplication;

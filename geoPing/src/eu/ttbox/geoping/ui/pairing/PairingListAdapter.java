@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,9 +17,8 @@ import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.ui.person.PhotoEditorView;
-import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
-import eu.ttbox.geoping.ui.person.PersonListAdapter.PhotoLoaderAsyncTask;
 import eu.ttbox.geoping.ui.person.PhotoEditorView.EditorListener;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class PairingListAdapter extends android.support.v4.widget.ResourceCursorAdapter {
 

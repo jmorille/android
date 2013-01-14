@@ -8,8 +8,8 @@ import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
-import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
+import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 

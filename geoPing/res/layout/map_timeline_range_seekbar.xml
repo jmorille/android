@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <view xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:minHeight="60dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     class="eu.ttbox.geoping.ui.map.timeline.RangeTimelineView"
-    >
+    android:minHeight="50dp" >
 
     <TextView
-        android:id="@+id/rangeTimeline_BeginTextView"
+        android:id="@+id/rangeTimeline_beginTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:background="@android:color/white"
         android:text="Begin" />
 
     <TextView
-        android:id="@+id/rangeTimeline_EndTextView"
+        android:id="@+id/rangeTimeline_endTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:background="@android:color/white" 
         android:text="End" />
 
     <LinearLayout
-        android:id="@+id/rangeTimeline_SeekBarViewContainer"
-        android:minHeight="30dp"
+        android:id="@+id/rangeTimeline_seekBarViewContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignBottom="@id/rangeTimeline_BeginTextView" />
+        android:layout_below="@id/rangeTimeline_beginTextView"
+        android:minHeight="30dp" />
 
 </view>

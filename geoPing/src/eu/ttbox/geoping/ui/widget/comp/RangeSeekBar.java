@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.ui.widget.comp;
 
-import java.math.BigDecimal;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

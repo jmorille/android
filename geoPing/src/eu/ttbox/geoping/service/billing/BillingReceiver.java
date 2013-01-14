@@ -16,12 +16,11 @@
 
 package eu.ttbox.geoping.service.billing;
 
-import eu.ttbox.geoping.service.billing.Consts.ResponseCode;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import eu.ttbox.geoping.service.billing.Consts.ResponseCode;
 
 /**
  * This class implements the broadcast receiver for in-app billing. All asynchronous messages from

@@ -1,11 +1,11 @@
 package eu.ttbox.geoping.service.receiver;
 
-import eu.ttbox.geoping.core.Intents;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 import android.util.Log;
+import eu.ttbox.geoping.core.Intents;
 
 public class MsgReceiverIntentService extends IntentService {
 

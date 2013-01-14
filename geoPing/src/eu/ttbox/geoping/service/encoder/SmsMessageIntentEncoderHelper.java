@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
-import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
 
 public class SmsMessageIntentEncoderHelper {
 

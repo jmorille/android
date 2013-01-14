@@ -2,15 +2,14 @@
 
 package eu.ttbox.geoping.service.billing;
 
-import eu.ttbox.geoping.service.billing.BillingService.RequestPurchase;
-import eu.ttbox.geoping.service.billing.BillingService.RestoreTransactions;
-import eu.ttbox.geoping.service.billing.Consts.PurchaseState;
-import eu.ttbox.geoping.service.billing.Consts.ResponseCode;
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import eu.ttbox.geoping.service.billing.BillingService.RequestPurchase;
+import eu.ttbox.geoping.service.billing.BillingService.RestoreTransactions;
+import eu.ttbox.geoping.service.billing.Consts.PurchaseState;
+import eu.ttbox.geoping.service.billing.Consts.ResponseCode;
 
 /**
  * This class contains the methods that handle responses from Android Market.  The

@@ -18,9 +18,9 @@ public class RangeTimelineView extends RelativeLayout {
 	private TextView rangeBeginText;
 	private TextView rangeEndText;
 	private RangeSeekBar rangeSeekBar;
-	
-    private OnRangeTimelineChangeListener onRangeTimelineChangeListener;
-	
+
+	private OnRangeTimelineChangeListener onRangeTimelineChangeListener;
+
 	public RangeTimelineView(Context context) {
 		super(context);
 	}
@@ -36,62 +36,72 @@ public class RangeTimelineView extends RelativeLayout {
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-		rangeBeginText = (TextView) findViewById(R.id.rangeTimeline_BeginTextView);
-		rangeEndText = (TextView) findViewById(R.id.rangeTimeline_EndTextView);
+		rangeBeginText = (TextView) findViewById(R.id.rangeTimeline_beginTextView);
+		rangeEndText = (TextView) findViewById(R.id.rangeTimeline_endTextView);
 		// Range Seek Bar
 		// ---------------
-		ViewGroup rangeViewContainer = (ViewGroup) findViewById(R.id.rangeTimeline_SeekBarViewContainer);
-		   rangeSeekBar = new RangeSeekBar(0, AppConstants.ONE_DAY_IN_MS, getContext());
-		rangeViewContainer.addView(rangeSeekBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		ViewGroup rangeViewContainer = (ViewGroup) findViewById(R.id.rangeTimeline_seekBarViewContainer);
+		rangeSeekBar = new RangeSeekBar(0, AppConstants.ONE_DAY_IN_MS, getContext());
+		rangeViewContainer.addView(rangeSeekBar, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		// rangeSeekBar = (RangeSeekBar)
+		// findViewById(R.id.rangeTimeline_seekBarView);
 		rangeSeekBar.setNotifyWhileDragging(true);
-		rangeSeekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener () {
+		rangeSeekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener() {
 			@Override
 			public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
-				// handle changed range values
-			    final String timePattern = "%1$tH:%1$tM:%1$tS";
-			    String minValueString = String.format(timePattern, (long)minValue);
-			    String maxValueString = String.format(timePattern, (long)maxValue);
-				rangeBeginText.setText( minValueString );
-				rangeEndText.setText(maxValueString );
-				boolean isRangeDefine = minValue>rangeSeekBar.getAbsoluteMinValue()  || maxValue<rangeSeekBar.getAbsoluteMaxValue();
-				if (onRangeTimelineChangeListener!=null) {
-				    onRangeTimelineChangeListener.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
+				String minValueString = getTimeFromMs(minValue);
+				String maxValueString = getTimeFromMs(maxValue);
+				rangeBeginText.setText(minValueString);
+				rangeEndText.setText(maxValueString);
+				if (onRangeTimelineChangeListener != null) {
+					boolean isRangeDefine = minValue > rangeSeekBar.getAbsoluteMinValue() || maxValue < rangeSeekBar.getAbsoluteMaxValue();
+					onRangeTimelineChangeListener.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
 				}
 				Log.d(TAG, "User selected new date range: MIN=" + minValue + ", MAX=" + maxValue);
 			}
 		});
 	}
 
-	 /**
-     * Returns the absolute minimum value of the range that has been set at
-     * construction time.
-     * 
-     * @return The absolute minimum value of the range.
-     */
-    public int getAbsoluteMinValue() {
-        return rangeSeekBar.getAbsoluteMinValue();
-    }
+	private String getTimeFromMs(int ms) {
+		// final String timePattern = "%1$tH:%1$tM:%1$tS";
+		// String.format(timePattern, (long) minValue
+		int x = ms / 1000;
+		int seconde = x % 60;
+		x /= 60;
+		int minutes = x % 60;
+		x /= 60;
+		int hours = x;// % 24;  
+//		x /= 24;
+//		hours = x*24 + hours;
+		return String.format("%02d:%02d:%02d", hours, minutes, seconde);
+	}
 
-    /**
-     * Returns the absolute maximum value of the range that has been set at
-     * construction time.
-     * 
-     * @return The absolute maximum value of the range.
-     */
-    public int getAbsoluteMaxValue() {
-        return rangeSeekBar.getAbsoluteMaxValue();
-    }
+	/**
+	 * Returns the absolute minimum value of the range that has been set at
+	 * construction time.
+	 * 
+	 * @return The absolute minimum value of the range.
+	 */
+	public int getAbsoluteMinValue() {
+		return rangeSeekBar.getAbsoluteMinValue();
+	}
 
- 
-    public void setOnRangeTimelineChangeListener(OnRangeTimelineChangeListener listener) {
-        this.onRangeTimelineChangeListener = listener;
-    }
+	/**
+	 * Returns the absolute maximum value of the range that has been set at
+	 * construction time.
+	 * 
+	 * @return The absolute maximum value of the range.
+	 */
+	public int getAbsoluteMaxValue() {
+		return rangeSeekBar.getAbsoluteMaxValue();
+	}
 
+	public void setOnRangeTimelineChangeListener(OnRangeTimelineChangeListener listener) {
+		this.onRangeTimelineChangeListener = listener;
+	}
 
-    public interface OnRangeTimelineChangeListener {
-        public void onRangeTimelineValuesChanged( int minValue, int maxValue, boolean isRangeDefine);
-    }
-    
-    
+	public interface OnRangeTimelineChangeListener {
+		public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine);
+	}
 
 }
