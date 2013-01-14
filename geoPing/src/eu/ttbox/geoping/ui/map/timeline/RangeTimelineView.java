@@ -41,22 +41,22 @@ public class RangeTimelineView extends RelativeLayout {
 		// Range Seek Bar
 		// ---------------
 		ViewGroup rangeViewContainer = (ViewGroup) findViewById(R.id.rangeTimeline_SeekBarViewContainer);
-		RangeSeekBar  rangeSeekBar = new RangeSeekBar(0, AppConstants.ONE_DAY_IN_MS, getContext());
+		   rangeSeekBar = new RangeSeekBar(0, AppConstants.ONE_DAY_IN_MS, getContext());
 		rangeViewContainer.addView(rangeSeekBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		rangeSeekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener () {
 			@Override
 			public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
 				// handle changed range values
 			    final String timePattern = "%1$tH:%1$tM:%1$tS";
-			    String minValueString = String.format(timePattern, minValue);
-			    String maxValueString = String.format(timePattern, maxValue);
+			    String minValueString = String.format(timePattern, (long)minValue);
+			    String maxValueString = String.format(timePattern, (long)maxValue);
 				rangeBeginText.setText( minValueString );
 				rangeEndText.setText(maxValueString );
-				boolean isRangeDefine = minValue>getAbsoluteMinValue()  || maxValue<getAbsoluteMaxValue();
+				boolean isRangeDefine = minValue>rangeSeekBar.getAbsoluteMinValue()  || maxValue<rangeSeekBar.getAbsoluteMaxValue();
 				if (onRangeTimelineChangeListener!=null) {
 				    onRangeTimelineChangeListener.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
 				}
-				Log.d(TAG, "User selected new date range: MIN=" + minValueString + ", MAX=" + maxValueString);
+				Log.d(TAG, "User selected new date range: MIN=" + minValue + ", MAX=" + maxValue);
 			}
 		});
 	}

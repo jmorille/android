@@ -330,7 +330,10 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine) {
         seletedRangeActivated = isRangeDefine;
         seletedRangeBeginTimeInMs = timeBeginInMs + rangeTimelineValue.minValue;
-        seletedRangeBeginTimeInMs = timeBeginInMs + rangeTimelineValue.maxValue;
+        seletedRangeEndTimeInMs = timeBeginInMs + rangeTimelineValue.maxValue;
+        Log.d(TAG, String.format( "Start Midgnight : %1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", timeBeginInMs));
+        Log.d(TAG, String.format( "User selected new date range: MIN=%s ms, MAX=%s ms, isRange="+seletedRangeActivated,seletedRangeBeginTimeInMs , seletedRangeEndTimeInMs));
+        Log.d(TAG, String.format( "User selected new date range: MIN=%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS, MAX=%2$tY-%2$tm-%2$td %2$tH:%2$tM:%2$tS, isRange="+seletedRangeActivated,seletedRangeBeginTimeInMs , seletedRangeEndTimeInMs));
         mapView.postInvalidate();
     }
 
@@ -346,6 +349,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         
         for (GeoTrack geoTrack : geoTracks) {
             idx++;
+//            Log.d(TAG, "User selected new date range: MIN=" + (geoTrack.time >= seletedRangeBeginTimeInMs) + "ms, MAX=" + (geoTrack.time <= seletedRangeEndTimeInMs)+ ", geoTrack.time="+geoTrack.time);
+
             if (!seletedRangeActivated || ( geoTrack.time >= seletedRangeBeginTimeInMs && geoTrack.time <= seletedRangeEndTimeInMs)) {
                 GeoPoint geoPoint = geoTrack.asGeoPoint();
                 p.toMapPixels(geoPoint, myScreenCoords);
