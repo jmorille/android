@@ -57,7 +57,7 @@ public class RangeTimelineView extends RelativeLayout {
 					boolean isRangeDefine = minValue > rangeSeekBar.getAbsoluteMinValue() || maxValue < rangeSeekBar.getAbsoluteMaxValue();
 					onRangeTimelineChangeListener.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
 				}
-				Log.d(TAG, "User selected new date range: MIN=" + minValue + ", MAX=" + maxValue);
+//				Log.d(TAG, "User selected new date range: MIN=" + minValue + ", MAX=" + maxValue);
 			}
 		});
 	}
