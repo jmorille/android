@@ -43,6 +43,7 @@ public class RangeTimelineView extends RelativeLayout {
 		ViewGroup rangeViewContainer = (ViewGroup) findViewById(R.id.rangeTimeline_SeekBarViewContainer);
 		   rangeSeekBar = new RangeSeekBar(0, AppConstants.ONE_DAY_IN_MS, getContext());
 		rangeViewContainer.addView(rangeSeekBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		rangeSeekBar.setNotifyWhileDragging(true);
 		rangeSeekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener () {
 			@Override
 			public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
