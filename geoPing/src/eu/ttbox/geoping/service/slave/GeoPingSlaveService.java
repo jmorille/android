@@ -28,6 +28,7 @@ import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.model.Pairing;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
@@ -514,15 +515,30 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
                 .setOngoing(true) //
                 .setContentTitle(title) //
                 .setContentText(contentText) //
-                .setContentIntent(contentIntent) //
+                .setContentIntent(contentIntent); //
 
-                // .setNumber(5) //
-                .setContent(contentView);
-        // Add Action
-        notificationBuilder.addAction(R.drawable.ic_cadenas_ferme_rouge, r.getString(R.string.notif_pairing_never), secuNever);
-        notificationBuilder.addAction(R.drawable.ic_menu_nav_cancel, r.getString(android.R.string.no), secuNo);
-        notificationBuilder.addAction(R.drawable.ic_menu_nav_accept, r.getString(android.R.string.yes), secuYes);
-        notificationBuilder.addAction(R.drawable.ic_cadenas_ouvert_vert, r.getString(R.string.notif_pairing_always), secuAlways);
+        // .setNumber(5) //
+        // Content Value
+        if (VersionUtils.isJb16) {
+            // Jb
+            NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(notificationBuilder);
+            style.addLine(contactDisplayName) //
+                    .setSummaryText("this is the summary")//
+            ;
+            notificationBuilder.setStyle(style);
+            // Add Action
+            notificationBuilder.addAction(R.drawable.ic_cadenas_ferme_rouge, r.getString(R.string.notif_pairing_never), secuNever);
+            notificationBuilder.addAction(R.drawable.ic_menu_nav_cancel, r.getString(android.R.string.no), secuNo);
+            notificationBuilder.addAction(R.drawable.ic_menu_nav_accept, r.getString(android.R.string.yes), secuYes);
+            notificationBuilder.addAction(R.drawable.ic_cadenas_ouvert_vert, r.getString(R.string.notif_pairing_always), secuAlways);
+            // Tocker
+            notificationBuilder.setTicker("This is the ticker");
+
+        } else {
+            // Ics, Hb, ginger
+            notificationBuilder.setContent(contentView);
+        }
+
         if (photo != null) {
             notificationBuilder.setLargeIcon(photo);
         } else {
