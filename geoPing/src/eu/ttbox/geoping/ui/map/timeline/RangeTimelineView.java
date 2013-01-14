@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.ui.widget.comp.RangeSeekBar;
 import eu.ttbox.geoping.ui.widget.comp.RangeSeekBar.OnRangeSeekBarChangeListener;
 
@@ -16,8 +17,10 @@ public class RangeTimelineView extends RelativeLayout {
 
 	private TextView rangeBeginText;
 	private TextView rangeEndText;
-	private RangeSeekBar<Integer> rangeSeekBar;
-
+	private RangeSeekBar rangeSeekBar;
+	
+    private OnRangeTimelineChangeListener onRangeTimelineChangeListener;
+	
 	public RangeTimelineView(Context context) {
 		super(context);
 	}
@@ -38,17 +41,56 @@ public class RangeTimelineView extends RelativeLayout {
 		// Range Seek Bar
 		// ---------------
 		ViewGroup rangeViewContainer = (ViewGroup) findViewById(R.id.rangeTimeline_SeekBarViewContainer);
-		RangeSeekBar<Integer> rangeSeekBar = new RangeSeekBar<Integer>(0, 86400, getContext());
+		RangeSeekBar  rangeSeekBar = new RangeSeekBar(0, AppConstants.ONE_DAY_IN_MS, getContext());
 		rangeViewContainer.addView(rangeSeekBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		rangeSeekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
+		rangeSeekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener () {
 			@Override
-			public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+			public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
 				// handle changed range values
-				rangeBeginText.setText("Begin : " +minValue.toString());
-				rangeEndText.setText("End : " + maxValue.toString());
-				Log.i(TAG, "User selected new date range: MIN=" + minValue + ", MAX=" + maxValue);
+			    final String timePattern = "%1$tH:%1$tM:%1$tS";
+			    String minValueString = String.format(timePattern, minValue);
+			    String maxValueString = String.format(timePattern, maxValue);
+				rangeBeginText.setText( minValueString );
+				rangeEndText.setText(maxValueString );
+				boolean isRangeDefine = minValue>getAbsoluteMinValue()  || maxValue<getAbsoluteMaxValue();
+				if (onRangeTimelineChangeListener!=null) {
+				    onRangeTimelineChangeListener.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
+				}
+				Log.d(TAG, "User selected new date range: MIN=" + minValueString + ", MAX=" + maxValueString);
 			}
 		});
 	}
+
+	 /**
+     * Returns the absolute minimum value of the range that has been set at
+     * construction time.
+     * 
+     * @return The absolute minimum value of the range.
+     */
+    public int getAbsoluteMinValue() {
+        return rangeSeekBar.getAbsoluteMinValue();
+    }
+
+    /**
+     * Returns the absolute maximum value of the range that has been set at
+     * construction time.
+     * 
+     * @return The absolute maximum value of the range.
+     */
+    public int getAbsoluteMaxValue() {
+        return rangeSeekBar.getAbsoluteMaxValue();
+    }
+
+ 
+    public void setOnRangeTimelineChangeListener(OnRangeTimelineChangeListener listener) {
+        this.onRangeTimelineChangeListener = listener;
+    }
+
+
+    public interface OnRangeTimelineChangeListener {
+        public void onRangeTimelineValuesChanged( int minValue, int maxValue, boolean isRangeDefine);
+    }
+    
+    
 
 }

@@ -5,7 +5,7 @@ import java.util.Calendar;
 public class AppConstants {
 
     public static final double E6 = 1000000d;
-
+    public static final int ONE_DAY_IN_MS= 3600*24;
     // Constant
     public static final long UNSET_TIME = -1l;
     public static final long UNSET_ID = -1l;
@@ -47,6 +47,7 @@ public class AppConstants {
 
     private static long getZeroDate() {
         Calendar cal = Calendar.getInstance();
+        cal.clear();
         cal.set(Calendar.YEAR, 2012);
         cal.set(Calendar.MONTH, Calendar.DECEMBER);
         cal.set(Calendar.DAY_OF_MONTH, 22);
