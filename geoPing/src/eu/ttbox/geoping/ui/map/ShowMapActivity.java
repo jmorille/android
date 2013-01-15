@@ -122,9 +122,13 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 			mapFragment.centerOnMyPosition();
 			return true;
 		}
-		case R.id.menuMap_track_person: {
-			mapFragment.showSelectPersonDialog();
+		case R.id.menuMap_mypositon_hide: {
+//			TODO mapFragment.showSelectPersonDialog();
 			return true;
+		}
+		case R.id.menuMap_track_timeline: {
+           mapFragment.swichRangeTimelineBarVisibility();
+		    return true; 
 		}
 		default: {
 			// Map click

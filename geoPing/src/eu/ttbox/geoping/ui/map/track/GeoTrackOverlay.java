@@ -54,11 +54,10 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
-import eu.ttbox.geoping.ui.map.timeline.RangeTimelineValue;
-import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView.OnRangeTimelineChangeListener;
+import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView.OnRangeTimelineValuesChangeListener;
 import eu.ttbox.geoping.ui.map.track.bubble.GeoTrackBubble;
 
-public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnSharedPreferenceChangeListener, OnRangeTimelineChangeListener {
+public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnSharedPreferenceChangeListener, OnRangeTimelineValuesChangeListener {
 
     private static final String TAG = "GeoTrackOverlay";
 
@@ -81,11 +80,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     // Listener
     private BroadcastReceiver mStatusReceiver;
     private IntentFilter mStatusReceiverIntentFilter;
+    private OnRangeGeoTrackValuesChangeListener onRangeGeoTrackValuesChangeListener;
+
     // Config
     private Person person;
 
     private boolean geocodingAuto = false;
-    private RangeTimelineValue rangeTimelineValue;
 
     // Cached
     private Point myScreenCoords = new Point();
@@ -110,8 +110,15 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     // Data
     private long timeBeginInMs;
     private long timeEndInMs;
+
+    // Geotrack range values
     private long geoPingTimeValueMin = Long.MAX_VALUE;
     private long geoPingTimeValueMax = Long.MIN_VALUE;
+
+    // Selected Range Values
+    private boolean seletedRangeActivated = false;
+    private long seletedRangeBeginTimeInMs = 0;
+    private long seletedRangeEndTimeInMs = Long.MAX_VALUE;
 
     // ===========================================================
     // Ui Handler
@@ -136,12 +143,11 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     // Constructors
     // ===========================================================
 
-    public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay, boolean geocodingAuto, RangeTimelineValue rangeTimelineValue) {
-        this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay, geocodingAuto, rangeTimelineValue);
+    public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay, boolean geocodingAuto) {
+        this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay, geocodingAuto);
     }
 
-    public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs, boolean geocodingAuto,
-            RangeTimelineValue rangeTimelineValue) {
+    public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs, boolean geocodingAuto) {
         super(pResourceProxy);
         GEOTRACK_LIST_LOADER = R.id.config_id_geotrack_list_loader + (int) person.id + 1000;
         // person.id;
@@ -154,7 +160,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         this.loaderManager = loaderManager;
         this.mapView = mapView;
         this.mMapController = mapView.getController();
-        this.rangeTimelineValue = rangeTimelineValue;
+
         setDateRange(timeInMs);
         // Service
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -288,7 +294,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     }
 
     // ===========================================================
-    // Accessor
+    // Accessors
     // ===========================================================
 
     public void disableThreadExecutors() {
@@ -319,23 +325,52 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
     }
 
     // ===========================================================
-    // Map Drawing
+    // Range Timeline
     // ===========================================================
 
-    private boolean seletedRangeActivated = false;
-    private long seletedRangeBeginTimeInMs = 0;
-    private long seletedRangeEndTimeInMs = Long.MAX_VALUE;
-    
+    public void setOnRangeGeoTrackValuesChangeListener(OnRangeGeoTrackValuesChangeListener onRangeGeoTrackValuesChangeListener) {
+        this.onRangeGeoTrackValuesChangeListener = onRangeGeoTrackValuesChangeListener;
+    }
+
     @Override
     public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine) {
         seletedRangeActivated = isRangeDefine;
-        seletedRangeBeginTimeInMs = timeBeginInMs + rangeTimelineValue.minValue;
-        seletedRangeEndTimeInMs = timeBeginInMs + rangeTimelineValue.maxValue;
-//        Log.d(TAG, String.format( "Start Midgnight : %1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", timeBeginInMs));
-//        Log.d(TAG, String.format( "User selected new date range: MIN=%s ms, MAX=%s ms, isRange="+seletedRangeActivated,seletedRangeBeginTimeInMs , seletedRangeEndTimeInMs));
-//        Log.d(TAG, String.format( "User selected new date range: MIN=%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS, MAX=%2$tY-%2$tm-%2$td %2$tH:%2$tM:%2$tS, isRange="+seletedRangeActivated,seletedRangeBeginTimeInMs , seletedRangeEndTimeInMs));
+        seletedRangeBeginTimeInMs = timeBeginInMs + minValue * 1000;
+        seletedRangeEndTimeInMs = timeBeginInMs + maxValue * 1000; 
         mapView.postInvalidate();
     }
+
+    public interface OnRangeGeoTrackValuesChangeListener {
+        public void onRangeGeoTrackValuesChangeListener(int minValueInS, int maxValueInS);
+    }
+
+    private boolean computeGeoTrackTimeRange(long value, boolean notifyListener) {
+        boolean rangeChange = false;
+        long timeValueMin = Math.min(geoPingTimeValueMin, value);
+        long timeValueMax = Math.max(geoPingTimeValueMax, value);
+        // Set range
+        if (timeValueMin < geoPingTimeValueMin || timeValueMax > geoPingTimeValueMax) {
+            rangeChange = true;
+            geoPingTimeValueMin = timeValueMin;
+            geoPingTimeValueMax = timeValueMax;
+            if (notifyListener) {
+                notifyChangeOnRangeGeoTrackValuesChangeListener();
+            }
+        }
+        return rangeChange;
+    }
+
+    private void notifyChangeOnRangeGeoTrackValuesChangeListener() {
+        if (onRangeGeoTrackValuesChangeListener != null) {
+            int newRangeMin = (int) ((geoPingTimeValueMin - timeBeginInMs) / 1000);
+            int newRangeMax = (int) ((geoPingTimeValueMax - timeBeginInMs)/ 1000);
+            onRangeGeoTrackValuesChangeListener.onRangeGeoTrackValuesChangeListener(newRangeMin, newRangeMax);
+        }
+    }
+
+    // ===========================================================
+    // Map Drawing
+    // ===========================================================
 
     @Override
     protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
@@ -346,12 +381,14 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
         int idx = 0;
         int geoTrackSize = geoTracks.size();
-        
+
         for (GeoTrack geoTrack : geoTracks) {
             idx++;
-//            Log.d(TAG, "User selected new date range: MIN=" + (geoTrack.time >= seletedRangeBeginTimeInMs) + "ms, MAX=" + (geoTrack.time <= seletedRangeEndTimeInMs)+ ", geoTrack.time="+geoTrack.time);
+            // Log.d(TAG, "User selected new date range: MIN=" + (geoTrack.time
+            // >= seletedRangeBeginTimeInMs) + "ms, MAX=" + (geoTrack.time <=
+            // seletedRangeEndTimeInMs)+ ", geoTrack.time="+geoTrack.time);
 
-            if (!seletedRangeActivated || ( geoTrack.time >= seletedRangeBeginTimeInMs && geoTrack.time <= seletedRangeEndTimeInMs)) {
+            if (!seletedRangeActivated || (geoTrack.time >= seletedRangeBeginTimeInMs && geoTrack.time <= seletedRangeEndTimeInMs)) {
                 GeoPoint geoPoint = geoTrack.asGeoPoint();
                 p.toMapPixels(geoPoint, myScreenCoords);
                 // Line Path
@@ -442,23 +479,27 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
         int selectRadius = zoonLevel + 6;
         Projection pj = mapView.getProjection();
         for (GeoTrack testLocation : geoTracks) {
-            // Translate the MapLocation's lat/long coordinates to screen
-            // coordinates
-            pj.toPixels(testLocation.asGeoPoint(), tapPointTestScreenCoords);
+            if (!seletedRangeActivated || (testLocation.time >= seletedRangeBeginTimeInMs && testLocation.time <= seletedRangeEndTimeInMs)) {
+                // Translate the MapLocation's lat/long coordinates to screen
+                // coordinates
+                pj.toPixels(testLocation.asGeoPoint(), tapPointTestScreenCoords);
 
-            // Create a 'hit' testing Rectangle w/size and coordinates of our
-            // icon
-            // Set the 'hit' testing Rectangle with the size and coordinates of
-            // our on screen icon
-            tapPointHitTestRect.set(-selectRadius, -selectRadius, selectRadius, selectRadius);
-            tapPointHitTestRect.offset(tapPointTestScreenCoords.x, tapPointTestScreenCoords.y);
+                // Create a 'hit' testing Rectangle w/size and coordinates of
+                // our
+                // icon
+                // Set the 'hit' testing Rectangle with the size and coordinates
+                // of
+                // our on screen icon
+                tapPointHitTestRect.set(-selectRadius, -selectRadius, selectRadius, selectRadius);
+                tapPointHitTestRect.offset(tapPointTestScreenCoords.x, tapPointTestScreenCoords.y);
 
-            // Finally test for a match between our 'hit' Rectangle and the
-            // location clicked by the user
-            pj.toPixels(tapPoint, tapPointTestScreenCoords);
-            if (tapPointHitTestRect.contains(tapPointTestScreenCoords.x, tapPointTestScreenCoords.y)) {
-                hitMapLocation = testLocation;
-                // break;
+                // Finally test for a match between our 'hit' Rectangle and the
+                // location clicked by the user
+                pj.toPixels(tapPoint, tapPointTestScreenCoords);
+                if (tapPointHitTestRect.contains(tapPointTestScreenCoords.x, tapPointTestScreenCoords.y)) {
+                    hitMapLocation = testLocation;
+                    // break;
+                }
             }
         }
         return hitMapLocation;
@@ -613,17 +654,20 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                 GeoTrackHelper helper = new GeoTrackHelper().initWrapper(cursor);
                 geoPingTimeValueMin = Long.MAX_VALUE;
                 geoPingTimeValueMax = Long.MIN_VALUE;
+                boolean isRangeChange = false;
                 do {
                     GeoTrack geoTrack = helper.getEntity(cursor);
                     // Log.d(TAG, String.format("Cursor : %s", geoTrack));
                     // Adding to list
                     points.add(geoTrack);
                     long time = geoTrack.getTime();
-                    computeGeoPingTimeRange(time);
+                    isRangeChange= isRangeChange|| computeGeoTrackTimeRange(time, false);
                     Log.d(TAG, String.format("Add New GeoTrack : %s", geoTrack));
                 } while (cursor.moveToNext());
+                if (isRangeChange) {
+                    notifyChangeOnRangeGeoTrackValuesChangeListener();
+                }
             }
-
             geoTracks = points;
         }
 
@@ -632,11 +676,6 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
             geoTracks.clear();
         }
     };
-
-    private void computeGeoPingTimeRange(long value) {
-        geoPingTimeValueMin = Math.min(geoPingTimeValueMin, value);
-        geoPingTimeValueMax = Math.max(geoPingTimeValueMax, value);
-    }
 
     // ===========================================================
     // Observer
@@ -685,7 +724,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
                     if (addedGeoTrack != null && time >= timeBeginInMs && time <= timeEndInMs) {
                         // Add GeoTrack
                         addNewGeoTrack(addedGeoTrack);
-                        computeGeoPingTimeRange(time);
+                        computeGeoTrackTimeRange(time, true);
                     } else {
                         Log.d(TAG, "Ignore display Geotrack " + addedGeoTrack + " for the time range [" + timeBeginInMs + ", " + timeEndInMs + "]");
                     }

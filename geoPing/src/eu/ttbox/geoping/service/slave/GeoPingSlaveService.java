@@ -528,7 +528,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
             notificationBuilder.setStyle(style);
             // Add Action
             notificationBuilder.addAction(R.drawable.ic_cadenas_ferme_rouge, r.getString(R.string.notif_pairing_never), secuNever);
-            notificationBuilder.addAction(R.drawable.ic_menu_nav_cancel, r.getString(android.R.string.no), secuNo);
+//            notificationBuilder.addAction(R.drawable.ic_menu_nav_cancel, r.getString(android.R.string.no), secuNo);
             notificationBuilder.addAction(R.drawable.ic_menu_nav_accept, r.getString(android.R.string.yes), secuYes);
             notificationBuilder.addAction(R.drawable.ic_cadenas_ouvert_vert, r.getString(R.string.notif_pairing_always), secuAlways);
             // Tocker

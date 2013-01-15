@@ -19,6 +19,17 @@
         <menu>
         </menu>
     </item>
+ 
+    <item
+        android:id="@+id/menuMap_mypositon_hide"
+        android:icon="@drawable/ic_action_user"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_map_track_timeline"/>    
     
+    <item
+        android:id="@+id/menuMap_track_timeline"
+        android:icon="@drawable/ic_action_user"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_map_mypositon_hide"/>    
 
 </menu>

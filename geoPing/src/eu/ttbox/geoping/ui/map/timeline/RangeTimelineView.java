@@ -13,95 +13,152 @@ import eu.ttbox.geoping.ui.widget.comp.RangeSeekBar.OnRangeSeekBarChangeListener
 
 public class RangeTimelineView extends RelativeLayout {
 
-	private static final String TAG = "RangeTimelineView";
+    private static final String TAG = "RangeTimelineView";
 
-	private TextView rangeBeginText;
-	private TextView rangeEndText;
-	private RangeSeekBar rangeSeekBar;
+    private TextView rangeBeginText;
+    private TextView rangeEndText;
+    private RangeSeekBar rangeSeekBar;
 
-	private OnRangeTimelineChangeListener onRangeTimelineChangeListener;
+    private OnRangeTimelineValuesChangeListener onRangeTimelineChangeListener;
 
-	public RangeTimelineView(Context context) {
-		super(context);
-	}
+    // ===========================================================
+    // Constructor
+    // ===========================================================
 
-	public RangeTimelineView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public RangeTimelineView(Context context) {
+        super(context);
+    }
 
-	public RangeTimelineView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs);
-	}
+    public RangeTimelineView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
-		rangeBeginText = (TextView) findViewById(R.id.rangeTimeline_beginTextView);
-		rangeEndText = (TextView) findViewById(R.id.rangeTimeline_endTextView);
-		// Range Seek Bar
-		// ---------------
-		ViewGroup rangeViewContainer = (ViewGroup) findViewById(R.id.rangeTimeline_seekBarViewContainer);
-		rangeSeekBar = new RangeSeekBar(0, AppConstants.ONE_DAY_IN_MS, getContext());
-		rangeViewContainer.addView(rangeSeekBar, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		// rangeSeekBar = (RangeSeekBar)
-		// findViewById(R.id.rangeTimeline_seekBarView);
-		rangeSeekBar.setNotifyWhileDragging(true);
-		rangeSeekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener() {
-			@Override
-			public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
-				String minValueString = getTimeFromMs(minValue);
-				String maxValueString = getTimeFromMs(maxValue);
-				rangeBeginText.setText(minValueString);
-				rangeEndText.setText(maxValueString);
-				if (onRangeTimelineChangeListener != null) {
-					boolean isRangeDefine = minValue > rangeSeekBar.getAbsoluteMinValue() || maxValue < rangeSeekBar.getAbsoluteMaxValue();
-					onRangeTimelineChangeListener.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
-				}
-//				Log.d(TAG, "User selected new date range: MIN=" + minValue + ", MAX=" + maxValue);
-			}
-		});
-	}
+    public RangeTimelineView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs);
+    }
 
-	private String getTimeFromMs(int ms) {
-		// final String timePattern = "%1$tH:%1$tM:%1$tS";
-		// String.format(timePattern, (long) minValue
-		int x = ms / 1000;
-		int seconde = x % 60;
-		x /= 60;
-		int minutes = x % 60;
-		x /= 60;
-		int hours = x;// % 24;  
-//		x /= 24;
-//		hours = x*24 + hours;
-		return String.format("%02d:%02d:%02d", hours, minutes, seconde);
-	}
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        rangeBeginText = (TextView) findViewById(R.id.rangeTimeline_beginTextView);
+        rangeEndText = (TextView) findViewById(R.id.rangeTimeline_endTextView);
+        // Range Seek Bar
+        // ---------------
+        ViewGroup rangeViewContainer = (ViewGroup) findViewById(R.id.rangeTimeline_seekBarViewContainer);
+        rangeSeekBar = new RangeSeekBar(0, AppConstants.ONE_DAY_IN_S, getContext());
+        rangeViewContainer.addView(rangeSeekBar, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        // rangeSeekBar = (RangeSeekBar)
+        // findViewById(R.id.rangeTimeline_seekBarView);
+        rangeSeekBar.setNotifyWhileDragging(true);
+        rangeSeekBar.setOnRangeSeekBarChangeListener(onRangeSeekBarChangeListener);
+    }
 
-	/**
-	 * Returns the absolute minimum value of the range that has been set at
-	 * construction time.
-	 * 
-	 * @return The absolute minimum value of the range.
-	 */
-	public int getAbsoluteMinValue() {
-		return rangeSeekBar.getAbsoluteMinValue();
-	}
+    // ===========================================================
+    // Range Listener
+    // ===========================================================
 
-	/**
-	 * Returns the absolute maximum value of the range that has been set at
-	 * construction time.
-	 * 
-	 * @return The absolute maximum value of the range.
-	 */
-	public int getAbsoluteMaxValue() {
-		return rangeSeekBar.getAbsoluteMaxValue();
-	}
+    private OnRangeSeekBarChangeListener onRangeSeekBarChangeListener = new OnRangeSeekBarChangeListener() {
+        @Override
+        public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
+            setRangeBeginText(minValue);
+            setRangeEndText(maxValue);  
+            if (onRangeTimelineChangeListener != null) {
+                boolean isRangeDefine = minValue > rangeSeekBar.getAbsoluteMinValue() || maxValue < rangeSeekBar.getAbsoluteMaxValue();
+                onRangeTimelineChangeListener.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
+            }
+            // Log.d(TAG, "User selected new date range: MIN=" + minValue +  ", MAX=" + maxValue);
+        }
 
-	public void setOnRangeTimelineChangeListener(OnRangeTimelineChangeListener listener) {
-		this.onRangeTimelineChangeListener = listener;
-	}
+       
+    };
+    
 
-	public interface OnRangeTimelineChangeListener {
-		public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine);
-	}
+    public void setOnRangeTimelineChangeListener(OnRangeTimelineValuesChangeListener listener) {
+        this.onRangeTimelineChangeListener = listener;
+    }
+
+    public interface OnRangeTimelineValuesChangeListener {
+        public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine);
+    }
+
+    // ===========================================================
+    // Text Range
+    // ===========================================================
+
+    private void setRangeBeginText(int minValue) {
+        String minValueString = getTimeFromMs(minValue);
+        rangeBeginText.setText(minValueString);
+    }
+    
+    private void setRangeEndText(int maxValue) {
+        String maxValueString = getTimeFromMs(maxValue); 
+        rangeEndText.setText(maxValueString);
+    }
+    
+    private String getTimeFromMs(int valueInS) { 
+        int x = valueInS;// / 1000;
+        int seconde = x % 60;
+        x /= 60;
+        int minutes = x % 60;
+        x /= 60;
+        int hours = x;// % 24;
+        // x /= 24;
+        // hours = x*24 + hours;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconde);
+    }
+    
+    // ===========================================================
+    // Accessors
+    // ===========================================================
+
+    public void setAbsoluteValues(int absoluteMinValue, int absoluteMaxValue) {
+        int currentSelectMinVal = rangeSeekBar.getSelectedMinValue();
+        int currentSelectMaxVal = rangeSeekBar.getSelectedMaxValue();
+        boolean isSelectMin = currentSelectMinVal == rangeSeekBar.getAbsoluteMinValue();
+        boolean isSelectMax = currentSelectMaxVal == rangeSeekBar.getAbsoluteMaxValue();
+        this.rangeSeekBar.setAbsoluteMinValue(absoluteMinValue);
+        this.rangeSeekBar.setAbsoluteMaxValue(absoluteMaxValue);
+        if (isSelectMin) {
+            setSelectedMinValue(absoluteMinValue);
+        } else {
+//            setSelectedMinValue(currentSelectMinVal);
+        }
+        if (isSelectMax) {
+           setSelectedMaxValue(absoluteMaxValue);
+        } else {
+//            setSelectedMaxValue(currentSelectMaxVal);
+        }
+    }
+    
+    public void setSelectedMinValue(int value) {
+        this.rangeSeekBar.setSelectedMinValue(value);
+        setRangeBeginText(value);
+    }
+    
+    public void setSelectedMaxValue(int value) {
+        this.rangeSeekBar.setSelectedMaxValue(value);
+        setRangeEndText(value);
+    }
+    
+    /**
+     * Returns the absolute minimum value of the range that has been set at
+     * construction time.
+     * 
+     * @return The absolute minimum value of the range.
+     */
+    public int getAbsoluteMinValue() {
+        return rangeSeekBar.getAbsoluteMinValue();
+    }
+
+    /**
+     * Returns the absolute maximum value of the range that has been set at
+     * construction time.
+     * 
+     * @return The absolute maximum value of the range.
+     */
+    public int getAbsoluteMaxValue() {
+        return rangeSeekBar.getAbsoluteMaxValue();
+    }
+
 
 }

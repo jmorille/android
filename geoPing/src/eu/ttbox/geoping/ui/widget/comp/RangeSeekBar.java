@@ -42,9 +42,9 @@ public class RangeSeekBar extends ImageView {
     private final float thumbHalfHeight = 0.5f * thumbImage.getHeight();
     private final float lineHeight = 0.3f * thumbHalfHeight;
     private final float padding = thumbHalfWidth;
-    private final int absoluteMinValue, absoluteMaxValue;
+    private int absoluteMinValue, absoluteMaxValue;
 
-    private final double absoluteMinValuePrim, absoluteMaxValuePrim;
+    private double absoluteMinValuePrim, absoluteMaxValuePrim;
     private double normalizedMinValue = 0d;
     private double normalizedMaxValue = 1d;
     private Thumb pressedThumb = null;
@@ -77,6 +77,11 @@ public class RangeSeekBar extends ImageView {
 
     private int mScaledTouchSlop;
     private boolean mIsDragging;
+
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     public RangeSeekBar(Context context) {
         this(0, Integer.MAX_VALUE, context);
@@ -121,6 +126,25 @@ public class RangeSeekBar extends ImageView {
     private final void init() {
         mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
+    
+    // ===========================================================
+    // Test Configs
+    // ===========================================================
+
+    public void setAbsoluteMinValue(int absoluteMinValue) {
+        this.absoluteMinValue = absoluteMinValue;
+        absoluteMinValuePrim = absoluteMinValue;
+    }
+    
+    public void setAbsoluteMaxValue(int absoluteMaxValue) {
+        this.absoluteMaxValue = absoluteMaxValue;
+        absoluteMaxValuePrim = absoluteMaxValue;
+    }
+    
+    // ===========================================================
+    // Accessors
+    // ===========================================================
+
 
     public boolean isNotifyWhileDragging() {
         return notifyWhileDragging;

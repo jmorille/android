@@ -49,6 +49,11 @@
     <string name="menu_person">Personnes</string>
     <string name="menu_pairing">Appariement</string>
     <string name="menu_smslog">Log Sms</string>
+ 
+    <!-- Menu Map-->
+    <string name="menu_map_mypositon_hide">Hide My Position</string>
+    <string name="menu_map_track_timeline">Time Line</string>
+       
     
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>

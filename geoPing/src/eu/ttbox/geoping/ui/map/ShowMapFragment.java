@@ -42,8 +42,9 @@ import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
 import eu.ttbox.geoping.ui.map.timeline.RangeTimelineValue;
 import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView;
-import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView.OnRangeTimelineChangeListener;
+import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView.OnRangeTimelineValuesChangeListener;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay;
+import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay.OnRangeGeoTrackValuesChangeListener;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog;
 import eu.ttbox.geoping.ui.map.track.dialog.SelectGeoTrackDialog.OnSelectPersonListener;
 import eu.ttbox.osm.ui.map.MapViewFactory;
@@ -132,23 +133,66 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
         // Range Seek Bar
         // ---------------
-        rangeTimelineBar = (RangeTimelineView) v.findViewById(R.id.map_timeline_bar);
+        rangeTimelineBar = (RangeTimelineView) v.findViewById(R.id.map_timeline_bar); 
         rangeTimelineValue = new RangeTimelineValue(rangeTimelineBar.getAbsoluteMinValue(), rangeTimelineBar.getAbsoluteMaxValue());
-        rangeTimelineBar.setOnRangeTimelineChangeListener(new OnRangeTimelineChangeListener() {
-
-            @Override
-            public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine) {
-                rangeTimelineValue.minValue = minValue;
-                rangeTimelineValue.maxValue = maxValue;
-                rangeTimelineValue.isRangeDefine = isRangeDefine;
-                for (GeoTrackOverlay geotrack : geoTrackOverlayByUser.values()) {
-                    geotrack.onRangeTimelineValuesChanged(minValue,   maxValue,   isRangeDefine);
-                }
-            }
-        });
+        rangeTimelineBar.setOnRangeTimelineChangeListener(onRangeTimelineValuesChangeListener);
         return v;
     }
+    
+    // ===========================================================
+    // Range Listener
+    // ===========================================================
 
+    
+    public void swichRangeTimelineBarVisibility() {
+        if (rangeTimelineBar!=null) {
+            switch (rangeTimelineBar.getVisibility()) {
+            case View.VISIBLE:
+                rangeTimelineBar.setVisibility(View.GONE);
+                break;
+            case View.GONE:
+                rangeTimelineBar.setVisibility(View.VISIBLE);
+                break;
+            default:
+                break;
+            } 
+        }
+    }
+    private OnRangeTimelineValuesChangeListener onRangeTimelineValuesChangeListener = new OnRangeTimelineValuesChangeListener() {
+
+        @Override
+        public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine) {
+            rangeTimelineValue.minValue = minValue;
+            rangeTimelineValue.maxValue = maxValue;
+            rangeTimelineValue.isRangeDefine = isRangeDefine;
+            for (GeoTrackOverlay geotrack : geoTrackOverlayByUser.values()) {
+                geotrack.onRangeTimelineValuesChanged(minValue,   maxValue,   isRangeDefine);
+            }
+        }
+    };
+    
+    
+    private OnRangeGeoTrackValuesChangeListener onRangeGeoTrackValuesChangeListener = new OnRangeGeoTrackValuesChangeListener() {
+
+        private int geotrackRangeMin =  Integer.MAX_VALUE;
+        private int geotrackRangeMax = Integer.MIN_VALUE;
+        
+        public void onRangeGeoTrackValuesChangeListener(int minValue, int maxValue) {
+          if (minValue<geotrackRangeMin || maxValue>geotrackRangeMax) {
+              // Set Round Value to the close Hours  
+              geotrackRangeMin =roundToHour(minValue);
+              geotrackRangeMax = roundToHour(maxValue)+3600;
+              // Change Range in Timeline
+              rangeTimelineBar.setAbsoluteValues(geotrackRangeMin, geotrackRangeMax);
+//              rangeTimelineBar.setAbsoluteMaxValue(geotrackRangeMax); 
+          }
+        } 
+        
+        private int roundToHour(int valueInS) {
+            int hours = valueInS/3600;
+            return hours*3600;
+        }
+    };
     // ===========================================================
     // Life Cycle
     // ===========================================================
@@ -374,6 +418,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         return geoTrackOverlay;
     }
 
+
     private GeoTrackOverlay geoTrackOverlayAddPerson(Person person) {
         GeoTrackOverlay geoTrackOverlay = null;
         boolean isDone = false;
@@ -381,7 +426,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         if (!TextUtils.isEmpty(userId) && !geoTrackOverlayByUser.containsKey(userId)) {
             LoaderManager loaderManager = getActivity().getSupportLoaderManager();
             // Overlay .getBaseContext()
-            geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto, rangeTimelineValue);
+            geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto);
+            geoTrackOverlay.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener);
             geoTrackOverlayByUser.put(userId, geoTrackOverlay);
             // register
             isDone = mapView.getOverlays().add(geoTrackOverlay);
