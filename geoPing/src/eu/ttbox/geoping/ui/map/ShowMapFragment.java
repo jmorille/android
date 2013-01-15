@@ -145,18 +145,18 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
 	public void swichRangeTimelineBarVisibility() {
 		if (rangeTimelineBar != null) {
+			Log.d(TAG, "swichRangeTimelineBarVisibility : " + rangeTimelineBar.getVisibility());
 			switch (rangeTimelineBar.getVisibility()) {
 			case View.VISIBLE:
 				rangeTimelineBar.setVisibility(View.GONE);
-				rangeTimelineBar.resetSelectedValues();
 				break;
 			case View.GONE:
 				rangeTimelineBar.setVisibility(View.VISIBLE);
-				rangeTimelineBar.resetSelectedValues();
 				break;
 			default:
 				break;
 			}
+			rangeTimelineBar.resetSelectedValues();
 		}
 	}
 
@@ -457,12 +457,17 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		boolean isDone = false;
 		String userId = person.phone;
 		if (!TextUtils.isEmpty(userId) && !geoTrackOverlayByUser.containsKey(userId)) {
+			boolean isEmpty = geoTrackOverlayByUser.isEmpty();
 			LoaderManager loaderManager = getActivity().getSupportLoaderManager();
 			// Overlay .getBaseContext()
 			geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto);
 			geoTrackOverlay.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener);
 			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
-			onRangeGeoTrackValuesChangeListener.onRangeGeoTrackValuesChange(geoTrackOverlay.getGeoTrackRangeTimeValueMin(), geoTrackOverlay.getGeoTrackRangeTimeValueMax());
+			if (isEmpty) {
+				onRangeGeoTrackValuesChangeListener.computeRangeValues(geoTrackOverlayByUser.values());
+			} else {
+				onRangeGeoTrackValuesChangeListener.onRangeGeoTrackValuesChange(geoTrackOverlay.getGeoTrackRangeTimeValueMin(), geoTrackOverlay.getGeoTrackRangeTimeValueMax());
+			}
 			// register
 			isDone = mapView.getOverlays().add(geoTrackOverlay);
 			Log.i(TAG, String.format("Add New GeoTrack Overlay (%s) for %s", isDone, person));

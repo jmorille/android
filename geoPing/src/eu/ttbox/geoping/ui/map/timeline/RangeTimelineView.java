@@ -65,16 +65,20 @@ public class RangeTimelineView extends RelativeLayout {
         public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
             setRangeBeginText(minValue);
             setRangeEndText(maxValue);  
-            if (onRangeTimelineChangeListener != null) {
-                boolean isRangeDefine = minValue > rangeSeekBar.getAbsoluteMinValue() || maxValue < rangeSeekBar.getAbsoluteMaxValue();
-                onRangeTimelineChangeListener.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
-            }
+            notifyOnRangeTimelineChangeListener(minValue,  maxValue) ;
             // Log.d(TAG, "User selected new date range: MIN=" + minValue +  ", MAX=" + maxValue);
         }
 
        
     };
     
+    public void notifyOnRangeTimelineChangeListener(int minValue, int maxValue) {
+        if (onRangeTimelineChangeListener != null) { 
+            boolean isRangeDefine = minValue > rangeSeekBar.getAbsoluteMinValue() || maxValue < rangeSeekBar.getAbsoluteMaxValue();
+            onRangeTimelineChangeListener.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
+        }
+
+    }
 
     public void setOnRangeTimelineChangeListener(OnRangeTimelineValuesChangeListener listener) {
         this.onRangeTimelineChangeListener = listener;
@@ -142,13 +146,15 @@ public class RangeTimelineView extends RelativeLayout {
     public void resetSelectedValues() {
     	setSelectedMinValue(getAbsoluteMinValue());
     	setSelectedMaxValue(getAbsoluteMaxValue());
-    }
-    public void setSelectedMinValue(int value) {
-        this.rangeSeekBar.setSelectedMinValue(value);
-        setRangeBeginText(value);
+    	notifyOnRangeTimelineChangeListener(getAbsoluteMinValue(), getAbsoluteMaxValue());
     }
     
-    public void setSelectedMaxValue(int value) {
+    private void setSelectedMinValue(int value) {
+        this.rangeSeekBar.setSelectedMinValue(value);
+        setRangeBeginText(value); 
+    }
+    
+    private void setSelectedMaxValue(int value) {
         this.rangeSeekBar.setSelectedMaxValue(value);
         setRangeEndText(value);
     }

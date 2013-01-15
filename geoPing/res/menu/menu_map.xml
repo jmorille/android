@@ -20,16 +20,18 @@
         </menu>
     </item>
  
+    <!-- TODO Choose icon -->
     <item
         android:id="@+id/menuMap_mypositon_hide"
         android:icon="@drawable/ic_action_user"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_map_track_timeline"/>    
+        android:title="@string/menu_map_mypositon_hide"/>    
     
+    <!-- TODO Choose icon -->
     <item
         android:id="@+id/menuMap_track_timeline"
         android:icon="@drawable/ic_action_user"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_map_mypositon_hide"/>    
+        android:title="@string/menu_map_track_timeline"/>    
 
 </menu>
