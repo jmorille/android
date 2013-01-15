@@ -51,6 +51,9 @@ public class RangeTimelineView extends RelativeLayout {
         // findViewById(R.id.rangeTimeline_seekBarView);
         rangeSeekBar.setNotifyWhileDragging(true);
         rangeSeekBar.setOnRangeSeekBarChangeListener(onRangeSeekBarChangeListener);
+        // Define range Text
+        setRangeBeginText(rangeSeekBar.getSelectedMinValue());
+        setRangeEndText(rangeSeekBar.getSelectedMaxValue());
     }
 
     // ===========================================================
@@ -112,6 +115,7 @@ public class RangeTimelineView extends RelativeLayout {
     // ===========================================================
 
     public void setAbsoluteValues(int absoluteMinValue, int absoluteMaxValue) {
+    	Log.w(TAG, "setAbsoluteValues " + getTimeFromMs(absoluteMinValue) + " to " +    getTimeFromMs(absoluteMaxValue) );
         int currentSelectMinVal = rangeSeekBar.getSelectedMinValue();
         int currentSelectMaxVal = rangeSeekBar.getSelectedMaxValue();
         boolean isSelectMin = currentSelectMinVal == rangeSeekBar.getAbsoluteMinValue();
@@ -121,15 +125,24 @@ public class RangeTimelineView extends RelativeLayout {
         if (isSelectMin) {
             setSelectedMinValue(absoluteMinValue);
         } else {
-//            setSelectedMinValue(currentSelectMinVal);
+            setSelectedMinValue(currentSelectMinVal);
         }
         if (isSelectMax) {
            setSelectedMaxValue(absoluteMaxValue);
         } else {
-//            setSelectedMaxValue(currentSelectMaxVal);
+            setSelectedMaxValue(currentSelectMaxVal);
         }
+        this.rangeSeekBar.postInvalidate();
     }
     
+    public boolean isSelectedValues() {
+    	return rangeSeekBar.isSelectedValues();
+    }
+    
+    public void resetSelectedValues() {
+    	setSelectedMinValue(getAbsoluteMinValue());
+    	setSelectedMaxValue(getAbsoluteMaxValue());
+    }
     public void setSelectedMinValue(int value) {
         this.rangeSeekBar.setSelectedMinValue(value);
         setRangeBeginText(value);

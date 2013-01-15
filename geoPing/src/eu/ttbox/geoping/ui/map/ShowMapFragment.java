@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.ui.map;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -56,490 +57,524 @@ import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
  */
 public class ShowMapFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String TAG = "ShowMapFragment";
+	private static final String TAG = "ShowMapFragment";
 
-    private static final int GEOTRACK_PERSON_LOADER = R.id.config_id_map_geotrack_person_loader;
+	private static final int GEOTRACK_PERSON_LOADER = R.id.config_id_map_geotrack_person_loader;
 
-    // Constant
-    /**
-     * This number depend of previous menu
-     */
-    private int MENU_LAST_ID = 3;
+	// Constant
+	/**
+	 * This number depend of previous menu
+	 */
+	private int MENU_LAST_ID = 3;
 
-    // Map
-    private MapController mapController;
-    private MapView mapView;
+	// Map
+	private MapController mapController;
+	private MapView mapView;
 
-    // Config
-    private boolean geocodingAuto = true;
+	// Config
+	private boolean geocodingAuto = true;
 
-    // Overlay
-    private MyLocationOverlay myLocation;
-    // private GeoTrackOverlay geoTrackOverlay;
-    private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser = new HashMap<String, GeoTrackOverlay>();
+	// Overlay
+	private MyLocationOverlay myLocation;
+	// private GeoTrackOverlay geoTrackOverlay;
+	private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser = new HashMap<String, GeoTrackOverlay>();
 
-    // View
-    private RangeTimelineView rangeTimelineBar;
-    // Listener
-    private StatusReceiver mStatusReceiver;
-    // Service
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences privateSharedPreferences;
-    private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+	// View
+	private RangeTimelineView rangeTimelineBar;
+	// Listener
+	private StatusReceiver mStatusReceiver;
+	// Service
+	private SharedPreferences sharedPreferences;
+	private SharedPreferences privateSharedPreferences;
+	private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-    // Instance value
-    private RangeTimelineValue rangeTimelineValue;
+	// Instance value
+	private RangeTimelineValue rangeTimelineValue;
 
-    
-    // Deprecated
-    private ResourceProxy mResourceProxy;
+	// Deprecated
+	private ResourceProxy mResourceProxy;
 
-    // ===========================================================
-    // Constructors
-    // ===========================================================
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.map, container, false);
+	// ===========================================================
+	// Constructors
+	// ===========================================================
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.map, container, false);
 
-        
-        // Prefs
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        privateSharedPreferences = getActivity().getSharedPreferences(MapConstants.PREFS_NAME, Context.MODE_PRIVATE);
-        // Config
-        geocodingAuto = sharedPreferences.getBoolean(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO, true);
+		// Prefs
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+		privateSharedPreferences = getActivity().getSharedPreferences(MapConstants.PREFS_NAME, Context.MODE_PRIVATE);
+		// Config
+		geocodingAuto = sharedPreferences.getBoolean(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO, true);
 
-        // Osm
-        // ----------
-        this.mResourceProxy = new DefaultResourceProxyImpl(getActivity().getApplicationContext());
-        ActivityManager activityManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-        // Maps
-        ITileSource tileSource = getPreferenceMapViewTileSource();
-        mapView = MapViewFactory.createOsmMapView(getActivity().getApplicationContext(), mResourceProxy, tileSource, activityManager);
-        ViewGroup mapViewContainer = (ViewGroup) v.findViewById(R.id.mapViewContainer);
-        mapViewContainer.addView((View) mapView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        // Map Controler
-        mapController = mapView.getController();
-        // mapController.setZoom(17); // Zoon 1 is world view
+		// Osm
+		// ----------
+		this.mResourceProxy = new DefaultResourceProxyImpl(getActivity().getApplicationContext());
+		ActivityManager activityManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+		// Maps
+		ITileSource tileSource = getPreferenceMapViewTileSource();
+		mapView = MapViewFactory.createOsmMapView(getActivity().getApplicationContext(), mResourceProxy, tileSource, activityManager);
+		ViewGroup mapViewContainer = (ViewGroup) v.findViewById(R.id.mapViewContainer);
+		mapViewContainer.addView((View) mapView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		// Map Controler
+		mapController = mapView.getController();
+		// mapController.setZoom(17); // Zoon 1 is world view
 
-        // Overlay
-        // ----------
-        this.myLocation = new MyLocationOverlay(getActivity(), this.mapView); // .getBaseContext()
-        mapView.getOverlays().add(myLocation);
-        // Service
-        mStatusReceiver = new StatusReceiver();
-        // Query
-        getActivity().getSupportLoaderManager().initLoader(GEOTRACK_PERSON_LOADER, null, geoTrackPersonLoaderCallback);
+		// Overlay
+		// ----------
+		this.myLocation = new MyLocationOverlay(getActivity(), this.mapView); // .getBaseContext()
+		mapView.getOverlays().add(myLocation);
+		// Service
+		mStatusReceiver = new StatusReceiver();
+		// Range Seek Bar
+		// ---------------
+		rangeTimelineBar = (RangeTimelineView) v.findViewById(R.id.map_timeline_bar);
+		rangeTimelineValue = new RangeTimelineValue(rangeTimelineBar.getAbsoluteMinValue(), rangeTimelineBar.getAbsoluteMaxValue());
+		rangeTimelineBar.setOnRangeTimelineChangeListener(onRangeTimelineValuesChangeListener);
 
-        // Range Seek Bar
-        // ---------------
-        rangeTimelineBar = (RangeTimelineView) v.findViewById(R.id.map_timeline_bar); 
-        rangeTimelineValue = new RangeTimelineValue(rangeTimelineBar.getAbsoluteMinValue(), rangeTimelineBar.getAbsoluteMaxValue());
-        rangeTimelineBar.setOnRangeTimelineChangeListener(onRangeTimelineValuesChangeListener);
-        return v;
-    }
-    
-    // ===========================================================
-    // Range Listener
-    // ===========================================================
+		// Query
+		getActivity().getSupportLoaderManager().initLoader(GEOTRACK_PERSON_LOADER, null, geoTrackPersonLoaderCallback);
 
-    
-    public void swichRangeTimelineBarVisibility() {
-        if (rangeTimelineBar!=null) {
-            switch (rangeTimelineBar.getVisibility()) {
-            case View.VISIBLE:
-                rangeTimelineBar.setVisibility(View.GONE);
-                break;
-            case View.GONE:
-                rangeTimelineBar.setVisibility(View.VISIBLE);
-                break;
-            default:
-                break;
-            } 
-        }
-    }
-    private OnRangeTimelineValuesChangeListener onRangeTimelineValuesChangeListener = new OnRangeTimelineValuesChangeListener() {
+		return v;
+	}
 
-        @Override
-        public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine) {
-            rangeTimelineValue.minValue = minValue;
-            rangeTimelineValue.maxValue = maxValue;
-            rangeTimelineValue.isRangeDefine = isRangeDefine;
-            for (GeoTrackOverlay geotrack : geoTrackOverlayByUser.values()) {
-                geotrack.onRangeTimelineValuesChanged(minValue,   maxValue,   isRangeDefine);
-            }
-        }
-    };
-    
-    
-    private OnRangeGeoTrackValuesChangeListener onRangeGeoTrackValuesChangeListener = new OnRangeGeoTrackValuesChangeListener() {
+	// ===========================================================
+	// Range Listener
+	// ===========================================================
 
-        private int geotrackRangeMin =  Integer.MAX_VALUE;
-        private int geotrackRangeMax = Integer.MIN_VALUE;
-        
-        public void onRangeGeoTrackValuesChangeListener(int minValue, int maxValue) {
-          if (minValue<geotrackRangeMin || maxValue>geotrackRangeMax) {
-              // Set Round Value to the close Hours  
-              geotrackRangeMin =roundToHour(minValue);
-              geotrackRangeMax = roundToHour(maxValue)+3600;
-              // Change Range in Timeline
-              rangeTimelineBar.setAbsoluteValues(geotrackRangeMin, geotrackRangeMax);
-//              rangeTimelineBar.setAbsoluteMaxValue(geotrackRangeMax); 
-          }
-        } 
-        
-        private int roundToHour(int valueInS) {
-            int hours = valueInS/3600;
-            return hours*3600;
-        }
-    };
-    // ===========================================================
-    // Life Cycle
-    // ===========================================================
+	public void swichRangeTimelineBarVisibility() {
+		if (rangeTimelineBar != null) {
+			switch (rangeTimelineBar.getVisibility()) {
+			case View.VISIBLE:
+				rangeTimelineBar.setVisibility(View.GONE);
+				rangeTimelineBar.resetSelectedValues();
+				break;
+			case View.GONE:
+				rangeTimelineBar.setVisibility(View.VISIBLE);
+				rangeTimelineBar.resetSelectedValues();
+				break;
+			default:
+				break;
+			}
+		}
+	}
 
-    @Override
-    public void onDestroy() {
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### onDestroy call ### ### ### ### ###");
-        }
-        myLocation.disableCompass();
-        myLocation.disableMyLocation();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        super.onDestroy();
-    }
+	private OnRangeTimelineValuesChangeListener onRangeTimelineValuesChangeListener = new OnRangeTimelineValuesChangeListener() {
 
-    @Override
-    public void onResume() {
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### onResume call ### ### ### ### ###");
-        }
-        super.onResume();
+		@Override
+		public void onRangeTimelineValuesChanged(int minValue, int maxValue, boolean isRangeDefine) {
+			rangeTimelineValue.minValue = minValue;
+			rangeTimelineValue.maxValue = maxValue;
+			rangeTimelineValue.isRangeDefine = isRangeDefine;
+			for (GeoTrackOverlay geotrack : geoTrackOverlayByUser.values()) {
+				geotrack.onRangeTimelineValuesChanged(minValue, maxValue, isRangeDefine);
+			}
+		}
+	};
 
-        // read preference
-        ITileSource tileSource = getPreferenceMapViewTileSource();
-        mapView.setTileSource(tileSource);
+	private GeoTrackValuesChangeListener onRangeGeoTrackValuesChangeListener = new GeoTrackValuesChangeListener();
 
-        // Zoon 1 is world view
-        mapView.getController().setZoom(privateSharedPreferences.getInt(MapConstants.PREFS_ZOOM_LEVEL, 17));
-        // Center
-        int scrollX = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X, Integer.MIN_VALUE);
-        int scrollY = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, Integer.MIN_VALUE);
-        if (Integer.MIN_VALUE != scrollX && Integer.MIN_VALUE != scrollY) {
-            // mapView.scrollTo(scrollX, scrollY);
-            // mapView.scrollTo(privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X,
-            // 0), privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y,
-            // 0));
-        }
-        // Options
-        if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, false)) {
-            this.myLocation.enableMyLocation(true);
-        }
+	private class GeoTrackValuesChangeListener implements OnRangeGeoTrackValuesChangeListener {
 
-        if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false)) {
-            this.myLocation.enableCompass(true);
-        }
+		private int geotrackRangeMin = Integer.MAX_VALUE;
+		private int geotrackRangeMax = Integer.MIN_VALUE;
 
-        // Service
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intents.ACTION_NEW_GEOTRACK_INSERTED);
-        getActivity().registerReceiver(mStatusReceiver, filter);
+		public void onRangeGeoTrackValuesChange(int minValue, int maxValue) {
+			if (minValue < geotrackRangeMin || maxValue > geotrackRangeMax) {
+				// Set Round Value to the close Hours
+				geotrackRangeMin = roundToHour(minValue);
+				geotrackRangeMax = roundToHour(maxValue) + AppConstants.ONE_HOUR_IN_S;
+				// Change Range in Timeline
+				if (rangeTimelineBar != null) {
+					rangeTimelineBar.setAbsoluteValues(geotrackRangeMin, geotrackRangeMax);
+					// rangeTimelineBar.setAbsoluteMaxValue(geotrackRangeMax);
+				}
+			}
+		}
 
-        // Overlay MyLocation
-        if (myLocation != null) {
-            myLocation.onResume();
-        }
-    }
+		private int roundToHour(int valueInS) {
+			int hours = valueInS / 3600;
+			return hours * 3600;
+		}
 
-    @Override
-    public void onPause() {
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### onPause call ### ### ### ### ###");
-        }
-        // save Preference
-        // final SharedPreferences.Editor edit = sharedPreferences.edit();
-        // edit.putString(AppConstants.PREFS__KEY_TILE_SOURCE,
-        // mapView.getTileProvider().getTileSource().name());
-        // edit.commit();
+		public void computeRangeValues(Collection<GeoTrackOverlay> geoTracks) {
+			int min = Integer.MAX_VALUE;
+			int max = Integer.MIN_VALUE;
+			boolean isSet = false;
+			if (geoTracks != null && !geoTracks.isEmpty()) {
+				isSet = true;
+				for (GeoTrackOverlay geoTrack : geoTracks) {
+					min = Math.min(min, geoTrack.getGeoTrackRangeTimeValueMin());
+					max = Math.max(max, geoTrack.getGeoTrackRangeTimeValueMax());
+				}
+				// Add
+				min = roundToHour(min);
+				max = roundToHour(max) + AppConstants.ONE_HOUR_IN_S;
+			}
+			// Define Range
+			if (isSet) {
+				geotrackRangeMin = min;
+				geotrackRangeMax = max;
+			} else {
+				geotrackRangeMin = 0;
+				geotrackRangeMax = AppConstants.ONE_DAY_IN_S;
+			}
+			if (rangeTimelineBar != null) {
+				rangeTimelineBar.setAbsoluteValues(geotrackRangeMin, geotrackRangeMax);
+			}
+		}
 
-        // Priavte Preference
-        final SharedPreferences.Editor localEdit = privateSharedPreferences.edit();
-        localEdit.putString(MapConstants.PREFS_TILE_SOURCE, mapView.getTileProvider().getTileSource().name());
-        localEdit.putInt(MapConstants.PREFS_SCROLL_X, mapView.getScrollX());
-        localEdit.putInt(MapConstants.PREFS_SCROLL_Y, mapView.getScrollY());
-        localEdit.putInt(MapConstants.PREFS_ZOOM_LEVEL, mapView.getZoomLevel());
-        localEdit.putBoolean(MapConstants.PREFS_SHOW_LOCATION, myLocation.isMyLocationEnabled());
-        localEdit.putBoolean(MapConstants.PREFS_SHOW_COMPASS, myLocation.isCompassEnabled());
-        localEdit.commit();
+	};
 
-        // Service
-        getActivity().unregisterReceiver(mStatusReceiver);
+	// ===========================================================
+	// Life Cycle
+	// ===========================================================
 
-        // Overlay May Location
-        if (myLocation != null) {
-            myLocation.onPause();
-        }
+	@Override
+	public void onDestroy() {
+		if (Log.isLoggable(TAG, Log.INFO)) {
+			Log.i(TAG, "### ### ### ### ### onDestroy call ### ### ### ### ###");
+		}
+		myLocation.disableCompass();
+		myLocation.disableMyLocation();
+		sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+		super.onDestroy();
+	}
 
-        // Overlay GeoTrack
-        // if (!geoTrackOverlayByUser.isEmpty()) {
-        // for (Map.Entry<String, GeoTrackOverlay> entry :
-        // geoTrackOverlayByUser.entrySet()) {
-        // String key = entry.getKey();
-        // GeoTrackOverlay geoTrackOverlay = entry.getValue();
-        // geoTrackOverlay.onPause();
-        // }
-        // }
+	@Override
+	public void onResume() {
+		if (Log.isLoggable(TAG, Log.INFO)) {
+			Log.i(TAG, "### ### ### ### ### onResume call ### ### ### ### ###");
+		}
+		super.onResume();
 
-        super.onPause();
-        // timer.cancel();
-    }
+		// read preference
+		ITileSource tileSource = getPreferenceMapViewTileSource();
+		mapView.setTileSource(tileSource);
 
-    // ===========================================================
-    // Map Tile
-    // ===========================================================
+		// Zoon 1 is world view
+		mapView.getController().setZoom(privateSharedPreferences.getInt(MapConstants.PREFS_ZOOM_LEVEL, 17));
+		// Center
+		int scrollX = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X, Integer.MIN_VALUE);
+		int scrollY = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, Integer.MIN_VALUE);
+		if (Integer.MIN_VALUE != scrollX && Integer.MIN_VALUE != scrollY) {
+			// mapView.scrollTo(scrollX, scrollY);
+			// mapView.scrollTo(privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X,
+			// 0), privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y,
+			// 0));
+		}
+		// Options
+		if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, false)) {
+			this.myLocation.enableMyLocation(true);
+		}
 
-    public ITileSource getMapViewTileSource() {
-        return mapView.getTileProvider().getTileSource();
-    }
+		if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false)) {
+			this.myLocation.enableCompass(true);
+		}
 
-    public void setMapViewTileSource(ITileSource tileSource) {
-        mapView.setTileSource(tileSource);
-    }
+		// Service
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intents.ACTION_NEW_GEOTRACK_INSERTED);
+		getActivity().registerReceiver(mStatusReceiver, filter);
 
-    public ArrayList<ITileSource> getMapViewTileSources() {
-        return TileSourceFactory.getTileSources();
-    }
+		// Overlay MyLocation
+		if (myLocation != null) {
+			myLocation.onResume();
+		}
+	}
 
-    public String getMapViewTileSourceName(ITileSource tileSource) {
-        return tileSource.localizedName(mResourceProxy);
-    }
+	@Override
+	public void onPause() {
+		if (Log.isLoggable(TAG, Log.INFO)) {
+			Log.i(TAG, "### ### ### ### ### onPause call ### ### ### ### ###");
+		}
+		// save Preference
+		// final SharedPreferences.Editor edit = sharedPreferences.edit();
+		// edit.putString(AppConstants.PREFS__KEY_TILE_SOURCE,
+		// mapView.getTileProvider().getTileSource().name());
+		// edit.commit();
 
-    private ITileSource getPreferenceMapViewTileSource() {
-        final String tileSourceName = privateSharedPreferences.getString(MapConstants.PREFS_TILE_SOURCE, TileSourceFactory.DEFAULT_TILE_SOURCE.name());
-        ITileSource tileSource = null;
-        try {
-            tileSource = TileSourceFactory.getTileSource(tileSourceName);
-        } catch (final IllegalArgumentException ignore) {
-        }
-        return tileSource;
-    }
+		// Priavte Preference
+		final SharedPreferences.Editor localEdit = privateSharedPreferences.edit();
+		localEdit.putString(MapConstants.PREFS_TILE_SOURCE, mapView.getTileProvider().getTileSource().name());
+		localEdit.putInt(MapConstants.PREFS_SCROLL_X, mapView.getScrollX());
+		localEdit.putInt(MapConstants.PREFS_SCROLL_Y, mapView.getScrollY());
+		localEdit.putInt(MapConstants.PREFS_ZOOM_LEVEL, mapView.getZoomLevel());
+		localEdit.putBoolean(MapConstants.PREFS_SHOW_LOCATION, myLocation.isMyLocationEnabled());
+		localEdit.putBoolean(MapConstants.PREFS_SHOW_COMPASS, myLocation.isCompassEnabled());
+		localEdit.commit();
 
-    // ===========================================================
-    // Map Action
-    // ===========================================================
+		// Service
+		getActivity().unregisterReceiver(mStatusReceiver);
 
-    public void centerOnMyPosition() {
-        mapView.getScroller().forceFinished(true);
-        myLocation.enableFollowLocation();
-        myLocation.runOnFirstFix(new Runnable() {
+		// Overlay May Location
+		if (myLocation != null) {
+			myLocation.onPause();
+		}
 
-            @Override
-            public void run() {
-                // myLocation.animateToLastFix();
-                mapController.setZoom(17);
-            }
-        });
-    }
+		// Overlay GeoTrack
+		// if (!geoTrackOverlayByUser.isEmpty()) {
+		// for (Map.Entry<String, GeoTrackOverlay> entry :
+		// geoTrackOverlayByUser.entrySet()) {
+		// String key = entry.getKey();
+		// GeoTrackOverlay geoTrackOverlay = entry.getValue();
+		// geoTrackOverlay.onPause();
+		// }
+		// }
 
-    public void centerOnPersonPhone(final String phone, final int latE6, final int lngE6) {
-        if (myLocation != null) {
-            myLocation.disableFollowLocation();
-        }
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                // Animate to
-                if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
-                    GeoPoint geoPoint = new GeoPoint(latE6, lngE6);
-                    mapController.setCenter(geoPoint);
-                    // mapController.animateTo(latE6, lngE6,
-                    // AnimationType.HALFCOSINUSALDECELERATING);
-                }
-                // Display GeoPoints for person
-                GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
-            }
-        });
-    }
+		super.onPause();
+		// timer.cancel();
+	}
 
-    // ===========================================================
-    // Select Person Dialog
-    // ===========================================================
+	// ===========================================================
+	// Map Tile
+	// ===========================================================
 
-    public void showSelectPersonDialog() {
-        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-        SelectGeoTrackDialog personListDialod = new SelectGeoTrackDialog(getActivity(), loaderManager, onSelectPersonListener, geoTrackOverlayByUser);
-        personListDialod.show();
-    }
+	public ITileSource getMapViewTileSource() {
+		return mapView.getTileProvider().getTileSource();
+	}
 
-    private OnSelectPersonListener onSelectPersonListener = new OnSelectPersonListener() {
+	public void setMapViewTileSource(ITileSource tileSource) {
+		mapView.setTileSource(tileSource);
+	}
 
-        @Override
-        public void onDoRemovePerson(Person person) {
-            geoTrackOverlayRemovePerson(person);
-        }
+	public ArrayList<ITileSource> getMapViewTileSources() {
+		return TileSourceFactory.getTileSources();
+	}
 
-        @Override
-        public void onDoAddPerson(Person person) {
-            geoTrackOverlayAddPerson(person);
-        }
+	public String getMapViewTileSourceName(ITileSource tileSource) {
+		return tileSource.localizedName(mResourceProxy);
+	}
 
-        @Override
-        public void onSelectPerson(Person person) {
-            geoTrackOverlayAnimateToLastKnowPosition(person.phone);
-        }
+	private ITileSource getPreferenceMapViewTileSource() {
+		final String tileSourceName = privateSharedPreferences.getString(MapConstants.PREFS_TILE_SOURCE, TileSourceFactory.DEFAULT_TILE_SOURCE.name());
+		ITileSource tileSource = null;
+		try {
+			tileSource = TileSourceFactory.getTileSource(tileSourceName);
+		} catch (final IllegalArgumentException ignore) {
+		}
+		return tileSource;
+	}
 
-        @Override
-        public void onNoPerson(SelectGeoTrackDialog dialog) {
-            // Open the Creation Person
-            Intent intent = Intents.activityMain(getActivity());
-            startActivity(intent);
-        }
-    };
+	// ===========================================================
+	// Map Action
+	// ===========================================================
 
-    // ===========================================================
-    // GeoTrack Overlay
-    // ===========================================================
+	public void centerOnMyPosition() {
+		mapView.getScroller().forceFinished(true);
+		myLocation.enableFollowLocation();
+		myLocation.runOnFirstFix(new Runnable() {
 
-    private GeoTrackOverlay geoTrackOverlayGetOrAddForPhone(String phone) {
-        GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(phone);
-        // Add person layer
-        if (geoTrackOverlay == null) {
-            Person person = null;
-            Cursor cursor = getActivity().getContentResolver().query(PersonProvider.Constants.CONTENT_URI, null, PersonColumns.SELECT_BY_PHONE_NUMBER, new String[] { phone }, null);
-            if (cursor.moveToFirst()) {
-                PersonHelper helper = new PersonHelper().initWrapper(cursor);
-                person = helper.getEntity(cursor);
-                cursor.close();
-            }
-            if (person != null) {
-                geoTrackOverlay = geoTrackOverlayAddPerson(person);
-            }
-        }
+			@Override
+			public void run() {
+				// myLocation.animateToLastFix();
+				mapController.setZoom(17);
+			}
+		});
+	}
 
-        return geoTrackOverlay;
-    }
+	public void centerOnPersonPhone(final String phone, final int latE6, final int lngE6) {
+		if (myLocation != null) {
+			myLocation.disableFollowLocation();
+		}
+		executor.execute(new Runnable() {
+			@Override
+			public void run() {
+				// Animate to
+				if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
+					GeoPoint geoPoint = new GeoPoint(latE6, lngE6);
+					mapController.setCenter(geoPoint);
+					// mapController.animateTo(latE6, lngE6,
+					// AnimationType.HALFCOSINUSALDECELERATING);
+				}
+				// Display GeoPoints for person
+				GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
+			}
+		});
+	}
 
+	// ===========================================================
+	// Select Person Dialog
+	// ===========================================================
 
-    private GeoTrackOverlay geoTrackOverlayAddPerson(Person person) {
-        GeoTrackOverlay geoTrackOverlay = null;
-        boolean isDone = false;
-        String userId = person.phone;
-        if (!TextUtils.isEmpty(userId) && !geoTrackOverlayByUser.containsKey(userId)) {
-            LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-            // Overlay .getBaseContext()
-            geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto);
-            geoTrackOverlay.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener);
-            geoTrackOverlayByUser.put(userId, geoTrackOverlay);
-            // register
-            isDone = mapView.getOverlays().add(geoTrackOverlay);
-            Log.i(TAG, String.format("Add New GeoTrack Overlay (%s) for %s", isDone, person));
-        } else {
-            Log.e(TAG, String.format("Could not Add person %s in geoTrackOverlayByUser (It already in List)", person));
-        }
-        if (!isDone) {
-            geoTrackOverlay = null;
-        }
-        return geoTrackOverlay;
-    }
+	public void showSelectPersonDialog() {
+		LoaderManager loaderManager = getActivity().getSupportLoaderManager();
+		SelectGeoTrackDialog personListDialod = new SelectGeoTrackDialog(getActivity(), loaderManager, onSelectPersonListener, geoTrackOverlayByUser);
+		personListDialod.show();
+	}
 
-    private boolean geoTrackOverlayRemovePerson(Person person) {
-        boolean isDone = false;
-        Log.d(TAG, String.format("Want to remove New GeoTrack Overlay for %s", person));
-        String userId = person.phone;
-        if (geoTrackOverlayByUser.containsKey(userId)) {
-            GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.remove(userId);
-            isDone = mapView.getOverlays().remove(geoTrackOverlay);
-            geoTrackOverlay.onDetach(mapView);
-            Log.i(TAG, String.format("Remove GeoTrack Overlay (%s) for %s", isDone, person));
-        } else {
-            Log.e(TAG, String.format("Could not remove person %s in geoTrackOverlayByUser", person));
-        }
-        return isDone;
-    }
+	private OnSelectPersonListener onSelectPersonListener = new OnSelectPersonListener() {
 
-    private boolean geoTrackOverlayAnimateToLastKnowPosition(String userId) {
-        boolean isDone = false;
-        if (geoTrackOverlayByUser.containsKey(userId)) {
-            GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(userId);
-            geoTrackOverlay.animateToLastKnowPosition();
-            if (myLocation != null) {
-                myLocation.disableFollowLocation();
-            }
-            isDone = true;
-        } else {
-            Log.e(TAG, String.format("Could not Animate to last position of person %s in geoTrackOverlayByUser", userId));
-            for (String key : geoTrackOverlayByUser.keySet()) {
-                Log.e(TAG, String.format("geoTrackOverlayByUser contains Key : %s", key));
-            }
-        }
-        Log.d(TAG, String.format("animateToLastKnowPosition for User : %s (is done %s)", userId, isDone));
-        return isDone;
-    }
+		@Override
+		public void onDoRemovePerson(Person person) {
+			geoTrackOverlayRemovePerson(person);
+		}
 
-    // ===========================================================
-    // Loader
-    // ===========================================================
+		@Override
+		public void onDoAddPerson(Person person) {
+			geoTrackOverlayAddPerson(person);
+		}
 
-    private final LoaderManager.LoaderCallbacks<Cursor> geoTrackPersonLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+		@Override
+		public void onSelectPerson(Person person) {
+			geoTrackOverlayAnimateToLastKnowPosition(person.phone);
+		}
 
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Log.d(TAG, "onCreateLoader");
-            String sortOrder = PersonColumns.ORDER_NAME_ASC;
-            String selection = PersonColumns.SELECT_BYPHONE_NUMBER_NOT_NULL;// null;
-            String[] selectionArgs = null;
-            // Loader
-            CursorLoader cursorLoader = new CursorLoader(getActivity(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
-            return cursorLoader;
-        }
+		@Override
+		public void onNoPerson(SelectGeoTrackDialog dialog) {
+			// Open the Creation Person
+			Intent intent = Intents.activityMain(getActivity());
+			startActivity(intent);
+		}
+	};
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            int resultCount = cursor.getCount();
-            Log.d(TAG, String.format("onLoadFinished with %s results", resultCount));
-            if (cursor.moveToFirst()) {
-                PersonHelper helper = new PersonHelper().initWrapper(cursor);
-                do {
-                    Person pers = helper.getEntity(cursor);
-                    Log.d(TAG, String.format("Add Person with phone : %s", pers));
-                    geoTrackOverlayAddPerson(pers);
-                } while (cursor.moveToNext());
-            }
-        }
+	// ===========================================================
+	// GeoTrack Overlay
+	// ===========================================================
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            // for (Map.Entry<String, GeoTrackOverlay> entry :
-            // geoTrackOverlayByUser.entrySet()) {
-            // String key = entry.getKey();
-            // removeGeoTrackOverlay(key);
-            // }
-        }
+	private GeoTrackOverlay geoTrackOverlayGetOrAddForPhone(String phone) {
+		GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(phone);
+		// Add person layer
+		if (geoTrackOverlay == null) {
+			Person person = null;
+			Cursor cursor = getActivity().getContentResolver().query(PersonProvider.Constants.CONTENT_URI, null, PersonColumns.SELECT_BY_PHONE_NUMBER, new String[] { phone }, null);
+			if (cursor.moveToFirst()) {
+				PersonHelper helper = new PersonHelper().initWrapper(cursor);
+				person = helper.getEntity(cursor);
+				cursor.close();
+			}
+			if (person != null) {
+				geoTrackOverlay = geoTrackOverlayAddPerson(person);
+			}
+		}
 
-    };
+		return geoTrackOverlay;
+	}
 
-    // ===========================================================
-    // Listeners
-    // ===========================================================
+	private GeoTrackOverlay geoTrackOverlayAddPerson(Person person) {
+		GeoTrackOverlay geoTrackOverlay = null;
+		boolean isDone = false;
+		String userId = person.phone;
+		if (!TextUtils.isEmpty(userId) && !geoTrackOverlayByUser.containsKey(userId)) {
+			LoaderManager loaderManager = getActivity().getSupportLoaderManager();
+			// Overlay .getBaseContext()
+			geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto);
+			geoTrackOverlay.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener);
+			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
+			onRangeGeoTrackValuesChangeListener.onRangeGeoTrackValuesChange(geoTrackOverlay.getGeoTrackRangeTimeValueMin(), geoTrackOverlay.getGeoTrackRangeTimeValueMax());
+			// register
+			isDone = mapView.getOverlays().add(geoTrackOverlay);
+			Log.i(TAG, String.format("Add New GeoTrack Overlay (%s) for %s", isDone, person));
+		} else {
+			Log.e(TAG, String.format("Could not Add person %s in geoTrackOverlayByUser (It already in List)", person));
+		}
+		if (!isDone) {
+			geoTrackOverlay = null;
+		}
+		return geoTrackOverlay;
+	}
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO)) {
-            geocodingAuto = sharedPreferences.getBoolean(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO, true);
-        }
-    }
+	private boolean geoTrackOverlayRemovePerson(Person person) {
+		boolean isDone = false;
+		Log.d(TAG, String.format("Want to remove New GeoTrack Overlay for %s", person));
+		String userId = person.phone;
+		if (geoTrackOverlayByUser.containsKey(userId)) {
+			GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.remove(userId);
+			isDone = mapView.getOverlays().remove(geoTrackOverlay);
+			geoTrackOverlay.onDetach(mapView);
+			onRangeGeoTrackValuesChangeListener.computeRangeValues(geoTrackOverlayByUser.values());
+			Log.i(TAG, String.format("Remove GeoTrack Overlay (%s) for %s", isDone, person));
+		} else {
+			Log.e(TAG, String.format("Could not remove person %s in geoTrackOverlayByUser", person));
+		}
+		return isDone;
+	}
 
-    private class StatusReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Log.e(TAG, "########################################");
-            Log.e(TAG, "ShwoMap StatusReceiver onReceive  action : " + action);
-            if (Intents.ACTION_NEW_GEOTRACK_INSERTED.equals(action)) {
-            }
-        }
-    };
-    // ===========================================================
-    // Others
-    // ===========================================================
+	private boolean geoTrackOverlayAnimateToLastKnowPosition(String userId) {
+		boolean isDone = false;
+		if (geoTrackOverlayByUser.containsKey(userId)) {
+			GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(userId);
+			geoTrackOverlay.animateToLastKnowPosition();
+			if (myLocation != null) {
+				myLocation.disableFollowLocation();
+			}
+			isDone = true;
+		} else {
+			Log.e(TAG, String.format("Could not Animate to last position of person %s in geoTrackOverlayByUser", userId));
+			for (String key : geoTrackOverlayByUser.keySet()) {
+				Log.e(TAG, String.format("geoTrackOverlayByUser contains Key : %s", key));
+			}
+		}
+		Log.d(TAG, String.format("animateToLastKnowPosition for User : %s (is done %s)", userId, isDone));
+		return isDone;
+	}
+
+	// ===========================================================
+	// Loader
+	// ===========================================================
+
+	private final LoaderManager.LoaderCallbacks<Cursor> geoTrackPersonLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+
+		@Override
+		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			Log.d(TAG, "onCreateLoader");
+			String sortOrder = PersonColumns.ORDER_NAME_ASC;
+			String selection = PersonColumns.SELECT_BYPHONE_NUMBER_NOT_NULL;// null;
+			String[] selectionArgs = null;
+			// Loader
+			CursorLoader cursorLoader = new CursorLoader(getActivity(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+			return cursorLoader;
+		}
+
+		@Override
+		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+			int resultCount = cursor.getCount();
+			Log.d(TAG, String.format("onLoadFinished with %s results", resultCount));
+			if (cursor.moveToFirst()) {
+				PersonHelper helper = new PersonHelper().initWrapper(cursor);
+				do {
+					Person pers = helper.getEntity(cursor);
+					Log.d(TAG, String.format("Add Person with phone : %s", pers));
+					geoTrackOverlayAddPerson(pers);
+				} while (cursor.moveToNext());
+			}
+		}
+
+		@Override
+		public void onLoaderReset(Loader<Cursor> loader) {
+			// for (Map.Entry<String, GeoTrackOverlay> entry :
+			// geoTrackOverlayByUser.entrySet()) {
+			// String key = entry.getKey();
+			// removeGeoTrackOverlay(key);
+			// }
+		}
+
+	};
+
+	// ===========================================================
+	// Listeners
+	// ===========================================================
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if (key.equals(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO)) {
+			geocodingAuto = sharedPreferences.getBoolean(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO, true);
+		}
+	}
+
+	private class StatusReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			Log.e(TAG, "########################################");
+			Log.e(TAG, "ShwoMap StatusReceiver onReceive  action : " + action);
+			if (Intents.ACTION_NEW_GEOTRACK_INSERTED.equals(action)) {
+			}
+		}
+	};
+	// ===========================================================
+	// Others
+	// ===========================================================
 
 }
