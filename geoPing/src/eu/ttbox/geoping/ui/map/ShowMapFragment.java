@@ -361,6 +361,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 	// Map Action
 	// ===========================================================
 
+	public void swichDisplayMyPosition() {
+		myLocation.enableMyLocation(!myLocation.isMyLocationEnabled());
+	}
 	public void centerOnMyPosition() {
 		mapView.getScroller().forceFinished(true);
 		myLocation.enableFollowLocation();
@@ -457,17 +460,12 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		boolean isDone = false;
 		String userId = person.phone;
 		if (!TextUtils.isEmpty(userId) && !geoTrackOverlayByUser.containsKey(userId)) {
-			boolean isEmpty = geoTrackOverlayByUser.isEmpty();
 			LoaderManager loaderManager = getActivity().getSupportLoaderManager();
 			// Overlay .getBaseContext()
 			geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto);
 			geoTrackOverlay.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener);
 			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
-			if (isEmpty) {
-				onRangeGeoTrackValuesChangeListener.computeRangeValues(geoTrackOverlayByUser.values());
-			} else {
-				onRangeGeoTrackValuesChangeListener.onRangeGeoTrackValuesChange(geoTrackOverlay.getGeoTrackRangeTimeValueMin(), geoTrackOverlay.getGeoTrackRangeTimeValueMax());
-			}
+			onRangeGeoTrackValuesChangeListener.computeRangeValues(geoTrackOverlayByUser.values());
 			// register
 			isDone = mapView.getOverlays().add(geoTrackOverlay);
 			Log.i(TAG, String.format("Add New GeoTrack Overlay (%s) for %s", isDone, person));

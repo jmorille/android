@@ -123,7 +123,7 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 			return true;
  		}
 		case R.id.menuMap_mypositon_hide: {
-//			TODO mapFragment.showSelectPersonDialog();
+			 mapFragment.swichDisplayMyPosition();
 			return true;
 		}
 		case R.id.menuMap_track_person: {
