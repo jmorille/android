@@ -117,7 +117,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
 	// Selected Range Values
 	private boolean seletedRangeActivated = false;
-	private long seletedRangeBeginTimeInMs = 0;
+	private long seletedRangeBeginTimeInMs = Long.MIN_VALUE;
 	private long seletedRangeEndTimeInMs = Long.MAX_VALUE;
 
 	// ===========================================================
@@ -329,6 +329,11 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	// ===========================================================
 
 	public void setOnRangeGeoTrackValuesChangeListener(OnRangeGeoTrackValuesChangeListener onRangeGeoTrackValuesChangeListener) {
+		if (onRangeGeoTrackValuesChangeListener == null) {
+			seletedRangeActivated = false;
+			seletedRangeBeginTimeInMs = Long.MIN_VALUE;
+			seletedRangeEndTimeInMs = Long.MAX_VALUE;
+		}
 		this.onRangeGeoTrackValuesChangeListener = onRangeGeoTrackValuesChangeListener;
 	}
 
