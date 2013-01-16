@@ -33,6 +33,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -143,14 +145,25 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 	// Range Listener
 	// ===========================================================
 
+	/**
+	 * http://android.cyrilmottier.com/?p=98 
+	 * http://stackoverflow.com/questions/3654492/android-can-height-of-slidingdrawer-be-set-with-wrap-content
+	 */
 	public void swichRangeTimelineBarVisibility() {
 		if (rangeTimelineBar != null) {
 			Log.d(TAG, "swichRangeTimelineBarVisibility : " + rangeTimelineBar.getVisibility());
 			switch (rangeTimelineBar.getVisibility()) {
 			case View.VISIBLE:
-				rangeTimelineBar.setVisibility(View.GONE);
+				 Animation animationOut = AnimationUtils.loadAnimation(this.getActivity(), R.anim.slide_out_up);
+				 rangeTimelineBar.clearAnimation(); 
+				 rangeTimelineBar.startAnimation(animationOut);
+				rangeTimelineBar.setVisibility(View.INVISIBLE);
 				break;
+			case View.INVISIBLE:
 			case View.GONE:
+				 Animation animation = AnimationUtils.loadAnimation(this.getActivity(), R.anim.slide_in_up);
+				 rangeTimelineBar.clearAnimation(); 
+				 rangeTimelineBar.startAnimation(animation);
 				rangeTimelineBar.setVisibility(View.VISIBLE);
 				break;
 			default:

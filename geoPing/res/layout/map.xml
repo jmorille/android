@@ -19,6 +19,7 @@
             android:id="@+id/map_timeline_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             layout="@layout/map_timeline_range_seekbar" />
     </FrameLayout>
 
