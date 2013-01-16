@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menuMap"
-        android:icon="@android:drawable/ic_dialog_map"
+        android:icon="@drawable/ic_location_web_site"
         android:showAsAction="ifRoom"
         android:title="@string/menu_map"/>
     <item

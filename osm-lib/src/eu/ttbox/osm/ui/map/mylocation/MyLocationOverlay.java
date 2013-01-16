@@ -98,7 +98,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 	protected boolean mFollow = true; // follow location updates
 	protected boolean mDrawAccuracyEnabled = true;
 	protected boolean mDrawCompassEnabled = false;
-
+	protected boolean mDrawMyLocationEnabled = true;
 
 	// Compass Config
 	private final int mCompassCenterX = 35;
@@ -425,6 +425,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 	// @Override
 	public boolean enableMyLocation() {
 		boolean result = true;
+		this.mDrawMyLocationEnabled = true;
 		result = mLocationListener.startListening(this);
 
 		// set initial location when enabled
@@ -445,6 +446,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 	// @Override
 	public void disableMyLocation() {
 		mLocationListener.stopListening();
+		this.mDrawMyLocationEnabled = false;
 	}
 
 	// ===========================================================
@@ -565,7 +567,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 			return;
 		}
 		Location location = mLocationListener.getLastFix();
-		if (location != null) {
+		if (mDrawMyLocationEnabled && location != null) {
 			drawMyLocation(canvas, mapView, location, mLocationListener.getLastFixAsGeoPoint());
 		}
 		//
