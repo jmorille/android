@@ -10,7 +10,7 @@
         android:id="@+id/menuMap_track_person"
         android:icon="@drawable/ic_action_user"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_person"/>    
+        android:title="@string/menu_person"/>
     <item
         android:id="@+id/menuMap_mapmode"
         android:icon="@android:drawable/ic_menu_mapmode"
@@ -19,19 +19,15 @@
         <menu>
         </menu>
     </item>
- 
-    <!-- TODO Choose icon -->
-    <item
-        android:id="@+id/menuMap_mypositon_hide"
-        android:icon="@drawable/ic_action_user"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_map_mypositon_hide"/>    
-    
-    <!-- TODO Choose icon -->
     <item
         android:id="@+id/menuMap_track_timeline"
-        android:icon="@drawable/ic_action_user"
+        android:icon="@drawable/ic_device_access_time"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_map_track_timeline"/>    
+        android:title="@string/menu_map_track_timeline"/>
+    <item
+        android:id="@+id/menuMap_mypositon_hide"
+        android:icon="@drawable/ic_device_access_location_off"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_map_mypositon_hide"/>
 
 </menu>
