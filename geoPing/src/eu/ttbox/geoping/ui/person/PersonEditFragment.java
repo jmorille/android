@@ -34,6 +34,7 @@ import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
+import eu.ttbox.geoping.ui.person.PersonListAdapter.PhotoLoaderAsyncTask;
 import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 
 public class PersonEditFragment extends Fragment implements ColorPickerDialog.OnColorChangedListener {
@@ -511,6 +512,11 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		if (photo != null) {
 			photoImageView.setValues(photo, false);
 		} else if (isContactId) {
+		    // Cancel previous Async
+		    final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask)photoImageView.getTag();
+	        if (oldTask != null) {
+	            oldTask.cancel(false);
+	        }
 			// Load photos
 			PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(photoImageView);
 			photoImageView.setTag(newTask);
@@ -524,8 +530,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		// Toast.LENGTH_SHORT).show();
 		// }
 		//
-		// });
-
+		// }); 
 	}
 
 	public class PhotoLoaderAsyncTask extends AsyncTask<String, Void, Bitmap> {

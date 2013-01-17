@@ -5,8 +5,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
@@ -26,6 +28,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -35,6 +38,10 @@ import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
+import eu.ttbox.geoping.service.core.ContactHelper;
+import eu.ttbox.geoping.ui.person.PhotoEditorView;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
+import eu.ttbox.geoping.ui.person.PersonEditFragment.PhotoLoaderAsyncTask;
 
 public class PairingEditFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -68,8 +75,14 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
     private RadioButton authorizeTypeNeverRadioButton;
     private RadioButton authorizeTypeAlwaysRadioButton;
  
+    // Image
+    private PhotoEditorView photoImageView;
     
     private Button selectContactClickButton;
+    
+    // Cache
+    private PhotoThumbmailCache photoCache;
+    
     // Instance
     // private String entityId;
     private Uri entityUri;
@@ -82,6 +95,9 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "****************** onCreateView");
         View v = inflater.inflate(R.layout.pairing_edit, container, false);
+        // Cache
+        photoCache = ((GeoPingApplication) getActivity().getApplicationContext()).getPhotoThumbmailCache();
+
      // Prefs
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -90,6 +106,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
         showNotifDefault = sharedPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, DEFAULT_PREFS_SHOW_GEOPING_NOTIFICATION);
 
         // binding
+        photoImageView = (PhotoEditorView) v.findViewById(R.id.pairing_photo_imageView);
         nameEditText = (EditText) v.findViewById(R.id.pairing_name);
         phoneEditText = (EditText) v.findViewById(R.id.pairing_phone);
         showNotificationCheckBox = (CheckBox) v.findViewById(R.id.paring_show_notification);
@@ -392,6 +409,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
     private void setPairing(String name, String phone) {
         nameEditText.setText(name);
         phoneEditText.setText(phone);
+        loadPhoto(null, phone);
     }
 
     // ===========================================================
@@ -434,8 +452,11 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
             if (cursor.moveToFirst()) {
                 // Data
                 PairingHelper helper = new PairingHelper().initWrapper(cursor);
-                helper.setTextPairingName(nameEditText, cursor)//
-                        .setTextPairingPhone(phoneEditText, cursor)//
+                // Data
+                String pairingPhone = helper.getPairingPhone(cursor);
+                // Binding
+                phoneEditText.setText(pairingPhone);
+                helper.setTextPairingName(nameEditText, cursor)// 
                         .setCheckBoxPairingShowNotif(showNotificationCheckBox, cursor);
                 // Pairing
                 PairingAuthorizeTypeEnum authType = helper.getPairingAuthorizeTypeEnum(cursor);
@@ -457,6 +478,8 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
                 if (PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST.equals(authType)) {
                     showNotificationCheckBox.setVisibility(View.GONE);
                 }
+             // Photo
+                loadPhoto(null, pairingPhone);
             }
         }
 
@@ -466,5 +489,95 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
         }
 
     };
+
+
+    // ===========================================================
+    // Photo Loader
+    // ===========================================================
+
+    /**
+     * Pour plus de details sur l'intégration dans les contacts consulter
+     * <ul>
+     * <li>item_photo_editor.xml</li>
+     * <li>com.android.contacts.editor.PhotoEditorView</li>
+     * <li>com.android.contacts.detail.PhotoSelectionHandler</li>
+     * <li>com.android.contacts.editor.ContactEditorFragment.PhotoHandler</li>
+     * </ul>
+     * 
+     * @param contactId
+     */
+    private void loadPhoto(String contactId, final String phone) {
+        Bitmap photo = null;
+        boolean isContactId = !TextUtils.isEmpty(contactId);
+        boolean isContactPhone = !TextUtils.isEmpty(phone);
+        // Search in cache
+        if (photo == null && isContactId) {
+            photo = photoCache.get(contactId);
+        }
+        if (photo == null && isContactPhone) {
+            photo = photoCache.get(phone);
+        }
+        // Set Photo
+        if (photo != null) {
+            photoImageView.setValues(photo, false);
+        } else if (isContactId) {
+            // Cancel previous Async
+            final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask)photoImageView.getTag();
+            if (oldTask != null) {
+                oldTask.cancel(false);
+            }
+            // Load photos
+            PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(photoImageView);
+            photoImageView.setTag(newTask);
+            newTask.execute(contactId, phone);
+        }
+        // photoImageView.setEditorListener(new EditorListener() {
+        //
+        // @Override
+        // public void onRequest(int request) {
+        // Toast.makeText(getActivity(), "Click to phone " + phone,
+        // Toast.LENGTH_SHORT).show();
+        // }
+        //
+        // }); 
+    }
+
+    public class PhotoLoaderAsyncTask extends AsyncTask<String, Void, Bitmap> {
+
+        final PhotoEditorView holder;
+
+        public PhotoLoaderAsyncTask(PhotoEditorView holder) {
+            super();
+            this.holder = holder;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            holder.setTag(this);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            String contactIdSearch = params[0];
+            String phoneSearch = null;
+            if (params.length > 1) {
+                phoneSearch = params[1];
+            }
+            Bitmap result =ContactHelper.openPhotoBitmap(getActivity(), photoCache, contactIdSearch, phoneSearch);
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            if (holder.getTag() == this) {
+                holder.setValues(result, true);
+                holder.setTag(null);
+            }
+        }
+    }
+
+    // ===========================================================
+    // Others
+    // ===========================================================
 
 }

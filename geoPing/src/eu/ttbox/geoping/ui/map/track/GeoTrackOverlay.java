@@ -374,12 +374,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	}
 
 	public int getGeoTrackRangeTimeValueMin() {
-		int newRangeMin = (int) ((geoTrackRangeTimeValueMin - timeBeginInMs) / 1000);
+		int newRangeMin = geoTrackRangeTimeValueMin ==  Long.MAX_VALUE ?  Integer.MAX_VALUE :  (int) ((geoTrackRangeTimeValueMin - timeBeginInMs) / 1000);
 		return newRangeMin;
 	}
 
 	public int getGeoTrackRangeTimeValueMax() {
-		int newRangeMax = (int) ((geoTrackRangeTimeValueMax - timeBeginInMs) / 1000);
+		int newRangeMax = geoTrackRangeTimeValueMax ==  Long.MIN_VALUE ?  Integer.MIN_VALUE :   (int) ((geoTrackRangeTimeValueMax - timeBeginInMs) / 1000);
 		return newRangeMax;
 	}
 

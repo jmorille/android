@@ -20,12 +20,24 @@
             android:hint="@string/pairing_name"
             android:inputType="textPersonName" />
 
+         <include
+            android:id="@+id/pairing_photo_imageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="26dp"
+            layout="@layout/item_photo_editor"
+            android:maxHeight="80dp"
+            android:maxWidth="80dp" />
+        
+         
         <EditText
             android:id="@+id/pairing_phone"
             style="@style/entity_edit"
             android:layout_width="fill_parent"
             android:layout_below="@id/pairing_name"
             android:hint="@string/pairing_phone"
+              android:layout_toLeftOf="@id/pairing_photo_imageView"
             android:inputType="phone" />
 
         <TextView
