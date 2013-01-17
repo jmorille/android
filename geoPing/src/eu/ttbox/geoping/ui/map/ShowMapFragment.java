@@ -438,6 +438,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 	}
 
 	public void centerOnMyPosition() {
+		if (!myLocation.isMyLocationEnabled()) {
+			myLocation.enableMyLocation(true);
+		}
 		mapView.getScroller().forceFinished(true);
 		myLocation.enableFollowLocation();
 		myLocation.runOnFirstFix(new Runnable() {
