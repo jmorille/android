@@ -11,6 +11,8 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
@@ -34,7 +36,14 @@ import eu.ttbox.geoping.R;
  *            Float, Short, Byte or BigDecimal.
  */
 public class RangeSeekBar extends ImageView {
-	private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+	public static final String TAG = "RangeSeekBar";
+
+	// private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private final Paint paintLineUnselect;
+	private final Paint paintLineSelect;
+	private final RectF rectLine = new RectF();
+
 	private final Bitmap thumbImage = BitmapFactory.decodeResource(getResources(), R.drawable.seek_thumb_normal);
 	private final Bitmap thumbPressedImage = BitmapFactory.decodeResource(getResources(), R.drawable.seek_thumb_pressed);
 	private final float thumbWidth = thumbImage.getWidth();
@@ -51,6 +60,7 @@ public class RangeSeekBar extends ImageView {
 	private boolean notifyWhileDragging = false;
 	private OnRangeSeekBarChangeListener listener;
 
+	private GestureDetector gestures;
 	/**
 	 * Default color of a {@link RangeSeekBar}, #FF33B5E5. This is also known as
 	 * "Ice Cream Sandwich" blue.
@@ -109,11 +119,20 @@ public class RangeSeekBar extends ImageView {
 	 */
 	public RangeSeekBar(int absoluteMinValue, int absoluteMaxValue, Context context) throws IllegalArgumentException {
 		super(context);
+		gestures = new GestureDetector(context, new GestureListener());
+		// Init value
 		this.absoluteMinValue = absoluteMinValue;
 		this.absoluteMaxValue = absoluteMaxValue;
 		absoluteMinValuePrim = absoluteMinValue;
 		absoluteMaxValuePrim = absoluteMaxValue;
 
+		// Init Paint
+		paintLineUnselect = new Paint(Paint.ANTI_ALIAS_FLAG);
+		paintLineUnselect.setStyle(Style.FILL);
+		paintLineUnselect.setColor(Color.GRAY);
+		paintLineUnselect.setAntiAlias(true);
+		paintLineSelect = new Paint(paintLineUnselect);
+		paintLineSelect.setColor(DEFAULT_COLOR);
 		// make RangeSeekBar focusable. This solves focus handling issues in
 		// case EditText widgets are being used along with the RangeSeekBar
 		// within ScollViews.
@@ -124,6 +143,11 @@ public class RangeSeekBar extends ImageView {
 
 	private final void init() {
 		mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+		// Set Rect Line
+//		rectLine.left = padding;
+//		rectLine.top = 0.5f * (getHeight() - lineHeight);
+//		rectLine.right = getWidth() - padding;
+//		rectLine.bottom = 0.5f * (getHeight() + lineHeight);
 	}
 
 	// ===========================================================
@@ -247,6 +271,61 @@ public class RangeSeekBar extends ImageView {
 		this.listener = listener;
 	}
 
+	private class GestureListener implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+
+		public GestureListener() {
+			super();
+		}
+
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			return false;
+		}
+
+		@Override
+		public boolean onDoubleTap(MotionEvent e) {
+			Log.i(TAG, "onDoubleTap");
+			return false;
+		}
+
+		@Override
+		public boolean onDoubleTapEvent(MotionEvent e) {
+			Log.i(TAG, "onDoubleTapEvent");
+			return false;
+		}
+
+		@Override
+		public boolean onDown(MotionEvent e) {
+			return false;
+		}
+
+		@Override
+		public void onShowPress(MotionEvent e) {
+
+		}
+
+		@Override
+		public boolean onSingleTapUp(MotionEvent e) {
+			return false;
+		}
+
+		@Override
+		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+			return false;
+		}
+
+		@Override
+		public void onLongPress(MotionEvent e) {
+
+		}
+
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+			return false;
+		}
+
+	}
+
 	/**
 	 * Handles thumb selection and movement. Notifies listener callback on
 	 * certain events.
@@ -256,7 +335,9 @@ public class RangeSeekBar extends ImageView {
 
 		if (!isEnabled())
 			return false;
-
+		// Gesture detector
+		gestures.onTouchEvent(event);
+		// Manuel manage
 		int pointerIndex;
 
 		final int action = event.getAction();
@@ -343,6 +424,7 @@ public class RangeSeekBar extends ImageView {
 			}
 			invalidate(); // see above explanation
 			break;
+
 		}
 		return true;
 	}
@@ -411,6 +493,11 @@ public class RangeSeekBar extends ImageView {
 			height = Math.min(height, MeasureSpec.getSize(heightMeasureSpec));
 		}
 		setMeasuredDimension(width, height);
+		// Set Rect Line
+		rectLine.left = padding;
+		rectLine.top = 0.5f * (getHeight() - lineHeight);
+		rectLine.right = getWidth() - padding;
+		rectLine.bottom = 0.5f * (getHeight() + lineHeight);
 	}
 
 	/**
@@ -421,19 +508,27 @@ public class RangeSeekBar extends ImageView {
 		super.onDraw(canvas);
 
 		// draw seek bar background line
-		final RectF rect = new RectF(padding, 0.5f * (getHeight() - lineHeight), getWidth() - padding, 0.5f * (getHeight() + lineHeight));
-		paint.setStyle(Style.FILL);
-		paint.setColor(Color.GRAY);
-		paint.setAntiAlias(true);
-		canvas.drawRect(rect, paint);
+		// final RectF rectLine = new RectF(padding, 0.5f * (getHeight() -
+		// lineHeight), getWidth() - padding, 0.5f * (getHeight() +
+		// lineHeight));
+
+		 rectLine.left = padding;
+		 rectLine.top = 0.5f * (getHeight() - lineHeight);
+		 rectLine.right = getWidth() - padding;
+		 rectLine.bottom = 0.5f * (getHeight() + lineHeight);
+
+//		paintLineUnselect.setStyle(Style.FILL);
+//		paintLineUnselect.setColor(Color.GRAY);
+//		paintLineUnselect.setAntiAlias(true);
+		canvas.drawRect(rectLine, paintLineUnselect);
 
 		// draw seek bar active range line
-		rect.left = normalizedToScreen(normalizedMinValue);
-		rect.right = normalizedToScreen(normalizedMaxValue);
+		rectLine.left = normalizedToScreen(normalizedMinValue);
+		rectLine.right = normalizedToScreen(normalizedMaxValue);
 
 		// orange color
-		paint.setColor(DEFAULT_COLOR);
-		canvas.drawRect(rect, paint);
+//		paintLineSelect.setColor(DEFAULT_COLOR);
+		canvas.drawRect(rectLine, paintLineSelect);
 
 		// draw minimum thumb
 		drawThumb(normalizedToScreen(normalizedMinValue), Thumb.MIN.equals(pressedThumb), canvas);
@@ -481,7 +576,7 @@ public class RangeSeekBar extends ImageView {
 	 *            The canvas to draw upon.
 	 */
 	private void drawThumb(float screenCoord, boolean pressed, Canvas canvas) {
-		canvas.drawBitmap(pressed ? thumbPressedImage : thumbImage, screenCoord - thumbHalfWidth, (float) ((0.5f * getHeight()) - thumbHalfHeight), paint);
+		canvas.drawBitmap(pressed ? thumbPressedImage : thumbImage, screenCoord - thumbHalfWidth, (float) ((0.5f * getHeight()) - thumbHalfHeight), paintLineSelect);
 	}
 
 	/**

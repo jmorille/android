@@ -369,6 +369,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		if (onRangeGeoTrackValuesChangeListener != null) {
 			int newRangeMin = getGeoTrackRangeTimeValueMin();
 			int newRangeMax = getGeoTrackRangeTimeValueMax();
+			Log.w(TAG, "notifyChangeOnRangeGeoTrackValuesChangeListener : "  +newRangeMin + " to " + newRangeMax );
 			onRangeGeoTrackValuesChangeListener.onRangeGeoTrackValuesChange(newRangeMin, newRangeMax);
 		}
 	}
@@ -396,7 +397,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
 		int idx = 0;
 		int geoTrackSize = geoTracks.size();
-
+		boolean isFirstDraw = false;
 		for (GeoTrack geoTrack : geoTracks) {
 			idx++;
 			// Log.d(TAG, "User selected new date range: MIN=" + (geoTrack.time
@@ -408,7 +409,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 				p.toMapPixels(geoPoint, myScreenCoords);
 				// Line Path
 				boolean isLast = geoTrackSize == idx;
-				if (idx > 1) {
+				if (isFirstDraw) {
 					canvas.drawLine(lastScreenCoords.x, lastScreenCoords.y, myScreenCoords.x, myScreenCoords.y, mPaint);
 				}
 				// Point
@@ -420,6 +421,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 				// End Loop
 				lastScreenCoords.x = myScreenCoords.x;
 				lastScreenCoords.y = myScreenCoords.y;
+				isFirstDraw = true;
 			}
 		}
 

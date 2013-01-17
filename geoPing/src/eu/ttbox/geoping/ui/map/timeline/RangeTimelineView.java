@@ -3,6 +3,7 @@ package eu.ttbox.geoping.ui.map.timeline;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +22,9 @@ public class RangeTimelineView extends RelativeLayout {
 
     private OnRangeTimelineValuesChangeListener onRangeTimelineChangeListener;
 
+    public int rangeTimelineMin = 0;
+    public int rangeTimelineMax = AppConstants.ONE_DAY_IN_S;
+    
     // ===========================================================
     // Constructor
     // ===========================================================
@@ -54,6 +58,14 @@ public class RangeTimelineView extends RelativeLayout {
         // Define range Text
         setRangeBeginText(rangeSeekBar.getSelectedMinValue());
         setRangeEndText(rangeSeekBar.getSelectedMaxValue());
+        this.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				setAbsoluteValues(rangeSeekBar.getSelectedMinValue(), rangeSeekBar.getSelectedMaxValue());
+				return true;
+			}
+		});
     }
 
     // ===========================================================
@@ -119,11 +131,11 @@ public class RangeTimelineView extends RelativeLayout {
     // ===========================================================
 
     public void setAbsoluteValues(int absoluteMinValue, int absoluteMaxValue) {
-       if (  absoluteMinValue > absoluteMinValue) {
-           // Unset Value
-           Log.w(TAG, "Ignore setAbsoluteValues for min > max : "+  absoluteMinValue + " > " + absoluteMaxValue);
-           return;
-       }
+//       if (  absoluteMinValue > absoluteMinValue) {
+//           // Unset Value
+//           Log.w(TAG, "Ignore setAbsoluteValues for min > max : "+  absoluteMinValue + " > " + absoluteMaxValue);
+//           return;
+//       }
     	Log.w(TAG, "setAbsoluteValues " + getTimeFromMs(absoluteMinValue) + " to " +    getTimeFromMs(absoluteMaxValue) );
         Log.w(TAG, "setAbsoluteValues " +  absoluteMinValue  + " to " +     absoluteMaxValue  );
         int currentSelectMinVal = rangeSeekBar.getSelectedMinValue();
@@ -150,6 +162,7 @@ public class RangeTimelineView extends RelativeLayout {
     }
     
     public void resetSelectedValues() {
+    	setAbsoluteValues(rangeTimelineMin, rangeTimelineMax);
     	setSelectedMinValue(getAbsoluteMinValue());
     	setSelectedMaxValue(getAbsoluteMaxValue());
     	notifyOnRangeTimelineChangeListener(getAbsoluteMinValue(), getAbsoluteMaxValue());
@@ -185,5 +198,13 @@ public class RangeTimelineView extends RelativeLayout {
         return rangeSeekBar.getAbsoluteMaxValue();
     }
 
+	public int getRangeTimelineMin() {
+		return rangeTimelineMin;
+	}
+ 
+	public int getRangeTimelineMax() {
+		return rangeTimelineMax;
+	}
+ 
 
 }

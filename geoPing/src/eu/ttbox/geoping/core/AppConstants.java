@@ -6,7 +6,7 @@ public class AppConstants {
 
     public static final double E6 = 1000000d;
     public static final int ONE_HOUR_IN_S= 3600 ;
-    public static final int ONE_DAY_IN_S= 3600*24 ;
+    public static final int ONE_DAY_IN_S= ONE_HOUR_IN_S*24 ;
     // Constant
     public static final long UNSET_TIME = -1l;
     public static final long UNSET_ID = -1l;
