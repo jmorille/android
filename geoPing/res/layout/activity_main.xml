@@ -3,7 +3,17 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    
+    <include
+        android:id="@+id/admob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" 
+        layout="@layout/admob"
+       />
+    
     <LinearLayout
+        android:layout_above="@id/admob"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -31,12 +41,14 @@
         </android.support.v4.view.ViewPager>
     </LinearLayout>
 
-    <fragment
-        android:id="@+id/fragment_admob"
-        android:name="eu.ttbox.geoping.ui.admob.AdmobFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true" />
+    
+    
+    <!-- <fragment -->
+    <!-- android:id="@+id/fragment_admob" -->
+    <!-- android:name="eu.ttbox.geoping.ui.admob.AdmobFragment" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_alignParentBottom="true" -->
+    <!-- android:layout_centerInParent="true" /> -->
 
 </RelativeLayout>
