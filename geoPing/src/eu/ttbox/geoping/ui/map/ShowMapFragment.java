@@ -172,7 +172,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			default:
 				break;
 			}
-		
+
 		}
 	}
 
@@ -197,11 +197,13 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		private int geotrackRangeMax = Integer.MIN_VALUE;
 
 		public void onRangeGeoTrackValuesChange(int minValue, int maxValue) {
-			 onRangeGeoTrackValuesChange(minValue, maxValue, true);
+			onRangeGeoTrackValuesChange(minValue, maxValue, true);
 		}
-		public void computeRangeValues( ) {
-			 computeRangeValues(geoTrackOverlayByUser.values());
+
+		public void computeRangeValues() {
+			computeRangeValues(geoTrackOverlayByUser.values());
 		}
+
 		public boolean onRangeGeoTrackValuesChange(int minValue, int maxValue, boolean notify) {
 			Log.d(TAG, "onRangeGeoTrackValuesChange  event values :  " + minValue + " to " + maxValue);
 			Log.d(TAG, "onRangeGeoTrackValuesChange current range : " + geotrackRangeMin + " to " + geotrackRangeMax);
@@ -228,13 +230,13 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 				isRangeUpdate = true;
 			}
 			// Max Range
-			if (geotrackRangeMax == rangeTimelineBar.getRangeTimelineMax()) { 
+			if (geotrackRangeMax == rangeTimelineBar.getRangeTimelineMax()) {
 				geotrackRangeMax = Math.min(roundToHour(maxValue, true), rangeTimelineBar.getRangeTimelineMax());
 				isRangeUpdate = true;
-			} else if (maxValue > geotrackRangeMax) { 
+			} else if (maxValue > geotrackRangeMax) {
 				geotrackRangeMax = Math.min(rangeTimelineBar.getRangeTimelineMax(), //
 						Math.max(geotrackRangeMax, roundToHour(maxValue, true))//
-						); 
+						);
 
 				isRangeUpdate = true;
 			}
@@ -254,13 +256,12 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			return hours;
 		}
 
-	
 		public void computeRangeValues(Collection<GeoTrackOverlay> geoTracks) {
 			if (rangeTimelineBar == null) {
 				Log.w(TAG, "onRangeGeoTrackValuesChange : Ignore for null rangeTimelineBar ");
 				return;
 			}
-		 
+
 			// Reset Range
 			geotrackRangeMin = rangeTimelineBar.getRangeTimelineMin();
 			geotrackRangeMax = rangeTimelineBar.getRangeTimelineMax();
@@ -291,7 +292,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			// geotrackRangeMin = 0;
 			// geotrackRangeMax = AppConstants.ONE_DAY_IN_S;
 			// }
-			if (isSet  ) {
+			if (isSet) {
 				Log.d(TAG, "computeRangeValues to set setAbsoluteValues " + geotrackRangeMin + " / " + geotrackRangeMax);
 				rangeTimelineBar.setAbsoluteValues(geotrackRangeMin, geotrackRangeMax);
 			}
@@ -337,9 +338,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			// 0));
 		}
 		// Options
-		if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, false)) {
-			this.myLocation.enableMyLocation(true);
-		}
+		boolean enableMyLocation = privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, true);
+		this.myLocation.enableMyLocation(enableMyLocation);
 
 		if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false)) {
 			this.myLocation.enableCompass(true);
@@ -541,7 +541,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geocodingAuto);
 			geoTrackOverlay.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener);
 			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
-			onRangeGeoTrackValuesChangeListener.computeRangeValues( );
+			onRangeGeoTrackValuesChangeListener.computeRangeValues();
 			// register
 			isDone = mapView.getOverlays().add(geoTrackOverlay);
 			Log.i(TAG, String.format("Add New GeoTrack Overlay (%s) for %s", isDone, person));
@@ -563,7 +563,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			isDone = mapView.getOverlays().remove(geoTrackOverlay);
 			geoTrackOverlay.onDetach(mapView);
 			geoTrackOverlay.setOnRangeGeoTrackValuesChangeListener(null);
-			onRangeGeoTrackValuesChangeListener.computeRangeValues( );
+			onRangeGeoTrackValuesChangeListener.computeRangeValues();
 			Log.i(TAG, String.format("Remove GeoTrack Overlay (%s) for %s", isDone, person));
 		} else {
 			Log.e(TAG, String.format("Could not remove person %s in geoTrackOverlayByUser", person));

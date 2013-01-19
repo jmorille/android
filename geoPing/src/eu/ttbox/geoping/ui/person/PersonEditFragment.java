@@ -404,7 +404,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 			}
 		}
 
-		// Notifify listenr
+		// Notifify listener
 		if (onPersonSelectListener != null) {
 			onPersonSelectListener.onPersonSelect(entityId, phone);
 		}
@@ -511,7 +511,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		// Set Photo
 		if (photo != null) {
 			photoImageView.setValues(photo, false);
-		} else if (isContactId) {
+		} else if (isContactId || isContactPhone) {
 		    // Cancel previous Async
 		    final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask)photoImageView.getTag();
 	        if (oldTask != null) {
@@ -562,7 +562,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 		protected void onPostExecute(Bitmap result) {
 			if (holder.getTag() == this) {
 				holder.setValues(result, true);
-				holder.setTag(null);
+				holder.setTag(null); 
 			}
 		}
 	}

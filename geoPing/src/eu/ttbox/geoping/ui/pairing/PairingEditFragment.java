@@ -520,7 +520,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
         // Set Photo
         if (photo != null) {
             photoImageView.setValues(photo, false);
-        } else if (isContactId) {
+        } else if (isContactId || isContactPhone) {
             // Cancel previous Async
             final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask)photoImageView.getTag();
             if (oldTask != null) {
@@ -564,6 +564,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
                 phoneSearch = params[1];
             }
             Bitmap result =ContactHelper.openPhotoBitmap(getActivity(), photoCache, contactIdSearch, phoneSearch);
+            Log.d(TAG, "PhotoLoaderAsyncTask load photo : " + (result !=null) );
             return result;
         }
 
@@ -572,6 +573,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
             if (holder.getTag() == this) {
                 holder.setValues(result, true);
                 holder.setTag(null);
+                Log.d(TAG, "PhotoLoaderAsyncTask onPostExecute photo : " + (result !=null) );
             }
         }
     }
