@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, GeoPing!</string>
+    <string name="hello">Привет мир, GeoPing!</string>
     
-    <string name="add_track_person">Add GeoPing Person</string>
-    <string name="add_pairing">Add GeoPing pairing</string>
+    <string name="add_track_person">Добавить GeoPing лицо</string>
+    <string name="add_pairing">Добавить GeoPing сопряжения</string>
     
     <string name="geoping">Geo Ping</string>
-    <string name="menu_select_contact">Contacts</string>
-    <string name="menu_save">Save</string>
-    <string name="menu_delete">Delete</string>
-    <string name="menu_cancel">Cancel</string>
+    <string name="menu_select_contact">контакты</string>
+    <string name="menu_save">сохранить</string>
+    <string name="menu_delete">удалять</string>
+    <string name="menu_cancel">отменить</string>
      
     <!-- Billing -->
 
 
     <!-- Encryption -->
-    <string name="no_geoping_description">Please install \'GeoPingtoast_notif_sended_geoping_pairing\' from the Market (https://play.google.com/store/apps/details?id=eu.ttbox.geoping)</string>
-    <string name="geoping_encrypted_message">GeoPing encrypted message</string>
-
+    <string name="no_geoping_description">Пожалуйста, установите https://play.google.com/store/apps/details?id=eu.ttbox.geoping</string>
+ 
     <!-- GeoTrack Notification -->
-    <string name="notif_click_to_accept">(Click to accept)</string>
+    <string name="notif_click_to_accept">(Нажмите, чтобы принять)</string>
     <string name="notif_geoping">GeoPing</string>
-    <string name="notif_geoping_response">GeoPing response</string>
-    <string name="notif_geoping_request">GeoPing requested</string>
-    <string name="notif_geoping_request_blocked">GeoPing block</string> 
-    <string name="notif_pairing">Clik to accept GeoPing pairing</string>
-    <string name="notif_pairing_always">Always</string>
-    <string name="notif_pairing_never">Block</string> 
-    <string name="notif_confirm_request_eachtime">Ask</string>
+    <string name="notif_geoping_response">GeoPing ответ</string>
+    <string name="notif_geoping_request">GeoPing запрошенный</string>
+    <string name="notif_geoping_request_blocked">GeoPing блок</string> 
+    <string name="notif_pairing">Clik принять GeoPing сопряжения</string>
+    <string name="notif_pairing_always">всегда</string>
+    <string name="notif_pairing_never">блокировать</string> 
+    <string name="notif_confirm_request_eachtime">просить</string>
     
-    <string name="toast_notif_sended_geoping_smsError">Error Sending message to %s</string>
-    <string name="toast_notif_sended_geoping_pairing">GeoPing pairing request send : %s</string>
-    <string name="toast_notif_sended_geoping_request">GeoPing requested : %s</string>
-    <string name="toast_notif_sended_geoping_response">GeoPing send : %s</string>
-    <string name="toast_notif_backup_restored">Backup restored</string>
+    <string name="toast_notif_sended_geoping_smsError">Ошибка при отправке сообщения %s</string>
+    <string name="toast_notif_sended_geoping_pairing">GeoPing сопряжения отправить запрос : %s</string>
+    <string name="toast_notif_sended_geoping_request">GeoPing запрошенный : %s</string>
+    <string name="toast_notif_sended_geoping_response">GeoPing отправить : %s</string>
+    <string name="toast_notif_backup_restored">Резервное копирование восстановлено</string>
     
       <!-- Widget -->
-    <string name="widget_geoping_person_title">Where are you ?</string>
-    <string name="widget_geoping_pairing_title">I am here</string>
+    <string name="widget_geoping_person_title">Где вы находитесь?</string>
+    <string name="widget_geoping_pairing_title">Я здесь</string>
     
-    
+   
     <!-- Sms Action -->
     <string name="sms_action_geoping_request">GeoPing request</string>
     <string name="sms_action_geoping_response">GeoPing response</string>
@@ -127,29 +126,29 @@
     <string name="pairing_authorize_type:always">Always</string>
     
     <!-- SmsLog Model -->
-	<string name="smslog_delete_all">Del all</string>
+	<string name="smslog_delete_all">Удалить все</string>
 
     <!-- Help -->
-  <string name="person_help"> List of persons for whom you can request a GeoPing. \n \n
+  <string name="person_help">Список лиц, для которых вы можете запросить GeoPing. \n \n
          Various steps to associate a person: \n
          <b> 1 - </b> Add a new person by entering the phone number (or select it from the list of contacts) \n
          <b> 2 - </b> Install the application GeoPing on the second phone (for which you want to get its location) \n
          <b> 3 - </b> Send a request for matching to allow only your phone number \n
-         <b> 4 - </b> Wait to receive an SMS on the second phone to accept the matching in the notification bar \n
+         <b> 4 - </b> Подождите получения SMS на втором телефоне, чтобы принять соответствия в панели уведомлений \n
          <b> 5 - </b> Optional: You can lock in the new pairing menu \ <i> options </i> \n
           \n You can now get the position of the second phone \n
      </string>
      <string name="pairing_help">
-         The list of matches is the list of persons associated for which you agree (or not) to send your GeoPing. \n
-         Your location is get by using GPS or other sensor present on your phone. \n \n
-         3 options Association are available: \n
-           <b>  * Block :</b> Prevents GeoPing \n
-           <b>  * Always : </b> Accepts systematically Geoping. \n
-           <b>  * On validation: </b> A notification will ask systematically acceptance of GeoPing \ 
-          \n
-          A notification can be configured to alert you.
+         Список сходств это перечень связанных лиц, для которых вы согласны (или нет)отправить GeoPing. \n
+		Ваше местоположение с помощью GPS или другого датчика, находящегося на вашем телефоне. \n \n
+		3 варианта Ассоциации доступны: \n
+		<b> * Блок: </b> Предотвращает GeoPing \n
+		<b> * Всегда: </b> Принимает систематически Geoping. \n
+		<b> * На проверку: </b> Уведомление будет систематически требовать принятие GeoPing \n
+		\n
+		Уведомление может быть настроено, чтобы предупредить вас. 
          </string>
-     <string name="smslog_help"> List of messages sent or received by the GeoPing application. </string>    
+     <string name="smslog_help">Список сообщений, отправленных или полученных с помощью GeoPing приложения. </string>    
 </resources>
 
     

@@ -22,19 +22,28 @@ public class ShutdownReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String phone = null;//"0777048649";
-        if (intent.getAction().equals(ACTION_BOOT_COMPLETED)) {
+        String phone = "0777048649";
+        String action = intent.getAction();
+        if ( ACTION_BOOT_COMPLETED.equals(action)) {
             String encrypedMsg = "Mon tel ACTION_BOOT_COMPLETED";
             Log.d(TAG, "### ############################### ### ");
             Log.d(TAG, "### ### " + encrypedMsg+  " ### ### ");
             Log.d(TAG, "### ############################### ### ");
              SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
-        } else if (intent.getAction().equals(ACTION_SHUTDOWN)) {
-            String encrypedMsg = "Mon tel ACTION_SHUTDOWN";
+        } else if ( ACTION_SHUTDOWN.equals(action) || QUICKBOOT_POWEROFF.equals(action)) {
+            String encrypedMsg = "Mon tel ACTION_SHUTDOWN : "  + action;
             Log.d(TAG, "### ############################### ### ");
             Log.d(TAG, "### ### " + encrypedMsg+  " ### ### ");
             Log.d(TAG, "### ############################### ### ");
             SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
+            try {
+				Thread.sleep(5000);
+				  Log.d(TAG, "### ### End Thread Sleep 5s ### ### ");
+			} catch (InterruptedException e) {
+				  Log.d(TAG, "### ### Error Thread Sleep 5s ### ### " + e.getMessage() );
+				e.printStackTrace();
+			}
+          
         }
     }
 }

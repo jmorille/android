@@ -30,6 +30,11 @@
     <string name="toast_notif_backup_restored">Salvaguardia instalado de nuevo</string>
     
    
+    <!-- Widget -->
+    <string name="widget_geoping_person_title">Donde estas ?</string>
+    <string name="widget_geoping_pairing_title">Estoy aqui</string>
+    
+    
     <!-- Sms Action -->
     <string name="sms_action_geoping_request">GeoPing solicitud</string>
     <string name="sms_action_geoping_response">GeoPing respuesta</string>

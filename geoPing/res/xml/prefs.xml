@@ -24,13 +24,11 @@
             android:summaryOn="@string/prefs_geoping_localSave_summaryOn"
             android:title="@string/prefs_geoping_localSave" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/prefs_geoping_request" >
+    <PreferenceCategory android:title="@string/prefs_geoping_geoPoint_category" >
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="myLocationDisplayLatlng"
             android:title="@string/prefs_myLocation_display_LatLng" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/prefs_geoping_geoPoint_category" >
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="geoPointGeocodingAuto"
@@ -39,6 +37,7 @@
     <PreferenceCategory
         android:icon="@drawable/ic_action_about"
         android:title="@string/prefs_info" >
+        
         <eu.ttbox.geoping.ui.prefs.comp.version.AppVersionPreference
             android:defaultValue="unknow"
             android:title="@string/prefs_version" />

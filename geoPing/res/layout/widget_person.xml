@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:layout_margin="4dip"
         android:gravity="center_horizontal"
-        android:text="@string/sms_action_geoping_request" />
+        android:text="@string/widget_geoping_person_title" />
 
     <ListView
         android:id="@+id/widget_person_list"
