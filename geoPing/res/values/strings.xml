@@ -5,7 +5,7 @@
     <string name="add_track_person">Add GeoPing Person</string>
     <string name="add_pairing">Add GeoPing pairing</string>
     
-    <string name="geoping">Geo Ping</string>
+    <string name="geoping">GeoPing</string>
     <string name="menu_select_contact">Contacts</string>
     <string name="menu_save">Save</string>
     <string name="menu_delete">Delete</string>
@@ -25,7 +25,7 @@
     <string name="notif_pairing">Click to accept GeoPing pairing</string>
     <string name="notif_pairing_always">Always</string>
     <string name="notif_pairing_never">Blocked</string> 
-    <string name="notif_confirm_request_eachtime">Ask</string>
+    <string name="notif_confirm_request_eachtime">On demand</string>
     
     <string name="toast_notif_sended_geoping_smsError">Error during the sending of message to %s</string>
     <string name="toast_notif_sended_geoping_pairing">GeoPing pairing request sent : %s</string>
@@ -95,9 +95,9 @@
     <string name="prefs_help">Help</string>
     <string name="prefs_licence">Licence</string>
     <string name="prefs_about">Credit</string>
-    <string name="prefs_relasenotes">What up ?</string> 
-    <string name="prefs_count_laught">Laught count</string>
-    <string name="prefs_count_laught_summary">Nombre d\'utilisation de l\'application</string>
+    <string name="prefs_relasenotes">What \'\s up ?</string> 
+    <string name="prefs_count_laught">Counter of launching</string>
+    <string name="prefs_count_laught_summary">Number of launching the application</string>
     
 
     <!-- Dialog -->
@@ -111,40 +111,40 @@
     
     <!-- Person model -->
     <string name="person_name">Name</string>
-    <string name="person_phone">Phone Number</string>
-    <string name="description_contact_photo">contact photo</string>
+    <string name="person_phone">Phone number</string>
+    <string name="description_contact_photo">Picture of the contact</string>
  
     <!-- Pairing model -->
     <string name="pairing_name">Name</string>
-    <string name="pairing_phone">Phone Number</string>
+    <string name="pairing_phone">Phone number</string>
     <string name="pairing_show_notification">Show notification</string>
-    <string name="pairing_authorize_type">GeoPing Authorization</string>
-    <string name="pairing_authorize_type:never">Block</string>
+    <string name="pairing_authorize_type">GeoPing authorization</string>
+    <string name="pairing_authorize_type:never">Blocked</string>
     <string name="pairing_authorize_type:ask">On validation</string>
     <string name="pairing_authorize_type:always">Always</string>
     
     <!-- SmsLog Model -->
-	<string name="smslog_delete_all">Del all</string>
+	<string name="smslog_delete_all">Delete everything</string>
 
     <!-- Help -->
   <string name="person_help"> List of persons for whom you can request a GeoPing. \n \n
          Various steps to associate a person: \n
-         <b> 1 - </b> Add a new person by entering the phone number (or select it from the list of contacts) \n
-         <b> 2 - </b> Install the application GeoPing on the second phone (for which you want to get its location) \n
-         <b> 3 - </b> Send a request for matching to allow only your phone number \n
-         <b> 4 - </b> Wait to receive an SMS on the second phone to accept the matching in the notification bar \n
-         <b> 5 - </b> Optional: You can lock in the new pairing menu \ <i> options </i> \n
+         <b> 1 - </b> Add a new person by dialing the phone number (or select it from the list of contacts) \n
+         <b> 2 - </b> Install the application GeoPing on the second phone (for which you want to get its position) \n
+         <b> 3 - </b> Send a pairing request to allow only your phone number \n
+         <b> 4 - </b> Wait for the receipt of an SMS on the second phone to accept the pairing in the notification bar \n
+         <b> 5 - </b> Optional: you can block any new pairing in the menu \ <i> options </i> \n
           \n You can now get the position of the second phone \n
      </string>
      <string name="pairing_help">
-         The list of matches is the list of persons associated for which you agree (or not) to send your GeoPing. \n
-         Your location is get by using GPS or other sensor present on your phone. \n \n
-         3 options Association are available: \n
-           <b>  * Block :</b> Prevents GeoPing \n
-           <b>  * Always : </b> Accepts systematically Geoping. \n
-           <b>  * On validation: </b> A notification will ask systematically acceptance of GeoPing \ 
+         The list of associations is the list of persons associated for which you agree (or not) to send your GeoPing. \n
+         Your position is getting by using GPS or other sensor in your phone. \n \n
+         3 options of association are available: \n
+           <b>  * Block:</b> Prevents any GeoPing request \n
+           <b>  * Always : </b> Accepts systematically Geoping request. \n
+           <b>  * On validation: </b> A notification will ask you systematically your agreement for GeoPing request \ 
           \n
-          A notification can be configured to alert you.
+          A notification can be configured to warn you.
          </string>
      <string name="smslog_help"> List of messages sent or received by the GeoPing application. </string>    
 </resources>
