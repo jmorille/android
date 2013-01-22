@@ -4,7 +4,8 @@
     <string name="add_track_person">Anadir una persona</string>
     <string name="add_pairing">Permitir un GeoPing</string>
     
-    <string name="geoping">Geo Ping</string>
+    <string name="geoping">Geo
+        Ping</string>
     <string name="menu_select_contact">Contactos</string>
     <string name="menu_save">Ahorrar</string>
     <string name="menu_delete">Quitar</string>
@@ -14,20 +15,20 @@
 
     <!-- GeoTrack Notification -->
     <string name="notif_geoping">GeoPing</string>
-    <string name="notif_click_to_accept">(Acceptar)</string>
-    <string name="notif_geoping_response">GeoPing respuesta</string>
-    <string name="notif_geoping_request">GeoPing solicatado</string>
-    <string name="notif_geoping_request_blocked">GeoPing Bloqueado</string> 
-    <string name="notif_pairing">GeoPing Coincidencia</string>
-    <string name="notif_pairing_always">Para siempre</string>
+    <string name="notif_click_to_accept">(Aceptar)</string>
+    <string name="notif_geoping_response">Estoy aqui</string>
+    <string name="notif_geoping_request">Donde estas ?</string>
+    <string name="notif_geoping_request_blocked">GeoPing prohibido</string> 
+    <string name="notif_pairing">Asociacion GeoPing</string>
+    <string name="notif_pairing_always">Siempre</string>
     <string name="notif_pairing_never">Bloquear</string> 
     <string name="notif_confirm_request_eachtime">Solicitar</string>
     
-    <string name="toast_notif_sended_geoping_smsError">Error Sending message to %s</string>
-    <string name="toast_notif_sended_geoping_pairing">GeoPing pairing request send : %s</string>
-     <string name="toast_notif_sended_geoping_request">GeoPing solicitado : %s</string>
-    <string name="toast_notif_sended_geoping_response">GeoPing enviado : %s</string>
-    <string name="toast_notif_backup_restored">Salvaguardia instalado de nuevo</string>
+    <string name="toast_notif_sended_geoping_smsError">Error durante el envio del mensaje a  %s</string>
+    <string name="toast_notif_sended_geoping_pairing">GeoPing asociacion solicitada: %s</string>
+     <string name="toast_notif_sended_geoping_request">Donde estas ?: %s</string>
+    <string name="toast_notif_sended_geoping_response">Estoy aqui: %s</string>
+    <string name="toast_notif_backup_restored">Salvaguardia instalada de nuevo</string>
     
    
     <!-- Widget -->
@@ -38,49 +39,49 @@
     <!-- Sms Action -->
     <string name="sms_action_geoping_request">GeoPing solicitud</string>
     <string name="sms_action_geoping_response">GeoPing respuesta</string>
-    <string name="sms_action_pairing_request">Coincidencia solicitud</string>
-    <string name="sms_action_pairing_response">Coincidencia respuesta</string>
+    <string name="sms_action_pairing_request">Solicitud de asociacion</string>
+    <string name="sms_action_pairing_response">Respuesta de asociacion</string>
     
 
     <!-- Menu -->
     <string name="menu_map_mypositioncenter">Mi posicion</string>
     <string name="map_mode">Typo de mapa</string>
-    <string name="menu.geoTracker">Geo Tracker</string>
+    <string name="menu.geoTracker">GeoTracker</string>
     <string name="menu_geoping">GeoPing</string>
 
     <string name="menu_settings">Opciones</string>
     <string name="menu_map">Mapa</string>
     <string name="menu_quit">Quitar</string>
     <string name="menu_person">Personas</string>
-    <string name="menu_pairing">Coincidencia</string>
+    <string name="menu_pairing">Asociacion</string>
     <string name="menu_smslog">Log Sms</string>
     
      <!-- Menu Map-->
-    <string name="menu_map_mypositon_hide">Hide My Position</string>
+    <string name="menu_map_mypositon_hide">Ocultar mi posicion</string>
     <string name="menu_map_track_timeline">Time Line</string>
            
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>
     
     <string name="prefs_geoping_request">Preguntas GeoPing</string>
-    <string name="prefs_block_geoping_pairing">Bloquear nuevo Geoping emparejamiento</string>
-    <string name="prefs_block_geoping_pairing_summaryOff">Block new Geoping pairing</string>
-    <string name="prefs_block_geoping_pairing_summaryOn">Authorize new Geoping pairing</string>
+    <string name="prefs_block_geoping_pairing">Bloquear nueva asociacion de GeoPing</string>
+    <string name="prefs_block_geoping_pairing_summaryOff">Bloquear nueva asociacion de GeoPing</string>
+    <string name="prefs_block_geoping_pairing_summaryOn">Autorizar nueva asociacion de GeoPing</string>
     
-    <string name="prefs_show_geoping_notification">Mostra una notificacion</string>
-    <string name="prefs_show_geoping_notification_summary">Para los nuevas coincidencias</string> 
-    <string name="prefs_geoping_localSave">Salva en local</string>
-    <string name="prefs_geoping_localSave_summaryOn">Garde une trace en DB Local</string>
-    <string name="prefs_geoping_localSave_summaryOff">Désactivé</string>
+    <string name="prefs_show_geoping_notification">Mostrar una notificacion</string>
+    <string name="prefs_show_geoping_notification_summary">Para las nuevas asociaciones</string> 
+    <string name="prefs_geoping_localSave">Ahorrar en local</string>
+    <string name="prefs_geoping_localSave_summaryOn">Archivado en local</string>
+    <string name="prefs_geoping_localSave_summaryOff">Inhabilitado</string>
 
     <string name="prefs_myLocation">Mi Posicion</string>
-    <string name="prefs_myLocation_display_LatLng">Afficher les coord. WSG84</string>
+    <string name="prefs_myLocation_display_LatLng">Mostrar las posiciones</string>
 
     <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
-    <string name="prefs_geoPoint_geocoding_auto">Geocoding automatique</string>
+    <string name="prefs_geoPoint_geocoding_auto">Geocoding automatico</string>
 
     <string name="prefs_developement">Desarrollo</string>
-    <string name="prefs_sms_delete_onMessage">Eliminación de SMS</string>
+    <string name="prefs_sms_delete_onMessage">Supresion de SMS</string>
     <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing están invisible</string>
     <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping no están borrado</string>
     
