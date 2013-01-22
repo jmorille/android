@@ -74,7 +74,7 @@
     <string name="prefs_geoping_localSave_summaryOff">Inhabilitado</string>
 
     <string name="prefs_myLocation">Mi Posicion</string>
-    <string name="prefs_myLocation_display_LatLng">Mostrar las posiciones</string>
+    <string name="prefs_myLocation_display_LatLng">Mostrar las coordenadas</string>
 
     <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
     <string name="prefs_geoPoint_geocoding_auto">Geocoding automatico</string>
@@ -141,6 +141,7 @@
          \n 
          Si le gusta, usted puede recibir una notificacion para avisarle.\n 
         </string>
-    <string name="smslog_help">Lista de los mensajes enviados o recibidos por la aplicacion GeoPing.</string>
+    <string name="smslog_help">Lista de los mensajes enviados o recibidos por la aplicacion GeoP
+        ing.</string>
         
 </resources>

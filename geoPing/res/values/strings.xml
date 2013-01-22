@@ -22,15 +22,15 @@
     <string name="notif_geoping_response">I am here</string>
     <string name="notif_geoping_request">Where are you ?</string>
     <string name="notif_geoping_request_blocked">GeoPing blocked</string> 
-    <string name="notif_pairing">Clik to accept GeoPing pairing</string>
+    <string name="notif_pairing">Click to accept GeoPing pairing</string>
     <string name="notif_pairing_always">Always</string>
-    <string name="notif_pairing_never">Block</string> 
+    <string name="notif_pairing_never">Blocked</string> 
     <string name="notif_confirm_request_eachtime">Ask</string>
     
-    <string name="toast_notif_sended_geoping_smsError">Error Sending message to %s</string>
-    <string name="toast_notif_sended_geoping_pairing">GeoPing pairing request send : %s</string>
-    <string name="toast_notif_sended_geoping_request">GeoPing requested : %s</string>
-    <string name="toast_notif_sended_geoping_response">GeoPing send : %s</string>
+    <string name="toast_notif_sended_geoping_smsError">Error during the sending of message to %s</string>
+    <string name="toast_notif_sended_geoping_pairing">GeoPing pairing request sent : %s</string>
+    <string name="toast_notif_sended_geoping_request">Where are you ?: %s</string>
+    <string name="toast_notif_sended_geoping_response">I am here: %s</string>
     <string name="toast_notif_backup_restored">Backup restored</string>
     
       <!-- Widget -->
@@ -40,15 +40,15 @@
     
     <!-- Sms Action -->
     <string name="sms_action_geoping_request">GeoPing request</string>
-    <string name="sms_action_geoping_response">GeoPing response</string>
+    <string name="sms_action_geoping_response">GeoPing answer</string>
     <string name="sms_action_pairing_request">Pairing request</string>
-    <string name="sms_action_pairing_response">Pairing response</string>
+    <string name="sms_action_pairing_response">Pairing answer</string>
     
 
     <!-- Menu -->
     <string name="menu_map_mypositioncenter">My position</string>
     <string name="map_mode">Map Type</string>
-    <string name="menu.geoTracker">Geo Tacker</string>
+    <string name="menu.geoTracker">GeoTracker</string>
     <string name="menu_geoping">GeoPing</string>
 
     <string name="menu_settings">Settings</string>
@@ -60,7 +60,7 @@
     
     
      <!-- Menu Map-->
-    <string name="menu_map_mypositon_hide">Hide My Position</string>
+    <string name="menu_map_mypositon_hide">Hide my position</string>
     <string name="menu_map_track_timeline">Time Line</string>
        
      
@@ -69,32 +69,32 @@
     
     <string name="prefs_geoping_request">GeoPing Request</string> 
     <string name="prefs_block_geoping_pairing">Pairing</string>
-    <string name="prefs_block_geoping_pairing_summaryOff">Block new Geoping pairing</string>
-    <string name="prefs_block_geoping_pairing_summaryOn">Authorize new Geoping pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOff">Block new GeoPing pairing</string>
+    <string name="prefs_block_geoping_pairing_summaryOn">Authorize new GeoPing pairing</string>
     
-    <string name="prefs_show_geoping_notification">Show an notification</string>
+    <string name="prefs_show_geoping_notification">Show a notification</string>
     <string name="prefs_show_geoping_notification_summary">For new pairing</string> 
-    <string name="prefs_geoping_localSave">Save in a local DB</string>
+    <string name="prefs_geoping_localSave">Save in a local database</string>
     <string name="prefs_geoping_localSave_summaryOn">Keep a record in a local DB</string>
     <string name="prefs_geoping_localSave_summaryOff">Desactivated</string>
 
-    <string name="prefs_myLocation">My Position</string>
-    <string name="prefs_myLocation_display_LatLng">Show WSG84 coord.</string>
+    <string name="prefs_myLocation">My position</string>
+    <string name="prefs_myLocation_display_LatLng">Show the coordinates</string>
 
     <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
-    <string name="prefs_geoPoint_geocoding_auto">Geocoding automatique</string>
+    <string name="prefs_geoPoint_geocoding_auto">Automatic Geocoding</string>
    
     <string name="prefs_developement">Development</string>
-    <string name="prefs_sms_delete_onMessage">Delete des SMS</string>
+    <string name="prefs_sms_delete_onMessage">Deleting SMS</string>
     <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing are invisible</string>
-    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping don\'t deleted</string>
+    <string name="prefs_sms_delete_onMessage_summaryOff">SMS GeoPing are saved</string>
     
     
     <string name="prefs_info">Information</string>
     <string name="prefs_version">Version</string>
     <string name="prefs_help">Help</string>
     <string name="prefs_licence">Licence</string>
-    <string name="prefs_about">Crédit</string>
+    <string name="prefs_about">Credit</string>
     <string name="prefs_relasenotes">What up ?</string> 
     <string name="prefs_count_laught">Laught count</string>
     <string name="prefs_count_laught_summary">Nombre d\'utilisation de l\'application</string>
