@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, GeoPing!</string>
     
     <string name="add_track_person">Add GeoPing Person</string>
     <string name="add_pairing">Add GeoPing pairing</string>
@@ -16,15 +15,13 @@
 
 
     <!-- Encryption -->
-    <string name="no_geoping_description">Please install \'GeoPingtoast_notif_sended_geoping_pairing\' from the Market (https://play.google.com/store/apps/details?id=eu.ttbox.geoping)</string>
-    <string name="geoping_encrypted_message">GeoPing encrypted message</string>
-
+  
     <!-- GeoTrack Notification -->
     <string name="notif_click_to_accept">(Click to accept)</string>
     <string name="notif_geoping">GeoPing</string>
-    <string name="notif_geoping_response">GeoPing response</string>
-    <string name="notif_geoping_request">GeoPing requested</string>
-    <string name="notif_geoping_request_blocked">GeoPing block</string> 
+    <string name="notif_geoping_response">I am here</string>
+    <string name="notif_geoping_request">Where are you ?</string>
+    <string name="notif_geoping_request_blocked">GeoPing blocked</string> 
     <string name="notif_pairing">Clik to accept GeoPing pairing</string>
     <string name="notif_pairing_always">Always</string>
     <string name="notif_pairing_never">Block</string> 

@@ -4,8 +4,7 @@
     <string name="add_track_person">Anadir una persona</string>
     <string name="add_pairing">Permitir un GeoPing</string>
     
-    <string name="geoping">Geo
-        Ping</string>
+    <string name="geoping">GeoPing</string>
     <string name="menu_select_contact">Contactos</string>
     <string name="menu_save">Ahorrar</string>
     <string name="menu_delete">Quitar</string>
@@ -63,7 +62,7 @@
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>
     
-    <string name="prefs_geoping_request">Preguntas GeoPing</string>
+    <string name="prefs_geoping_request">GeoPing solicitud</string>
     <string name="prefs_block_geoping_pairing">Bloquear nueva asociacion de GeoPing</string>
     <string name="prefs_block_geoping_pairing_summaryOff">Bloquear nueva asociacion de GeoPing</string>
     <string name="prefs_block_geoping_pairing_summaryOn">Autorizar nueva asociacion de GeoPing</string>
@@ -82,8 +81,8 @@
 
     <string name="prefs_developement">Desarrollo</string>
     <string name="prefs_sms_delete_onMessage">Supresion de SMS</string>
-    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing están invisible</string>
-    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping no están borrado</string>
+    <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing están invisibles</string>
+    <string name="prefs_sms_delete_onMessage_summaryOff">SMS Geoping están registrados</string>
     
     
     <string name="prefs_info">Informacion</string>
@@ -97,7 +96,7 @@
     
 
     <!-- Dialog -->
-    <string name="color_picker">Selecciona un color</string>
+    <string name="color_picker">Seleccionar un color</string>
  
     <!-- GeoTrack -->
     <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
@@ -108,40 +107,40 @@
     <!-- Person model -->
     <string name="person_name">Nombre</string>
     <string name="person_phone">N° Telefono</string>
-    <string name="description_contact_photo">"foto de contacto"</string>
+    <string name="description_contact_photo">"foto del contacto"</string>
   
     <!-- Pairing model -->
     <string name="pairing_name">Nombre</string>
     <string name="pairing_phone">N° Telefono</string>
-    <string name="pairing_show_notification">Muestra una notificacion</string>
-    <string name="pairing_authorize_type">Autorizacion</string>
+    <string name="pairing_show_notification">Mostrar una notificacion</string>
+    <string name="pairing_authorize_type">Autorizado</string>
     <string name="pairing_authorize_type:never">Nunca</string>
     <string name="pairing_authorize_type:ask">Sobre validacion</string>
     <string name="pairing_authorize_type:always">Siempre</string>
     
     <!-- SmsLog Model -->
-	<string name="smslog_delete_all">Todos quitados</string>
+	<string name="smslog_delete_all">Quitado todo</string>
 
     <!-- Help -->
-   <string name="person_help">Lista de las personas para quienes usted puede pedir un Geoping.\n  \n
+   <string name="person_help">Lista de las personas para quienes usted puede pedir un GeoPing.\n  \n
         Varios pasos para asociar una persona : \n
-        <b> 1- </b> Anade una persona al ingresar su numero de telefono (o seleccionarlo en la lista de contactos) \n
+        <b> 1- </b> Anade una persona al ingresar su numero de telefono (o seleccionarlo a partir de la lista de contactos) \n
         <b> 2- </b> Instala la aplicacion Geoping sobre el segundo telefono (para cual usted quiere conocer su posicion) \n
-        <b> 3- </b> Envia una solicitud de coincidencia para solamente autorizar su numero de telefono\n
-        <b> 4- </b> Espera la llegada del mensaje SMS sobre el segundo telefono para aceptar la coincidencia en la barra de notificacion \n
-        <b> 5- </b> Optional : Usted puede bloquear cualquier nuevo emparejamiento en el menu <i>opciones</i> \n
+        <b> 3- </b> Envia una solicitud de asociacion para solamente autorizar su numero de telefono\n
+        <b> 4- </b> Espera la llegada del mensaje SMS sobre el segundo telefono para aceptar la asociacion en la barra de notificacion \n
+        <b> 5- </b> Opcional : Usted puede bloquear cualquier nueva asociacion en el menu <i>opciones</i> \n
        \n Ahora usted puede conocer la posicion del segundo telefono\n 
     </string>
     <string name="pairing_help">
-        La lista de los emparejamientos representa la lista de las personas asociadas para lo cuales usted puede aceptar (o no) enviar su Geoping.\n 
+        La lista de las asociaciones representa la lista de las personas asociadas con quienes usted puede aceptar (o no) enviar su GeoPing.\n 
         Su posicion geografico esta obtenida mediante su GPS o cualquier sensor que esta en su telefono. \n\n
         3 opciones de asociacion están disponibles: \n 
-         <b>   * Bloquear : </b> Impide cualquier GeoPing \n 
-         <b>   * Siempre :</b> Acepta sitematicamente el Geoping.\n 
+         <b>   * Bloquear : </b> Impide cualquiera solicitud de GeoPing \n 
+         <b>   * Siempre :</b> Acepta sistematicamente el GeoPing.\n 
          <b>   * Sobre validacion :</b>  Una notificacion le preguntara sistematicamente la aceptación del GeoPing \n 
          \n 
-         Una notificacion puede estar configurada para avisarle.\n 
+         Si le gusta, usted puede recibir una notificacion para avisarle.\n 
         </string>
-    <string name="smslog_help">Lista de los mensajes enviados o recibidos por la aplicacion Geoping.</string>
+    <string name="smslog_help">Lista de los mensajes enviados o recibidos por la aplicacion GeoPing.</string>
         
 </resources>
