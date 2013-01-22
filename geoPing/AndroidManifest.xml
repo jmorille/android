@@ -40,7 +40,7 @@
     <uses-feature android:name="android.hardware.telephony" android:required="false"/>
     
  
-    <application android:backupAgent=".service.backup.GeoPingBackupAgent" android:debuggable="false" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:restoreAnyVersion="false" android:theme="@style/AppTheme">
+    <application android:backupAgent=".service.backup.GeoPingBackupAgent" android:debuggable="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:restoreAnyVersion="false" android:theme="@style/AppTheme">
  	    <meta-data android:name="com.google.android.backup.api_key" android:value="@string/backup_api_key"/>
 	    
         <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
@@ -130,14 +130,16 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.HOME"/>
             </intent-filter>            
-        </receiver>
+		
+	  </receiver>
 
-       <receiver android:enabled="false" android:name=".service.slave.receiver.BootCompleteReceiver">
+       <receiver android:enabled="true" android:name=".service.slave.receiver.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.HOME"/>
-            </intent-filter>
+            </intent-filter>    
          </receiver>
+         
         <service android:enabled="true" android:name=".service.slave.BackgroudLocService">
 		 <intent-filter> 
                <action android:name="EVENT_GSM"/> 
