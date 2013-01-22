@@ -1,8 +1,11 @@
 package eu.ttbox.geoping.service.slave.receiver;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.telephony.SmsManager;
 import android.util.Log;
 
@@ -11,15 +14,18 @@ public class ShutdownReceiver extends BroadcastReceiver {
     private static final String TAG = "ShutdownReceiver";
 
     // http://developer.android.com/reference/android/content/Intent.html#ACTION_BOOT_COMPLETED
-    private final String ACTION_BOOT_COMPLETED = "android.intent.action.ACTION_BOOT_COMPLETED";
+    private static final String ACTION_BOOT_COMPLETED = "android.intent.action.ACTION_BOOT_COMPLETED";
+    public static final String ACTION_SMS_SENT = "eu.ttbox.geoping.ShutdownReceiver.ACTION_SMS_SENT";
 
     /**
      * To be more specific, if you choose Restart, ACTION_SHUTDOWN is broadcast,
      * but if you choose Power Off, QUICKBOOT_POWEROFF is broadcast instead.
      **/
-    private final String QUICKBOOT_POWEROFF = "android.intent.action.QUICKBOOT_POWEROFF";
-    private final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
+    private static final String QUICKBOOT_POWEROFF = "android.intent.action.QUICKBOOT_POWEROFF";
+    private static final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
 
+   boolean isSend = false;
+    
     @Override
     public void onReceive(Context context, Intent intent) {
         String phone = "0777048649";
@@ -33,9 +39,15 @@ public class ShutdownReceiver extends BroadcastReceiver {
         } else if ( ACTION_SHUTDOWN.equals(action) || QUICKBOOT_POWEROFF.equals(action)) {
             String encrypedMsg = "Mon tel ACTION_SHUTDOWN : "  + action;
             Log.d(TAG, "### ############################### ### ");
-            Log.d(TAG, "### ### " + encrypedMsg+  " ### ### ");
+            Log.d(TAG, "### ### " + encrypedMsg+  " ### ### " + System.currentTimeMillis());
             Log.d(TAG, "### ############################### ### ");
-            SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
+            // Register Receiver
+            // Register broadcast receivers for SMS sent and delivered intents
+          
+            // Send SMS
+            PendingIntent sentIntent = PendingIntent.getBroadcast( context, 0, new Intent(ACTION_SMS_SENT), 0);
+            isSend = true;
+            SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, sentIntent, null);
             try {
 				Thread.sleep(5000);
 				  Log.d(TAG, "### ### End Thread Sleep 5s ### ### ");
@@ -44,6 +56,30 @@ public class ShutdownReceiver extends BroadcastReceiver {
 				e.printStackTrace();
 			}
           
+        } else   if ( ACTION_SMS_SENT.equals(action)) {
+            String message = null;
+            boolean error = true;
+            switch (getResultCode()) {
+            case Activity.RESULT_OK:
+                Log.d(TAG, "### ############################### ### "+isSend);
+                Log.d(TAG, "### Message sent !!!               # ### " + System.currentTimeMillis());
+                Log.d(TAG, "### ############################### ### ");
+                message = "Message sent!";
+                error = false;
+                break;
+            case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                message = "Error.";
+                break;
+            case SmsManager.RESULT_ERROR_NO_SERVICE:
+                message = "Error: No service.";
+                break;
+            case SmsManager.RESULT_ERROR_NULL_PDU:
+                message = "Error: Null PDU.";
+                break;
+            case SmsManager.RESULT_ERROR_RADIO_OFF:
+                message = "Error: Radio off.";
+                break;
+            }
         }
     }
 }
