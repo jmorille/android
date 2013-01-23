@@ -23,6 +23,8 @@ import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import eu.ttbox.geoping.R;
@@ -69,6 +71,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
+		
 		mTriangleAffordance = findViewById(R.id.photo_triangle_affordance);
 		mPhotoImageView = (ImageView) findViewById(R.id.photo);
 		mFrameView = findViewById(R.id.frame);
@@ -76,6 +79,9 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 			@Override
 			public void onClick(View v) {
 				if (mListener != null) {
+					Animation animationOut = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_to_middle);
+					 clearAnimation();
+					 startAnimation(animationOut);
 					mListener.onRequest(EditorListener.REQUEST_PICK_PHOTO);
 				}
 			}

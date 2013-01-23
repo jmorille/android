@@ -54,6 +54,8 @@
     <string name="menu_pairing">Association</string>
     <string name="menu_smslog">Log Sms</string>
  
+     <string name="menu_pairing_notification">Notification</string>
+    
     <!-- Menu Map-->
     <string name="menu_map_mypositon_hide">Masquer ma position</string>
     <string name="menu_map_track_timeline">Time Line</string>

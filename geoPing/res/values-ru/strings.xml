@@ -60,6 +60,7 @@
     <string name="menu_pairing">Pairing</string>
     <string name="menu_smslog">Log Sms</string>
     
+    <string name="menu_pairing_notification">Notification</string>
     
      <!-- Menu Map-->
     <string name="menu_map_mypositon_hide">Hide My Position</string>

@@ -55,6 +55,8 @@
     <string name="menu_pairing">Asociacion</string>
     <string name="menu_smslog">Log Sms</string>
     
+    <string name="menu_pairing_notification">Notificacion</string>
+    
      <!-- Menu Map-->
     <string name="menu_map_mypositon_hide">Ocultar mi posicion</string>
     <string name="menu_map_track_timeline">Time Line</string>

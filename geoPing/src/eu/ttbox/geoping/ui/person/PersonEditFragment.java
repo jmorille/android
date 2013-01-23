@@ -138,7 +138,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 	// Accessor
 	// ===========================================================
 
-	public void setEntityId(String entityId) {
+	private void setEntityId(String entityId) {
 		this.entityId = entityId;
 	}
 
@@ -157,9 +157,7 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 	}
 
 	private void loadEntity(String entityId) {
-		Log.d(TAG, "loadEntity : " + entityId);
-		Log.d(TAG, "getActivity : " + (getActivity() != null));
-		Log.d(TAG, "getSupportLoaderManager : " + (getActivity().getSupportLoaderManager() != null));
+		Log.d(TAG, "loadEntity : " + entityId); 
 		setEntityId(entityId);
 		Bundle bundle = new Bundle();
 		bundle.putString(Intents.EXTRA_PERSON_ID, entityId);
