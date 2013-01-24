@@ -322,15 +322,7 @@ public class GeoPingMasterService extends IntentService {
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// Contact Name
 		Person contact = searchPersonForPhone(phone);
-
-		if (true) {
-			// TODO Dont Search twice
-			ContactVo contactSearch = ContactHelper.searchContactForPhone(this, phone);
-			if (contactSearch != null) {
-				Log.w(TAG, String.format("Compare Person Contact Id %s with Search Phone Contact Id %s", contact.contactId, contactSearch.id));
-				contact.contactId = String.valueOf(contactSearch.id);
-			}
-		}
+ 
 		String contactDisplayName = phone;
 		Bitmap photo = null;
 		if (contact != null) {

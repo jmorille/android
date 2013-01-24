@@ -5,9 +5,12 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.util.Log;
+import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 
@@ -26,70 +29,50 @@ public class ShutdownReceiver extends BroadcastReceiver {
 	private static final String QUICKBOOT_POWEROFF = "android.intent.action.QUICKBOOT_POWEROFF";
 	private static final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
 
-	boolean isSend = false;
-
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		
+
 		String action = intent.getAction();
 		if (ACTION_BOOT_COMPLETED.equals(action)) {
 			String encrypedMsg = "Mon tel Viens de démarrer : " + ACTION_BOOT_COMPLETED;
 			Log.d(TAG, "### ############################### ### ");
 			Log.d(TAG, "### ### " + encrypedMsg + " ### ### ");
 			Log.d(TAG, "### ############################### ### ");
-			String phone = loadPhoneNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
-			SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
+			// Search Phones
+			String phone = searchPhoneForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
+			if (phone != null) {
+				SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
+			}
 		} else if (ACTION_SHUTDOWN.equals(action) || QUICKBOOT_POWEROFF.equals(action)) {
 			String encrypedMsg = "Mon tel viens de s'éteindre : " + action;
 			Log.d(TAG, "### ############################### ### ");
-			Log.d(TAG, "### ### " + encrypedMsg + " ### ### " + System.currentTimeMillis());
+			Log.d(TAG, "### ### " + encrypedMsg + " ### ### ");
 			Log.d(TAG, "### ############################### ### ");
-			// Register Receiver
-			// Register broadcast receivers for SMS sent and delivered intents
-			String phone = loadPhoneNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
-			// Send SMS
-			PendingIntent sentIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_SMS_SENT), 0);
-			isSend = true;
-			SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, sentIntent, null);
-			try {
-				Thread.sleep(5000);
-				Log.d(TAG, "### ### End Thread Sleep 5s ### ### ");
-			} catch (InterruptedException e) {
-				Log.d(TAG, "### ### Error Thread Sleep 5s ### ### " + e.getMessage());
-				e.printStackTrace();
-			}
-
-		} else if (ACTION_SMS_SENT.equals(action)) {
-			String message = null;
-			boolean error = true;
-			switch (getResultCode()) {
-			case Activity.RESULT_OK:
-				Log.d(TAG, "### ############################### ### " + isSend);
-				Log.d(TAG, "### Message sent !!!               # ### " + System.currentTimeMillis());
-				Log.d(TAG, "### ############################### ### ");
-				message = "Message sent!";
-				error = false;
-				break;
-			case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-				message = "Error.";
-				break;
-			case SmsManager.RESULT_ERROR_NO_SERVICE:
-				message = "Error: No service.";
-				break;
-			case SmsManager.RESULT_ERROR_NULL_PDU:
-				message = "Error: Null PDU.";
-				break;
-			case SmsManager.RESULT_ERROR_RADIO_OFF:
-				message = "Error: Radio off.";
-				break;
+			// Search Phones
+			String phone = searchPhoneForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
+			Log.d(TAG, "### ### Destination : " + phone + " ### ### ");
+			if (phone != null) {
+				// Send SMS
+				SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
+				// Sleep for Send the Sms
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+				int sleepWantedInMs =   prefs.getInt(AppConstants.PREFS_SPY_NOTIFICATION_SHUTDOWN_SLEEP_IN_MS, 5000);
+				try {
+					Log.d(TAG, "### ### Begin Thread Sleep " + sleepWantedInMs + " ms ### ### ");
+					Thread.sleep(sleepWantedInMs);
+					Log.d(TAG, "### ### End Thread Sleep " + sleepWantedInMs + " ms ### ### ");
+				} catch (InterruptedException e) {
+					Log.e(TAG, "### ### Error Thread Sleep " + sleepWantedInMs + " ms ### ### " + e.getMessage());
+				}
 			}
 		}
 	}
 
-	private String loadPhoneNotif(Context context, String notifCol) {
+	private String searchPhoneForNotif(Context context, String notifCol) {
 		String[] projection = new String[] { PairingColumns.COL_PHONE };
-		String selection = String.format("%s = ?", notifCol);
-		Cursor cursor = context.getContentResolver().query(PairingProvider.Constants.CONTENT_URI, projection, selection, new String[] { "1" }, null);
+		String selection = String.format("%s = 1", notifCol);
+		Cursor cursor = context.getContentResolver().query(PairingProvider.Constants.CONTENT_URI, projection, selection, null, null);
+		Log.d(TAG, "Search Pairing for criteria : " + selection + " ==> " + cursor.getCount() + " result");
 		StringBuffer sb = new StringBuffer();
 		boolean isNotFirst = false;
 		try {
@@ -97,7 +80,7 @@ public class ShutdownReceiver extends BroadcastReceiver {
 				if (isNotFirst) {
 					sb.append(';');
 				}
-				String phone = cursor.getString(1);
+				String phone = cursor.getString(0);
 				sb.append(phone);
 				isNotFirst = true;
 			}

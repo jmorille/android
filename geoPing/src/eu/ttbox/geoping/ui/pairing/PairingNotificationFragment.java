@@ -1,9 +1,13 @@
 package eu.ttbox.geoping.ui.pairing;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -16,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 
@@ -157,7 +162,8 @@ public class PairingNotificationFragment extends Fragment {
 				helper.setCompoundButtonWithIdx(notifPhoneCall, cursor, helper.notifPhoneCall);
 				helper.setCompoundButtonWithIdx(notifPhoneReceive, cursor, helper.notifPhoneReceive);
 			}
-		}
+			 
+ 		}
 
 		@Override
 		public void onLoaderReset(Loader<Cursor> loader) {
@@ -167,5 +173,16 @@ public class PairingNotificationFragment extends Fragment {
 		}
 
 	};
+	class PairingNotificationContentObserver extends ContentObserver { 
 
+		PairingNotificationContentObserver(  Handler h) {
+			super(h); 
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			Log.d(TAG, "*** PairingNotificationContentObserver onChange Observer");
+			// TODO Valeus
+		}
+	}
 }

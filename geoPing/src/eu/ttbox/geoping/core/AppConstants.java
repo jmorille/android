@@ -35,6 +35,9 @@ public class AppConstants {
     public static final String PREFS_LOCAL_SAVE = "localSave";
     public static final String PREFS_AUTHORIZE_GEOPING_PAIRING = "authorizeNewGeopingPairing";
     
+    // Spy Notification TODO
+    public static final String PREFS_SPY_NOTIFICATION_SHUTDOWN_SLEEP_IN_MS  = "spyNotifShutdownSleepInMs";
+    
     // Map
     public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = eu.ttbox.osm.core.AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC;
     public static final String PREFS_GEOPOINT_GEOCODING_AUTO = "geoPointGeocodingAuto";
