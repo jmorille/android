@@ -112,6 +112,7 @@ public class PairingNotificationFragment extends Fragment {
 	private void saveNotif(String coloumn, boolean value) {
 		ContentValues values = new ContentValues();
 		values.put(coloumn, value);
+		Log.d(TAG, "Update " + entityUri  + " : Column "  + coloumn + " = " + value);
 		getActivity().getContentResolver().update(entityUri, values, null, null);
 	}
 	
@@ -124,9 +125,10 @@ public class PairingNotificationFragment extends Fragment {
 	// LoaderManager
 	// ===========================================================
 
-	private void loadEntity(Bundle agrs) {
-		if (agrs != null && agrs.containsKey(Intents.EXTRA_DATA_URI)) {
-			getActivity().getSupportLoaderManager().initLoader(PAIRING_NOTIF_LOADER, agrs, pairingNotifLoaderCallback);
+	private void loadEntity(Bundle args) {
+		if (args != null && args.containsKey(Intents.EXTRA_DATA_URI)) {
+			this.entityUri = Uri.parse(args.getString(Intents.EXTRA_DATA_URI));
+			getActivity().getSupportLoaderManager().initLoader(PAIRING_NOTIF_LOADER, args, pairingNotifLoaderCallback);
 		}
 	}
 
@@ -135,7 +137,7 @@ public class PairingNotificationFragment extends Fragment {
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 			Log.d(TAG, "onCreateLoader");
-			String entityId = args.getCharSequence(Intents.EXTRA_DATA_URI).toString();
+			String entityId = args.getString(Intents.EXTRA_DATA_URI) ;
 			Uri entityUri = Uri.parse(entityId);
 			// Loader
 			CursorLoader cursorLoader = new CursorLoader(getActivity(), entityUri, PairingColumns.NOTIFS_COLS, null, null, null);
