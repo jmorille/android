@@ -124,6 +124,13 @@
     <string name="pairing_authorize_type:ask">On validation</string>
     <string name="pairing_authorize_type:always">Always</string>
     
+    <string name="pairing_notification_shutdown">Allumage/Extinction du téléphone</string>
+    <string name="pairing_notification_battery_low">Batterie faible</string>
+    <string name="pairing_notification_sim_change">Changement de carte SIM</string>
+    <string name="pairing_notification_phone_call">Appel Téléphonique Emis</string>
+    <string name="pairing_notification_phone_receive">Appel Téléphonique Recut</string>
+    
+    
     <!-- SmsLog Model -->
 	<string name="smslog_delete_all">Delete everything</string>
 

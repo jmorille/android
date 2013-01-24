@@ -30,6 +30,14 @@ public class PairingDatabase {
         public static final String COL_AUTHORIZE_TYPE = "AUTHORIZE_TYPE";
         public static final String COL_SHOW_NOTIF = "SHOW_NOTIF";
         public static final String COL_PAIRING_TIME = "COL_PAIRING_TIME";
+
+        // Notification
+        public static final String COL_NOTIF_SHUTDOWN = "COL_NOTIF_SHUTDOWN";
+        public static final String COL_NOTIF_BATTERY_LOW = "COL_NOTIF_BATTERY_LOW";
+        public static final String COL_NOTIF_SIM_CHANGE = "COL_NOTIF_SIM_CHANGE";
+        public static final String COL_NOTIF_PHONE_CALL = "COL_NOTIF_PHONE_CALL";
+        public static final String COL_NOTIF_PHONE_RECEIVE = "COL_NOTIF_PHONE_RECEIVE";
+        
         // All Cols
         public static final String[] ALL_COLS = new String[] { COL_ID, COL_NAME, COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH, COL_AUTHORIZE_TYPE, COL_SHOW_NOTIF, COL_PAIRING_TIME };
         // Where Clause

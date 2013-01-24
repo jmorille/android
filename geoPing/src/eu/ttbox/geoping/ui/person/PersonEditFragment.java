@@ -34,7 +34,6 @@ import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
-import eu.ttbox.geoping.ui.person.PersonListAdapter.PhotoLoaderAsyncTask;
 import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 
 public class PersonEditFragment extends Fragment implements ColorPickerDialog.OnColorChangedListener {

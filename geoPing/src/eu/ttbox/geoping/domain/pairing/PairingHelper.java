@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Log;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.model.Pairing;
@@ -23,6 +24,13 @@ public class PairingHelper {
     public int showNotificationIdx = -1;
     public int pairingTimeIdx = -1;
 
+    public int notifShutdown= -1;
+    public int notifBatteryLow= -1;
+    public int notifSimChange= -1;
+    public int notifPhoneCall= -1;
+    public int notifPhoneReceive= -1;
+
+    
     public PairingHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(PairingColumns.COL_ID);
         nameIdx = cursor.getColumnIndex(PairingColumns.COL_NAME);
@@ -31,6 +39,12 @@ public class PairingHelper {
         authorizeTypeIdx = cursor.getColumnIndex(PairingColumns.COL_AUTHORIZE_TYPE);
         showNotificationIdx = cursor.getColumnIndex(PairingColumns.COL_SHOW_NOTIF);
         pairingTimeIdx = cursor.getColumnIndex(PairingColumns.COL_PAIRING_TIME);
+        // Notification
+        notifShutdown = cursor.getColumnIndex(PairingColumns.COL_NOTIF_SHUTDOWN);
+        notifBatteryLow = cursor.getColumnIndex(PairingColumns.COL_NOTIF_BATTERY_LOW);
+        notifSimChange = cursor.getColumnIndex(PairingColumns.COL_NOTIF_SIM_CHANGE);
+        notifPhoneCall = cursor.getColumnIndex(PairingColumns.COL_NOTIF_PHONE_CALL);
+        notifPhoneReceive = cursor.getColumnIndex(PairingColumns.COL_NOTIF_PHONE_RECEIVE);
 
         isNotInit = false;
         return this;
@@ -55,6 +69,13 @@ public class PairingHelper {
         return this;
     }
 
+    public PairingHelper setCompoundButtonWithIdx(CompoundButton view, Cursor cursor, int idx) {
+        boolean value = cursor.getInt(idx) ==1;
+        view.setChecked(value);
+        return this;
+    }
+
+    
     public PairingHelper setTextPairingId(TextView view, Cursor cursor) {
         return setTextWithIdx(view, cursor, idIdx);
     }
@@ -78,6 +99,7 @@ public class PairingHelper {
     public PairingHelper setTextPairingPhone(TextView view, Cursor cursor) {
         return setTextWithIdx(view, cursor, phoneIdx);
     }
+
 
     public PairingHelper setTextPairingAuthorizeType(TextView view, Cursor cursor) {
         PairingAuthorizeTypeEnum authType = getPairingAuthorizeTypeEnum(cursor);

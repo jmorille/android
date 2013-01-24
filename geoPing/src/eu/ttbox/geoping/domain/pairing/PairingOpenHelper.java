@@ -10,7 +10,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "PairingOpenHelper";
 
     public static final String DATABASE_NAME = "pairing.db";
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
 
     // ===========================================================
     // Table
@@ -21,17 +21,21 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
             + "( " + PairingDatabase.PairingColumns.COL_NAME //
             + ", " + PairingDatabase.PairingColumns.COL_PHONE //
             + ", " + PairingDatabase.PairingColumns.COL_PHONE_NORMALIZED //
-            + ", " + PairingDatabase.PairingColumns.COL_PHONE_MIN_MATCH // 
+            + ", " + PairingDatabase.PairingColumns.COL_PHONE_MIN_MATCH //
             + ", " + PairingDatabase.PairingColumns.COL_AUTHORIZE_TYPE //
             + ", " + PairingDatabase.PairingColumns.COL_SHOW_NOTIF //
-            + ", " + PairingDatabase.PairingColumns.COL_PAIRING_TIME // 
+            + ", " + PairingDatabase.PairingColumns.COL_PAIRING_TIME //
+            + ", " + PairingDatabase.PairingColumns.COL_NOTIF_SHUTDOWN //
+            + ", " + PairingDatabase.PairingColumns.COL_NOTIF_BATTERY_LOW //
+            + ", " + PairingDatabase.PairingColumns.COL_NOTIF_SIM_CHANGE //
+            + ", " + PairingDatabase.PairingColumns.COL_NOTIF_PHONE_CALL //
+            + ", " + PairingDatabase.PairingColumns.COL_NOTIF_PHONE_RECEIVE //
             + ");";
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    
     private SQLiteDatabase mDatabase;
 
     PairingOpenHelper(Context context) {
@@ -48,8 +52,10 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
+
         db.execSQL("DROP TABLE IF EXISTS " + PairingDatabase.TABLE_PAIRING_FTS);
         onCreate(db);
+
     }
 
 }
