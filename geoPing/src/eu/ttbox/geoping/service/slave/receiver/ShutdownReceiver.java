@@ -34,22 +34,22 @@ public class ShutdownReceiver extends BroadcastReceiver {
 
 		String action = intent.getAction();
 		if (ACTION_BOOT_COMPLETED.equals(action)) {
-			String encrypedMsg = "Mon tel Viens de démarrer : " + ACTION_BOOT_COMPLETED;
+			String encrypedMsg = "Mon tel Vient de démarrer : " + ACTION_BOOT_COMPLETED;
 			Log.d(TAG, "### ############################### ### ");
 			Log.d(TAG, "### ### " + encrypedMsg + " ### ### ");
 			Log.d(TAG, "### ############################### ### ");
 			// Search Phones
-			String phone = searchPhoneForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
+			String phone = SpyNotificationHelper.searchPhoneForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
 			if (phone != null) {
 				SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
 			}
 		} else if (ACTION_SHUTDOWN.equals(action) || QUICKBOOT_POWEROFF.equals(action)) {
-			String encrypedMsg = "Mon tel viens de s'éteindre : " + action;
+			String encrypedMsg = "Mon tel vient de s'éteindre : " + action;
 			Log.d(TAG, "### ############################### ### ");
 			Log.d(TAG, "### ### " + encrypedMsg + " ### ### ");
 			Log.d(TAG, "### ############################### ### ");
 			// Search Phones
-			String phone = searchPhoneForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
+			String phone = SpyNotificationHelper.searchPhoneForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
 			Log.d(TAG, "### ### Destination : " + phone + " ### ### ");
 			if (phone != null) {
 				// Send SMS
@@ -68,31 +68,5 @@ public class ShutdownReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private String searchPhoneForNotif(Context context, String notifCol) {
-		String[] projection = new String[] { PairingColumns.COL_PHONE };
-		String selection = String.format("%s = 1", notifCol);
-		Cursor cursor = context.getContentResolver().query(PairingProvider.Constants.CONTENT_URI, projection, selection, null, null);
-		Log.d(TAG, "Search Pairing for criteria : " + selection + " ==> " + cursor.getCount() + " result");
-		StringBuffer sb = new StringBuffer();
-		boolean isNotFirst = false;
-		try {
-			while (cursor.moveToNext()) {
-				if (isNotFirst) {
-					sb.append(';');
-				}
-				String phone = cursor.getString(0);
-				sb.append(phone);
-				isNotFirst = true;
-			}
-		} finally {
-			cursor.close();
-		}
-		// Result
-		if (isNotFirst) {
-			return sb.toString();
-		}
-		return null;
-
-	}
 
 }

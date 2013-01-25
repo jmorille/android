@@ -123,8 +123,7 @@
         <receiver android:enabled="true" android:name=".service.slave.receiver.ShutdownReceiver">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
-                <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/> 
             </intent-filter>
 			 <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -138,6 +137,9 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.HOME"/>
             </intent-filter>    
+            <intent-filter>
+                <action android:name="eu.ttbox.geoping.BootCompleteReceiver.ACTION_SMS_SENT"/>
+            </intent-filter>  
          </receiver>
          
         <service android:enabled="true" android:name=".service.slave.BackgroudLocService">
