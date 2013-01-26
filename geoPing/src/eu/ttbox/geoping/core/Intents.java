@@ -109,6 +109,14 @@ public class Intents {
         return intent;
     }
 
+    public static Intent showOnMapPerson(Context context, long personId, String phone) {
+    	 Intent intent = new Intent(context, ShowMapActivity.class);
+         intent.setAction(Intent.ACTION_VIEW);
+         intent.putExtra(EXTRA_PERSON_ID, personId);
+         intent.putExtra(EXTRA_SMS_PHONE, phone);
+         return intent;
+         
+    }
     // ===========================================================
     // GeoPing Master
     // ===========================================================

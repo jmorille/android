@@ -36,7 +36,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 {
 
 	private static final String TAG = "PhotoEditorView";
-	
+
 	private ImageView mPhotoImageView;
 	private View mFrameView;
 
@@ -47,6 +47,10 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 	private boolean mHasSetPhoto = false;
 	private boolean mReadOnly;
 
+	// ===========================================================
+	// Constructor
+	// ===========================================================
+
 	public PhotoEditorView(Context context) {
 		super(context);
 	}
@@ -54,24 +58,17 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 	public PhotoEditorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// Read atrs
-		TypedArray a = getContext().obtainStyledAttributes(attrs,R.styleable.PhotoEditorView);
+		TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PhotoEditorView);
 		int geopingType = a.getInteger(R.styleable.PhotoEditorView_geopingType, 0);
 		a.recycle();
 		Log.w(TAG, "geopingType : " + geopingType);
 	}
 
-	@Override
-	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-		mFrameView.setEnabled(enabled);
-	}
- 
-
 	/** {@inheritDoc} */
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-		
+
 		mTriangleAffordance = findViewById(R.id.photo_triangle_affordance);
 		mPhotoImageView = (ImageView) findViewById(R.id.photo);
 		mFrameView = findViewById(R.id.frame);
@@ -80,25 +77,33 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 			public void onClick(View v) {
 				if (mListener != null) {
 					Animation animationOut = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_to_middle);
-					 clearAnimation();
-					 startAnimation(animationOut);
+					clearAnimation();
+					startAnimation(animationOut);
 					mListener.onRequest(EditorListener.REQUEST_PICK_PHOTO);
 				}
 			}
 		});
 	}
- 
- 
+
+	// ===========================================================
+	// Accessors
+	// ===========================================================
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		mFrameView.setEnabled(enabled);
+	}
 
 	public void setValues(final Bitmap photo, boolean readOnly) {
-		if (photo != null) { 
+		if (photo != null) {
 			mPhotoImageView.setImageBitmap(photo);
-//			mPhotoImageView.post(new Runnable() { 
-//				@Override
-//				public void run() {
-//					mPhotoImageView.setImageBitmap(photo);
-//				}
-//			});
+			// mPhotoImageView.post(new Runnable() {
+			// @Override
+			// public void run() {
+			// mPhotoImageView.setImageBitmap(photo);
+			// }
+			// });
 			mFrameView.setEnabled(isEnabled());
 			mHasSetPhoto = true;
 			// mEntry.setFromTemplate(false);
@@ -114,7 +119,6 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 		return mHasSetPhoto;
 	}
 
- 
 	protected void resetDefault() {
 		// Invalid photo, show default "add photo" place-holder
 		mPhotoImageView.setImageResource(R.drawable.ic_contact_picture_holo_light);
@@ -122,6 +126,10 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 		mHasSetPhoto = false;
 		// mEntry.setFromTemplate(true);
 	}
+
+	// ===========================================================
+	// Listeners
+	// ===========================================================
 
 	/** {@inheritDoc} */
 	// @Override
@@ -132,7 +140,6 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 		mTriangleAffordance.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
 		mFrameView.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
 	}
- 
 
 	public interface EditorListener {
 		public void onRequest(int request);

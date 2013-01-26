@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.ui.person;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -22,6 +25,7 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.ui.map.ShowMapActivity;
 
 public class PersonListFragment extends Fragment {
 
@@ -40,7 +44,6 @@ public class PersonListFragment extends Fragment {
 	// init
 	private PersonListAdapter listAdapter;
 
-	 
 	private final AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 			Log.w(TAG, "OnItemClickListener on Item at Position=" + position + " with id=" + id);
@@ -60,14 +63,12 @@ public class PersonListFragment extends Fragment {
 		Log.i(TAG, "---------- Constructor PersonListFragment");
 	}
 
- 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.track_person_list, container, false);
+		final View v = inflater.inflate(R.layout.track_person_list, container, false);
 		Log.d(TAG, "onCreateView");
 		Log.i(TAG, "---------- onCreateView PersonListFragment");
-		 
+
 		// Bindings
 		listView = (ListView) v.findViewById(android.R.id.list);
 		listView.setEmptyView(v.findViewById(android.R.id.empty));
@@ -83,9 +84,29 @@ public class PersonListFragment extends Fragment {
 		addPersonButton.setOnClickListener(addPersonOnClickListener);
 		addPersonButtonHelp.setOnClickListener(addPersonOnClickListener);
 		// init
-		listAdapter = new PersonListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER );
+		listAdapter = new PersonListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 		listView.setAdapter(listAdapter);
 		listView.setOnItemClickListener(mOnClickListener);
+		listAdapter.setPersonListItemListener(new PersonListAdapter.PersonListItemListener() {
+
+			@Override
+			public void onClickPing(long personId, String phoneNumber) {
+				Context context = getActivity();
+				context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
+			}
+
+			@Override
+			public void onClickMap(long personId, String phoneNumber) {
+				// 
+//				Animation animationOut = AnimationUtils.loadAnimation(getActivity(), R.anim.shrink_to_top);
+//				v.clearAnimation();
+//				v.startAnimation(animationOut);
+				// Start Activity
+				Context context = getActivity(); 
+				Intent intentMap = Intents.showOnMapPerson(context, personId, phoneNumber);
+				context.startActivity(intentMap);
+			}
+		});
 		// Empty List
 		// emptyListView = (TextView) v.findViewById(android.R.id.empty);
 		// listView.setEmptyView(emptyListView);
@@ -103,7 +124,6 @@ public class PersonListFragment extends Fragment {
 
 	}
 
-	 
 	// ===========================================================
 	// Click Event
 	// ===========================================================

@@ -8,6 +8,9 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
@@ -26,7 +29,10 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 	private Context context;
 	// Cache
 	private PhotoThumbmailCache photoCache;
-
+	
+	// Listeners
+	private PersonListItemListener personListItemListener;
+	
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -46,7 +52,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 	}
 
 	@Override
-	public void bindView(View view, final Context context, Cursor cursor) {
+	public void bindView(final View view, final Context context, Cursor cursor) {
 
 		if (isNotBinding) {
 			intViewBinding(view, context, cursor);
@@ -62,6 +68,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		// Value
 		final String phoneNumber = helper.getPersonPhone(cursor);
 		final String contactId = helper.getContactId(cursor);
+		final long personId = helper.getPersonId(cursor);
 		String personName = helper.getPersonDisplayName(cursor);
 		int color = helper.getPersonColor(cursor);
 		// Bind Value
@@ -90,11 +97,25 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		// Button
 		holder.pingButton.setEditorListener(new EditorListener() {
 			@Override
-			public void onRequest(int request) {
-				context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
+			public void onRequest(int request) { 
+				if (personListItemListener != null) {
+					personListItemListener.onClickPing(personId, phoneNumber);
+ 				}
 			}
 		});
-
+		holder.mapButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Animation animationOut = AnimationUtils.loadAnimation(context, R.anim.shrink_to_middle);
+				holder.mapButton.clearAnimation();
+				holder.mapButton.startAnimation(animationOut);
+				if (personListItemListener != null) {
+					personListItemListener.onClickMap(personId, phoneNumber);
+ 				}
+				
+			}
+		});
 	}
 
 	@Override
@@ -105,15 +126,17 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		holder.nameText = (TextView) view.findViewById(R.id.person_list_item_name);
 		holder.phoneText = (TextView) view.findViewById(R.id.person_list_item_phone);
 		holder.pingButton = (PhotoEditorView) view.findViewById(R.id.person_list_item_geoping_button);
+		holder.mapButton = (ImageView) view.findViewById(R.id.person_list_item_editButton);;
 		view.setTag(holder);
 		return view;
 
 	}
 
 	static class ViewHolder {
-		PhotoEditorView pingButton;
+		ImageView mapButton;
 		TextView nameText;
 		TextView phoneText;
+		PhotoEditorView pingButton;
 		PhotoLoaderAsyncTask photoLoaderAsyncTask;
 	}
 
@@ -155,6 +178,25 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		}
 	}
 
+
+	// ===========================================================
+	// Listeners
+	// ===========================================================
+	 
+	
+	public void setPersonListItemListener(PersonListItemListener personListItemListener) {
+		this.personListItemListener = personListItemListener;
+	}
+
+	public interface PersonListItemListener {
+		
+		public void onClickMap( long personId, String phoneNumber);
+		public void onClickPing( long personId, String phoneNumber);
+
+		 
+	}
+
+	
 	// ===========================================================
 	// Others
 	// ===========================================================

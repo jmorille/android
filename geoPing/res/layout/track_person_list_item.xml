@@ -5,41 +5,55 @@
     android:orientation="horizontal"
     android:padding="10dip" >
 
+    <ImageView
+        android:id="@+id/person_list_item_editButton"
+        style="@style/entity_list_item"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:src="@drawable/ic_location_web_site" />
+
+    <include
+        xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping"
+        android:id="@+id/person_list_item_geoping_button"
+        style="@style/entity_list_item"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        layout="@layout/item_photo_editor"
+        android:minWidth="60dip"
+        android:text="@string/geoping"
+        geoping:geopingType="request" />
+
     <TextView
         android:id="@+id/person_list_item_name"
         style="@style/entity_list_item"
+        android:layout_alignTop="@id/person_list_item_geoping_button"
+        android:layout_marginLeft="5dp"
+        android:layout_toLeftOf="@id/person_list_item_geoping_button"
+        android:layout_toRightOf="@id/person_list_item_editButton"
         android:focusable="false"
         android:focusableInTouchMode="false" />
 
     <TextView
         android:id="@+id/person_list_item_phone"
         style="@style/entity_list_item"
+        android:layout_alignLeft="@id/person_list_item_name"
         android:layout_below="@id/person_list_item_name"
         android:focusable="false"
         android:focusableInTouchMode="false" />
 
-<!--     <ImageButton -->
-<!--     android:id="@+id/person_list_item_geoping_button" -->
-<!--     style="@style/entity_list_item" -->
-<!--     android:layout_alignParentRight="true" -->
-<!--     android:layout_centerVertical="true" -->
-<!--     android:minWidth="60dip" -->
-<!--     android:src="@drawable/ic_launcher" -->
-<!--     android:text="@string/geoping" -->
-<!--     android:width="20dp" /> -->
-<!---->
-
-    <include
-        android:id="@+id/person_list_item_geoping_button"
-          xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping" 
-         layout="@layout/item_photo_editor"
-        style="@style/entity_list_item"
-        android:layout_alignParentRight="true" 
-        android:layout_centerVertical="true"
-        android:minWidth="60dip" 
-        android:text="@string/geoping"
-        geoping:geopingType="request"
-        android:layout_width="48dp"
-        android:layout_height="48dp" />
+    <!-- <ImageButton -->
+    <!-- android:id="@+id/person_list_item_geoping_button" -->
+    <!-- style="@style/entity_list_item" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:layout_centerVertical="true" -->
+    <!-- android:minWidth="60dip" -->
+    <!-- android:src="@drawable/ic_launcher" -->
+    <!-- android:text="@string/geoping" -->
+    <!-- android:width="20dp" /> -->
+    <!--  -->
 
 </RelativeLayout>

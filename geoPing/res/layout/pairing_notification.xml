@@ -13,47 +13,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
 
-        <CheckBox
-            android:id="@+id/pairing_notification_shutdown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" 
-            android:text="@string/pairing_notification_shutdown" />
-
-        <CheckBox
-            android:id="@+id/pairing_notification_battery_low"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/pairing_notification_shutdown" 
-            android:layout_alignLeft="@id/pairing_notification_shutdown" 
-            android:text="@string/pairing_notification_battery_low" />
-
-        <CheckBox
-            android:id="@+id/pairing_notification_sim_change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/pairing_notification_battery_low" 
-            android:layout_alignLeft="@id/pairing_notification_battery_low" 
-            android:text="@string/pairing_notification_sim_change" />
-
-        <CheckBox
-            android:id="@+id/pairing_notification_phone_call"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/pairing_notification_sim_change"
-            android:layout_below="@id/pairing_notification_sim_change" 
-            android:text="@string/pairing_notification_phone_call" />
-
-        <CheckBox
-            android:id="@+id/pairing_notification_phone_reveive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/pairing_notification_sim_change"
-            android:layout_below="@id/pairing_notification_sim_change" 
-            android:text="@string/pairing_notification_phone_receive" />
+        <include layout="@layout/pairing_notification_compound_button" />
         
         
     </RelativeLayout>
