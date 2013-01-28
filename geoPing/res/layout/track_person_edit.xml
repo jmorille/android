@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping" 
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -22,16 +23,7 @@
             android:hint="@string/person_name"
             android:inputType="textPersonName" />
 
-        <!-- <ImageView -->
-        <!-- android:id="@+id/person_photo_imageView" -->
-        <!-- android:layout_width="80dp" -->
-        <!-- android:layout_height="80dp" -->
-        <!-- android:layout_alignParentRight="true" -->
-        <!-- android:layout_marginBottom="26dp" -->
-        <!-- android:maxHeight="80dp" -->
-        <!-- android:maxWidth="80dp" -->
-        <!-- android:src="@drawable/ic_launcher" /> -->
-
+      
         <include
             android:id="@+id/person_photo_imageView"
             android:layout_width="80dp"
@@ -39,6 +31,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="26dp"
             layout="@layout/item_photo_editor"
+               geoping:geopingType="request"
             android:maxHeight="80dp"
             android:maxWidth="80dp" />
 

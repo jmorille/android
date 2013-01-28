@@ -107,7 +107,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 			
 			@Override
 			public void onClick(View v) {
-				Animation animationOut = AnimationUtils.loadAnimation(context, R.anim.shrink_to_middle);
+				Animation animationOut = AnimationUtils.loadAnimation(context, R.anim.rotate_anim);
 				holder.mapButton.clearAnimation();
 				holder.mapButton.startAnimation(animationOut);
 				if (personListItemListener != null) {

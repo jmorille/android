@@ -15,6 +15,16 @@ import eu.ttbox.geoping.ui.pairing.PairingListFragment;
 import eu.ttbox.geoping.ui.person.PersonListFragment;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
+/**
+ * TODO <br>
+ * edit ./samples/android-17/ActionBarCompat/src/com/example/android/
+ * actionbarcompat/ActionBarActivity.java <br>
+ * edit ./samples/android-17/ActionBarCompat/src/com/example/android/
+ * actionbarcompat/ActionBarHelper.java <br>
+ * 
+ * @author jmorille
+ * 
+ */
 public class MainActivity extends SherlockFragmentActivity { //
 
 	private static final String TAG = "MainActivity";
@@ -39,7 +49,6 @@ public class MainActivity extends SherlockFragmentActivity { //
 	private PairingListFragment pairingListFragment;
 	private SmsLogListFragment smsLogListFragment;
 
- 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -47,7 +56,7 @@ public class MainActivity extends SherlockFragmentActivity { //
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main); 
+		setContentView(R.layout.activity_main);
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
 		// of the app.
@@ -66,8 +75,6 @@ public class MainActivity extends SherlockFragmentActivity { //
 		Log.d(TAG, "--------------- " + getPackageName() + "_preferences");
 
 	}
- 
- 
 
 	// ===========================================================
 	// Menu
@@ -134,7 +141,7 @@ public class MainActivity extends SherlockFragmentActivity { //
 			switch (position) {
 			case PERSON:
 				if (personListFragment == null) {
-					personListFragment = new PersonListFragment( );
+					personListFragment = new PersonListFragment();
 					Log.d(TAG, "Create Fragment PersonListFragment");
 				}
 				fragment = personListFragment;

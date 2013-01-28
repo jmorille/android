@@ -136,8 +136,8 @@ public class RangeTimelineView extends RelativeLayout {
 //           Log.w(TAG, "Ignore setAbsoluteValues for min > max : "+  absoluteMinValue + " > " + absoluteMaxValue);
 //           return;
 //       }
-    	Log.w(TAG, "setAbsoluteValues " + getTimeFromMs(absoluteMinValue) + " to " +    getTimeFromMs(absoluteMaxValue) );
-        Log.w(TAG, "setAbsoluteValues " +  absoluteMinValue  + " to " +     absoluteMaxValue  );
+    	Log.d(TAG, "setAbsoluteValues " + getTimeFromMs(absoluteMinValue) + " to " +    getTimeFromMs(absoluteMaxValue) );
+        Log.d(TAG, "setAbsoluteValues " +  absoluteMinValue  + " to " +     absoluteMaxValue  );
         int currentSelectMinVal = rangeSeekBar.getSelectedMinValue();
         int currentSelectMaxVal = rangeSeekBar.getSelectedMaxValue();
         boolean isSelectMin = currentSelectMinVal == rangeSeekBar.getAbsoluteMinValue();

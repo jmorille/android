@@ -456,6 +456,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 	}
 
 	public void centerOnPersonPhone(final String phone) {
+		Log.d(TAG, "centerOnPersonPhone : " + phone);
 		if (myLocation != null) {
 			myLocation.disableFollowLocation();
 		}
@@ -463,7 +464,10 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			@Override
 			public void run() {
 				// Display GeoPoints for person
+				Log.d(TAG, "@@@@@@ geoTrackOverlay for center");
 				GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone, true);
+				Log.d(TAG, "@@@@@@ geoTrackOverlay to center now");
+				geoTrackOverlay.animateToLastKnowPosition(false);
 			}
 		});
 	}
@@ -535,6 +539,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
 	private GeoTrackOverlay geoTrackOverlayGetOrAddForPhone(String phone, boolean centerOnLastPos) {
 		GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(phone);
+		Log.d(TAG, "geoTrackOverlay for phone  [" + phone + "] with center on it (" +centerOnLastPos +
+				")  is found: "  + (geoTrackOverlay !=null) );
 		// Add person layer
 		if (geoTrackOverlay == null) {
 			Person person = null;
@@ -549,7 +555,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			}
 		} else {
 			if (centerOnLastPos) {
-				geoTrackOverlay.animateToLastKnowPosition();
+				geoTrackOverlay.animateToLastKnowPosition(false);
 			}
 		}
 
@@ -571,16 +577,26 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 					.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener) // 
 					.setGeocodingAuto(geocodingAuto);
 			// Last Position center
+			Log.d(TAG, "------------------------------------------");
+			Log.d(TAG, "------------------------------------------");
+			Log.d(TAG, "GeotrackLastAddedListener need to create " + centerOnLastPos);
+			Log.d(TAG, "------------------------------------------");
+			Log.d(TAG, "------------------------------------------");
 			if (centerOnLastPos) {
 				GeotrackLastAddedListener geotrackLastAddedListener = new GeotrackLastAddedListener() {
 					@Override
 					public void addedLastGeoTrack(GeoTrack lastGeoTrack) {
-						Log.d(TAG, String.format("Cnter One on the last postion of the person %s", person));
+						Log.d(TAG, "------------------------------------------");
+						Log.d(TAG, "------------------------------------------");
+						Log.d(TAG, String.format("Center One on the last postion of the person %s", person));
+						Log.d(TAG, "------------------------------------------");
+						Log.d(TAG, "------------------------------------------");
 						centerOnPersonPhone(userId, lastGeoTrack.getLatitudeE6(), lastGeoTrack.getLongitudeE6());
 						geoTrackOverlay.setGeotrackLastAddedListener(null);
 					}
 				};
 				geoTrackOverlay.setGeotrackLastAddedListener(geotrackLastAddedListener); //
+				geoTrackOverlay.animateToLastKnowPosition(false);
 			}
 			// Register this geoTrack
 			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
@@ -593,7 +609,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		} else {
 			geoTrackOverlay = geoTrackOverlayByUser.get(userId);
 			if (centerOnLastPos) {
-				geoTrackOverlay.animateToLastKnowPosition();
+				geoTrackOverlay.animateToLastKnowPosition(false);
 			}
 			Log.e(TAG, String.format("Could not Add person %s in geoTrackOverlayByUser (It already in List)", person));
 		}
@@ -624,7 +640,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		boolean isDone = false;
 		if (geoTrackOverlayByUser.containsKey(userId)) {
 			GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(userId);
-			geoTrackOverlay.animateToLastKnowPosition();
+			geoTrackOverlay.animateToLastKnowPosition(false);
 			if (myLocation != null) {
 				myLocation.disableFollowLocation();
 			}

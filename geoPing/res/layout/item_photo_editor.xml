@@ -3,7 +3,7 @@
       xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping" 
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    geoping:geopingType="request"
+ 
     class="eu.ttbox.geoping.ui.person.PhotoEditorView"
     android:orientation="horizontal" >
 

@@ -82,7 +82,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	private IntentFilter mStatusReceiverIntentFilter;
 	private OnRangeGeoTrackValuesChangeListener onRangeGeoTrackValuesChangeListener;
 	private GeotrackLastAddedListener geotrackLastAddedListener;
-	
+
 	// Config
 	private Person person;
 
@@ -144,11 +144,11 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	// Constructors
 	// ===========================================================
 
-	public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay ) {
-		this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay );
+	public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay) {
+		this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay);
 	}
 
-	public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs ) {
+	public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs) {
 		super(pResourceProxy);
 		GEOTRACK_LIST_LOADER = R.id.config_id_geotrack_list_loader + (int) person.id + 1000;
 		// person.id;
@@ -156,7 +156,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		Log.d(TAG, "### Create " + person);
 		Log.d(TAG, "#################################");
 		this.context = ctx;
-		this.person = person; 
+		this.person = person;
 		this.loaderManager = loaderManager;
 		this.mapView = mapView;
 		this.mMapController = mapView.getController();
@@ -267,21 +267,27 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 				beginMs, endMs));
 	}
 
-	public void animateToLastKnowPosition() {
+	public void animateToLastKnowPosition(boolean animated) {
 		int geoTrackSize = geoTracks.size();
+		Log.w(TAG, "------ animateToLastKnowPosition(" + animated + ") : geoTrackSize = " + geoTrackSize);
 		if (geoTrackSize > 0) {
 			GeoTrack geoTrack = geoTracks.get(geoTrackSize - 1);
-			animateToGeoTrack(geoTrack);
+			animateToGeoTrack(geoTrack, animated);
 		}
 	}
 
-	public void animateToGeoTrack(GeoTrack geoTrack) {
-		mMapController.animateTo(geoTrack.asGeoPoint());
+	public void animateToGeoTrack(GeoTrack geoTrack, boolean animated) {
+		if (animated) {
+			mMapController.animateTo(geoTrack.asGeoPoint());
+		} else {
+			mMapController.setCenter(geoTrack.asGeoPoint());
+		}
+		Log.d(TAG, "animateToGeoTrack (" + animated + ") : " + geoTrack);
 	}
 
 	private void invalidateMapFor(GeoTrack geoTrack) {
 		// TODO for GeoPoint
-		mapView.invalidate();
+		mapView.postInvalidate();
 	}
 
 	private void addNewGeoTrack(GeoTrack geoTrack) {
@@ -306,7 +312,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		// Invalidate Map
 		invalidateMapFor(geoTrack);
 		if (isNewOneIsTheLast) {
-			animateToGeoTrack(geoTrack);
+			animateToGeoTrack(geoTrack, true);
 		}
 	}
 
@@ -318,7 +324,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		this.geocodingAuto = isGeocodingAuto;
 		return this;
 	}
-	
+
 	public void disableThreadExecutors() {
 		if (runOnFirstFixExecutor != null) {
 			runOnFirstFixExecutor.shutdown();
@@ -392,18 +398,18 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		if (onRangeGeoTrackValuesChangeListener != null) {
 			int newRangeMin = getGeoTrackRangeTimeValueMin();
 			int newRangeMax = getGeoTrackRangeTimeValueMax();
-			Log.w(TAG, "notifyChangeOnRangeGeoTrackValuesChangeListener : "  +newRangeMin + " to " + newRangeMax );
+			Log.w(TAG, "notifyChangeOnRangeGeoTrackValuesChangeListener : " + newRangeMin + " to " + newRangeMax);
 			onRangeGeoTrackValuesChangeListener.onRangeGeoTrackValuesChange(newRangeMin, newRangeMax);
 		}
 	}
 
 	public int getGeoTrackRangeTimeValueMin() {
-		int newRangeMin = geoTrackRangeTimeValueMin ==  Long.MAX_VALUE ?  Integer.MAX_VALUE :  (int) ((geoTrackRangeTimeValueMin - timeBeginInMs) / 1000);
+		int newRangeMin = geoTrackRangeTimeValueMin == Long.MAX_VALUE ? Integer.MAX_VALUE : (int) ((geoTrackRangeTimeValueMin - timeBeginInMs) / 1000);
 		return newRangeMin;
 	}
 
 	public int getGeoTrackRangeTimeValueMax() {
-		int newRangeMax = geoTrackRangeTimeValueMax ==  Long.MIN_VALUE ?  Integer.MIN_VALUE :   (int) ((geoTrackRangeTimeValueMax - timeBeginInMs) / 1000);
+		int newRangeMax = geoTrackRangeTimeValueMax == Long.MIN_VALUE ? Integer.MIN_VALUE : (int) ((geoTrackRangeTimeValueMax - timeBeginInMs) / 1000);
 		return newRangeMax;
 	}
 
@@ -697,17 +703,19 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 				boolean isRangeChange = false;
 				GeoTrack geoTrack = null;
 				do {
-					  geoTrack = helper.getEntity(cursor);
+					geoTrack = helper.getEntity(cursor);
 					// Log.d(TAG, String.format("Cursor : %s", geoTrack));
 					// Adding to list
 					points.add(geoTrack);
 					isRangeChange |= computeGeoTrackTimeRange(geoTrack.getTime(), false);
 					Log.d(TAG, String.format("Add New GeoTrack : %s", geoTrack));
 				} while (cursor.moveToNext());
+
 				if (isRangeChange) {
 					notifyChangeOnRangeGeoTrackValuesChangeListener();
 				}
-				if (geoTrack != null && geotrackLastAddedListener != null) {
+				Log.w(TAG, "------- Added last Geopoint : " + geoTrack  + " // with LastAddedListener "  + (geotrackLastAddedListener != null));
+				if (geoTrack != null && geotrackLastAddedListener != null) { 
 					geotrackLastAddedListener.addedLastGeoTrack(geoTrack);
 				}
 			}
@@ -716,7 +724,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
 		@Override
 		public void onLoaderReset(Loader<Cursor> loader) {
-			geoTracks.clear();
+ 			geoTracks.clear();
 		}
 	};
 
@@ -797,7 +805,6 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		}
 		return result;
 	}
-	
 
 	// ===========================================================
 	// Listener
@@ -807,7 +814,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		this.geotrackLastAddedListener = geotrackLastAddedListener;
 		return this;
 	}
-	
+
 	public interface GeotrackLastAddedListener {
 		public void addedLastGeoTrack(GeoTrack lastGeoTrack);
 

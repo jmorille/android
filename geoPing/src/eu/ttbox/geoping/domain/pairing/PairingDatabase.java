@@ -3,15 +3,19 @@ package eu.ttbox.geoping.domain.pairing;
 import java.util.HashMap;
 
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Log;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
+import eu.ttbox.geoping.service.slave.receiver.ShutdownReceiver;
 
 public class PairingDatabase {
 
@@ -195,5 +199,65 @@ public class PairingDatabase {
 			db.close();
 		}
 		return result;
+	}
+
+	private void checkSpyNotificationServiceActivator(ContentValues values) {
+		for (String notif : PairingColumns.NOTIFS_COLS) {
+			if (values.containsKey(notif)) {
+				boolean isWantedActif = values.getAsBoolean(notif);
+				
+				
+			}
+		}
+	}
+	
+	private Class getSpyNotificationServiceClassForColumnName(String notifColumnName) {
+		Class serviceClass = null;
+		if (PairingColumns.COL_NOTIF_SHUTDOWN.equals(notifColumnName)) {
+			 serviceClass = ShutdownReceiver.class;
+		}
+		return serviceClass;
+	}
+
+	private void enabledSettingSpyNotificationService(Context context, String notifColumnName, boolean wantedState) {
+		Class serviceClass = getSpyNotificationServiceClassForColumnName(notifColumnName);
+		if (serviceClass==null) {
+			Log.w(TAG, "No ComponentServiceClass For Notification Column : " + notifColumnName);
+		}
+		ComponentName receiver = new ComponentName(context, serviceClass);
+		PackageManager pm = context.getPackageManager();
+		int setting = pm.getComponentEnabledSetting(receiver);
+		switch (setting) {
+		case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
+			if (!wantedState) {
+				// TODO check the global status
+				boolean globalState = false;
+			    if (!globalState)	{
+			    	Log.i(TAG, "Enable component "  + receiver);
+					pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+ 			    }
+			}
+			break;
+		case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
+		case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
+		case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
+			if (wantedState) {
+				Log.i(TAG, "Enable component "  + receiver);
+				pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+			}
+			break; 
+		default:
+			break;
+		} 
+	}
+	private void getGlobalStatus(String notifColumnName) {
+		
+	}
+
+	private void initComp(PackageManager pm) {
+		pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+		pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+		// packeageM
+		// pm.setComponenetEnabledSetting(connectivity)
 	}
 }

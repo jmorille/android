@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.ui.person;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -97,12 +98,15 @@ public class PersonListFragment extends Fragment {
 
 			@Override
 			public void onClickMap(long personId, String phoneNumber) {
-				// 
-//				Animation animationOut = AnimationUtils.loadAnimation(getActivity(), R.anim.shrink_to_top);
-//				v.clearAnimation();
-//				v.startAnimation(animationOut);
+				//
+				// Animation animationOut =
+				// AnimationUtils.loadAnimation(getActivity(),
+				// R.anim.shrink_to_top);
+				// v.clearAnimation();
+				// v.startAnimation(animationOut);
 				// Start Activity
-				Context context = getActivity(); 
+				Context context = getActivity();
+//				Bundle translateBundle = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.slide_in_left, R.anim.slide_out_left).toBundle();
 				Intent intentMap = Intents.showOnMapPerson(context, personId, phoneNumber);
 				context.startActivity(intentMap);
 			}
