@@ -464,10 +464,13 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			@Override
 			public void run() {
 				// Display GeoPoints for person
-				Log.d(TAG, "@@@@@@ geoTrackOverlay for center");
+				Log.d(TAG, "@@@@@@ geoTrackOverlay for center BEGIN");
 				GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone, true);
-				Log.d(TAG, "@@@@@@ geoTrackOverlay to center now");
+                Log.d(TAG, "@@@@@@ geoTrackOverlay for center END");
+                
+				Log.d(TAG, "@@@@@@ geoTrackOverlay to center now BEGIN");
 				geoTrackOverlay.animateToLastKnowPosition(false);
+                Log.d(TAG, "@@@@@@ geoTrackOverlay to center now END");
 			}
 		});
 	}
@@ -573,31 +576,36 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		if (!geoTrackOverlayByUser.containsKey(userId)) {
 			Log.d(TAG, String.format("Need to add GeoTrackOverlay for person %s", person));
 			LoaderManager loaderManager = getActivity().getSupportLoaderManager(); 
-			geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis()) //
-					.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener) // 
-					.setGeocodingAuto(geocodingAuto);
+			//
 			// Last Position center
-			Log.d(TAG, "------------------------------------------");
-			Log.d(TAG, "------------------------------------------");
-			Log.d(TAG, "GeotrackLastAddedListener need to create " + centerOnLastPos);
-			Log.d(TAG, "------------------------------------------");
-			Log.d(TAG, "------------------------------------------");
+//			Log.d(TAG, "------------------------------------------");
+//			Log.d(TAG, "------------------------------------------");
+//			Log.d(TAG, "GeotrackLastAddedListener need to create " + centerOnLastPos);
+//			Log.d(TAG, "------------------------------------------");
+//			Log.d(TAG, "------------------------------------------");
 			if (centerOnLastPos) {
 				GeotrackLastAddedListener geotrackLastAddedListener = new GeotrackLastAddedListener() {
 					@Override
 					public void addedLastGeoTrack(GeoTrack lastGeoTrack) {
 						Log.d(TAG, "------------------------------------------");
 						Log.d(TAG, "------------------------------------------");
-						Log.d(TAG, String.format("Center One on the last postion of the person %s", person));
+						Log.d(TAG, String.format("Center One on the last postion of the person %s // to GeoTrack %s", person, lastGeoTrack));
 						Log.d(TAG, "------------------------------------------");
 						Log.d(TAG, "------------------------------------------");
 						centerOnPersonPhone(userId, lastGeoTrack.getLatitudeE6(), lastGeoTrack.getLongitudeE6());
-						geoTrackOverlay.setGeotrackLastAddedListener(null);
+//						geoTrackOverlay.setGeotrackLastAddedListener(null);
 					}
 				};
-				geoTrackOverlay.setGeotrackLastAddedListener(geotrackLastAddedListener); //
-				geoTrackOverlay.animateToLastKnowPosition(false);
+				geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geotrackLastAddedListener); 
+//				geoTrackOverlay.setGeotrackLastAddedListener(geotrackLastAddedListener); //
+//				geoTrackOverlay.animateToLastKnowPosition(false);
+			} else {
+			    geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), null); 
+
 			}
+	         geoTrackOverlay.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener) // 
+             .setGeocodingAuto(geocodingAuto);
+
 			// Register this geoTrack
 			geoTrackOverlayByUser.put(userId, geoTrackOverlay);
 			onRangeGeoTrackValuesChangeListener.computeRangeValues();
@@ -607,6 +615,10 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			mapView.postInvalidate();
 			Log.i(TAG, String.format("Add New GeoTrack Overlay (%s) for %s", isDone, person));
 		} else {
+		    Log.i(TAG, "------------------------------------------");
+            Log.i(TAG, "---------- animateToLastKnowPosition ----------");
+            Log.i(TAG, "------------------------------------------");
+            
 			geoTrackOverlay = geoTrackOverlayByUser.get(userId);
 			if (centerOnLastPos) {
 				geoTrackOverlay.animateToLastKnowPosition(false);

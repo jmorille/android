@@ -21,7 +21,7 @@ public class SpyNotificationHelper {
         try {
             while (cursor.moveToNext()) {
                 if (isNotFirst) {
-                    sb.append(' ');
+                    sb.append(';');
                 }
                 String phone = cursor.getString(0);
                 sb.append(phone);

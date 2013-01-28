@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -104,7 +105,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	private MapView.LayoutParams balloonViewLayoutParams;
 
 	// instance
-	private ArrayList<GeoTrack> geoTracks = new ArrayList<GeoTrack>();;
+	private CopyOnWriteArrayList<GeoTrack> geoTracks = new CopyOnWriteArrayList<GeoTrack>(); 
 
 	private GeoTrack selectedGeoTrack;
 
@@ -144,11 +145,11 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	// Constructors
 	// ===========================================================
 
-	public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay) {
-		this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay);
+	public GeoTrackOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay, GeotrackLastAddedListener geotrackLastAddedListener) {
+		this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay,   geotrackLastAddedListener);
 	}
 
-	public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs) {
+	public GeoTrackOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs, GeotrackLastAddedListener geotrackLastAddedListener) {
 		super(pResourceProxy);
 		GEOTRACK_LIST_LOADER = R.id.config_id_geotrack_list_loader + (int) person.id + 1000;
 		// person.id;
@@ -172,6 +173,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 			Log.w(TAG, "The Geocoder is not Present");
 		}
 		// Listener
+		this.geotrackLastAddedListener = geotrackLastAddedListener;
 		mStatusReceiver = new StatusReceiver();
 		try {
 			mStatusReceiverIntentFilter = new IntentFilter(Intents.ACTION_NEW_GEOTRACK_INSERTED, GeoTrackerProvider.Constants.ITEM_MIME_TYPE);
@@ -714,12 +716,16 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 				if (isRangeChange) {
 					notifyChangeOnRangeGeoTrackValuesChangeListener();
 				}
+				Log.w(TAG, "------------------------------------------");
+                Log.w(TAG, "------------------------------------------");
 				Log.w(TAG, "------- Added last Geopoint : " + geoTrack  + " // with LastAddedListener "  + (geotrackLastAddedListener != null));
+                Log.w(TAG, "------------------------------------------");
+                Log.w(TAG, "------------------------------------------");
 				if (geoTrack != null && geotrackLastAddedListener != null) { 
 					geotrackLastAddedListener.addedLastGeoTrack(geoTrack);
 				}
 			}
-			geoTracks = points;
+			geoTracks = new CopyOnWriteArrayList<GeoTrack>(points);
 		}
 
 		@Override
@@ -811,7 +817,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	// ===========================================================
 
 	public GeoTrackOverlay setGeotrackLastAddedListener(GeotrackLastAddedListener geotrackLastAddedListener) {
-		this.geotrackLastAddedListener = geotrackLastAddedListener;
+//		this.geotrackLastAddedListener = geotrackLastAddedListener;
 		return this;
 	}
 
