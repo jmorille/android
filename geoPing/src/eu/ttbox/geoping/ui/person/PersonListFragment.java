@@ -104,11 +104,9 @@ public class PersonListFragment extends Fragment {
 				// R.anim.shrink_to_top);
 				// v.clearAnimation();
 				// v.startAnimation(animationOut);
-				// Start Activity
-				Context context = getActivity();
-//				Bundle translateBundle = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.slide_in_left, R.anim.slide_out_left).toBundle();
-				Intent intentMap = Intents.showOnMapPerson(context, personId, phoneNumber);
-				context.startActivity(intentMap);
+				// Start Activity 
+						Intents.startActivityShowOnMapPerson(getActivity(), personId, phoneNumber);
+//				context.startActivity(intentMap);
 			}
 		});
 		// Empty List

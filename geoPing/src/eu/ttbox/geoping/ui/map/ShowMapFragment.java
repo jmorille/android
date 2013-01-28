@@ -460,19 +460,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		if (myLocation != null) {
 			myLocation.disableFollowLocation();
 		}
-		executor.execute(new Runnable() {
-			@Override
-			public void run() {
-				// Display GeoPoints for person
-				Log.d(TAG, "@@@@@@ geoTrackOverlay for center BEGIN");
-				GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone, true);
-                Log.d(TAG, "@@@@@@ geoTrackOverlay for center END");
-                
-				Log.d(TAG, "@@@@@@ geoTrackOverlay to center now BEGIN");
-				geoTrackOverlay.animateToLastKnowPosition(false);
-                Log.d(TAG, "@@@@@@ geoTrackOverlay to center now END");
-			}
-		});
+//		GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone, true);
+//		geoTrackOverlay.animateToLastKnowPosition(false);
+	 
 	}
 
 	public void centerOnPersonPhone(final String phone, final int latE6, final int lngE6) {
@@ -489,10 +479,11 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 					// mapController.animateTo(latE6, lngE6,
 					// AnimationType.HALFCOSINUSALDECELERATING);
 				}
-				// Display GeoPoints for person
-				GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
+				
 			}
 		});
+		// Display GeoPoints for person
+		GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone);
 	}
 
 	// ===========================================================

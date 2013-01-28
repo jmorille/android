@@ -271,7 +271,9 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
 	public void animateToLastKnowPosition(boolean animated) {
 		int geoTrackSize = geoTracks.size();
+		Log.w(TAG, "------ ------------- ---------");
 		Log.w(TAG, "------ animateToLastKnowPosition(" + animated + ") : geoTrackSize = " + geoTrackSize);
+		Log.w(TAG, "------ ------------- ---------");
 		if (geoTrackSize > 0) {
 			GeoTrack geoTrack = geoTracks.get(geoTrackSize - 1);
 			animateToGeoTrack(geoTrack, animated);

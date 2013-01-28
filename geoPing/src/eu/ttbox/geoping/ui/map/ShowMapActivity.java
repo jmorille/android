@@ -6,7 +6,6 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,6 +19,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 
 /**
@@ -30,8 +30,7 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 
 	private static final String TAG = "ShowMapActivity";
 
-	private static final boolean IS_POST_HONEYCOMB = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-
+ 
 	// Constant
 	/**
 	 * This number depend of previous menu
@@ -141,7 +140,7 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 			if ((menuId >= TilesOverlay.MENU_TILE_SOURCE_STARTING_ID) && (menuId < TilesOverlay.MENU_TILE_SOURCE_STARTING_ID + tileSize)) {
 				mapFragment.setMapViewTileSource(tiles.get(menuId - TilesOverlay.MENU_TILE_SOURCE_STARTING_ID));
 				// Compatibility
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				if (VersionUtils.isHc11) {
 					invalidateOptionsMenu();
 				}
 				return true;
