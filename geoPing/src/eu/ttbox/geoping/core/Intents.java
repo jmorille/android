@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.PairingProvider;
@@ -112,12 +113,12 @@ public class Intents {
 		return intent;
 	}
 
-	public static void startActivityShowOnMapPerson(Context context, long personId, String phone) {
+	public static void startActivityShowOnMapPerson(View v, Context context, long personId, String phone  ) {
 		Intent intent = new Intent(context, ShowMapActivity.class);
 		intent.setAction(Intent.ACTION_VIEW);
 		intent.putExtra(EXTRA_PERSON_ID, personId);
 		intent.putExtra(EXTRA_SMS_PHONE, phone);
-		startActivityWithTransitionBundle(context, intent);
+		startActivityWithTransitionBundle(context, intent,   v);
 	}
 
 
@@ -126,9 +127,10 @@ public class Intents {
 	// ===========================================================
 
 	@SuppressLint("NewApi")
-	private static void startActivityWithTransitionBundle(Context context, Intent intent) {
+	private static void startActivityWithTransitionBundle(Context context, Intent intent, View v) {
 		if (VersionUtils.isJb16) {
-			Bundle translateBundle = ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_left, R.anim.slide_out_left).toBundle();
+//            Bundle translateBundle = ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_left, R.anim.slide_out_left).toBundle();
+			Bundle translateBundle = ActivityOptions.makeScaleUpAnimation(v,0,0, v.getWidth(), v.getHeight() ).toBundle();
 			context.startActivity(intent, translateBundle);
 		} else {
 			context.startActivity(intent);

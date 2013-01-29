@@ -79,7 +79,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 					Animation animationOut = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_to_middle);
 					clearAnimation();
 					startAnimation(animationOut);
-					mListener.onRequest(EditorListener.REQUEST_PICK_PHOTO);
+					mListener.onRequest(v, EditorListener.REQUEST_PICK_PHOTO);
 				}
 			}
 		});
@@ -142,7 +142,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 	}
 
 	public interface EditorListener {
-		public void onRequest(int request);
+		public void onRequest(View v, int request);
 
 		public static final int REQUEST_PICK_PHOTO = 1;
 	}

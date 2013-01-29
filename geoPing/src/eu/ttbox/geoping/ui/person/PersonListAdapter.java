@@ -97,9 +97,9 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		// Button
 		holder.pingButton.setEditorListener(new EditorListener() {
 			@Override
-			public void onRequest(int request) { 
+			public void onRequest(View v, int request) { 
 				if (personListItemListener != null) {
-					personListItemListener.onClickPing(personId, phoneNumber);
+					personListItemListener.onClickPing(v, personId, phoneNumber);
  				}
 			}
 		});
@@ -111,7 +111,7 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 				holder.mapButton.clearAnimation();
 				holder.mapButton.startAnimation(animationOut);
 				if (personListItemListener != null) {
-					personListItemListener.onClickMap(personId, phoneNumber);
+					personListItemListener.onClickMap(v, personId, phoneNumber);
  				}
 				
 			}
@@ -190,8 +190,8 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 
 	public interface PersonListItemListener {
 		
-		public void onClickMap( long personId, String phoneNumber);
-		public void onClickPing( long personId, String phoneNumber);
+		public void onClickMap(View v,  long personId, String phoneNumber);
+		public void onClickPing(View v,  long personId, String phoneNumber);
 
 		 
 	}

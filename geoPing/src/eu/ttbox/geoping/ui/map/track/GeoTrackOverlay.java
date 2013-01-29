@@ -268,16 +268,23 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		Log.d(TAG, String.format("Range Date %1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS,%1$tL to Now %2$tY-%2$tm-%2$td %2$tH:%2$tM:%2$tS,%2$tL", //
 				beginMs, endMs));
 	}
+	
+	private GeotrackLastAddedListener animateToLastAddedListener = new GeotrackLastAddedListener() {
+      @Override
+      public void addedLastGeoTrack(GeoTrack lastGeoTrack) { 
+          animateToGeoTrack(lastGeoTrack, false);
+          setGeotrackLastAddedListener(null);
+      }
+  };
 
 	public void animateToLastKnowPosition(boolean animated) {
 		int geoTrackSize = geoTracks.size();
-		Log.w(TAG, "------ ------------- ---------");
-		Log.w(TAG, "------ animateToLastKnowPosition(" + animated + ") : geoTrackSize = " + geoTrackSize);
-		Log.w(TAG, "------ ------------- ---------");
+		setGeotrackLastAddedListener(animateToLastAddedListener);
 		if (geoTrackSize > 0) {
 			GeoTrack geoTrack = geoTracks.get(geoTrackSize - 1);
 			animateToGeoTrack(geoTrack, animated);
-		}
+			setGeotrackLastAddedListener(null);
+		} 
 	}
 
 	public void animateToGeoTrack(GeoTrack geoTrack, boolean animated) {
@@ -402,7 +409,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		if (onRangeGeoTrackValuesChangeListener != null) {
 			int newRangeMin = getGeoTrackRangeTimeValueMin();
 			int newRangeMax = getGeoTrackRangeTimeValueMax();
-			Log.w(TAG, "notifyChangeOnRangeGeoTrackValuesChangeListener : " + newRangeMin + " to " + newRangeMax);
+			Log.d(TAG, "notifyChangeOnRangeGeoTrackValuesChangeListener : " + newRangeMin + " to " + newRangeMax);
 			onRangeGeoTrackValuesChangeListener.onRangeGeoTrackValuesChange(newRangeMin, newRangeMax);
 		}
 	}
@@ -819,7 +826,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	// ===========================================================
 
 	public GeoTrackOverlay setGeotrackLastAddedListener(GeotrackLastAddedListener geotrackLastAddedListener) {
-//		this.geotrackLastAddedListener = geotrackLastAddedListener;
+		this.geotrackLastAddedListener = geotrackLastAddedListener;
 		return this;
 	}
 

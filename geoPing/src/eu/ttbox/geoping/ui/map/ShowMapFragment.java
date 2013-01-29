@@ -460,8 +460,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		if (myLocation != null) {
 			myLocation.disableFollowLocation();
 		}
-//		GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone, true);
-//		geoTrackOverlay.animateToLastKnowPosition(false);
+		GeoTrackOverlay geoTrackOverlay = geoTrackOverlayGetOrAddForPhone(phone ); 
+		geoTrackOverlay.animateToLastKnowPosition(false);
 	 
 	}
 
@@ -507,7 +507,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 		@Override
 		public void onDoAddPerson(Person person) {
 			Log.d(TAG, "onSelectPersonListener ask add person : " + person);
-			geoTrackOverlayAddPerson(person, false);
+			geoTrackOverlayAddPerson(person );
 		}
 
 		@Override
@@ -527,13 +527,11 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 	// ===========================================================
 	// GeoTrack Overlay
 	// ===========================================================
-	private GeoTrackOverlay geoTrackOverlayGetOrAddForPhone(String phone) {
-		return geoTrackOverlayGetOrAddForPhone(phone, false);
-	}
+ 
 
-	private GeoTrackOverlay geoTrackOverlayGetOrAddForPhone(String phone, boolean centerOnLastPos) {
+	private GeoTrackOverlay geoTrackOverlayGetOrAddForPhone(String phone ) {
 		GeoTrackOverlay geoTrackOverlay = geoTrackOverlayByUser.get(phone);
-		Log.d(TAG, "geoTrackOverlay for phone  [" + phone + "] with center on it (" +centerOnLastPos +
+		Log.d(TAG, "geoTrackOverlay for phone  [" + phone + "] with center on it ("  +
 				")  is found: "  + (geoTrackOverlay !=null) );
 		// Add person layer
 		if (geoTrackOverlay == null) {
@@ -545,18 +543,13 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 				cursor.close();
 			}
 			if (person != null) {
-				geoTrackOverlay = geoTrackOverlayAddPerson(person, centerOnLastPos);
+				geoTrackOverlay = geoTrackOverlayAddPerson(person );
 			}
-		} else {
-			if (centerOnLastPos) {
-				geoTrackOverlay.animateToLastKnowPosition(false);
-			}
-		}
-
+		}   
 		return geoTrackOverlay;
 	}
 
-	private synchronized GeoTrackOverlay geoTrackOverlayAddPerson(final Person person, boolean centerOnLastPos) {
+	private synchronized GeoTrackOverlay geoTrackOverlayAddPerson(final Person person  ) {
 		final String userId = person != null ? person.phone : null;
 		if (TextUtils.isEmpty(userId)) {
 			Log.e(TAG, String.format("Could not Add person %s with No Phone", person));
@@ -574,26 +567,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 //			Log.d(TAG, "GeotrackLastAddedListener need to create " + centerOnLastPos);
 //			Log.d(TAG, "------------------------------------------");
 //			Log.d(TAG, "------------------------------------------");
-			if (centerOnLastPos) {
-				GeotrackLastAddedListener geotrackLastAddedListener = new GeotrackLastAddedListener() {
-					@Override
-					public void addedLastGeoTrack(GeoTrack lastGeoTrack) {
-						Log.d(TAG, "------------------------------------------");
-						Log.d(TAG, "------------------------------------------");
-						Log.d(TAG, String.format("Center One on the last postion of the person %s // to GeoTrack %s", person, lastGeoTrack));
-						Log.d(TAG, "------------------------------------------");
-						Log.d(TAG, "------------------------------------------");
-						centerOnPersonPhone(userId, lastGeoTrack.getLatitudeE6(), lastGeoTrack.getLongitudeE6());
-//						geoTrackOverlay.setGeotrackLastAddedListener(null);
-					}
-				};
-				geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), geotrackLastAddedListener); 
-//				geoTrackOverlay.setGeotrackLastAddedListener(geotrackLastAddedListener); //
-//				geoTrackOverlay.animateToLastKnowPosition(false);
-			} else {
-			    geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), null); 
-
-			}
+		    geoTrackOverlay = new GeoTrackOverlay(getActivity(), this.mapView, loaderManager, person, System.currentTimeMillis(), null); 
 	         geoTrackOverlay.setOnRangeGeoTrackValuesChangeListener(onRangeGeoTrackValuesChangeListener) // 
              .setGeocodingAuto(geocodingAuto);
 
@@ -605,16 +579,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 			isDone = mapView.getOverlays().add(geoTrackOverlay);
 			mapView.postInvalidate();
 			Log.i(TAG, String.format("Add New GeoTrack Overlay (%s) for %s", isDone, person));
-		} else {
-		    Log.i(TAG, "------------------------------------------");
-            Log.i(TAG, "---------- animateToLastKnowPosition ----------");
-            Log.i(TAG, "------------------------------------------");
-            
-			geoTrackOverlay = geoTrackOverlayByUser.get(userId);
-			if (centerOnLastPos) {
-				geoTrackOverlay.animateToLastKnowPosition(false);
-			}
+		} else { 
 			Log.e(TAG, String.format("Could not Add person %s in geoTrackOverlayByUser (It already in List)", person));
+			geoTrackOverlay = geoTrackOverlayByUser.get(userId);
 		}
 		if (!isDone) {
 			return null;
@@ -684,7 +651,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 				do {
 					Person pers = helper.getEntity(cursor);
 					Log.d(TAG, String.format("Add Person with phone : %s", pers));
-					geoTrackOverlayAddPerson(pers, false);
+					geoTrackOverlayAddPerson(pers );
 				} while (cursor.moveToNext());
 			}
 		}

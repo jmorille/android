@@ -123,7 +123,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
 		// Action
 		holder.pingButton.setEditorListener(new EditorListener() {
 			@Override
-			public void onRequest(int request) {
+			public void onRequest(View v, int request) {
 				context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
 			}
 		});

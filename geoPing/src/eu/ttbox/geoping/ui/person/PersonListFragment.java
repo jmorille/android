@@ -91,13 +91,13 @@ public class PersonListFragment extends Fragment {
 		listAdapter.setPersonListItemListener(new PersonListAdapter.PersonListItemListener() {
 
 			@Override
-			public void onClickPing(long personId, String phoneNumber) {
+			public void onClickPing(View v, long personId, String phoneNumber) {
 				Context context = getActivity();
 				context.startService(Intents.sendSmsGeoPingRequest(context, phoneNumber));
 			}
 
 			@Override
-			public void onClickMap(long personId, String phoneNumber) {
+			public void onClickMap(View v, long personId, String phoneNumber) {
 				//
 				// Animation animationOut =
 				// AnimationUtils.loadAnimation(getActivity(),
@@ -105,7 +105,7 @@ public class PersonListFragment extends Fragment {
 				// v.clearAnimation();
 				// v.startAnimation(animationOut);
 				// Start Activity 
-						Intents.startActivityShowOnMapPerson(getActivity(), personId, phoneNumber);
+						Intents.startActivityShowOnMapPerson(v, getActivity(), personId, phoneNumber);
 //				context.startActivity(intentMap);
 			}
 		});

@@ -84,7 +84,7 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
 		// Button
 		holder.pingButton.setEditorListener(new EditorListener() {
 			@Override
-			public void onRequest(int request) {
+			public void onRequest(View v, int request) {
 				context.startService(Intents.sendSmsGeoPingResponse(context, phoneNumber, true));
 				// Notif
 				NotifToasts.showToastSendGeoPingResponse(context, phoneNumber);
