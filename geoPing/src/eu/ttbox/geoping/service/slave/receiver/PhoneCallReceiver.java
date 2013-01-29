@@ -9,12 +9,19 @@ import android.util.Log;
 
 public class PhoneCallReceiver extends BroadcastReceiver {
 
-	private static final String TAG = "LowBatteryReceiver";
+	private static final String TAG = "PhoneCallReceiver";
 
-	private static final String PHONE_ANSWER = "android.intent.action.ANSWER";
-
+	 
 	private static final String ACTION_PHONE_STATE_CHANGED = TelephonyManager.ACTION_PHONE_STATE_CHANGED;
 
+	private static final String  EXTRA_STATE = "state";
+	private static final String  EXTRA_INCOMING_NUMBER  ="incoming_number";
+
+	
+	private static final String  STATE_RINGING = "RINGING"; // Sonne
+ 	private static final String  STATE_OFFHOOK = "OFFHOOK"; // Decrocher
+ 	private static final String  STATE_IDLE	 = "IDLE"; // Racroche
+ 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
@@ -22,9 +29,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
 			Log.d(TAG,  "PhoneState action : " + action);
 			Bundle extras = intent.getExtras();
 			printExtras(extras);
-		} else if (PHONE_ANSWER.equals(action)) {
-
-		}
+		}  
 
 	}
 

@@ -149,7 +149,7 @@
         </receiver> 
           <receiver android:enabled="false" android:name=".service.slave.receiver.PhoneCallReceiver">
             <intent-filter>
-                 <action android:name="android.intent.action.SIM_STATE_CHANGED"/> 
+                 <action android:name="android.intent.action.PHONE_STATE"/>  
             </intent-filter>   
         </receiver> 
           
