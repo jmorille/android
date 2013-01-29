@@ -279,6 +279,7 @@ public class PairingDatabase {
 		case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
 			if (wantedState) {
 				if (PairingColumns.COL_NOTIF_SIM_CHANGE.equals(notifColumnName)) {
+					// Save Data needed for Receiver
 					String phone = SimChangeReceiver.savePrefsPhoneNumber(context);
 					if (phone == null) {
 						// TODO Notify Error
