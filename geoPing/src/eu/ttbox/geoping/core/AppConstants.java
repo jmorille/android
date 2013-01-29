@@ -37,6 +37,7 @@ public class AppConstants {
     
     // Spy Notification TODO
     public static final String PREFS_SPY_NOTIFICATION_SHUTDOWN_SLEEP_IN_MS  = "spyNotifShutdownSleepInMs";
+    public static final String PREFS_SPY_NOTIFICATION_SIMCHANGE_PHONENUMBER  = "spyNotifSimChanePhoneNumber";
     
     // Map
     public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = eu.ttbox.osm.core.AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC;

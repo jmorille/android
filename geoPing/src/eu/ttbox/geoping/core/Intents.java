@@ -130,8 +130,9 @@ public class Intents {
 	private static void startActivityWithTransitionBundle(Context context, Intent intent, View v) {
 		if (VersionUtils.isJb16) {
 //            Bundle translateBundle = ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_left, R.anim.slide_out_left).toBundle();
-			Bundle translateBundle = ActivityOptions.makeScaleUpAnimation(v,0,0, v.getWidth(), v.getHeight() ).toBundle();
-			context.startActivity(intent, translateBundle);
+//			Bundle translateBundle = ActivityOptions.makeScaleUpAnimation(v,0,0, v.getWidth(), v.getHeight() ).toBundle();
+//			context.startActivity(intent, translateBundle);
+			context.startActivity(intent);
 		} else {
 			context.startActivity(intent);
 		}

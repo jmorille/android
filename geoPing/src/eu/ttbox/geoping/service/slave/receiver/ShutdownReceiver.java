@@ -33,17 +33,7 @@ public class ShutdownReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 
 		String action = intent.getAction();
-		if (ACTION_BOOT_COMPLETED.equals(action)) {
-			String encrypedMsg = "Mon tel Vient de démarrer : " + ACTION_BOOT_COMPLETED;
-			Log.d(TAG, "### ############################### ### ");
-			Log.d(TAG, "### ### " + encrypedMsg + " ### ### ");
-			Log.d(TAG, "### ############################### ### ");
-			// Search Phones
-			String phone = SpyNotificationHelper.searchPhoneForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
-			if (phone != null) {
-				SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
-			}
-		} else if (ACTION_SHUTDOWN.equals(action) || QUICKBOOT_POWEROFF.equals(action)) {
+		if (ACTION_SHUTDOWN.equals(action) || QUICKBOOT_POWEROFF.equals(action)) {
 			String encrypedMsg = "Mon tel vient de s'éteindre : " + action;
 			Log.d(TAG, "### ############################### ### ");
 			Log.d(TAG, "### ### " + encrypedMsg + " ### ### ");
@@ -56,7 +46,7 @@ public class ShutdownReceiver extends BroadcastReceiver {
 				SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
 				// Sleep for Send the Sms
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-				int sleepWantedInMs =   prefs.getInt(AppConstants.PREFS_SPY_NOTIFICATION_SHUTDOWN_SLEEP_IN_MS, 5000);
+				int sleepWantedInMs = prefs.getInt(AppConstants.PREFS_SPY_NOTIFICATION_SHUTDOWN_SLEEP_IN_MS, 5000);
 				try {
 					Log.d(TAG, "### ### Begin Thread Sleep " + sleepWantedInMs + " ms ### ### ");
 					Thread.sleep(sleepWantedInMs);
@@ -67,6 +57,5 @@ public class ShutdownReceiver extends BroadcastReceiver {
 			}
 		}
 	}
-
 
 }

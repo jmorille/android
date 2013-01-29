@@ -120,7 +120,8 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
-        <receiver android:enabled="true" android:name=".service.slave.receiver.ShutdownReceiver">
+          <!-- Spy Notification Receiver -->
+        <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/> 
@@ -128,11 +129,9 @@
 			 <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.HOME"/>
-            </intent-filter>            
-		
-	  </receiver>
-
-       <receiver android:enabled="true" android:name=".service.slave.receiver.BootCompleteReceiver">
+            </intent-filter>        
+	  </receiver> 
+       <receiver android:enabled="false" android:name=".service.slave.receiver.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.HOME"/>
@@ -141,8 +140,19 @@
                 <action android:name="eu.ttbox.geoping.BootCompleteReceiver.ACTION_SMS_SENT"/>
             </intent-filter>  
          </receiver>
-         
-        <service android:enabled="true" android:name=".service.slave.BackgroudLocService">
+        <receiver android:enabled="false" android:name=".service.slave.receiver.LowBatteryReceiver">
+            <intent-filter>
+                 <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
+<!--                   <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/> -->
+            </intent-filter>
+        </receiver> 
+          <receiver android:enabled="false" android:name=".service.slave.receiver.SimChangeReceiver">
+            <intent-filter>
+                 <action android:name="android.intent.action.SIM_STATE_CHANGED"/> 
+            </intent-filter>   
+        </receiver> 
+        <!-- Geo Location background service Receiver-->
+        <service android:enabled="false" android:name=".service.slave.BackgroudLocService">
 		 <intent-filter> 
                <action android:name="EVENT_GSM"/> 
            </intent-filter> 

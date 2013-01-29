@@ -55,6 +55,11 @@
                 android:summaryOff="@string/prefs_sms_delete_onMessage_summaryOff"
                 android:summaryOn="@string/prefs_sms_delete_onMessage_summaryOn"
                 android:title="@string/prefs_sms_delete_onMessage" />
+            <EditTextPreference 
+                 android:defaultValue="5000"
+                android:key="spyNotifShutdownSleepInMs"
+               android:title="spyNotifShutdownSleepInMs" 
+                />
         </PreferenceScreen>
 
         <Preference android:title="@string/prefs_about" >
