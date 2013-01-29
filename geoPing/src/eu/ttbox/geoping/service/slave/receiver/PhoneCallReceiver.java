@@ -13,11 +13,16 @@ public class PhoneCallReceiver extends BroadcastReceiver {
 
 	 
 	private static final String ACTION_PHONE_STATE_CHANGED = TelephonyManager.ACTION_PHONE_STATE_CHANGED;
-
+	private static final String ACTION_NEW_OUTGOING_CALL ="android.intent.action.NEW_OUTGOING_CALL";
+	
+	// Extras Incoming
 	private static final String  EXTRA_STATE = "state";
 	private static final String  EXTRA_INCOMING_NUMBER  ="incoming_number";
 
+	// Extras Outgoing
+	private static final String  EXTRA_OUTGOING_NUMBER  ="android.intent.extra.PHONE_NUMBER";
 	
+	// Incomming State
 	private static final String  STATE_RINGING = "RINGING"; // Sonne
  	private static final String  STATE_OFFHOOK = "OFFHOOK"; // Decrocher
  	private static final String  STATE_IDLE	 = "IDLE"; // Racroche
@@ -29,6 +34,22 @@ public class PhoneCallReceiver extends BroadcastReceiver {
 			Log.d(TAG,  "PhoneState action : " + action);
 			Bundle extras = intent.getExtras();
 			printExtras(extras);
+			String state = extras.getString(EXTRA_STATE);
+			if (STATE_RINGING.equals(state)) {
+				String phoneNumber = extras.getString(EXTRA_INCOMING_NUMBER);
+				Log.d(TAG, "PhoneState incomming call : " + phoneNumber);
+			} else if (STATE_OFFHOOK.equals(state)) {
+				// Decrocher
+			} else if (STATE_IDLE.equals(state)) {
+				// Racroche ou ignore 
+			}
+		}  else if (ACTION_NEW_OUTGOING_CALL.equals(action)) {
+			Log.d(TAG,  "PhoneState action : " + action);
+			Bundle extras = intent.getExtras();
+			printExtras(extras);
+			// String 
+			String composePhoneNumber = extras.getString(EXTRA_OUTGOING_NUMBER);
+			Log.d(TAG, "PhoneState compose PhoneNumber : " + composePhoneNumber);
 		}  
 
 	}
