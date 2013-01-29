@@ -125,11 +125,7 @@
             <intent-filter android:priority="2147483647">
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/> 
-            </intent-filter>
-			 <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <category android:name="android.intent.category.HOME"/>
-            </intent-filter>        
+            </intent-filter>     
 	  </receiver> 
        <receiver android:enabled="false" android:name=".service.slave.receiver.BootCompleteReceiver">
             <intent-filter>
@@ -151,6 +147,13 @@
                  <action android:name="android.intent.action.SIM_STATE_CHANGED"/> 
             </intent-filter>   
         </receiver> 
+          <receiver android:enabled="false" android:name=".service.slave.receiver.PhoneCallReceiver">
+            <intent-filter>
+                 <action android:name="android.intent.action.SIM_STATE_CHANGED"/> 
+            </intent-filter>   
+        </receiver> 
+          
+          
         <!-- Geo Location background service Receiver-->
         <service android:enabled="false" android:name=".service.slave.BackgroudLocService">
 		 <intent-filter> 

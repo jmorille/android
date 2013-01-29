@@ -108,7 +108,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 		String phoneNumber = telephoneMgr.getLine1Number();
 		Log.d(TAG, "SIM DeviceId : " + telephoneMgr.getDeviceId()); // Code IMEI
 		Log.d(TAG, "SIM Network Operator Name : " + telephoneMgr.getNetworkOperatorName());
-		Log.d(TAG, "SIM Serial Number : " + telephoneMgr.getSimSerialNumber());
+		Log.d(TAG, "SIM Serial Number : " + telephoneMgr.getSimSerialNumber()); 
 		return phoneNumber;
 	}
 

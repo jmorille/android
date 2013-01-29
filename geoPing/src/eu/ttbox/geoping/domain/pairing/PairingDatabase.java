@@ -17,6 +17,7 @@ import android.util.Log;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.service.slave.receiver.BootCompleteReceiver;
 import eu.ttbox.geoping.service.slave.receiver.LowBatteryReceiver;
+import eu.ttbox.geoping.service.slave.receiver.PhoneCallReceiver;
 import eu.ttbox.geoping.service.slave.receiver.ShutdownReceiver;
 import eu.ttbox.geoping.service.slave.receiver.SimChangeReceiver;
 
@@ -248,7 +249,10 @@ public class PairingDatabase {
 			serviceClass = new ComponentName[] { new ComponentName(context, LowBatteryReceiver.class) };
 		} else if (PairingColumns.COL_NOTIF_SIM_CHANGE.equals(notifColumnName)) {
 			serviceClass = new ComponentName[] { new ComponentName(context, SimChangeReceiver.class) };
+		} else if (PairingColumns.COL_NOTIF_PHONE_CALL.equals(notifColumnName)) {
+			serviceClass = new ComponentName[] { new ComponentName(context, PhoneCallReceiver.class) };
 		}
+		
 		return serviceClass;
 	}
 
