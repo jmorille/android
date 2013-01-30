@@ -46,7 +46,7 @@
 			<type>apklib</type>
 		</dependency>
 
-		<!-- Google Service --> 
+		<!-- Google Service -->
 		<dependency>
 			<groupId>com.google.android.gcm</groupId>
 			<artifactId>gcm-client</artifactId>
@@ -76,7 +76,7 @@
 		<plugins>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>android-maven-plugin</artifactId> 
+				<artifactId>android-maven-plugin</artifactId>
 				<configuration>
 					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
@@ -91,7 +91,7 @@
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
-			 
+
 		</plugins>
 	</build>
 
@@ -163,9 +163,11 @@
 						<version>${android-maven-plugin.version}</version>
 						<inherited>true</inherited>
 						<configuration>
-   						    <release>true</release>
-   						    <nativeLibrariesDirectory>ignored</nativeLibrariesDirectory>
-							<sign><debug>false</debug></sign>
+							<release>true</release>
+							<nativeLibrariesDirectory>ignored</nativeLibrariesDirectory>
+							<sign>
+								<debug>false</debug>
+							</sign>
 							<zipalign>
 								<skip>false</skip>
 								<verbose>true</verbose>
@@ -225,9 +227,45 @@
 						</executions>
 					</plugin>
 				</plugins>
-				 
+
 			</build>
 		</profile>
 
 	</profiles>
+
+	<reporting>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javancss-maven-plugin</artifactId>
+				<version>2.0-beta-2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.5.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>2.7.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

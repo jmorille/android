@@ -23,7 +23,7 @@ import eu.ttbox.geoping.service.slave.receiver.SimChangeReceiver;
 
 public class PairingDatabase {
 
-	@SuppressWarnings("unused")
+	 
 	private static final String TAG = "PairingDatabase";
 
 	public static final String TABLE_PAIRING_FTS = "pairingFTS";
@@ -124,6 +124,10 @@ public class PairingDatabase {
 		} finally {
 			db.close();
 		}
+		if (result>0) {
+            // Check Service Activation
+            checkSpyNotificationServiceActivator(values);
+        }
 		return result;
 	}
 
@@ -186,6 +190,14 @@ public class PairingDatabase {
 		} finally {
 			db.close();
 		}
+		if (result>0) {
+		    ContentValues values = new ContentValues(PairingColumns.NOTIFS_COLS.length);
+		    for (String notifColumns : PairingColumns.NOTIFS_COLS ) {
+		        values.put(notifColumns, 0);
+		    }
+            // Check Service Activation
+            checkSpyNotificationServiceActivator(values);
+        }
 		return result;
 	}
 
@@ -204,8 +216,10 @@ public class PairingDatabase {
 		} finally {
 			db.close();
 		}
-		// Check Service Activation
-		checkSpyNotificationServiceActivator(values);
+		if (result>0) {
+    		// Check Service Activation
+    		checkSpyNotificationServiceActivator(values);
+		}
 		return result;
 	}
 

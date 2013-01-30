@@ -57,6 +57,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 			Bundle extras = intent.getExtras();
 			printExtras(extras);
 			String state = extras.getString(EXTRA_SIM_STATE);
+			Log.w(TAG, "SIM Action : " + action + " / State : " + state);
 			// Test phoneName = GSM ?
 			if (SIM_STATE_LOADED.equals(state)) {
 				// Read Phone number
@@ -83,6 +84,8 @@ public class SimChangeReceiver extends BroadcastReceiver {
 			}
 
 		}
+		
+		
 
 	}
 
@@ -97,7 +100,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 
 	private void printExtras(Bundle extras) {
 		for (String key : extras.keySet()) {
-			String value = extras.getString(key);
+			Object value = extras.get(key);
 			Log.d(TAG, "SIM extras : " + key + " = " + value);
 		}
 	}
@@ -109,6 +112,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 		Log.d(TAG, "SIM DeviceId : " + telephoneMgr.getDeviceId()); // Code IMEI
 		Log.d(TAG, "SIM Network Operator Name : " + telephoneMgr.getNetworkOperatorName());
 		Log.d(TAG, "SIM Serial Number : " + telephoneMgr.getSimSerialNumber()); 
+		Log.d(TAG, "SIM PhoneNumber : " + phoneNumber ); // Code IMEI
 		return phoneNumber;
 	}
 
