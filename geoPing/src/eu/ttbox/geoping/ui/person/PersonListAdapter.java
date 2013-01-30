@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import eu.ttbox.geoping.GeoPingApplication;
@@ -107,9 +108,9 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 			
 			@Override
 			public void onClick(View v) {
-				Animation animationOut = AnimationUtils.loadAnimation(context, R.anim.rotate_anim);
-				holder.mapButton.clearAnimation();
-				holder.mapButton.startAnimation(animationOut);
+//				Animation animationOut = AnimationUtils.loadAnimation(context, R.anim.rotate_anim);
+//				holder.mapButton.clearAnimation();
+//				holder.mapButton.startAnimation(animationOut);
 				if (personListItemListener != null) {
 					personListItemListener.onClickMap(v, personId, phoneNumber);
  				}
@@ -126,14 +127,14 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		holder.nameText = (TextView) view.findViewById(R.id.person_list_item_name);
 		holder.phoneText = (TextView) view.findViewById(R.id.person_list_item_phone);
 		holder.pingButton = (PhotoEditorView) view.findViewById(R.id.person_list_item_geoping_button);
-		holder.mapButton = (ImageView) view.findViewById(R.id.person_list_item_editButton);;
+		holder.mapButton = (ImageButton) view.findViewById(R.id.person_list_item_editButton);;
 		view.setTag(holder);
 		return view;
 
 	}
 
 	static class ViewHolder {
-		ImageView mapButton;
+		ImageButton mapButton;
 		TextView nameText;
 		TextView phoneText;
 		PhotoEditorView pingButton;

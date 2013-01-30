@@ -62,6 +62,8 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 SharedPreferences.Editor prefEditor = prefs.edit();
                 long now = System.currentTimeMillis();
                 prefEditor.putLong(PREFS_KEY_INLINE_TIME_IN_MS, now);
+                prefEditor.commit();
+                
             } else if (STATE_IDLE.equals(state)) {
                 // Racroche ou ignore
                 long endCall = System.currentTimeMillis();

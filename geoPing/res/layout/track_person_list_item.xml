@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:padding="10dip" >
 
-    <ImageView
+    <ImageButton
         android:id="@+id/person_list_item_editButton"
         style="@style/entity_list_item"
         android:layout_alignParentLeft="true"
