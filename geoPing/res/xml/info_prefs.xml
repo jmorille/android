@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceCategory xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/prefs_developement" >
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_action_about"
+        android:title="@string/prefs_info" >
+        <eu.ttbox.geoping.ui.prefs.comp.version.AppVersionPreference
+            android:defaultValue="unknow"
+            android:title="@string/prefs_version" />
+
+        <eu.ttbox.geoping.ui.prefs.comp.version.DisplayIntPreference
+            android:defaultValue="0"
+            android:key="APP_COUNT_LAUGHT"
+            android:summary="@string/prefs_count_laught_summary"
+            android:title="@string/prefs_count_laught" />
+
+        <Preference android:title="@string/prefs_about" >
+            <intent
+                android:action="eu.ttbox.geoping.ui.about.ACTION_VIEW_ABOUT"
+                android:targetClass="eu.ttbox.geoping.ui.about.AboutActivity"
+                android:targetPackage="eu.ttbox.geoping" />
+        </Preference>
+        <!-- <Preference -->
+        <!-- android:title="@string/prefs_licence" > -->
+        <!-- <intent -->
+        <!-- android:action="eu.ttbox.geoping.ui.about.ACTION_VIEW_LICENCE" -->
+        <!-- android:targetClass="eu.ttbox.geoping.ui.about.AboutActivity" -->
+        <!-- android:targetPackage="eu.ttbox.geoping" /> -->
+        <!-- </Preference> -->
+
+
+        <!-- <Preference -->
+        <!-- android:icon="@drawable/ic_action_help" -->
+        <!-- android:title="@string/prefs_help" > -->
+        <!-- <intent -->
+        <!-- android:action="android.intent.action.VIEW" -->
+        <!-- android:targetClass="eu.ttbox.velib.ui.help.HelpTabLayoutActivity" -->
+        <!-- android:targetPackage="eu.ttbox.velib" /> -->
+        <!-- </Preference> -->
+
+    </PreferenceCategory>
+
+</PreferenceCategory>

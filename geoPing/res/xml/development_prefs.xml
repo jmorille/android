@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/prefs_developement" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="smsDeleteOnMessage"
+        android:summaryOff="@string/prefs_sms_delete_onMessage_summaryOff"
+        android:summaryOn="@string/prefs_sms_delete_onMessage_summaryOn"
+        android:title="@string/prefs_sms_delete_onMessage" />
+
+    <EditTextPreference
+        android:defaultValue="5000"
+        android:key="spyNotifShutdownSleepInMs"
+        android:title="spyNotifShutdownSleepInMs" />
+
+</PreferenceScreen>

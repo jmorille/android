@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
      
     <string name="add_track_person">Ajouter une personne</string>
@@ -96,6 +97,10 @@
     <string name="prefs_count_laught">Nombre de lancement</string>
     <string name="prefs_count_laught_summary">Compteur d\'utilisation de l\'application</string>
     
+    <!-- Prefs Dev-->
+    <string name="show_dev_countdown">"Plus que <xliff:g id="STEP_COUNT">%1$d</xliff:g> étapes pour devenir un développeur."</string>
+    <string name="show_dev_on">"Vous êtes désormais un développeur !"</string>
+    <string name="show_dev_already">"Inutile, vous êtes déjà un développeur."</string>
 
     <!-- Dialog -->
     <string name="color_picker">Sélectionner une couleur</string>

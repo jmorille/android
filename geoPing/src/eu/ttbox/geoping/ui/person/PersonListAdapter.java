@@ -127,7 +127,10 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		holder.nameText = (TextView) view.findViewById(R.id.person_list_item_name);
 		holder.phoneText = (TextView) view.findViewById(R.id.person_list_item_phone);
 		holder.pingButton = (PhotoEditorView) view.findViewById(R.id.person_list_item_geoping_button);
-		holder.mapButton = (ImageButton) view.findViewById(R.id.person_list_item_editButton);;
+		holder.mapButton = (ImageButton) view.findViewById(R.id.person_list_item_editButton);
+		// Do not work if set in the xml laytou file
+		holder.mapButton .setFocusable(false);
+        holder.mapButton .setFocusableInTouchMode(false);
 		view.setTag(holder);
 		return view;
 

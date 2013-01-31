@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="add_track_person">Anadir una persona</string>
     <string name="add_pairing">Permitir un GeoPing</string>
@@ -96,7 +97,13 @@
     <string name="prefs_count_laught">Numero de lanzamiento</string>
     <string name="prefs_count_laught_summary">Numero de utilizacion de la aplicacion</string>
     
+   
+    <!-- Prefs Dev-->
+    <string name="show_dev_countdown">"Solo te quedan <xliff:g id="STEP_COUNT">%1$d</xliff:g> pasos para ser un desarrollador."</string>
+    <string name="show_dev_on">"¡Ahora están activadas las opciones de desarrollo!"</string>
+    <string name="show_dev_already">"No es necesario, están activadas las opciones de desarrollo."</string>
 
+    
     <!-- Dialog -->
     <string name="color_picker">Seleccionar un color</string>
  
