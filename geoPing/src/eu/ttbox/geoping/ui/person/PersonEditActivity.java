@@ -122,10 +122,10 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 		case R.id.menu_cancel:
 			editFragment.onCancelClick();
 			return true;
-		case R.id.menuQuitter:
-			// Pour fermer l'application il suffit de faire finish()
-			finish();
-			return true;
+//		case R.id.menuQuitter:
+//			// Pour fermer l'application il suffit de faire finish()
+//			finish();
+//			return true;
 		}
 		return false;
 	}

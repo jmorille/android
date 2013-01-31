@@ -13,12 +13,14 @@
     <string name="menu_delete">удалять</string>
     <string name="menu_cancel">отменить</string>
      
-    <!-- Billing -->
+      <!-- Billing -->
 
 
-    <!-- Encryption -->
-    <string name="no_geoping_description">Пожалуйста, установите https://play.google.com/store/apps/details?id=eu.ttbox.geoping</string>
- 
+    <!-- Share -->
+    <string name="menu_share_app">Share GeoPing</string>
+    <string name="share_app_subject">Let me recommend you GeoPing application</string>
+  
+
     <!-- GeoTrack Notification -->
     <string name="notif_click_to_accept">(Нажмите, чтобы принять)</string>
     <string name="notif_geoping">GeoPing</string>

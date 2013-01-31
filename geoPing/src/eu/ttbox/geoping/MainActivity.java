@@ -1,5 +1,7 @@
 package eu.ttbox.geoping;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +11,7 @@ import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
 import eu.ttbox.geoping.ui.pairing.PairingListFragment;
@@ -28,6 +31,8 @@ import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 public class MainActivity extends SherlockFragmentActivity { //
 
 	private static final String TAG = "MainActivity";
+
+	private com.actionbarsherlock.widget.ShareActionProvider mShareActionProvider;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -83,7 +88,28 @@ public class MainActivity extends SherlockFragmentActivity { //
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.menu, menu);
+		// Share
+		MenuItem itemShare = menu.findItem(R.id.menuAppShare);
+		mShareActionProvider = (com.actionbarsherlock.widget.ShareActionProvider) itemShare.getActionProvider();
+		// Share Inten
+ 
+		mShareActionProvider.setShareIntent(createShareIntent(this));
 		return true;
+	}
+
+	private Intent createShareIntent(Context context) {
+		Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
+		shareAppIntent.setType("text/plain"); 
+		shareAppIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.share_app_subject));
+//		shareAppIntent.putExtra(Intent.EXTRA_TEXT, "geoPing://pairing?id=eu.ttbox.geoping");
+		shareAppIntent.putExtra(Intent.EXTRA_TEXT, "market://details?id=eu.ttbox.geoping");
+		return shareAppIntent;
+	}
+
+	private void setShareItent(Intent shareIntent) {
+		if (mShareActionProvider != null) {
+			mShareActionProvider.setShareIntent(shareIntent);
+		}
 	}
 
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
@@ -99,6 +125,12 @@ public class MainActivity extends SherlockFragmentActivity { //
 		case R.id.menu_smslog:
 			mViewPager.setCurrentItem(SectionsPagerAdapter.LOG);
 			return true;
+			// case R.id.menuAppShare:
+			// Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
+			// shareAppIntent.putExtra(Intent.EXTRA_TEXT,
+			// "market://details?id=eu.ttbox.geoping");
+			// setShareItent(shareAppIntent);
+			// return true;
 		default:
 			break;
 		}
@@ -106,12 +138,12 @@ public class MainActivity extends SherlockFragmentActivity { //
 		if (isConsume) {
 			return isConsume;
 		} else {
-			switch (item.getItemId()) {
-			case R.id.menuQuitter:
-				// Pour fermer l'application il suffit de faire finish()
-				finish();
-				return true;
-			}
+			// switch (item.getItemId()) {
+			// case R.id.menuQuitter:
+			// // Pour fermer l'application il suffit de faire finish()
+			// finish();
+			// return true;
+			// }
 		}
 		return false;
 	}

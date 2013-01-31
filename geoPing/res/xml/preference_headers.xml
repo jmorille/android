@@ -9,7 +9,11 @@
             android:name="pref-resource"
             android:value="geoping_prefs" />
     </header>
+
+    <!-- System --> 
+    
     <header
+         android:id="@+id/development_settings"
         android:fragment="eu.ttbox.geoping.ui.prefs.GeoPingPrefActivity$PrefsFragment"
         android:icon="@android:drawable/ic_menu_gallery"
         android:title="@string/prefs_developement" >
@@ -18,6 +22,7 @@
             android:value="development_prefs" />
     </header>
     <header
+          android:id="@+id/about_settings"
         android:fragment="eu.ttbox.geoping.ui.prefs.GeoPingPrefActivity$PrefsFragment"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="@string/prefs_info" >

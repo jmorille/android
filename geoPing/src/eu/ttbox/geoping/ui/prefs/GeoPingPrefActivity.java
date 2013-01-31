@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import eu.ttbox.geoping.GeoPingApplication;
@@ -40,6 +41,7 @@ public class GeoPingPrefActivity extends PreferenceActivity  implements OnShared
         // onBuildHeaders() will be called during super.onCreate()
         super.onCreate(aSavedState);
         if (!VersionUtils.isHc11) {
+//        	 addPreferencesFromResource(R.xml.prefs);
             addPreferencesFromResource(R.xml.geoping_prefs);
             addPreferencesFromResource(R.xml.development_prefs);
             addPreferencesFromResource(R.xml.info_prefs);

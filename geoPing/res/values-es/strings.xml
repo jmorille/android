@@ -11,7 +11,14 @@
     <string name="menu_delete">Quitar</string>
     <string name="menu_cancel">Cancelar</string> 
     
-     
+    <!-- Billing -->
+
+
+    <!-- Share -->
+    <string name="menu_share_app">Share GeoPing</string>
+    <string name="share_app_subject">Let me recommend you GeoPing application</string>
+  
+    
 
     <!-- GeoTrack Notification -->
     <string name="notif_geoping">GeoPing</string>

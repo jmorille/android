@@ -39,7 +39,13 @@ public class MenuOptionsItemSelectionHelper {
 	            Intent intentSmsLog = new Intent(context,SmsLogListActivity.class);
 	            context.startActivity(intentSmsLog);
 	            return true;
+//	        case R.id.menuAppShare:
+//	            Intent intentAppShare = new Intent(Intent.ACTION_SEND);
+//	            intentAppShare.putExtra(Intent.EXTRA_TEXT, "market://details?id=eu.ttbox.geoping");
+//	            return true;
+	        
 	        }
+	        
 	        return false;
 	    }
 	 

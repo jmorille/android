@@ -49,6 +49,7 @@
             android:title="@string/prefs_count_laught" />
 
         <PreferenceScreen android:title="@string/prefs_developement" android:key="prefDevMode" android:enabled="false">
+           
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="smsDeleteOnMessage"

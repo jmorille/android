@@ -91,6 +91,10 @@
         
          <!-- Pairing -->
         <activity android:label="@string/menu_pairing" android:name=".ui.pairing.PairingListActivity">
+<!--              <intent-filter> -->
+<!--                   <action android:name="android.intent.action.SEND"/> -->
+<!-- 			      <data android:scheme="geoPing"  android:path="pairing" android:mimeType="text/plain"  /> -->
+<!-- 			 </intent-filter> -->
         </activity>
         <activity android:name=".ui.pairing.PairingEditActivity">
         </activity>

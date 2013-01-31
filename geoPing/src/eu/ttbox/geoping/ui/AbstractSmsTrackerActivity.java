@@ -23,12 +23,12 @@ public class AbstractSmsTrackerActivity extends FragmentActivity {
         if (isConsume) {
             return isConsume;
         } else {
-            switch (item.getItemId()) {
-            case R.id.menuQuitter:
-                // Pour fermer l'application il suffit de faire finish()
-                finish();
-                return true;
-            }
+//            switch (item.getItemId()) {
+//            case R.id.menuQuitter:
+//                // Pour fermer l'application il suffit de faire finish()
+//                finish();
+//                return true;
+//            }
         }
         return false;
     }
