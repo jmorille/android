@@ -162,23 +162,25 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 		if (intent == null) {
 			return;
 		}
-		String action = intent.getAction();
-		Log.d(TAG, String.format("Handle Intent for action %s : %s", action, intent));
-		if (Intent.ACTION_VIEW.equals(action)) {
-			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-			Bundle bundle =  intent.getExtras();
-			if ( bundle.containsKey(GeoTrackColumns.COL_LATITUDE_E6)  
-					 && bundle.containsKey(GeoTrackColumns.COL_LONGITUDE_E6) ) {
-				int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
-				int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
-				Log.w(TAG, String.format("Show on Map Phone [%s] (%s, %s) ", phone, latE6, lngE6));
-				if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
-					mapFragment.centerOnPersonPhone(phone, latE6, lngE6);
-				} 
-			} else {
-				mapFragment.centerOnPersonPhone(phone);
-			}
-		}
+//		mapFragment.handleIntent(intent);
+//		
+//		String action = intent.getAction();
+//		Log.d(TAG, String.format("Handle Intent for action %s : %s", action, intent));
+//		if (Intent.ACTION_VIEW.equals(action)) {
+//			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+//			Bundle bundle =  intent.getExtras();
+//			if ( bundle.containsKey(GeoTrackColumns.COL_LATITUDE_E6)  
+//					 && bundle.containsKey(GeoTrackColumns.COL_LONGITUDE_E6) ) {
+//				int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
+//				int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
+//				Log.w(TAG, String.format("Show on Map Phone [%s] (%s, %s) ", phone, latE6, lngE6));
+//				if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
+//					mapFragment.centerOnPersonPhone(phone, latE6, lngE6);
+//				} 
+//			} else {
+//				mapFragment.centerOnPersonPhone(phone);
+//			}
+//		}
 	}
 	// ===========================================================
 	// Others

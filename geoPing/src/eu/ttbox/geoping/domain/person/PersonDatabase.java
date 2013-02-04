@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
+import eu.ttbox.geoping.domain.EncryptionColumns;
 
 public class PersonDatabase {
 
@@ -20,7 +21,7 @@ public class PersonDatabase {
 
     public static final String TABLE_PERSON_FTS = "personFTS";
 
-    public static class PersonColumns {
+    public static class PersonColumns implements EncryptionColumns {
 
         public static final String COL_ID = BaseColumns._ID;
         public static final String COL_NAME = "NAME";

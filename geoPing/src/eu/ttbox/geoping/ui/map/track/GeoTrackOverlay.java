@@ -178,8 +178,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		try {
 			mStatusReceiverIntentFilter = new IntentFilter(Intents.ACTION_NEW_GEOTRACK_INSERTED, GeoTrackerProvider.Constants.ITEM_MIME_TYPE);
 		} catch (MalformedMimeTypeException e) {
-			Log.e(TAG, "Coud not create Intenfilter for mStatusReceiver : " + e.getMessage());
-			e.printStackTrace();
+			Log.e(TAG, "Coud not create Intenfilter for mStatusReceiver : " + e.getMessage(), e);
+		 
 		}
 
 		// Init

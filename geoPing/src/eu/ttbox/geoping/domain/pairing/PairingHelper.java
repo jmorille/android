@@ -28,7 +28,10 @@ public class PairingHelper {
     public int notifBatteryLow= -1;
     public int notifSimChange= -1;
     public int notifPhoneCall= -1;
-    public int notifPhoneReceive= -1;
+    
+    public int encryptionPubKey= -1;
+    public int encryptionPrivKey= -1;
+    public int encryptionRemotePubKey= -1;
 
     
     public PairingHelper initWrapper(Cursor cursor) {
@@ -44,8 +47,13 @@ public class PairingHelper {
         notifBatteryLow = cursor.getColumnIndex(PairingColumns.COL_NOTIF_BATTERY_LOW);
         notifSimChange = cursor.getColumnIndex(PairingColumns.COL_NOTIF_SIM_CHANGE);
         notifPhoneCall = cursor.getColumnIndex(PairingColumns.COL_NOTIF_PHONE_CALL);
-        notifPhoneReceive = cursor.getColumnIndex(PairingColumns.COL_NOTIF_PHONE_RECEIVE);
+        // Encryption
+        encryptionPubKey = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_PUBKEY);
+        encryptionPrivKey = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_PRIVKEY);
+        encryptionRemotePubKey = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_REMOTE_PUBKEY);
 
+         
+        
         isNotInit = false;
         return this;
     }

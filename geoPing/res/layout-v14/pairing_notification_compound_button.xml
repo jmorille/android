@@ -39,12 +39,6 @@
             android:layout_below="@id/pairing_notification_sim_change"
             android:text="@string/pairing_notification_phone_call" />
 
-        <Switch
-            android:id="@+id/pairing_notification_phone_reveive"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/pairing_notification_phone_call"
-            android:layout_below="@id/pairing_notification_phone_call"
-            android:text="@string/pairing_notification_phone_receive" />
+       
         
 </merge>

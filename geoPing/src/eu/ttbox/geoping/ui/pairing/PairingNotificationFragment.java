@@ -36,7 +36,7 @@ public class PairingNotificationFragment extends Fragment {
 	private CompoundButton notifBatteryLow;
 	private CompoundButton notifSimChange;
 	private CompoundButton notifPhoneCall;
-	private CompoundButton notifPhoneReceive;
+ 
 
 	// Alls
 	private CompoundButton[] notifViews;
@@ -62,10 +62,7 @@ public class PairingNotificationFragment extends Fragment {
 			break;
 		case R.id.pairing_notification_phone_call:
 			result = PairingColumns.COL_NOTIF_PHONE_CALL;
-			break;
-		case R.id.pairing_notification_phone_reveive:
-			result = PairingColumns.COL_NOTIF_PHONE_RECEIVE;
-			break;
+			break; 
 		default:
 			Log.w(TAG, "No DB Column mapping for View : " + v);
 			break;
@@ -81,11 +78,10 @@ public class PairingNotificationFragment extends Fragment {
 		notifShutdown = (CompoundButton) v.findViewById(R.id.pairing_notification_shutdown);
 		notifBatteryLow = (CompoundButton) v.findViewById(R.id.pairing_notification_battery_low);
 		notifSimChange = (CompoundButton) v.findViewById(R.id.pairing_notification_sim_change);
-		notifPhoneCall = (CompoundButton) v.findViewById(R.id.pairing_notification_phone_call);
-		notifPhoneReceive = (CompoundButton) v.findViewById(R.id.pairing_notification_phone_reveive);
+		notifPhoneCall = (CompoundButton) v.findViewById(R.id.pairing_notification_phone_call); 
 
 		// Listeners
- 		notifViews = new CompoundButton[] { notifShutdown, notifBatteryLow, notifSimChange, notifPhoneCall, notifPhoneReceive };
+ 		notifViews = new CompoundButton[] { notifShutdown, notifBatteryLow, notifSimChange, notifPhoneCall  };
 		OnClickListener notifOnClickListener = new OnClickListener() {
 
 			@Override
@@ -159,8 +155,7 @@ public class PairingNotificationFragment extends Fragment {
 				helper.setCompoundButtonWithIdx(notifShutdown, cursor, helper.notifShutdown);
 				helper.setCompoundButtonWithIdx(notifBatteryLow, cursor, helper.notifBatteryLow);
 				helper.setCompoundButtonWithIdx(notifSimChange, cursor, helper.notifSimChange);
-				helper.setCompoundButtonWithIdx(notifPhoneCall, cursor, helper.notifPhoneCall);
-				helper.setCompoundButtonWithIdx(notifPhoneReceive, cursor, helper.notifPhoneReceive);
+				helper.setCompoundButtonWithIdx(notifPhoneCall, cursor, helper.notifPhoneCall); 
 			}
 			 
  		}

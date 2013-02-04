@@ -1,7 +1,6 @@
 package eu.ttbox.geoping.service.slave;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -10,11 +9,11 @@ import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService.GeoPingRequest
 
 public class MultiGeoRequestLocationListener implements LocationListener {
 
-    private List<GeoPingRequest> geoPingRequestList;
+    private CopyOnWriteArrayList<GeoPingRequest> geoPingRequestList;
 
     public MultiGeoRequestLocationListener() {
         super();
-        this.geoPingRequestList = new ArrayList<GeoPingRequest>();
+        this.geoPingRequestList = new CopyOnWriteArrayList<GeoPingRequest>();
     }
 
     @Override
