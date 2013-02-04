@@ -47,7 +47,7 @@ public class BlockableAdView extends AdView {
 
 	private boolean isAddBloked(Context context) {
 		// TODO read property
-		return false;
+		return true;
 	}
 
 }

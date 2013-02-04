@@ -85,6 +85,17 @@ public class Intents {
 	}
 
 	// ===========================================================
+	// GeoPing Market
+	// ===========================================================
+
+	public static void startActivityAppMarket(Context context) {
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		String marketPackage = context.getApplicationContext().getPackageName();
+		intent.setData(Uri.parse("market://details?id=" + marketPackage));
+		context.startActivity(intent);
+	}
+
+	// ===========================================================
 	// map Intent
 	// ===========================================================
 
@@ -113,14 +124,13 @@ public class Intents {
 		return intent;
 	}
 
-	public static void startActivityShowOnMapPerson(View v, Context context, long personId, String phone  ) {
+	public static void startActivityShowOnMapPerson(View v, Context context, long personId, String phone) {
 		Intent intent = new Intent(context, ShowMapActivity.class);
 		intent.setAction(Intent.ACTION_VIEW);
 		intent.putExtra(EXTRA_PERSON_ID, personId);
 		intent.putExtra(EXTRA_SMS_PHONE, phone);
-		startActivityWithTransitionBundle(context, intent,   v);
+		startActivityWithTransitionBundle(context, intent, v);
 	}
-
 
 	// ===========================================================
 	// Core Méthode
@@ -129,9 +139,13 @@ public class Intents {
 	@SuppressLint("NewApi")
 	private static void startActivityWithTransitionBundle(Context context, Intent intent, View v) {
 		if (VersionUtils.isJb16) {
-//            Bundle translateBundle = ActivityOptions.makeCustomAnimation(context, R.anim.slide_in_left, R.anim.slide_out_left).toBundle();
-//			Bundle translateBundle = ActivityOptions.makeScaleUpAnimation(v,0,0, v.getWidth(), v.getHeight() ).toBundle();
-//			context.startActivity(intent, translateBundle);
+			// Bundle translateBundle =
+			// ActivityOptions.makeCustomAnimation(context,
+			// R.anim.slide_in_left, R.anim.slide_out_left).toBundle();
+			// Bundle translateBundle =
+			// ActivityOptions.makeScaleUpAnimation(v,0,0, v.getWidth(),
+			// v.getHeight() ).toBundle();
+			// context.startActivity(intent, translateBundle);
 			context.startActivity(intent);
 		} else {
 			context.startActivity(intent);
@@ -203,7 +217,7 @@ public class Intents {
 		return new Intent(context, MainActivity.class) //
 				.setAction(Intent.ACTION_VIEW)//
 		// TODO Select Page
-		; 
+		;
 	}
 
 	// Sms Consumer
