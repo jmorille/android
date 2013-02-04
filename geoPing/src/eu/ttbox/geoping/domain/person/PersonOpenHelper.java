@@ -1,12 +1,18 @@
 package eu.ttbox.geoping.domain.person;
 
+import java.util.ArrayList;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import eu.ttbox.geoping.domain.core.CountryMonitor;
+import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
 import eu.ttbox.geoping.domain.message.MessageDatabase;
+import eu.ttbox.geoping.domain.message.MessageDatabase.MessageColumns;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PersonOpenHelper extends SQLiteOpenHelper {
 
@@ -14,37 +20,55 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 
 	public static final String DATABASE_NAME = "person.db";
 	public static final int DATABASE_VERSION = 5;
-	
-    // ===========================================================
-    // Table
-    // ===========================================================
 
-	private static final String FTS_TABLE_CREATE_USER = "CREATE VIRTUAL TABLE " + PersonDatabase.TABLE_PERSON_FTS + //
+	// ===========================================================
+	// Table
+	// ===========================================================
+
+	private static final String FTS_TABLE_CREATE_USER_V5 = "CREATE VIRTUAL TABLE personFTS"   + //
 			" USING fts3 " //
-			+ "( " + PersonDatabase.PersonColumns.COL_NAME //
-			+ ", " + PersonDatabase.PersonColumns.COL_PHONE //
-            + ", " + PersonDatabase.PersonColumns.COL_PHONE_NORMALIZED //
-            + ", " + PersonDatabase.PersonColumns.COL_PHONE_MIN_MATCH //
-			+ ", " + PersonDatabase.PersonColumns.COL_COLOR //
-			+ ", " + PersonDatabase.PersonColumns.COL_CONTACT_ID//
-            + ", " + PersonDatabase.PersonColumns.COL_PAIRING_TIME // 
+			+ "( " + PersonColumns.COL_NAME //
+			+ ", " + PersonColumns.COL_PHONE //
+			+ ", " + PersonColumns.COL_PHONE_NORMALIZED //
+			+ ", " + PersonColumns.COL_PHONE_MIN_MATCH //
+			+ ", " + PersonColumns.COL_COLOR //
+			+ ", " + PersonColumns.COL_CONTACT_ID//
+			+ ", " + PersonColumns.COL_PAIRING_TIME //
 			+ ");";
-	
+
+	private static final String FTS_TABLE_CREATE_USER_V6 = "CREATE TABLE " + PersonDatabase.TABLE_PERSON_FTS //
+			+ "( " + PersonColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT"//
+			+ ", " + PersonColumns.COL_NAME + " TEXT" //
+			+ ", " + PersonColumns.COL_PHONE + " TEXT" //
+			+ ", " + PersonColumns.COL_PHONE_NORMALIZED + " TEXT" //
+			+ ", " + PersonColumns.COL_PHONE_MIN_MATCH + " TEXT" //
+			+ ", " + PersonColumns.COL_COLOR + " INTEGER"//
+			+ ", " + PersonColumns.COL_CONTACT_ID + " INTEGER"//
+			+ ", " + PersonColumns.COL_PAIRING_TIME + " INTEGER"//
+			// Encryption
+			+ ", " + PersonColumns.COL_ENCRYPTION_PUBKEY + " TEXT"//
+			+ ", " + PersonColumns.COL_ENCRYPTION_PRIVKEY + " TEXT"//
+			+ ", " + PersonColumns.COL_ENCRYPTION_REMOTE_PUBKEY + " TEXT"//
+			+ ", " + PersonColumns.COL_ENCRYPTION_REMOTE_TIME + " INTEGER"//
+			+ ", " + PersonColumns.COL_ENCRYPTION_REMOTE_WAY + " TEXT"//
+			+ ");";
+
+	private static final String FTS_TABLE_CREATE_USER = FTS_TABLE_CREATE_USER_V5;
 
 	private static final String FTS_TABLE_CREATE_MESSAGE = "CREATE VIRTUAL TABLE " + MessageDatabase.TABLE_MESSAGE_FTS + //
 			" USING fts3 " //
-			+ "( " + MessageDatabase.MessageColumns.COL_NAME //
-			+ ", " + MessageDatabase.MessageColumns.COL_PHONE //
-			+ ", " + MessageDatabase.MessageColumns.COL_COLOR //
+			+ "( " + MessageColumns.COL_NAME //
+			+ ", " + MessageColumns.COL_PHONE //
+			+ ", " + MessageColumns.COL_COLOR //
 			+ ");";
 
-    // ===========================================================
-    // Index
-    // ===========================================================
- 
+	// ===========================================================
+	// Index
+	// ===========================================================
+
 	private static final String INDEX_PERSON_AK = "IDX_PERSON_AK";
 	private static final String CREATE_INDEX_PERSON_AK = "CREATE INDEX IF NOT EXISTS " + INDEX_PERSON_AK + " on " + PersonDatabase.TABLE_PERSON_FTS + "(" //
-			+ PersonDatabase.PersonColumns.COL_PHONE //
+			+ PersonColumns.COL_PHONE_MIN_MATCH //
 			+ ");";
 
 	private static final String INDEX_MESSAGE_AK = "IDX_MESSAGE_AK";
@@ -52,13 +76,13 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 			+ MessageDatabase.MessageColumns.COL_PHONE //
 			+ ");";
 
-    // ===========================================================
-    // Constructors
-    // ===========================================================
+	// ===========================================================
+	// Constructors
+	// ===========================================================
 
 	private SQLiteDatabase mDatabase;
 	private CountryMonitor countryMonitor;
-	
+
 	public PersonOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		//
@@ -72,25 +96,51 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 		mDatabase.execSQL(FTS_TABLE_CREATE_USER);
 		mDatabase.execSQL(FTS_TABLE_CREATE_MESSAGE);
 		// Index
-//		db.execSQL(CREATE_INDEX_PERSON_AK);
-//		db.execSQL(CREATE_INDEX_MESSAGE_AK);
+		// db.execSQL(CREATE_INDEX_PERSON_AK);
+		// db.execSQL(CREATE_INDEX_MESSAGE_AK);
 		// new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary();
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
+
+		// Read previous values
+		// ----------------------
+		ArrayList<ContentValues> oldRows = null;
+		if (oldVersion <= 5) {
+			String[] stringColums = new String[] { //
+			PersonColumns.COL_NAME, PersonColumns.COL_PHONE, PersonColumns.COL_PHONE_NORMALIZED, PersonColumns.COL_PHONE_MIN_MATCH //
+					, PersonColumns.COL_CONTACT_ID //
+			};
+			String[] intColums = new String[] { //
+			PersonColumns.COL_COLOR // init
+			};
+			String[] longColums = new String[] { PersonColumns.COL_PAIRING_TIME };
+			oldRows = UpgradeDbHelper.copyTable(db, "personFTS", stringColums, intColums, longColums);
+			// Drop All Table
+			db.execSQL("DROP TABLE IF EXISTS personFTS");
+		}
+
+		// Create the new Table
+		// ----------------------
 		// Index
-//		db.execSQL("DROP INDEX  IF EXISTS " + INDEX_PERSON_AK + ";");
-//		db.execSQL("DROP INDEX  IF EXISTS " + INDEX_MESSAGE_AK + ";");
+		// db.execSQL("DROP INDEX  IF EXISTS " + INDEX_PERSON_AK + ";");
+		// db.execSQL("DROP INDEX  IF EXISTS " + INDEX_MESSAGE_AK + ";");
 		// Table
 		db.execSQL("DROP TABLE IF EXISTS " + MessageDatabase.TABLE_MESSAGE_FTS);
 		db.execSQL("DROP TABLE IF EXISTS " + PersonDatabase.TABLE_PERSON_FTS);
 		onCreate(db);
+
+		// Insert data in new table
+		// ----------------------
+		if (oldVersion <= 5) {
+			UpgradeDbHelper.insertOldRowInNewTable(db, oldRows, PersonDatabase.TABLE_PERSON_FTS);
+		}
 	}
 
-    public Object getCurrentCountryIso() {
-         return countryMonitor.getCountryIso();
-    }
+	public Object getCurrentCountryIso() {
+		return countryMonitor.getCountryIso();
+	}
 
 }

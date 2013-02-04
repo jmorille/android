@@ -2,6 +2,8 @@ package eu.ttbox.geoping.domain.core;
 
 import java.util.ArrayList;
 
+import eu.ttbox.geoping.domain.pairing.PairingDatabase;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -64,5 +66,24 @@ public class UpgradeDbHelper {
         }
         return allRows;
     }
+    
+    public static int insertOldRowInNewTable(SQLiteDatabase db, ArrayList<ContentValues> oldRows , String newTableName) {
+		  int resultCount = 0 ;
+		if (oldRows != null && !oldRows.isEmpty()) {
+			try { 
+              db.beginTransaction();
+				for (ContentValues values : oldRows) { 
+				    resultCount += db.insertOrThrow(PairingDatabase.TABLE_PAIRING_FTS, null, values);
+					Log.d(TAG, "Upgrading database : inserting memory copy of row values : " + values   );
+				}
+				db.setTransactionSuccessful();
+			} catch (RuntimeException e) {
+				Log.e(TAG, "Upgrading database Error during inserting the copy in Table : " + e.getMessage(), e);
+			} finally {
+			    db.endTransaction();
+			}
+		}
+		return resultCount;
+	}
     
 }

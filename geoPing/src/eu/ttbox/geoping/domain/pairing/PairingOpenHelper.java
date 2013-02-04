@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PairingOpenHelper extends SQLiteOpenHelper {
 
@@ -38,6 +39,8 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 			+ ", " + PairingColumns.COL_ENCRYPTION_PUBKEY + " TEXT"//
             + ", " + PairingColumns.COL_ENCRYPTION_PRIVKEY + " TEXT"//
             + ", " + PairingColumns.COL_ENCRYPTION_REMOTE_PUBKEY + " TEXT"//
+			+ ", " + PersonColumns.COL_ENCRYPTION_REMOTE_TIME + " INTEGER"//
+			+ ", " + PersonColumns.COL_ENCRYPTION_REMOTE_WAY + " TEXT"//
 			+ ");";
 
 	private static final String FTS_TABLE_CREATE_PAIRING_V5 = "CREATE VIRTUAL TABLE pairingFTS " + // PairingDatabase.TABLE_PAIRING_FTS
@@ -99,23 +102,11 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 		Log.d(TAG, "Upgrading database : Create TABLE  : " + PairingDatabase.TABLE_PAIRING_FTS   );
 		onCreate(db);
 		// Insert data in new table
-		if (oldRows != null && !oldRows.isEmpty()) {
-			try {
-//				ContentResolver cr = context.getContentResolver();
-                int resultCount = 0 ;
-                db.beginTransaction();
-				for (ContentValues values : oldRows) {
-//					cr.insert(PairingProvider.Constants.CONTENT_URI, values);
-				    resultCount += db.insertOrThrow(PairingDatabase.TABLE_PAIRING_FTS, null, values);
-					Log.d(TAG, "Upgrading database : inserting memory copy of row values : " + values   );
-				}
-				db.setTransactionSuccessful();
-			} catch (RuntimeException e) {
-				Log.e(TAG, "Upgrading database Error during inserting the copy in Table : " + e.getMessage(), e);
-			} finally {
-			    db.endTransaction();
-			}
-		}
+		if (oldVersion <= 5 ) {
+			UpgradeDbHelper.insertOldRowInNewTable(db, oldRows, PairingDatabase.TABLE_PAIRING_FTS);
+  		}
 	}
 
+	
+	
 }

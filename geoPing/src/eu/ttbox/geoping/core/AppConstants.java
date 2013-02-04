@@ -29,6 +29,7 @@ public class AppConstants {
 
     public static final int PER_PERSON_ID_MULTIPLICATOR = 10000;
     public static final String KEY_DB_LOCAL = "local";
+    
     // Request Notification
     public static final String PREFS_SMS_DELETE_ON_MESSAGE = "smsDeleteOnMessage";
     public static final String PREFS_SHOW_GEOPING_NOTIFICATION = "showGeopingNotification";
@@ -37,8 +38,9 @@ public class AppConstants {
     
     // Spy Notification TODO
     public static final String PREFS_SPY_NOTIFICATION_SHUTDOWN_SLEEP_IN_MS  = "spyNotifShutdownSleepInMs";
-    public static final String PREFS_SPY_NOTIFICATION_SIMCHANGE_PHONENUMBER  = "spyNotifSimChanePhoneNumber";
+    public static final String PREFS_SPY_NOTIFICATION_SIMCHANGE_PHONENUMBER  = "spyNotifSimChangegPhoneNumber";
     
+    public static final String PREFS_ADD_BLOCKED = "addBlocked";
     // Map
     public static final String PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC = eu.ttbox.osm.core.AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC;
     public static final String PREFS_GEOPOINT_GEOCODING_AUTO = "geoPointGeocodingAuto";

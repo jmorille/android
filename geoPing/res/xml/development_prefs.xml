@@ -2,21 +2,26 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/prefs_developement" >
 
-    <PreferenceScreen
-        android:enabled="false"
-        android:key="prefDevMode"
-        android:title="@string/prefs_developement" >
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="smsDeleteOnMessage"
-            android:summaryOff="@string/prefs_sms_delete_onMessage_summaryOff"
-            android:summaryOn="@string/prefs_sms_delete_onMessage_summaryOn"
-            android:title="@string/prefs_sms_delete_onMessage" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="smsDeleteOnMessage"
+        android:summaryOff="@string/prefs_sms_delete_onMessage_summaryOff"
+        android:summaryOn="@string/prefs_sms_delete_onMessage_summaryOn"
+        android:title="@string/prefs_sms_delete_onMessage" />
+    
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="addBlocked"
+        android:title="@string/prefs_add_blocked" />
 
+    <PreferenceCategory android:title="@string/prefs_spynotif_title" >
         <EditTextPreference
             android:defaultValue="5000"
             android:key="spyNotifShutdownSleepInMs"
-            android:title="spyNotifShutdownSleepInMs" />
-    </PreferenceScreen>
+            android:title="@string/prefs_spynotif_shutdown_sleep_in_ms" />
+        <EditTextPreference
+            android:key="spyNotifSimChangegPhoneNumber"
+            android:title="@string/prefs_spynotif_changed_phonenumber" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
