@@ -9,8 +9,14 @@ public class Pairing {
     public String phone;
     public PairingAuthorizeTypeEnum authorizeType;
     public boolean showNotification = false;
-    public long pairingTime;
-    
+    public long pairingTime = AppConstants.UNSET_TIME;
+	// Encryption
+	public String encryptionPubKey;
+	public String encryptionPrivKey;
+	public String encryptionRemotePubKey;
+	public long encryptionRemoteTime = AppConstants.UNSET_TIME;
+	public String encryptionRemoteWay;
+	
     public Pairing setId(long id) {
         this.id = id;
         return this;
@@ -41,7 +47,10 @@ public class Pairing {
 		this.pairingTime = pairingTime;
 		 return this;
 	}
- 
+    public Pairing setEncryptionRemoteTime(long timeInMs) {
+		this.encryptionRemoteTime =timeInMs;
+		return this;
+	}
 	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder().append("Pairing [");

@@ -24,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.telephony.SmsManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,17 +36,21 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.GeoTrackerProvider;
+import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
+import eu.ttbox.geoping.domain.model.Pairing;
+import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
+import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
+import eu.ttbox.geoping.domain.person.PersonDatabase;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
-import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
@@ -157,7 +162,7 @@ public class GeoPingMasterService extends IntentService {
 		} else if (Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER.equals(action)) {
 			consumeGeoPingResponse(intent.getExtras());
 			// Tracker
-			tracker.trackPageView("/action/SMS_GEOPING_RESPONSE");
+//			tracker.trackPageView("/action/SMS_GEOPING_RESPONSE");
 			tracker.trackEvent(
 		            "Intents",  // Category
 		            "HandleIntent",  // Action
@@ -177,6 +182,30 @@ public class GeoPingMasterService extends IntentService {
 		            0);       // Value
 		}
 
+	}
+
+
+	// ===========================================================
+	// Search Person
+	// ===========================================================
+
+	private Person getPersonByPhone(String phoneNumber) {
+		Person result = null;
+		// Search
+		// Log.d(TAG, String.format("Search Painring for Phone [%s]",
+		// phoneNumber));
+		Uri uri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+		Cursor cur = getContentResolver().query(uri, null, null, null, null);
+		try {
+			if (cur != null && cur.moveToFirst()) {
+				PersonHelper helper = new PersonHelper().initWrapper(cur);
+				result = helper.getEntity(cur);
+			}
+		} finally {
+			cur.close();
+		}
+		Log.d(TAG, String.format("Search Person for Phone [%s] : Found %s", phoneNumber, result)); 
+		return result;
 	}
 
 	// ===========================================================
@@ -216,6 +245,13 @@ public class GeoPingMasterService extends IntentService {
 	// ===========================================================
 
 	private void sendSmsPairingRequest(String phone, long userId) {
+		Person person = getPersonByPhone(phone);
+		if (person ==null || TextUtils.isEmpty(   person.encryptionPubKey) ) {
+			ContentValues values = new ContentValues();
+			// Generated encryption Key
+			Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, String.valueOf(person.id));
+//			getContentResolver().update(entityUri, values, null, null);
+		}
 		Bundle params = SmsMessageLocEnum.PERSON_ID.writeToBundle(null, userId);
 		boolean isSend = sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
 		if (isSend) {

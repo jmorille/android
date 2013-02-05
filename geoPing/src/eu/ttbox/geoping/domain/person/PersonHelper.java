@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.widget.TextView;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.model.Person;
+import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PersonHelper {
@@ -16,6 +17,12 @@ public class PersonHelper {
     public int colorIdx = -1;
     public int contactIdIdx = -1;
     public int pairingTimeIdx = -1;
+    // Encryption
+    public int encryptionPubKeyIdx= -1;
+    public int encryptionPrivKeyIdx= -1;
+    public int encryptionRemotePubKeyIdx= -1;
+    public int encryptionRemoteTimeIdx= -1;
+	public int encryptionRemoteWayIdx= -1;
 
     public PersonHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(PersonColumns.COL_ID);
@@ -24,6 +31,13 @@ public class PersonHelper {
         colorIdx = cursor.getColumnIndex(PersonColumns.COL_COLOR);
         contactIdIdx = cursor.getColumnIndex(PersonColumns.COL_CONTACT_ID);
         pairingTimeIdx = cursor.getColumnIndex(PersonColumns.COL_PAIRING_TIME);
+        // Encryption
+        encryptionPubKeyIdx = cursor.getColumnIndex(PersonColumns.COL_ENCRYPTION_PUBKEY);
+        encryptionPrivKeyIdx = cursor.getColumnIndex(PersonColumns.COL_ENCRYPTION_PRIVKEY);
+        encryptionRemotePubKeyIdx = cursor.getColumnIndex(PersonColumns.COL_ENCRYPTION_REMOTE_PUBKEY);
+        encryptionRemoteTimeIdx = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_REMOTE_TIME);
+        encryptionRemoteWayIdx = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_REMOTE_WAY); 
+     
         isNotInit = false;
         return this;
     }
@@ -39,6 +53,12 @@ public class PersonHelper {
         user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : 0);
         user.setContactId(contactIdIdx > -1 ? cursor.getString(contactIdIdx) : null);
         user.setPairingTime(pairingTimeIdx > -1 ? cursor.getLong(pairingTimeIdx)  : AppConstants.UNSET_TIME );
+        // Encryption
+        user.encryptionPrivKey = encryptionPrivKeyIdx>-1?cursor.getString(encryptionPrivKeyIdx) : null;
+        user.encryptionPubKey = encryptionPubKeyIdx>-1?cursor.getString(encryptionPubKeyIdx) : null;
+        user.encryptionRemotePubKey = encryptionRemotePubKeyIdx>-1?cursor.getString(encryptionRemotePubKeyIdx) : null;
+        user.setEncryptionRemoteTime(encryptionRemoteTimeIdx > -1 ? cursor.getLong(encryptionRemoteTimeIdx)  : AppConstants.UNSET_TIME );
+        user.encryptionRemoteWay = encryptionRemoteWayIdx>-1?cursor.getString(encryptionRemoteWayIdx) : null;
         return user;
     }
 
@@ -95,6 +115,13 @@ public class PersonHelper {
         initialValues.put(PersonColumns.COL_COLOR, entity.color);
         initialValues.put(PersonColumns.COL_CONTACT_ID, entity.contactId);
         initialValues.put(PersonColumns.COL_PAIRING_TIME, entity.pairingTime);
+        // Encryption
+        initialValues.put(PersonColumns.COL_ENCRYPTION_PRIVKEY, entity.encryptionPrivKey);
+        initialValues.put(PersonColumns.COL_ENCRYPTION_PUBKEY, entity.encryptionPubKey);
+        initialValues.put(PersonColumns.COL_ENCRYPTION_REMOTE_PUBKEY, entity.encryptionRemotePubKey);
+        initialValues.put(PersonColumns.COL_ENCRYPTION_REMOTE_TIME, entity.encryptionRemoteTime);
+        initialValues.put(PersonColumns.COL_ENCRYPTION_REMOTE_WAY, entity.encryptionRemoteWay); 
+      
         return initialValues;
     }
 

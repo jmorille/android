@@ -23,16 +23,18 @@ public class PairingHelper {
     public int authorizeTypeIdx = -1;
     public int showNotificationIdx = -1;
     public int pairingTimeIdx = -1;
-
+    // Spy Notif
     public int notifShutdown= -1;
     public int notifBatteryLow= -1;
     public int notifSimChange= -1;
     public int notifPhoneCall= -1;
-    
-    public int encryptionPubKey= -1;
-    public int encryptionPrivKey= -1;
-    public int encryptionRemotePubKey= -1;
-
+    // Encryption
+    public int encryptionPubKeyIdx= -1;
+    public int encryptionPrivKeyIdx= -1;
+    public int encryptionRemotePubKeyIdx= -1;
+    public int encryptionRemoteTimeIdx= -1;
+	public int encryptionRemoteWayIdx= -1;
+	
     
     public PairingHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(PairingColumns.COL_ID);
@@ -48,12 +50,12 @@ public class PairingHelper {
         notifSimChange = cursor.getColumnIndex(PairingColumns.COL_NOTIF_SIM_CHANGE);
         notifPhoneCall = cursor.getColumnIndex(PairingColumns.COL_NOTIF_PHONE_CALL);
         // Encryption
-        encryptionPubKey = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_PUBKEY);
-        encryptionPrivKey = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_PRIVKEY);
-        encryptionRemotePubKey = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_REMOTE_PUBKEY);
-
-         
-        
+        encryptionPubKeyIdx = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_PUBKEY);
+        encryptionPrivKeyIdx = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_PRIVKEY);
+        encryptionRemotePubKeyIdx = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_REMOTE_PUBKEY);
+        encryptionRemoteTimeIdx = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_REMOTE_TIME);
+        encryptionRemoteWayIdx = cursor.getColumnIndex(PairingColumns.COL_ENCRYPTION_REMOTE_WAY); 
+          
         isNotInit = false;
         return this;
     }
@@ -69,6 +71,13 @@ public class PairingHelper {
         user.setAuthorizeType(authorizeTypeIdx > -1 ? getPairingAuthorizeTypeEnum(cursor) : null);
         user.setShowNotification(showNotificationIdx > -1 ? cursor.getInt(showNotificationIdx) == 1 ? true : false : false);
         user.setPairingTime(pairingTimeIdx > -1 ? cursor.getLong(pairingTimeIdx) : AppConstants.UNSET_TIME);
+        // Encryption
+        user.encryptionPrivKey = encryptionPrivKeyIdx>-1?cursor.getString(encryptionPrivKeyIdx) : null;
+        user.encryptionPubKey = encryptionPubKeyIdx>-1?cursor.getString(encryptionPubKeyIdx) : null;
+        user.encryptionRemotePubKey = encryptionRemotePubKeyIdx>-1?cursor.getString(encryptionRemotePubKeyIdx) : null;
+        user.setEncryptionRemoteTime(encryptionRemoteTimeIdx > -1 ? cursor.getLong(encryptionRemoteTimeIdx)  : AppConstants.UNSET_TIME );
+        user.encryptionRemoteWay = encryptionRemoteWayIdx>-1?cursor.getString(encryptionRemoteWayIdx) : null;
+
         return user;
     }
 
@@ -147,18 +156,25 @@ public class PairingHelper {
         return cursor.getString(nameIdx);
     }
 
-    public static ContentValues getContentValues(Pairing vo) {
+    public static ContentValues getContentValues(Pairing entity) {
         ContentValues initialValues = new ContentValues();
-        if (vo.id > -1) {
-            initialValues.put(PairingColumns.COL_ID, Long.valueOf(vo.id));
+        if (entity.id > -1) {
+            initialValues.put(PairingColumns.COL_ID, Long.valueOf(entity.id));
         }
-        initialValues.put(PairingColumns.COL_NAME, vo.name);
-        initialValues.put(PairingColumns.COL_PHONE, vo.phone);
-        initialValues.put(PairingColumns.COL_SHOW_NOTIF, vo.showNotification);
-        initialValues.put(PairingColumns.COL_PAIRING_TIME, vo.pairingTime);
+        initialValues.put(PairingColumns.COL_NAME, entity.name);
+        initialValues.put(PairingColumns.COL_PHONE, entity.phone);
+        initialValues.put(PairingColumns.COL_SHOW_NOTIF, entity.showNotification);
+        initialValues.put(PairingColumns.COL_PAIRING_TIME, entity.pairingTime);
         // secu
-        PairingAuthorizeTypeEnum authorizeType = vo.authorizeType != null ? vo.authorizeType : PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
+        PairingAuthorizeTypeEnum authorizeType = entity.authorizeType != null ? entity.authorizeType : PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
         initialValues.put(PairingColumns.COL_AUTHORIZE_TYPE, authorizeType.getCode());
+        // Encryption
+        initialValues.put(PairingColumns.COL_ENCRYPTION_PRIVKEY, entity.encryptionPrivKey);
+        initialValues.put(PairingColumns.COL_ENCRYPTION_PUBKEY, entity.encryptionPubKey);
+        initialValues.put(PairingColumns.COL_ENCRYPTION_REMOTE_PUBKEY, entity.encryptionRemotePubKey); 
+        initialValues.put(PairingColumns.COL_ENCRYPTION_REMOTE_TIME, entity.encryptionRemoteTime);
+        initialValues.put(PairingColumns.COL_ENCRYPTION_REMOTE_WAY, entity.encryptionRemoteWay); 
+     
         return initialValues;
     }
 

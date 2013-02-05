@@ -42,7 +42,7 @@ public class GeoPingApplication extends Application {
 	@Override
 	public void onCreate() {
 		// Strict Mode
-		// initStrictMode();
+		 initStrictMode();
 		// Create Application
 		super.onCreate();
 		APP_INSTANCE = this;
@@ -215,7 +215,7 @@ public class GeoPingApplication extends Application {
 							.detectDiskWrites() //
 							.detectNetwork() //
 							.penaltyFlashScreen() //
-							// .penaltyLog()//
+							 .penaltyLog()//
 							.build());
 		}
 	}

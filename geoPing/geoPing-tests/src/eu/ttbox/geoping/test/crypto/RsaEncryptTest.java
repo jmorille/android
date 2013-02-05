@@ -1,17 +1,11 @@
 package eu.ttbox.geoping.test.crypto;
 
-import java.security.KeyFactory;
 import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 
 import android.test.AndroidTestCase;
 import android.util.Log;
-import eu.ttbox.geoping.crypto.codec.Hex;
 import eu.ttbox.geoping.crypto.encrypt.AesBytesEncryptor;
 import eu.ttbox.geoping.crypto.encrypt.Base64EncodingTextEncryptor;
 import eu.ttbox.geoping.crypto.encrypt.RsaBytesEncryptor;

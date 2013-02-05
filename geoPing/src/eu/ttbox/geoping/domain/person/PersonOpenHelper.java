@@ -11,7 +11,6 @@ import eu.ttbox.geoping.domain.core.CountryMonitor;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
 import eu.ttbox.geoping.domain.message.MessageDatabase;
 import eu.ttbox.geoping.domain.message.MessageDatabase.MessageColumns;
-import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PersonOpenHelper extends SQLiteOpenHelper {
@@ -19,7 +18,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 	private static final String TAG = "PersonOpenHelper";
 
 	public static final String DATABASE_NAME = "person.db";
-	public static final int DATABASE_VERSION = 5;
+	public static final int DATABASE_VERSION = 6;
 
 	// ===========================================================
 	// Table
@@ -53,7 +52,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 			+ ", " + PersonColumns.COL_ENCRYPTION_REMOTE_WAY + " TEXT"//
 			+ ");";
 
-	private static final String FTS_TABLE_CREATE_USER = FTS_TABLE_CREATE_USER_V5;
+	private static final String FTS_TABLE_CREATE_USER = FTS_TABLE_CREATE_USER_V6;
 
 	private static final String FTS_TABLE_CREATE_MESSAGE = "CREATE VIRTUAL TABLE " + MessageDatabase.TABLE_MESSAGE_FTS + //
 			" USING fts3 " //

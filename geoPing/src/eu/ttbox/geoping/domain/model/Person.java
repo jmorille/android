@@ -11,6 +11,13 @@ public class Person {
 	public String contactId;
 	public long pairingTime;
 
+	// Encryption
+	public String encryptionPubKey;
+	public String encryptionPrivKey;
+	public String encryptionRemotePubKey;
+	public long encryptionRemoteTime;
+	public String encryptionRemoteWay;
+	
 	public Person setId(long id) {
 		this.id = id;
 		return this;
@@ -35,16 +42,22 @@ public class Person {
 		this.contactId = contactId;
 		return this;
 	}
- 
 
 	public Person setPairingTime(long pairingTime) {
 		this.pairingTime = pairingTime;
 		return this;
 	}
 
+	public Person setEncryptionRemoteTime(long timeInMs) {
+		this.encryptionRemoteTime =timeInMs;
+		return this;
+	}
+	
 	@Override
 	public String toString() {
 		return "Person [id=" + id + ", displayName=" + displayName + ", phone=" + phone + "]";
 	}
+
+	
 
 }
