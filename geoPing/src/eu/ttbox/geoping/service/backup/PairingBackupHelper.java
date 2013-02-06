@@ -1,17 +1,19 @@
 package eu.ttbox.geoping.service.backup;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.zip.GZIPOutputStream;
 
 import org.json.JSONObject;
 
 import android.app.backup.BackupDataInputStream;
 import android.app.backup.BackupDataOutput;
 import android.app.backup.BackupHelper;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.ParcelFileDescriptor;
+import android.util.JsonWriter;
 import android.util.Log;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
@@ -64,11 +66,19 @@ public class PairingBackupHelper implements BackupHelper {
 			int columnSize = stringColums.length + intColums.length + longColums.length;
 			String[] columns = UpgradeDbHelper.concatAllCols(columnSize, stringColums, intColums, longColums);
 			cursor = pairingDatabase.queryEntities(columns, null, null, null);
-			while (cursor.moveToNext()) {
-				JSONObject values = UpgradeDbHelper.readCursorToJson(cursor, stringColums, intColums, longColums);
-				String stringLine = values.toString();
-				byte[] stringBytes = stringLine.getBytes();
+			if (cursor.getCount()>0) {
+			     
+			    ByteArrayOutputStream bufStream = new ByteArrayOutputStream(1024);
+			    GZIPOutputStream gzipOut = new GZIPOutputStream(bufStream, 1024);
+			    JsonWriter writer = new JsonWriter(new OutputStreamWriter(gzipOut, "UTF-8"));
+    			while (cursor.moveToNext()) {
+    				JSONObject values = UpgradeDbHelper.readCursorToJson(cursor, stringColums, intColums, longColums);
+    				String stringLine = values.toString();
+    				byte[] stringBytes = stringLine.getBytes();
+    			}
 			}
+		} catch (IOException e) {
+		    Log.e(TAG, "Backup IOException : " + e.getMessage(), e);
 		} finally {
 			if (cursor != null) {
 				cursor.close();
