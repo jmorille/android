@@ -1,9 +1,13 @@
 package eu.ttbox.geoping.domain.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonGenerator;
 
 import android.app.Application;
 import android.content.ContentValues;
@@ -97,30 +101,31 @@ public class UpgradeDbHelper {
 		return values;
 	}
 
-	public static JSONObject readCursorToJson(Cursor cursor, String[] stringColums, String[] intColums, String[] longColums) {
-		JSONObject values = new JSONObject();
+	public static void readCursorToJson( JsonGenerator g, Cursor cursor, String[] stringColums, String[] intColums, String[] longColums) {
+	 
 		try {
 			// Read String
 			for (String colName : stringColums) {
 				String colValue = cursor.getString(cursor.getColumnIndex(colName));
-				values.put(colName, colValue);
+				g.writeStringField(colName, colValue); 
 			}
 			// Read Int
 			for (String colName : intColums) {
 				int colValue = cursor.getInt(cursor.getColumnIndex(colName));
-				values.put(colName, colValue);
+				g.writeNumberField(colName, colValue); 
 			}
 			// Read Long
 			for (String colName : longColums) {
 				long colValue = cursor.getLong(cursor.getColumnIndex(colName));
-				values.put(colName, colValue);
+				g.writeNumberField(colName, colValue);
 			}
-		} catch (JSONException e) {
+		} catch (JsonGenerationException e) {
 //		TODO	GeoPingApplication.getInstance().tracker().
-			Log.e(TAG, "Error Writing Json : " + e.getMessage(), e);
-			values = null;
-		}
-		return values;
+			Log.e(TAG, "Error Writing Json : " + e.getMessage(), e);  
+		} catch (IOException e) {
+//			TODO	GeoPingApplication.getInstance().tracker().
+				Log.e(TAG, "Error Writing Json : " + e.getMessage(), e);
+		} 
 	}
 
 	public static int insertOldRowInNewTable(SQLiteDatabase db, ArrayList<ContentValues> oldRows, String newTableName) {
