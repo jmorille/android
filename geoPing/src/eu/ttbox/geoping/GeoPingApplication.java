@@ -20,7 +20,7 @@ import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class GeoPingApplication extends Application {
 
-	private String TAG = "AndroGisterApp";
+	private String TAG = "GeoPingApplication";
 
 	/* define your web property ID obtained after profile creation for the app */
 

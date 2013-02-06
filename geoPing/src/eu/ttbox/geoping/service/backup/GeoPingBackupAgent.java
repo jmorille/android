@@ -24,8 +24,7 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 	static final String PREFS = "eu.ttbox.geoping_preferences";
 
 	// A key to uniquely identify the set of backup data
-	static final String BACKUP_KEY_PREFS = "GEOPING_PREFS";
-	static final String BACKUP_KEY_PAIRING_DB = "GEOPING_DB_PAIRING";
+	static final String BACKUP_KEY_PREFS = "GEOPING_PREFS"; 
 	static final String BACKUP_KEY_PERSON_DB = "GEOPING_DB_PERSON";
 
 	// Allocate a helper and add it to the backup agent
@@ -35,14 +34,11 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 		// Prefs
 		SharedPreferencesBackupHelper helperPrefs = new SharedPreferencesBackupHelper(this, PREFS);
 		addHelper(BACKUP_KEY_PREFS, helperPrefs);
-
-		// Database Pairing
-		// DbBackupHelper helperDbPairing = new DbBackupHelper(this,
-		// FILENAME_PAIRING_DB);
-		// addHelper(BACKUP_KEY_PAIRING_DB, helperDbPairing);
+ 		// Database Pairing
+		PairingBackupHelper helperDbPairing = new PairingBackupHelper(this);
+//		addHelper(PairingBackupHelper.BACKUP_KEY_PAIRING_DB, helperDbPairing); 
 		// Database Person
-		// DbBackupHelper helperDbPerson = new DbBackupHelper(this,
-		// FILENAME_PERSON_DB);
+		// DbBackupHelper helperDbPerson = new DbBackupHelper(this,  FILENAME_PERSON_DB);
 		// addHelper(BACKUP_KEY_PERSON_DB, helperDbPerson);
 	}
 
@@ -59,14 +55,7 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 	@Override
 	public void onRestore(BackupDataInput data, int appVersionCode, ParcelFileDescriptor newState) throws IOException {
 		synchronized (GeoPingBackupAgent.sDataLock) {
-			Log.i(TAG, "----- onRestore Begin Backup --- GeoPing");
-			while (data.readNextHeader()) {
-				 String key = data.getKey();
-		         int dataSize = data.getDataSize();
-//		         if (key.equals(MY_BACKUP_KEY_ONE)) {
-//		        	 
-//		         }
-			}
+			Log.i(TAG, "----- onRestore Begin Backup --- GeoPing"); 
 			super.onRestore(data, appVersionCode, newState);
 			Log.i(TAG, "----- onRestore Begin End --- GeoPing");
 		}
