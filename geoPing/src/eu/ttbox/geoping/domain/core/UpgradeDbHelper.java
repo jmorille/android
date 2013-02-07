@@ -2,6 +2,8 @@ package eu.ttbox.geoping.domain.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,6 +138,30 @@ public class UpgradeDbHelper {
 		}
 	}
 
+	public static ContentValues convertJsonMapAsContentValues(HashMap<String, Object> jsonMap , List<String> allValidColumns) {
+		// Values
+		ContentValues values = new ContentValues();
+		// Read
+		for (String colName : jsonMap.keySet()) {
+			if (allValidColumns.contains(colName)) {
+				Object colValue = jsonMap.get(colName);
+				if (colValue instanceof String) {
+					values.put(colName, (String) colValue);
+				} else if (colValue instanceof Integer) {
+					values.put(colName, (Integer) colValue);
+				} else if (colValue instanceof Long) {
+					values.put(colName, (Long) colValue);
+				} else if (colValue instanceof Double) {
+					values.put(colName, (Double) colValue);
+				} else if (colValue instanceof Boolean) {
+					values.put(colName, (Boolean) colValue);
+				} else {
+					Log.w(TAG, "Ignore Column : [" + colName + "] for type " + (colValue != null ? colValue.getClass() : "null"));
+				}
+			}
+		} 
+		return values;
+	}
 	public static int insertOldRowInNewTable(SQLiteDatabase db, ArrayList<ContentValues> oldRows, String newTableName) {
 		int resultCount = 0;
 		if (oldRows != null && !oldRows.isEmpty()) {

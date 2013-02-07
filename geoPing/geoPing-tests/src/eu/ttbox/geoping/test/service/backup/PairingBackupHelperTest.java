@@ -3,13 +3,18 @@ package eu.ttbox.geoping.test.service.backup;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import android.app.backup.BackupDataInputStream;
+import android.content.ContentValues;
 import android.test.AndroidTestCase;
 import android.test.mock.MockCursor;
 import android.util.Log;
+import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.service.backup.PairingBackupHelper;
+import eu.ttbox.geoping.service.backup.PairingBackupHelper.BackupInsertor;
 
 public class PairingBackupHelperTest extends AndroidTestCase {
 
@@ -90,7 +95,18 @@ public class PairingBackupHelperTest extends AndroidTestCase {
 	 
 		//  Backup Read
 		ByteArrayInputStream dataIn =  new ByteArrayInputStream(dataWrite.toByteArray()); 
-		service.readBackup(dataIn);
+		List<String> allCols = Arrays.asList(PairingColumns.ALL_COLS);
+		MockBackupInsertor dbInsertor = new MockBackupInsertor() ;
+		service.readBackup(dataIn, allCols, dbInsertor);
+		assertEquals(lines.size(), dbInsertor.insertCount);
+	}
+	
+	public class MockBackupInsertor implements BackupInsertor {
+		public int insertCount = 0;
+		@Override
+		public long insertEntity(ContentValues values) { 
+			return insertCount++;
+		}
 	}
 
 	private HashMap<String, Object> getCursorLine(int idx) {

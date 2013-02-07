@@ -53,7 +53,13 @@ public class PairingBackupHelper implements BackupHelper {
 	PairingColumns.COL_AUTHORIZE_TYPE, PairingColumns.COL_SHOW_NOTIF // init
 	};
 	public static final String[] longColums = new String[] { PairingColumns.COL_PAIRING_TIME };
+	
+	
+	public interface BackupInsertor {
 
+		long insertEntity(ContentValues values);
+	}
+	
 	public PairingBackupHelper(Context ctx) {
 		super();
 		this.context = ctx;
@@ -119,6 +125,7 @@ public class PairingBackupHelper implements BackupHelper {
 				g.writeEndArray();
 				g.close(); // important: will force flushing of output, close
 							// underlying output stream
+				// Close Streams
 				gzipOut.close();
 				bufStream.close();
 				// Log.i(TAG, buf.toString());
@@ -136,13 +143,23 @@ public class PairingBackupHelper implements BackupHelper {
 		Log.i(TAG, "--- restore Entity '" + key + "' size=" + data.size());
 
 		if (BACKUP_KEY_PAIRING_DB.equals(key)) {
-			readBackup(data);
+			List<String> allCols = Arrays.asList(PairingColumns.ALL_COLS);
+			BackupInsertor dbInsertor = new BackupInsertor() {
+
+				@Override
+				public long insertEntity(ContentValues values) { 
+					return pairingDatabase.insertEntity(values);
+				} 
+			};
+			readBackup(data, allCols, dbInsertor);
 		}
 		Log.i(TAG, "----- restoreEntity End");
 		Log.i(TAG, "-------------------------------------------------");
 	}
 
-	public void readBackup(InputStream data) {
+	
+
+	public void readBackup(InputStream data, List<String> allValidColumns, BackupInsertor dbInsertor) {
 		Log.d(TAG, "read Backup : " + data);
 		try {
 			JsonFactory f = new JsonFactory();
@@ -152,46 +169,15 @@ public class PairingBackupHelper implements BackupHelper {
 			// advance stream to START_ARRAY first:
 			jp.nextToken();
 			// Read Objects
-			List<String> allCols = Arrays.asList(PairingColumns.ALL_COLS);
 			TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
 			};
 			while (jp.nextToken() == JsonToken.START_OBJECT) {
-				Log.d(TAG, "JsonToken.START_OBJECT");
 				HashMap<String, Object> jsonMap = mapper.readValue(jp, typeRef);
-				Log.d(TAG, "jsonMap : " + jsonMap);
-				Log.d(TAG, "Backup Pairing Line Begin");
-				// Values
-				ContentValues values = new ContentValues();
-				// Read String
-				for (String colName : stringColums) {
-					if (allCols.contains(colName)) {
-						String colValue = (String) jsonMap.get(colName);
-						Log.d(TAG, "Backup Pairing Line : " + colValue);
-						values.put(colName, colValue);
-					}
-				}
-				// Read Int
-				for (String colName : intColums) {
-					if (allCols.contains(colName)) {
-						Integer colValue = (Integer) jsonMap.get(colName);
-						Log.d(TAG, "Backup Pairing Line : " + colValue);
-						values.put(colName, colValue);
-					}
-				}
-				// Read Long
-				for (String colName : longColums) {
-					if (allCols.contains(colName)) {
-						Integer colValue = (Integer) jsonMap.get(colName);
-						Log.d(TAG, "Backup Pairing Line : " + colValue);
-						values.put(colName, colValue);
-					}
-				}
+				ContentValues values = UpgradeDbHelper.convertJsonMapAsContentValues(jsonMap, allValidColumns);
 				// Insert
-				pairingDatabase.insertEntity(values);
-				Log.d(TAG, "Backup Pairing Line : Inserting");
-				// after binding, stream points to closing END_OBJECT
+				long entityId = dbInsertor.insertEntity(values);
+				Log.d(TAG, "Backup Pairing Line : new Inserting entity id " + entityId);
 			}
-
 			// Close
 			jp.close();
 			gzipIs.close();
