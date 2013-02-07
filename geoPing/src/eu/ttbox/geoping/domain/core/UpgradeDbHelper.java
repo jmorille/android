@@ -101,35 +101,39 @@ public class UpgradeDbHelper {
 		return values;
 	}
 
-	 
-	
-	public static void readCursorToJson( JsonGenerator g, Cursor cursor, String[] stringColums, String[] intColums, String[] longColums) {
-	  		try {
+	public static void readCursorToJson(JsonGenerator g, Cursor cursor, String[] stringColums, String[] intColums, String[] longColums) {
+		try {
 			// Read String
-			for (String colName : stringColums) {
-				int colIdx = cursor.getColumnIndex(colName);
-				String colValue = cursor.getString(colIdx);
-				g.writeStringField(colName, colValue); 
+			if (stringColums != null) {
+				for (String colName : stringColums) {
+					int colIdx = cursor.getColumnIndex(colName);
+					String colValue = cursor.getString(colIdx);
+					g.writeStringField(colName, colValue);
+				}
 			}
 			// Read Int
-			for (String colName : intColums) {
-				int colIdx = cursor.getColumnIndex(colName);
-				int colValue = cursor.getInt(colIdx);
-				g.writeNumberField(colName, colValue); 
+			if (intColums != null) {
+				for (String colName : intColums) {
+					int colIdx = cursor.getColumnIndex(colName);
+					int colValue = cursor.getInt(colIdx);
+					g.writeNumberField(colName, colValue);
+				}
 			}
 			// Read Long
-			for (String colName : longColums) {
-				int colIdx = cursor.getColumnIndex(colName);
-				long colValue = cursor.getLong(colIdx);
-				g.writeNumberField(colName, colValue);
+			if (longColums != null) {
+				for (String colName : longColums) {
+					int colIdx = cursor.getColumnIndex(colName);
+					long colValue = cursor.getLong(colIdx);
+					g.writeNumberField(colName, colValue);
+				}
 			}
 		} catch (JsonGenerationException e) {
-//		TODO	GeoPingApplication.getInstance().tracker().
-			Log.e(TAG, "Error Writing Json : " + e.getMessage(), e);  
+			// TODO GeoPingApplication.getInstance().tracker().
+			Log.e(TAG, "Error Writing Json : " + e.getMessage(), e);
 		} catch (IOException e) {
-//			TODO	GeoPingApplication.getInstance().tracker().
-				Log.e(TAG, "Error Writing Json : " + e.getMessage(), e);
-		} 
+			// TODO GeoPingApplication.getInstance().tracker().
+			Log.e(TAG, "Error Writing Json : " + e.getMessage(), e);
+		}
 	}
 
 	public static int insertOldRowInNewTable(SQLiteDatabase db, ArrayList<ContentValues> oldRows, String newTableName) {

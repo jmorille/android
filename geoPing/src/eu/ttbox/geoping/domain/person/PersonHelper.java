@@ -106,7 +106,7 @@ public class PersonHelper {
     }
 
     public static ContentValues getContentValues(Person entity) {
-        ContentValues initialValues = new ContentValues();
+        ContentValues initialValues = new ContentValues(PersonColumns.ALL_COLS.length);
         if (entity.id > -1) {
             initialValues.put(PersonColumns.COL_ID, Long.valueOf(entity.id));
         }

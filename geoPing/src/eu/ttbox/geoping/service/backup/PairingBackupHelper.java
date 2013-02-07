@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
-import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 
 /**
@@ -111,9 +110,9 @@ public class PairingBackupHelper implements BackupHelper {
 				JsonGenerator g = f.createGenerator(gzipOut, JsonEncoding.UTF16_BE);
 				// StringWriter buf = new StringWriter();
 				// JsonGenerator g = f.createGenerator(buf );
-				g.writeStartArray(); 
+				g.writeStartArray();
 				while (cursor.moveToNext()) {
-					g.writeStartObject(); 
+					g.writeStartObject();
 					UpgradeDbHelper.readCursorToJson(g, cursor, stringColums, intColums, longColums);
 					g.writeEndObject();
 				}
@@ -153,16 +152,16 @@ public class PairingBackupHelper implements BackupHelper {
 			// advance stream to START_ARRAY first:
 			jp.nextToken();
 			// Read Objects
+			List<String> allCols = Arrays.asList(PairingColumns.ALL_COLS);
 			TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
 			};
-			List<String> allCols = Arrays.asList(PairingColumns.ALL_COLS);
 			while (jp.nextToken() == JsonToken.START_OBJECT) {
 				Log.d(TAG, "JsonToken.START_OBJECT");
 				HashMap<String, Object> jsonMap = mapper.readValue(jp, typeRef);
 				Log.d(TAG, "jsonMap : " + jsonMap);
 				Log.d(TAG, "Backup Pairing Line Begin");
+				// Values
 				ContentValues values = new ContentValues();
-
 				// Read String
 				for (String colName : stringColums) {
 					if (allCols.contains(colName)) {
@@ -182,7 +181,7 @@ public class PairingBackupHelper implements BackupHelper {
 				// Read Long
 				for (String colName : longColums) {
 					if (allCols.contains(colName)) {
-					Integer colValue = (Integer) jsonMap.get(colName);
+						Integer colValue = (Integer) jsonMap.get(colName);
 						Log.d(TAG, "Backup Pairing Line : " + colValue);
 						values.put(colName, colValue);
 					}
@@ -190,7 +189,7 @@ public class PairingBackupHelper implements BackupHelper {
 				// Insert
 				pairingDatabase.insertEntity(values);
 				Log.d(TAG, "Backup Pairing Line : Inserting");
-				// after binding, stream points to closing END_OBJECT 
+				// after binding, stream points to closing END_OBJECT
 			}
 
 			// Close

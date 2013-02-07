@@ -10,6 +10,11 @@ public class ContentValuesWrapper implements HelperWrapper<ContentValues> {
         super();
         this.contentValues = new ContentValues();
     }
+    
+    public ContentValuesWrapper(int size) {
+        super();
+        this.contentValues = new ContentValues(size);
+    }
 
     public ContentValuesWrapper(ContentValues contentValues) {
         super();

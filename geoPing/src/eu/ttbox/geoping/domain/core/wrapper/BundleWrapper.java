@@ -11,6 +11,10 @@ public class BundleWrapper implements HelperWrapper<Bundle> {
     public BundleWrapper() {
         this.bundle = new Bundle();
     }
+    
+    public BundleWrapper(int size) {
+        this.bundle = new Bundle(size);
+    }
 
     // public void putAll(Bundle map) {
 

@@ -157,7 +157,7 @@ public class PairingHelper {
     }
 
     public static ContentValues getContentValues(Pairing entity) {
-        ContentValues initialValues = new ContentValues();
+        ContentValues initialValues = new ContentValues(PairingColumns.ALL_COLS.length);
         if (entity.id > -1) {
             initialValues.put(PairingColumns.COL_ID, Long.valueOf(entity.id));
         }
