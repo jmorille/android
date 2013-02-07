@@ -93,6 +93,7 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
 
 		// Backgroud
 		PairingAuthorizeTypeEnum authType = helper.getPairingAuthorizeTypeEnum(cursor);
+		if (authType!=null) {
 		switch (authType) {
 		case AUTHORIZE_ALWAYS:
 			// view.setBackgroundResource(R.color.pairing_authorize_type_always);
@@ -115,6 +116,7 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
 			// view.setBackgroundResource(android.R.color.transparent);
 			break;
 		}
+		}  
 	}
 
 	@Override

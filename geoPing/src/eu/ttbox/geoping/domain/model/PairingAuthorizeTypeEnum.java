@@ -9,15 +9,18 @@ public enum PairingAuthorizeTypeEnum {
     AUTHORIZE_ALWAYS, //
     AUTHORIZE_NEVER; //
     
+    public static final PairingAuthorizeTypeEnum DEFAULT = PairingAuthorizeTypeEnum.AUTHORIZE_REQUEST;
+    
     public int getCode() {
         return ordinal();
     }
     
     public static PairingAuthorizeTypeEnum getByCode(int code) {
-        if (code<0) {
-            return null;
+        PairingAuthorizeTypeEnum[] valCodes =  PairingAuthorizeTypeEnum.values();
+        if (code<0 || code>=valCodes.length) {
+            return DEFAULT;
         }
-        return PairingAuthorizeTypeEnum.values()[code];
+        return valCodes[code];
     }
 
     

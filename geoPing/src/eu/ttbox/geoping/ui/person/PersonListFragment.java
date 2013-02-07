@@ -61,14 +61,14 @@ public class PersonListFragment extends Fragment {
 
 	public PersonListFragment() {
 		super();
-		Log.i(TAG, "---------- Constructor PersonListFragment");
+//		Log.i(TAG, "---------- Constructor PersonListFragment");
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View v = inflater.inflate(R.layout.track_person_list, container, false);
 		Log.d(TAG, "onCreateView");
-		Log.i(TAG, "---------- onCreateView PersonListFragment");
+//		Log.i(TAG, "---------- onCreateView PersonListFragment");
 
 		// Bindings
 		listView = (ListView) v.findViewById(android.R.id.list);

@@ -1,9 +1,11 @@
 package eu.ttbox.geoping.test.service.backup;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.backup.BackupDataInputStream;
 import android.test.AndroidTestCase;
 import android.test.mock.MockCursor;
 import android.util.Log;
@@ -13,7 +15,7 @@ public class PairingBackupHelperTest extends AndroidTestCase {
 
 	public static final String TAG = "PairingBackupHelperTest";
 
-	public void testEncodeMessage() {
+	public void testBackupDataReadWrite() {
 	
 		// FileDescriptor fd = null;
 		// BackupDataInput dataIn = new BackupDataInput(fd);
@@ -55,8 +57,11 @@ public class PairingBackupHelperTest extends AndroidTestCase {
 					columnIndex = colIndexLast;
 					colIndexes.put(columnName, columnIndex);
 					idenxCols.put(columnIndex, columnName);
+					Log.d(TAG, "Register columns index : " + columnName + " = " + columnIndex);
 					// Increment for next
 					colIndexLast++;
+				} else {
+				    columnIndex = colIndexes.get(columnName);
 				}
 				return columnIndex;
 			}
@@ -79,16 +84,19 @@ public class PairingBackupHelperTest extends AndroidTestCase {
 		};
 
 		
-		// Service
+		//  Backup Write
 		PairingBackupHelper service = new PairingBackupHelper(getContext()); 
-		ByteArrayOutputStream data = service.copyTable(cursor, PairingBackupHelper.stringColums, PairingBackupHelper.intColums, PairingBackupHelper.longColums);
-		
+		ByteArrayOutputStream dataWrite = service.copyTable(cursor, PairingBackupHelper.stringColums, PairingBackupHelper.intColums, PairingBackupHelper.longColums);
+	 
+		//  Backup Read
+		ByteArrayInputStream dataIn =  new ByteArrayInputStream(dataWrite.toByteArray()); 
+		service.readBackup(dataIn);
 	}
 
 	private HashMap<String, Object> getCursorLine(int idx) {
 		HashMap<String, Object> line = new HashMap<String, Object>();
 		for (String colName : PairingBackupHelper.stringColums) {
-			String colValue = "val : " + colName + "-" + idx;
+			String colValue = "val-" + colName + "-" + idx;
 			line.put(colName, colValue);
 		}
 		for (String colName : PairingBackupHelper.intColums) {

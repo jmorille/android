@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import eu.ttbox.geoping.GeoPingApplication;
@@ -28,6 +29,9 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
 
     private static final String TAG = "GeoPingPrefActivity";
 
+    private SharedPreferences sharedPreferences;
+    
+    // Dev Listener
     private SharedPreferences developmentPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener mDevelopmentPreferencesListener;
 
@@ -40,6 +44,7 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
         // onBuildHeaders() will be called during super.onCreate()
         developmentPreferences = getSharedPreferences(AppVersionPreference.PREFS_DEV_MODE, Context.MODE_PRIVATE);
         super.onCreate(aSavedState);
+        sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
         if (!VersionUtils.isHc11) {
             final boolean showDev = developmentPreferences.getBoolean(AppVersionPreference.PREF_SHOW_DEVMODE, false);
             // addPreferencesFromResource(R.xml.prefs);
@@ -49,11 +54,16 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
             }
             addPreferencesFromResource(R.xml.info_prefs);
         }
+        // Tracker
+        GeoPingApplication.getInstance().tracker().trackPageView("/Pref");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        // Register change listener 
+       sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        // Resume for Headeers
         if (VersionUtils.isHc11) {
             onResumeHc11();
         }
@@ -76,6 +86,9 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
     @Override
     public void onPause() {
         super.onPause();
+     // Register change listener
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        // Resume for Headeers
         if (developmentPreferences != null && mDevelopmentPreferencesListener != null) {
             developmentPreferences.unregisterOnSharedPreferenceChangeListener(mDevelopmentPreferencesListener);
             mDevelopmentPreferencesListener = null;
@@ -139,7 +152,7 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
     // ===========================================================
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) { 
         // Ask Backup
         BackupManager.dataChanged(getPackageName());
         // Update Display

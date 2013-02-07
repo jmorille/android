@@ -77,7 +77,7 @@ public class MainActivity extends SherlockFragmentActivity { //
 		// if (tracker != null) {
 		// tracker.trackPageView("/" + TAG);
 		// }
-		Log.d(TAG, "--------------- " + getPackageName() + "_preferences");
+//		Log.d(TAG, "--------------- " + getPackageName() + "_preferences");
 
 	}
 
