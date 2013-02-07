@@ -101,22 +101,26 @@ public class UpgradeDbHelper {
 		return values;
 	}
 
-	public static void readCursorToJson( JsonGenerator g, Cursor cursor, String[] stringColums, String[] intColums, String[] longColums) {
 	 
-		try {
+	
+	public static void readCursorToJson( JsonGenerator g, Cursor cursor, String[] stringColums, String[] intColums, String[] longColums) {
+	  		try {
 			// Read String
 			for (String colName : stringColums) {
-				String colValue = cursor.getString(cursor.getColumnIndex(colName));
+				int colIdx = cursor.getColumnIndex(colName);
+				String colValue = cursor.getString(colIdx);
 				g.writeStringField(colName, colValue); 
 			}
 			// Read Int
 			for (String colName : intColums) {
-				int colValue = cursor.getInt(cursor.getColumnIndex(colName));
+				int colIdx = cursor.getColumnIndex(colName);
+				int colValue = cursor.getInt(colIdx);
 				g.writeNumberField(colName, colValue); 
 			}
 			// Read Long
 			for (String colName : longColums) {
-				long colValue = cursor.getLong(cursor.getColumnIndex(colName));
+				int colIdx = cursor.getColumnIndex(colName);
+				long colValue = cursor.getLong(colIdx);
 				g.writeNumberField(colName, colValue);
 			}
 		} catch (JsonGenerationException e) {

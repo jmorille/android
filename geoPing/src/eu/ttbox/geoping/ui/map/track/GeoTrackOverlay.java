@@ -3,10 +3,9 @@ package eu.ttbox.geoping.ui.map.track;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -105,7 +104,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	private MapView.LayoutParams balloonViewLayoutParams;
 
 	// instance
-	private CopyOnWriteArrayList<GeoTrack> geoTracks = new CopyOnWriteArrayList<GeoTrack>(); 
+	private ConcurrentSkipListSet<GeoTrack> geoTracks = new ConcurrentSkipListSet<GeoTrack>(); 
 
 	private GeoTrack selectedGeoTrack;
 
@@ -129,6 +128,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	private static final int UI_MSG_SET_ADDRESS = 1;
 
 	private Handler uiHandler = new Handler() {
+		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case UI_MSG_SET_ADDRESS:
@@ -140,6 +140,8 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 			}
 		}
 	};
+	
+	 
 
 	// ===========================================================
 	// Constructors
@@ -277,11 +279,10 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
       }
   };
 
-	public void animateToLastKnowPosition(boolean animated) {
-		int geoTrackSize = geoTracks.size();
+	public void animateToLastKnowPosition(boolean animated) { 
 		setGeotrackLastAddedListener(animateToLastAddedListener);
-		if (geoTrackSize > 0) {
-			GeoTrack geoTrack = geoTracks.get(geoTrackSize - 1);
+		if (!geoTracks.isEmpty()) {
+			GeoTrack geoTrack = geoTracks.last();
 			animateToGeoTrack(geoTrack, animated);
 			setGeotrackLastAddedListener(null);
 		} 
@@ -293,7 +294,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		} else {
 			mMapController.setCenter(geoTrack.asGeoPoint());
 		}
-		Log.d(TAG, "animateToGeoTrack (" + animated + ") : " + geoTrack);
+		Log.d(TAG, "CenterMap (" + animated + ") : " + geoTrack);
 	}
 
 	private void invalidateMapFor(GeoTrack geoTrack) {
@@ -307,10 +308,11 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		boolean isNewOneIsTheLast = true;
 		int geoTrackSize = geoTracks.size();
 		if (geoTrackSize > 0) {
-			GeoTrack endList = geoTracks.get(geoTrackSize - 1);
+			GeoTrack endList = geoTracks.last(); 
 			geoTracks.add(geoTrack);
 			if (geoTrack.time < endList.time) {
-				Collections.sort(geoTracks);
+				// For  
+//			NOT needded for set	Collections.sort(geoTracks);
 				isNewOneIsTheLast = false;
 			}
 		} else {
@@ -734,7 +736,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 					geotrackLastAddedListener.addedLastGeoTrack(geoTrack);
 				}
 			}
-			geoTracks = new CopyOnWriteArrayList<GeoTrack>(points);
+			geoTracks = new ConcurrentSkipListSet<GeoTrack>(points);
 		}
 
 		@Override
