@@ -16,9 +16,12 @@
 
 
     <!-- Share -->
-    <string name="menu_share_app">Share GeoPing</string>
+    <string name="menu_share_app">Partager GeoPing</string>
     <string name="share_app_subject">Let me recommend you GeoPing application</string>
   
+    <string name="app_comment_title">Voter et Commenter</string>
+    <string name="app_comment_summary">Merci de nous laisser vos commentaires.</string>
+   
     
     <!-- GeoTrack Notification -->
     <string name="notif_geoping">GeoPing</string>
@@ -104,6 +107,10 @@
     <string name="prefs_count_laught">Nombre de lancement</string>
     <string name="prefs_count_laught_summary">Compteur d\'utilisation de l\'application</string>
     
+    <!-- Infos Legale -->
+    <string name="legal_information">"Informations légales"</string>
+    <string name="prefs_license_activity_title">"Licences open source"</string>
+     
     <!-- Prefs Dev-->
     <string name="show_dev_countdown">"Plus que <xliff:g id="STEP_COUNT">%1$d</xliff:g> étapes pour devenir un développeur."</string>
     <string name="show_dev_on">"Vous êtes désormais un développeur !"</string>

@@ -24,6 +24,7 @@ public class AboutActivity extends Activity {
 
 	public static final String ACTION_VIEW_HTML  = Intent.ACTION_VIEW;
 	public static final String ACTION_VIEW_ABOUT = "eu.ttbox.geoping.ui.about.ACTION_VIEW_ABOUT";
+	public static final String ACTION_VIEW_RELEASE_NOTES = "eu.ttbox.geoping.ui.about.ACTION_VIEW_RELEASE_NOTES";
 	public static final String ACTION_VIEW_LICENCE = "eu.ttbox.geoping.ui.about.ACTION_VIEW_LICENCE";
 
 	@Override
@@ -58,11 +59,15 @@ public class AboutActivity extends Activity {
 		if (intent != null) {
 			if (ACTION_VIEW_HTML.equals(  intent.getAction())) {
 				webView.loadUrl(intent.getData().getPath());
-			} else 
-			if (ACTION_VIEW_ABOUT.equals(  intent.getAction())) {
+			} else if (ACTION_VIEW_RELEASE_NOTES.equals(  intent.getAction())) {
+				webView.loadData(readTextFromResource(R.raw.release_notes), "text/html", "utf-8");
+				setTitle(R.string.prefs_relasenotes);
+			} else if (ACTION_VIEW_ABOUT.equals(  intent.getAction())) {
 				webView.loadData(readTextFromResource(R.raw.credits), "text/html", "utf-8");
+				setTitle(R.string.prefs_about);
  			} else if (ACTION_VIEW_LICENCE.equals(  intent.getAction())) {
 				webView.loadData(readTextFromResource(R.raw.licence), "text/html", "utf-8");
+				setTitle(R.string.prefs_license_activity_title);
  			}
 		}
 	}

@@ -64,13 +64,13 @@ public class SimChangeReceiver extends BroadcastReceiver {
 			// Test phoneName = GSM ?
 			if (SIM_STATE_LOADED.equals(state)) {
 				// Read Phone number
-				String phoneNumber = getSystemPhoneNumber(context); 
+				String phoneNumber = getSystemPhoneNumber(context);
 				if (TextUtils.isEmpty(phoneNumber)) {
 					Log.e(TAG, "No phone number Readable in TelephonyManager");
 				} else {
 					// Compare to preference
 					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-					String prefPhone = prefs.getString(AppConstants.PREFS_SPY_NOTIFICATION_SIMCHANGE_PHONENUMBER, null);
+					String prefPhone = prefs.getString(AppConstants.PREFS_EVENT_SPY_SIMCHANGE_PHONENUMBER, null);
 					if (TextUtils.isEmpty(prefPhone)) {
 						// Save as New Phone
 						savePrefsPhoneNumber(prefs, phoneNumber);
@@ -89,18 +89,20 @@ public class SimChangeReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private void sendSpyNotifSms(Context context, String phoneNumber) { 
-		ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SIM_CHANGE);
-        if (phones != null) {
-            // Send Sms
-            SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsValueEventTypeEnum.SIM_CHANGE);
-        }
+	private void sendSpyNotifSms(Context context, String phoneNumber) {
+		ArrayList<String> phones = SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SIM_CHANGE);
+		if (phones != null) {
+			// Send Sms
+			SpyNotificationHelper.sendEventSpySmsMessage(context, phones, SmsValueEventTypeEnum.SIM_CHANGE);
+		}
 	}
 
 	private void printExtras(Bundle extras) {
-		for (String key : extras.keySet()) {
-			Object value = extras.get(key);
-			Log.d(TAG, "SIM extras : " + key + " = " + value);
+		if (extras != null) {
+			for (String key : extras.keySet()) {
+				Object value = extras.get(key);
+				Log.d(TAG, "SIM extras : " + key + " = " + value);
+			}
 		}
 	}
 
@@ -110,8 +112,8 @@ public class SimChangeReceiver extends BroadcastReceiver {
 		String phoneNumber = telephoneMgr.getLine1Number();
 		Log.d(TAG, "SIM DeviceId : " + telephoneMgr.getDeviceId()); // Code IMEI
 		Log.d(TAG, "SIM Network Operator Name : " + telephoneMgr.getNetworkOperatorName());
-		Log.d(TAG, "SIM Serial Number : " + telephoneMgr.getSimSerialNumber()); 
-		Log.d(TAG, "SIM PhoneNumber : " + phoneNumber ); // Code IMEI
+		Log.d(TAG, "SIM Serial Number : " + telephoneMgr.getSimSerialNumber());
+		Log.d(TAG, "SIM PhoneNumber : " + phoneNumber); // Code IMEI
 		return phoneNumber;
 	}
 
@@ -121,7 +123,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 			return null;
 		}
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		String prefPhone = prefs.getString(AppConstants.PREFS_SPY_NOTIFICATION_SIMCHANGE_PHONENUMBER, null);
+		String prefPhone = prefs.getString(AppConstants.PREFS_EVENT_SPY_SIMCHANGE_PHONENUMBER, null);
 		if (prefPhone == null || !phoneNumber.equals(prefPhone)) {
 			savePrefsPhoneNumber(prefs, phoneNumber);
 		}
@@ -131,10 +133,10 @@ public class SimChangeReceiver extends BroadcastReceiver {
 	public static void savePrefsPhoneNumber(SharedPreferences prefs, String phoneNumber) {
 		if (!TextUtils.isEmpty(phoneNumber)) {
 			SharedPreferences.Editor prefEditor = prefs.edit();
-			prefEditor.putString(AppConstants.PREFS_SPY_NOTIFICATION_SIMCHANGE_PHONENUMBER, phoneNumber);
+			prefEditor.putString(AppConstants.PREFS_EVENT_SPY_SIMCHANGE_PHONENUMBER, phoneNumber);
 			prefEditor.commit();
 		} else {
-			Log.w(TAG, "No Phone number to save in pref Key : " + AppConstants.PREFS_SPY_NOTIFICATION_SIMCHANGE_PHONENUMBER);
+			Log.w(TAG, "No Phone number to save in pref Key : " + AppConstants.PREFS_EVENT_SPY_SIMCHANGE_PHONENUMBER);
 		}
 	}
 

@@ -37,8 +37,8 @@ public class AppConstants {
     public static final String PREFS_AUTHORIZE_GEOPING_PAIRING = "authorizeNewGeopingPairing";
     
     // Spy Notification TODO
-    public static final String PREFS_SPY_NOTIFICATION_SHUTDOWN_SLEEP_IN_MS  = "spyNotifShutdownSleepInMs";
-    public static final String PREFS_SPY_NOTIFICATION_SIMCHANGE_PHONENUMBER  = "spyNotifSimChangegPhoneNumber";
+    public static final String PREFS_EVENT_SPY_SHUTDOWN_SLEEP_IN_MS  = "spyEventShutdownSleepInMs";
+    public static final String PREFS_EVENT_SPY_SIMCHANGE_PHONENUMBER  = "spyEventSimChangePhoneNumber";
     
     public static final String PREFS_ADD_BLOCKED = "addBlocked";
     // Map

@@ -18,6 +18,8 @@
     <string name="menu_share_app">Share GeoPing</string>
     <string name="share_app_subject">Let me recommend you GeoPing application</string>
   
+    <string name="app_comment_title">Evaluar y hacer comentarios</string>
+    <string name="app_comment_summary">Gracias para sus commentarios</string>
     
 
     <!-- GeoTrack Notification -->
@@ -110,6 +112,10 @@
     <string name="show_dev_on">"¡Ahora están activadas las opciones de desarrollo!"</string>
     <string name="show_dev_already">"No es necesario, están activadas las opciones de desarrollo."</string>
 
+       <!-- Prefs Infos Legale -->
+    <string name="legal_information">Legal information</string>
+    <string name="prefs_license_activity_title">Open source licenses</string>
+    
     
     <!-- Dialog -->
     <string name="color_picker">Seleccionar un color</string>

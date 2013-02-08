@@ -105,10 +105,10 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         if (beginCall < 0) {
             // Pas de communication
             switch (callAction) {
-            case PREFS_ACTION_INCOMING:
+            case PREFS_ACTION_OUTGOING:
                 message = "A essayer d'appeler le numéro " + phoneNumber;
                 break;
-            case PREFS_ACTION_OUTGOING:
+            case PREFS_ACTION_INCOMING:
                 message = "A recu un appel non repondu du numéro " + phoneNumber;
                 break;
             default:
@@ -117,16 +117,17 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         } else {
             int callDurationInS = (int) ((endCall - beginCall) / 1000);
             switch (callAction) {
-            case PREFS_ACTION_INCOMING:
+            case PREFS_ACTION_OUTGOING:
                 message = "A appeler " + callDurationInS + " s le numéro " + phoneNumber;
                 break;
-            case PREFS_ACTION_OUTGOING:
+            case PREFS_ACTION_INCOMING:
                 message = "A Recu un appel de " + callDurationInS + " s du numéro " + phoneNumber;
                 break;
             default:
                 break;
             }
         }
+        Log.d(TAG, "PhoneState result : " + message);
         // TODO
 //        ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_PHONE_CALL);
 //        if (phones != null) {

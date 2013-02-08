@@ -2,6 +2,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/prefs_developement" >
 
+    <PreferenceCategory android:title="@string/legal_information">
+        <Preference android:title="@string/prefs_license_activity_title" >
+            <intent
+                android:action="eu.ttbox.geoping.ui.about.ACTION_VIEW_LICENCE"
+                android:targetClass="eu.ttbox.geoping.ui.about.AboutActivity"
+                android:targetPackage="eu.ttbox.geoping" />
+        </Preference>
+        
+    </PreferenceCategory>
+    
     <PreferenceCategory
         android:icon="@drawable/ic_action_about"
         android:title="@string/prefs_info" >
@@ -15,12 +25,23 @@
             android:summary="@string/prefs_count_laught_summary"
             android:title="@string/prefs_count_laught" />
 
-        <Preference android:title="@string/prefs_about" >
+        <Preference android:title="@string/prefs_relasenotes" >
             <intent
-                android:action="eu.ttbox.geoping.ui.about.ACTION_VIEW_ABOUT"
+                android:action="eu.ttbox.geoping.ui.about.ACTION_VIEW_RELEASE_NOTES"
                 android:targetClass="eu.ttbox.geoping.ui.about.AboutActivity"
                 android:targetPackage="eu.ttbox.geoping" />
         </Preference>
+        
+       <Preference android:title="@string/app_comment_title" 
+           android:summary="@string/app_comment_summary"
+           android:icon="@android:drawable/ic_dialog_email">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=eu.ttbox.geoping"  />
+        </Preference>
+        
+       
+       
         <!-- <Preference -->
         <!-- android:title="@string/prefs_licence" > -->
         <!-- <intent -->

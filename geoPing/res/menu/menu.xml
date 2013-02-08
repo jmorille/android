@@ -43,10 +43,11 @@
         android:icon="@android:drawable/ic_menu_share"
         android:showAsAction="ifRoom"
         android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
-        android:title="Share App"/>
+        android:title="@string/app_share_title"/>
       <item
         android:id="@+id/menuAppComment"
         android:icon="@android:drawable/ic_menu_manage"
         android:showAsAction="ifRoom" 
-        android:title="Comment"/>
+        android:title="@string/app_comment_title"
+       />
 </menu>

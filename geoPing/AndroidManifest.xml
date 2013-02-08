@@ -130,11 +130,11 @@
         <receiver android:name="eu.ttbox.geoping.service.receiver.MessageAcknowledgeReceiver">
             <intent-filter>
                 <action android:name="eu.ttbox.geoping.ACTION_SEND_ACK"/>  
-                <data android:mimeType="vnd.android.cursor.dir/ttbox.geoping.smsLog" />
+                <data android:mimeType="vnd.android.cursor.item/ttbox.geoping.smsLog" />
             </intent-filter> 
             <intent-filter> 
                 <action android:name="eu.ttbox.geoping.ACTION_DELIVERY_ACK"/> 
-                <data android:mimeType="vnd.android.cursor.dir/ttbox.geoping.smsLog" />
+                <data android:mimeType="vnd.android.cursor.item/ttbox.geoping.smsLog" />
             </intent-filter> 
             </receiver>
         

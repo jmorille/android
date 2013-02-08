@@ -43,7 +43,7 @@ public class ShutdownReceiver extends BroadcastReceiver {
 			    SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsValueEventTypeEnum.SHUTDOWN);
  				// Sleep for Send the Sms
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-				int sleepWantedInMs = prefs.getInt(AppConstants.PREFS_SPY_NOTIFICATION_SHUTDOWN_SLEEP_IN_MS, 5000);
+				int sleepWantedInMs = prefs.getInt(AppConstants.PREFS_EVENT_SPY_SHUTDOWN_SLEEP_IN_MS, 5000);
 				try {
 					Log.d(TAG, "### ### Begin Thread Sleep " + sleepWantedInMs + " ms ### ### ");
 					Thread.sleep(sleepWantedInMs);
