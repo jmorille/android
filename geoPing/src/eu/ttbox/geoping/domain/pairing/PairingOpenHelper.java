@@ -51,12 +51,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 			+ ", " + PairingColumns.COL_PHONE_MIN_MATCH //
 			+ ", " + PairingColumns.COL_AUTHORIZE_TYPE //
 			+ ", " + PairingColumns.COL_SHOW_NOTIF //
-			+ ", " + PairingColumns.COL_PAIRING_TIME //
-			// Temp new
-			+ ", " + PairingColumns.COL_NOTIF_SHUTDOWN //
-			+ ", " + PairingColumns.COL_NOTIF_BATTERY_LOW //
-			+ ", " + PairingColumns.COL_NOTIF_SIM_CHANGE //
-			+ ", " + PairingColumns.COL_NOTIF_PHONE_CALL // 
+			+ ", " + PairingColumns.COL_PAIRING_TIME // 
 			+ ");";
 
 	private static final String FTS_TABLE_CREATE_PAIRING = FTS_TABLE_CREATE_PAIRING_V6;
