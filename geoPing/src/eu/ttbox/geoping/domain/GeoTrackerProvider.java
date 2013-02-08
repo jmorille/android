@@ -37,8 +37,8 @@ public class GeoTrackerProvider extends ContentProvider {
         
         
         // MIME types used for searching words or looking up a single definition
-        public static final String COLLECTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.geoTrackPoint";
-        public static final String ITEM_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.geoTrackPoint";
+        public static final String COLLECTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/ttbox.geoping.geoTrackPoint";
+        public static final String ITEM_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/ttbox.geoping.geoTrackPoint";
 
     }
 

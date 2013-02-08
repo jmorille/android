@@ -120,12 +120,25 @@
 		  </intent-filter>
 		</receiver>
 
-        <!-- Receiver -->
+        <!-- SMS Receiver -->
         <receiver android:name=".service.slave.receiver.SMSReceiver">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
+         <!-- SMS Acknowledge Receiver -->
+        <receiver android:name="eu.ttbox.geoping.service.receiver.MessageAcknowledgeReceiver">
+            <intent-filter>
+                <action android:name="eu.ttbox.geoping.ACTION_SEND_ACK"/>  
+                <data android:mimeType="vnd.android.cursor.dir/ttbox.geoping.smsLog" />
+            </intent-filter> 
+            <intent-filter> 
+                <action android:name="eu.ttbox.geoping.ACTION_DELIVERY_ACK"/> 
+                <data android:mimeType="vnd.android.cursor.dir/ttbox.geoping.smsLog" />
+            </intent-filter> 
+            </receiver>
+        
+        
           <!-- Spy Notification Receiver -->
         <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver">
             <intent-filter android:priority="2147483647">

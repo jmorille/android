@@ -20,8 +20,8 @@ public class PairingProvider extends ContentProvider {
     // Constante
 
     // MIME types used for searching words or looking up a single definition
-    public static final String PAIRINGS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/pairing";
-    public static final String PAIRING_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/pairing";
+    public static final String PAIRINGS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/ttbox.geoping.pairing";
+    public static final String PAIRING_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/ttbox.geoping.pairing";
 
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.PairingProvider";

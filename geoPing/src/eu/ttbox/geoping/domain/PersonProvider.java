@@ -20,8 +20,8 @@ public class PersonProvider extends ContentProvider {
     // Constante
 
     // MIME types used for searching words or looking up a single definition
-    public static final String PERSONS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/person";
-    public static final String PERSON_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/person";
+    public static final String PERSONS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/ttbox.geoping.person";
+    public static final String PERSON_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/ttbox.geoping.person";
 
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.PersonProvider";

@@ -21,6 +21,9 @@ public class SmsMessageEncoderHelper {
 
 	public final static String ACTION_GEO_PING = "WRY";
 	public final static String ACTION_GEO_LOC = "LOC";
+	
+	public final static String ACTION_SPY_EVENT = "EVT";
+    
 	public final static String ACTION_GEO_PAIRING = "PAQ";
 	public final static String ACTION_GEO_PAIRING_RESPONSE = "PAR";
 

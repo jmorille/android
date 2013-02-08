@@ -1,18 +1,16 @@
 package eu.ttbox.geoping.service.slave.receiver;
 
-import android.app.Activity;
-import android.app.PendingIntent;
+import java.util.ArrayList;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.preference.PreferenceManager;
-import android.telephony.SmsManager;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
-import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
 
 public class ShutdownReceiver extends BroadcastReceiver {
 
@@ -38,13 +36,12 @@ public class ShutdownReceiver extends BroadcastReceiver {
 			Log.d(TAG, "### ############################### ### ");
 			Log.d(TAG, "### ### " + encrypedMsg + " ### ### ");
 			Log.d(TAG, "### ############################### ### ");
-			// Search Phones
-			String phone = SpyNotificationHelper.searchPhoneForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
-			Log.d(TAG, "### ### Destination : " + phone + " ### ### ");
-			if (phone != null) {
-				// Send SMS
-				SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
-				// Sleep for Send the Sms
+			// Search Phones 
+			ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
+			if (phones != null) {
+			    // Send Sms
+			    SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsValueEventTypeEnum.SHUTDOWN);
+ 				// Sleep for Send the Sms
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 				int sleepWantedInMs = prefs.getInt(AppConstants.PREFS_SPY_NOTIFICATION_SHUTDOWN_SLEEP_IN_MS, 5000);
 				try {

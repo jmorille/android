@@ -11,10 +11,12 @@ public enum SmsMessageActionEnum {
     // Slave
     GEOPING_REQUEST(SmsMessageEncoderHelper.ACTION_GEO_PING, Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER, GeoPingSlaveService.class), //
     ACTION_GEO_PAIRING(SmsMessageEncoderHelper.ACTION_GEO_PAIRING, Intents.ACTION_SMS_PAIRING_RESQUEST, GeoPingSlaveService.class), //
+   
     // Master
     ACTION_GEO_LOC(SmsMessageEncoderHelper.ACTION_GEO_LOC, Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class), //
-    ACTION_GEO_PAIRING_RESPONSE(SmsMessageEncoderHelper.ACTION_GEO_PAIRING_RESPONSE, Intents.ACTION_SMS_PAIRING_RESPONSE, GeoPingMasterService.class); //
-    
+    ACTION_GEO_PAIRING_RESPONSE(SmsMessageEncoderHelper.ACTION_GEO_PAIRING_RESPONSE, Intents.ACTION_SMS_PAIRING_RESPONSE, GeoPingMasterService.class), //
+    // Receive Notif
+    ACTION_SPY_EVENT(SmsMessageEncoderHelper.ACTION_SPY_EVENT, Intents.ACTION_SMS_EVT_RESPONSE, GeoPingMasterService.class);
 
     // ===========================================================
     // Constructor

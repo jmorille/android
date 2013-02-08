@@ -34,9 +34,16 @@ public class SmsLogDatabase {
         public static final String COL_TIME = "TIME";
         public static final String COL_PARENT_ID = "PARENT_ID";
         public static final String COL_SMS_WEIGHT = "SMS_WEIGHT";
+        // Acknowledge
+        public static final String COL_IS_SEND_TIME = "IS_SEND_TIME";
+        public static final String COL_IS_DELIVERY_TIME = "IS_DELIVERY_TIME";
 
         // All Cols
-        public static final String[] ALL_COLS = new String[] { COL_ID, COL_TIME, COL_ACTION, COL_PHONE,COL_PHONE_NORMALIZED,COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE , COL_MESSAGE_PARAMS,COL_SMS_WEIGHT,COL_PARENT_ID };
+        public static final String[] ALL_COLS = new String[] { //
+            COL_ID, COL_TIME, COL_ACTION, COL_PHONE,COL_PHONE_NORMALIZED,COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE , COL_MESSAGE_PARAMS  //
+            , COL_SMS_WEIGHT,COL_PARENT_ID //
+            , COL_IS_SEND_TIME, COL_IS_DELIVERY_TIME //Acknowledge
+        };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
 
@@ -164,6 +171,12 @@ public class SmsLogDatabase {
         }
         return result;
     }
+    
+//    private void manageContentValues(ContentValues values) {
+//        String action = values.getAsString(SmsLogColumns.COL_ACTION);
+//        if (action!=null && action)
+//    }
+    
 
     public int deleteEntity(String selection, String[] selectionArgs) {
         int result = -1;

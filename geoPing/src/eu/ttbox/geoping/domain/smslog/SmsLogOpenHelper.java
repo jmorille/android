@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.domain.smslog;
 
+import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,7 +11,7 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "SmsLogOpenHelper";
 
     public static final String DATABASE_NAME = "smsLog.db";
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
 
     // ===========================================================
     // Table
@@ -24,16 +25,19 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
      */
     private static final String FTS_TABLE_CREATE = "CREATE VIRTUAL TABLE " + SmsLogDatabase.TABLE_SMSLOG_FTS + //
             " USING fts3 " //
-            + "( " + SmsLogDatabase.SmsLogColumns.COL_TIME //
-            + ", " + SmsLogDatabase.SmsLogColumns.COL_SMSLOG_TYPE //
-            + ", " + SmsLogDatabase.SmsLogColumns.COL_ACTION //
-            + ", " + SmsLogDatabase.SmsLogColumns.COL_PHONE //
-            + ", " + SmsLogDatabase.SmsLogColumns.COL_PHONE_NORMALIZED // 
-            + ", " + SmsLogDatabase.SmsLogColumns.COL_PHONE_MIN_MATCH // 
-            + ", " + SmsLogDatabase.SmsLogColumns.COL_MESSAGE //
-            + ", " + SmsLogDatabase.SmsLogColumns.COL_MESSAGE_PARAMS //
-            + ", " + SmsLogDatabase.SmsLogColumns.COL_PARENT_ID //
-            + ", " + SmsLogDatabase.SmsLogColumns.COL_SMS_WEIGHT //
+            + "( " + SmsLogColumns.COL_TIME //
+            + ", " + SmsLogColumns.COL_SMSLOG_TYPE //
+            + ", " + SmsLogColumns.COL_ACTION //
+            + ", " + SmsLogColumns.COL_PHONE //
+            + ", " + SmsLogColumns.COL_PHONE_NORMALIZED // 
+            + ", " + SmsLogColumns.COL_PHONE_MIN_MATCH // 
+            + ", " + SmsLogColumns.COL_MESSAGE //
+            + ", " + SmsLogColumns.COL_MESSAGE_PARAMS //
+            + ", " + SmsLogColumns.COL_PARENT_ID //
+            + ", " + SmsLogColumns.COL_SMS_WEIGHT //
+            // Acknowledge
+            + ", " + SmsLogColumns.COL_IS_SEND_TIME //
+            + ", " + SmsLogColumns.COL_IS_DELIVERY_TIME // 
             + ");";
 
     // ===========================================================

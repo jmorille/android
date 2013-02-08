@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import android.os.Bundle;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
+import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
 
 public enum SmsMessageLocEnum {
 
@@ -12,11 +13,6 @@ public enum SmsMessageLocEnum {
     PROVIDER('p', SmsMessageTypeEnum.GPS_PROVIDER, GeoTrackColumns.COL_PROVIDER), //
     DATE('d', SmsMessageTypeEnum.DATE, GeoTrackColumns.COL_TIME), //
     GEO_E6('g', SmsMessageTypeEnum.MULTI, GeoTrackColumns.COL_LATITUDE_E6, new String[] { GeoTrackColumns.COL_LATITUDE_E6, GeoTrackColumns.COL_LONGITUDE_E6, GeoTrackColumns.COL_ALTITUDE }), //
-    // PARAM_LATITUDE_E6('x', SmsMessageTypeEnum.INT,
-    // GeoTrackColumns.COL_LATITUDE_E6), //
-    // PARAM_LONGITUDE_E6('y', SmsMessageTypeEnum.INT,
-    // GeoTrackColumns.COL_LONGITUDE_E6), //
-//    PARAM_ALTITUDE('z', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ALTITUDE), //
     ACCURACY('a', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ACCURACY), //
     BEARING('b', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BEARING), //
     SPEAD('c', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED), //
@@ -24,8 +20,11 @@ public enum SmsMessageLocEnum {
 
     // Person
     TIME_IN_S('s', SmsMessageTypeEnum.INT, "TIME_IN_S"), //
-    PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID); //
+    PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID), //
 
+    // Spy Event
+    EVT_TYPE('E', SmsMessageTypeEnum.STRING, "EVT_TYPE"),
+    EVT_DATE('t', SmsMessageTypeEnum.DATE, "EVT_DATE"); //
     // ===========================================================
     // Constructor
     // ===========================================================
@@ -91,6 +90,8 @@ public enum SmsMessageLocEnum {
     // ===========================================================
     // Writer / Reader
     // ===========================================================
+ 
+    
     public Bundle writeToBundle(Bundle extras, long value) {
         Bundle params = extras == null ? new Bundle() : extras;
         params.putLong(dbFieldName, value);
@@ -114,6 +115,13 @@ public enum SmsMessageLocEnum {
         params.putString(dbFieldName, value);
         return params;
     }
+    
+    public Bundle writeToBundle(Bundle extras, SmsValueEventTypeEnum value) {
+        Bundle params = extras == null ? new Bundle() : extras;
+        params.putString(dbFieldName, value.name());
+        return params;
+    }
+    
 
     public long readLong(Bundle params, long defaultValue) {
         long result = defaultValue;

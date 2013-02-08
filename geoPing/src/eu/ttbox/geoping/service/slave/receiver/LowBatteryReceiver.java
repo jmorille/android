@@ -1,11 +1,12 @@
 package eu.ttbox.geoping.service.slave.receiver;
 
+import java.util.ArrayList;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.SmsManager;
-import android.util.Log;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
 
 public class LowBatteryReceiver extends BroadcastReceiver {
 
@@ -17,12 +18,11 @@ public class LowBatteryReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
-		if (ACTION_BATTERY_LOW.equals(action)) {
-			String encrypedMsg = "Mon tel  a peu de Batteyr: " + action;
-			String phone = SpyNotificationHelper.searchPhoneForNotif(context, PairingColumns.COL_NOTIF_BATTERY_LOW);
-			Log.d(TAG, "### ### Destination : " + phone + " ### ### ");
-			if (phone != null) { 
-				SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, null, null);
+		if (ACTION_BATTERY_LOW.equals(action)) { 
+			ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_BATTERY_LOW);
+			if (phones != null) { 
+			    // Send Sms
+                SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsValueEventTypeEnum.LOW_BATTERY);
 			}
 		}  
 

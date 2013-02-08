@@ -1,5 +1,9 @@
 package eu.ttbox.geoping.service.slave.receiver;
 
+import java.util.ArrayList;
+
+import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -77,7 +81,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 prefEditor.remove(PREFS_KEY_INLINE_TIME_IN_MS);
                 prefEditor.commit();
                 // Manage Datas
-                String message =  manageCallDatas(phoneNumber, callAction, beginCall, endCall);
+                String message =  manageCallDatas(context, phoneNumber, callAction, beginCall, endCall);
             }
         } else if (ACTION_NEW_OUTGOING_CALL.equals(action)) {
             Log.d(TAG, "PhoneState action : " + action);
@@ -96,7 +100,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         }
     }
 
-    private String manageCallDatas(String phoneNumber, int callAction, long beginCall, long endCall) {
+    private String manageCallDatas(Context context, String phoneNumber, int callAction, long beginCall, long endCall) {
         String message = null;
         if (beginCall < 0) {
             // Pas de communication
@@ -123,6 +127,12 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 break;
             }
         }
+        // TODO
+//        ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_PHONE_CALL);
+//        if (phones != null) {
+//            // Send Sms
+//            SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsValueEventTypeEnum.PHONE_CALL);
+//        }
         return message;
     }
 

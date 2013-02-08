@@ -19,8 +19,8 @@ public class MessageProvider extends ContentProvider {
     // Constante
   
     // MIME types used for searching words or looking up a single definition
-    public static final String MessageS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.cursor.item/Message";
-    public static final String Message_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.cursor.item/Message";
+    public static final String MessageS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/ttbox.geoping.Message";
+    public static final String Message_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/ttbox.geoping.Message";
 
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.MessageProvider";

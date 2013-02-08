@@ -381,9 +381,8 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     private void sendSmsLocation(String phone, Location location) {
         GeoTrack geotrack = new GeoTrack(null, location);
         geotrack.batteryLevelInPercent = batterLevelInPercent;
-        Bundle params = GeoTrackHelper.getBundleValues(geotrack);
-        ContentResolver cr = getContentResolver();
-        SmsSenderHelper.sendSms(cr, phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
+        Bundle params = GeoTrackHelper.getBundleValues(geotrack); 
+        SmsSenderHelper.sendSms(this, phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
         if (saveInLocalDb) {
             geotrack.requesterPersonPhone = phone;
             saveInLocalDb(geotrack);
