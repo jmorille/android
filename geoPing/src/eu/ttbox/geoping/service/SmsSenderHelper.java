@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.service;
 
+import java.util.Map;
+
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
@@ -66,12 +68,11 @@ public class SmsSenderHelper {
 		Uri logUri = cr.insert(SmsLogProvider.Constants.CONTENT_URI, values);
 		return logUri;
 	}
-	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	 
 	private void printContentValues(ContentValues values) {
-		for (String key : values.keySet()) {
-			Object val = values.get(key);
-			Log.d(TAG, "SaveLog ContentValues : " + key + " = " +val);
+		for (Map.Entry<String, Object> key : values.valueSet()) {
+			Object val = key.getValue();
+			Log.d(TAG, "SaveLog ContentValues : " + key.getKey() + " = " +val );
 		}
 	}	
 }

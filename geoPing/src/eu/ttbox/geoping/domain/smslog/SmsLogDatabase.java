@@ -30,7 +30,7 @@ public class SmsLogDatabase {
         public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
         public static final String COL_MESSAGE = "MSG";
         public static final String COL_MESSAGE_PARAMS = "MSG_PARAMS";
-        public static final String COL_SMSLOG_TYPE = "SMSLOG_TYPE";
+        public static final String COL_SMSLOG_TYPE = "SMSLOG_TYPE"; // @see SmsLogTypeEnum
         public static final String COL_TIME = "TIME";
         public static final String COL_PARENT_ID = "PARENT_ID";
         public static final String COL_SMS_WEIGHT = "SMS_WEIGHT";

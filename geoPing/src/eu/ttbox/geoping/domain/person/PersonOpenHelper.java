@@ -1,6 +1,8 @@
 package eu.ttbox.geoping.domain.person;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,7 +26,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 	// Table
 	// ===========================================================
 
-	private static final String FTS_TABLE_CREATE_USER_V5 = "CREATE VIRTUAL TABLE personFTS"   + //
+	private static final String FTS_TABLE_CREATE_USER_V5 = "CREATE VIRTUAL TABLE personFTS" + //
 			" USING fts3 " //
 			+ "( " + PersonColumns.COL_NAME //
 			+ ", " + PersonColumns.COL_PHONE //
@@ -134,7 +136,8 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 		// Insert data in new table
 		// ----------------------
 		if (oldVersion <= 5) {
-			UpgradeDbHelper.insertOldRowInNewTable(db, oldRows, PersonDatabase.TABLE_PERSON_FTS);
+			List<String> validColumns = Arrays.asList(PersonColumns.ALL_COLS);
+			UpgradeDbHelper.insertOldRowInNewTable(db, oldRows, PersonDatabase.TABLE_PERSON_FTS, validColumns);
 		}
 	}
 

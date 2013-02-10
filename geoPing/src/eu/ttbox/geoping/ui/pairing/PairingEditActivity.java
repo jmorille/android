@@ -18,7 +18,6 @@ import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
-import eu.ttbox.geoping.ui.person.PersonEditActivity.SectionsPagerAdapter;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class PairingEditActivity extends SherlockFragmentActivity {
@@ -51,8 +50,8 @@ public class PairingEditActivity extends SherlockFragmentActivity {
 			if (!TextUtils.isEmpty(pairingPhone) && !TextUtils.isEmpty(phone)) {
 				if (smsLogFragment != null && !pairingPhone.equals(phone)) {
 					Bundle args = new Bundle();
-					args.putString(Intents.EXTRA_SMS_PHONE, pairingPhone);
-					smsLogFragment.refreshLoader(args);
+					args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, pairingPhone);
+  					smsLogFragment.refreshLoader(args);
 				}
 			}
 			pairingUri = id;

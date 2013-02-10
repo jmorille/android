@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
@@ -37,6 +36,12 @@ public class SmsLogListFragment extends Fragment {
 
 	// binding
 	private ListView listView;
+
+	// Intents
+	public static class Intents {
+		public static final String EXTRA_SMS_PHONE = eu.ttbox.geoping.core.Intents.EXTRA_SMS_PHONE;
+		public static final String EXTRA_INOUT_GOING_TYPE = "EXTRA_INOUT_GOING_TYPE"; 
+	}
 
 	// init
 	private SmsLogListAdapter listAdapter;
@@ -79,27 +84,14 @@ public class SmsLogListFragment extends Fragment {
 		getActivity().getSupportLoaderManager().initLoader(SMSLOG_LIST_LOADER, savedInstanceState, smsLogLoaderCallback);
 	}
 
-	/**
-	 * 
-	 */
-//	@Override
-//	public void onAttach(Activity activity) {
-//		super.onAttach(activity);
-//		activity.getContentResolver().registerContentObserver(SmsLogProvider.Constants.CONTENT_URI, true, mObserver);
-//	}
-//
-//	@Override
-//	public void onDetach() {
-//		super.onDetach();
-//		getActivity().getContentResolver().unregisterContentObserver(mObserver);
-//	}
-
 	// ===========================================================
 	// Observer
 	// ===========================================================
 
 	/**
-	 * {@link https://bitbucket.org/craigleehi/google-i-o-2012-app/src/f4fd7504d43b/android/src/com/google/android/apps/iosched/ui/ExploreFragment.java}
+	 * {@link https
+	 * ://bitbucket.org/craigleehi/google-i-o-2012-app/src/f4fd7504d43b
+	 * /android/src/com/google/android/apps/iosched/ui/ExploreFragment.java}
 	 * 
 	 */
 	private final ContentObserver mObserver = new ContentObserver(new Handler()) {
@@ -160,26 +152,24 @@ public class SmsLogListFragment extends Fragment {
 			String sortOrder = SMSLOG_SORT_DEFAULT;
 			String selection = null;
 			String[] selectionArgs = null;
-			String queryString = null;
 			Uri searchUri = SmsLogProvider.Constants.CONTENT_URI;
 			// Check for Entity Binding
-			if (args != null && args.containsKey(Intents.EXTRA_SMS_PHONE)) {
-				String phoneNumber = args.getString(Intents.EXTRA_SMS_PHONE);
-				searchUri = Uri.withAppendedPath(SmsLogProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+			if (args != null) {
+				if (args.containsKey(Intents.EXTRA_SMS_PHONE)) {
+					String phoneNumber = args.getString(Intents.EXTRA_SMS_PHONE);
+					searchUri = Uri.withAppendedPath(SmsLogProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+				}
+				if (args.containsKey(Intents.EXTRA_INOUT_GOING_TYPE)) {
+					int isTypeSend = args.getInt(Intents.EXTRA_INOUT_GOING_TYPE, 0);
+					if (isTypeSend>0) {
+						selection = String.format("%s > 0", SmsLogColumns.COL_SMSLOG_TYPE);
+					} else if (isTypeSend<0) {
+						selection = String.format("%s < 0", SmsLogColumns.COL_SMSLOG_TYPE);
+					}
+				} 
+				
 			}
-			// else if (args!=null && args.containsKey(Intents.EXTRA_DATA_URI))
-			// {
-			// Uri entityUri = (Uri)args.getParcelable(Intents.EXTRA_DATA_URI);
-			// Cursor entityCursor =
-			// getActivity().getContentResolver().query(entityUri, new String[]
-			// {} , null, null, null);
-			// try {
-			//
-			// } finally {
-			// entityCursor.close();
-			// }
-			// }
-
+			 
 			// Loader
 			CursorLoader cursorLoader = new CursorLoader(getActivity(), searchUri, null, selection, selectionArgs, sortOrder);
 			return cursorLoader;

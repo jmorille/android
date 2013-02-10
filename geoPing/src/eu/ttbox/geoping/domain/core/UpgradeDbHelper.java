@@ -4,19 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonGenerator;
-
-import android.app.Application;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import eu.ttbox.geoping.GeoPingApplication;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonGenerator;
+
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 
 public class UpgradeDbHelper {
@@ -138,7 +135,7 @@ public class UpgradeDbHelper {
 		}
 	}
 
-	public static ContentValues convertJsonMapAsContentValues(HashMap<String, Object> jsonMap , List<String> allValidColumns) {
+	public static ContentValues convertJsonMapAsContentValues(HashMap<String, Object> jsonMap, List<String> allValidColumns) {
 		// Values
 		ContentValues values = new ContentValues();
 		// Read
@@ -159,17 +156,22 @@ public class UpgradeDbHelper {
 					Log.w(TAG, "Ignore Column : [" + colName + "] for type " + (colValue != null ? colValue.getClass() : "null"));
 				}
 			}
-		} 
+		}
 		return values;
 	}
-	public static int insertOldRowInNewTable(SQLiteDatabase db, ArrayList<ContentValues> oldRows, String newTableName) {
+
+	public static int insertOldRowInNewTable(SQLiteDatabase db, ArrayList<ContentValues> oldRows, String newTableName, List<String> validColumns) {
 		int resultCount = 0;
 		if (oldRows != null && !oldRows.isEmpty()) {
 			try {
 				db.beginTransaction();
 				for (ContentValues values : oldRows) {
-					resultCount += db.insertOrThrow(PairingDatabase.TABLE_PAIRING_FTS, null, values);
-					Log.d(TAG, "Upgrading database : inserting memory copy of row values : " + values);
+					ContentValues filterValue = values;
+					if (validColumns != null) {
+						filterValue = filterContentValues(values, validColumns);
+					}
+					resultCount += db.insertOrThrow(PairingDatabase.TABLE_PAIRING_FTS, null, filterValue);
+					Log.d(TAG, "Upgrading database : inserting memory copy of row values : " + filterValue);
 				}
 				db.setTransactionSuccessful();
 			} catch (RuntimeException e) {
@@ -179,6 +181,20 @@ public class UpgradeDbHelper {
 			}
 		}
 		return resultCount;
+	}
+
+	public static ContentValues filterContentValues(ContentValues values, List<String> validColumns) {
+		ContentValues result = null;
+		for (Map.Entry<String, Object> keyVal : values.valueSet()) {
+			String key = keyVal.getKey();
+			if (!validColumns.contains(key)) {
+				if (result == null) {
+					result = new ContentValues(values);
+				}
+				result.remove(key);
+			}
+		}
+		return result == null ? values : result;
 	}
 
 }

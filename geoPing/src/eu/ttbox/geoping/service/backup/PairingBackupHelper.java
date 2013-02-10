@@ -143,15 +143,16 @@ public class PairingBackupHelper implements BackupHelper {
 		Log.i(TAG, "--- restore Entity '" + key + "' size=" + data.size());
 
 		if (BACKUP_KEY_PAIRING_DB.equals(key)) {
-			List<String> allCols = Arrays.asList(PairingColumns.ALL_COLS);
+			final List<String> validColumns = Arrays.asList(PairingColumns.ALL_COLS);
 			BackupInsertor dbInsertor = new BackupInsertor() {
 
 				@Override
 				public long insertEntity(ContentValues values) { 
-					return pairingDatabase.insertEntity(values);
+					ContentValues filteredValues = UpgradeDbHelper.filterContentValues(values, validColumns);
+					return pairingDatabase.insertEntity(filteredValues);
 				} 
 			};
-			readBackup(data, allCols, dbInsertor);
+			readBackup(data, validColumns, dbInsertor);
 		}
 		Log.i(TAG, "----- restoreEntity End");
 		Log.i(TAG, "-------------------------------------------------");

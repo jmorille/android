@@ -1,6 +1,8 @@
 package eu.ttbox.geoping.domain.pairing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,8 +39,8 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 			+ ", " + PairingColumns.COL_NOTIF_PHONE_CALL + " INTEGER"//
 			// Encryption
 			+ ", " + PairingColumns.COL_ENCRYPTION_PUBKEY + " TEXT"//
-            + ", " + PairingColumns.COL_ENCRYPTION_PRIVKEY + " TEXT"//
-            + ", " + PairingColumns.COL_ENCRYPTION_REMOTE_PUBKEY + " TEXT"//
+			+ ", " + PairingColumns.COL_ENCRYPTION_PRIVKEY + " TEXT"//
+			+ ", " + PairingColumns.COL_ENCRYPTION_REMOTE_PUBKEY + " TEXT"//
 			+ ", " + PersonColumns.COL_ENCRYPTION_REMOTE_TIME + " INTEGER"//
 			+ ", " + PersonColumns.COL_ENCRYPTION_REMOTE_WAY + " TEXT"//
 			+ ");";
@@ -51,7 +53,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 			+ ", " + PairingColumns.COL_PHONE_MIN_MATCH //
 			+ ", " + PairingColumns.COL_AUTHORIZE_TYPE //
 			+ ", " + PairingColumns.COL_SHOW_NOTIF //
-			+ ", " + PairingColumns.COL_PAIRING_TIME // 
+			+ ", " + PairingColumns.COL_PAIRING_TIME //
 			+ ");";
 
 	private static final String FTS_TABLE_CREATE_PAIRING = FTS_TABLE_CREATE_PAIRING_V6;
@@ -70,7 +72,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		mDatabase = db;
-		mDatabase.execSQL(FTS_TABLE_CREATE_PAIRING); 
+		mDatabase.execSQL(FTS_TABLE_CREATE_PAIRING);
 		// new PairingDbBootstrap(mHelperContext, mDatabase).loadDictionary();
 	}
 
@@ -89,19 +91,18 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 			String[] longColums = new String[] { PairingColumns.COL_PAIRING_TIME };
 			oldRows = UpgradeDbHelper.copyTable(db, "pairingFTS", stringColums, intColums, longColums);
 			// Drop All Table
-			db.execSQL("DROP TABLE IF EXISTS pairingFTS"  );
+			db.execSQL("DROP TABLE IF EXISTS pairingFTS");
 		}
 		// Create the new Table
-		Log.d(TAG, "Upgrading database :DROP TABLE  : " + PairingDatabase.TABLE_PAIRING_FTS   );
+		Log.d(TAG, "Upgrading database :DROP TABLE  : " + PairingDatabase.TABLE_PAIRING_FTS);
 		db.execSQL("DROP TABLE IF EXISTS " + PairingDatabase.TABLE_PAIRING_FTS);
-		Log.d(TAG, "Upgrading database : Create TABLE  : " + PairingDatabase.TABLE_PAIRING_FTS   );
+		Log.d(TAG, "Upgrading database : Create TABLE  : " + PairingDatabase.TABLE_PAIRING_FTS);
 		onCreate(db);
 		// Insert data in new table
-		if (oldVersion <= 5 ) {
-			UpgradeDbHelper.insertOldRowInNewTable(db, oldRows, PairingDatabase.TABLE_PAIRING_FTS);
-  		}
+		if (oldVersion <= 5 && oldRows != null) {
+			List<String> validColumns = Arrays.asList(PairingColumns.ALL_COLS);
+			UpgradeDbHelper.insertOldRowInNewTable(db, oldRows, PairingDatabase.TABLE_PAIRING_FTS, validColumns);
+		}
 	}
 
-	
-	
 }
