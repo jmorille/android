@@ -1,7 +1,6 @@
 package eu.ttbox.geoping.core;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import eu.ttbox.geoping.MainActivity;
-import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
@@ -37,7 +35,11 @@ public class Intents {
 	public static final String ACTION_SMS_PAIRING_RESQUEST = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESQUEST";
 	public static final String ACTION_SMS_PAIRING_RESPONSE = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESPONSE";
 
-	   public static final String ACTION_SMS_EVT_RESPONSE = "eu.ttbox.geoping.ACTION_EVT_RESPONSE";
+	   public static final String ACTION_SMS_EVTSPY_SHUTDOWN = "eu.ttbox.geoping.ACTION_SMS_EVTSPY_SHUTDOWN";
+	   public static final String ACTION_SMS_EVTSPY_BOOT = "eu.ttbox.geoping.ACTION_SMS_EVTSPY_BOOT";
+	   public static final String ACTION_SMS_EVTSPY_LOW_BATTERY = "eu.ttbox.geoping.ACTION_SMS_EVTSPY_LOW_BATTERY";
+	   public static final String ACTION_SMS_EVTSPY_PHONE_CALL = "eu.ttbox.geoping.ACTION_SMS_EVTSPY_PHONE_CALL";
+	   public static final String ACTION_SMS_EVTSPY_SIM_CHANGE = "eu.ttbox.geoping.ACTION_SMS_EVTSPY_SIM_CHANGE";
 
 	   
 	public static final String ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE = "eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE";

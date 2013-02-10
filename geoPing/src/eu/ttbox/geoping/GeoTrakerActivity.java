@@ -32,7 +32,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
-import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
+import eu.ttbox.geoping.service.encoder.helper.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.master.GsmCidLatHelper;
 import eu.ttbox.geoping.service.slave.BackgroudLocService;
 import eu.ttbox.geoping.ui.AbstractSmsTrackerActivity;

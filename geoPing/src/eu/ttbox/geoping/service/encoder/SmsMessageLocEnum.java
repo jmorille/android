@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import android.os.Bundle;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
-import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
 
 public enum SmsMessageLocEnum {
 
@@ -23,7 +22,7 @@ public enum SmsMessageLocEnum {
     PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID), //
 
     // Spy Event
-    EVT_TYPE('E', SmsMessageTypeEnum.STRING, "EVT_TYPE"),
+//    EVT_TYPE('E', SmsMessageTypeEnum.STRING, "EVT_TYPE"),
     EVT_DATE('t', SmsMessageTypeEnum.DATE, "EVT_DATE"); //
     // ===========================================================
     // Constructor
@@ -115,13 +114,7 @@ public enum SmsMessageLocEnum {
         params.putString(dbFieldName, value);
         return params;
     }
-    
-    public Bundle writeToBundle(Bundle extras, SmsValueEventTypeEnum value) {
-        Bundle params = extras == null ? new Bundle() : extras;
-        params.putString(dbFieldName, value.name());
-        return params;
-    }
-    
+     
 
     public long readLong(Bundle params, long defaultValue) {
         long result = defaultValue;

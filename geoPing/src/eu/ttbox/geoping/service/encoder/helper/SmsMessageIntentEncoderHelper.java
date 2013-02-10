@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.encoder;
+package eu.ttbox.geoping.service.encoder.helper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
+import eu.ttbox.geoping.service.encoder.GeoPingMessage;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class SmsMessageIntentEncoderHelper {
 

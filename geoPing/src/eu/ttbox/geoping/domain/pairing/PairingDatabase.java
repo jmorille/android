@@ -16,11 +16,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.EncryptionColumns;
-import eu.ttbox.geoping.service.slave.receiver.BootCompleteReceiver;
-import eu.ttbox.geoping.service.slave.receiver.LowBatteryReceiver;
-import eu.ttbox.geoping.service.slave.receiver.PhoneCallReceiver;
-import eu.ttbox.geoping.service.slave.receiver.ShutdownReceiver;
-import eu.ttbox.geoping.service.slave.receiver.SimChangeReceiver;
+import eu.ttbox.geoping.service.slave.eventspy.BootCompleteReceiver;
+import eu.ttbox.geoping.service.slave.eventspy.LowBatteryReceiver;
+import eu.ttbox.geoping.service.slave.eventspy.PhoneCallReceiver;
+import eu.ttbox.geoping.service.slave.eventspy.ShutdownReceiver;
+import eu.ttbox.geoping.service.slave.eventspy.SimChangeReceiver;
 
 public class PairingDatabase {
 

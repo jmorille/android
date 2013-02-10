@@ -113,7 +113,7 @@ public class PairingNotificationFragment extends Fragment {
 	private void saveNotif(String coloumn, boolean value) {
 		ContentValues values = new ContentValues();
 		values.put(coloumn, value);
-		Log.d(TAG, "Update " + entityUri  + " : Column "  + coloumn + " = " + value);
+		Log.d(TAG, "EventSpy Update " + entityUri  + " : Column "  + coloumn + " = " + value);
 		getActivity().getContentResolver().update(entityUri, values, null, null);
 	}
 	

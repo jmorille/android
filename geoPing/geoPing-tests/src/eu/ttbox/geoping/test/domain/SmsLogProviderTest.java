@@ -43,7 +43,7 @@ public class SmsLogProviderTest extends ProviderTestCase2<SmsLogProvider> {
                 .setAction(SmsMessageActionEnum.GEOPING_REQUEST)//
                 .setTime(java.lang.System.currentTimeMillis()) //
                 .setMessage("th7lhawmo,z31,y1e14h,xt3jbc,aa,s0,pg,b1p") //
-                .setSmsLogType(SmsLogTypeEnum.SEND);
+                .setSmsLogType(SmsLogTypeEnum.SEND_ACK);
         ContentValues values =  SmsLogHelper.getContentValues(vo);
         // Insert
         Uri uri = provider.insert(CONTENT_URI, values);

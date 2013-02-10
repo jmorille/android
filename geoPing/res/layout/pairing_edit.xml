@@ -88,6 +88,7 @@
         <Button
             android:id="@+id/select_contact_button"
             style="@style/entity_edit"
+            android:maxHeight="25dp"
             android:layout_alignParentBottom="true"
             android:layout_below="@id/paring_show_notification" 
             android:text="@string/menu_select_contact" />

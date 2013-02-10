@@ -50,6 +50,13 @@
     <string name="sms_action_geoping_response">Envoi de ma position</string>
     <string name="sms_action_pairing_request">Demande d\'association</string>
     <string name="sms_action_pairing_response">Réponse à l\'association</string>
+ 
+    <string name="sms_action_spyevt_shutdown">Event Shutdown</string>
+    <string name="sms_action_spyevt_boot">Event Boot</string>
+    <string name="sms_action_spyevt_low_battery">Event Low Battery</string>
+    <string name="sms_action_spyevt_phone_call">Event Phone Call</string>
+    <string name="sms_action_spyevt_sim_change">Event Sim Change</string>
+    
     
 
     <!-- Menu -->

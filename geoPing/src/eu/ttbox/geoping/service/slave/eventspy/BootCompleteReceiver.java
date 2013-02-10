@@ -1,16 +1,13 @@
-package eu.ttbox.geoping.service.slave.receiver;
+package eu.ttbox.geoping.service.slave.eventspy;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.SmsManager;
 import android.util.Log;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
-import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class BootCompleteReceiver extends BroadcastReceiver {
 
@@ -31,13 +28,13 @@ public class BootCompleteReceiver extends BroadcastReceiver {
             // NSpy Notif
             String encrypedMsg = "Mon tel Vient de démarrer : " + action;
             Log.d(TAG, "### ############################### ### ");
-            Log.d(TAG, "### ### " + encrypedMsg + " ### ### ");
+            Log.d(TAG, "### ### EventSpy BOOT : " + encrypedMsg + " ### ### ");
             Log.d(TAG, "### ############################### ### ");
             // Search Phones
             ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
             if (phones != null) {
                 // Send Sms
-                SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsValueEventTypeEnum.BOOT);
+                SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_BOOT);
             } 
         } 
     }

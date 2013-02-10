@@ -18,7 +18,7 @@ public enum PairingAuthorizeTypeEnum {
     public static PairingAuthorizeTypeEnum getByCode(int code) {
         PairingAuthorizeTypeEnum[] valCodes =  PairingAuthorizeTypeEnum.values();
         if (code<0 || code>=valCodes.length) {
-            return DEFAULT;
+            return null;
         }
         return valCodes[code];
     }

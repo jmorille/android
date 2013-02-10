@@ -1,11 +1,14 @@
 package eu.ttbox.geoping.service.slave.receiver;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
@@ -17,8 +20,9 @@ import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
+import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
-import eu.ttbox.geoping.service.encoder.SmsMessageIntentEncoderHelper;
+import eu.ttbox.geoping.service.encoder.helper.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.receiver.MsgReceiverIntentService;
 
 /**
@@ -65,15 +69,13 @@ public class SMSReceiver extends BroadcastReceiver {
 					}
 				}
 			}
-		} 
+		}
 	}
 
+	// ===========================================================
+	// Consume Sms message
+	// ===========================================================
 
-    // ===========================================================
-    // Consume Sms message
-    // ===========================================================
-
-	
 	private boolean consumeMessage(Context context, SmsMessage message) {
 		final String messageBody = message.getMessageBody();
 		final String phoneNumber = message.getDisplayOriginatingAddress();
@@ -85,9 +87,10 @@ public class SMSReceiver extends BroadcastReceiver {
 		}
 		GeoPingMessage geoMsg = SmsMessageIntentEncoderHelper.decodeAsGeoPingMessage(context, phoneNumber, messageBody, textEncryptor);
 		boolean isConsume = SmsMessageIntentEncoderHelper.startServiceGeoPingMessageAsIntent(context, geoMsg);
+		Log.d(TAG, "is Consume SMS (" + isConsume + ") Geo Action : " + phoneNumber + " / " + messageBody);
 		if (isConsume) {
 			// Log It
-			logSmsMessage(context, SmsLogTypeEnum.RECEIVE, geoMsg);
+			logSmsMessageReceive(context, geoMsg);
 		}
 		return isConsume;
 	}
@@ -104,7 +107,7 @@ public class SMSReceiver extends BroadcastReceiver {
 			intent.putExtra(Intents.EXTRA_SMS_GEOPING_ARRIVED, messageBody);
 			intent.putExtra(Intents.EXTRA_SMS_PHONE, phoneNumber);
 			MsgReceiverIntentService.runIntentInService(context, intent);
- 		}
+		}
 		return isGeoPingmsg;
 	}
 
@@ -112,10 +115,11 @@ public class SMSReceiver extends BroadcastReceiver {
 	// Log Sms message
 	// ===========================================================
 
-	private void logSmsMessage(Context context, SmsLogTypeEnum type, GeoPingMessage geoMsg) {
-		ContentValues values = SmsLogHelper.getContentValues(type, geoMsg);
-		values.put(SmsLogColumns.COL_SMS_WEIGHT, 1);
-		Uri insertUri = context.getContentResolver().insert(SmsLogProvider.Constants.CONTENT_URI, values);
+	private void logSmsMessageReceive(Context context, GeoPingMessage geoMsg) {
+		// Save
+		ContentResolver cr = context.getContentResolver();
+		Uri insertUri = SmsSenderHelper.logSmsMessage(cr, SmsLogTypeEnum.RECEIVE, geoMsg, 1);
+		Log.d(TAG, "Save Log Message : " + insertUri); 
 		// Multi Message
 		if (geoMsg.isMultiMessages()) {
 			String logParentId = null;
@@ -126,12 +130,12 @@ public class SMSReceiver extends BroadcastReceiver {
 			}
 			// Add Count for 0 msg
 			for (GeoPingMessage msgOther : geoMsg.multiMessages) {
-				ContentValues valuesOther = SmsLogHelper.getContentValues(type, msgOther);
+				ContentValues valuesOther = SmsLogHelper.getContentValues(SmsLogTypeEnum.RECEIVE, msgOther);
 				valuesOther.put(SmsLogColumns.COL_SMS_WEIGHT, 0);
 				if (isParent) {
 					valuesOther.put(SmsLogColumns.COL_PARENT_ID, logParentId);
 				}
-				context.getContentResolver().insert(SmsLogProvider.Constants.CONTENT_URI, valuesOther);
+				cr.insert(SmsLogProvider.Constants.CONTENT_URI, valuesOther);
 			}
 		}
 	}

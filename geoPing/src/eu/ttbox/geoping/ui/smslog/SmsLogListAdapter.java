@@ -14,19 +14,23 @@ import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorAdapter {
 
-    private SmsLogHelper helper;
+    private static final String TAG = "SmsLogListAdapter";
+
+	private SmsLogHelper helper;
 
     private boolean isNotBinding = true;
 
     private Resources mResources;
 
+    private android.content.res.Resources resources;
     // ===========================================================
     // Constructor
     // ===========================================================
 
     public SmsLogListAdapter(Context context, Cursor c, int flags) {
         super(context, R.layout.smslog_list_item, c, flags);
-        mResources = new Resources(context);
+        this.resources = context.getResources();
+        this.mResources = new Resources(context);
     }
 
     private void intViewBinding(View view, Context context, Cursor cursor) {
@@ -86,50 +90,69 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
     private Drawable getCallTypeDrawable(SmsLogTypeEnum callType) {
         switch (callType) {
         case RECEIVE:
-            return mResources.incoming;
-        case SEND:
+            return mResources.incoming; 
+        case SEND_REQ:
+            return mResources.outgoing_request;
+        case SEND_ACK:
             return mResources.outgoing;
+        case SEND_DELIVERY_ACK: 
+            return mResources.outgoing_delivery_ack;
+        case SEND_ERROR:
+            return mResources.outgoing_error;
         default:
             throw new IllegalArgumentException("invalid call type: " + callType);
         }
     }
     
     private String getSmsActionLabel(SmsMessageActionEnum action) {
-        switch (action) {
-        case GEOPING_REQUEST:
-            return mResources.actionGeoPingRequest;
-        case ACTION_GEO_LOC:
-            return mResources.actionGeoPingResponse;
-        case ACTION_GEO_PAIRING:
-            return mResources.actionPairingRequest;
-        case ACTION_GEO_PAIRING_RESPONSE:
-            return mResources.actionPairingResponse;
-         default:
-            return action.name();
-        }
+//    	Log.d(TAG, "getSmsActionLabel : "  + action); 
+    	 return action.getLabel(resources);
+    	 	
+    	// FIXME
+//        switch (action) {
+//        case GEOPING_REQUEST:
+//            return mResources.actionGeoPingRequest;
+//        case ACTION_GEO_LOC:
+//            return mResources.actionGeoPingResponse;
+//        case ACTION_GEO_PAIRING:
+//            return mResources.actionPairingRequest;
+//        case ACTION_GEO_PAIRING_RESPONSE:
+//            return mResources.actionPairingResponse;
+//         default:
+//            return action.name();
+//        }
     }
     
     private static class Resources {
         public final Drawable incoming;
+        public final Drawable outgoing_request;
         public final Drawable outgoing;
-        public final Drawable missed;
-        public final Drawable voicemail;
+//        public final Drawable missed;
+//        public final Drawable voicemail;
+        public final Drawable outgoing_delivery_ack;
+        public final Drawable outgoing_error;
+        
         public final String actionGeoPingRequest;
         public final String actionGeoPingResponse;
         public final String actionPairingRequest;
         public final String actionPairingResponse;
-        
+         
         public Resources(Context context) {
             final android.content.res.Resources r = context.getResources();
-            incoming = r.getDrawable(R.drawable.ic_call_incoming_holo_dark);
-            outgoing = r.getDrawable(R.drawable.ic_call_outgoing_holo_dark);
-            missed = r.getDrawable(R.drawable.ic_call_missed_holo_dark);
-            voicemail = r.getDrawable(R.drawable.ic_call_voicemail_holo_dark);
+            incoming = r.getDrawable(R.drawable.ic_call_incoming);
+            outgoing_request = r.getDrawable(R.drawable.ic_call_outgoing_request );
+            outgoing = r.getDrawable(R.drawable.ic_call_outgoing );
+            outgoing_error = r.getDrawable(R.drawable.ic_call_outgoing_error );
+            outgoing_delivery_ack = r.getDrawable(R.drawable.ic_call_outgoing_delivery_ack );
+//            missed = r.getDrawable(R.drawable.ic_call_missed );
+//            voicemail = r.getDrawable(R.drawable.ic_call_voicemail_holo_dark);
             // Text
             actionGeoPingRequest = r.getString(R.string.sms_action_geoping_request);
             actionGeoPingResponse = r.getString(R.string.sms_action_geoping_response);
             actionPairingRequest = r.getString(R.string.sms_action_pairing_request);
             actionPairingResponse = r.getString(R.string.sms_action_pairing_response);
         }
+        
+        
     }
 }

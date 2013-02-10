@@ -1,10 +1,12 @@
-package eu.ttbox.geoping.service.encoder;
+package eu.ttbox.geoping.service.encoder.helper;
 
 import java.util.HashMap;
 
 import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
+import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageTypeEnum;
 import eu.ttbox.geoping.service.encoder.params.IntegerEncoded;
 import eu.ttbox.geoping.service.encoder.params.LongEncoded;
 

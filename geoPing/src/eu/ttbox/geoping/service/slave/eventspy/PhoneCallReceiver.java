@@ -1,9 +1,7 @@
-package eu.ttbox.geoping.service.slave.receiver;
+package eu.ttbox.geoping.service.slave.eventspy;
 
 import java.util.ArrayList;
 
-import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
-import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +9,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class PhoneCallReceiver extends BroadcastReceiver {
 
@@ -47,14 +47,14 @@ public class PhoneCallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (ACTION_PHONE_STATE_CHANGED.equals(action)) {
-            Log.d(TAG, "PhoneState action : " + action);
+            Log.d(TAG, "EventSpy PhoneState action : " + action);
             Bundle extras = intent.getExtras();
             printExtras(extras);
             String state = extras.getString(EXTRA_STATE);
             SharedPreferences prefs = context.getSharedPreferences(PHONE_RECEIVER_PREFS_NAME, Context.MODE_PRIVATE);
             if (STATE_RINGING.equals(state)) {
                 String phoneNumber = extras.getString(EXTRA_INCOMING_NUMBER);
-                Log.d(TAG, "PhoneState incomming call : " + phoneNumber);
+                Log.d(TAG, "EventSpy PhoneState STATE_RINGING incomming call : " + phoneNumber);
                 // Prefs
                 SharedPreferences.Editor prefEditor = prefs.edit();
                 prefEditor.putString(PREFS_KEY_PHONE_NUMBER, phoneNumber);
@@ -62,6 +62,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 prefEditor.commit();
 
             } else if (STATE_OFFHOOK.equals(state)) {
+            	Log.d(TAG, "EventSpy PhoneState STATE_OFFHOOK"  );
                 // Decrocher
                 SharedPreferences.Editor prefEditor = prefs.edit();
                 long now = System.currentTimeMillis();
@@ -69,6 +70,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 prefEditor.commit();
                 
             } else if (STATE_IDLE.equals(state)) {
+            	Log.d(TAG, "EventSpy PhoneState STATE_IDLE"  );
                 // Racroche ou ignore
                 long endCall = System.currentTimeMillis();
                 long beginCall = prefs.getLong(PREFS_KEY_INLINE_TIME_IN_MS, -1);
@@ -84,12 +86,12 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 String message =  manageCallDatas(context, phoneNumber, callAction, beginCall, endCall);
             }
         } else if (ACTION_NEW_OUTGOING_CALL.equals(action)) {
-            Log.d(TAG, "PhoneState action : " + action);
+            Log.d(TAG, "EventSpy PhoneState action : " + action);
             Bundle extras = intent.getExtras();
             printExtras(extras);
             // String
             String composePhoneNumber = extras.getString(EXTRA_OUTGOING_NUMBER);
-            Log.d(TAG, "PhoneState compose PhoneNumber : " + composePhoneNumber);
+            Log.d(TAG, "EventSpy PhoneState compose PhoneNumber : " + composePhoneNumber);
             // Service
             SharedPreferences prefs = context.getSharedPreferences(PHONE_RECEIVER_PREFS_NAME, Context.MODE_PRIVATE);
             // Prefs
@@ -127,20 +129,20 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 break;
             }
         }
-        Log.d(TAG, "PhoneState result : " + message);
+        Log.d(TAG, "EventSpy PhoneState === > : " + message);
         // TODO
-//        ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_PHONE_CALL);
-//        if (phones != null) {
-//            // Send Sms
-//            SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsValueEventTypeEnum.PHONE_CALL);
-//        }
+        ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_PHONE_CALL);
+        if (phones != null) {
+            // Send Sms
+            SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_PHONE_CALL);
+        }
         return message;
     }
 
     private void printExtras(Bundle extras) {
         for (String key : extras.keySet()) {
             Object value = extras.get(key);
-            Log.d(TAG, "PhoneState extras : " + key + " = " + value);
+            Log.d(TAG, "EventSpy PhoneState extras : " + key + " = " + value);
         }
     }
 

@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.slave.receiver;
+package eu.ttbox.geoping.service.slave.eventspy;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,6 @@ import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
-import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
 
 public class SpyNotificationHelper {
 
@@ -53,6 +52,7 @@ public class SpyNotificationHelper {
                     result.add(phone);
                 }
             }
+            Log.d(TAG, "Search EventSpy "+ notifCol + " : found " + resultCount+ " phones to notify" );
         } finally {
             cursor.close();
         }
@@ -68,15 +68,14 @@ public class SpyNotificationHelper {
     }
     
     
-    public static void sendEventSpySmsMessage(Context context, ArrayList<String> phones, SmsValueEventTypeEnum eventType) {
+    public static void sendEventSpySmsMessage(Context context, ArrayList<String> phones, SmsMessageActionEnum eventType) {
         if (phones != null) {
-            Log.d(TAG, "Event Spy Notification  : " +eventType+ " for "+ phones.size() + " phones destinations");
+            Log.d(TAG, "EventSpy Notification  : " +eventType+ " for "+ phones.size() + " phones destinations");
             // Send SMS
             Bundle params = new Bundle();
-            SmsMessageLocEnum.EVT_DATE.writeToBundle(params, System.currentTimeMillis());
-            SmsMessageLocEnum.EVT_TYPE.writeToBundle(params, eventType);
+            SmsMessageLocEnum.EVT_DATE.writeToBundle(params, System.currentTimeMillis()); 
             for (String phone : phones) {
-                SmsSenderHelper.sendSms(context, phone, SmsMessageActionEnum.ACTION_SPY_EVENT, params);
+                SmsSenderHelper.sendSms(context, phone, eventType, params);
             }   
         }
     }

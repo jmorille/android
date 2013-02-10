@@ -50,6 +50,12 @@
     <string name="sms_action_geoping_response">GeoPing answer</string>
     <string name="sms_action_pairing_request">Pairing request</string>
     <string name="sms_action_pairing_response">Pairing answer</string>
+
+    <string name="sms_action_spyevt_shutdown">Event Shutdown</string>
+    <string name="sms_action_spyevt_boot">Event Boot</string>
+    <string name="sms_action_spyevt_low_battery">Event Low Battery</string>
+    <string name="sms_action_spyevt_phone_call">Event Phone Call</string>
+    <string name="sms_action_spyevt_sim_change">Event Sim Change</string>
     
 
     <!-- Menu -->

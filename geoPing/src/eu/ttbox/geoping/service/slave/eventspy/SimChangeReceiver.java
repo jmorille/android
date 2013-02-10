@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.slave.receiver;
+package eu.ttbox.geoping.service.slave.eventspy;
 
 import java.util.ArrayList;
 
@@ -8,13 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
-import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 /**
  * {@link http
@@ -66,7 +65,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 				// Read Phone number
 				String phoneNumber = getSystemPhoneNumber(context);
 				if (TextUtils.isEmpty(phoneNumber)) {
-					Log.e(TAG, "No phone number Readable in TelephonyManager");
+					Log.e(TAG, "EventSpy : No phone number Readable in TelephonyManager");
 				} else {
 					// Compare to preference
 					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -74,10 +73,10 @@ public class SimChangeReceiver extends BroadcastReceiver {
 					if (TextUtils.isEmpty(prefPhone)) {
 						// Save as New Phone
 						savePrefsPhoneNumber(prefs, phoneNumber);
-						Log.w(TAG, "Register for SIM Change Listener Phone Number : " + phoneNumber);
+						Log.w(TAG, "EventSpy Register for SIM Change Listener Phone Number : " + phoneNumber);
 						// TODO Need to notify ?
 					} else if (!prefPhone.equals(phoneNumber)) {
-						Log.w(TAG, "SIM Change for new Phone Number : " + phoneNumber);
+						Log.w(TAG, "EventSpy SIM Change for new Phone Number : " + phoneNumber);
 						// Send message
 						sendSpyNotifSms(context, phoneNumber);
 						// Save as New Phone
@@ -93,7 +92,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 		ArrayList<String> phones = SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SIM_CHANGE);
 		if (phones != null) {
 			// Send Sms
-			SpyNotificationHelper.sendEventSpySmsMessage(context, phones, SmsValueEventTypeEnum.SIM_CHANGE);
+			SpyNotificationHelper.sendEventSpySmsMessage(context, phones, SmsMessageActionEnum.SPY_SIM_CHANGE);
 		}
 	}
 
@@ -101,7 +100,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 		if (extras != null) {
 			for (String key : extras.keySet()) {
 				Object value = extras.get(key);
-				Log.d(TAG, "SIM extras : " + key + " = " + value);
+				Log.d(TAG, "EventSpy SIM extras : " + key + " = " + value);
 			}
 		}
 	}
@@ -110,10 +109,10 @@ public class SimChangeReceiver extends BroadcastReceiver {
 		// Read Phone number
 		TelephonyManager telephoneMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		String phoneNumber = telephoneMgr.getLine1Number();
-		Log.d(TAG, "SIM DeviceId : " + telephoneMgr.getDeviceId()); // Code IMEI
-		Log.d(TAG, "SIM Network Operator Name : " + telephoneMgr.getNetworkOperatorName());
-		Log.d(TAG, "SIM Serial Number : " + telephoneMgr.getSimSerialNumber());
-		Log.d(TAG, "SIM PhoneNumber : " + phoneNumber); // Code IMEI
+		Log.d(TAG, "EventSpy SIM DeviceId : " + telephoneMgr.getDeviceId()); // Code IMEI
+		Log.d(TAG, "EventSpy SIM Network Operator Name : " + telephoneMgr.getNetworkOperatorName());
+		Log.d(TAG, "EventSpy SIM Serial Number : " + telephoneMgr.getSimSerialNumber());
+		Log.d(TAG, "EventSpy SIM PhoneNumber : " + phoneNumber); // Code IMEI
 		return phoneNumber;
 	}
 

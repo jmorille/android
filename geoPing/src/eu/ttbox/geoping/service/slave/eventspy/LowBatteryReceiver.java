@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.slave.receiver;
+package eu.ttbox.geoping.service.slave.eventspy;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
-import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class LowBatteryReceiver extends BroadcastReceiver {
 
@@ -22,7 +22,7 @@ public class LowBatteryReceiver extends BroadcastReceiver {
 			ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_BATTERY_LOW);
 			if (phones != null) { 
 			    // Send Sms
-                SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsValueEventTypeEnum.LOW_BATTERY);
+                SpyNotificationHelper.sendEventSpySmsMessage(context,phones, SmsMessageActionEnum.SPY_LOW_BATTERY);
 			}
 		}  
 

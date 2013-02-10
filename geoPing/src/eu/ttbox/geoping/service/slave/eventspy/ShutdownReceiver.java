@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.slave.receiver;
+package eu.ttbox.geoping.service.slave.eventspy;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
-import eu.ttbox.geoping.service.encoder.params.SmsValueEventTypeEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class ShutdownReceiver extends BroadcastReceiver {
 
@@ -34,22 +34,22 @@ public class ShutdownReceiver extends BroadcastReceiver {
 		if (ACTION_SHUTDOWN.equals(action) || QUICKBOOT_POWEROFF.equals(action)) {
 			String encrypedMsg = "Mon tel vient de s'éteindre : " + action;
 			Log.d(TAG, "### ############################### ### ");
-			Log.d(TAG, "### ### " + encrypedMsg + " ### ### ");
+			Log.d(TAG, "### ### EventSpy SHUTDOWN : " + encrypedMsg + " ### ### ");
 			Log.d(TAG, "### ############################### ### ");
 			// Search Phones 
 			ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
 			if (phones != null) {
 			    // Send Sms
-			    SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsValueEventTypeEnum.SHUTDOWN);
+			    SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_SHUTDOWN);
  				// Sleep for Send the Sms
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 				int sleepWantedInMs = prefs.getInt(AppConstants.PREFS_EVENT_SPY_SHUTDOWN_SLEEP_IN_MS, 5000);
 				try {
-					Log.d(TAG, "### ### Begin Thread Sleep " + sleepWantedInMs + " ms ### ### ");
+					Log.d(TAG, "EventSpy SHUTDOWN : Begin Thread Sleep " + sleepWantedInMs + " ms ### ### ");
 					Thread.sleep(sleepWantedInMs);
-					Log.d(TAG, "### ### End Thread Sleep " + sleepWantedInMs + " ms ### ### ");
+					Log.d(TAG, "EventSpy SHUTDOWN : End Thread Sleep " + sleepWantedInMs + " ms ### ### ");
 				} catch (InterruptedException e) {
-					Log.e(TAG, "### ### Error Thread Sleep " + sleepWantedInMs + " ms ### ### " + e.getMessage());
+					Log.e(TAG, "EventSpy SHUTDOWN :  Error Thread Sleep " + sleepWantedInMs + " ms ### ### " + e.getMessage());
 				}
 			}
 		}

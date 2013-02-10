@@ -1,9 +1,11 @@
-package eu.ttbox.geoping.service.encoder;
+package eu.ttbox.geoping.service.encoder.helper;
 
 import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
+import eu.ttbox.geoping.service.encoder.GeoPingMessage;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class SmsMessageEncoderHelper {
 	public final static String TAG = "SmsMessageEncoderHelper";
@@ -18,15 +20,7 @@ public class SmsMessageEncoderHelper {
 	// Action
 	public static String ACTION_END = "!"; // new String(
 											// Character.toChars(34));
-
-	public final static String ACTION_GEO_PING = "WRY";
-	public final static String ACTION_GEO_LOC = "LOC";
-	
-	public final static String ACTION_SPY_EVENT = "EVT";
-    
-	public final static String ACTION_GEO_PAIRING = "PAQ";
-	public final static String ACTION_GEO_PAIRING_RESPONSE = "PAR";
-
+ 
 	public static final char PARAM_BEGIN = '(';
 	public static final char PARAM_END = ')';
 

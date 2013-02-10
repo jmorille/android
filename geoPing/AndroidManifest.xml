@@ -60,10 +60,9 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                  <data android:scheme="sms"/>
                   <data android:scheme="smsto"/>
-            </intent-filter>
-
+            </intent-filter> 
         </activity>
-        
+          
         <activity android:label="@string/app_name" android:name=".SmsTrakerActivity">
 <!--             <intent-filter> -->
 <!--                 <action android:name="android.intent.action.MAIN"/>  -->
@@ -140,13 +139,13 @@
         
         
           <!-- Spy Notification Receiver -->
-        <receiver android:enabled="false" android:name=".service.slave.receiver.ShutdownReceiver">
+        <receiver android:enabled="false" android:name=".service.slave.eventspy.ShutdownReceiver">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/> 
             </intent-filter>     
 	  </receiver> 
-       <receiver android:enabled="false" android:name=".service.slave.receiver.BootCompleteReceiver">
+       <receiver android:enabled="false" android:name=".service.slave.eventspy.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.HOME"/>
@@ -155,18 +154,18 @@
                 <action android:name="eu.ttbox.geoping.BootCompleteReceiver.ACTION_SMS_SENT"/>
             </intent-filter>  
          </receiver>
-        <receiver android:enabled="false" android:name=".service.slave.receiver.LowBatteryReceiver">
+        <receiver android:enabled="false" android:name=".service.slave.eventspy.LowBatteryReceiver">
             <intent-filter>
                  <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
 <!--                   <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/> -->
             </intent-filter>
         </receiver> 
-          <receiver android:enabled="false" android:name=".service.slave.receiver.SimChangeReceiver">
+          <receiver android:enabled="false" android:name=".service.slave.eventspy.SimChangeReceiver">
             <intent-filter>
                  <action android:name="android.intent.action.SIM_STATE_CHANGED"/> 
             </intent-filter>   
         </receiver> 
-          <receiver android:enabled="false" android:name=".service.slave.receiver.PhoneCallReceiver">
+          <receiver android:enabled="false" android:name=".service.slave.eventspy.PhoneCallReceiver">
             <intent-filter>
                  <action android:name="android.intent.action.PHONE_STATE"/>  
             </intent-filter>   

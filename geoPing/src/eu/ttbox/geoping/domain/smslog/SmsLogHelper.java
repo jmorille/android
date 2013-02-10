@@ -15,7 +15,7 @@ import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
-import eu.ttbox.geoping.service.encoder.SmsParamEncoderHelper;
+import eu.ttbox.geoping.service.encoder.helper.SmsParamEncoderHelper;
 
 public class SmsLogHelper {
 
@@ -86,7 +86,8 @@ public class SmsLogHelper {
 	}
 
 	public SmsMessageActionEnum getSmsMessageActionEnum(Cursor cursor) {
-		return SmsMessageActionEnum.getByCode(cursor.getInt(actionIdx));
+		String actionValue = cursor.getString(actionIdx); 
+		return SmsMessageActionEnum.getByDbCode(actionValue);
 	}
 
 	// ===========================================================
@@ -136,7 +137,7 @@ public class SmsLogHelper {
 		ContentValues values = new ContentValues();
 		values.put(SmsLogColumns.COL_TIME, System.currentTimeMillis());
 		values.put(SmsLogColumns.COL_PHONE, phone);
-		values.put(SmsLogColumns.COL_ACTION, action.name());
+		values.put(SmsLogColumns.COL_ACTION, action.getDbCode());
 		values.put(SmsLogColumns.COL_SMSLOG_TYPE, type.getCode());
 		if (params != null && !params.isEmpty()) {
 			String paramString = convertAsJsonString(params);
