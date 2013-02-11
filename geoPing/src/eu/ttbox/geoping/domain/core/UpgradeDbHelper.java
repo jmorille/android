@@ -100,6 +100,34 @@ public class UpgradeDbHelper {
 		return values;
 	}
 
+	public static void writeLineToJson(JsonGenerator g, ContentValues values) {
+		for (Map.Entry<String, Object> keyVal : values.valueSet()) {
+			String colName = keyVal.getKey();
+			Object colValue = keyVal.getValue();
+			try {
+				if (colValue instanceof String) {
+					g.writeStringField(colName, (String) colValue);
+				} else if (colValue instanceof Integer) {
+					g.writeNumberField(colName, (Integer) colValue);
+				} else if (colValue instanceof Long) {
+					g.writeNumberField(colName, (Long) colValue);
+				} else if (colValue instanceof Double) {
+					g.writeNumberField(colName, (Double) colValue);
+				} else if (colValue instanceof Boolean) {
+					g.writeBooleanField(colName, (Boolean) colValue);
+				} else {
+					Log.w(TAG, "Ignore Column : [" + colName + "] for type " + (colValue != null ? colValue.getClass() : "null (" + colValue + ")"));
+				}
+			} catch (JsonGenerationException e) {
+				// TODO GeoPingApplication.getInstance().tracker().
+				Log.e(TAG, "Error Writing Json : " + e.getMessage(), e);
+			} catch (IOException e) {
+				// TODO GeoPingApplication.getInstance().tracker().
+				Log.e(TAG, "Error Writing Json : " + e.getMessage(), e);
+			}
+		}
+	}
+
 	public static void readCursorToJson(JsonGenerator g, Cursor cursor, String[] stringColums, String[] intColums, String[] longColums) {
 		try {
 			// Read String
@@ -142,7 +170,9 @@ public class UpgradeDbHelper {
 		for (String colName : jsonMap.keySet()) {
 			if (allValidColumns.contains(colName)) {
 				Object colValue = jsonMap.get(colName);
-				if (colValue instanceof String) {
+				if (colValue ==null) {
+					Log.d(TAG, "Ignore Column : [" + colName + "] for value NULL"  );
+				} else  if (colValue instanceof String) {
 					values.put(colName, (String) colValue);
 				} else if (colValue instanceof Integer) {
 					values.put(colName, (Integer) colValue);
@@ -153,7 +183,7 @@ public class UpgradeDbHelper {
 				} else if (colValue instanceof Boolean) {
 					values.put(colName, (Boolean) colValue);
 				} else {
-					Log.w(TAG, "Ignore Column : [" + colName + "] for type " + (colValue != null ? colValue.getClass() : "null"));
+					Log.w(TAG, "Ignore Column : [" + colName + "] for type " + (colValue != null ? colValue.getClass() : "null (" + colValue + ")"));
 				}
 			}
 		}
