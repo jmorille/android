@@ -2,7 +2,6 @@ package eu.ttbox.geoping.ui.prefs.comp.version;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.preference.Preference;
 import android.util.AttributeSet;

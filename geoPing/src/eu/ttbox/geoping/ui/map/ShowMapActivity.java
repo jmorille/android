@@ -18,9 +18,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.VersionUtils;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 
 /**
  * @see http://mobiforge.com/developing/story/using-google-maps-android

@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.ui.smslog;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -32,7 +30,7 @@ public class SmsLogListFragment extends Fragment {
 	// Constant
 	private static final String SMSLOG_SORT_DEFAULT = String.format("%s DESC, %s DESC", SmsLogColumns.COL_TIME, SmsLogColumns.COL_PHONE);
 
-	private static final int EDIT_ENTITY = 0;
+//	private static final int EDIT_ENTITY = 0;
 
 	// binding
 	private ListView listView;
@@ -40,7 +38,7 @@ public class SmsLogListFragment extends Fragment {
 	// Intents
 	public static class Intents {
 		public static final String EXTRA_SMS_PHONE = eu.ttbox.geoping.core.Intents.EXTRA_SMS_PHONE;
-		public static final String EXTRA_INOUT_GOING_TYPE = "EXTRA_INOUT_GOING_TYPE"; 
+		public static final String EXTRA_INOUT_GOING_TYPE = "EXTRA_INOUT_GOING_TYPE";  
 	}
 
 	// init
@@ -81,7 +79,7 @@ public class SmsLogListFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.d(TAG, "onActivityCreated");
-		getActivity().getSupportLoaderManager().initLoader(SMSLOG_LIST_LOADER, savedInstanceState, smsLogLoaderCallback);
+		getActivity().getSupportLoaderManager().initLoader(SMSLOG_LIST_LOADER, getArguments(), smsLogLoaderCallback);
 	}
 
 	// ===========================================================
@@ -123,17 +121,17 @@ public class SmsLogListFragment extends Fragment {
 		int deleteCount = getActivity().getContentResolver().delete(SmsLogProvider.Constants.CONTENT_URI, null, null);
 	}
 
-	@Override
-	public void onActivityResult(int reqCode, int resultCode, Intent data) {
-		super.onActivityResult(reqCode, resultCode, data);
-
-		switch (reqCode) {
-		case (EDIT_ENTITY):
-			if (resultCode == Activity.RESULT_OK) {
-				getActivity().getSupportLoaderManager().restartLoader(SMSLOG_LIST_LOADER, null, smsLogLoaderCallback);
-			}
-		}
-	}
+//	@Override
+//	public void onActivityResult(int reqCode, int resultCode, Intent data) {
+//		super.onActivityResult(reqCode, resultCode, data);
+//
+//		switch (reqCode) {
+//		case (EDIT_ENTITY):
+//			if (resultCode == Activity.RESULT_OK) {
+//				getActivity().getSupportLoaderManager().restartLoader(SMSLOG_LIST_LOADER, null, smsLogLoaderCallback);
+//			}
+//		}
+//	}
 
 	public void refreshLoader(Bundle args) {
 		getActivity().getSupportLoaderManager().restartLoader(SMSLOG_LIST_LOADER, args, smsLogLoaderCallback);
@@ -159,7 +157,7 @@ public class SmsLogListFragment extends Fragment {
 					String phoneNumber = args.getString(Intents.EXTRA_SMS_PHONE);
 					searchUri = Uri.withAppendedPath(SmsLogProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
 				}
-				if (args.containsKey(Intents.EXTRA_INOUT_GOING_TYPE)) {
+				  if (args.containsKey(Intents.EXTRA_INOUT_GOING_TYPE)) {
 					int isTypeSend = args.getInt(Intents.EXTRA_INOUT_GOING_TYPE, 0);
 					if (isTypeSend>0) {
 						selection = String.format("%s > 0", SmsLogColumns.COL_SMSLOG_TYPE);

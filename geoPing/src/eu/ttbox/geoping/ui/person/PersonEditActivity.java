@@ -48,8 +48,8 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 			if (!TextUtils.isEmpty(personPhone) && !TextUtils.isEmpty(phone)) {
 				if (smsLogFragment!=null && !personPhone.equals(phone)) {
 					Bundle args = new Bundle();
-					args.putString(Intents.EXTRA_SMS_PHONE, personPhone);
-					smsLogFragment.refreshLoader(args); 
+					args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, personPhone);
+  					smsLogFragment.refreshLoader(args); 
 				}
 			}
 			personId = id;
@@ -197,8 +197,8 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 			case LOG:
 				if (smsLogFragment == null) {
 					Bundle args = new Bundle();
-					args.putString(Intents.EXTRA_SMS_PHONE, personPhone);
-					smsLogFragment = new SmsLogListFragment();
+					args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, personPhone);
+			 		smsLogFragment = new SmsLogListFragment();
 					smsLogFragment.setArguments(args);
 				}
 				fragment = smsLogFragment;

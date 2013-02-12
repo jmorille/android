@@ -11,12 +11,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Log;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class SmsLogDatabase {
-
-    @SuppressWarnings("unused")
+ 
     private static final String TAG = "SmsLogDatabase";
 
     public static final String TABLE_SMSLOG_FTS = "personFTS";
@@ -33,7 +33,7 @@ public class SmsLogDatabase {
         public static final String COL_SMSLOG_TYPE = "SMSLOG_TYPE"; // @see SmsLogTypeEnum
         public static final String COL_TIME = "TIME";
         public static final String COL_PARENT_ID = "PARENT_ID";
-        public static final String COL_SMS_WEIGHT = "SMS_WEIGHT";
+        public static final String COL_SMS_WEIGHT = "SMS_WEIGHT"; 
         // Acknowledge
         public static final String COL_IS_SEND_TIME = "IS_SEND_TIME";
         public static final String COL_IS_DELIVERY_TIME = "IS_DELIVERY_TIME";
@@ -116,12 +116,16 @@ public class SmsLogDatabase {
         if (TextUtils.isEmpty(pSelection)) {
             selection = String.format("%s = ?", SmsLogColumns.COL_PHONE_MIN_MATCH);
             selectionArgs = new String[] { minMatch };
+            Log.d(TAG, "selection : " + selection);
+            Log.d(TAG, "selectionArgs :  " + selectionArgs[0] );
         } else {
             selection = String.format("%s = ? and (%s)", SmsLogColumns.COL_PHONE_MIN_MATCH, pSelection);
             int pSelectionArgSize = pSelectionArgs.length;
             selectionArgs = new String[pSelectionArgSize + 1];
             System.arraycopy(pSelectionArgs, 0, selectionArgs, 1, pSelectionArgSize);
             selectionArgs[0] = minMatch;
+            Log.d(TAG, "selection : " + selection);
+            Log.d(TAG, "selectionArgs :  " + selectionArgs[0]+ ", " +  selectionArgs[1]);
         }
         return queryEntities(projection, selection, selectionArgs, sortOrder);
     }

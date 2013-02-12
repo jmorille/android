@@ -14,8 +14,8 @@ public class SmsLog {
 	public SmsLogTypeEnum smsLogType;
 	public SmsMessageActionEnum action;
 	public String phone;
-	public String message;
-
+	public String message; 
+	
 	public SmsLog setId(long id) {
 		this.id = id;
 		return this;
@@ -37,12 +37,11 @@ public class SmsLog {
 		this.time = time;
 		return this;
 	}
-
+ 
 	public SmsLog setMessage(String name) {
 		this.message = name;
 		return this;
 	}
-
 	public SmsLog setPhone(String phone) {
 		this.phone = phone;
 		return this;

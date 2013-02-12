@@ -11,34 +11,41 @@ import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
 public enum SmsMessageActionEnum {
 
 	// Slave
-	GEOPING_REQUEST("WRY", Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER, GeoPingSlaveService.class, R.string.sms_action_geoping_request), //
-	ACTION_GEO_PAIRING("PAQ", Intents.ACTION_SMS_PAIRING_RESQUEST, GeoPingSlaveService.class, R.string.sms_action_pairing_request), //
+	GEOPING_REQUEST("WRY", Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER, GeoPingSlaveService.class,false, R.string.sms_action_geoping_request), //
+	ACTION_GEO_PAIRING("PAQ", Intents.ACTION_SMS_PAIRING_RESQUEST, GeoPingSlaveService.class, false,R.string.sms_action_pairing_request), //
 
 	// Master
-	ACTION_GEO_LOC("LOC", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, R.string.sms_action_geoping_response), //
-	ACTION_GEO_PAIRING_RESPONSE("PAR", Intents.ACTION_SMS_PAIRING_RESPONSE, GeoPingMasterService.class, R.string.sms_action_pairing_response), //
+	ACTION_GEO_LOC("LOC", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, true,R.string.sms_action_geoping_response), //
+	ACTION_GEO_PAIRING_RESPONSE("PAR", Intents.ACTION_SMS_PAIRING_RESPONSE, GeoPingMasterService.class, true,R.string.sms_action_pairing_response), //
 	// Spy Event Notif
-	SPY_SHUTDOWN("esd", Intents.ACTION_SMS_EVTSPY_SHUTDOWN, GeoPingMasterService.class, R.string.sms_action_spyevt_shutdown), //
-	SPY_BOOT("esb", Intents.ACTION_SMS_EVTSPY_BOOT, GeoPingMasterService.class, R.string.sms_action_spyevt_boot), //
-	SPY_LOW_BATTERY("elb", Intents.ACTION_SMS_EVTSPY_LOW_BATTERY, GeoPingMasterService.class, R.string.sms_action_spyevt_low_battery), //
-	SPY_PHONE_CALL("epc", Intents.ACTION_SMS_EVTSPY_PHONE_CALL, GeoPingMasterService.class, R.string.sms_action_spyevt_phone_call), //
-	SPY_SIM_CHANGE("eps", Intents.ACTION_SMS_EVTSPY_SIM_CHANGE, GeoPingMasterService.class, R.string.sms_action_spyevt_sim_change);
+	SPY_SHUTDOWN("esd", Intents.ACTION_SMS_EVTSPY_SHUTDOWN, GeoPingMasterService.class,true, R.string.sms_action_spyevt_shutdown), //
+	SPY_BOOT("esb", Intents.ACTION_SMS_EVTSPY_BOOT, GeoPingMasterService.class, true,R.string.sms_action_spyevt_boot), //
+	SPY_LOW_BATTERY("elb", Intents.ACTION_SMS_EVTSPY_LOW_BATTERY, GeoPingMasterService.class, true,R.string.sms_action_spyevt_low_battery), //
+	SPY_PHONE_CALL("epc", Intents.ACTION_SMS_EVTSPY_PHONE_CALL, GeoPingMasterService.class, true,R.string.sms_action_spyevt_phone_call), //
+	SPY_SIM_CHANGE("eps", Intents.ACTION_SMS_EVTSPY_SIM_CHANGE, GeoPingMasterService.class, true,R.string.sms_action_spyevt_sim_change);
 
 	// ===========================================================
 	// Constructor
 	// ===========================================================
 
-	private SmsMessageActionEnum(String smsAction, String intentAction, Class<?> cls, int labelStringId) {
+	private SmsMessageActionEnum(String smsAction, String intentAction, Class<?> cls, boolean isMaster, int labelStringId) {
 		this.intentAction = intentAction;
 		this.smsAction = smsAction;
 		this.serviceClass = cls;
+		this.isMaster = isMaster;
 		this.labelResourceId = labelStringId;
 	}
 
 	public final String intentAction;
 	public final String smsAction;
 	public final Class<?> serviceClass;
+	public final boolean isMaster;
+	
 	public final int labelResourceId;
+	
+	
+	 
+	
 	// ===========================================================
 	// Conversion Init
 	// ===========================================================

@@ -1,7 +1,6 @@
 package eu.ttbox.geoping.ui.person;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,8 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -26,7 +23,6 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
-import eu.ttbox.geoping.ui.map.ShowMapActivity;
 
 public class PersonListFragment extends Fragment {
 

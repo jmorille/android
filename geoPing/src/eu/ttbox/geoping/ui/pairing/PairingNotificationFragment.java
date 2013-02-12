@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.ui.pairing;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.ContentValues;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -15,12 +13,11 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 

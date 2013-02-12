@@ -1,10 +1,10 @@
 package eu.ttbox.geoping.domain.smslog;
 
-import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 
 public class SmsLogOpenHelper extends SQLiteOpenHelper {
 

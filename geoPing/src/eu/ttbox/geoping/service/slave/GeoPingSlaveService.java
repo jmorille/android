@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -318,7 +317,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
 		if (personId != -1l) {
 			params = SmsMessageLocEnum.PERSON_ID.writeToBundle(null, personId);
 		}
-		SmsSenderHelper.sendSms(this, phone, SmsMessageActionEnum.ACTION_GEO_PAIRING_RESPONSE, params);
+		SmsSenderHelper.sendSms(this,  phone, SmsMessageActionEnum.ACTION_GEO_PAIRING_RESPONSE, params);
 	}
 
 	// ===========================================================

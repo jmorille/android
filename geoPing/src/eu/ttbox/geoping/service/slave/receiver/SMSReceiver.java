@@ -1,6 +1,5 @@
 package eu.ttbox.geoping.service.slave.receiver;
 
-import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
@@ -117,8 +115,8 @@ public class SMSReceiver extends BroadcastReceiver {
 
 	private void logSmsMessageReceive(Context context, GeoPingMessage geoMsg) {
 		// Save
-		ContentResolver cr = context.getContentResolver();
-		Uri insertUri = SmsSenderHelper.logSmsMessage(cr, SmsLogTypeEnum.RECEIVE, geoMsg, 1);
+		ContentResolver cr = context.getContentResolver(); 
+		Uri insertUri = SmsSenderHelper.logSmsMessage(cr,   SmsLogTypeEnum.RECEIVE, geoMsg, 1);
 		Log.d(TAG, "Save Log Message : " + insertUri); 
 		// Multi Message
 		if (geoMsg.isMultiMessages()) {
@@ -130,9 +128,9 @@ public class SMSReceiver extends BroadcastReceiver {
 			}
 			// Add Count for 0 msg
 			for (GeoPingMessage msgOther : geoMsg.multiMessages) {
-				ContentValues valuesOther = SmsLogHelper.getContentValues(SmsLogTypeEnum.RECEIVE, msgOther);
+				ContentValues valuesOther = SmsLogHelper.getContentValues(  SmsLogTypeEnum.RECEIVE, msgOther);
 				valuesOther.put(SmsLogColumns.COL_SMS_WEIGHT, 0);
-				if (isParent) {
+  				if (isParent) {
 					valuesOther.put(SmsLogColumns.COL_PARENT_ID, logParentId);
 				}
 				cr.insert(SmsLogProvider.Constants.CONTENT_URI, valuesOther);

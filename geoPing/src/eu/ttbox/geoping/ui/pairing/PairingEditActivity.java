@@ -42,7 +42,7 @@ public class PairingEditActivity extends SherlockFragmentActivity {
 	// Listener
 	// ===========================================================
 
-	private PairingEditFragment.OnPersonSelectListener onPairingSelectListener = new PairingEditFragment.OnPersonSelectListener() {
+	private PairingEditFragment.OnPairingSelectListener onPairingSelectListener = new PairingEditFragment.OnPairingSelectListener() {
 
 		@Override
 		public void onPersonSelect(Uri id, String phone) {
@@ -51,7 +51,7 @@ public class PairingEditActivity extends SherlockFragmentActivity {
 				if (smsLogFragment != null && !pairingPhone.equals(phone)) {
 					Bundle args = new Bundle();
 					args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, pairingPhone);
-  					smsLogFragment.refreshLoader(args);
+					smsLogFragment.refreshLoader(args);
 				}
 			}
 			pairingUri = id;
@@ -132,10 +132,10 @@ public class PairingEditActivity extends SherlockFragmentActivity {
 		case R.id.menu_cancel:
 			editFragment.onCancelClick();
 			return true;
-//		case R.id.menuQuitter:
-//			// Pour fermer l'application il suffit de faire finish()
-//			finish();
-//			return true;
+			// case R.id.menuQuitter:
+			// // Pour fermer l'application il suffit de faire finish()
+			// finish();
+			// return true;
 		}
 		return false;
 	}
@@ -205,7 +205,7 @@ public class PairingEditActivity extends SherlockFragmentActivity {
 				fragment = editFragment;
 				break;
 			case NOTIFICATION:
-				if (notificationFragment==null) {
+				if (notificationFragment == null) {
 					Bundle args = new Bundle();
 					args.putString(Intents.EXTRA_DATA_URI, pairingUri.toString());
 					notificationFragment = new PairingNotificationFragment();
@@ -216,7 +216,7 @@ public class PairingEditActivity extends SherlockFragmentActivity {
 			case LOG:
 				if (smsLogFragment == null) {
 					Bundle args = new Bundle();
-					args.putString(Intents.EXTRA_SMS_PHONE, pairingPhone);
+					args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, pairingPhone);
 					smsLogFragment = new SmsLogListFragment();
 					smsLogFragment.setArguments(args);
 				}
@@ -237,7 +237,7 @@ public class PairingEditActivity extends SherlockFragmentActivity {
 			case PAIRING:
 				return getString(R.string.menu_pairing).toUpperCase();
 			case NOTIFICATION:
-				return getString(R.string.menu_pairing_notification).toUpperCase(); 
+				return getString(R.string.menu_pairing_notification).toUpperCase();
 			case LOG:
 				return getString(R.string.menu_smslog).toUpperCase();
 			}

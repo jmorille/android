@@ -79,7 +79,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
 	private Button selectContactClickButton;
 
 	// Listener
-	private OnPersonSelectListener onPairingSelectListener;
+	private OnPairingSelectListener onPairingSelectListener;
 	
 	// Cache
 	private PhotoThumbmailCache photoCache;
@@ -92,7 +92,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
 	// Interface
 	// ===========================================================
 
-	public interface OnPersonSelectListener {
+	public interface OnPairingSelectListener {
 
 		void onPersonSelect(Uri id, String phone);
 
@@ -193,7 +193,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
 	// Accessor
 	// ===========================================================
 
-	public void setOnPersonSelectListener(OnPersonSelectListener onPersonSelectListener) {
+	public void setOnPersonSelectListener(OnPairingSelectListener onPersonSelectListener) {
 		this.onPairingSelectListener = onPersonSelectListener;
 	}
 

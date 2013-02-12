@@ -8,7 +8,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -382,7 +381,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
         GeoTrack geotrack = new GeoTrack(null, location);
         geotrack.batteryLevelInPercent = batterLevelInPercent;
         Bundle params = GeoTrackHelper.getBundleValues(geotrack); 
-        SmsSenderHelper.sendSms(this, phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
+        SmsSenderHelper.sendSms(this,  phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
         if (saveInLocalDb) {
             geotrack.requesterPersonPhone = phone;
             saveInLocalDb(geotrack);

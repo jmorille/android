@@ -11,7 +11,6 @@ import eu.ttbox.geoping.ui.pairing.PairingListActivity;
 import eu.ttbox.geoping.ui.person.PersonListActivity;
 import eu.ttbox.geoping.ui.prefs.GeoPingPrefActivity;
 import eu.ttbox.geoping.ui.smslog.SmsLogListActivity;
-import eu.ttbox.osm.core.ExternalIntents;
 
 public class MenuOptionsItemSelectionHelper {
 

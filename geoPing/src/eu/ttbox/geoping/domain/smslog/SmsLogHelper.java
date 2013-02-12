@@ -27,7 +27,7 @@ public class SmsLogHelper {
 	public int phoneIdx = -1;
 	public int phoneNormalizedIdx = -1;
 	public int phoneMinMatchIdx = -1;
-	public int smsLogTypeIdx = -1;
+	public int smsLogTypeIdx = -1; 
 
 	public SmsLogHelper initWrapper(Cursor cursor) {
 		idIdx = cursor.getColumnIndex(SmsLogColumns.COL_ID);
@@ -36,7 +36,7 @@ public class SmsLogHelper {
 		phoneIdx = cursor.getColumnIndex(SmsLogColumns.COL_PHONE);
 		phoneNormalizedIdx = cursor.getColumnIndex(SmsLogColumns.COL_PHONE_NORMALIZED);
 		phoneMinMatchIdx = cursor.getColumnIndex(SmsLogColumns.COL_PHONE_MIN_MATCH);
-		smsLogTypeIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMSLOG_TYPE);
+		smsLogTypeIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMSLOG_TYPE); 
 		messageIdx = cursor.getColumnIndex(SmsLogColumns.COL_MESSAGE);
 		isNotInit = false;
 		return this;
@@ -53,6 +53,7 @@ public class SmsLogHelper {
 		user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
 		user.setSmsLogType(smsLogTypeIdx > -1 ? getSmsLogType(cursor) : null);
 		user.setMessage(messageIdx > -1 ? cursor.getString(messageIdx) : null);
+	 
 		return user;
 	}
 
@@ -86,7 +87,7 @@ public class SmsLogHelper {
 	}
 
 	public SmsMessageActionEnum getSmsMessageActionEnum(Cursor cursor) {
-		String actionValue = cursor.getString(actionIdx); 
+		String actionValue = cursor.getString(actionIdx);
 		return SmsMessageActionEnum.getByDbCode(actionValue);
 	}
 
@@ -125,20 +126,20 @@ public class SmsLogHelper {
 		initialValues.put(SmsLogColumns.COL_PHONE, vo.phone);
 		initialValues.put(SmsLogColumns.COL_ACTION, vo.action.getCode());
 		initialValues.put(SmsLogColumns.COL_MESSAGE, vo.message);
-		initialValues.put(SmsLogColumns.COL_SMSLOG_TYPE, vo.smsLogType.getCode());
+		initialValues.put(SmsLogColumns.COL_SMSLOG_TYPE, vo.smsLogType.getCode()); 
 		return initialValues;
 	}
 
-	public static ContentValues getContentValues(SmsLogTypeEnum type, GeoPingMessage geoMessage) {
-		return getContentValues(type, geoMessage.phone, geoMessage.action, geoMessage.params);
+	public static ContentValues getContentValues( SmsLogTypeEnum type, GeoPingMessage geoMessage) {
+		return getContentValues(  type, geoMessage.phone, geoMessage.action, geoMessage.params);
 	}
 
-	public static ContentValues getContentValues(SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params) {
+	public static ContentValues getContentValues( SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params) {
 		ContentValues values = new ContentValues();
 		values.put(SmsLogColumns.COL_TIME, System.currentTimeMillis());
 		values.put(SmsLogColumns.COL_PHONE, phone);
 		values.put(SmsLogColumns.COL_ACTION, action.getDbCode());
-		values.put(SmsLogColumns.COL_SMSLOG_TYPE, type.getCode());
+		values.put(SmsLogColumns.COL_SMSLOG_TYPE, type.getCode()); 
 		if (params != null && !params.isEmpty()) {
 			String paramString = convertAsJsonString(params);
 			if (paramString != null) {
@@ -171,7 +172,7 @@ public class SmsLogHelper {
 						switch (fieldEnum) {
 						case PERSON_ID:
 							// Ignore this Field
-							break; 
+							break;
 						default:
 							val = readForJsonParamTypeValue(key, fieldEnum, extras);
 							break;

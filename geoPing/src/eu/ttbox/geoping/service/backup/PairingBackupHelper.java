@@ -29,7 +29,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
-import eu.ttbox.geoping.domain.pairing.PairingHelper;
 
 /**
  * http://blog.stylingandroid.com/archives/781
