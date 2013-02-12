@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.domain.pairing.PairingHelper;
 
 /**
  * http://blog.stylingandroid.com/archives/781
@@ -53,18 +54,25 @@ public class PairingBackupHelper implements BackupHelper {
 	PairingColumns.COL_AUTHORIZE_TYPE, PairingColumns.COL_SHOW_NOTIF // init
 	};
 	public static final String[] longColums = new String[] { PairingColumns.COL_PAIRING_TIME };
-	
-	
+
 	public interface BackupInsertor {
 
 		long insertEntity(ContentValues values);
 	}
-	
+
 	public PairingBackupHelper(Context ctx) {
 		super();
 		this.context = ctx;
 		this.pairingDatabase = new PairingDatabase(ctx);
 	}
+	
+	@Override
+	public void writeNewStateDescription(ParcelFileDescriptor newState) {
+	 Log.d(TAG, "--- --------------------------------- ---");
+	 Log.d(TAG, "--- writeNewStateDescription          ---");
+	 Log.d(TAG, "--- --------------------------------- ---");
+	}
+
 
 	@Override
 	public void performBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) {
@@ -91,10 +99,12 @@ public class PairingBackupHelper implements BackupHelper {
 		ByteArrayOutputStream bufStream = null;
 		Cursor cursor = null;
 		try {
-			int columnSize = stringColums.length + intColums.length + longColums.length;
-			String[] columns = UpgradeDbHelper.concatAllCols(columnSize, stringColums, intColums, longColums);
+//			int columnSize = stringColums.length + intColums.length + longColums.length;
+//			String[] columns = UpgradeDbHelper.concatAllCols(columnSize, stringColums, intColums, longColums);
+			 String[] columns = PairingColumns.ALL_COLS;
 			cursor = pairingDatabase.queryEntities(columns, null, null, null);
-			bufStream = copyTable(cursor, stringColums, intColums, longColums);
+//			bufStream = copyTable(cursor, stringColums, intColums, longColums);
+			 bufStream = copyTable(cursor, columns, null, null);
 		} finally {
 			if (cursor != null) {
 				cursor.close();
@@ -117,9 +127,12 @@ public class PairingBackupHelper implements BackupHelper {
 				// StringWriter buf = new StringWriter();
 				// JsonGenerator g = f.createGenerator(buf );
 				g.writeStartArray();
+//				PairingHelper helper = new PairingHelper().initWrapper(cursor);
 				while (cursor.moveToNext()) {
 					g.writeStartObject();
-					UpgradeDbHelper.readCursorToJson(g, cursor, stringColums, intColums, longColums);
+//					ContentValues values = helper.getContentValues(helper.getEntity(cursor));
+//					UpgradeDbHelper.writeLineToJson(g, values);
+					 UpgradeDbHelper.readCursorToJson(g, cursor, stringColums,  intColums, longColums);
 					g.writeEndObject();
 				}
 				g.writeEndArray();
@@ -147,18 +160,16 @@ public class PairingBackupHelper implements BackupHelper {
 			BackupInsertor dbInsertor = new BackupInsertor() {
 
 				@Override
-				public long insertEntity(ContentValues values) { 
+				public long insertEntity(ContentValues values) {
 					ContentValues filteredValues = UpgradeDbHelper.filterContentValues(values, validColumns);
 					return pairingDatabase.insertEntity(filteredValues);
-				} 
+				}
 			};
 			readBackup(data, validColumns, dbInsertor);
 		}
 		Log.i(TAG, "----- restoreEntity End");
 		Log.i(TAG, "-------------------------------------------------");
 	}
-
-	
 
 	public void readBackup(InputStream data, List<String> allValidColumns, BackupInsertor dbInsertor) {
 		Log.d(TAG, "read Backup : " + data);
@@ -187,9 +198,5 @@ public class PairingBackupHelper implements BackupHelper {
 		}
 	}
 
-	@Override
-	public void writeNewStateDescription(ParcelFileDescriptor newState) {
-
-	}
 
 }
