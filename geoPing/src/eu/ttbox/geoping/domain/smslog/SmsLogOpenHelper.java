@@ -24,12 +24,11 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
      * "rowid"
      */
     private static final String FTS_TABLE_CREATE = "CREATE VIRTUAL TABLE " + SmsLogDatabase.TABLE_SMSLOG_FTS + //
-            " USING fts3 " //
-            + "( " + SmsLogColumns.COL_TIME //
-            + ", " + SmsLogColumns.COL_SMSLOG_TYPE //
-            + ", " + SmsLogColumns.COL_ACTION //
-            + ", " + SmsLogColumns.COL_PHONE //
-            + ", " + SmsLogColumns.COL_PHONE_NORMALIZED // 
+            " USING fts4 " //
+            + "( " + SmsLogColumns.COL_TIME + " NOT NULL"//
+            + ", " + SmsLogColumns.COL_SMSLOG_TYPE //@see SmsLogTypeEnum
+            + ", " + SmsLogColumns.COL_ACTION // @see SmsMessageActionEnum
+            + ", " + SmsLogColumns.COL_PHONE // 
             + ", " + SmsLogColumns.COL_PHONE_MIN_MATCH // 
             + ", " + SmsLogColumns.COL_MESSAGE //
             + ", " + SmsLogColumns.COL_MESSAGE_PARAMS //
@@ -38,6 +37,8 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
             // Acknowledge
             + ", " + SmsLogColumns.COL_IS_SEND_TIME //
             + ", " + SmsLogColumns.COL_IS_DELIVERY_TIME // 
+            // Options
+            + ", ORDER BY " + SmsLogColumns.COL_TIME + " DESC" //
             + ");";
 
     // ===========================================================

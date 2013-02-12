@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.SmsLogProvider;
+import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 
@@ -28,8 +29,7 @@ public class SmsLogListFragment extends Fragment {
 	private static final int SMSLOG_LIST_LOADER = R.id.config_id_smsLog_list_loader;
 
 	// Constant
-	private static final String SMSLOG_SORT_DEFAULT = String.format("%s DESC, %s DESC", SmsLogColumns.COL_TIME, SmsLogColumns.COL_PHONE);
-
+ 
 //	private static final int EDIT_ENTITY = 0;
 
 	// binding
@@ -147,7 +147,7 @@ public class SmsLogListFragment extends Fragment {
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 			Log.d(TAG, "onCreateLoader");
-			String sortOrder = SMSLOG_SORT_DEFAULT;
+			String sortOrder = SmsLogDatabase.SMSLOG_SORT_DEFAULT;
 			String selection = null;
 			String[] selectionArgs = null;
 			Uri searchUri = SmsLogProvider.Constants.CONTENT_URI;

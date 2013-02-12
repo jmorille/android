@@ -21,12 +21,14 @@ public class SmsLogDatabase {
 
     public static final String TABLE_SMSLOG_FTS = "personFTS";
 
+    public static final String SMSLOG_SORT_DEFAULT = String.format("%s DESC", SmsLogColumns.COL_TIME );
+
+	
     public static class SmsLogColumns {
 
         public static final String COL_ID = BaseColumns._ID;
         public static final String COL_ACTION = "ACTION";
-        public static final String COL_PHONE = "PHONE";
-        public static final String COL_PHONE_NORMALIZED = "PHONE_NORMALIZED";
+        public static final String COL_PHONE = "PHONE"; 
         public static final String COL_PHONE_MIN_MATCH = "PHONE_MIN_MATCH";
         public static final String COL_MESSAGE = "MSG";
         public static final String COL_MESSAGE_PARAMS = "MSG_PARAMS";
@@ -40,7 +42,7 @@ public class SmsLogDatabase {
 
         // All Cols
         public static final String[] ALL_COLS = new String[] { //
-            COL_ID, COL_TIME, COL_ACTION, COL_PHONE,COL_PHONE_NORMALIZED,COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE , COL_MESSAGE_PARAMS  //
+            COL_ID, COL_TIME, COL_ACTION, COL_PHONE, COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE , COL_MESSAGE_PARAMS  //
             , COL_SMS_WEIGHT,COL_PARENT_ID //
             , COL_IS_SEND_TIME, COL_IS_DELIVERY_TIME //Acknowledge
         };
@@ -114,12 +116,12 @@ public class SmsLogDatabase {
         String selection = null;
         String[] selectionArgs = null;
         if (TextUtils.isEmpty(pSelection)) {
-            selection = String.format("%s = ?", SmsLogColumns.COL_PHONE_MIN_MATCH);
+            selection = String.format("%s MATCH ?", SmsLogColumns.COL_PHONE_MIN_MATCH);
             selectionArgs = new String[] { minMatch };
             Log.d(TAG, "selection : " + selection);
             Log.d(TAG, "selectionArgs :  " + selectionArgs[0] );
         } else {
-            selection = String.format("%s = ? and (%s)", SmsLogColumns.COL_PHONE_MIN_MATCH, pSelection);
+            selection = String.format("%s MATCH ? and (%s)", SmsLogColumns.COL_PHONE_MIN_MATCH, pSelection);
             int pSelectionArgSize = pSelectionArgs.length;
             selectionArgs = new String[pSelectionArgSize + 1];
             System.arraycopy(pSelectionArgs, 0, selectionArgs, 1, pSelectionArgSize);
@@ -132,8 +134,7 @@ public class SmsLogDatabase {
 
     private void fillNormalizedNumber(ContentValues values) {
         // No NUMBER? Also ignore NORMALIZED_NUMBER
-        if (!values.containsKey(SmsLogColumns.COL_PHONE)) {
-            values.remove(SmsLogColumns.COL_PHONE_NORMALIZED);
+        if (!values.containsKey(SmsLogColumns.COL_PHONE)) { 
             values.remove(SmsLogColumns.COL_PHONE_MIN_MATCH);
             return;
         }
@@ -148,8 +149,7 @@ public class SmsLogDatabase {
         if (!TextUtils.isEmpty(number)) {
             String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
             if (!TextUtils.isEmpty(normalizedNumber)) {
-                String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
-                values.put(SmsLogColumns.COL_PHONE_NORMALIZED, normalizedNumber);
+                String minMatch = PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber); 
                 values.put(SmsLogColumns.COL_PHONE_MIN_MATCH, minMatch);
             }
         }

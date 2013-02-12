@@ -24,8 +24,7 @@ public class SmsLogHelper {
 	public int timeIdx = -1;
 	public int actionIdx = -1;
 	public int messageIdx = -1;
-	public int phoneIdx = -1;
-	public int phoneNormalizedIdx = -1;
+	public int phoneIdx = -1; 
 	public int phoneMinMatchIdx = -1;
 	public int smsLogTypeIdx = -1; 
 
@@ -33,8 +32,7 @@ public class SmsLogHelper {
 		idIdx = cursor.getColumnIndex(SmsLogColumns.COL_ID);
 		timeIdx = cursor.getColumnIndex(SmsLogColumns.COL_TIME);
 		actionIdx = cursor.getColumnIndex(SmsLogColumns.COL_ACTION);
-		phoneIdx = cursor.getColumnIndex(SmsLogColumns.COL_PHONE);
-		phoneNormalizedIdx = cursor.getColumnIndex(SmsLogColumns.COL_PHONE_NORMALIZED);
+		phoneIdx = cursor.getColumnIndex(SmsLogColumns.COL_PHONE); 
 		phoneMinMatchIdx = cursor.getColumnIndex(SmsLogColumns.COL_PHONE_MIN_MATCH);
 		smsLogTypeIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMSLOG_TYPE); 
 		messageIdx = cursor.getColumnIndex(SmsLogColumns.COL_MESSAGE);
