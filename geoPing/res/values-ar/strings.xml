@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+     
+    <string name="add_track_person">إضافة شخص</string>
+    <string name="add_pairing">يأذن GeoPing</string>
+    
+    <string name="geoping">GeoPing</string>
+    <string name="menu_select_contact">اتصالات</string>
+    <string name="menu_save">تسجيل</string>
+    <string name="menu_delete">نزع</string>
+    <string name="menu_cancel">إلغاء</string> 
+    
+     <!-- Billing -->
+
+
+    <!-- Share -->
+    <string name="menu_share_app">حصة GeoPing</string>
+    <string name="share_app_subject">اسمحوا لي أن أوصي لكم GeoPing تطبيق</string>
+  
+    <string name="app_comment_title">معدل واستعراض</string>
+    <string name="app_comment_summary">شكرا لكم لترك تعليقاتك</string>
+   
+    
+    <!-- GeoTrack Notification -->
+    <string name="notif_geoping">GeoPing</string>
+    <string name="notif_click_to_accept">(قبل)</string>
+    <string name="notif_geoping_response">يبحث</string>   <!-- Todo où est affiché le texte  -->
+    <string name="notif_geoping_request">أين أنت؟</string>
+    <string name="notif_geoping_request_blocked">GeoPing غير المصرح به</string> 
+    <string name="notif_pairing">جمعية GeoPing</string>
+    <string name="notif_pairing_always">دائما</string>
+    <string name="notif_pairing_never">منع</string> 
+    <string name="notif_confirm_request_eachtime">\?</string>
+    
+    <string name="toast_notif_sended_geoping_smsError">%s خطأ أثناء إرسال الدودة SMS</string>
+    <string name="toast_notif_sended_geoping_pairing">طلبت جمعية GeoPing</string>
+    <string name="toast_notif_sended_geoping_request">%s : أين أنت؟</string>
+    <string name="toast_notif_sended_geoping_response">%s : يبحث</string>
+    <string name="toast_notif_backup_restored">استعادة النسخ الاحتياطي</string>
+    
+   
+    <!-- Widget -->
+    <string name="widget_geoping_person_title">أين أنت؟</string>
+    <string name="widget_geoping_pairing_title">يبحث</string>
+
+    <!-- Sms Action -->
+    <string name="sms_action_geoping_request">طلب GeoPing</string>
+    <string name="sms_action_geoping_response">إرسال موقفي</string>
+    <string name="sms_action_pairing_request">جمعية الطلب</string>
+    <string name="sms_action_pairing_response">"ردا على جمعية"</string>
+ 
+    <string name="sms_action_spyevt_shutdown">Event Shutdown</string>
+    <string name="sms_action_spyevt_boot">Event Boot</string>
+    <string name="sms_action_spyevt_low_battery">Event Low Battery</string>
+    <string name="sms_action_spyevt_phone_call">Event Phone Call</string>
+    <string name="sms_action_spyevt_sim_change">Event Sim Change</string>
+    
+    
+
+    <!-- Menu -->
+    <string name="menu_map_mypositioncenter">موقفي</string>
+    <string name="map_mode">بطاقة نوع</string>
+    <string name="menu.geoTracker">GeoTracker</string>
+    <string name="menu_geoping">GeoPing</string>
+
+    <string name="menu_settings">خيارات</string>
+    <string name="menu_map">خريطة</string>
+    <string name="menu_quit">يتخلي عن</string>
+    <string name="menu_person">الناس</string>
+    <string name="menu_pairing">جمعية</string>
+    <string name="menu_smslog">السجل SMS</string>
+ 
+     <string name="menu_pairing_notification">بلاغ</string>
+    
+    <!-- Menu Map-->
+    <string name="menu_map_mypositon_hide">إخفاء موقعك</string>
+    <string name="menu_map_track_timeline">الجدول الزمني</string>
+       
+    
+    <!-- Prefs -->
+    <string name="prefs_sms_category">رصد SMS</string>
+    
+    <string name="prefs_geoping_request">طلب GeoPing</string>
+    <string name="prefs_block_geoping_pairing">إتحاد</string>
+    <string name="prefs_block_geoping_pairing_summaryOff">منع الجمعيات الجديد</string>
+    <string name="prefs_block_geoping_pairing_summaryOn">السماح للجمعيات جديدة</string>
+    
+    <string name="prefs_show_geoping_notification">عرض إعلام</string>
+    <string name="prefs_show_geoping_notification_summary">للجمعيات جديدة</string> 
+    <string name="prefs_geoping_localSave">حفظ محليا</string>
+    <string name="prefs_geoping_localSave_summaryOn">تسجيل الدخول محليا استنادا</string>
+    <string name="prefs_geoping_localSave_summaryOff">عطل</string>
+
+    <string name="prefs_myLocation">موقفي</string>
+    <string name="prefs_myLocation_display_LatLng">إظهار التفاصيل</string>
+
+    <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
+    <string name="prefs_geoPoint_geocoding_auto">التلقائي الترميز الجغرافي</string>
+    
+    <string name="prefs_developement">تنمية</string>
+    <string name="prefs_sms_delete_onMessage">حذف SMS</string>
+    <string name="prefs_sms_delete_onMessage_summaryOn">SMS الخفي GeoPing</string>
+    <string name="prefs_sms_delete_onMessage_summaryOff">SMS النسخ الاحتياطي Geoping</string>
+     
+        
+    <string name="prefs_info">معلومات</string>
+    <string name="prefs_version">نص</string>
+    <string name="prefs_help">عون</string>
+    <string name="prefs_licence">ترخيص</string>
+    <string name="prefs_about">ائتمان</string>
+    <string name="prefs_relasenotes">ما الجديد؟</string> 
+    <string name="prefs_count_laught">إطلاق عدد من</string>
+    <string name="prefs_count_laught_summary">Usemeter تطبيق</string>
+    
+    <!-- Infos Legale -->
+    <string name="legal_information">"معلومات قانونية"</string>
+    <string name="prefs_license_activity_title">"فتح تراخيص المصدر"</string>
+     
+    <!-- Prefs Dev-->
+    <string name="show_dev_countdown">You are now <xliff:g id="step_count">%1$d</xliff:g> steps away from enabling development settings.</string>
+    <string name="show_dev_on">You have enabled development settings!</string>
+    <string name="show_dev_already">No need, you have already enabled development settings.</string>
+
+    <!-- Dialog -->
+    <string name="color_picker">Sélectionner une couleur</string>
+ 
+    <!-- GeoTrack -->
+    <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
+       <!-- Map My Location Dialog -->
+    <string name="accuracy_separator">+/-</string> <!-- +/- &#8723; -->
+    <string name="altitude">ارتفاع</string>
+    
+    <!-- Person model -->
+    <string name="person_name">اسم</string>
+    <string name="person_phone">رقم الهاتف</string>
+    <string name="description_contact_photo">"صورة جهة الاتصال"</string>
+    
+    <!-- Pairing model -->
+    <string name="pairing_name">اسم</string>
+    <string name="pairing_phone">رقم الهاتف</string>
+    <string name="pairing_show_notification">عرض إعلام</string>
+    <string name="pairing_authorize_type">مأذون</string>
+    <string name="pairing_authorize_type:never">مسدود</string>
+    <string name="pairing_authorize_type:ask">على التحقق من صحة</string>
+    <string name="pairing_authorize_type:always">دائما</string>
+     
+    <!-- SmsLog Model -->
+	<string name="smslog_delete_all">إزالة جميع</string>
+
+    <!-- Help -->
+    <string name="person_help">Liste des personnes auquelles vous pouvez demander un GeoPing.\n  \n
+        Différentes étapes pour associer une personne : \n
+        n\ إضافة شخص جديد عن طريق إدخال رقم الهاتف (أو تحديده من قائمة الأسماء) <b>-1</b> 
+        n\ تثبيت التطبيق على الهاتف GeoPing الثانية (التي كنت ترغب في الحصول موقعها) <b> -2 </b> 
+        n\ إرسال طلب جمعية للسماح فقط رقم الهاتف <b> -3 </b>
+        n\ انتظر وصول SMS على الهاتف الثاني على قبول الجمعيات في شريط التنبيهات <b> -4 </b> 
+        n\ اختياري: يمكنك منع pantographs جمعية جديدة في قائمة خيارات <b> -5 </b> 
+        \n يمكنك الآن الحصول على موقف الهاتف الثاني
+    </string>
+    <string name="pairing_help">
+        لائحة الجمعيات لائحة الأشخاص المرتبطين للتوافق (أو لا) لإرسال GeoPing الخاص.\n 
+        n\n\  يتم الحصول على الموقع الخاص بك عن طريق GPS أو غيرها من أجهزة الاستشعار الحالية على هاتفك. 
+        n\  3 خيارات متاحة جمعية : 
+        n\  يمنع تطبيق GeoPing <b> : يقفل *   </b>  
+        n\ تقبل دائما Geoping الطلب. <b> : دائما *   </b> 
+        n\ وهناك الإخطار الفوري تلقائيا قبول GeoPing <b> : على التحقق من صحة *   </b>  
+        n\ إذا كنت ترغب في إرسال إشعار طلب هو شكلي GeoPing
+        n\ 
+        </string>
+    <string name="smslog_help">قائمة الرسائل المرسلة أو الواردة إلى تطبيق GeoPing.</string>
+    
+</resources>
