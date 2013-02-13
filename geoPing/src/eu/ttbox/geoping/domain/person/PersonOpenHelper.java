@@ -13,8 +13,6 @@ import eu.ttbox.geoping.domain.core.CountryMonitor;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
 import eu.ttbox.geoping.domain.message.MessageDatabase;
 import eu.ttbox.geoping.domain.message.MessageDatabase.MessageColumns;
-import eu.ttbox.geoping.domain.pairing.PairingDatabase;
-import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class PersonOpenHelper extends SQLiteOpenHelper {

@@ -23,8 +23,10 @@ public class AppConstants {
 
     //
     public static final String LOCAL_DB_KEY = "local";
-    public static final int SMS_MAX_SIZE = 160;
-
+    public static final int SMS_MAX_SIZE_7BITS = 160;
+    public static final int SMS_MAX_SIZE_8BITS = 140;
+    public static final int SMS_MAX_BITS_ARRAY_SIZE =  1120;
+    
     public static final char PHONE_SEP = ';';
 
     public static final int PER_PERSON_ID_MULTIPLICATOR = 10000;

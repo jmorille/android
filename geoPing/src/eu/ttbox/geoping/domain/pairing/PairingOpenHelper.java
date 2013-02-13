@@ -10,8 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 

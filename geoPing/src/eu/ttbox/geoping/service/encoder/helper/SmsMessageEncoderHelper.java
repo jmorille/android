@@ -47,7 +47,7 @@ public class SmsMessageEncoderHelper {
 	}
 
 	public static String encodeSmsMessage(String action, Bundle params, int radix, TextEncryptor textEncryptor) {
-		StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE);
+		StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE_7BITS);
 		sb.append(action);
 		if (params != null && !params.isEmpty()) {
 			sb.append(PARAM_BEGIN);

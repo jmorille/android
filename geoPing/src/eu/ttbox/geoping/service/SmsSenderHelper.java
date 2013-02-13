@@ -30,7 +30,7 @@ public class SmsSenderHelper {
 		Uri isSend = null;
 		String encrypedMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
 		Log.d(TAG, String.format("Send Request SmsMessage to %s : %s (%s)", phone, action, encrypedMsg));
-		if (encrypedMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
+		if (encrypedMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE_7BITS) {
 			// Log It
 			ContentResolver cr = context.getContentResolver();
 			Uri logUri = logSmsMessage(cr, side,   SmsLogTypeEnum.SEND_REQ, phone, action, params, 1);

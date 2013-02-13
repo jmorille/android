@@ -11,18 +11,18 @@ import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
 public enum SmsMessageActionEnum {
 
 	// Slave
-	GEOPING_REQUEST("WRY", Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER, GeoPingSlaveService.class,false, R.string.sms_action_geoping_request), //
-	ACTION_GEO_PAIRING("PAQ", Intents.ACTION_SMS_PAIRING_RESQUEST, GeoPingSlaveService.class, false,R.string.sms_action_pairing_request), //
+	GEOPING_REQUEST("WRY", Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER, GeoPingSlaveService.class, false, R.string.sms_action_geoping_request), //
+	ACTION_GEO_PAIRING("PAQ", Intents.ACTION_SMS_PAIRING_RESQUEST, GeoPingSlaveService.class, false, R.string.sms_action_pairing_request), //
 
 	// Master
-	ACTION_GEO_LOC("LOC", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, true,R.string.sms_action_geoping_response), //
-	ACTION_GEO_PAIRING_RESPONSE("PAR", Intents.ACTION_SMS_PAIRING_RESPONSE, GeoPingMasterService.class, true,R.string.sms_action_pairing_response), //
+	ACTION_GEO_LOC("LOC", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geoping_response), //
+	ACTION_GEO_PAIRING_RESPONSE("PAR", Intents.ACTION_SMS_PAIRING_RESPONSE, GeoPingMasterService.class, true, R.string.sms_action_pairing_response), //
 	// Spy Event Notif
-	SPY_SHUTDOWN("esd", Intents.ACTION_SMS_EVTSPY_SHUTDOWN, GeoPingMasterService.class,true, R.string.sms_action_spyevt_shutdown), //
-	SPY_BOOT("esb", Intents.ACTION_SMS_EVTSPY_BOOT, GeoPingMasterService.class, true,R.string.sms_action_spyevt_boot), //
-	SPY_LOW_BATTERY("elb", Intents.ACTION_SMS_EVTSPY_LOW_BATTERY, GeoPingMasterService.class, true,R.string.sms_action_spyevt_low_battery), //
-	SPY_PHONE_CALL("epc", Intents.ACTION_SMS_EVTSPY_PHONE_CALL, GeoPingMasterService.class, true,R.string.sms_action_spyevt_phone_call), //
-	SPY_SIM_CHANGE("eps", Intents.ACTION_SMS_EVTSPY_SIM_CHANGE, GeoPingMasterService.class, true,R.string.sms_action_spyevt_sim_change);
+	SPY_SHUTDOWN("esd", Intents.ACTION_SMS_EVTSPY_SHUTDOWN, GeoPingMasterService.class, true, R.string.sms_action_spyevt_shutdown), //
+	SPY_BOOT("esb", Intents.ACTION_SMS_EVTSPY_BOOT, GeoPingMasterService.class, true, R.string.sms_action_spyevt_boot), //
+	SPY_LOW_BATTERY("elb", Intents.ACTION_SMS_EVTSPY_LOW_BATTERY, GeoPingMasterService.class, true, R.string.sms_action_spyevt_low_battery), //
+	SPY_PHONE_CALL("epc", Intents.ACTION_SMS_EVTSPY_PHONE_CALL, GeoPingMasterService.class, true, R.string.sms_action_spyevt_phone_call), //
+	SPY_SIM_CHANGE("eps", Intents.ACTION_SMS_EVTSPY_SIM_CHANGE, GeoPingMasterService.class, true, R.string.sms_action_spyevt_sim_change);
 
 	// ===========================================================
 	// Constructor
@@ -40,12 +40,9 @@ public enum SmsMessageActionEnum {
 	public final String smsAction;
 	public final Class<?> serviceClass;
 	public final boolean isMaster;
-	
+
 	public final int labelResourceId;
-	
-	
-	 
-	
+
 	// ===========================================================
 	// Conversion Init
 	// ===========================================================
@@ -59,20 +56,28 @@ public enum SmsMessageActionEnum {
 		HashMap<String, SmsMessageActionEnum> intentNames = new HashMap<String, SmsMessageActionEnum>(values.length);
 		for (SmsMessageActionEnum field : values) {
 			// Sms Code
-			addAndCheckUnique(smsCodes, field, field.smsAction);
+			addAndCheckUnique(smsCodes, field, field.smsAction, true);
 			// intent name
-			addAndCheckUnique(intentNames, field, field.intentAction);
+			addAndCheckUnique(intentNames, field, field.intentAction, false);
 		}
 		// Affect
 		bySmsCodeNames = smsCodes;
 		byIntentNames = intentNames;
 	}
 
-	private static void addAndCheckUnique(HashMap<String, SmsMessageActionEnum> map, SmsMessageActionEnum field, String key) {
+	private static void addAndCheckUnique(HashMap<String, SmsMessageActionEnum> map, SmsMessageActionEnum field, String key, boolean isManage2LowerKey) {
 		if (map.containsKey(key)) {
 			throw new IllegalArgumentException(String.format("Duplicated Key %s", key));
 		}
 		map.put(key, field);
+		// Compatibility for version Lower than 0.1.5 (37)
+		// COuld suppress this code if no v37
+		if (isManage2LowerKey) {
+			String lowerKey = key.toLowerCase();
+			if (!key.equals(lowerKey)) {
+				map.put(lowerKey, field);
+			}
+		}
 	}
 
 	// ===========================================================
@@ -96,9 +101,11 @@ public enum SmsMessageActionEnum {
 	public static SmsMessageActionEnum getByCode(int code) {
 		return SmsMessageActionEnum.values()[code];
 	}
+
 	public static SmsMessageActionEnum getByDbCode(String dbCode) {
 		return SmsMessageActionEnum.valueOf(dbCode);
 	}
+
 	// ===========================================================
 	// Instance Accessor
 	// ===========================================================

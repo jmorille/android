@@ -298,7 +298,7 @@ public class SmsParamEncoderHelper {
 	}
 
 	public static StringBuilder encodeMessage(Bundle extras, StringBuilder dest, int radix) {
-		StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE);
+		StringBuilder sb = dest != null ? dest : new StringBuilder(AppConstants.SMS_MAX_SIZE_7BITS);
 		boolean isNotFirst = false;
 		// Single Field
 		for (String key : extras.keySet()) {

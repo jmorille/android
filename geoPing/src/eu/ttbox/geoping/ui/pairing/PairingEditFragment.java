@@ -36,7 +36,6 @@ import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
-import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;

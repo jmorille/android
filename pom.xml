@@ -47,7 +47,7 @@
         <actionbarsherlock.version>4.2.0</actionbarsherlock.version>
 
         <!-- Osm -->
-        <osmdroid.version>3.0.9-20121109</osmdroid.version> <!-- 3.0.8 -->
+        <osmdroid.version>3.0.9-20130213</osmdroid.version> <!-- 3.0.8, 3.0.9-20121109,  -->
         <slf4j-android.version>1.6.1-RC1</slf4j-android.version>
          
         <!-- Utils -->
