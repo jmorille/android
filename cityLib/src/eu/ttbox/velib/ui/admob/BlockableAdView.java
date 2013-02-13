@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.admob;
+package eu.ttbox.velib.ui.admob;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,7 +11,7 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 
-import eu.ttbox.geoping.core.AppConstants;
+import eu.ttbox.velib.core.AppConstants;
 
 public class BlockableAdView extends AdView implements SharedPreferences.OnSharedPreferenceChangeListener {
 

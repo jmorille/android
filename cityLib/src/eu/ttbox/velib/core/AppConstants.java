@@ -12,7 +12,8 @@ public class AppConstants {
 	
     public static final int UNSET_ID = -1;
 
-    
+    public static final String PREFS_ADD_BLOCKED = "addBlocked";
+
 	public static final String PREFS_KEY_APP_COUNT_LAUGHT = "AppLaughtCounter";
 
 	public static final String PREFS_KEY_USER_NUMBER_EXPECTED = "personCountExpected";
