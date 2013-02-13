@@ -60,6 +60,9 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 prefEditor.putString(PREFS_KEY_PHONE_NUMBER, phoneNumber);
                 prefEditor.putInt(PREFS_KEY_ACTION, PREFS_ACTION_INCOMING);
                 prefEditor.commit();
+                
+                Log.d(TAG, "EventSpy PhoneState Write State " + PREFS_KEY_PHONE_NUMBER + " : " +  phoneNumber );
+                Log.d(TAG, "EventSpy PhoneState Write State " + PREFS_KEY_ACTION + " : " +  PREFS_ACTION_INCOMING );
 
             } else if (STATE_OFFHOOK.equals(state)) {
             	Log.d(TAG, "EventSpy PhoneState STATE_OFFHOOK"  );
@@ -68,6 +71,8 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 long now = System.currentTimeMillis();
                 prefEditor.putLong(PREFS_KEY_INLINE_TIME_IN_MS, now);
                 prefEditor.commit();
+                
+                Log.d(TAG, "EventSpy PhoneState Write State " + PREFS_KEY_INLINE_TIME_IN_MS + " : " +  now );
                 
             } else if (STATE_IDLE.equals(state)) {
             	Log.d(TAG, "EventSpy PhoneState STATE_IDLE"  );
@@ -104,6 +109,10 @@ public class PhoneCallReceiver extends BroadcastReceiver {
 
     private String manageCallDatas(Context context, String phoneNumber, int callAction, long beginCall, long endCall) {
         String message = null;
+        Log.d(TAG, "EventSpy PhoneState Compute Final State phoneNumber : " + phoneNumber );
+        Log.d(TAG, "EventSpy PhoneState Compute Final State callAction : " + callAction );
+        Log.d(TAG, "EventSpy PhoneState Compute Final State beginCall : " + beginCall );
+        Log.d(TAG, "EventSpy PhoneState Compute Final State endCall : " + endCall );
         if (beginCall < 0) {
             // Pas de communication
             switch (callAction) {
