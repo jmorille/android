@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 
 public class SmsLogOpenHelper extends SQLiteOpenHelper {
@@ -23,22 +24,21 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
      * identifier, so when making requests, we will use "_id" as an alias for
      * "rowid"
      */
-    private static final String FTS_TABLE_CREATE = "CREATE VIRTUAL TABLE " + SmsLogDatabase.TABLE_SMSLOG_FTS + //
-            " USING fts4 " //
-            + "( " + SmsLogColumns.COL_TIME + " NOT NULL"//
-            + ", " + SmsLogColumns.COL_SMSLOG_TYPE //@see SmsLogTypeEnum
-            + ", " + SmsLogColumns.COL_ACTION // @see SmsMessageActionEnum
-            + ", " + SmsLogColumns.COL_PHONE // 
-            + ", " + SmsLogColumns.COL_PHONE_MIN_MATCH // 
-            + ", " + SmsLogColumns.COL_MESSAGE //
-            + ", " + SmsLogColumns.COL_MESSAGE_PARAMS //
-            + ", " + SmsLogColumns.COL_PARENT_ID //
-            + ", " + SmsLogColumns.COL_SMS_WEIGHT //
+    private static final String FTS_TABLE_CREATE = "CREATE TABLE " + SmsLogDatabase.TABLE_SMSLOG_FTS   // 
+            + "( " + SmsLogColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT"//
+            + ", " + SmsLogColumns.COL_TIME + " INTEGER NOT NULL"//
+            + ", " + SmsLogColumns.COL_SMSLOG_TYPE + " INTEGER"  //@see SmsLogTypeEnum
+            + ", " + SmsLogColumns.COL_ACTION+ " TEXT"// // @see SmsMessageActionEnum
+            + ", " + SmsLogColumns.COL_PHONE + " TEXT"// 
+            + ", " + SmsLogColumns.COL_PHONE_MIN_MATCH + " TEXT"// 
+            + ", " + SmsLogColumns.COL_MESSAGE + " TEXT"//
+            + ", " + SmsLogColumns.COL_MESSAGE_PARAMS + " TEXT"//
+            + ", " + SmsLogColumns.COL_PARENT_ID  + " INTEGER"// 
+            + ", " + SmsLogColumns.COL_SMS_WEIGHT + " INTEGER"//  
+            + ", " + SmsLogColumns.COL_SMS_SIDE  + " INTEGER"//  
             // Acknowledge
-            + ", " + SmsLogColumns.COL_IS_SEND_TIME //
-            + ", " + SmsLogColumns.COL_IS_DELIVERY_TIME // 
-            // Options
-            + ", ORDER BY " + SmsLogColumns.COL_TIME + " DESC" //
+            + ", " + SmsLogColumns.COL_IS_SEND_TIME + " INTEGER"//
+            + ", " + SmsLogColumns.COL_IS_DELIVERY_TIME + " INTEGER"//  
             + ");";
 
     // ===========================================================

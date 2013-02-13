@@ -119,6 +119,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 	public static String savePrefsPhoneNumber(Context context) {
 		String phoneNumber = getSystemPhoneNumber(context);
 		if (TextUtils.isEmpty(phoneNumber)) {
+		    Log.w(TAG, "No Phone number assciate with this Phone");
 			return null;
 		}
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -134,6 +135,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 			SharedPreferences.Editor prefEditor = prefs.edit();
 			prefEditor.putString(AppConstants.PREFS_EVENT_SPY_SIMCHANGE_PHONENUMBER, phoneNumber);
 			prefEditor.commit();
+			Log.d(TAG, "Register Sim Change Phone : " + phoneNumber);
 		} else {
 			Log.w(TAG, "No Phone number to save in pref Key : " + AppConstants.PREFS_EVENT_SPY_SIMCHANGE_PHONENUMBER);
 		}

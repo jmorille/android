@@ -17,10 +17,10 @@
     <PreferenceCategory android:title="@string/prefs_spynotif_title" >
         <EditTextPreference
             android:defaultValue="5000"
-            android:key="spyNotifShutdownSleepInMs"
+            android:key="spyEventShutdownSleepInMs"
             android:title="@string/prefs_spynotif_shutdown_sleep_in_ms" />
         <EditTextPreference
-            android:key="spyNotifSimChangegPhoneNumber"
+            android:key="spyEventSimChangePhoneNumber"
             android:title="@string/prefs_spynotif_changed_phonenumber" />
     </PreferenceCategory>
 

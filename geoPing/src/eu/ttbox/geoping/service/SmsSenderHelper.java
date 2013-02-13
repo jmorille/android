@@ -13,6 +13,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.SmsLogProvider;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
@@ -25,14 +26,14 @@ public class SmsSenderHelper {
 
 	private static final String TAG = "SmsSenderHelper";
 
-	public static Uri sendSms(Context context,   String phone, SmsMessageActionEnum action, Bundle params) {
+	public static Uri sendSms(Context context,  SmsLogSideEnum side,    String phone, SmsMessageActionEnum action, Bundle params) {
 		Uri isSend = null;
 		String encrypedMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
 		Log.d(TAG, String.format("Send Request SmsMessage to %s : %s (%s)", phone, action, encrypedMsg));
 		if (encrypedMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE) {
 			// Log It
 			ContentResolver cr = context.getContentResolver();
-			Uri logUri = logSmsMessage(cr,  SmsLogTypeEnum.SEND_REQ, phone, action, params, 1);
+			Uri logUri = logSmsMessage(cr, side,   SmsLogTypeEnum.SEND_REQ, phone, action, params, 1);
 			Log.d(TAG, "SmsMessage Request save Log to : " + logUri);
 			// Acknowledge
 			PendingIntent sendIntent = PendingIntent.getBroadcast(context, 0, //
@@ -56,12 +57,12 @@ public class SmsSenderHelper {
 	// Log Sms message
 	// ===========================================================
 
-	public static Uri logSmsMessage(ContentResolver cr,   SmsLogTypeEnum type, GeoPingMessage geoMessage, int smsWeight) {
-		return logSmsMessage(cr,   type, geoMessage.phone, geoMessage.action, geoMessage.params, smsWeight);
+	public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side,   SmsLogTypeEnum type, GeoPingMessage geoMessage, int smsWeight) {
+		return logSmsMessage(cr,  side, type, geoMessage.phone, geoMessage.action, geoMessage.params, smsWeight);
 	}
 
-	public static Uri logSmsMessage(ContentResolver cr,  SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, int smsWeight) {
-		ContentValues values = SmsLogHelper.getContentValues(  type, phone, action, params);
+	public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side , SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, int smsWeight) {
+		ContentValues values = SmsLogHelper.getContentValues(  side, type, phone, action, params);
 		values.put(SmsLogColumns.COL_SMS_WEIGHT, smsWeight); 
  		Uri logUri = cr.insert(SmsLogProvider.Constants.CONTENT_URI, values);
 		return logUri;

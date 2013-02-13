@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.domain.PairingProvider;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
@@ -46,13 +47,13 @@ public class SpyNotificationHelper {
         try {
             int resultCount = cursor.getCount();
             if (resultCount > 0) {
-                result = new  ArrayList<String> (resultCount);
+                result = new ArrayList<String>(resultCount);
                 while (cursor.moveToNext()) {
                     String phone = cursor.getString(0);
                     result.add(phone);
                 }
             }
-            Log.d(TAG, "Search EventSpy "+ notifCol + " : found " + resultCount+ " phones to notify" );
+            Log.d(TAG, "Search EventSpy " + notifCol + " : found " + resultCount + " phones to notify");
         } finally {
             cursor.close();
         }
@@ -66,18 +67,17 @@ public class SpyNotificationHelper {
         Log.d(TAG, "Search Pairing for criteria : " + selection + " ==> " + cursor.getCount() + " result");
         return cursor;
     }
-    
-    
+
     public static void sendEventSpySmsMessage(Context context, ArrayList<String> phones, SmsMessageActionEnum eventType) {
         if (phones != null) {
-            Log.d(TAG, "EventSpy Notification  : " +eventType+ " for "+ phones.size() + " phones destinations");
+            Log.d(TAG, "EventSpy Notification  : " + eventType + " for " + phones.size() + " phones destinations");
             // Send SMS
             Bundle params = new Bundle();
-            SmsMessageLocEnum.EVT_DATE.writeToBundle(params, System.currentTimeMillis()); 
+            SmsMessageLocEnum.EVT_DATE.writeToBundle(params, System.currentTimeMillis());
             for (String phone : phones) {
-                SmsSenderHelper.sendSms(context, phone, eventType, params);
-            }   
+                SmsSenderHelper.sendSms(context, SmsLogSideEnum.SLAVE, phone, eventType, params);
+            }
         }
     }
-    
+
 }

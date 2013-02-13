@@ -36,6 +36,7 @@ import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
@@ -212,7 +213,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
 //		this.entityUri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI, entityId);
 		this.entityUri = entityUri;
 		Bundle bundle = new Bundle();
-		bundle.putString(Intents.EXTRA_DATA_URI, entityUri.toString());
+		bundle.putString(Intents.EXTRA_DATA_URI, entityUri.toString()); 
 		getActivity().getSupportLoaderManager().initLoader(PAIRING_EDIT_LOADER, bundle, pairingLoaderCallback);
 	}
 	

@@ -16,6 +16,7 @@ import com.actionbarsherlock.view.MenuItem;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
@@ -49,6 +50,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 				if (smsLogFragment!=null && !personPhone.equals(phone)) {
 					Bundle args = new Bundle();
 					args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, personPhone);
+					args.putInt(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SIDE_DBCODE, SmsLogSideEnum.MASTER.getDbCode());
   					smsLogFragment.refreshLoader(args); 
 				}
 			}
@@ -198,6 +200,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 				if (smsLogFragment == null) {
 					Bundle args = new Bundle();
 					args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, personPhone);
+					args.putInt(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SIDE_DBCODE, SmsLogSideEnum.MASTER.getDbCode());
 			 		smsLogFragment = new SmsLogListFragment();
 					smsLogFragment.setArguments(args);
 				}

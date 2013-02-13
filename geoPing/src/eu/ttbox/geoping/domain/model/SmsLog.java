@@ -15,6 +15,7 @@ public class SmsLog {
 	public SmsMessageActionEnum action;
 	public String phone;
 	public String message; 
+	public SmsLogSideEnum side;
 	
 	public SmsLog setId(long id) {
 		this.id = id;
@@ -47,8 +48,13 @@ public class SmsLog {
 		return this;
 	}
 
-  
-	public SmsLog setSmsLogType(SmsLogTypeEnum smsLogType) {
+	 
+	public SmsLog setSide(SmsLogSideEnum side) {
+        this.side = side;
+        return this;
+    }
+
+    public SmsLog setSmsLogType(SmsLogTypeEnum smsLogType) {
 		this.smsLogType = smsLogType;
 		return this;
 	}

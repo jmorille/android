@@ -33,6 +33,7 @@ public class SmsLogDatabase {
         public static final String COL_MESSAGE = "MSG";
         public static final String COL_MESSAGE_PARAMS = "MSG_PARAMS";
         public static final String COL_SMSLOG_TYPE = "SMSLOG_TYPE"; // @see SmsLogTypeEnum
+        public static final String COL_SMS_SIDE = "SMS_SIDE";  // @see SmsLogSideEnum
         public static final String COL_TIME = "TIME";
         public static final String COL_PARENT_ID = "PARENT_ID";
         public static final String COL_SMS_WEIGHT = "SMS_WEIGHT"; 
@@ -43,7 +44,7 @@ public class SmsLogDatabase {
         // All Cols
         public static final String[] ALL_COLS = new String[] { //
             COL_ID, COL_TIME, COL_ACTION, COL_PHONE, COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE , COL_MESSAGE_PARAMS  //
-            , COL_SMS_WEIGHT,COL_PARENT_ID //
+            ,COL_SMS_SIDE, COL_SMS_WEIGHT,COL_PARENT_ID //
             , COL_IS_SEND_TIME, COL_IS_DELIVERY_TIME //Acknowledge
         };
         // Where Clause
@@ -92,7 +93,7 @@ public class SmsLogDatabase {
      * @return Cursor over all words that match, or null if none found.
      */
     public Cursor getEntityMatches(String[] projection, String query, String order) {
-        String selection = SmsLogColumns.COL_ACTION + " MATCH ?";
+        String selection = SmsLogColumns.COL_ACTION + " = ?";
         String queryString = new StringBuilder(query).append("*").toString();
         String[] selectionArgs = new String[] { queryString };
         return queryEntities(projection, selection, selectionArgs, order);
@@ -116,12 +117,12 @@ public class SmsLogDatabase {
         String selection = null;
         String[] selectionArgs = null;
         if (TextUtils.isEmpty(pSelection)) {
-            selection = String.format("%s MATCH ?", SmsLogColumns.COL_PHONE_MIN_MATCH);
+            selection = String.format("%s = ?", SmsLogColumns.COL_PHONE_MIN_MATCH);
             selectionArgs = new String[] { minMatch };
             Log.d(TAG, "selection : " + selection);
             Log.d(TAG, "selectionArgs :  " + selectionArgs[0] );
         } else {
-            selection = String.format("%s MATCH ? and (%s)", SmsLogColumns.COL_PHONE_MIN_MATCH, pSelection);
+            selection = String.format("%s = ? and (%s)", SmsLogColumns.COL_PHONE_MIN_MATCH, pSelection);
             int pSelectionArgSize = pSelectionArgs.length;
             selectionArgs = new String[pSelectionArgSize + 1];
             System.arraycopy(pSelectionArgs, 0, selectionArgs, 1, pSelectionArgSize);

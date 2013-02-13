@@ -15,6 +15,7 @@ import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
 import eu.ttbox.geoping.domain.SmsLogProvider;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
@@ -113,10 +114,11 @@ public class SMSReceiver extends BroadcastReceiver {
 	// Log Sms message
 	// ===========================================================
 
-	private void logSmsMessageReceive(Context context, GeoPingMessage geoMsg) {
+	private void logSmsMessageReceive(Context context,     GeoPingMessage geoMsg) {
 		// Save
 		ContentResolver cr = context.getContentResolver(); 
-		Uri insertUri = SmsSenderHelper.logSmsMessage(cr,   SmsLogTypeEnum.RECEIVE, geoMsg, 1);
+		SmsLogSideEnum side = geoMsg.action.isMaster ? SmsLogSideEnum.MASTER : SmsLogSideEnum.SLAVE;
+		Uri insertUri = SmsSenderHelper.logSmsMessage( cr,side,   SmsLogTypeEnum.RECEIVE, geoMsg, 1);
 		Log.d(TAG, "Save Log Message : " + insertUri); 
 		// Multi Message
 		if (geoMsg.isMultiMessages()) {
@@ -128,7 +130,7 @@ public class SMSReceiver extends BroadcastReceiver {
 			}
 			// Add Count for 0 msg
 			for (GeoPingMessage msgOther : geoMsg.multiMessages) {
-				ContentValues valuesOther = SmsLogHelper.getContentValues(  SmsLogTypeEnum.RECEIVE, msgOther);
+				ContentValues valuesOther = SmsLogHelper.getContentValues(side,   SmsLogTypeEnum.RECEIVE, msgOther);
 				valuesOther.put(SmsLogColumns.COL_SMS_WEIGHT, 0);
   				if (isParent) {
 					valuesOther.put(SmsLogColumns.COL_PARENT_ID, logParentId);

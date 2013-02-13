@@ -33,6 +33,7 @@ import eu.ttbox.geoping.domain.GeoTrackerProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
@@ -381,7 +382,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
         GeoTrack geotrack = new GeoTrack(null, location);
         geotrack.batteryLevelInPercent = batterLevelInPercent;
         Bundle params = GeoTrackHelper.getBundleValues(geotrack); 
-        SmsSenderHelper.sendSms(this,  phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
+        SmsSenderHelper.sendSms(this, SmsLogSideEnum.SLAVE,  phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
         if (saveInLocalDb) {
             geotrack.requesterPersonPhone = phone;
             saveInLocalDb(geotrack);

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.model.SmsLog;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
@@ -27,6 +28,7 @@ public class SmsLogHelper {
 	public int phoneIdx = -1; 
 	public int phoneMinMatchIdx = -1;
 	public int smsLogTypeIdx = -1; 
+    public int smsLogSideIdx = -1; 
 
 	public SmsLogHelper initWrapper(Cursor cursor) {
 		idIdx = cursor.getColumnIndex(SmsLogColumns.COL_ID);
@@ -36,6 +38,7 @@ public class SmsLogHelper {
 		phoneMinMatchIdx = cursor.getColumnIndex(SmsLogColumns.COL_PHONE_MIN_MATCH);
 		smsLogTypeIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMSLOG_TYPE); 
 		messageIdx = cursor.getColumnIndex(SmsLogColumns.COL_MESSAGE);
+		smsLogSideIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMS_SIDE);
 		isNotInit = false;
 		return this;
 	}
@@ -51,7 +54,7 @@ public class SmsLogHelper {
 		user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
 		user.setSmsLogType(smsLogTypeIdx > -1 ? getSmsLogType(cursor) : null);
 		user.setMessage(messageIdx > -1 ? cursor.getString(messageIdx) : null);
-	 
+		user.setSide(smsLogSideIdx > -1 ? getSmsLogSideEnum(cursor) : null);
 		return user;
 	}
 
@@ -89,6 +92,11 @@ public class SmsLogHelper {
 		return SmsMessageActionEnum.getByDbCode(actionValue);
 	}
 
+    public SmsLogSideEnum getSmsLogSideEnum(Cursor cursor) {
+        int key = cursor.getInt(smsLogSideIdx);
+        return SmsLogSideEnum.getByDbCode(key);
+    }
+	
 	// ===========================================================
 	// Field Setter
 	// ===========================================================
@@ -125,19 +133,22 @@ public class SmsLogHelper {
 		initialValues.put(SmsLogColumns.COL_ACTION, vo.action.getCode());
 		initialValues.put(SmsLogColumns.COL_MESSAGE, vo.message);
 		initialValues.put(SmsLogColumns.COL_SMSLOG_TYPE, vo.smsLogType.getCode()); 
+        initialValues.put(SmsLogColumns.COL_SMS_SIDE, vo.side.getDbCode());  
+		
 		return initialValues;
 	}
 
-	public static ContentValues getContentValues( SmsLogTypeEnum type, GeoPingMessage geoMessage) {
-		return getContentValues(  type, geoMessage.phone, geoMessage.action, geoMessage.params);
+	public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, GeoPingMessage geoMessage) {
+		return getContentValues(   side, type, geoMessage.phone, geoMessage.action, geoMessage.params);
 	}
 
-	public static ContentValues getContentValues( SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params) {
+	public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params) {
 		ContentValues values = new ContentValues();
 		values.put(SmsLogColumns.COL_TIME, System.currentTimeMillis());
 		values.put(SmsLogColumns.COL_PHONE, phone);
 		values.put(SmsLogColumns.COL_ACTION, action.getDbCode());
 		values.put(SmsLogColumns.COL_SMSLOG_TYPE, type.getCode()); 
+		values.put(SmsLogColumns.COL_SMS_SIDE, side.getDbCode()); 
 		if (params != null && !params.isEmpty()) {
 			String paramString = convertAsJsonString(params);
 			if (paramString != null) {

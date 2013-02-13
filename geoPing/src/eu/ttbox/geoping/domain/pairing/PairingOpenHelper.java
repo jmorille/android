@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
@@ -57,6 +59,18 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 			+ ");";
 
 	private static final String FTS_TABLE_CREATE_PAIRING = FTS_TABLE_CREATE_PAIRING_V6;
+	
+
+    // ===========================================================
+    // Index
+    // ===========================================================
+
+    private static final String INDEX_PAIRING_PHONE_AK = "IDX_PAIRING_PHONE_AK";
+    private static final String CREATE_INDEX_PAIRING_PHONE_AK = "CREATE UNIQUE INDEX IF NOT EXISTS " + INDEX_PAIRING_PHONE_AK + " on " + PairingDatabase.TABLE_PAIRING_FTS + "(" //
+            + PairingColumns.COL_PHONE_MIN_MATCH  
+            + ");";
+
+    
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -73,8 +87,15 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		mDatabase = db;
 		mDatabase.execSQL(FTS_TABLE_CREATE_PAIRING);
+		mDatabase.execSQL(CREATE_INDEX_PAIRING_PHONE_AK);
 		// new PairingDbBootstrap(mHelperContext, mDatabase).loadDictionary();
 	}
+	
+	private void onLocalDrop(SQLiteDatabase db) {
+	    db.execSQL("DROP INDEX IF EXISTS " + INDEX_PAIRING_PHONE_AK  );
+	    db.execSQL("DROP TABLE IF EXISTS " + PairingDatabase.TABLE_PAIRING_FTS); 
+	}
+	
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -94,9 +115,8 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS pairingFTS");
 		}
 		// Create the new Table
-		Log.d(TAG, "Upgrading database :DROP TABLE  : " + PairingDatabase.TABLE_PAIRING_FTS);
-		db.execSQL("DROP TABLE IF EXISTS " + PairingDatabase.TABLE_PAIRING_FTS);
-		Log.d(TAG, "Upgrading database : Create TABLE  : " + PairingDatabase.TABLE_PAIRING_FTS);
+		Log.d(TAG, "Upgrading database : DROP TABLE  : " + PairingDatabase.TABLE_PAIRING_FTS);
+		onLocalDrop(db);
 		onCreate(db);
 		// Insert data in new table
 		if (oldVersion <= 5 && oldRows != null) {

@@ -39,6 +39,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.service.SmsSenderHelper;
@@ -292,7 +293,7 @@ public class GeoPingMasterService extends IntentService {
 		}
 
 		try {
-			Uri logUri = SmsSenderHelper.sendSms(this, phone, action, params);
+			Uri logUri = SmsSenderHelper.sendSms(this, SmsLogSideEnum.MASTER, phone, action, params);
 			isSend = (logUri != null);
 		} catch (IllegalArgumentException e) {
 			Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, getResources().getString(R.string.toast_notif_sended_geoping_smsError, phone + " : " + e.getMessage()));
