@@ -83,7 +83,14 @@
         <!-- http://stackoverflow.com/questions/5298370/how-to-add-a-button-to-a-preferencescreen-android -->
         <!-- <Preference  android:title="Clear Cache" -->
         <!-- android:icon="@android:drawable/ic_dialog_info" > -->
-
+     
+       <Preference android:title="@string/app_comment_title" 
+           android:summary="@string/app_comment_summary"
+           android:icon="@android:drawable/ic_dialog_email">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=eu.ttbox.velib"  />
+        </Preference>
 
         <!-- </Preference> -->
     </PreferenceCategory>

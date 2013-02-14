@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <!-- Share -->
+    <string name="menu_share_app">Share CityLib</string>
+    <string name="share_app_subject">Let me recommend you CityLib application</string>
+  
+    <string name="app_comment_title">Evaluar y hacer comentarios</string>
+    <string name="app_comment_summary">Gracias para sus commentarios</string>
+    
 
     <!-- Traduction -->
 

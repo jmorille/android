@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    
+    <!-- Share -->
+    <string name="menu_share_app">Partager GeoPing</string>
+    <string name="share_app_subject">Let me recommend you GeoPing application</string>
+  
+    <string name="app_comment_title">Voter et Commenter</string>
+    <string name="app_comment_summary">Merci de nous laisser vos commentaires.</string>
+   
+    
     <!-- Traduction -->
 
     <string name="valid">Valider</string>
