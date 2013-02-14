@@ -46,13 +46,14 @@
         <!-- android:layout_width="wrap_content" -->
         <!-- android:layout_height="wrap_content" /> -->
 
-        <com.google.ads.AdView
-            android:id="@+id/adView"
+
+        <include
+            android:id="@+id/admob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/admob_key"
-            ads:loadAdOnCreate="true" />
+            layout="@layout/admob" />
+ 
+         
     </LinearLayout>
 
 </ScrollView>
