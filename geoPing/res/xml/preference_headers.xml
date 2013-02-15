@@ -10,6 +10,15 @@
             android:value="geoping_prefs" />
     </header>
 
+        <header
+        android:fragment="eu.ttbox.geoping.ui.prefs.GeoPingPrefActivity$PrefsFragment"
+        android:icon="@drawable/ic_location_web_site"
+        android:title="@string/prefs_geoping_geoPoint_category" >
+        <extra
+            android:name="pref-resource"
+            android:value="map_prefs" />
+    </header>
+    
     <!-- System --> 
     
     <header

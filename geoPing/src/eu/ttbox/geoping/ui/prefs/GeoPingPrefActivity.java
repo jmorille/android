@@ -49,13 +49,14 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
             final boolean showDev = developmentPreferences.getBoolean(AppVersionPreference.PREF_SHOW_DEVMODE, false);
             // addPreferencesFromResource(R.xml.prefs);
             addPreferencesFromResource(R.xml.geoping_prefs);
+            addPreferencesFromResource(R.xml.map_prefs);
             if (showDev) {
                 addPreferencesFromResource(R.xml.development_prefs);
             }
             addPreferencesFromResource(R.xml.info_prefs);
         }
         // Tracker
-        GeoPingApplication.getInstance().tracker().trackPageView("/Pref");
+        GeoPingApplication.getInstance().tracker().trackPageView("/Preference");
     }
 
     @Override
