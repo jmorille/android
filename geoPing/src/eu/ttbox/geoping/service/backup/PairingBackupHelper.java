@@ -91,7 +91,6 @@ public class PairingBackupHelper implements BackupHelper {
 		}
 		Log.i(TAG, "----- performBackup End : key =  " + BACKUP_KEY_PAIRING_DB);
 		Log.i(TAG, "-------------------------------------------------");
-
 	}
 
 	public ByteArrayOutputStream copyTable(String[] stringColums, String[] intColums, String[] longColums) {
