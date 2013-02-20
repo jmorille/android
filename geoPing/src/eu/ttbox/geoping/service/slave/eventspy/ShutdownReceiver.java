@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
@@ -39,8 +40,9 @@ public class ShutdownReceiver extends BroadcastReceiver {
 			// Search Phones 
 			ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
 			if (phones != null) {
+			    Bundle params = new Bundle();
 			    // Send Sms
-			    SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_SHUTDOWN);
+			    SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_SHUTDOWN, params);
  				// Sleep for Send the Sms
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 				int sleepWantedInMs = prefs.getInt(AppConstants.PREFS_EVENT_SPY_SHUTDOWN_SLEEP_IN_MS, 5000);

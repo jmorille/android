@@ -34,6 +34,7 @@ import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
  * http://blog.stylingandroid.com/archives/781
  * 
  */
+@Deprecated
 public class PairingBackupHelper implements BackupHelper {
 
 	private static final String TAG = "PairingBackupHelper";

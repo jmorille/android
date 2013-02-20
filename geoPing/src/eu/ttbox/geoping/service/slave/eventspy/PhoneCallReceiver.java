@@ -142,8 +142,9 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         // TODO
         ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_PHONE_CALL);
         if (phones != null) {
+            Bundle params = new Bundle();
             // Send Sms
-            SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_PHONE_CALL);
+            SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_PHONE_CALL, params);
         }
         return message;
     }

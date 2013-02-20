@@ -41,7 +41,7 @@
 
         <!-- Google Api -->
         <gcm.version>3</gcm.version>
-        <admob.version>6.2.1-r8</admob.version>
+        <admob.version>6.3.0-r9</admob.version> <!--6.2.1-r8 -->
         <analytics.version>2</analytics.version>
         <compatibility-v13.version>11</compatibility-v13.version>
         <actionbarsherlock.version>4.2.0</actionbarsherlock.version>

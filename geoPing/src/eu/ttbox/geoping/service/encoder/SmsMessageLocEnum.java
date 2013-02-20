@@ -22,7 +22,7 @@ public enum SmsMessageLocEnum {
     PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID), //
 
     // Spy Event
-//    EVT_TYPE('E', SmsMessageTypeEnum.STRING, "EVT_TYPE"),
+//    EVT_SIM_PHONE('i', SmsMessageTypeEnum.STRING, "EVT_SIM_PHONE"),
     EVT_DATE('t', SmsMessageTypeEnum.DATE, "EVT_DATE"); //
     // ===========================================================
     // Constructor
@@ -90,7 +90,12 @@ public enum SmsMessageLocEnum {
     // Writer / Reader
     // ===========================================================
  
-    
+    public boolean isToBundle(Bundle extras ) {
+        if (extras==null) {
+            return false;
+        }
+        return extras.containsKey(dbFieldName);
+    }
     public Bundle writeToBundle(Bundle extras, long value) {
         Bundle params = extras == null ? new Bundle() : extras;
         params.putLong(dbFieldName, value);

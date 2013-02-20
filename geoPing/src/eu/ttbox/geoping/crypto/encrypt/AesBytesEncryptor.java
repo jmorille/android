@@ -19,7 +19,7 @@ import eu.ttbox.geoping.crypto.keygen.BytesKeyGenerator;
 
 /**
  * Encryptor that uses 256-bit AES encryption.
- *
+ * {@link http://android-developers.blogspot.fr/2013/02/using-cryptography-to-store-credentials.html}
  * @author Keith Donald
  */
 public final class AesBytesEncryptor implements BytesEncryptor {

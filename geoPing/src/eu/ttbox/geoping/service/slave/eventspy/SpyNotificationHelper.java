@@ -68,12 +68,14 @@ public class SpyNotificationHelper {
         return cursor;
     }
 
-    public static void sendEventSpySmsMessage(Context context, ArrayList<String> phones, SmsMessageActionEnum eventType) {
+    public static void sendEventSpySmsMessage(Context context, ArrayList<String> phones, SmsMessageActionEnum eventType,  Bundle eventParams ) {
         if (phones != null) {
             Log.d(TAG, "EventSpy Notification  : " + eventType + " for " + phones.size() + " phones destinations");
             // Send SMS
-            Bundle params = new Bundle();
-            SmsMessageLocEnum.EVT_DATE.writeToBundle(params, System.currentTimeMillis());
+            Bundle params = eventParams==null ?new Bundle() : eventParams ;
+            if (! SmsMessageLocEnum.EVT_DATE.isToBundle(params)) {
+                SmsMessageLocEnum.EVT_DATE.writeToBundle(params, System.currentTimeMillis());
+            }
             for (String phone : phones) {
                 SmsSenderHelper.sendSms(context, SmsLogSideEnum.SLAVE, phone, eventType, params);
             }

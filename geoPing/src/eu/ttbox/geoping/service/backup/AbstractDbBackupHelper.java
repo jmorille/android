@@ -2,72 +2,84 @@ package eu.ttbox.geoping.service.backup;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
-import eu.ttbox.geoping.domain.pairing.PairingDatabase;
-import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
-
+import android.app.backup.BackupDataInputStream;
+import android.app.backup.BackupDataOutput;
+import android.app.backup.BackupHelper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import android.app.backup.BackupDataOutput;
-import android.app.backup.BackupHelper;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class AbstractDbBackupHelper  implements BackupHelper {
-    
+import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
+import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.service.backup.PairingBackupHelper.BackupInsertor;
+
+public abstract class AbstractDbBackupHelper implements BackupHelper {
+
     private static final String TAG = "AbstractDbBackupHelper";
-    
-    
+
+    private static final int IS_BUFFER_SIZE = 1024;
+
     private final Context context;
-    
+
     private final String backupKey;
-    
+
     // ===========================================================
     // Interface
     // ===========================================================
 
-    
     public interface BackupInsertor {
 
         long insertEntity(ContentValues values);
     }
-    
+
     // ===========================================================
     // Constructor
     // ===========================================================
 
-    
     public AbstractDbBackupHelper(Context ctx, String backupKey) {
         super();
         this.context = ctx;
-        this.backupKey =backupKey;
+        this.backupKey = backupKey;
     }
-    
 
     // ===========================================================
     // States
     // ===========================================================
 
-    
     @Override
     public void writeNewStateDescription(ParcelFileDescriptor newState) {
-     Log.d(TAG, "--- --------------------------------- ---");
-     Log.d(TAG, "--- writeNewStateDescription          ---");
-     Log.d(TAG, "--- --------------------------------- ---");
+        Log.d(TAG, "--- --------------------------------- ---");
+        Log.d(TAG, "--- writeNewStateDescription          ---");
+        Log.d(TAG, "--- --------------------------------- ---");
     }
-    
 
     // ===========================================================
     // Backup
     // ===========================================================
 
-    public void performBackup(String backupKey, ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) {
+    @Override
+    public void performBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) { 
         Log.i(TAG, "-------------------------------------------------");
         Log.i(TAG, "--- performBackup : key =  " + backupKey);
         // Doing copy
-        ByteArrayOutputStream dataCopy = copyTable(stringColums, intColums, longColums);
+        ByteArrayOutputStream dataCopy = copyTableAsBytes();
         if (dataCopy != null) {
             try {
                 byte[] dataBytes = dataCopy.toByteArray();
@@ -81,20 +93,15 @@ public abstract class AbstractDbBackupHelper  implements BackupHelper {
         Log.i(TAG, "----- performBackup End : key =  " + backupKey);
         Log.i(TAG, "-------------------------------------------------");
     }
-    
-    
-    
-    
-    public ByteArrayOutputStream copyTable(String[] stringColums, String[] intColums, String[] longColums) {
+
+    public abstract Cursor getBackupCursor();
+
+    public ByteArrayOutputStream copyTableAsBytes() {
         ByteArrayOutputStream bufStream = null;
         Cursor cursor = null;
         try {
-//          int columnSize = stringColums.length + intColums.length + longColums.length;
-//          String[] columns = UpgradeDbHelper.concatAllCols(columnSize, stringColums, intColums, longColums);
-             String[] columns = PairingColumns.ALL_COLS;
-            cursor = pairingDatabase.queryEntities(columns, null, null, null);
-//          bufStream = copyTable(cursor, stringColums, intColums, longColums);
-             bufStream = copyTable(cursor, columns, null, null);
+            cursor = getBackupCursor();
+            bufStream = copyTableAsJsonByte(cursor);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -102,11 +109,92 @@ public abstract class AbstractDbBackupHelper  implements BackupHelper {
         }
         return bufStream;
     }
-    
+
+    public abstract ContentValues getCursorAsContentValues(Cursor cursor);
+
+    public ByteArrayOutputStream copyTableAsJsonByte(Cursor cursor) {
+        ByteArrayOutputStream bufStream = null;
+        // Do copy Table
+        try {
+
+            if (cursor.getCount() > 0) {
+                bufStream = new ByteArrayOutputStream(IS_BUFFER_SIZE);
+                GZIPOutputStream gzipOut = new GZIPOutputStream(bufStream, IS_BUFFER_SIZE);
+                // Json writer
+                JsonFactory f = new JsonFactory();
+                JsonGenerator g = f.createGenerator(gzipOut, JsonEncoding.UTF16_BE);
+                g.writeStartArray();
+                while (cursor.moveToNext()) {
+                    g.writeStartObject();
+                    // Write Datas
+                    ContentValues values = getCursorAsContentValues(cursor);
+                    UpgradeDbHelper.writeLineToJson(g, values);
+                    // End Lines
+                    g.writeEndObject();
+                }
+                g.writeEndArray();
+                // important: will force flushing of output, close underlying
+                // output stream
+                g.close();
+                // Close Streams
+                gzipOut.close();
+                bufStream.close();
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Backup IOException : " + e.getMessage(), e);
+        }
+        return bufStream;
+    }
 
     // ===========================================================
     // Restore
     // ===========================================================
 
     
+    @Override
+    public void restoreEntity(BackupDataInputStream data) {
+        String key = data.getKey();
+        Log.i(TAG, "-------------------------------------------------");
+        Log.i(TAG, "--- restore Entity '" + key + "' size=" + data.size());
+
+        if (backupKey.equals(key)) {
+            final List<String> validColumns = Arrays.asList(PairingColumns.ALL_COLS); 
+            readBackup(data );
+        }
+        Log.i(TAG, "----- restoreEntity End");
+        Log.i(TAG, "-------------------------------------------------");
+    }
+    
+    
+    public void readBackup(InputStream data  ) {
+        Log.d(TAG, "read Backup : " + data);
+        try {
+            JsonFactory f = new JsonFactory();
+            GZIPInputStream gzipIs = new GZIPInputStream(data, IS_BUFFER_SIZE);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonParser jp = f.createJsonParser(gzipIs);
+            // advance stream to START_ARRAY first:
+            jp.nextToken();
+            // Read Objects
+            TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
+            };
+            final List<String> allValidColumns = getValidColumns();
+            while (jp.nextToken() == JsonToken.START_OBJECT) {
+                HashMap<String, Object> jsonMap = mapper.readValue(jp, typeRef);
+                ContentValues values = UpgradeDbHelper.convertJsonMapAsContentValues(jsonMap, allValidColumns);
+                // Insert
+                long entityId = insertEntity(values);
+                Log.d(TAG, "Backup Pairing Line : new Inserting entity id " + entityId);
+            }
+            // Close
+            jp.close();
+            gzipIs.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Backup IOException : " + e.getMessage(), e);
+        }
+    }
+    
+    public abstract List<String> getValidColumns();
+    
+    public abstract long insertEntity(ContentValues values);
 }

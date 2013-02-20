@@ -11,6 +11,11 @@ import eu.ttbox.geoping.crypto.encrypt.Base64EncodingTextEncryptor;
 import eu.ttbox.geoping.crypto.encrypt.RsaBytesEncryptor;
 import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
 
+/**
+ * {@link http://android-developers.blogspot.fr/2013/02/using-cryptography-to-store-credentials.html}
+ * @author a000cqp
+ *
+ */
 public class RsaEncryptTest extends AndroidTestCase {
 
     public static final String TAG = "RsaEncryptTest";

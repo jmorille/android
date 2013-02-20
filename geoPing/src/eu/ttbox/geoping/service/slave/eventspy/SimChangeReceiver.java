@@ -78,9 +78,9 @@ public class SimChangeReceiver extends BroadcastReceiver {
 					} else if (!prefPhone.equals(phoneNumber)) {
 						Log.w(TAG, "EventSpy SIM Change for new Phone Number : " + phoneNumber);
 						// Send message
-						sendSpyNotifSms(context, phoneNumber);
+						sendSpyNotifSms(context, prefPhone, phoneNumber);
 						// Save as New Phone
-						savePrefsPhoneNumber(prefs, phoneNumber);
+						// NO savePrefsPhoneNumber(prefs, phoneNumber);
 					}
 				}
 			}
@@ -88,11 +88,13 @@ public class SimChangeReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private void sendSpyNotifSms(Context context, String phoneNumber) {
+	private void sendSpyNotifSms(Context context, String prefPhone,  String phoneNumber) {
 		ArrayList<String> phones = SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SIM_CHANGE);
 		if (phones != null) {
+		    Bundle params = new Bundle();
+		    // TODO Manage prefPhone et phoneNumber
 			// Send Sms
-			SpyNotificationHelper.sendEventSpySmsMessage(context, phones, SmsMessageActionEnum.SPY_SIM_CHANGE);
+			SpyNotificationHelper.sendEventSpySmsMessage(context, phones, SmsMessageActionEnum.SPY_SIM_CHANGE, params);
 		}
 	}
 
