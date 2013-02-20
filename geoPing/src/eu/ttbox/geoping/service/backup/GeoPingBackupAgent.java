@@ -8,8 +8,6 @@ import android.app.backup.BackupDataOutput;
 import android.app.backup.SharedPreferencesBackupHelper;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import eu.ttbox.geoping.domain.pairing.PairingOpenHelper;
-import eu.ttbox.geoping.domain.person.PersonOpenHelper;
 
 public class GeoPingBackupAgent extends BackupAgentHelper {
 
@@ -18,9 +16,7 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 	// Object for intrinsic lock
 	public static final Object[] sDataLock = new Object[0];
 
-	// The name of the SharedPreferences file
-	static final String FILENAME_PAIRING_DB = PairingOpenHelper.DATABASE_NAME;
-	static final String FILENAME_PERSON_DB = PersonOpenHelper.DATABASE_NAME;
+	// The name of the SharedPreferences file 
 	static final String PREFS = "eu.ttbox.geoping_preferences";
 
 	// A key to uniquely identify the set of backup data
@@ -45,9 +41,9 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 		synchronized (GeoPingBackupAgent.sDataLock) {
             Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
             Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
-			Log.i(TAG, "----- onBackup Begin Backup --- GeoPing"); 
+			Log.i(TAG, "----- onBackup GeoPing Backup --- Begin"); 
 			super.onBackup(oldState, data, newState);
-			Log.i(TAG, "----- onBackup End   Backup --- GeoPing");
+			Log.i(TAG, "----- onBackup GeoPing   Backup --- End");
             Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
             Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
 		}
@@ -58,9 +54,10 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 		synchronized (GeoPingBackupAgent.sDataLock) {
             Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
 		    Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
-			Log.i(TAG, "----- onRestore Begin Backup --- GeoPing"); 
+		    Log.i(TAG, "----- onRestore GeoPing Backup : Version = " + appVersionCode); 
+			Log.i(TAG, "----- onRestore GeoPing Backup --- Begin"); 
 			super.onRestore(data, appVersionCode, newState);
-			Log.i(TAG, "----- onRestore Begin End --- GeoPing");
+			Log.i(TAG, "----- onRestore GeoPing End --- End");
             Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
             Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
 		}

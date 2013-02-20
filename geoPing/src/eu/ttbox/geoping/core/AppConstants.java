@@ -51,8 +51,10 @@ public class AppConstants {
 
     // public static final String PREFS_KEY_TILE_SOURCE = "KEY_TILE_SOURCE";
 
-    public static final String PREFS_APP_COUNT_LAUGHT = "APP_COUNT_LAUGHT";
-    public static final String PREFS_APP_FIRSTDATE_LAUGHT = "APP_FIRSTDATE_LAUGHT";
+    public static final String PREFS_APP_LAUGHT_COUNT = "APP_LAUGHT_COUNT";
+    public static final String PREFS_APP_LAUGHT_LASTDATE = "APP_LAUGHT_LASTDATE";
+    public static final String PREFS_APP_LAUGHT_LASTVERSION = "APP_LAUGHT_LASTVERSION";
+    public static final String PREFS_APP_LAUGHT_FIRSTDATE = "APP_LAUGHT_FIRSTDATE";
 
     private static long getZeroDate() {
         Calendar cal = Calendar.getInstance();

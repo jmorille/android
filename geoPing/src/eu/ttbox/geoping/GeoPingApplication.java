@@ -74,15 +74,17 @@ public class GeoPingApplication extends Application {
 	private int incrementApplicationLaunchCounter(Context context) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 		// Read previous values
-		int counter = settings.getInt(AppConstants.PREFS_APP_COUNT_LAUGHT, 0);
-		long firstDateLaugth = settings.getLong(AppConstants.PREFS_APP_FIRSTDATE_LAUGHT, Long.MIN_VALUE);
+		int counter = settings.getInt(AppConstants.PREFS_APP_LAUGHT_COUNT, 0);
+// TODO		long lastVersionLaugth = settings.getInt(AppConstants.PREFS_APP_LAUGHT_LASTVERSION, Integer.MIN_VALUE);
+		long firstDateLaugth = settings.getLong(AppConstants.PREFS_APP_LAUGHT_FIRSTDATE, Long.MIN_VALUE);
 		counter++;
 		// Edit
 		SharedPreferences.Editor prefEditor = settings.edit();
-		prefEditor.putInt(AppConstants.PREFS_APP_COUNT_LAUGHT, counter);
+		prefEditor.putInt(AppConstants.PREFS_APP_LAUGHT_COUNT, counter);
+		long now = System.currentTimeMillis();
+		prefEditor.putLong(AppConstants.PREFS_APP_LAUGHT_LASTDATE, now);
 		if (Long.MIN_VALUE == firstDateLaugth) {
-			long now = System.currentTimeMillis();
-			prefEditor.putLong(AppConstants.PREFS_APP_FIRSTDATE_LAUGHT, now);
+			prefEditor.putLong(AppConstants.PREFS_APP_LAUGHT_FIRSTDATE, now);
 		}
 		prefEditor.commit();
 		return counter;

@@ -2,6 +2,7 @@ package eu.ttbox.geoping.domain.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class UpgradeDbHelper {
 
@@ -101,11 +103,19 @@ public class UpgradeDbHelper {
 	}
 
 	public static void writeLineToJson(JsonGenerator g, ContentValues values) {
+		 List<String> ignoreFields = Arrays.asList(new String[]{ PersonColumns.COL_ID});
 		for (Map.Entry<String, Object> keyVal : values.valueSet()) {
 			String colName = keyVal.getKey();
+			if (ignoreFields.contains(colName)) {
+				Log.i(TAG, "Ignore Column : [" + colName + "] for in Ignore Fields List");
+				continue;
+ 			}
+			
 			Object colValue = keyVal.getValue();
 			try {
-				if (colValue instanceof String) {
+				if (colValue ==null) {
+					Log.d(TAG, "Ignore Column : [" + colName + "] for value NULL"  );
+				} else  if (colValue instanceof String) {
 					g.writeStringField(colName, (String) colValue);
 				} else if (colValue instanceof Integer) {
 					g.writeNumberField(colName, (Integer) colValue);

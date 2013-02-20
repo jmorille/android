@@ -16,7 +16,7 @@ public class PersonDbBackupHelper  extends AbstractDbBackupHelper {
     @SuppressWarnings("unused")
     private static final String TAG = "PersonBackupHelper";
 
-    public static final String BACKUP_KEY_PERSON_DB = "BACKUP_KEY_PERSON_DB";
+    public static final String BACKUP_KEY_PERSON_DB = "GEOPING_PERSON_DB";
 
     private PersonDatabase personDatabase;
     private PersonHelper helper;
