@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.ui.map.track.dialog;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -32,7 +33,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
 	private PersonHelper helper;
 
 	private boolean isNotBinding = true;
-	private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser;
+	private  Map<String, GeoTrackOverlay> geoTrackOverlayByUser;
 
 	// Cache
 	PhotoThumbmailCache photoCache;
@@ -45,7 +46,7 @@ public class GeoTrackSelectPersonListAdapter extends android.support.v4.widget.R
 		void onDoAddPerson(Person person);
 	}
 
-	public GeoTrackSelectPersonListAdapter(Context context, Cursor c, int flags, OnActivatedPersonListener mCallBack, HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser) {
+	public GeoTrackSelectPersonListAdapter(Context context, Cursor c, int flags, OnActivatedPersonListener mCallBack,  Map<String, GeoTrackOverlay> geoTrackOverlayByUser) {
 		super(context, R.layout.map_geotrack_select_dialog_list_item, c, flags); // if
 																					// >10
 																					// add

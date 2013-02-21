@@ -1,6 +1,6 @@
 package eu.ttbox.geoping.ui.map.track.dialog;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -53,11 +53,11 @@ public class SelectGeoTrackDialog extends AlertDialog {
         void onNoPerson(SelectGeoTrackDialog dialog );
     }
 
-    public SelectGeoTrackDialog(Context context, LoaderManager loaderManager, OnSelectPersonListener callBack, HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser) {
+    public SelectGeoTrackDialog(Context context, LoaderManager loaderManager, OnSelectPersonListener callBack,  Map<String, GeoTrackOverlay> geoTrackOverlayByUser) {
         this(context, 0, loaderManager, callBack, geoTrackOverlayByUser);
     }
 
-    public SelectGeoTrackDialog(Context context, int theme, LoaderManager loaderManager, OnSelectPersonListener callBack, HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser) {
+    public SelectGeoTrackDialog(Context context, int theme, LoaderManager loaderManager, OnSelectPersonListener callBack,  Map<String, GeoTrackOverlay> geoTrackOverlayByUser) {
         super(context, theme);
         this.loaderManager = loaderManager;
         this.mCallBack = callBack;

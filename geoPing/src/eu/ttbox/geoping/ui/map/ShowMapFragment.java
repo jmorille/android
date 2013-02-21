@@ -3,6 +3,7 @@ package eu.ttbox.geoping.ui.map;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -79,8 +80,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
 	// Overlay
 	private MyLocationOverlay myLocation;
-	// private GeoTrackOverlay geoTrackOverlay;
-	private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser = new HashMap<String, GeoTrackOverlay>();
+	// private GeoTrackOverlay geoTrackOverlay; 
+	private ConcurrentHashMap<String, GeoTrackOverlay> geoTrackOverlayByUser = new ConcurrentHashMap<String, GeoTrackOverlay>();
 
 	// View
 	private RangeTimelineView rangeTimelineBar;

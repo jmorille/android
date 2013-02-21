@@ -4,9 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.security.DigestInputStream;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -66,6 +63,9 @@ public abstract class AbstractDbBackupHelper implements BackupHelper {
         Log.d(TAG, "--- --------------------------------- ---");
         Log.d(TAG, "--- writeNewStateDescription          ---");
         Log.d(TAG, "--- --------------------------------- ---");
+        Log.d(TAG, "--- FileDescriptor : " +  newState.getFileDescriptor());
+        Log.d(TAG, "--- FileDescriptor : " +  newState.toString());
+       
     }
 
     // ===========================================================
