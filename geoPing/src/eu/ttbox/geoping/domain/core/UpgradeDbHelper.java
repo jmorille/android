@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.domain.core;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -102,8 +103,38 @@ public class UpgradeDbHelper {
 		return values;
 	}
 
-	public static void writeLineToJson(JsonGenerator g, ContentValues values) {
-		 List<String> ignoreFields = Arrays.asList(new String[]{ PersonColumns.COL_ID});
+	public static void computeMessageDigester(MessageDigest md, ContentValues values,  List<String> ignoreFields) {
+	    for (Map.Entry<String, Object> keyVal : values.valueSet()) {
+            String colName = keyVal.getKey();
+            if (ignoreFields.contains(colName)) {
+                Log.i(TAG, "Ignore Column : [" + colName + "] for in Ignore Fields List");
+                continue;
+            }
+            Object colValue = keyVal.getValue();
+            byte[]  bytes =  null;
+            if (colValue ==null) {
+                Log.d(TAG, "Ignore Column : [" + colName + "] for value NULL"  );
+            } else  if (colValue instanceof String) {
+                  bytes =  ((String) colValue).getBytes(); 
+            } else if (colValue instanceof Integer) {
+                Integer  val =  ((Integer) colValue) ;
+                bytes = new byte[]{val.byteValue()};
+            } else if (colValue instanceof Long) {
+                Long  val =  ((Long) colValue) ;
+             
+            } else if (colValue instanceof Double) { 
+            } else if (colValue instanceof Boolean) { 
+            } else {
+                Log.w(TAG, "Ignore Column : [" + colName + "] for type " + (colValue != null ? colValue.getClass() : "null (" + colValue + ")"));
+            }
+            if (bytes!=null) {
+                md.update(bytes);
+            }
+	    }
+	}
+	
+	public static void writeLineToJson(JsonGenerator g, ContentValues values,  List<String> ignoreFields ) {
+		
 		for (Map.Entry<String, Object> keyVal : values.valueSet()) {
 			String colName = keyVal.getKey();
 			if (ignoreFields.contains(colName)) {
@@ -200,6 +231,8 @@ public class UpgradeDbHelper {
 		return values;
 	}
 
+ 
+	
 	public static int insertOldRowInNewTable(SQLiteDatabase db, ArrayList<ContentValues> oldRows, String newTableName, List<String> validColumns) {
 		int resultCount = 0;
 		if (oldRows != null && !oldRows.isEmpty()) {

@@ -20,14 +20,14 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 	static final String PREFS = "eu.ttbox.geoping_preferences";
 
 	// A key to uniquely identify the set of backup data
-	static final String BACKUP_KEY_PREFS = "GEOPING_PREFS";  
+	static final String BACKUP_KEY_PREFS = "GEOPING_01_PREFS";  
 
 	// Allocate a helper and add it to the backup agent
 	@Override
 	public void onCreate() { 
-		// Prefs
-		SharedPreferencesBackupHelper helperPrefs = new SharedPreferencesBackupHelper(this, PREFS);
-		addHelper(BACKUP_KEY_PREFS, helperPrefs);
+        // Prefs
+        SharedPreferencesBackupHelper helperPrefs = new SharedPreferencesBackupHelper(this, PREFS);
+        addHelper(BACKUP_KEY_PREFS, helperPrefs);
  		// Database Pairing
 		PairingDbBackupHelper helperDbPairing = new PairingDbBackupHelper(this);
 		addHelper(PairingDbBackupHelper.BACKUP_KEY_PAIRING_DB, helperDbPairing); 

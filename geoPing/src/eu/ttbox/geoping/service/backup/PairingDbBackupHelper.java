@@ -16,7 +16,7 @@ public class PairingDbBackupHelper  extends AbstractDbBackupHelper {
     @SuppressWarnings("unused")
     private static final String TAG = "PairingDbBackupHelper";
 
-    public static final String BACKUP_KEY_PAIRING_DB = "GEOPING_PAIRING_DB";
+    public static final String BACKUP_KEY_PAIRING_DB = "GEOPING_02_PAIRING_DB";
 
     private PairingDatabase pairingDatabase;
     private PairingHelper helper;
@@ -46,7 +46,7 @@ public class PairingDbBackupHelper  extends AbstractDbBackupHelper {
         return cursor;
     }
     
-    public  ContentValues getCursorAsContentValues(Cursor cursor) { 
+    public  ContentValues getCursorAsContentValues(Cursor cursor ) { 
         Pairing entity = helper.getEntity(cursor);
         ContentValues values =   PairingHelper.getContentValues(entity);
         return values;
