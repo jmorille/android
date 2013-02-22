@@ -117,7 +117,7 @@ public class SMSReceiver extends BroadcastReceiver {
 	private void logSmsMessageReceive(Context context,     GeoPingMessage geoMsg) {
 		// Save
 		ContentResolver cr = context.getContentResolver(); 
-		SmsLogSideEnum side = geoMsg.action.isMaster ? SmsLogSideEnum.MASTER : SmsLogSideEnum.SLAVE;
+		SmsLogSideEnum side = geoMsg.action.isMasterConsume ? SmsLogSideEnum.MASTER : SmsLogSideEnum.SLAVE;
 		Uri insertUri = SmsSenderHelper.logSmsMessage( cr,side,   SmsLogTypeEnum.RECEIVE, geoMsg, 1);
 		Log.d(TAG, "Save Log Message : " + insertUri); 
 		// Multi Message

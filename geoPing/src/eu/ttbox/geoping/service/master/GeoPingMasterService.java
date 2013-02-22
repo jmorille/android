@@ -293,7 +293,7 @@ public class GeoPingMasterService extends IntentService {
 		}
 
 		try {
-			Uri logUri = SmsSenderHelper.sendSms(this, SmsLogSideEnum.MASTER, phone, action, params);
+			Uri logUri = SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.MASTER, phone, action, params);
 			isSend = (logUri != null);
 		} catch (IllegalArgumentException e) {
 			Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, getResources().getString(R.string.toast_notif_sended_geoping_smsError, phone + " : " + e.getMessage()));

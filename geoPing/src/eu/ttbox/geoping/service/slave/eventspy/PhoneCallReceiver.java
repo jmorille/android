@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.service.slave.eventspy;
 
-import java.util.ArrayList;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -140,7 +138,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         }
         Log.d(TAG, "EventSpy PhoneState === > : " + message);
         // TODO
-        ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_PHONE_CALL);
+        String[] phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_PHONE_CALL);
         if (phones != null) {
             Bundle params = new Bundle();
             // Send Sms

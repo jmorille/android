@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.service.slave.eventspy;
 
-import java.util.ArrayList;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -89,7 +87,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 	}
 
 	private void sendSpyNotifSms(Context context, String prefPhone,  String phoneNumber) {
-		ArrayList<String> phones = SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SIM_CHANGE);
+	    String[] phones = SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SIM_CHANGE);
 		if (phones != null) {
 		    Bundle params = new Bundle();
 		    // TODO Manage prefPhone et phoneNumber
@@ -99,7 +97,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 	}
 
 	private void printExtras(Bundle extras) {
-		if (extras != null) {
+		if (extras != null) { 
 			for (String key : extras.keySet()) {
 				Object value = extras.get(key);
 				Log.d(TAG, "EventSpy SIM extras : " + key + " = " + value);

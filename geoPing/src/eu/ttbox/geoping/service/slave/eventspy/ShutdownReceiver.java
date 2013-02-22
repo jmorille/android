@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.service.slave.eventspy;
 
-import java.util.ArrayList;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +36,7 @@ public class ShutdownReceiver extends BroadcastReceiver {
 			Log.d(TAG, "### ### EventSpy SHUTDOWN : " + encrypedMsg + " ### ### ");
 			Log.d(TAG, "### ############################### ### ");
 			// Search Phones 
-			ArrayList<String> phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
+			String[] phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_SHUTDOWN);
 			if (phones != null) {
 			    Bundle params = new Bundle();
 			    // Send Sms

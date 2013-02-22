@@ -120,6 +120,8 @@ public class GeoTrackHelper {
 		return bundle;
 	}
 
+	 
+	
 	private static  HelperWrapper<?> getWrapperValues(GeoTrack geoTrack, HelperWrapper<?> initialValues, boolean noHasCheck) {
 		if (geoTrack.id > -1) {
 			initialValues.putLong(GeoTrackColumns.COL_ID, Long.valueOf(geoTrack.id));

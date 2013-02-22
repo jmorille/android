@@ -32,14 +32,14 @@ public enum SmsMessageActionEnum {
 		this.intentAction = intentAction;
 		this.smsAction = smsAction;
 		this.serviceClass = cls;
-		this.isMaster = isMaster;
+		this.isMasterConsume = isMaster;
 		this.labelResourceId = labelStringId;
 	}
 
 	public final String intentAction;
 	public final String smsAction;
 	public final Class<?> serviceClass;
-	public final boolean isMaster;
+	public final boolean isMasterConsume;
 
 	public final int labelResourceId;
 

@@ -46,7 +46,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
 
     private static final String LOCK_NAME = "GeoPingSlaveLocationService";
 
-    public static final String ACTION_FIND_LOCALISATION_AND_SEND_SMS_GEOPING = "ACTION_FIND_LOCALISATION_AND_SEND_SMS_GEOPING";
+    private static final String ACTION_FIND_LOCALISATION_AND_SEND_SMS_GEOPING = "ACTION_FIND_LOCALISATION_AND_SEND_SMS_GEOPING";
 
     private final IBinder binder = new LocalBinder();
 
@@ -138,12 +138,18 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     // Intent Handler
     // ===========================================================
 
-    public static void runFindLocationAndSendInService(Context context, String phone, Bundle params) {
+    public static void runFindLocationAndSendInService(Context context, SmsMessageActionEnum smsAction , String[] phone, Bundle params) {
         // PowerManager.WakeLock lock = getLock(context);
         // lock.acquire();
+        if (!smsAction.isMasterConsume) {
+            throw new RuntimeException("It shoud be a Master consumer GeoPing Action Service for : " + smsAction);
+        }
+        
         Intent intent = new Intent(context, GeoPingSlaveLocationService.class);
         intent.putExtra(Intents.EXTRA_SMS_PHONE, phone);
         intent.putExtra(Intents.EXTRA_SMS_PARAMS, params);
+        intent.putExtra(Intents.EXTRA_SMS_ACTION, smsAction.intentAction);
+               
         intent.setAction(ACTION_FIND_LOCALISATION_AND_SEND_SMS_GEOPING);
         context.startService(intent);
     }
@@ -152,10 +158,13 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
         if (ACTION_FIND_LOCALISATION_AND_SEND_SMS_GEOPING.equals(action)) {
-            // GeoPing Request
-            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+            String[] phone = intent.getStringArrayExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-            registerGeoPingRequest(phone, params);
+            // Action
+            // GeoPing Request
+            String smsAction = intent.getStringExtra(Intents.EXTRA_SMS_ACTION);
+            SmsMessageActionEnum smsActionMsg = SmsMessageActionEnum.getByIntentName(smsAction);
+            registerGeoPingRequest(smsActionMsg, phone, params);
         }
 
     }
@@ -209,7 +218,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     // Geocoding Request
     // ===========================================================
 
-    public boolean registerGeoPingRequest(String phoneNumber, Bundle params) {
+    public boolean registerGeoPingRequest(SmsMessageActionEnum smsAction ,  String[] phoneNumber, Bundle params) {
         boolean locProviderEnabled = false;
         synchronized (multiGeoRequestListener) {
             // Acquire Lock
@@ -218,7 +227,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
             Log.d(TAG, "*** Lock Acquire: " + LOCK_NAME + " " + lock);
             // Register request
             Location initLastLoc = myLocation.getLastKnownLocation();
-            GeoPingRequest request = new GeoPingRequest(phoneNumber, params); 
+            GeoPingRequest request = new GeoPingRequest(  smsAction, phoneNumber, params); 
             multiGeoRequestListener.add(request); 
             
             // TODO Bad for multi request
@@ -290,8 +299,8 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     }
 
     public class GeoPingRequest implements Callable<Boolean>, LocationListener {
-
-        private String smsPhoneNumber;
+        private SmsMessageActionEnum smsAction;
+        private  String[] smsPhoneNumber;
         private Bundle params;
 
         private int accuracyExpected = -1;
@@ -303,8 +312,9 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
             super();
         }
 
-        public GeoPingRequest(String phoneNumber, Bundle params) {
+        public GeoPingRequest(SmsMessageActionEnum smsAction,  String[] phoneNumber, Bundle params) {
             super();
+            this.smsAction = smsAction;
             this.smsPhoneNumber = phoneNumber;
             this.params = params;
             this.accuracyExpected = SmsMessageLocEnum.ACCURACY.readInt(params, -1);
@@ -331,7 +341,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
             int[] cellId = getCellId();
             // Location
             if (lastLocation != null) {
-                sendSmsLocation(smsPhoneNumber, lastLocation);
+                sendSmsLocation(smsAction, smsPhoneNumber, lastLocation, params);
                 isDone = Boolean.TRUE;
             }
             return isDone;
@@ -378,14 +388,20 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     // Sender Sms message
     // ===========================================================
 
-    private void sendSmsLocation(String phone, Location location) {
+    private void sendSmsLocation(SmsMessageActionEnum smsAction,  String[] phones, Location location, Bundle extrasBundles) {
         GeoTrack geotrack = new GeoTrack(null, location);
         geotrack.batteryLevelInPercent = batterLevelInPercent;
         Bundle params = GeoTrackHelper.getBundleValues(geotrack); 
-        SmsSenderHelper.sendSms(this, SmsLogSideEnum.SLAVE,  phone, SmsMessageActionEnum.ACTION_GEO_LOC, params);
-        if (saveInLocalDb) {
-            geotrack.requesterPersonPhone = phone;
-            saveInLocalDb(geotrack);
+        // Add extrasBundles to params
+        if (extrasBundles!=null && !extrasBundles.isEmpty()) {
+            params.putAll(extrasBundles);
+        }
+        for (String phone : phones) {
+        SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.SLAVE,  phone, smsAction, params);
+            if (saveInLocalDb) {
+                geotrack.requesterPersonPhone = phone;
+                saveInLocalDb(geotrack);
+            }
         }
     }
 
