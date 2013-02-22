@@ -6,66 +6,71 @@ import android.database.sqlite.SQLiteOpenHelper;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 
 public class GeoTrackOpenHelper extends SQLiteOpenHelper {
-    
-    public static final String TAG = "GeoTrackOpenHelper";
-    
-    public static final String DATABASE_NAME = "geoping.db";
-    public static final int DATABASE_VERSION = 6;
 
-    // ===========================================================
-    // Table
-    // ===========================================================
+	public static final String TAG = "GeoTrackOpenHelper";
 
-    private static final String CREATE_BDD = new StringBuffer("CREATE TABLE ").append(GeoTrackDatabase.TABLE_TRACK_POINT).append(" (")//
-            .append(GeoTrackColumns.COL_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")//
-            .append(GeoTrackColumns.COL_PERSON_ID).append(" INTEGER   NULL, ")// /
-            .append(GeoTrackColumns.COL_REQUESTER_PERSON).append(" TEXT, ")// /
-            .append(GeoTrackColumns.COL_PHONE).append(" TEXT NOT NULL, ")// /
-            .append(GeoTrackColumns.COL_PHONE_MIN_MATCH).append(" TEXT NOT NULL, ")// /
-            .append(GeoTrackColumns.COL_PROVIDER).append(" TEXT NOT NULL, ")// /
-            .append(GeoTrackColumns.COL_TIME).append(" INTEGER NOT NULL, ")// /
-            .append(GeoTrackColumns.COL_TIME_MIDNIGHT).append(" INTEGER NOT NULL, ")// /
-            .append(GeoTrackColumns.COL_LATITUDE_E6).append(" INTEGER NOT NULL, ")// /
-            .append(GeoTrackColumns.COL_LONGITUDE_E6).append(" INTEGER NOT NULL, ")// /
-            .append(GeoTrackColumns.COL_ACCURACY).append(" INTEGER NOT NULL, ")// /
-            .append(GeoTrackColumns.COL_ALTITUDE).append(" INTEGER, ")// /
-            .append(GeoTrackColumns.COL_BEARING).append(" INTEGER, ")// /
-            .append(GeoTrackColumns.COL_SPEED).append(" INTEGER, ")// /
-            .append(GeoTrackColumns.COL_BATTERY_LEVEL).append(" INTEGER, ")// /
-            .append(GeoTrackColumns.COL_ADDRESS).append(" TEXT ")// /
-            .append(" );").toString();
+	public static final String DATABASE_NAME = "geoping.db";
+	public static final int DATABASE_VERSION = 7;
 
-    // ===========================================================
-    // Index
-    // ===========================================================
+	// ===========================================================
+	// Table
+	// ===========================================================
 
-    private static final String INDEX_TRACK_POINT_AK = "IDX_TRACKPOINT_AK";
-    private static final String CREATE_INDEX_AK = "CREATE INDEX IF NOT EXISTS " + INDEX_TRACK_POINT_AK + " on " + GeoTrackDatabase.TABLE_TRACK_POINT + "(" //
-            + GeoTrackColumns.COL_PHONE + ", " //
-            + GeoTrackColumns.COL_TIME //
-            + ");";
+	private static final String CREATE_BDD = "CREATE TABLE " + GeoTrackDatabase.TABLE_TRACK_POINT //
+			+ "( " + GeoTrackColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " //
+			+ ", " + GeoTrackColumns.COL_PERSON_ID + " INTEGER   NULL, " //  
+			+ ", " + GeoTrackColumns.COL_REQUESTER_PERSON + " TEXT, " //  
+			+ ", " + GeoTrackColumns.COL_PHONE + " TEXT NOT NULL, " //  
+			+ ", " + GeoTrackColumns.COL_PHONE_MIN_MATCH + " TEXT NOT NULL, " //
+			+ ", " + GeoTrackColumns.COL_TIME_MIDNIGHT + " INTEGER NOT NULL, " //
+			// Location
+			+ ", " + GeoTrackColumns.COL_TIME + " INTEGER NOT NULL, " //
+			+ ", " + GeoTrackColumns.COL_PROVIDER + " TEXT NOT NULL, " //
+			+ ", " + GeoTrackColumns.COL_LATITUDE_E6 + " INTEGER NOT NULL, " //
+			+ ", " + GeoTrackColumns.COL_LONGITUDE_E6 + " INTEGER NOT NULL, " //
+			+ ", " + GeoTrackColumns.COL_ACCURACY + " INTEGER NOT NULL, " //
+			+ ", " + GeoTrackColumns.COL_ALTITUDE + " INTEGER, " //
+			+ ", " + GeoTrackColumns.COL_BEARING + " INTEGER, " //
+			+ ", " + GeoTrackColumns.COL_SPEED + " INTEGER, " //
+			+ ", " + GeoTrackColumns.COL_ADDRESS + " TEXT " //
+			// Other
+			+ ", " + GeoTrackColumns.COL_BATTERY_LEVEL + " INTEGER, " //
+			// Event
+			+ ", " + GeoTrackColumns.COL_EVT_TIME + " INTEGER, " //
+			+ ", " + GeoTrackColumns.COL_EVT_TYPE + " TEXT " // 
+			+ " );";
 
-    // ===========================================================
-    // Constructors
-    // ===========================================================
+	// ===========================================================
+	// Index
+	// ===========================================================
 
-    public GeoTrackOpenHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
+	private static final String INDEX_TRACK_POINT_AK = "IDX_TRACKPOINT_AK";
+	private static final String CREATE_INDEX_AK = "CREATE INDEX IF NOT EXISTS " + INDEX_TRACK_POINT_AK + " on " + GeoTrackDatabase.TABLE_TRACK_POINT + "(" //
+			+ GeoTrackColumns.COL_PHONE + ", " //
+			+ GeoTrackColumns.COL_TIME //
+			+ ");";
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-//        Log.d(TAG, CREATE_BDD);
-        db.execSQL(CREATE_BDD);
-//        Log.d(TAG, CREATE_INDEX_AK);
-         db.execSQL(CREATE_INDEX_AK);
-    }
+	// ===========================================================
+	// Constructors
+	// ===========================================================
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { 
-        db.execSQL("DROP INDEX IF EXISTS " + INDEX_TRACK_POINT_AK + ";");
-        db.execSQL("DROP TABLE IF EXISTS " + GeoTrackDatabase.TABLE_TRACK_POINT + ";"); 
-        onCreate(db);
-    }
+	public GeoTrackOpenHelper(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		// Log.d(TAG, CREATE_BDD);
+		db.execSQL(CREATE_BDD);
+		// Log.d(TAG, CREATE_INDEX_AK);
+		db.execSQL(CREATE_INDEX_AK);
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		db.execSQL("DROP INDEX IF EXISTS " + INDEX_TRACK_POINT_AK + ";");
+		db.execSQL("DROP TABLE IF EXISTS " + GeoTrackDatabase.TABLE_TRACK_POINT + ";");
+		onCreate(db);
+	}
 
 }

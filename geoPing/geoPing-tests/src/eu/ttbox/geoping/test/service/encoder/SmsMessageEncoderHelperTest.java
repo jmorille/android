@@ -60,7 +60,7 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
                     .setBearing(257);
         }
         Bundle bundle = convertAsBundle(geoTrack);
-        GeoPingMessage result = new GeoPingMessage("+33612131415", SmsMessageActionEnum.ACTION_GEO_LOC, bundle);
+        GeoPingMessage result = new GeoPingMessage("+33612131415", SmsMessageActionEnum.LOC, bundle);
         return result;
     }
 
@@ -76,7 +76,7 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
             geoTrack.setBearing(0);
         }
         Bundle bundle = convertAsBundle(geoTrack);
-        GeoPingMessage result = new GeoPingMessage("+33612131415", SmsMessageActionEnum.ACTION_GEO_LOC, bundle);
+        GeoPingMessage result = new GeoPingMessage("+33612131415", SmsMessageActionEnum.LOC, bundle);
         return result;
     }
 
@@ -94,7 +94,7 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
 
             for (GeoTrack geoTrack : geoTracks) {
                 Bundle params = convertAsBundle(geoTrack);
-                GeoPingMessage msg = new GeoPingMessage("+33612131415", SmsMessageActionEnum.ACTION_GEO_LOC, params);
+                GeoPingMessage msg = new GeoPingMessage("+33612131415", SmsMessageActionEnum.LOC, params);
                 for (int radix : new int[] { 10, 36, IntegerEncoded.MAX_RADIX }) {
                     doEncodeDecodeTest(msg, String.format("Encoded Place %s %s radix=%s", place.name(), geoTrack.provider, radix), radix, encryptor);
                 }
@@ -194,7 +194,7 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
         assertEquals(1, decoded.multiMessages.size());
         GeoPingMessage decoded2 = decoded.multiMessages.get(0);
         assertNotNull(decoded2);
-        assertEquals(SmsMessageActionEnum.ACTION_GEO_LOC, decoded2.action);
+        assertEquals(SmsMessageActionEnum.LOC, decoded2.action);
         assertNotNull(decoded2.params);
     }
 
@@ -211,8 +211,8 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
             GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
             Log.d(TAG, String.format("Extract %s from : %s", decoded, msg));
             // Message 02
-            SmsMessageActionEnum[] expMultiEctions = new SmsMessageActionEnum[] { SmsMessageActionEnum.ACTION_GEO_LOC  };
-            doValidateMultiMessages(decoded, SmsMessageActionEnum.ACTION_GEO_LOC, expMultiEctions);
+            SmsMessageActionEnum[] expMultiEctions = new SmsMessageActionEnum[] { SmsMessageActionEnum.LOC  };
+            doValidateMultiMessages(decoded, SmsMessageActionEnum.LOC, expMultiEctions);
         }
     }
     public void testDecodeMultiMessageMultiTriiLoc() {
@@ -228,15 +228,15 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
             GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
             Log.d(TAG, String.format("Extract %s from : %s", decoded, msg));
             // Message 02
-            SmsMessageActionEnum[] expMultiEctions = new SmsMessageActionEnum[] {    SmsMessageActionEnum.ACTION_GEO_LOC,  SmsMessageActionEnum.ACTION_GEO_LOC  };
-            doValidateMultiMessages(decoded, SmsMessageActionEnum.ACTION_GEO_LOC, expMultiEctions);
+            SmsMessageActionEnum[] expMultiEctions = new SmsMessageActionEnum[] {    SmsMessageActionEnum.LOC,  SmsMessageActionEnum.LOC  };
+            doValidateMultiMessages(decoded, SmsMessageActionEnum.LOC, expMultiEctions);
         }
     }
 
     private void doValidateMultiMessages(GeoPingMessage decoded, SmsMessageActionEnum expMainAction, SmsMessageActionEnum[] expMultiActions) {
         // Main Messages
         assertNotNull(decoded.action);
-        assertEquals(SmsMessageActionEnum.ACTION_GEO_LOC, decoded.action);
+        assertEquals(SmsMessageActionEnum.LOC, decoded.action);
         // Check Expected Size
         assertNotNull(decoded.multiMessages);
         assertEquals(expMultiActions.length, decoded.multiMessages.size());

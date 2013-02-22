@@ -134,14 +134,14 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
                 Pairing pairing = getPairingByPhone(phone);
                 PairingAuthorizeTypeEnum authorizeType = pairing.authorizeType;
                 boolean showNotification = pairing.showNotification;
-                if (intent.getBooleanExtra(Intents.EXTRA_INTERNAL_BOOL, false)) {
-                    // Is Internal Direct Order
-                    showNotification = false;
-                    authorizeType = PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS;
-                    Log.i(TAG, "Internal Order, bypass user preference and Hide Notif and Authorize anyway");
-                    // Show Toast
-
-                }
+//                if (intent.getBooleanExtra(Intents.EXTRA_INTERNAL_BOOL, false)) {
+//                    // Is Internal Direct Order
+//                    showNotification = false;
+//                    authorizeType = PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS;
+//                    Log.i(TAG, "Internal Order, bypass user preference and Hide Notif and Authorize anyway");
+//                    // Show Toast
+//
+//                }
                 switch (authorizeType) {
                 case AUTHORIZE_NEVER:
                     Log.i(TAG, "Ignore Geoping (Never Authorize) request from phone " + phone);
@@ -152,7 +152,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
                     break;
                 case AUTHORIZE_ALWAYS:
                     Log.i(TAG, "Accept Geoping (always Authorize) request from phone " + phone);
-                    GeoPingSlaveLocationService.runFindLocationAndSendInService(this , SmsMessageActionEnum.ACTION_GEO_LOC, new String[] { phone }, params);
+                    GeoPingSlaveLocationService.runFindLocationAndSendInService(this , SmsMessageActionEnum.LOC, new String[] { phone }, params);
                     // Display Notification GeoPing
                     if (showNotification) {
                         showNotificationGeoPing(pairing, params, true);
@@ -264,7 +264,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
         switch (notifType) {
         case GEOPING_REQUEST_CONFIRM:
             if (positifResponse) {
-                GeoPingSlaveLocationService.runFindLocationAndSendInService(this, SmsMessageActionEnum.ACTION_GEO_LOC , new String[] {  phone } , params);
+                GeoPingSlaveLocationService.runFindLocationAndSendInService(this, SmsMessageActionEnum.LOC , new String[] {  phone } , params);
             }
             break;
         default:

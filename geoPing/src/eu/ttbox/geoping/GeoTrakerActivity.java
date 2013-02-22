@@ -349,7 +349,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
             if (destinationAddress != null && destinationAddress.length() > 0) {
                 GeoTrack geotrack = new GeoTrack(null, location);
                 Bundle params = GeoTrackHelper.getBundleValues(geotrack);
-                String encoded = SmsMessageIntentEncoderHelper.encodeSmsMessage(SmsMessageActionEnum.ACTION_GEO_LOC, params);
+                String encoded = SmsMessageIntentEncoderHelper.encodeSmsMessage(SmsMessageActionEnum.LOC, params);
                 if (encoded != null && encoded.length() > 0) {
                     SmsManager.getDefault().sendTextMessage(destinationAddress, null, encoded, null, null);
                 }

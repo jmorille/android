@@ -11,11 +11,13 @@ import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
 public enum SmsMessageActionEnum {
 
 	// Slave
+	// GEOPING_REQUEST_AS_GMAP("GMap",  Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER, GeoPingSlaveService.class, false, R.string.sms_action_geoping_request), //
 	GEOPING_REQUEST("WRY", Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER, GeoPingSlaveService.class, false, R.string.sms_action_geoping_request), //
 	ACTION_GEO_PAIRING("PAQ", Intents.ACTION_SMS_PAIRING_RESQUEST, GeoPingSlaveService.class, false, R.string.sms_action_pairing_request), //
 
 	// Master
-	ACTION_GEO_LOC("LOC", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geoping_response), //
+	LOC("LOC", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geoping_response), //
+	LOC_DECLARATION("lod", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geoping_response), //
 	ACTION_GEO_PAIRING_RESPONSE("PAR", Intents.ACTION_SMS_PAIRING_RESPONSE, GeoPingMasterService.class, true, R.string.sms_action_pairing_response), //
 	// Spy Event Notif
 	SPY_SHUTDOWN("esd", Intents.ACTION_SMS_EVTSPY_SHUTDOWN, GeoPingMasterService.class, true, R.string.sms_action_spyevt_shutdown), //
@@ -47,8 +49,8 @@ public enum SmsMessageActionEnum {
 	// Conversion Init
 	// ===========================================================
 
-	static HashMap<String, SmsMessageActionEnum> bySmsCodeNames;
-	static HashMap<String, SmsMessageActionEnum> byIntentNames;
+	static final HashMap<String, SmsMessageActionEnum> bySmsCodeNames;
+	static final HashMap<String, SmsMessageActionEnum> byIntentNames;
 
 	static {
 		SmsMessageActionEnum[] values = SmsMessageActionEnum.values();

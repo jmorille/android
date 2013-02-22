@@ -44,7 +44,7 @@ public class SmsMessageIntentEncoderHelperTest extends AndroidTestCase {
         // Create Message from 2012-09-08 18:19:20,021
         GeoTrack geotrack = getMessageLoc("gps");
         Bundle params = GeoTrackHelper.getBundleValues(geotrack);
-        String encryped = SmsMessageIntentEncoderHelper.encodeSmsMessage(SmsMessageActionEnum.ACTION_GEO_LOC, params);
+        String encryped = SmsMessageIntentEncoderHelper.encodeSmsMessage(SmsMessageActionEnum.LOC, params);
         Log.d(TAG, String.format("Sms Encoded Message (%s chars) : %s", encryped.length(), encryped));
         Intent intent =   SmsMessageIntentEncoderHelper.decodeAsIntent(getContext(), PHONE, encryped);
         Log.d(TAG, String.format("Sms Decoded Message (action: %s)", intent.getAction()));

@@ -35,6 +35,10 @@ public class GeoTrack implements Comparable<GeoTrack>{
     public int accuracy = -1;
     public int bearing = -1;
     public int speed = -1;
+    
+    // Event
+    public long eventTime = AppConstants.UNSET_TIME;
+    public String eventType;
 
     private boolean hasAltitude = false;
 //    private boolean hasAccuracy = false;
@@ -140,6 +144,8 @@ public class GeoTrack implements Comparable<GeoTrack>{
         this.time = time;
         return this;
     }
+    
+    
 
     public double getLatitude() {
         return latitudeE6 / AppConstants.E6;
@@ -267,15 +273,30 @@ public class GeoTrack implements Comparable<GeoTrack>{
         return this;
     }
     
+    
+    public GeoTrack setEventTime(long time) {
+        this.eventTime = time;
+        return this;
+    }
+    
+
+    public GeoTrack setEventType(String eventType) {
+		this.eventType = eventType;
+		 return this;
+	}
+
+    
     // ===========================================================
     // Setter Value Test
     // ===========================================================
 
 
-    public boolean hasTime() {
+	public boolean hasTime() {
         return  time != AppConstants.UNSET_TIME;
     }
-    
+	public boolean hasEventTime() {
+        return  eventTime != AppConstants.UNSET_TIME;
+    }
     
     public boolean hasProvider() {
         return provider != null;
@@ -334,6 +355,10 @@ public class GeoTrack implements Comparable<GeoTrack>{
     // Business
     // ===========================================================
 
+    public boolean isValid() {
+    	return hasLatitude()&& hasLongitude();
+    }
+    
     private void clearLatLngCache() {
         cachedGeoPoint = null;
         cachedZoomLevelComputeCache = null;

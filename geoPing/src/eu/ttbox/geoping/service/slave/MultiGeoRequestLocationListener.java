@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.service.slave;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import android.location.Location;
@@ -9,11 +10,11 @@ import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService.GeoPingRequest
 
 public class MultiGeoRequestLocationListener implements LocationListener {
 
-	private ConcurrentSkipListSet<GeoPingRequest> geoPingRequestList;
+	private ConcurrentLinkedQueue<GeoPingRequest> geoPingRequestList;
 
 	public MultiGeoRequestLocationListener() {
 		super();
-		this.geoPingRequestList = new ConcurrentSkipListSet<GeoPingRequest>();
+		this.geoPingRequestList = new ConcurrentLinkedQueue<GeoPingRequest>();
 	}
 
 	@Override

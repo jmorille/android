@@ -58,7 +58,7 @@ public class Intents {
 
 	public static final String EXTRA_DATA_URI = "EXTRA_DATA_URI";
 
-	public static final String EXTRA_INTERNAL_BOOL = "EXTRA_INTERNAL_BOOL";
+//	public static final String EXTRA_INTERNAL_BOOL = "EXTRA_INTERNAL_BOOL";
 
 	public static final String EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL = "EXTRA_AUTHORIZE_PHONE_TYPE_ORDINAL";
 
@@ -205,15 +205,15 @@ public class Intents {
 		return intent;
 	}
 
-	public static Intent sendSmsGeoPingResponse(Context context, String phoneNumber, boolean internalNotif) {
-		Intent intent = new Intent(context, GeoPingSlaveService.class) //
-				.setAction(SmsMessageActionEnum.GEOPING_REQUEST.intentAction)//
-				.putExtra(EXTRA_SMS_PHONE, phoneNumber);
-		if (internalNotif) {
-			intent.putExtra(EXTRA_INTERNAL_BOOL, true);
-		}
-		return intent;
-	}
+//	public static Intent sendSmsGeoPingResponse(Context context, String phoneNumber, boolean internalNotif) {
+//		Intent intent = new Intent(context, GeoPingSlaveService.class) //
+//				.setAction(SmsMessageActionEnum.GEOPING_REQUEST.intentAction)//
+//				.putExtra(EXTRA_SMS_PHONE, phoneNumber);
+//		if (internalNotif) {
+//			intent.putExtra(EXTRA_INTERNAL_BOOL, true);
+//		}
+//		return intent;
+//	}
 
 	// ===========================================================
 	// Navigation

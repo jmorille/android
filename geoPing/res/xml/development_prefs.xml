@@ -8,18 +8,20 @@
         android:summaryOff="@string/prefs_sms_delete_onMessage_summaryOff"
         android:summaryOn="@string/prefs_sms_delete_onMessage_summaryOn"
         android:title="@string/prefs_sms_delete_onMessage" />
-    
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="addBlocked"
         android:title="@string/prefs_add_blocked" />
 
     <PreferenceCategory android:title="@string/prefs_spynotif_title" >
-        <EditTextPreference
+        <eu.ttbox.geoping.ui.prefs.comp.IntEditTextPreference
             android:defaultValue="5000"
             android:key="spyEventShutdownSleepInMs"
+            android:numeric="integer"
             android:title="@string/prefs_spynotif_shutdown_sleep_in_ms" />
+
         <EditTextPreference
+            android:inputType="phone"
             android:key="spyEventSimChangePhoneNumber"
             android:title="@string/prefs_spynotif_changed_phonenumber" />
     </PreferenceCategory>

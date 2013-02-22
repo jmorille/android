@@ -149,14 +149,6 @@ public class GeoPingMasterService extends IntentService {
 					"HandleIntent", // Action
 					"SMS_PAIRING_RESQUEST", // Label
 					0); // Value
-		} else if (Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER.equals(action)) {
-			consumeGeoPingResponse(intent.getExtras());
-			// Tracker
-			// tracker.trackPageView("/action/SMS_GEOPING_RESPONSE");
-			tracker.trackEvent("Intents", // Category
-					"HandleIntent", // Action
-					"SMS_GEOPING_RESPONSE", // Label
-					0); // Value
 		} else if (Intents.ACTION_SMS_PAIRING_RESPONSE.equals(action)) {
 			String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
 			Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
@@ -168,18 +160,37 @@ public class GeoPingMasterService extends IntentService {
 					"HandleIntent", // Action
 					"SMS_PAIRING_RESPONSE", // Label
 					0); // Value
-		} else if (Intents.ACTION_SMS_EVTSPY_PHONE_CALL.equals(action)) {
-			// TODO
-			Log.w(TAG, "--- ------------------------------------ ---");
-			Log.w(TAG, "--- Not managed EventSpy response : " + action + " ---");
-			Log.w(TAG, "--- ------------------------------------ ---");
-			printExtras(intent.getExtras());
-			Log.w(TAG, "--- ------------------------------------ ---");
-		} else { 
-			Log.w(TAG, "--- ------------------------------------ ---");
-			Log.w(TAG, "--- Not managed response : " + action + " ---");
-			printExtras(intent.getExtras());
-			Log.w(TAG, "--- ------------------------------------ ---");
+		} else {
+			SmsMessageActionEnum actionEnum = SmsMessageActionEnum.getByIntentName(action);
+			if (actionEnum != null) {
+				switch (actionEnum) {
+				case SPY_SHUTDOWN:
+					// TODO Display Notification
+					break;
+				case SPY_SIM_CHANGE:
+					// TODO Add Spy Person in DB for register next Data
+					// TODO consumeSimChange(bundle);
+				case SPY_BOOT:
+				case SPY_LOW_BATTERY:
+				case SPY_PHONE_CALL:
+				case LOC_DECLARATION:	
+				case LOC:
+					consumeGeoPingResponse(actionEnum, intent.getExtras());
+					break;
+				default:
+					Log.w(TAG, "--- ------------------------------------ ---");
+					Log.w(TAG, "--- Not managed EventSpy response : " + action + " ---");
+					Log.w(TAG, "--- ------------------------------------ ---");
+					printExtras(intent.getExtras());
+					Log.w(TAG, "--- ------------------------------------ ---");
+					break;
+				}
+				// Tracker
+				tracker.trackEvent("Intents", // Category
+						"HandleIntent", // Action
+						actionEnum.name(), // Label
+						0); // Value
+			}
 		}
 
 	}
@@ -191,7 +202,7 @@ public class GeoPingMasterService extends IntentService {
 				Log.d(TAG, "--- Intent extras : " + key + " = " + value);
 			}
 		} else {
-			Log.d(TAG, "--- Intent extras : NONE"  );
+			Log.d(TAG, "--- Intent extras : NONE");
 		}
 	}
 
@@ -307,21 +318,34 @@ public class GeoPingMasterService extends IntentService {
 	}
 
 	// ===========================================================
+	// Consume Alert Change Sim
+	// ===========================================================
+	private boolean consumeSimChange(Bundle bundle) {
+		boolean isConsume = false;
+		String phone = bundle.getString(Intents.EXTRA_SMS_PHONE);
+
+		return isConsume;
+	}
+
+	// ===========================================================
 	// Consume Localisation
 	// ===========================================================
 
-	private boolean consumeGeoPingResponse(Bundle bundle) {
+	private boolean consumeGeoPingResponse(SmsMessageActionEnum actionEnum, Bundle bundle) {
 		boolean isConsume = false;
 		String phone = bundle.getString(Intents.EXTRA_SMS_PHONE);
 		Bundle params = bundle.getBundle(Intents.EXTRA_SMS_PARAMS);
 		GeoTrack geoTrack = GeoTrackHelper.getEntityFromBundle(params);
 		geoTrack.setPhone(phone);
+		if(!SmsMessageActionEnum.LOC.equals(actionEnum)) {
+			geoTrack.eventType = actionEnum.name();
+		}
 		if (geoTrack != null) {
-			if (!geoTrack.hasPhone()) {
-
+ 			ContentValues values = GeoTrackHelper.getContentValues(geoTrack);
+			Uri uri = null;
+			if (!geoTrack.isValid()) {
+				uri = getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
 			}
-			ContentValues values = GeoTrackHelper.getContentValues(geoTrack);
-			Uri uri = getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
 			if (uri != null) {
 				Log.d(TAG, String.format("Send Broadcast Notification for New GeoTrack %s ", uri));
 				// BroadCast Response

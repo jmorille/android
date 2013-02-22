@@ -19,6 +19,8 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.PairingProvider;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
 
 /**
  * {link http://www.vogella.com/articles/AndroidWidgets/article.html}
@@ -66,9 +68,10 @@ public class PairingWidgetProvider extends AppWidgetProvider {
             final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
             final String phoneNumber = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             // Send it
-            Intent intentGeoPing = Intents.sendSmsGeoPingResponse(context, phoneNumber, true);
-            context.startService(intentGeoPing);
-            // Display Notif
+//            Intent intentGeoPing = Intents.sendSmsGeoPingResponse(context, phoneNumber, true);
+//            context.startService(intentGeoPing);
+			 GeoPingSlaveLocationService.runFindLocationAndSendInService(context , SmsMessageActionEnum.LOC_DECLARATION, new String[] { phoneNumber }, null);
+             // Display Notif
             NotifToasts.showToastSendGeoPingResponse(context, phoneNumber);
          }else if (AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED.equals(action)) {
              // TODO
