@@ -17,7 +17,7 @@ public enum SmsMessageActionEnum {
 
 	// Master
 	LOC("LOC", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geoping_response), //
-	LOC_DECLARATION("lod", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geoping_response), //
+	LOC_DECLARATION("lod", Intents.ACTION_SMS_GEOPING_DECLARATION_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geoping_declaration), //
 	ACTION_GEO_PAIRING_RESPONSE("PAR", Intents.ACTION_SMS_PAIRING_RESPONSE, GeoPingMasterService.class, true, R.string.sms_action_pairing_response), //
 	// Spy Event Notif
 	SPY_SHUTDOWN("esd", Intents.ACTION_SMS_EVTSPY_SHUTDOWN, GeoPingMasterService.class, true, R.string.sms_action_spyevt_shutdown), //
@@ -51,18 +51,23 @@ public enum SmsMessageActionEnum {
 
 	static final HashMap<String, SmsMessageActionEnum> bySmsCodeNames;
 	static final HashMap<String, SmsMessageActionEnum> byIntentNames;
+	static final HashMap<String, SmsMessageActionEnum> byDbCodes;
 
 	static {
 		SmsMessageActionEnum[] values = SmsMessageActionEnum.values();
 		HashMap<String, SmsMessageActionEnum> smsCodes = new HashMap<String, SmsMessageActionEnum>(values.length);
 		HashMap<String, SmsMessageActionEnum> intentNames = new HashMap<String, SmsMessageActionEnum>(values.length);
+		HashMap<String, SmsMessageActionEnum> dbCodesNames = new HashMap<String, SmsMessageActionEnum>(values.length);
 		for (SmsMessageActionEnum field : values) {
+			// DbCodes
+			dbCodesNames.put(field.name(), field);
 			// Sms Code
 			addAndCheckUnique(smsCodes, field, field.smsAction, true);
 			// intent name
 			addAndCheckUnique(intentNames, field, field.intentAction, false);
 		}
 		// Affect
+		byDbCodes = dbCodesNames;
 		bySmsCodeNames = smsCodes;
 		byIntentNames = intentNames;
 	}
@@ -105,7 +110,7 @@ public enum SmsMessageActionEnum {
 	}
 
 	public static SmsMessageActionEnum getByDbCode(String dbCode) {
-		return SmsMessageActionEnum.valueOf(dbCode);
+		return byDbCodes.get(dbCode);
 	}
 
 	// ===========================================================

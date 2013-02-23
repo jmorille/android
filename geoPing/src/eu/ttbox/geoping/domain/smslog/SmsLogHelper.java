@@ -91,6 +91,10 @@ public class SmsLogHelper {
 		String actionValue = cursor.getString(actionIdx);
 		return SmsMessageActionEnum.getByDbCode(actionValue);
 	}
+	public String getSmsMessageActionString(Cursor cursor) {
+		String actionValue = cursor.getString(actionIdx);
+		return actionValue;
+	}
 
     public SmsLogSideEnum getSmsLogSideEnum(Cursor cursor) {
         int key = cursor.getInt(smsLogSideIdx);

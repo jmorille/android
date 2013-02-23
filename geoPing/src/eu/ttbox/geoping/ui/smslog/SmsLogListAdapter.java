@@ -51,7 +51,12 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         holder.smsType.setImageDrawable(iconType);
         // Text
         SmsMessageActionEnum action = helper.getSmsMessageActionEnum(cursor);
-        String actionLabel = getSmsActionLabel(action);
+        String actionLabel;
+        if (action!=null) {
+        	  actionLabel = getSmsActionLabel(action); 
+        } else {
+        	 actionLabel = helper.getSmsMessageActionString(cursor);
+        }
         holder.actionText.setText(actionLabel);
         // Phone
         helper.setTextSmsLogPhone(holder.phoneText, cursor);

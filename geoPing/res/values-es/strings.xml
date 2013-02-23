@@ -25,7 +25,7 @@
     <!-- GeoTrack Notification -->
     <string name="notif_geoping">GeoPing</string>
     <string name="notif_click_to_accept">(Aceptar)</string>
-    <string name="notif_geoping_response">Estoy aqui</string>
+    <string name="notif_geoping_response">Estoy aquí</string>
     <string name="notif_geoping_request">Donde estas ?</string>
     <string name="notif_geoping_request_blocked">GeoPing prohibido</string> 
     <string name="notif_pairing">Asociacion GeoPing</string>
@@ -36,18 +36,19 @@
     <string name="toast_notif_sended_geoping_smsError">Error durante el envio del mensaje a  %s</string>
     <string name="toast_notif_sended_geoping_pairing">GeoPing asociacion solicitada: %s</string>
      <string name="toast_notif_sended_geoping_request">Donde estas ?: %s</string>
-    <string name="toast_notif_sended_geoping_response">Estoy aqui: %s</string>
+    <string name="toast_notif_sended_geoping_response">Estoy aquí: %s</string>
     <string name="toast_notif_backup_restored">Salvaguardia instalada de nuevo</string>
     
    
     <!-- Widget -->
     <string name="widget_geoping_person_title">Donde estas ?</string>
-    <string name="widget_geoping_pairing_title">Estoy aqui</string>
+    <string name="widget_geoping_pairing_title">Estoy aquí</string>
     
     
     <!-- Sms Action -->
     <string name="sms_action_geoping_request">GeoPing solicitud</string>
     <string name="sms_action_geoping_response">GeoPing respuesta</string>
+    <string name="sms_action_geoping_declaration">GeoPing declaración</string>
     <string name="sms_action_pairing_request">Solicitud de asociacion</string>
     <string name="sms_action_pairing_response">Respuesta de asociacion</string>
    

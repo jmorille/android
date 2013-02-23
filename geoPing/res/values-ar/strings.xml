@@ -48,6 +48,7 @@
     <!-- Sms Action -->
     <string name="sms_action_geoping_request">طلب GeoPing</string>
     <string name="sms_action_geoping_response">إرسال موقفي</string>
+    <string name="sms_action_geoping_declaration">GeoPing declaration</string>
     <string name="sms_action_pairing_request">جمعية الطلب</string>
     <string name="sms_action_pairing_response">"ردا على جمعية"</string>
  

@@ -215,7 +215,8 @@ public class GeoPingMasterService extends IntentService {
 		// Search
 		// Log.d(TAG, String.format("Search Painring for Phone [%s]",
 		// phoneNumber));
-		Uri uri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+		
+		Uri uri = PersonProvider.Constants.getUriPhoneFilter(phoneNumber);
 		Cursor cur = getContentResolver().query(uri, null, null, null, null);
 		try {
 			if (cur != null && cur.moveToFirst()) {
@@ -343,7 +344,7 @@ public class GeoPingMasterService extends IntentService {
 		if (geoTrack != null) {
  			ContentValues values = GeoTrackHelper.getContentValues(geoTrack);
 			Uri uri = null;
-			if (!geoTrack.isValid()) {
+			if (geoTrack.isValid()) {
 				uri = getContentResolver().insert(GeoTrackerProvider.Constants.CONTENT_URI, values);
 			}
 			if (uri != null) {
@@ -352,7 +353,7 @@ public class GeoPingMasterService extends IntentService {
 				Intent intent = Intents.newGeoTrackInserted(uri, values);
 				sendBroadcast(intent);
 				// Display Notification
-				showNotificationGeoPing(uri, values);
+				showNotificationGeoPing(  actionEnum, uri, values);
 			}
 			isConsume = true;
 		}
@@ -362,7 +363,7 @@ public class GeoPingMasterService extends IntentService {
 	private Person searchPersonForPhone(String phoneNumber) {
 		Person person = null;
 		Log.d(TAG, String.format("Search Contact Name for Phone [%s]", phoneNumber));
-		Uri uri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+		Uri uri = PersonProvider.Constants.getUriPhoneFilter(phoneNumber);
 		Cursor cur = getContentResolver().query(uri, null, null, null, null);
 		try {
 			if (cur != null && cur.moveToFirst()) {
@@ -380,7 +381,7 @@ public class GeoPingMasterService extends IntentService {
 	// ===========================================================
 
 	@SuppressLint("NewApi")
-	private void showNotificationGeoPing(Uri geoTrackData, ContentValues values) {
+	private void showNotificationGeoPing(SmsMessageActionEnum actionEnum, Uri geoTrackData, ContentValues values) {
 		String phone = values.getAsString(GeoTrackColumns.COL_PHONE);
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// Contact Name
@@ -413,7 +414,8 @@ public class GeoPingMasterService extends IntentService {
 				.setWhen(System.currentTimeMillis()) //
 				.setAutoCancel(true) //
 				.setContentIntent(pendingIntent)//
-				.setContentTitle(getString(R.string.notif_geoping)) //
+				.setContentTitle(getString(actionEnum.labelResourceId)) //
+				// TODO .setContentTitle(getString(R.string.notif_geoping)) //
 				.setContentText(contactDisplayName); //
 		if (photo != null) {
 			notificationBuilder.setLargeIcon(photo);

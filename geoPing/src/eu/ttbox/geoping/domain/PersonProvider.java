@@ -28,7 +28,11 @@ public class PersonProvider extends ContentProvider {
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/person");
 
         public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");
-
+        
+        public static final Uri getUriPhoneFilter(String phoneNumber) {
+        	Uri uri = Uri.withAppendedPath( CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+        	return uri;
+        }
     }
 
     private PersonDatabase personDatabase;

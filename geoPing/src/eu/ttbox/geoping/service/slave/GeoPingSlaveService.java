@@ -133,15 +133,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
                 // registerGeoPingRequest(phone, params);
                 Pairing pairing = getPairingByPhone(phone);
                 PairingAuthorizeTypeEnum authorizeType = pairing.authorizeType;
-                boolean showNotification = pairing.showNotification;
-//                if (intent.getBooleanExtra(Intents.EXTRA_INTERNAL_BOOL, false)) {
-//                    // Is Internal Direct Order
-//                    showNotification = false;
-//                    authorizeType = PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS;
-//                    Log.i(TAG, "Internal Order, bypass user preference and Hide Notif and Authorize anyway");
-//                    // Show Toast
-//
-//                }
+                boolean showNotification = pairing.showNotification; 
                 switch (authorizeType) {
                 case AUTHORIZE_NEVER:
                     Log.i(TAG, "Ignore Geoping (Never Authorize) request from phone " + phone);

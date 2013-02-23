@@ -326,7 +326,15 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 				Log.d(TAG, "Select contact Uri : " + contactData + " ==> Contact Id : " + contactId);
 				// Log.d(TAG, "Select contact Uri : " + contactData +
 				// " ==> Lookup Uri : " + contactLookupUri);
-				Uri uri = doSavePerson(name, phone, contactId);
+				// Check If exist in db
+				String checkExistId = checkExistEntityId(cr, phone);
+				// Save The select person
+				if (checkExistId==null) {
+					Uri uri = doSavePerson(name, phone, contactId);
+				} else {
+					Log.i(TAG, "Found existing Entity [" + checkExistId +"] for Phone : " + phone);	
+					loadEntity(checkExistId);
+				}
 				// showSelectedNumber(type, number);
 			}
 		} finally {
@@ -334,6 +342,22 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
 				c.close();
 			}
 		}
+	}
+	
+	private String checkExistEntityId(ContentResolver cr, String phone) {
+		Uri checkExistUri = PersonProvider.Constants.getUriPhoneFilter(phone);
+		String[] checkExistProjections = new String[] { PersonColumns.COL_ID };
+		Cursor checkExistCursor = cr.query(checkExistUri, checkExistProjections, null, null, null);
+		String checkExistId = null;
+		try {
+				if (checkExistCursor.moveToNext()) {
+				int checkExistColumnIndex = checkExistCursor.getColumnIndex(checkExistProjections[0]);
+				checkExistId = checkExistCursor.getString( checkExistColumnIndex  );
+			}
+		} finally {
+			checkExistCursor.close();
+		}
+		return checkExistId;
 	}
 
 	// ===========================================================

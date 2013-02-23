@@ -10,33 +10,33 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
 	public static final String TAG = "GeoTrackOpenHelper";
 
 	public static final String DATABASE_NAME = "geoping.db";
-	public static final int DATABASE_VERSION = 7;
+	public static final int DATABASE_VERSION = 8;
 
 	// ===========================================================
 	// Table
 	// ===========================================================
 
 	private static final String CREATE_BDD = "CREATE TABLE " + GeoTrackDatabase.TABLE_TRACK_POINT //
-			+ "( " + GeoTrackColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " //
-			+ ", " + GeoTrackColumns.COL_PERSON_ID + " INTEGER   NULL, " //  
-			+ ", " + GeoTrackColumns.COL_REQUESTER_PERSON + " TEXT, " //  
-			+ ", " + GeoTrackColumns.COL_PHONE + " TEXT NOT NULL, " //  
-			+ ", " + GeoTrackColumns.COL_PHONE_MIN_MATCH + " TEXT NOT NULL, " //
-			+ ", " + GeoTrackColumns.COL_TIME_MIDNIGHT + " INTEGER NOT NULL, " //
+			+ "( " + GeoTrackColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT " //
+			+ ", " + GeoTrackColumns.COL_PERSON_ID + " INTEGER   NULL " //  
+			+ ", " + GeoTrackColumns.COL_REQUESTER_PERSON + " TEXT " //  
+			+ ", " + GeoTrackColumns.COL_PHONE + " TEXT NOT NULL " //  
+			+ ", " + GeoTrackColumns.COL_PHONE_MIN_MATCH + " TEXT NOT NULL " //
+			+ ", " + GeoTrackColumns.COL_TIME_MIDNIGHT + " INTEGER NOT NULL " //
 			// Location
-			+ ", " + GeoTrackColumns.COL_TIME + " INTEGER NOT NULL, " //
-			+ ", " + GeoTrackColumns.COL_PROVIDER + " TEXT NOT NULL, " //
-			+ ", " + GeoTrackColumns.COL_LATITUDE_E6 + " INTEGER NOT NULL, " //
-			+ ", " + GeoTrackColumns.COL_LONGITUDE_E6 + " INTEGER NOT NULL, " //
-			+ ", " + GeoTrackColumns.COL_ACCURACY + " INTEGER NOT NULL, " //
-			+ ", " + GeoTrackColumns.COL_ALTITUDE + " INTEGER, " //
-			+ ", " + GeoTrackColumns.COL_BEARING + " INTEGER, " //
-			+ ", " + GeoTrackColumns.COL_SPEED + " INTEGER, " //
+			+ ", " + GeoTrackColumns.COL_TIME + " INTEGER NOT NULL " //
+			+ ", " + GeoTrackColumns.COL_PROVIDER + " TEXT NOT NULL " //
+			+ ", " + GeoTrackColumns.COL_LATITUDE_E6 + " INTEGER NOT NULL " //
+			+ ", " + GeoTrackColumns.COL_LONGITUDE_E6 + " INTEGER NOT NULL " //
+			+ ", " + GeoTrackColumns.COL_ACCURACY + " INTEGER NOT NULL " //
+			+ ", " + GeoTrackColumns.COL_ALTITUDE + " INTEGER " //
+			+ ", " + GeoTrackColumns.COL_BEARING + " INTEGER " //
+			+ ", " + GeoTrackColumns.COL_SPEED + " INTEGER " //
 			+ ", " + GeoTrackColumns.COL_ADDRESS + " TEXT " //
 			// Other
-			+ ", " + GeoTrackColumns.COL_BATTERY_LEVEL + " INTEGER, " //
+			+ ", " + GeoTrackColumns.COL_BATTERY_LEVEL + " INTEGER " //
 			// Event
-			+ ", " + GeoTrackColumns.COL_EVT_TIME + " INTEGER, " //
+			+ ", " + GeoTrackColumns.COL_EVT_TIME + " INTEGER " //
 			+ ", " + GeoTrackColumns.COL_EVT_TYPE + " TEXT " // 
 			+ " );";
 

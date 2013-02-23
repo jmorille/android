@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.ui.pairing;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -216,7 +217,7 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
 		getActivity().getSupportLoaderManager().initLoader(PAIRING_EDIT_LOADER, bundle, pairingLoaderCallback);
 	}
 	
-	public void prepareInsert() {
+	private void prepareInsert() {
 		this.entityUri = null;
 		showNotificationCheckBox.setChecked(showNotifDefault);
 		// Open Selection contact Diallog
@@ -302,7 +303,8 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
 	public void saveContactData(Uri contactData) {
 		String selection = null;
 		String[] selectionArgs = null;
-		Cursor c = getActivity().getContentResolver().query(contactData, new String[] { //
+		ContentResolver cr = getActivity().getContentResolver();
+		Cursor c = cr.query(contactData, new String[] { //
 				ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, // TODO
 																		// Check
 																		// for
@@ -316,7 +318,16 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
 				String name = c.getString(0);
 				String phone = c.getString(1);
 				int type = c.getInt(2);
-				Uri uri = doSavePairing(name, phone, null);
+				// Check If exist in db
+				String checkExistId = checkExistEntityId(cr, phone);
+				// Save The select person
+				if (checkExistId==null) {
+					Uri uri = doSavePairing(name, phone, null);
+				} else {
+					Log.i(TAG, "Found existing Entity [" + checkExistId +"] for Phone : " + phone);	
+					Uri checkExistUri = Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI, checkExistId);
+					loadEntity(checkExistUri);
+				} 
 				// showSelectedNumber(type, number);
 			}
 		} finally {
@@ -324,6 +335,23 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
 		}
 	}
 
+
+	private String checkExistEntityId(ContentResolver cr, String phone) {
+		Uri checkExistUri = PairingProvider.Constants.getUriPhoneFilter(phone);
+		String[] checkExistProjections = new String[] { PairingColumns.COL_ID };
+		Cursor checkExistCursor = cr.query(checkExistUri, checkExistProjections, null, null, null);
+		String checkExistId = null;
+		try {
+				if (checkExistCursor.moveToNext()) {
+				int checkExistColumnIndex = checkExistCursor.getColumnIndex(checkExistProjections[0]);
+				checkExistId = checkExistCursor.getString( checkExistColumnIndex  );
+			}
+		} finally {
+			checkExistCursor.close();
+		}
+		return checkExistId;
+	}
+	
 	public void onRadioAuthorizeTypeButtonClicked(View view) {
 		// Is the button now checked?
 		boolean checked = ((RadioButton) view).isChecked();

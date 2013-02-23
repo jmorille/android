@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
