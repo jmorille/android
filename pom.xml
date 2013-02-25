@@ -45,7 +45,8 @@
         <analytics.version>2</analytics.version>
         <compatibility-v13.version>11</compatibility-v13.version>
         <actionbarsherlock.version>4.2.0</actionbarsherlock.version>
-
+        <slidingmenu.version>1.2</slidingmenu.version>
+        
         <!-- Osm -->
         <osmdroid.version>3.0.9-20121109</osmdroid.version> <!-- 3.0.8, 3.0.9-20121109, 3.0.9-20130213 -->
         <slf4j-android.version>1.6.1-RC1</slf4j-android.version>
@@ -79,6 +80,13 @@
                 	</exclusion>
                 </exclusions>
         	</dependency>
+        	<!-- Sliding Memu -->
+        	<dependency>
+			  <groupId>com.slidingmenu</groupId>
+			  <artifactId>slidingmenu</artifactId>
+			    <version>${slidingmenu.version}</version>
+              <type>apklib</type>
+	        </dependency>
         </dependencies>
 	</dependencyManagement>
 
