@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
     android:orientation="vertical" >
 
     <eu.ttbox.geoping.ui.person.holocolorpicker.ColorPicker
@@ -12,14 +13,14 @@
 
     <eu.ttbox.geoping.ui.person.holocolorpicker.SVBar
         android:id="@+id/holocolorpicker_svbar"
-        android:layout_width="322dp"
+        android:layout_width="wrap_content"
         android:layout_height="112dp"
         android:layout_gravity="center"
         android:layout_margin="8dip" />
 
     <eu.ttbox.geoping.ui.person.holocolorpicker.OpacityBar
         android:id="@+id/holocolorpicker_opacitybar"
-        android:layout_width="322dp"
+        android:layout_width="wrap_content"
         android:layout_height="112dp"
         android:layout_gravity="center"
         android:layout_margin="8dip" />

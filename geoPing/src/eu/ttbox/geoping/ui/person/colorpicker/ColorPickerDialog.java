@@ -29,7 +29,7 @@ public class ColorPickerDialog extends Dialog {
 
     // Interface
     public interface OnColorChangedListener {
-        void colorChanged(int color);
+        void onColorChanged(int color);
     }
 
     // Instance
@@ -51,8 +51,8 @@ public class ColorPickerDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         OnColorChangedListener l = new OnColorChangedListener() {
-            public void colorChanged(int color) {
-                mListener.colorChanged(color);
+            public void onColorChanged(int color) {
+                mListener.onColorChanged(color);
                 dismiss();
             }
         };
@@ -231,7 +231,7 @@ public class ColorPickerDialog extends Dialog {
             case MotionEvent.ACTION_UP:
                 if (mTrackingCenter) {
                     if (inCenter) {
-                        mListener.colorChanged(mCenterPaint.getColor());
+                        mListener.onColorChanged(mCenterPaint.getColor());
                     }
                     mTrackingCenter = false; // so we draw w/o halo
                     invalidate();
