@@ -23,6 +23,7 @@ public enum SmsMessageLocEnum {
 
     // Spy Event
 //    EVT_SIM_PHONE('i', SmsMessageTypeEnum.STRING, "EVT_SIM_PHONE"),
+    PHONE_NUMBER('n', SmsMessageTypeEnum.STRING_BASE64, "PHONE_NUMBER"), //
     EVT_DATE('t', SmsMessageTypeEnum.DATE, GeoTrackColumns.COL_EVT_TIME); //
     // ===========================================================
     // Constructor

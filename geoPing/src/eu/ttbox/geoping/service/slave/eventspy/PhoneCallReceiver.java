@@ -9,6 +9,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 
 public class PhoneCallReceiver extends BroadcastReceiver {
 
@@ -105,9 +106,9 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         }
     }
 
-    private String manageCallDatas(Context context, String phoneNumber, int callAction, long beginCall, long endCall) {
+    private String manageCallDatas(Context context, String callPhoneNumber, int callAction, long beginCall, long endCall) {
         String message = null;
-        Log.d(TAG, "EventSpy PhoneState Compute Final State phoneNumber : " + phoneNumber );
+        Log.d(TAG, "EventSpy PhoneState Compute Final State phoneNumber : " + callPhoneNumber );
         Log.d(TAG, "EventSpy PhoneState Compute Final State callAction : " + callAction );
         Log.d(TAG, "EventSpy PhoneState Compute Final State beginCall : " + beginCall );
         Log.d(TAG, "EventSpy PhoneState Compute Final State endCall : " + endCall );
@@ -115,10 +116,10 @@ public class PhoneCallReceiver extends BroadcastReceiver {
             // Pas de communication
             switch (callAction) {
             case PREFS_ACTION_OUTGOING:
-                message = "A essayer d'appeler le numéro " + phoneNumber;
+                message = "A essayer d'appeler le numéro " + callPhoneNumber;
                 break;
             case PREFS_ACTION_INCOMING:
-                message = "A recu un appel non repondu du numéro " + phoneNumber;
+                message = "A recu un appel non repondu du numéro " + callPhoneNumber;
                 break;
             default:
                 break;
@@ -127,10 +128,10 @@ public class PhoneCallReceiver extends BroadcastReceiver {
             int callDurationInS = (int) ((endCall - beginCall) / 1000);
             switch (callAction) {
             case PREFS_ACTION_OUTGOING:
-                message = "A appeler " + callDurationInS + " s le numéro " + phoneNumber;
+                message = "A appeler " + callDurationInS + " s le numéro " + callPhoneNumber;
                 break;
             case PREFS_ACTION_INCOMING:
-                message = "A Recu un appel de " + callDurationInS + " s du numéro " + phoneNumber;
+                message = "A Recu un appel de " + callDurationInS + " s du numéro " + callPhoneNumber;
                 break;
             default:
                 break;
@@ -141,6 +142,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         String[] phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_PHONE_CALL);
         if (phones != null) {
             Bundle params = new Bundle();
+            SmsMessageLocEnum.PHONE_NUMBER.writeToBundle(params, callPhoneNumber);
             // Send Sms
             SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_PHONE_CALL, params);
         }
