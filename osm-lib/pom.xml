@@ -1,239 +1,235 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-       <groupId>eu.ttbox.android</groupId>
-       <artifactId>android-root</artifactId>
-	   <version>0.1.1</version>	
-	</parent>
+   <parent>
+      <groupId>eu.ttbox.android</groupId>
+      <artifactId>android-root</artifactId>
+      <version>0.1.2</version>
+   </parent>
 
-	<groupId>eu.ttbox.android.osm</groupId>
-	<artifactId>osm-lib</artifactId>
-<!-- 	<version>0.0.9</version> -->
-	<packaging>apklib</packaging>
+   <groupId>eu.ttbox.android.osm</groupId>
+   <artifactId>osm-lib</artifactId>
+    <version>0.1.2</version>
+   <packaging>apklib</packaging>
 
-	<name>OSM Libs</name>
+   <name>OSM Libs</name>
 
-<!-- 	<properties> -->
-<!-- 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
-		<!-- Android -->
-<!-- 		<android.version>4.1.2_r3</android.version> 2.3.3 -->
-<!-- 		<google.maps.version>16_r3</google.maps.version>  -->
-		<!-- Osm -->
-<!-- 		<osmdroid.version>3.0.8</osmdroid.version> -->
-<!-- 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>  -->
-		<!-- Release -->
-<!-- 		<android-maven-plugin.version>3.4.0</android-maven-plugin.version> -->
-<!-- 		<android.sdk.platform>16</android.sdk.platform> -->
-<!-- 		<sign.alias>android</sign.alias> -->
-<!-- 	</properties> -->
+   <!-- <properties> -->
+   <!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
+   <!-- Android -->
+   <!-- <android.version>4.1.2_r3</android.version> 2.3.3 -->
+   <!-- <google.maps.version>16_r3</google.maps.version> -->
+   <!-- Osm -->
+   <!-- <osmdroid.version>3.0.8</osmdroid.version> -->
+   <!-- <slf4j-android.version>1.6.1-RC1</slf4j-android.version> -->
+   <!-- Release -->
+   <!-- <android-maven-plugin.version>3.4.0</android-maven-plugin.version> -->
+   <!-- <android.sdk.platform>16</android.sdk.platform> -->
+   <!-- <sign.alias>android</sign.alias> -->
+   <!-- </properties> -->
 
-	<dependencies>
- 		<!-- Android -->
-		<dependency>
-			<groupId>android</groupId>
-			<artifactId>android</artifactId>
-			<version>${android.version}</version>
-			<scope>provided</scope>
-		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.google.android.maps</groupId> -->
-<!-- 			<artifactId>maps</artifactId> -->
-<!-- 			<version>${google.maps.version}</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
+   <dependencies>
+      <!-- Android -->
+      <dependency>
+         <groupId>android</groupId>
+         <artifactId>android</artifactId>
+         <version>${android.version}</version>
+         <scope>provided</scope>
+      </dependency>
+      <!-- <dependency> -->
+      <!-- <groupId>com.google.android.maps</groupId> -->
+      <!-- <artifactId>maps</artifactId> -->
+      <!-- <version>${google.maps.version}</version> -->
+      <!-- <scope>provided</scope> -->
+      <!-- </dependency> -->
 
-		<!-- Compatibility 
-		<dependency>
-			<groupId>android.support</groupId>
-			<artifactId>compatibility-v13</artifactId>
-			<version>${compatibility-v13.version}</version>
-		</dependency>
- -->
-		<!-- Open Street Map -->
-		<dependency>
-			<groupId>org.osmdroid</groupId>
-			<artifactId>osmdroid-android</artifactId>
-			<version>${osmdroid.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.osmdroid</groupId>
-			<artifactId>osmdroid-third-party</artifactId>
-			<version>${osmdroid.version}</version>
-		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.osmdroid</groupId> -->
-<!-- 			<artifactId>osmdroid-packager</artifactId> -->
-<!-- 			<version>${osmdroid.version}</version> -->
-<!-- 		</dependency> -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-android</artifactId>
-			<version>${slf4j-android.version}</version>
-		</dependency>
+      <!-- Compatibility <dependency> <groupId>android.support</groupId> 
+         <artifactId>compatibility-v13</artifactId> <version>${compatibility-v13.version}</version> 
+         </dependency> -->
+      <!-- Open Street Map -->
+      <dependency>
+         <groupId>org.osmdroid</groupId>
+         <artifactId>osmdroid-android</artifactId>
+         <version>${osmdroid.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.osmdroid</groupId>
+         <artifactId>osmdroid-third-party</artifactId>
+         <version>${osmdroid.version}</version>
+      </dependency>
+      <!-- <dependency> -->
+      <!-- <groupId>org.osmdroid</groupId> -->
+      <!-- <artifactId>osmdroid-packager</artifactId> -->
+      <!-- <version>${osmdroid.version}</version> -->
+      <!-- </dependency> -->
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-android</artifactId>
+         <version>${slf4j-android.version}</version>
+      </dependency>
 
 
-	</dependencies>
-	<!-- <modules> <module>tests</module> </modules> -->
-	<build>
-		<finalName>${project.artifactId}</finalName>
-		<sourceDirectory>src</sourceDirectory>
-		<!-- <testSourceDirectory>test</testSourceDirectory> -->
-		<plugins>
-			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>android-maven-plugin</artifactId> 
-				<configuration>
-					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
-					<resourceDirectory>${project.basedir}/res</resourceDirectory>
-<!-- 					<nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory> -->
-					<sdk>
-						<platform>${android.sdk.platform}</platform>
-						<path>${env.ANDROID_HOME}</path>
-					</sdk>
-					<deleteConflictingFiles>true</deleteConflictingFiles>
-					<undeployBeforeDeploy>true</undeployBeforeDeploy>
-				</configuration>
-				<extensions>true</extensions>
-			</plugin> 
-		</plugins>
-	</build>
+   </dependencies>
+   <!-- <modules> <module>tests</module> </modules> -->
+   <build>
+      <finalName>${project.artifactId}</finalName>
+      <sourceDirectory>src</sourceDirectory>
+      <!-- <testSourceDirectory>test</testSourceDirectory> -->
+      <plugins>
+         <plugin>
+            <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+            <artifactId>android-maven-plugin</artifactId>
+            <configuration>
+               <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+               <assetsDirectory>${project.basedir}/assets</assetsDirectory>
+               <resourceDirectory>${project.basedir}/res</resourceDirectory>
+               <!-- <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory> -->
+               <sdk>
+                  <platform>${android.sdk.platform}</platform>
+                  <path>${env.ANDROID_HOME}</path>
+               </sdk>
+               <deleteConflictingFiles>true</deleteConflictingFiles>
+               <undeployBeforeDeploy>true</undeployBeforeDeploy>
+            </configuration>
+            <extensions>true</extensions>
+         </plugin>
+      </plugins>
+   </build>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>oss.sonatype.org-jayway-releases</id>
-			<name>Jayway OpenSource RELEASE on Sonatype.org</name>
-			<url>https://oss.sonatype.org/content/repositories/jayway-releases/</url>
-		</pluginRepository>
-	</pluginRepositories>
+   <pluginRepositories>
+      <pluginRepository>
+         <id>oss.sonatype.org-jayway-releases</id>
+         <name>Jayway OpenSource RELEASE on Sonatype.org</name>
+         <url>https://oss.sonatype.org/content/repositories/jayway-releases/</url>
+      </pluginRepository>
+   </pluginRepositories>
 
-	<repositories>
-		<repository>
-			<id>osmdroid-repository</id>
-			<name>OSMDroid maven repository</name>
-			<url>https://oss.sonatype.org/content/groups/public/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+   <repositories>
+      <repository>
+         <id>osmdroid-repository</id>
+         <name>OSMDroid maven repository</name>
+         <url>https://oss.sonatype.org/content/groups/public/</url>
+         <snapshots>
+            <enabled>false</enabled>
+         </snapshots>
+      </repository>
+   </repositories>
 
-	<profiles>
-		<!-- https://github.com/jayway/android-maven-plugin-samples/blob/stable/morseflash/morseflash-app/pom.xml -->
-		<profile>
-			<id>release</id>
-			<!-- via this activation the profile is automatically used when the release 
-				is done with the maven release plugin -->
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jarsigner-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>signing</id>
-								<goals>
-									<goal>sign</goal>
-									<goal>verify</goal>
-								</goals>
-								<phase>package</phase>
-								<inherited>true</inherited>
-								<configuration>
-									<removeExistingSignatures>true</removeExistingSignatures>
-									<archiveDirectory />
-									<includes>
-										<include>${project.build.directory}/${project.artifactId}.apk</include>
-									</includes>
-									<keystore>${sign.keystore}</keystore>
-									<alias>${sign.alias}</alias>
-									<storepass>${sign.storepass}</storepass>
-									<keypass>${sign.keypass}</keypass>
-									<verbose>true</verbose>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- the signed apk then needs to be zipaligned and we activate proguard 
-						and we run the manifest update -->
-					<plugin>
-						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-						<artifactId>android-maven-plugin</artifactId>
-						<version>${android-maven-plugin.version}</version>  
-						<inherited>true</inherited>
-						<configuration>
-							<sign>
-								<debug>false</debug>
-							</sign>
-							<zipalign>
- 						    	<skip>false</skip>
-								<verbose>true</verbose>
-								<inputApk>${project.build.directory}/${project.artifactId}.apk</inputApk>
-								<outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk</outputApk>
-							</zipalign>
-							<manifest>
-								<debuggable>false</debuggable>
-								<versionCodeAutoIncrement>true</versionCodeAutoIncrement>
-							</manifest>
-							<proguard>
-								<skip>false</skip>
-							</proguard>
-						</configuration>
-						<executions>
-							<execution>
-								<id>manifestUpdate</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>manifest-update</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>alignApk</id>
-								<phase>package</phase>
-								<goals>
-									<goal>zipalign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>build-helper-maven-plugin</artifactId>
-						<configuration>
-							<artifacts>
-								<artifact>
-									<file>${project.build.directory}/${project.artifactId}-signed-aligned.apk</file>
-									<type>apk</type>
-									<classifier>signed-aligned</classifier>
-								</artifact>
-								<artifact>
-									<file>${project.build.directory}/proguard/mapping.txt</file>
-									<type>map</type>
-									<classifier>release</classifier>
-								</artifact>
-							</artifacts>
-						</configuration>
-						<executions>
-							<execution>
-								<id>attach-signed-aligned</id>
-								<phase>package</phase>
-								<goals>
-									<goal>attach-artifact</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+   <profiles>
+      <!-- https://github.com/jayway/android-maven-plugin-samples/blob/stable/morseflash/morseflash-app/pom.xml -->
+      <profile>
+         <id>release</id>
+         <!-- via this activation the profile is automatically used when 
+            the release is done with the maven release plugin -->
+         <activation>
+            <property>
+               <name>performRelease</name>
+               <value>true</value>
+            </property>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-jarsigner-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>signing</id>
+                        <goals>
+                           <goal>sign</goal>
+                           <goal>verify</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <inherited>true</inherited>
+                        <configuration>
+                           <removeExistingSignatures>true</removeExistingSignatures>
+                           <archiveDirectory />
+                           <includes>
+                              <include>${project.build.directory}/${project.artifactId}.apk</include>
+                           </includes>
+                           <keystore>${sign.keystore}</keystore>
+                           <alias>${sign.alias}</alias>
+                           <storepass>${sign.storepass}</storepass>
+                           <keypass>${sign.keypass}</keypass>
+                           <verbose>true</verbose>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+               <!-- the signed apk then needs to be zipaligned and we activate 
+                  proguard and we run the manifest update -->
+               <plugin>
+                  <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                  <artifactId>android-maven-plugin</artifactId>
+                  <version>${android-maven-plugin.version}</version>
+                  <inherited>true</inherited>
+                  <configuration>
+                     <sign>
+                        <debug>false</debug>
+                     </sign>
+                     <zipalign>
+                        <skip>false</skip>
+                        <verbose>true</verbose>
+                        <inputApk>${project.build.directory}/${project.artifactId}.apk</inputApk>
+                        <outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk</outputApk>
+                     </zipalign>
+                     <manifest>
+                        <debuggable>false</debuggable>
+                        <versionCodeAutoIncrement>true</versionCodeAutoIncrement>
+                     </manifest>
+                     <proguard>
+                        <skip>false</skip>
+                     </proguard>
+                  </configuration>
+                  <executions>
+                     <execution>
+                        <id>manifestUpdate</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>manifest-update</goal>
+                        </goals>
+                     </execution>
+                     <execution>
+                        <id>alignApk</id>
+                        <phase>package</phase>
+                        <goals>
+                           <goal>zipalign</goal>
+                        </goals>
+                     </execution>
+                  </executions>
+               </plugin>
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>build-helper-maven-plugin</artifactId>
+                  <configuration>
+                     <artifacts>
+                        <artifact>
+                           <file>${project.build.directory}/${project.artifactId}-signed-aligned.apk</file>
+                           <type>apk</type>
+                           <classifier>signed-aligned</classifier>
+                        </artifact>
+                        <artifact>
+                           <file>${project.build.directory}/proguard/mapping.txt</file>
+                           <type>map</type>
+                           <classifier>release</classifier>
+                        </artifact>
+                     </artifacts>
+                  </configuration>
+                  <executions>
+                     <execution>
+                        <id>attach-signed-aligned</id>
+                        <phase>package</phase>
+                        <goals>
+                           <goal>attach-artifact</goal>
+                        </goals>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
 
-	</profiles>
+   </profiles>
 </project>

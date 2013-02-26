@@ -77,7 +77,7 @@ public class PhotoThumbmailCache extends LruCache<String, Bitmap> {
 	}
 
 	public void cacheTrimToSize(int maxSize) {
-		this.trimToSize(maxSize);
+		this.cacheTrimToSize(maxSize);
 	}
 
 	public int cacheSize() {
