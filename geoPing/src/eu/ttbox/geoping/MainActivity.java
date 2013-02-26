@@ -64,8 +64,7 @@ public class MainActivity extends SherlockFragmentActivity { //
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// Create the adapter that will return a fragment for each of the three
-		// primary sections
-		// of the app.
+		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
@@ -73,23 +72,17 @@ public class MainActivity extends SherlockFragmentActivity { //
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		// Tracker
 		GeoPingApplication.getInstance().tracker().trackPageView("/" + TAG);
-		// GoogleAnalyticsTracker tracker = ((GeoPingApplication)
-		// getApplication()).tracker();
-		// if (tracker != null) {
-		// tracker.trackPageView("/" + TAG);
-		// }
-//		Log.d(TAG, "--------------- " + getPackageName() + "_preferences");
-
+		 
 		 // configure the SlidingMenu
-        SlidingMenu menu = new SlidingMenu(this);
-        menu.setMode(SlidingMenu.LEFT);
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        menu.setShadowWidthRes(R.dimen.shadow_width);
-        menu.setShadowDrawable(R.drawable.shadow);
-        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        menu.setFadeDegree(0.35f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-        menu.setMenu(R.layout.slidingmenu_menu);
+//        SlidingMenu menu = new SlidingMenu(this);
+//        menu.setMode(SlidingMenu.LEFT);
+//        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+//        menu.setShadowWidthRes(R.dimen.shadow_width);
+//        menu.setShadowDrawable(R.drawable.shadow);
+//        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+//        menu.setFadeDegree(0.35f);
+//        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+//        menu.setMenu(R.layout.slidingmenu_menu);
 	}
 
 	// ===========================================================

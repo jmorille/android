@@ -31,6 +31,7 @@ public class PersonProvider extends ContentProvider {
         
         public static final Uri getUriPhoneFilter(String phoneNumber) {
         	Uri uri = Uri.withAppendedPath( CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+        	Log.d(TAG, "PersonProvider phone filter Uri : " + uri);
         	return uri;
         }
     }

@@ -9,7 +9,7 @@ import eu.ttbox.geoping.core.Intents;
 
 public class MsgReceiverIntentService extends IntentService {
 
-	private static final String TAG = "SmsReceiverIntentService";
+	private static final String TAG = "MsgReceiverIntentService";
 
 	public MsgReceiverIntentService() {
 		super(TAG);

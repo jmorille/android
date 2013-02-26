@@ -42,7 +42,7 @@
       <!-- Compatibility -->
       <dependency>
          <groupId>android.support</groupId>
-         <artifactId>compatibility-v13</artifactId>
+         <artifactId>compatibility-v13</artifactId> 
       </dependency>
       <dependency>
          <groupId>com.actionbarsherlock</groupId>

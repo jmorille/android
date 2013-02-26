@@ -15,9 +15,14 @@ import eu.ttbox.geoping.R;
  *
  */
 public class GeopingSlidingMenuFragment extends ListFragment {
+ 
+    
+    public GeopingSlidingMenuFragment() {
+        super(); 
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.list, null);
+        return inflater.inflate(R.layout.slidingmenu_list, null);
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -46,7 +51,7 @@ public class GeopingSlidingMenuFragment extends ListFragment {
 
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row, null);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.slidingmenu_row, null);
             }
             ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);
             icon.setImageResource(getItem(position).iconRes);

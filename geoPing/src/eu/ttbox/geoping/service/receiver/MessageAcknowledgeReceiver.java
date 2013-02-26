@@ -16,106 +16,118 @@ import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 
 public class MessageAcknowledgeReceiver extends BroadcastReceiver {
 
-	private static final String TAG = "MsgQuittingAcknowledge";
+    private static final String TAG = "MessageAcknowledgeReceiver";
 
-	public static final String ACTION_SEND_ACK = "eu.ttbox.geoping.ACTION_SEND_ACK";
-	public static final String ACTION_DELIVERY_ACK = "eu.ttbox.geoping.ACTION_DELIVERY_ACK";
+    public static final String ACTION_SEND_ACK = "eu.ttbox.geoping.ACTION_SEND_ACK";
+    public static final String ACTION_DELIVERY_ACK = "eu.ttbox.geoping.ACTION_DELIVERY_ACK";
 
-	public static final String EXTRA_PDU = "pdu";
-	public static final String EXTRA_FORMAT = "format";
+    public static final String EXTRA_PDU = "pdu";
+    public static final String EXTRA_FORMAT = "format";
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		String action = intent.getAction();
-		Log.d(TAG, "Message Acknowledge action : " + action);
-		printExtras(intent.getExtras());
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        Log.d(TAG, "Message Acknowledge action : " + action);
+//        printExtras(intent.getExtras());
 
-		if (ACTION_SEND_ACK.equals(action)) {
-			Uri logUri = intent.getData();
-			Log.d(TAG, "GeoPing message Acknowledge Send : " + logUri);
-			saveAcknowledge(context, intent, logUri, SmsLogTypeEnum.SEND_ACK);
-		} else if (ACTION_DELIVERY_ACK.equals(action)) {
-			Uri logUri = intent.getData();
-			Log.d(TAG, "GeoPing message Acknowledge Delivery : " + logUri);
-			saveAcknowledge(context, intent, logUri, SmsLogTypeEnum.SEND_DELIVERY_ACK);
-		}
-	}
+        if (ACTION_SEND_ACK.equals(action)) {
+            Uri logUri = intent.getData();
+            Log.d(TAG, "GeoPing message Acknowledge Send : " + logUri);
+            long acknowledgeTimeInMs = System.currentTimeMillis();
+            saveAcknowledge(context, intent, logUri, SmsLogTypeEnum.SEND_ACK, acknowledgeTimeInMs);
+        } else if (ACTION_DELIVERY_ACK.equals(action)) {
+            Uri logUri = intent.getData();
+            Log.d(TAG, "GeoPing message Acknowledge Delivery : " + logUri);
+            long acknowledgeTimeInMs = System.currentTimeMillis();
+            if (intent.hasExtra(EXTRA_PDU)) {
+                byte[] msgByte = intent.getByteArrayExtra(EXTRA_PDU);
+                SmsMessage message = SmsMessage.createFromPdu(msgByte);
+                acknowledgeTimeInMs = message.getTimestampMillis();
+                Log.d(TAG, String.format("Message Acknowledge Time :  %1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS,%1$tL", acknowledgeTimeInMs));
+             }
+            saveAcknowledge(context, intent, logUri, SmsLogTypeEnum.SEND_DELIVERY_ACK, acknowledgeTimeInMs);
+        }
+    }
 
-	private void printExtras(Bundle extras) {
-		if (extras != null) {
-			for (String key : extras.keySet()) {
-				Object value = extras.get(key);
-				Log.d(TAG, "Message Acknowledge extras : " + key + " = " + value);
-				if (EXTRA_PDU.equals(key)) {
-					SmsMessage message = SmsMessage.createFromPdu((byte[]) value);
-				 
-					Log.d(TAG, "Message Acknowledge extras : " + key + " = " + message);
-					Log.d(TAG, "Message Acknowledge extras : " + key + " = MessageBody    : " + message.getMessageBody());
-					Log.d(TAG, "Message Acknowledge extras : " + key + " = Status         : " + message.getStatus());
-					Log.d(TAG, "Message Acknowledge extras : " + key + " = Ori Address    : " + message.getDisplayOriginatingAddress());
-					Log.d(TAG, "Message Acknowledge extras : " + key + " = Pseudo Subject : " + message.getPseudoSubject());
-					Log.d(TAG, "Message Acknowledge extras : " + key + " = Status         : " + message.getStatus());
-					Log.d(TAG, "Message Acknowledge extras : " + key + " = Status On Icc  : " + message.getStatusOnIcc());
-					Log.d(TAG, "Message Acknowledge extras : " + key + " = TimestampMilli : " + message.getTimestampMillis());
-					Log.d(TAG, "Message Acknowledge extras : " + key + " = UserData       : " + message.getUserData());
+    private void printExtras(Bundle extras) {
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                Object value = extras.get(key);
+                Log.d(TAG, "Message Acknowledge extras : " + key + " = " + value);
+                if (EXTRA_PDU.equals(key)) {
+                    SmsMessage message = SmsMessage.createFromPdu((byte[]) value);
 
-				}
-			}
-		}
-	}
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = " + message);
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = MessageBody    : " + message.getMessageBody());
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = Status         : " + message.getStatus());
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = Ori Address    : " + message.getDisplayOriginatingAddress());
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = Pseudo Subject : " + message.getPseudoSubject());
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = Status         : " + message.getStatus());
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = Status On Icc  : " + message.getStatusOnIcc());
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = TimestampMilli : " + message.getTimestampMillis());
+                    String timeAsString = String.format("Date %1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS,%1$tL", //
+                            message.getTimestampMillis());
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = TimestampMilli : " + String.format("Date %1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS,%1$tL", //
+                            message.getTimestampMillis()));
+                    Log.d(TAG, "Message Acknowledge extras : " + key + " = UserData       : " + message.getUserData());
 
-	/**
-	 * Do the update of the Message Acknowledge.
-	 * 
-	 * @param context
-	 *            The context
-	 * @param logUri
-	 *            The Log Uri
-	 * @param isSendOrDelivery
-	 *            Send=true and delivery = false
-	 */
-	private void saveAcknowledge(Context context, Intent intent, Uri logUri, SmsLogTypeEnum ackTypeRequested) {
-		 SmsLogTypeEnum ackType = ackTypeRequested;
-		String acknowledgeType;
-		if (SmsLogTypeEnum.SEND_DELIVERY_ACK.equals(ackType)) {
-			acknowledgeType = SmsLogColumns.COL_IS_DELIVERY_TIME;
-		} else {
-			acknowledgeType = SmsLogColumns.COL_IS_SEND_TIME;
-		}
-		// Manage Code
-		String message = null;
-		boolean error = true;
-		int resultCode = getResultCode(); // TODO Really not in the intent ?
-		switch (resultCode) {
-		case Activity.RESULT_OK:
-			message = "Message " + acknowledgeType;
-			error = false;
-			break;
-		case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-			message = "Error.";
-			break;
-		case SmsManager.RESULT_ERROR_NO_SERVICE:
-			message = "Error: No service.";
-			break;
-		case SmsManager.RESULT_ERROR_NULL_PDU:
-			message = "Error: Null PDU.";
-			break;
-		case SmsManager.RESULT_ERROR_RADIO_OFF:
-			message = "Error: Radio off.";
-			break;
-		}
-		if (error) {
-			ackType = SmsLogTypeEnum.SEND_ERROR;
-		}
-		Log.d(TAG, "### ############################### ### ");
-		Log.d(TAG, "### ###  ACTION_SMS_SENT : " + message);
-		Log.d(TAG, "### ############################### ### ");
-		// Save Acknowledge
-		ContentValues values = new ContentValues(1);
-		values.put(acknowledgeType, System.currentTimeMillis());
-		ackType.writeTo(values);
-		ContentResolver cr = context.getContentResolver();
-		cr.update(logUri, values, null, null);
-	}
+                }
+            }
+        }
+    }
+
+    /**
+     * Do the update of the Message Acknowledge.
+     * 
+     * @param context
+     *            The context
+     * @param logUri
+     *            The Log Uri
+     * @param isSendOrDelivery
+     *            Send=true and delivery = false
+     */
+    private void saveAcknowledge(Context context, Intent intent, Uri logUri, SmsLogTypeEnum ackTypeRequested, long acknowledgeTimeInMs) {
+        SmsLogTypeEnum ackType = ackTypeRequested;
+        String acknowledgeType;
+        if (SmsLogTypeEnum.SEND_DELIVERY_ACK.equals(ackType)) {
+            acknowledgeType = SmsLogColumns.COL_IS_DELIVERY_TIME;
+        } else {
+            acknowledgeType = SmsLogColumns.COL_IS_SEND_TIME;
+        }
+        // Manage Code
+        String message = null;
+        boolean error = true;
+        int resultCode = getResultCode(); // TODO Really not in the intent ?
+        switch (resultCode) {
+        case Activity.RESULT_OK:
+            message = "Message " + acknowledgeType;
+            error = false;
+            break;
+        case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+            message = "Error.";
+            break;
+        case SmsManager.RESULT_ERROR_NO_SERVICE:
+            message = "Error: No service.";
+            break;
+        case SmsManager.RESULT_ERROR_NULL_PDU:
+            message = "Error: Null PDU.";
+            break;
+        case SmsManager.RESULT_ERROR_RADIO_OFF:
+            message = "Error: Radio off.";
+            break;
+        }
+        if (error) {
+            ackType = SmsLogTypeEnum.SEND_ERROR;
+        }
+        Log.d(TAG, "### ############################### ### ");
+        Log.d(TAG, "### ###  ACTION_SMS_SENT : " + message);
+        Log.d(TAG, "### ############################### ### ");
+        // Save Acknowledge
+        ContentValues values = new ContentValues(1);
+        values.put(acknowledgeType, acknowledgeTimeInMs);
+        ackType.writeTo(values);
+        ContentResolver cr = context.getContentResolver();
+        cr.update(logUri, values, null, null);
+    }
 
 }

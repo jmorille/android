@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Log;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.EncryptionColumns;
 
@@ -109,6 +110,7 @@ public class PersonDatabase {
 			System.arraycopy(pSelectionArgs, 0, selectionArgs, 1, pSelectionArgSize);
 			selectionArgs[0] = minMatch;
 		}
+		Log.d(TAG, "searchForPhoneNumber Query : " + selection + " // Args Phone : " + selectionArgs[0]  + " / Args size : "+ selectionArgs.length) ;
 		return queryEntities(projection, selection, selectionArgs, sortOrder);
 	}
 
