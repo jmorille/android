@@ -104,33 +104,29 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 	// Menu
 	// ===========================================================
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.menu_person_edit, menu);
-		return true;
-	}
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getSupportMenuInflater().inflate(R.menu.menu_person_edit, menu);
+//		return true;
+//	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_save:
-			editFragment.onSaveClick();
-			finish();
-			return true;
-		case R.id.menu_delete:
-			editFragment.onDeleteClick();
-			return true;
-		case R.id.menu_select_contact:
-			editFragment.onSelectContactClick(null);
-			return true;
-		case R.id.menu_cancel:
-			editFragment.onCancelClick();
-			return true;
-//		case R.id.menuQuitter:
-//			// Pour fermer l'application il suffit de faire finish()
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case R.id.menu_save:
+//			editFragment.onSaveClick();
 //			finish();
 //			return true;
-		}
-		return false;
-	}
+//		case R.id.menu_delete:
+//			editFragment.onDeleteClick();
+//			return true;
+//		case R.id.menu_select_contact:
+//			editFragment.onSelectContactClick(null);
+//			return true;
+//		case R.id.menu_cancel:
+//			editFragment.onCancelClick();
+//			return true; 
+//		}
+//		return false;
+//	}
 
 	// ===========================================================
 	// Intent Handler

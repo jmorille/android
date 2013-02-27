@@ -35,115 +35,123 @@ import eu.ttbox.geoping.R;
 public class PhotoEditorView extends RelativeLayout // implements Editor
 {
 
-	private static final String TAG = "PhotoEditorView";
+    private static final String TAG = "PhotoEditorView";
 
-	private ImageView mPhotoImageView;
-	private View mFrameView;
+    private ImageView mPhotoImageView;
+    private View mFrameView;
 
-	// private ValuesDelta mEntry;
-	private EditorListener mListener;
-	private View mTriangleAffordance;
+    // private ValuesDelta mEntry;
+    private EditorListener mListener;
+    private View mTriangleAffordance;
 
-	private boolean mHasSetPhoto = false;
-	private boolean mReadOnly;
+    private boolean mHasSetPhoto = false;
+    private boolean mReadOnly;
 
-	// ===========================================================
-	// Constructor
-	// ===========================================================
+    // ===========================================================
+    // Constructor
+    // ===========================================================
 
-	public PhotoEditorView(Context context) {
-		super(context);
-	}
+    public PhotoEditorView(Context context) {
+        this(context, null);
+    }
 
-	public PhotoEditorView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		// Read atrs
-		TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PhotoEditorView);
-		int geopingType = a.getInteger(R.styleable.PhotoEditorView_geopingType, 0);
-		a.recycle();
-		Log.w(TAG, "geopingType : " + geopingType);
-	}
+    public PhotoEditorView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0); 
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
+    public PhotoEditorView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        // Read atrs
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PhotoEditorView);
+        int geopingType = a.getInteger(R.styleable.PhotoEditorView_geopingType, 0);
+        a.recycle();
+        Log.w(TAG, "geopingType : " + geopingType); 
+    }
 
-		mTriangleAffordance = findViewById(R.id.photo_triangle_affordance);
-		mPhotoImageView = (ImageView) findViewById(R.id.photo);
-		mFrameView = findViewById(R.id.frame);
-		mFrameView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (mListener != null) {
-					Animation animationOut = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_to_middle);
-					clearAnimation();
-					startAnimation(animationOut);
-					mListener.onRequest(v, EditorListener.REQUEST_PICK_PHOTO);
-				}
-			}
-		});
-	}
+    private void initView(Context context){
+        View.inflate(context, R.layout.item_photo_editor, this);  //correct way to inflate..
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
 
-	// ===========================================================
-	// Accessors
-	// ===========================================================
+        mTriangleAffordance = findViewById(R.id.photo_triangle_affordance);
+        mPhotoImageView = (ImageView) findViewById(R.id.photo);
+        mFrameView = findViewById(R.id.frame);
+        mFrameView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    Animation animationOut = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_to_middle);
+                    clearAnimation();
+                    startAnimation(animationOut);
+                    mListener.onRequest(v, EditorListener.REQUEST_PICK_PHOTO);
+                }
+            }
+        });
+    }
 
-	@Override
-	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-		mFrameView.setEnabled(enabled);
-	}
+    // ===========================================================
+    // Accessors
+    // ===========================================================
 
-	public void setValues(final Bitmap photo, boolean readOnly) {
-		if (photo != null) {
-			mPhotoImageView.setImageBitmap(photo);
-			// mPhotoImageView.post(new Runnable() {
-			// @Override
-			// public void run() {
-			// mPhotoImageView.setImageBitmap(photo);
-			// }
-			// });
-			mFrameView.setEnabled(isEnabled());
-			mHasSetPhoto = true;
-			// mEntry.setFromTemplate(false);
-		} else {
-			resetDefault();
-		}
-	}
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mFrameView.setEnabled(enabled);
+    }
 
-	/**
-	 * Return true if a valid {@link Photo} has been set.
-	 */
-	public boolean hasSetPhoto() {
-		return mHasSetPhoto;
-	}
+    public void setValues(final Bitmap photo, boolean readOnly) {
+        if (photo != null) {
+            mPhotoImageView.setImageBitmap(photo);
+            // mPhotoImageView.post(new Runnable() {
+            // @Override
+            // public void run() {
+            // mPhotoImageView.setImageBitmap(photo);
+            // }
+            // });
+            mFrameView.setEnabled(isEnabled());
+            mHasSetPhoto = true;
+            // mEntry.setFromTemplate(false);
+        } else {
+            resetDefault();
+        }
+    }
 
-	protected void resetDefault() {
-		// Invalid photo, show default "add photo" place-holder
-		mPhotoImageView.setImageResource(R.drawable.ic_contact_picture_holo_light);
-		mFrameView.setEnabled(!mReadOnly && isEnabled());
-		mHasSetPhoto = false;
-		// mEntry.setFromTemplate(true);
-	}
+    /**
+     * Return true if a valid {@link Photo} has been set.
+     */
+    public boolean hasSetPhoto() {
+        return mHasSetPhoto;
+    }
 
-	// ===========================================================
-	// Listeners
-	// ===========================================================
+    protected void resetDefault() {
+        // Invalid photo, show default "add photo" place-holder
+        mPhotoImageView.setImageResource(R.drawable.ic_contact_picture_holo_light);
+        mFrameView.setEnabled(!mReadOnly && isEnabled());
+        mHasSetPhoto = false;
+        // mEntry.setFromTemplate(true);
+    }
 
-	/** {@inheritDoc} */
-	// @Override
-	public void setEditorListener(EditorListener listener) {
-		mListener = listener;
+    // ===========================================================
+    // Listeners
+    // ===========================================================
 
-		final boolean isPushable = listener != null;
-		mTriangleAffordance.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
-		mFrameView.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
-	}
+    /** {@inheritDoc} */
+    // @Override
+    public void setEditorListener(EditorListener listener) {
+        mListener = listener;
 
-	public interface EditorListener {
-		public void onRequest(View v, int request);
+        final boolean isPushable = listener != null;
+        mTriangleAffordance.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
+        mFrameView.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
+    }
 
-		public static final int REQUEST_PICK_PHOTO = 1;
-	}
+    public interface EditorListener {
+        public void onRequest(View v, int request);
+
+        public static final int REQUEST_PICK_PHOTO = 1;
+    }
 }

@@ -18,6 +18,9 @@ public class PairingHelper {
     boolean isNotInit = true;
     public int idIdx = -1;
     public int nameIdx = -1;
+    public int personUuidIdx = -1;
+    public int emailIdx = -1;
+    // Phone
     public int phoneIdx = -1;
     public int phoneNormalizedIdx = -1;
     public int authorizeTypeIdx = -1;
@@ -39,6 +42,9 @@ public class PairingHelper {
     public PairingHelper initWrapper(Cursor cursor) {
         idIdx = cursor.getColumnIndex(PairingColumns.COL_ID);
         nameIdx = cursor.getColumnIndex(PairingColumns.COL_NAME);
+        personUuidIdx = cursor.getColumnIndex(PairingColumns.COL_PERSON_UUID);
+        emailIdx = cursor.getColumnIndex(PairingColumns.COL_EMAIL);
+        // Phone
         phoneIdx = cursor.getColumnIndex(PairingColumns.COL_PHONE);
         phoneNormalizedIdx = cursor.getColumnIndex(PairingColumns.COL_PHONE_NORMALIZED);
         authorizeTypeIdx = cursor.getColumnIndex(PairingColumns.COL_AUTHORIZE_TYPE);
@@ -67,6 +73,9 @@ public class PairingHelper {
         Pairing user = new Pairing();
         user.setId(idIdx > -1 ? cursor.getLong(idIdx) : AppConstants.UNSET_ID);
         user.setName(nameIdx > -1 ? cursor.getString(nameIdx) : null);
+        user.setPersonUuid(personUuidIdx > -1 ? cursor.getString(personUuidIdx) : null);
+        user.setEmail(emailIdx > -1 ? cursor.getString(emailIdx) : null);
+        // Phone
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
         user.setAuthorizeType(authorizeTypeIdx > -1 ? getPairingAuthorizeTypeEnum(cursor) : null);
         user.setShowNotification(showNotificationIdx > -1 ? cursor.getInt(showNotificationIdx) == 1 ? true : false : false);
@@ -162,6 +171,9 @@ public class PairingHelper {
             initialValues.put(PairingColumns.COL_ID, Long.valueOf(entity.id));
         }
         initialValues.put(PairingColumns.COL_NAME, entity.name);
+        initialValues.put(PairingColumns.COL_PERSON_UUID, entity.personUuid);
+        initialValues.put(PairingColumns.COL_EMAIL, entity.email);
+        // Phone
         initialValues.put(PairingColumns.COL_PHONE, entity.phone);
         initialValues.put(PairingColumns.COL_SHOW_NOTIF, entity.showNotification);
         initialValues.put(PairingColumns.COL_PAIRING_TIME, entity.pairingTime);

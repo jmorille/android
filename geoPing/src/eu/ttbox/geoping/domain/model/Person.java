@@ -6,11 +6,15 @@ public class Person {
 
 	public long id = AppConstants.UNSET_ID;
 	public String displayName;
+    public String personUuid;
+    public String email;
+     // Phone
 	public String phone;
-	public int color;
 	public String contactId;
 	public long pairingTime;
-
+	// Config
+    public int color;
+	
 	// Encryption
 	public String encryptionPubKey;
 	public String encryptionPrivKey;
@@ -27,6 +31,17 @@ public class Person {
 		this.displayName = name;
 		return this;
 	}
+
+    
+    public Person setPersonUuid(String personUuid) {
+        this.personUuid = personUuid;
+        return this;
+    }
+
+    public Person setEmail(String email) {
+        this.email = email;
+        return this;
+    }
 
 	public Person setPhone(String phone) {
 		this.phone = phone;

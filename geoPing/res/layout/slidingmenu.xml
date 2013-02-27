@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.slidingmenu.lib.SlidingMenu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sliding="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/slidingmenulayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    sliding:behindOffset="@dimen/slidingmenu_offset"
+    sliding:behindScrollScale="0.35"
+    sliding:fadeDegree="0.35"
+    sliding:fadeEnabled="true"
+    sliding:mode="left"
+    sliding:selectorDrawable="@drawable/slidingmenu_selector"
+    sliding:selectorEnabled="true"
+    sliding:shadowDrawable="@drawable/shadow"
+    sliding:shadowWidth="@dimen/shadow_width"
+    sliding:touchModeAbove="fullscreen" />

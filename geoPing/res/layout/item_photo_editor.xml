@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<view xmlns:android="http://schemas.android.com/apk/res/android" 
-      xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping" 
+<view xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-  android:focusable="false"
-        android:focusableInTouchMode="false"
     class="eu.ttbox.geoping.ui.person.PhotoEditorView"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
     android:orientation="horizontal" >
 
     <FrameLayout

@@ -6,6 +6,9 @@ public class Pairing {
 
     public long id =  AppConstants.UNSET_ID;
     public String name;
+    public String personUuid;
+    public String email;
+    // Phone
     public String phone;
     public PairingAuthorizeTypeEnum authorizeType;
     public boolean showNotification = false;
@@ -24,6 +27,17 @@ public class Pairing {
 
     public Pairing setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    
+    public Pairing setPersonUuid(String personUuid) {
+        this.personUuid = personUuid;
+        return this;
+    }
+
+    public Pairing setEmail(String email) {
+        this.email = email;
         return this;
     }
 
@@ -51,7 +65,9 @@ public class Pairing {
 		this.encryptionRemoteTime =timeInMs;
 		return this;
 	}
-	@Override
+    
+    
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder().append("Pairing [");
         sb.append("id=").append(id)//

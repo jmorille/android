@@ -27,6 +27,9 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 	private static final String FTS_TABLE_CREATE_PAIRING_V6 = "CREATE TABLE " + PairingDatabase.TABLE_PAIRING_FTS //
 			+ "( " + PairingColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT"//
 			+ ", " + PairingColumns.COL_NAME + " TEXT" //
+			+ ", " + PairingColumns.COL_PERSON_UUID + " TEXT" //
+            + ", " + PairingColumns.COL_EMAIL + " TEXT" //
+			// Phone
 			+ ", " + PairingColumns.COL_PHONE + " TEXT" //
 			+ ", " + PairingColumns.COL_PHONE_NORMALIZED + " TEXT" //
 			+ ", " + PairingColumns.COL_PHONE_MIN_MATCH + " TEXT" //

@@ -40,6 +40,9 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
     private static final String FTS_TABLE_CREATE_USER_V6 = "CREATE TABLE " + PersonDatabase.TABLE_PERSON_FTS //
             + "( " + PersonColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT"//
             + ", " + PersonColumns.COL_NAME + " TEXT" //
+            + ", " + PersonColumns.COL_PERSON_UUID + " TEXT" //
+            + ", " + PersonColumns.COL_EMAIL + " TEXT" //
+            // Phone
             + ", " + PersonColumns.COL_PHONE + " TEXT" //
             + ", " + PersonColumns.COL_PHONE_NORMALIZED + " TEXT" //
             + ", " + PersonColumns.COL_PHONE_MIN_MATCH + " TEXT" //

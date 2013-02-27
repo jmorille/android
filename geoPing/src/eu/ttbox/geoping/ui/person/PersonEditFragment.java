@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -26,6 +25,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -38,7 +43,7 @@ import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 import eu.ttbox.geoping.ui.person.holocolorpicker.HoloColorPickerDialog;
 
-public class PersonEditFragment extends Fragment implements ColorPickerDialog.OnColorChangedListener {
+public class PersonEditFragment extends SherlockFragment implements ColorPickerDialog.OnColorChangedListener {
 
     private static final String TAG = "PersonEditFragment";
 
@@ -131,10 +136,38 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
         // Menu
         // Load Data
         loadEntity(getArguments());
-        // setHasOptionsMenu(true);
+         setHasOptionsMenu(true);
         return v;
     }
 
+    // ===========================================================
+    // Menu
+    // ===========================================================
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_person_edit, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.menu_save:
+            onSaveClick();
+            getActivity().finish();
+            return true;
+        case R.id.menu_delete:
+             onDeleteClick();
+            return true;
+        case R.id.menu_select_contact:
+            onSelectContactClick(null);
+            return true;
+        case R.id.menu_cancel:
+             onCancelClick();
+            return true; 
+        }
+        return false;
+    }
     // ===========================================================
     // Accessor
     // ===========================================================
@@ -142,6 +175,8 @@ public class PersonEditFragment extends Fragment implements ColorPickerDialog.On
     private void setEntityId(String entityId) {
         this.entityId = entityId;
     }
+
+  
 
     public void setOnPersonSelectListener(OnPersonSelectListener onPersonSelectListener) {
         this.onPersonSelectListener = onPersonSelectListener;
