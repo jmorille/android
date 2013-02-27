@@ -17,6 +17,7 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 import android.text.TextUtils;
 import android.util.Log;
+import eu.ttbox.geoping.core.VersionUtils.AndroidPermissions;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 /**
@@ -28,7 +29,7 @@ public class ContactHelper {
 
 	private static final String TAG = "ContactHelper";
 
-	private static final String PERMISSION_READ_CONTACTS = "android.permission.READ_CONTACTS";
+	private static final String PERMISSION_READ_CONTACTS = AndroidPermissions.READ_CONTACTS; 
 
 
 	public static Bitmap openPhotoBitmap(Context context,  PhotoThumbmailCache photoCache, String contactId, String phone) {

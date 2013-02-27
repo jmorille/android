@@ -1,6 +1,8 @@
 package eu.ttbox.geoping.ui.pairing;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.VersionUtils.AndroidPermissions;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 
@@ -92,17 +95,42 @@ public class PairingNotificationFragment extends Fragment {
 		for (CompoundButton view : notifViews) {
 			view.setOnClickListener(notifOnClickListener);
 		}
-
+		// Security
+		checkPermissionsForButtonVisibility();
+		
 		// Load Data
 		loadEntity(getArguments());
 		return v;
 	}
 
+
+	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 	}
 
+	// ===========================================================
+    // Check Permission
+    // ===========================================================
+
+	private void checkPermissionsForButtonVisibility() {
+	    // Sim Change
+	    if (!AndroidPermissions.isPermissionGranted(getActivity(), AndroidPermissions.READ_PHONE_STATE)) {
+	        notifSimChange.setVisibility(View.GONE);
+	    } else {
+	        notifSimChange.setVisibility(View.VISIBLE);
+	    }
+	    // Phone Call
+        if (!AndroidPermissions.isPermissionGranted(getActivity(), AndroidPermissions.PROCESS_OUTGOING_CALLS)) {
+            notifPhoneCall.setVisibility(View.GONE);
+        } else {
+            notifPhoneCall.setVisibility(View.VISIBLE);
+        }
+	    
+	}
+
+    
 	// ===========================================================
 	// Bussiness
 	// ===========================================================
