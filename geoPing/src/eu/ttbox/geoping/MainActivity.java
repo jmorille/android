@@ -35,214 +35,218 @@ import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
  */
 public class MainActivity extends SherlockFragmentActivity { //
 
-	private static final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity";
 
-	private com.actionbarsherlock.widget.ShareActionProvider mShareActionProvider;
+    private com.actionbarsherlock.widget.ShareActionProvider mShareActionProvider;
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
-	SectionsPagerAdapter mSectionsPagerAdapter;
+    /**
+     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * fragments for each of the sections. We use a
+     * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
+     * will keep every loaded fragment in memory. If this becomes too memory
+     * intensive, it may be best to switch to a
+     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     */
+    SectionsPagerAdapter mSectionsPagerAdapter;
 
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
-	ViewPager mViewPager;
+    /**
+     * The {@link ViewPager} that will host the section contents.
+     */
+    ViewPager mViewPager;
 
-	// Pages
-	private PersonListFragment personListFragment;
-	private PairingListFragment pairingListFragment;
-	private SmsLogListFragment smsLogListFragment;
+    // Pages
+    private PersonListFragment personListFragment;
+    private PairingListFragment pairingListFragment;
+    private SmsLogListFragment smsLogListFragment;
 
-	// ===========================================================
-	// Constructors
-	// ===========================================================
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
-		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the app.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		// SlidingMenu
-		 final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
-		 slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		 // SlidingMenu with ViewPager 
-		 mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
-	           @Override
-	           public void onPageScrollStateChanged(int state) { }
+        // SlidingMenu
+        if (false) {
+            final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
+            slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+            // SlidingMenu with ViewPager
+            mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                }
 
-	           @Override
-	           public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
 
-	           @Override
-	           public void onPageSelected(int position) {
-	               switch (position) {
-	               case 0:
-	                   slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN); 
-	                   break;
-	               default:
-	                   slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN); 
-	                   break;
-	               }
-	           }
+                @Override
+                public void onPageSelected(int position) {
+                    switch (position) {
+                    case 0:
+                        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+                        break;
+                    default:
+                        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+                        break;
+                    }
+                }
 
-	       });
-       
-        
+            });
+        }
+
         // Tracker
         GeoPingApplication.getInstance().tracker().trackPageView("/" + TAG);
- 
-	}
 
-	// ===========================================================
-	// Menu
-	// ===========================================================
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.menu, menu);
-		// Share
-		MenuItem itemShare = menu.findItem(R.id.menuAppShare);
-		mShareActionProvider = (com.actionbarsherlock.widget.ShareActionProvider) itemShare.getActionProvider();
-		// Share Inten
- 
-		mShareActionProvider.setShareIntent(createShareIntent(this));
-		return true;
-	}
+    // ===========================================================
+    // Menu
+    // ===========================================================
 
-	private Intent createShareIntent(Context context) {
-		Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
-		shareAppIntent.setType("text/plain"); 
-		shareAppIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.share_app_subject));
-//		shareAppIntent.putExtra(Intent.EXTRA_TEXT, "geoPing://pairing?id=eu.ttbox.geoping");
-		shareAppIntent.putExtra(Intent.EXTRA_TEXT, "market://details?id=eu.ttbox.geoping");
-		return shareAppIntent;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.menu, menu);
+        // Share
+        MenuItem itemShare = menu.findItem(R.id.menuAppShare);
+        mShareActionProvider = (com.actionbarsherlock.widget.ShareActionProvider) itemShare.getActionProvider();
+        // Share Inten
 
-	private void setShareItent(Intent shareIntent) {
-		if (mShareActionProvider != null) {
-			mShareActionProvider.setShareIntent(shareIntent);
-		}
-	}
+        mShareActionProvider.setShareIntent(createShareIntent(this));
+        return true;
+    }
 
-	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_track_person: {
-			mViewPager.setCurrentItem(SectionsPagerAdapter.PERSON);
-			return true;
-		}
-		case R.id.menu_pairing: {
-			mViewPager.setCurrentItem(SectionsPagerAdapter.PAIRING);
-			return true;
-		}
-		case R.id.menu_smslog:
-			mViewPager.setCurrentItem(SectionsPagerAdapter.LOG);
-			return true;
-			// case R.id.menuAppShare:
-			// Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
-			// shareAppIntent.putExtra(Intent.EXTRA_TEXT,
-			// "market://details?id=eu.ttbox.geoping");
-			// setShareItent(shareAppIntent);
-			// return true;
-		default:
-			break;
-		}
-		boolean isConsume = MenuOptionsItemSelectionHelper.onOptionsItemSelected(this, item);
-		if (isConsume) {
-			return isConsume;
-		} else {
-			// switch (item.getItemId()) {
-			// case R.id.menuQuitter:
-			// // Pour fermer l'application il suffit de faire finish()
-			// finish();
-			// return true;
-			// }
-		}
-		return false;
-	}
+    private Intent createShareIntent(Context context) {
+        Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
+        shareAppIntent.setType("text/plain");
+        shareAppIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.share_app_subject));
+        // shareAppIntent.putExtra(Intent.EXTRA_TEXT,
+        // "geoPing://pairing?id=eu.ttbox.geoping");
+        shareAppIntent.putExtra(Intent.EXTRA_TEXT, "market://details?id=eu.ttbox.geoping");
+        return shareAppIntent;
+    }
 
-	// ===========================================================
-	// Pages Adapter
-	// ===========================================================
+    private void setShareItent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
+    }
 
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the primary sections of the app.
-	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.menu_track_person: {
+            mViewPager.setCurrentItem(SectionsPagerAdapter.PERSON);
+            return true;
+        }
+        case R.id.menu_pairing: {
+            mViewPager.setCurrentItem(SectionsPagerAdapter.PAIRING);
+            return true;
+        }
+        case R.id.menu_smslog:
+            mViewPager.setCurrentItem(SectionsPagerAdapter.LOG);
+            return true;
+            // case R.id.menuAppShare:
+            // Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
+            // shareAppIntent.putExtra(Intent.EXTRA_TEXT,
+            // "market://details?id=eu.ttbox.geoping");
+            // setShareItent(shareAppIntent);
+            // return true;
+        default:
+            break;
+        }
+        boolean isConsume = MenuOptionsItemSelectionHelper.onOptionsItemSelected(this, item);
+        if (isConsume) {
+            return isConsume;
+        } else {
+            // switch (item.getItemId()) {
+            // case R.id.menuQuitter:
+            // // Pour fermer l'application il suffit de faire finish()
+            // finish();
+            // return true;
+            // }
+        }
+        return false;
+    }
 
-		static final int PERSON = 0;
-		static final int PAIRING = 1;
-		static final int LOG = 2;
+    // ===========================================================
+    // Pages Adapter
+    // ===========================================================
 
-		public SectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the primary sections of the app.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-		@Override
-		public Fragment getItem(int position) {
-			Log.d(TAG, "getItem : " + position);
-			Fragment fragment = null;
-			switch (position) {
-			case PERSON:
-				if (personListFragment == null) {
-					personListFragment = new PersonListFragment();
-					Log.d(TAG, "Create Fragment PersonListFragment");
-				}
-				fragment = personListFragment;
-				break;
-			case PAIRING:
-				if (pairingListFragment == null) {
-					pairingListFragment = new PairingListFragment();
-					Log.d(TAG, "Create Fragment PairingListFragment");
-				}
-				fragment = pairingListFragment;
-				break;
-			case LOG:
-				if (smsLogListFragment == null) {
-					smsLogListFragment = new SmsLogListFragment();
-					Log.d(TAG, "Create Fragment SmsLogListFragment");
-				}
-				fragment = smsLogListFragment;
-				break;
-			}
-			// fragment = new DummySectionFragment();
-			// Bundle args = new Bundle();
-			// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position +
-			// 1);
-			// fragment.setArguments(args);
-			return fragment;
-		}
+        static final int PERSON = 0;
+        static final int PAIRING = 1;
+        static final int LOG = 2;
 
-		@Override
-		public int getCount() {
-			return 3;
-		}
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
-		@Override
-		public CharSequence getPageTitle(int position) {
-			switch (position) {
-			case PERSON:
-				return getString(R.string.menu_person).toUpperCase();
-			case PAIRING:
-				return getString(R.string.menu_pairing).toUpperCase();
-			case LOG:
-				return getString(R.string.menu_smslog).toUpperCase();
-			}
-			return null;
-		}
-	}
+        @Override
+        public Fragment getItem(int position) {
+            Log.d(TAG, "getItem : " + position);
+            Fragment fragment = null;
+            switch (position) {
+            case PERSON:
+                if (personListFragment == null) {
+                    personListFragment = new PersonListFragment();
+                    Log.d(TAG, "Create Fragment PersonListFragment");
+                }
+                fragment = personListFragment;
+                break;
+            case PAIRING:
+                if (pairingListFragment == null) {
+                    pairingListFragment = new PairingListFragment();
+                    Log.d(TAG, "Create Fragment PairingListFragment");
+                }
+                fragment = pairingListFragment;
+                break;
+            case LOG:
+                if (smsLogListFragment == null) {
+                    smsLogListFragment = new SmsLogListFragment();
+                    Log.d(TAG, "Create Fragment SmsLogListFragment");
+                }
+                fragment = smsLogListFragment;
+                break;
+            }
+            // fragment = new DummySectionFragment();
+            // Bundle args = new Bundle();
+            // args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position +
+            // 1);
+            // fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+            case PERSON:
+                return getString(R.string.menu_person).toUpperCase();
+            case PAIRING:
+                return getString(R.string.menu_pairing).toUpperCase();
+            case LOG:
+                return getString(R.string.menu_smslog).toUpperCase();
+            }
+            return null;
+        }
+    }
 
 }

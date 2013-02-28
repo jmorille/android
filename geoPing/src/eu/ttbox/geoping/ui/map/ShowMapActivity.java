@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.views.overlay.TilesOverlay;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,10 +16,12 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.VersionUtils;
+import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 
 /**
  * @see http://mobiforge.com/developing/story/using-google-maps-android
@@ -46,6 +49,10 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.map_activity);
+		  // SlidingMenu
+//        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstanceForMap(this);
+//        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+ 
 		// Google Analytics
 		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
 		tracker.trackPageView("/" + TAG);
@@ -139,7 +146,7 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 				mapFragment.setMapViewTileSource(tiles.get(menuId - TilesOverlay.MENU_TILE_SOURCE_STARTING_ID));
 				// Compatibility
 				if (VersionUtils.isHc11) {
-					invalidateOptionsMenu();
+				    isHc11InvalidateOptionsMenu();
 				}
 				return true;
 			}
@@ -148,6 +155,13 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 		return false;
 	}
 
+	@SuppressLint("NewApi")
+    private void isHc11InvalidateOptionsMenu() {
+	    if (VersionUtils.isHc11) {
+            invalidateOptionsMenu();
+        }
+	}
+	
 	// ===========================================================
 	// Handle Intent
 	// ===========================================================
