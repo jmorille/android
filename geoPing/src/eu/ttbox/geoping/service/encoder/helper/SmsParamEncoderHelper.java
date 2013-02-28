@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
-import eu.ttbox.geoping.crypto.codec.Base64;
 import eu.ttbox.geoping.service.billing.util.Base64DecoderException;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageTypeEnum;

@@ -3,7 +3,6 @@ package eu.ttbox.geoping.domain.core;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,6 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
-import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 public class UpgradeDbHelper {
 

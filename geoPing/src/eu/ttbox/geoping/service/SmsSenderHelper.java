@@ -1,6 +1,5 @@
 package eu.ttbox.geoping.service;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import android.app.PendingIntent;

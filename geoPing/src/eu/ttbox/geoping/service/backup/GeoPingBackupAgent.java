@@ -20,7 +20,7 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 	static final String PREFS = "eu.ttbox.geoping_preferences";
 
 	// A key to uniquely identify the set of backup data
-	static final String BACKUP_KEY_PREFS = "GEOPING_01_PREFS";  
+	public static final String BACKUP_KEY_PREFS = "GEOPING_01_PREFS";  
 
 	// Allocate a helper and add it to the backup agent
 	@Override

@@ -19,7 +19,7 @@ public class TestSharedPreferencesBackupHelper extends SharedPreferencesBackupHe
      * Backs up the configured {@link android.content.SharedPreferences} groups.
      */
     public void performBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) {
-        String backupKey = "????";
+        String backupKey = GeoPingBackupAgent.BACKUP_KEY_PREFS;
         Log.i(TAG, "-------------------------------------------------");
         Log.i(TAG, "--- performBackup : key =  " + backupKey);
 

@@ -16,12 +16,10 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.VersionUtils;
-import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 
 /**
  * @see http://mobiforge.com/developing/story/using-google-maps-android

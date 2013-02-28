@@ -1,6 +1,5 @@
 package eu.ttbox.geoping.service.backup;
 
-import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.List;
 

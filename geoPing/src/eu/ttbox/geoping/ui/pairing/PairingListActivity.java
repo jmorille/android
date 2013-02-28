@@ -35,7 +35,8 @@ public class PairingListActivity extends SherlockFragmentActivity {
         // SlidingMenu
         final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
         slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        
         // Intents
         handleIntent(getIntent());
         // Tracker

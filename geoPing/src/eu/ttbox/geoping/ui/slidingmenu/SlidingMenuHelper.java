@@ -2,7 +2,6 @@ package eu.ttbox.geoping.ui.slidingmenu;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
@@ -27,7 +26,8 @@ public class SlidingMenuHelper {
         slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         slidingMenu.setFadeDegree(0.35f);
         slidingMenu.setBehindScrollScale(0.35f);
-
+        slidingMenu.setSlidingEnabled(true);
+        
         slidingMenu.setMenu(R.layout.slidingmenu_menu);
         slidingMenu.setSelectorEnabled(true);
         slidingMenu.setSelectorDrawable(R.drawable.slidingmenu_selector);

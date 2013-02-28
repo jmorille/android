@@ -31,14 +31,15 @@ public class PersonListActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.track_person_list_activity);
-     // SlidingMenu
+        // SlidingMenu
         final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
         slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Intent
         handleIntent(getIntent());
         // Tracker
-        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).tracker();
-        tracker.trackPageView("/"+TAG);
+        GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
+        tracker.trackPageView("/" + TAG);
     }
 
     @Override

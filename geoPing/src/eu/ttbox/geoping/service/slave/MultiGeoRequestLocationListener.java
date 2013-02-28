@@ -1,7 +1,6 @@
 package eu.ttbox.geoping.service.slave;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 import android.location.Location;
 import android.location.LocationListener;

@@ -1,6 +1,5 @@
 package eu.ttbox.geoping.ui.map.track.dialog;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
