@@ -2,20 +2,16 @@ package eu.ttbox.geoping;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
 import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
 import eu.ttbox.geoping.ui.pairing.PairingListFragment;
@@ -75,44 +71,44 @@ public class MainActivity extends SherlockFragmentActivity { //
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// configure the SlidingMenu
-       final SlidingMenu slidingMenu = new SlidingMenu(this);
-         slidingMenu.setMode(SlidingMenu.LEFT);
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN); 
-        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-        slidingMenu.setShadowDrawable(R.drawable.shadow);
-        slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        slidingMenu.setFadeDegree(0.35f);
-        slidingMenu.setBehindScrollScale(0.35f); 
-        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        slidingMenu.setMenu(R.layout.slidingmenu_menu);
-        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
-            @Override
-            public void onPageScrollStateChanged(int state) { }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                case 0:
-                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN); 
-                    break;
-                default:
-                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN); 
-                    break;
-                }
-            }
-
-        });
-        CanvasTransformer smTransformer = new CanvasTransformer() {
-            @Override
-            public void transformCanvas(Canvas canvas, float percentOpen) {
-                float scale = (float) (percentOpen*0.25 + 0.75);
-                canvas.scale(scale, scale, canvas.getWidth()/2, canvas.getHeight()/2);
-            }
-        };
-        slidingMenu.setBehindCanvasTransformer(smTransformer);
+//       final SlidingMenu slidingMenu = new SlidingMenu(this);
+//         slidingMenu.setMode(SlidingMenu.LEFT);
+//        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN); 
+//        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+//        slidingMenu.setShadowDrawable(R.drawable.shadow);
+//        slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+//        slidingMenu.setFadeDegree(0.35f);
+//        slidingMenu.setBehindScrollScale(0.35f); 
+//        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+//        slidingMenu.setMenu(R.layout.slidingmenu_menu);
+//        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+//            @Override
+//            public void onPageScrollStateChanged(int state) { }
+//
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                switch (position) {
+//                case 0:
+//                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN); 
+//                    break;
+//                default:
+//                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN); 
+//                    break;
+//                }
+//            }
+//
+//        });
+//        CanvasTransformer smTransformer = new CanvasTransformer() {
+//            @Override
+//            public void transformCanvas(Canvas canvas, float percentOpen) {
+//                float scale = (float) (percentOpen*0.25 + 0.75);
+//                canvas.scale(scale, scale, canvas.getWidth()/2, canvas.getHeight()/2);
+//            }
+//        };
+//        slidingMenu.setBehindCanvasTransformer(smTransformer);
         
         
         // Tracker

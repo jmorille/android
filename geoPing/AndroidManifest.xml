@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="38" android:versionName="0.1.6" package="eu.ttbox.geoping">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="41" android:versionName="0.1.6" package="eu.ttbox.geoping">
 
     
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17"/>
@@ -244,8 +244,7 @@
 <!--        Permission Denial: reading eu.ttbox.geoping.domain.WidgetProvider 
 uri content://eu.ttbox.geoping.WidgetProvider/pairing from pid=2264, uid=10040 requires eu.ttbox.geoping.PERSON_READ
 		  android:readPermission="eu.ttbox.geoping.PERSON_READ"
-		 android:readPermission="eu.ttbox.geoping.PAIRING_READ" 
-		 
+		 android:readPermission="eu.ttbox.geoping.PAIRING_READ"  
 		  -->
 
 <!--         <provider android:authorities="eu.ttbox.geoping.WidgetProvider"     android:name=".domain.WidgetProvider"     -->

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal" />
+<!-- 
 <com.slidingmenu.lib.SlidingMenu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:sliding="http://schemas.android.com/apk/res-auto"
     android:id="@+id/slidingmenulayout"
@@ -14,3 +19,4 @@
     sliding:shadowDrawable="@drawable/shadow"
     sliding:shadowWidth="@dimen/shadow_width"
     sliding:touchModeAbove="fullscreen" />
+ -->
