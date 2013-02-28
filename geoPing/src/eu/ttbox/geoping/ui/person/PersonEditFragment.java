@@ -153,8 +153,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.menu_save:
-            onSaveClick();
-            getActivity().finish();
+            onSaveClick(); 
             return true;
         case R.id.menu_delete:
              onDeleteClick();

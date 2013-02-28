@@ -1,5 +1,10 @@
 package eu.ttbox.geoping.ui.pairing;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -43,7 +48,7 @@ import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.ui.person.PhotoEditorView;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
-public class PairingEditFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class PairingEditFragment extends SherlockFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	private static final String TAG = "PairingEditFragment";
 
@@ -169,16 +174,47 @@ public class PairingEditFragment extends Fragment implements SharedPreferences.O
 		return v;
 	}
 
-	@Override
-	public void onDestroy() {
-		sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-		super.onDestroy();
-	}
 
+
+    // ===========================================================
+    // Menu
+    // ===========================================================
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_pairing_edit, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.menu_save:
+             onSaveClick();
+            return true;
+        case R.id.menu_delete:
+            onDeleteClick();
+            return true;
+        case R.id.menu_select_contact:
+            onSelectContactClick(null);
+            return true;
+        case R.id.menu_cancel:
+            onCancelClick();
+            return true; 
+        }
+        return false;
+    }
+    
 	// ===========================================================
 	// Life Cycle
 	// ===========================================================
 
+    @Override
+    public void onDestroy() {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
+    }
+
+    
 	// ===========================================================
 	// Preferences
 	// ===========================================================

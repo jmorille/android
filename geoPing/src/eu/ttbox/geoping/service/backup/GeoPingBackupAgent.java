@@ -26,7 +26,7 @@ public class GeoPingBackupAgent extends BackupAgentHelper {
 	@Override
 	public void onCreate() { 
         // Prefs
-        SharedPreferencesBackupHelper helperPrefs = new SharedPreferencesBackupHelper(this, PREFS);
+        SharedPreferencesBackupHelper helperPrefs = new TestSharedPreferencesBackupHelper(this, PREFS);
         addHelper(BACKUP_KEY_PREFS, helperPrefs);
  		// Database Pairing
 		PairingDbBackupHelper helperDbPairing = new PairingDbBackupHelper(this);
