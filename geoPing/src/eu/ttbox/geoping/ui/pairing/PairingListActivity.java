@@ -11,9 +11,11 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 
 public class PairingListActivity extends SherlockFragmentActivity {
 
@@ -30,10 +32,14 @@ public class PairingListActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pairing_list_activity);
+        // SlidingMenu
+        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+
         // Intents
         handleIntent(getIntent());
         // Tracker
-        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).tracker();
+        GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
         tracker.trackPageView("/pairing/list");
     }
 

@@ -9,10 +9,12 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.SmsLogProvider;
+import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 
 public class SmsLogListActivity extends SherlockFragmentActivity {
 
@@ -29,6 +31,10 @@ public class SmsLogListActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.smslog_list_activity);
+     // SlidingMenu
+        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+        
         // Intents
         handleIntent(getIntent());
         // Tracker

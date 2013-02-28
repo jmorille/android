@@ -20,6 +20,7 @@ import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
 import eu.ttbox.geoping.ui.pairing.PairingListFragment;
 import eu.ttbox.geoping.ui.person.PersonListFragment;
+import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 /**
@@ -74,46 +75,31 @@ public class MainActivity extends SherlockFragmentActivity { //
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		// configure the SlidingMenu
-       final SlidingMenu slidingMenu = new SlidingMenu(this);
-         slidingMenu.setMode(SlidingMenu.LEFT);
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN); 
-        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-        slidingMenu.setShadowDrawable(R.drawable.shadow);
-        slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        slidingMenu.setFadeDegree(0.35f);
-        slidingMenu.setBehindScrollScale(0.35f); 
-        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        slidingMenu.setMenu(R.layout.slidingmenu_menu);
-        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
-            @Override
-            public void onPageScrollStateChanged(int state) { }
+		// SlidingMenu
+		 final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
+		 slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+		 // SlidingMenu with ViewPager 
+		 mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+	           @Override
+	           public void onPageScrollStateChanged(int state) { }
 
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+	           @Override
+	           public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                case 0:
-                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN); 
-                    break;
-                default:
-                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN); 
-                    break;
-                }
-            }
+	           @Override
+	           public void onPageSelected(int position) {
+	               switch (position) {
+	               case 0:
+	                   slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN); 
+	                   break;
+	               default:
+	                   slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN); 
+	                   break;
+	               }
+	           }
 
-        });
-        CanvasTransformer smTransformer = new CanvasTransformer() {
-            @Override
-            public void transformCanvas(Canvas canvas, float percentOpen) {
-                float scale = (float) (percentOpen*0.25 + 0.75);
-                canvas.scale(scale, scale, canvas.getWidth()/2, canvas.getHeight()/2);
-            }
-        };
-        slidingMenu.setBehindCanvasTransformer(smTransformer);
-        
+	       });
+       
         
         // Tracker
         GeoPingApplication.getInstance().tracker().trackPageView("/" + TAG);

@@ -11,9 +11,11 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 
 public class PersonListActivity extends SherlockFragmentActivity {
 
@@ -29,7 +31,10 @@ public class PersonListActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.track_person_list_activity);
-
+     // SlidingMenu
+        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+        
         handleIntent(getIntent());
         // Tracker
         GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).tracker();
