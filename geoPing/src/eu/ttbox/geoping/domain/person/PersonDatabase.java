@@ -19,7 +19,7 @@ public class PersonDatabase {
  
     private static final String TAG = "PersonDatabase";
 
-    public static final String TABLE_PERSON_FTS = "personFTS";
+    public static final String TABLE_PERSON_FTS = "personTS";
 
     public static class PersonColumns implements EncryptionColumns {
 

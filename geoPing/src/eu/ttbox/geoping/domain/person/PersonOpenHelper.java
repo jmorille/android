@@ -94,7 +94,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
         mDatabase.execSQL(FTS_TABLE_CREATE_USER);
         // mDatabase.execSQL(FTS_TABLE_CREATE_MESSAGE);
         // Index
-         db.execSQL(CREATE_INDEX_PERSON_PHONE_AK);
+        db.execSQL(CREATE_INDEX_PERSON_PHONE_AK);
         // db.execSQL(CREATE_INDEX_MESSAGE_AK);
         // new PersonDbBootstrap(mHelperContext, mDatabase).loadDictionary();
     }
@@ -103,8 +103,14 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
         // Index
         db.execSQL("DROP INDEX IF EXISTS " + INDEX_PERSON_PHONE_AK);
         // Table
-        db.execSQL("DROP TABLE IF EXISTS " + MessageDatabase.TABLE_MESSAGE_FTS);
         db.execSQL("DROP TABLE IF EXISTS " + PersonDatabase.TABLE_PERSON_FTS);
+
+        // Drop Older Tables
+        final String[] TO_DROP_TABLE_NAME = new String[] { "messageFTS", "personFTS" // V5
+        };
+        for (String toDrop : TO_DROP_TABLE_NAME) {
+            db.execSQL("DROP TABLE IF EXISTS " + toDrop);
+        }
     }
 
     @Override
@@ -132,10 +138,11 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
         // ----------------------
         onLocalDrop(db);
         onCreate(db);
+        Log.i(TAG, "Upgrading database : Create TABLE  : " + PersonDatabase.TABLE_PERSON_FTS);
 
         // Insert data in new table
         // ----------------------
-        if (oldVersion <= 5) {
+        if (oldRows != null) {
             List<String> validColumns = Arrays.asList(PersonColumns.ALL_COLS);
             UpgradeDbHelper.insertOldRowInNewTable(db, oldRows, PersonDatabase.TABLE_PERSON_FTS, validColumns);
         }

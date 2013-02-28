@@ -3,6 +3,7 @@ package eu.ttbox.geoping.domain.geotrack;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 
 public class GeoTrackOpenHelper extends SQLiteOpenHelper {
@@ -68,6 +69,8 @@ public class GeoTrackOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	    Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
+	    // Update
 		db.execSQL("DROP INDEX IF EXISTS " + INDEX_TRACK_POINT_AK + ";");
 		db.execSQL("DROP TABLE IF EXISTS " + GeoTrackDatabase.TABLE_TRACK_POINT + ";");
 		onCreate(db);

@@ -26,7 +26,7 @@ public class PairingDatabase {
 
     private static final String TAG = "PairingDatabase";
 
-    public static final String TABLE_PAIRING_FTS = "pairingFTS";
+    public static final String TABLE_PAIRING_FTS = "pairingTS";
 
     public static class PairingColumns implements EncryptionColumns {
 
