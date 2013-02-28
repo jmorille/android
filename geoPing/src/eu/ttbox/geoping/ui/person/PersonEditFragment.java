@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -94,6 +93,9 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.track_person_edit, container, false);
+        // Menu on Fragment
+        setHasOptionsMenu(true);
+
         // Cache
         photoCache = ((GeoPingApplication) getActivity().getApplicationContext()).getPhotoThumbmailCache();
 
@@ -136,7 +138,6 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         // Menu
         // Load Data
         loadEntity(getArguments());
-         setHasOptionsMenu(true);
         return v;
     }
 
@@ -149,24 +150,26 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         inflater.inflate(R.menu.menu_person_edit, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.menu_save:
-            onSaveClick(); 
+            onSaveClick();
             return true;
         case R.id.menu_delete:
-             onDeleteClick();
+            onDeleteClick();
             return true;
         case R.id.menu_select_contact:
             onSelectContactClick(null);
             return true;
         case R.id.menu_cancel:
-             onCancelClick();
-            return true; 
+            onCancelClick();
+            return true;
         }
         return false;
     }
+
     // ===========================================================
     // Accessor
     // ===========================================================
@@ -174,8 +177,6 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     private void setEntityId(String entityId) {
         this.entityId = entityId;
     }
-
-  
 
     public void setOnPersonSelectListener(OnPersonSelectListener onPersonSelectListener) {
         this.onPersonSelectListener = onPersonSelectListener;
@@ -240,8 +241,9 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     // ===========================================================
 
     public void onColorPickerClick(View v) {
-//        ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), this, mPaint.getColor());
- //        dialog.show();
+        // ColorPickerDialog dialog = new ColorPickerDialog(getActivity(), this,
+        // mPaint.getColor());
+        // dialog.show();
 
         // FragmentTransaction ft = getFragmentManager().beginTransaction();
         // Fragment prev =

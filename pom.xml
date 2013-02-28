@@ -57,7 +57,7 @@
       <!-- Utils -->
       <jackson.version>2.1.4</jackson.version>
       <!-- Release -->
-      <android-maven-plugin.version>3.5.0</android-maven-plugin.version> <!-- 3.5.1 -->
+      <android-maven-plugin.version>3.5.1</android-maven-plugin.version> <!-- 3.5.1 -->
       <android.sdk.platform>17</android.sdk.platform>
       <sign.alias>android</sign.alias>
    </properties>
