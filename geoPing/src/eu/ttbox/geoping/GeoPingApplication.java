@@ -16,6 +16,7 @@ import android.util.Log;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import eu.ttbox.geoping.core.AppConstants;
+import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class GeoPingApplication extends Application {
@@ -210,7 +211,7 @@ public class GeoPingApplication extends Application {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void initStrictMode() {
-		if (DEVELOPPER_MODE) {
+		if (VersionUtils.isHc11 &&    DEVELOPPER_MODE) {
 			StrictMode.setThreadPolicy( //
 					new StrictMode.ThreadPolicy.Builder()//
 							.detectDiskReads()//
