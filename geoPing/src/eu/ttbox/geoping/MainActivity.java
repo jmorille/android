@@ -10,12 +10,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.slidingmenu.lib.SlidingMenu;
 
+import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
 import eu.ttbox.geoping.ui.pairing.PairingListFragment;
 import eu.ttbox.geoping.ui.person.PersonListFragment;
@@ -32,10 +32,11 @@ import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
  * @author jmorille
  * 
  */
-public class MainActivity extends SherlockFragmentActivity { //
+public class MainActivity extends GeoPingSlidingMenuFragmentActivity { //
 
     private static final String TAG = "MainActivity";
 
+    // private SlidingMenu slidingMenu;
     private com.actionbarsherlock.widget.ShareActionProvider mShareActionProvider;
 
     /**
@@ -75,9 +76,9 @@ public class MainActivity extends SherlockFragmentActivity { //
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // SlidingMenu
-        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
-        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        // SlidingMenu with ViewPager
+//        slidingMenu = SlidingMenuHelper.newInstance(this);
+//        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+//        // SlidingMenu with ViewPager
         mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageScrollStateChanged(int state) {
@@ -91,20 +92,22 @@ public class MainActivity extends SherlockFragmentActivity { //
             public void onPageSelected(int position) {
                 switch (position) {
                 case 0:
-                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+                    getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
                     break;
                 default:
-                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+                    getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
                     break;
                 }
             }
 
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Tracker
         EasyTracker.getInstance().activityStart(this);
     }
+
+  
 
     @Override
     public void onStop() {
@@ -147,6 +150,7 @@ public class MainActivity extends SherlockFragmentActivity { //
 
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
+        
         case R.id.menu_track_person: {
             mViewPager.setCurrentItem(SectionsPagerAdapter.PERSON);
             return true;
@@ -178,7 +182,7 @@ public class MainActivity extends SherlockFragmentActivity { //
             // return true;
             // }
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     // ===========================================================
@@ -189,7 +193,7 @@ public class MainActivity extends SherlockFragmentActivity { //
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the primary sections of the app.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         static final int PERSON = 0;
         static final int PAIRING = 1;

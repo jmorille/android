@@ -14,9 +14,10 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 
-public class PairingListActivity extends SherlockFragmentActivity {
+public class PairingListActivity extends GeoPingSlidingMenuFragmentActivity {
 
     private static final String TAG = "PairingListActivity";
 
@@ -32,9 +33,9 @@ public class PairingListActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pairing_list_activity);
         // SlidingMenu
-        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
-        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
+//        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         // Intents
         handleIntent(getIntent());
@@ -84,7 +85,7 @@ public class PairingListActivity extends SherlockFragmentActivity {
             onCancelClick();
             return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     // ===========================================================

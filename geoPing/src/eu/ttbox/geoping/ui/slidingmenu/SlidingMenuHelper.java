@@ -11,14 +11,16 @@ import eu.ttbox.geoping.R;
 public class SlidingMenuHelper {
 
     public static SlidingMenu newInstanceForMap(Context context) {
-        return newInstance(context, SlidingMenu.TOUCHMODE_MARGIN);
+        SlidingMenu slidingMenu = new SlidingMenu(context);
+        return customizeSlidingInstance(context,slidingMenu,  SlidingMenu.TOUCHMODE_MARGIN);
      }
    
     public static SlidingMenu newInstance(Context context) {
-        return newInstance(context, SlidingMenu.TOUCHMODE_FULLSCREEN);
+          SlidingMenu slidingMenu = new SlidingMenu(context);
+        return customizeSlidingInstance(context,slidingMenu,  SlidingMenu.TOUCHMODE_FULLSCREEN);
     }
-    private static SlidingMenu newInstance(Context context, int touchModeAbove) {
-        final SlidingMenu slidingMenu = new SlidingMenu(context);
+    public static SlidingMenu customizeSlidingInstance(Context context, final SlidingMenu slidingMenu, int touchModeAbove) {
+       
         slidingMenu.setMode(SlidingMenu.LEFT);
         slidingMenu.setTouchModeAbove(touchModeAbove);
         slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
