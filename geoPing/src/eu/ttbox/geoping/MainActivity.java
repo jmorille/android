@@ -13,6 +13,7 @@ import android.util.Log;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
@@ -74,38 +75,42 @@ public class MainActivity extends SherlockFragmentActivity { //
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // SlidingMenu
-        if (false) {
-            final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
-            slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-            // SlidingMenu with ViewPager
-            mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
-                @Override
-                public void onPageScrollStateChanged(int state) {
-                }
+        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+        // SlidingMenu with ViewPager
+        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
 
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
-                @Override
-                public void onPageSelected(int position) {
-                    switch (position) {
-                    case 0:
-                        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-                        break;
-                    default:
-                        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-                        break;
-                    }
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                case 0:
+                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+                    break;
+                default:
+                    slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+                    break;
                 }
+            }
 
-            });
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Tracker
-        GeoPingApplication.getInstance().tracker().trackPageView("/" + TAG);
+        EasyTracker.getInstance().activityStart(this);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Tracker
+        EasyTracker.getInstance().activityStop(this);
     }
 
     // ===========================================================

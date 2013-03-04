@@ -206,10 +206,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
             int deleteCount = getActivity().getContentResolver().delete(entityUri, null, null);
             Log.d(TAG, "Delete %s entity successuf");
             if (deleteCount > 0) {
-                getActivity().setResult(Activity.RESULT_OK);
-                // Tracker
-                GeoPingApplication.getInstance().tracker().trackPageView("/Person/delete");
-
+                getActivity().setResult(Activity.RESULT_OK); 
             }
             getActivity().finish();
         }

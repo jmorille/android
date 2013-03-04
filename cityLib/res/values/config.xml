@@ -8,8 +8,10 @@
     <string name="backup_api_key">AEdPqrEAAAAIyRPxpmKUM1mUzyoCGeNvfAGfQ9iFwwmwauTHaA</string>
     <!-- Money-->
  	<string name="admob_key">a1509be215dd76b</string> 
-     <!-- Analytics -->
- 	<string name="analytics_key">UA-36410991-2</string> 
+     <!-- Analytics --> 
+    <string name="ga_trackingId">UA-36410991-2</string> 
+    <bool name="ga_autoActivityTracking">true</bool>
+    <bool name="ga_reportUncaughtExceptions">true</bool>
  	
  	<!-- ### Google Map ### -->
     <!-- ################## --> 	

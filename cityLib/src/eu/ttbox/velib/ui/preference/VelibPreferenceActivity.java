@@ -1,7 +1,5 @@
 package eu.ttbox.velib.ui.preference;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -10,7 +8,9 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
-import eu.ttbox.velib.AndroLibApplication;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.model.VelibProvider;
 
@@ -28,11 +28,16 @@ public class VelibPreferenceActivity extends PreferenceActivity implements OnSha
 		initSummaries(this.getPreferenceScreen());
 		// Register change listener
 		this.getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-	     // Tracker
-        GoogleAnalyticsTracker tracker = ((AndroLibApplication)getApplication()).getTracker();
-        tracker.trackPageView("/Preference");
+		  // Tracker
+        EasyTracker.getInstance().activityStart(this);
+    }
 
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Tracker
+        EasyTracker.getInstance().activityStop(this);
+    }
 
 	/**
 	 * Set the summaries of all preferences

@@ -1,6 +1,6 @@
 package eu.ttbox.velib.ui.search.adapter;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -49,7 +48,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 	// Instance
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
-	CopyOnWriteArrayList<ViewHolder> viewHolders = new CopyOnWriteArrayList<StationItemCurAdapter.ViewHolder>();
+	ConcurrentLinkedQueue<ViewHolder> viewHolders = new ConcurrentLinkedQueue<StationItemCurAdapter.ViewHolder>();
 
 
 	// ===========================================================
@@ -210,11 +209,12 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 
 	static class ViewHolder {
 		Location location;
-
+		// Data
+        // StationDispoIcView dispoIcView;
+		
 		// Binding
 		TextView distanceText;
 		TextView ocupationText;
-		// StationDispoIcView dispoIcView;
 		TextView adressText;
 		ImageView iconFavorite;
 		StationCompassView stationCompass;

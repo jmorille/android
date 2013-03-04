@@ -10,13 +10,15 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import eu.ttbox.geoping.GeoPingApplication;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Tracker;
+
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.core.VersionUtils;
@@ -30,7 +32,7 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
     private static final String TAG = "GeoPingPrefActivity";
 
     private SharedPreferences sharedPreferences;
-    
+
     // Dev Listener
     private SharedPreferences developmentPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener mDevelopmentPreferencesListener;
@@ -44,7 +46,7 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
         // onBuildHeaders() will be called during super.onCreate()
         developmentPreferences = getSharedPreferences(AppVersionPreference.PREFS_DEV_MODE, Context.MODE_PRIVATE);
         super.onCreate(aSavedState);
-        sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!VersionUtils.isHc11) {
             final boolean showDev = developmentPreferences.getBoolean(AppVersionPreference.PREF_SHOW_DEVMODE, false);
             // addPreferencesFromResource(R.xml.prefs);
@@ -56,21 +58,28 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
             addPreferencesFromResource(R.xml.info_prefs);
         }
         // Tracker
-        GeoPingApplication.getInstance().tracker().trackPageView("/Preference");
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Tracker
+        EasyTracker.getInstance().activityStop(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        // Register change listener 
-       sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        // Register change listener
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         // Resume for Headeers
         if (VersionUtils.isHc11) {
             onResumeHc11();
         }
 
     }
-    
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onResumeHc11() {
         mDevelopmentPreferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -87,7 +96,7 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
     @Override
     public void onPause() {
         super.onPause();
-     // Register change listener
+        // Register change listener
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         // Resume for Headeers
         if (developmentPreferences != null && mDevelopmentPreferencesListener != null) {
@@ -95,7 +104,6 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
             mDevelopmentPreferencesListener = null;
         }
     }
- 
 
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -153,15 +161,17 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
     // ===========================================================
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) { 
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         // Ask Backup
         BackupManager.dataChanged(getPackageName());
         // Update Display
-        Preference pref = findPreference(key);
+        // Preference pref = findPreference(key);
         // setSummary(pref);
         // Tracker
-        GeoPingApplication.getInstance().tracker().trackPageView("/Pref/" + key);
-
+        // GeoPingApplication.getInstance().tracker().trackPageView("/Pref/" +
+        // key);
+        Tracker tracker = EasyTracker.getTracker();
+        tracker.sendEvent("ui_pref", "changed", key, null);
     }
 
     // ===========================================================

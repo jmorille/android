@@ -15,9 +15,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.analytics.tracking.android.EasyTracker;
 
-import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.VersionUtils;
 
@@ -51,10 +50,16 @@ public class ShowMapActivity extends SherlockFragmentActivity {
 //        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstanceForMap(this);
 //        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
  
-		// Google Analytics
-		GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
-		tracker.trackPageView("/" + TAG);
-	}
+		  // Tracker
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Tracker
+        EasyTracker.getInstance().activityStop(this);
+    }
 
 	@Override
 	public void onAttachFragment(Fragment fragment) {
