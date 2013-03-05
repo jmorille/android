@@ -44,6 +44,12 @@ public class SelectGeoTrackDialog extends AlertDialog {
     // Config
 //    private HashMap<String, GeoTrackOverlay> geoTrackOverlayByUser;
 
+
+    // ===========================================================
+    // Interfaces
+    // ===========================================================
+
+    
     /**
      * The callback used to indicate the user is done selecting the favorite
      * Icon.
@@ -52,6 +58,11 @@ public class SelectGeoTrackDialog extends AlertDialog {
         void onSelectPerson(Person person);
         void onNoPerson(SelectGeoTrackDialog dialog );
     }
+
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     public SelectGeoTrackDialog(Context context, LoaderManager loaderManager, OnSelectPersonListener callBack,  Map<String, GeoTrackOverlay> geoTrackOverlayByUser) {
         this(context, 0, loaderManager, callBack, geoTrackOverlayByUser);

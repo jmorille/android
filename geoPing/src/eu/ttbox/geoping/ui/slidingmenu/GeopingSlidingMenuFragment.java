@@ -30,6 +30,11 @@ import eu.ttbox.geoping.ui.smslog.SmsLogListActivity;
  */
 public class GeopingSlidingMenuFragment extends ListFragment {
 
+    
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
     public GeopingSlidingMenuFragment() {
         super();
     }
@@ -41,7 +46,7 @@ public class GeopingSlidingMenuFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         SlidingMenuAdapter adapter = new SlidingMenuAdapter(getActivity());
-        adapter.add(new SlindingMenuItem(R.id.menuMap, R.string.menu_map, R.drawable.ic_location_web_site)); 
+        adapter.add(new SlindingMenuItem(R.id.menuMap, R.string.menu_map, R.drawable.ic_location_web_site));
         adapter.add(new SlindingMenuItem(R.id.menu_track_person, R.string.menu_person, R.drawable.ic_action_user));
         adapter.add(new SlindingMenuItem(R.id.menu_pairing, R.string.menu_pairing, R.drawable.ic_device_access_secure));
         adapter.add(new SlindingMenuItem(R.id.menu_smslog, R.string.menu_smslog, R.drawable.ic_collections_go_to_today));
@@ -53,16 +58,21 @@ public class GeopingSlidingMenuFragment extends ListFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SlindingMenuItem menu = (SlindingMenuItem) parent.getItemAtPosition(position);
-               boolean isSlide = onSlidingMenuSelectItem(menu);
-               if (isSlide) {
-                   switchFragment( );
-               }
+                boolean isSlide = onSlidingMenuSelectItem(menu);
+                if (isSlide) {
+                    switchFragment();
+                }
             }
         });
     }
 
+    
+    // ===========================================================
+    // Sliding Menu Select Item
+    // ===========================================================
+
     private boolean onSlidingMenuSelectItem(SlindingMenuItem cursor) {
-        Context  context = getActivity();
+        Context context = getActivity();
         switch (cursor.itemId) {
         case R.id.menu_settings:
             Intent intentOption = new Intent(context, GeoPingPrefActivity.class);
@@ -101,17 +111,41 @@ public class GeopingSlidingMenuFragment extends ListFragment {
         }
         return false;
     }
-    
- // the meat of switching the above fragment
-    private void switchFragment( ) {
+
+    private Class getActivityClassByItemId(int itemId) {
+        switch (itemId) {
+        case R.id.menu_settings:
+            return GeoPingPrefActivity.class;
+        case R.id.menuGeotracker:
+            return GeoTrakerActivity.class;
+        case R.id.menuMap:
+            return ShowMapActivity.class;
+        case R.id.menu_pairing:
+            return PairingListActivity.class;
+        case R.id.menu_track_person:
+            return PersonListActivity.class;
+        case R.id.menu_smslog:
+            return SmsLogListActivity.class;
+        default:
+            return null;
+        }
+    }
+
+    // the meat of switching the above fragment
+    private void switchFragment() {
         if (getActivity() == null)
             return;
-        
+
         if (getActivity() instanceof SlidingActivityBase) {
             SlidingActivityBase fca = (SlidingActivityBase) getActivity();
-            fca.showContent( );
-        }  
+            fca.showContent();
+        }
     }
+
+    
+    // ===========================================================
+    // Slinding Menu Item
+    // ===========================================================
 
     
     private class SlindingMenuItem {
@@ -134,16 +168,41 @@ public class GeopingSlidingMenuFragment extends ListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.slidingmenu_row, null);
+                // Then populate the ViewHolder
+                holder = new ViewHolder();
+                holder.icon = (ImageView) convertView.findViewById(R.id.row_icon);
+                holder.title = (TextView) convertView.findViewById(R.id.row_title);
+                holder.selector = (ImageView) convertView.findViewById(R.id.row_selector_icon);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
-            ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);
-            icon.setImageResource(getItem(position).iconRes);
-            TextView title = (TextView) convertView.findViewById(R.id.row_title);
-            title.setText(getItem(position).tag);
-
+            SlindingMenuItem lineItem = getItem(position);
+            holder.icon.setImageResource(lineItem.iconRes);
+            holder.title.setText(lineItem.tag);
+            // TODO Test Selector
+            if (R.id.menuMap == lineItem.itemId && getActivity() instanceof ShowMapActivity) {
+                holder.selector.setVisibility(View.VISIBLE);
+            }
             return convertView;
         }
 
     }
+
+    static class ViewHolder {
+        ImageView icon;
+        TextView title;
+        ImageView selector;
+    }
+    
+
+    
+    // ===========================================================
+    // Slinding Menu Person Item
+    // ===========================================================
+
+    
 }

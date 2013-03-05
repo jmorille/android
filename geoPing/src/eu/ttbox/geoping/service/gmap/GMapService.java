@@ -5,9 +5,7 @@ package eu.ttbox.geoping.service.gmap;
  * http://stackoverflow.com/questions/12955349/android-get-turn-by-turn-direction-of-route-between-two-geo-locations
  * 
  *  https://github.com/iamamused/Google-Maps-Directions-API-Java-Parser
- * 
- * @author a000cqp
- *
+ *  
  */
 public class GMapService {
 
