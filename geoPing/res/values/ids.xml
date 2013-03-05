@@ -7,6 +7,8 @@
     <item name="config_id_geotrack_select_person_loader" type="id"/>
     <item name="config_id_map_geotrack_person_loader" type="id"/>
 
+    <item name="config_id_slidingmenu_person_list_loader" type="id"/>
+    
     <!-- Master -->
     <item name="show_notification_new_geoping_response" type="id"/>
     <!-- Slave -->

@@ -32,6 +32,11 @@
         android:icon="@android:drawable/ic_menu_preferences"
         android:showAsAction="never"
         android:title="@string/menu_settings"/>
+    <item
+        android:id="@+id/menu_extra_feature"
+        android:icon="@android:drawable/ic_menu_more"
+        android:showAsAction="never"
+        android:title="@string/menu_extra_feature"/>
 <!--      <item -->
 <!--         android:id="@+id/menuQuitter" -->
 <!--         android:icon="@android:drawable/ic_lock_power_off" -->

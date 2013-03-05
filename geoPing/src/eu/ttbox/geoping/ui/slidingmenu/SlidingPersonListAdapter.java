@@ -36,7 +36,7 @@ public class SlidingPersonListAdapter extends android.support.v4.widget.Resource
     // ===========================================================
 
     public SlidingPersonListAdapter(Context context, Cursor c, int flags ) {
-        super(context, R.layout.track_person_list_item, c, flags);
+        super(context, R.layout.slidingmenu_person_list_item, c, flags);
         this.context = context; 
         // Cache
         photoCache = ((GeoPingApplication) context.getApplicationContext()).getPhotoThumbmailCache(); 
@@ -70,16 +70,16 @@ public class SlidingPersonListAdapter extends android.support.v4.widget.Resource
         final long personId = helper.getPersonId(cursor);
         String personName = helper.getPersonDisplayName(cursor);
         int color = helper.getPersonColor(cursor);
-        // Bind Value
-        holder.phoneText.setText(phoneNumber);
+        // Bind Value 
         holder.nameText.setText(personName);
+        holder.phoneText.setText(phoneNumber);
         // Color
         Drawable stld = PersonColorDrawableHelper.getListBackgroundColor(color);
         //
         // if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.JELLY_BEAN) {
         // view.setBackground(stld);
         // } else
-        view.setBackgroundDrawable(stld);
+        holder.pingButton.setBackgroundDrawable(stld);
 
         // Photo
         if (!TextUtils.isEmpty(contactId)) {
@@ -102,22 +102,17 @@ public class SlidingPersonListAdapter extends android.support.v4.widget.Resource
         View view = super.newView(context, cursor, parent);
         // Then populate the ViewHolder
         ViewHolder holder = new ViewHolder();
-        holder.nameText = (TextView) view.findViewById(R.id.person_list_item_name);
-        holder.phoneText = (TextView) view.findViewById(R.id.person_list_item_phone);
-        holder.pingButton = (PhotoEditorView) view.findViewById(R.id.person_list_item_geoping_button);
-        holder.mapButton = (ImageButton) view.findViewById(R.id.person_list_item_editButton);
-        // Do not work if set in the xml laytou file
-        holder.mapButton .setFocusable(false);
-        holder.mapButton .setFocusableInTouchMode(false);
+        holder.nameText = (TextView) view.findViewById(R.id.person_list_item_name); 
+        holder.pingButton = (PhotoEditorView) view.findViewById(R.id.person_list_item_geoping_button);  
+        holder.phoneText = (TextView) view.findViewById(R.id.person_list_item_phone); 
         view.setTag(holder);
         return view;
 
     }
 
-    static class ViewHolder {
-        ImageButton mapButton;
-        TextView nameText;
-        TextView phoneText;
+    static class ViewHolder { 
+        TextView nameText; 
+        TextView phoneText; 
         PhotoEditorView pingButton;
         PhotoLoaderAsyncTask photoLoaderAsyncTask;
     }

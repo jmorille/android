@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/entity_list_item_container"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="10dip" >
+ 
+    <include 
+        android:id="@+id/person_list_item_geoping_button"
+        style="@style/entity_list_item"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        layout="@layout/item_photo_editor"
+        android:minWidth="60dip"
+        android:text="@string/geoping"  />
+
+    <TextView
+        android:id="@+id/person_list_item_name"
+        style="@style/entity_list_item"
+        android:layout_width="match_parent"
+        android:layout_alignTop="@id/person_list_item_geoping_button"
+        android:layout_marginLeft="5dp" 
+        android:layout_toRightOf="@id/person_list_item_geoping_button"
+        android:singleLine="true"
+        android:focusable="false"
+        android:textIsSelectable="false"
+        android:focusableInTouchMode="false" />
+
+    <TextView
+        android:id="@+id/person_list_item_phone"
+        style="@style/entity_list_item"
+        android:layout_alignLeft="@id/person_list_item_name"
+        android:layout_below="@id/person_list_item_name"
+        android:textIsSelectable="false"
+        android:singleLine="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+
+    <!-- <ImageButton -->
+    <!-- android:id="@+id/person_list_item_geoping_button" -->
+    <!-- style="@style/entity_list_item" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:layout_centerVertical="true" -->
+    <!-- android:minWidth="60dip" -->
+    <!-- android:src="@drawable/ic_launcher" -->
+    <!-- android:text="@string/geoping" -->
+    <!-- android:width="20dp" /> -->
+    <!--  -->
+
+</RelativeLayout>

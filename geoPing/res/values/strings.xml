@@ -71,8 +71,10 @@
     <string name="menu_person">Person</string>
     <string name="menu_pairing">Pairing</string>
     <string name="menu_smslog">Log Sms</string>
+     <string name="menu_extra_feature">Extra Features</string>
     
     <string name="menu_pairing_notification">Notification</string>
+    
     
      <!-- Menu Map-->
     <string name="menu_map_mypositon_hide">Hide my position</string>

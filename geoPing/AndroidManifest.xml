@@ -98,9 +98,11 @@
         
           
 
-        
+         
         
         <!-- Billing Service -->
+        <activity android:name=".ui.billing.PayFeaturesActivity">
+        </activity>
        <service android:name=".service.billing.BillingService"/>
 
         <receiver android:name=".service.billing.BillingReceiver">

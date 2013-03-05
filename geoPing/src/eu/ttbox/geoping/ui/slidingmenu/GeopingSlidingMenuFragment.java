@@ -1,9 +1,16 @@
 package eu.ttbox.geoping.ui.slidingmenu;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.slidingmenu.lib.app.SlidingActivityBase;
@@ -18,6 +26,9 @@ import com.slidingmenu.lib.app.SlidingActivityBase;
 import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.PersonProvider;
+import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
+import eu.ttbox.geoping.ui.billing.PayFeaturesActivity;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.pairing.PairingListActivity;
 import eu.ttbox.geoping.ui.person.PersonListActivity;
@@ -28,9 +39,17 @@ import eu.ttbox.geoping.ui.smslog.SmsLogListActivity;
  * @see SampleListFragment
  * 
  */
-public class GeopingSlidingMenuFragment extends ListFragment {
+public class GeopingSlidingMenuFragment extends Fragment {
 
-    
+    private static final String TAG = "GeopingSlidingMenuFragment";
+
+    private static final int SLIDINGMENU_PERSON_LIST_LOADER = R.id.config_id_slidingmenu_person_list_loader;
+    private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.COL_NAME, PersonColumns.COL_PHONE);
+
+    private ListView menuListView;
+    private ListView personListView;
+    private SlidingPersonListAdapter personAdpater;
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -40,7 +59,10 @@ public class GeopingSlidingMenuFragment extends ListFragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.slidingmenu_list, null);
+        View v = inflater.inflate(R.layout.slidingmenu_list, null);
+        menuListView = (ListView) v.findViewById(android.R.id.list);
+        personListView = (ListView) v.findViewById(R.id.person_list);
+        return v;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -51,9 +73,11 @@ public class GeopingSlidingMenuFragment extends ListFragment {
         adapter.add(new SlindingMenuItem(R.id.menu_pairing, R.string.menu_pairing, R.drawable.ic_device_access_secure));
         adapter.add(new SlindingMenuItem(R.id.menu_smslog, R.string.menu_smslog, R.drawable.ic_collections_go_to_today));
         adapter.add(new SlindingMenuItem(R.id.menu_settings, R.string.menu_settings, android.R.drawable.ic_menu_preferences));
-        //
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(new OnItemClickListener() {
+        adapter.add(new SlindingMenuItem(R.id.menu_extra_feature, R.string.menu_extra_feature, android.R.drawable.ic_menu_more));
+
+        // Binding Menu
+        menuListView.setAdapter(adapter);
+        menuListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -64,9 +88,12 @@ public class GeopingSlidingMenuFragment extends ListFragment {
                 }
             }
         });
+        // Binding Person
+        personAdpater = new SlidingPersonListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        personListView.setAdapter(personAdpater);
+        getActivity().getSupportLoaderManager().initLoader(SLIDINGMENU_PERSON_LIST_LOADER, null, slidingmenuPersonLoaderCallback);
     }
 
-    
     // ===========================================================
     // Sliding Menu Select Item
     // ===========================================================
@@ -75,29 +102,20 @@ public class GeopingSlidingMenuFragment extends ListFragment {
         Context context = getActivity();
         switch (cursor.itemId) {
         case R.id.menu_settings:
-            Intent intentOption = new Intent(context, GeoPingPrefActivity.class);
-            context.startActivity(intentOption);
-            return true;
         case R.id.menuGeotracker:
-            Intent intentGeoTraker = new Intent(context, GeoTrakerActivity.class);
-            context.startActivity(intentGeoTraker);
-            return true;
         case R.id.menuMap:
-            Intent intentMap = new Intent(context, ShowMapActivity.class);
-            context.startActivity(intentMap);
-            return true;
         case R.id.menu_pairing:
-            Intent intentPairing = new Intent(context, PairingListActivity.class);
-            context.startActivity(intentPairing);
-            return true;
         case R.id.menu_track_person:
-            Intent intentGeoPing = new Intent(context, PersonListActivity.class);
-            context.startActivity(intentGeoPing);
-            return true;
         case R.id.menu_smslog:
-            Intent intentSmsLog = new Intent(context, SmsLogListActivity.class);
-            context.startActivity(intentSmsLog);
-            return true;
+        case R.id.menu_extra_feature:
+            Class<? extends Activity> intentClass = getActivityClassByItemId(cursor.itemId);
+            if (intentClass != null) {
+                Intent intentOption = new Intent(context, intentClass);
+                context.startActivity(intentOption);
+                return true;
+            }
+            return false;
+
         case R.id.menuAppComment:
             Intents.startActivityAppMarket(context);
             return true;
@@ -112,7 +130,7 @@ public class GeopingSlidingMenuFragment extends ListFragment {
         return false;
     }
 
-    private Class getActivityClassByItemId(int itemId) {
+    private Class<? extends Activity> getActivityClassByItemId(int itemId) {
         switch (itemId) {
         case R.id.menu_settings:
             return GeoPingPrefActivity.class;
@@ -126,6 +144,8 @@ public class GeopingSlidingMenuFragment extends ListFragment {
             return PersonListActivity.class;
         case R.id.menu_smslog:
             return SmsLogListActivity.class;
+        case R.id.menu_extra_feature:
+            return PayFeaturesActivity.class;
         default:
             return null;
         }
@@ -142,12 +162,10 @@ public class GeopingSlidingMenuFragment extends ListFragment {
         }
     }
 
-    
     // ===========================================================
     // Slinding Menu Item
     // ===========================================================
 
-    
     private class SlindingMenuItem {
         public int itemId;
         public String tag;
@@ -184,9 +202,11 @@ public class GeopingSlidingMenuFragment extends ListFragment {
             holder.icon.setImageResource(lineItem.iconRes);
             holder.title.setText(lineItem.tag);
             // TODO Test Selector
-            if (R.id.menuMap == lineItem.itemId && getActivity() instanceof ShowMapActivity) {
+            Class<? extends Activity> expectedClass = getActivityClassByItemId(lineItem.itemId);
+            if (expectedClass.isAssignableFrom(getActivity().getClass())) {
                 holder.selector.setVisibility(View.VISIBLE);
             }
+
             return convertView;
         }
 
@@ -197,12 +217,49 @@ public class GeopingSlidingMenuFragment extends ListFragment {
         TextView title;
         ImageView selector;
     }
-    
 
-    
     // ===========================================================
     // Slinding Menu Person Item
     // ===========================================================
 
-    
+    // ===========================================================
+    // Loader
+    // ===========================================================
+
+    private final LoaderManager.LoaderCallbacks<Cursor> slidingmenuPersonLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            Log.d(TAG, "onCreateLoader");
+            String sortOrder = PERSON_SORT_DEFAULT;
+            String selection = null;
+            String[] selectionArgs = null;
+            String queryString = null;
+            // Loader
+            CursorLoader cursorLoader = new CursorLoader(getActivity(), PersonProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+            return cursorLoader;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+            // Display List
+            personAdpater.swapCursor(cursor);
+            cursor.setNotificationUri(getActivity().getContentResolver(), PersonProvider.Constants.CONTENT_URI);
+            // Display Counter
+            int count = 0;
+            if (cursor != null) {
+                count = cursor.getCount();
+            }
+            Log.d(TAG, "onLoadFinished with result count : " + count);
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            personAdpater.swapCursor(null);
+        }
+
+    };
+
 }
