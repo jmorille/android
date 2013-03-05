@@ -1,25 +1,23 @@
 package eu.ttbox.velib.ui.help;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import eu.ttbox.velib.AndroLibApplication;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.analytics.tracking.android.EasyTracker;
+
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
 
-public class HelpMainActivity extends FragmentActivity {
+public class HelpMainActivity extends SherlockFragmentActivity {
 
     private static final String TAG = "HelpMainActivity";
 
@@ -55,9 +53,14 @@ public class HelpMainActivity extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         // Tracker
-        GoogleAnalyticsTracker tracker = ((AndroLibApplication)getApplication()).getTracker();
-        tracker.trackPageView("/Help");
+        EasyTracker.getInstance().activityStart(this);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Tracker
+        EasyTracker.getInstance().activityStop(this);
     }
 
     // ===========================================================
@@ -66,7 +69,7 @@ public class HelpMainActivity extends FragmentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+        getSupportMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
@@ -141,29 +144,17 @@ public class HelpMainActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = null;
+              Fragment fragment = null;
             switch (position) {
             case CIRCLE_CODE:
 //                if (circleColorFragment == null) {
-                fragment = new Fragment() {
-                        @Override
-                        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-                            View v = inflater.inflate(R.layout.help_circle, container, false);
-                            return v;
-                        }
-                    };
+                fragment = new HelpCircleFragment();
 //                }
 //                fragment = circleColorFragment;
                 break;
             case COLOR_CODE:
 //                if (colorCodeFragment == null) {
-                fragment = new Fragment() {
-                        @Override
-                        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-                            View v = inflater.inflate(R.layout.help_color, container, false);
-                            return v;
-                        }
-                    };
+                fragment = new HelpColorCircle() ;
 //                }
 //                fragment = colorCodeFragment;
                 break;
@@ -175,25 +166,13 @@ public class HelpMainActivity extends FragmentActivity {
                 break;
             case CONDUIT_CODE:
 //                if (conduitCodeFragment == null) {
-                fragment = new Fragment() {
-                        @Override
-                        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-                            View v = inflater.inflate(R.layout.help_conduite_code, container, false);
-                            return v;
-                        }
-                    };
+                fragment = new HelpConduitCodeFragment() ;
 //                }
 //                fragment = conduitCodeFragment;
                 break;
             case MAP_CODE:
 //                if (mapCodeFragment == null) {
-                fragment = new Fragment() {
-                        @Override
-                        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-                            View v = inflater.inflate(R.layout.help_map, container, false);
-                            return v;
-                        }
-                    };
+                fragment = new HelpMapFragment() ;
 //                }
 //                fragment = mapCodeFragment;
                 break;

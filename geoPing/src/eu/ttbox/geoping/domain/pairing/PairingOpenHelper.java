@@ -12,7 +12,14 @@ import android.util.Log;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
-
+/**
+ * <ul>
+ * <li>Db version 5 : Geoping 0.1.5 (37)</li>
+ * <li>Db version 6 : Geoping 0.1.6 (39)</li>
+ * </ul>
+ *  
+ *
+ */
 public class PairingOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "PairingOpenHelper";

@@ -6,21 +6,19 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.slidingmenu.lib.SlidingMenu;
+import com.google.analytics.tracking.android.EasyTracker;
 
-import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
+import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 
-public class PersonListActivity extends SherlockFragmentActivity {
+public class PersonListActivity extends GeoPingSlidingMenuFragmentActivity {
 
     private static final String TAG = "PersonListActivity";
 
+//    private SlidingMenu slidingMenu;
     private PersonListFragment listFragment;
 
     // ===========================================================
@@ -32,14 +30,20 @@ public class PersonListActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.track_person_list_activity);
         // SlidingMenu
-        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
-        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        slidingMenu = SlidingMenuHelper.newInstance(this);
+//        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Intent
         handleIntent(getIntent());
         // Tracker
-        GoogleAnalyticsTracker tracker = ((GeoPingApplication) getApplication()).tracker();
-        tracker.trackPageView("/" + TAG);
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Tracker
+        EasyTracker.getInstance().activityStop(this);
     }
 
     @Override
@@ -62,22 +66,24 @@ public class PersonListActivity extends SherlockFragmentActivity {
         finish();
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.menu_person_list, menu);
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId()) { 
         case R.id.menu_add:
             onAddEntityClick(null);
             return true;
         case R.id.menu_cancel:
             onCancelClick();
             return true;
-        }
-        return false;
+        } 
+        return super.onOptionsItemSelected(item);
     }
 
     // ===========================================================

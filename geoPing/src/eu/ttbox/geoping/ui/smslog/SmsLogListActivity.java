@@ -5,18 +5,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.slidingmenu.lib.SlidingMenu;
+import com.google.analytics.tracking.android.EasyTracker;
 
-import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.SmsLogProvider;
-import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
+import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 
-public class SmsLogListActivity extends SherlockFragmentActivity {
+public class SmsLogListActivity extends GeoPingSlidingMenuFragmentActivity {
 
     private static final String TAG = "SmsLogListActivity";
 
@@ -32,15 +29,21 @@ public class SmsLogListActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.smslog_list_activity);
      // SlidingMenu
-        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
-        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        final SlidingMenu slidingMenu = SlidingMenuHelper.newInstance(this);
+//        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         // Intents
         handleIntent(getIntent());
         // Tracker
-        GoogleAnalyticsTracker tracker = ((GeoPingApplication)getApplication()).tracker();
-        tracker.trackPageView("/"+TAG);
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Tracker
+        EasyTracker.getInstance().activityStop(this);
     }
 
     @Override
@@ -84,7 +87,7 @@ public class SmsLogListActivity extends SherlockFragmentActivity {
             onCancelClick();
             return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     // ===========================================================

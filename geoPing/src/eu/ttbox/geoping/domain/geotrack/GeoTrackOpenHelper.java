@@ -5,7 +5,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
-
+/**
+ * <ul>
+ * <li>Db version 6 : Geoping 0.1.5 (37)</li>
+ * <li>Db version 8 : Geoping 0.1.6 (39)</li>
+ * </ul>
+ *  
+ *
+ */
 public class GeoTrackOpenHelper extends SQLiteOpenHelper {
 
 	public static final String TAG = "GeoTrackOpenHelper";

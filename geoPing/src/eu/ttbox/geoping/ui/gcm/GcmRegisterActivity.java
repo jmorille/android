@@ -19,18 +19,18 @@ import static eu.ttbox.geoping.service.gcm.CommonUtilities.DISPLAY_MESSAGE_ACTIO
 import static eu.ttbox.geoping.service.gcm.CommonUtilities.EXTRA_MESSAGE;
 import static eu.ttbox.geoping.service.gcm.CommonUtilities.SENDER_ID;
 import static eu.ttbox.geoping.service.gcm.CommonUtilities.SERVER_URL;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gcm.GCMRegistrar;
 
 import eu.ttbox.geoping.R;
@@ -39,7 +39,7 @@ import eu.ttbox.geoping.service.gcm.ServerUtilities;
 /**
  * Main UI for the demo app.
  */
-public class GcmRegisterActivity extends Activity {
+public class GcmRegisterActivity extends SherlockFragmentActivity {
 
     TextView mDisplay;
     AsyncTask<Void, Void, Void> mRegisterTask;
@@ -56,8 +56,7 @@ public class GcmRegisterActivity extends Activity {
         GCMRegistrar.checkManifest(this);
         setContentView(R.layout.gcm_main);
         mDisplay = (TextView) findViewById(R.id.display);
-        registerReceiver(mHandleMessageReceiver,
-                new IntentFilter(DISPLAY_MESSAGE_ACTION));
+        registerReceiver(mHandleMessageReceiver, new IntentFilter(DISPLAY_MESSAGE_ACTION));
         final String regId = GCMRegistrar.getRegistrationId(this);
         if (regId.equals("")) {
             // Automatically registers application on startup.
@@ -76,8 +75,7 @@ public class GcmRegisterActivity extends Activity {
 
                     @Override
                     protected Void doInBackground(Void... params) {
-                        boolean registered =
-                                ServerUtilities.register(context, regId);
+                        boolean registered = ServerUtilities.register(context, regId);
                         // At this point all attempts to register with the app
                         // server failed, so we need to unregister the device
                         // from GCM - the app will try to register again when
@@ -103,36 +101,33 @@ public class GcmRegisterActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+        MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.gcm_options_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            /*
-             * Typically, an application registers automatically, so options
-             * below are disabled. Uncomment them if you want to manually
-             * register or unregister the device (you will also need to
-             * uncomment the equivalent options on options_menu.xml).
-             */
-            /*
-            case R.id.options_register:
-                GCMRegistrar.register(this, SENDER_ID);
-                return true;
-            case R.id.options_unregister:
-                GCMRegistrar.unregister(this);
-                return true;
-             */
-            case R.id.options_clear:
-                mDisplay.setText(null);
-                return true;
-            case R.id.options_exit:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+        /*
+         * Typically, an application registers automatically, so options below
+         * are disabled. Uncomment them if you want to manually register or
+         * unregister the device (you will also need to uncomment the equivalent
+         * options on options_menu.xml).
+         */
+        /*
+         * case R.id.options_register: GCMRegistrar.register(this, SENDER_ID);
+         * return true; case R.id.options_unregister:
+         * GCMRegistrar.unregister(this); return true;
+         */
+        case R.id.options_clear:
+            mDisplay.setText(null);
+            return true;
+        case R.id.options_exit:
+            finish();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -148,13 +143,11 @@ public class GcmRegisterActivity extends Activity {
 
     private void checkNotNull(Object reference, String name) {
         if (reference == null) {
-            throw new NullPointerException(
-                    getString(R.string.error_config, name));
+            throw new NullPointerException(getString(R.string.error_config, name));
         }
     }
 
-    private final BroadcastReceiver mHandleMessageReceiver =
-            new BroadcastReceiver() {
+    private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String newMessage = intent.getExtras().getString(EXTRA_MESSAGE);

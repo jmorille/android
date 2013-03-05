@@ -28,7 +28,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.SearchView.OnQueryTextListener;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import eu.ttbox.osm.ui.map.mylocation.sensor.LocationUtils;
 import eu.ttbox.velib.R;

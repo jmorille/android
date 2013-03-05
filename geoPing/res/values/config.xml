@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="https://schemas.android.com/tools" tools:ignore="TypographyDashes">
 
     <string name="app_name">GeoPing</string>
     <string name="empty_string"></string>
-    
+
     <!-- Backup Api Key For eu.ttbox.geoping -->
- 	<string name="backup_api_key">AEdPqrEAAAAI-ahoBk8qEhuAhuOd2Kecta_y7N3aCgBOFAHenA</string>
-     <!-- Money-->
- 	<string name="admob_key">a1509acb46a10d6</string> 
- 	<!-- Analytics -->
- 	<string name="analytics_key">UA-36410991-1</string> 
- 	
-   	<!-- ### Google Map ### -->
-    <!-- ################## --> 	
+    <string name="backup_api_key">AEdPqrEAAAAI-ahoBk8qEhuAhuOd2Kecta_y7N3aCgBOFAHenA</string>
+    <!-- Money -->
+    <string name="admob_key">a1509acb46a10d6</string>
+    <!-- Analytics --> 
+    <string name="ga_trackingId">UA-36410991-1</string> 
+    <bool name="ga_autoActivityTracking">true</bool>
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <!-- ### Google Map ### -->
+    <!-- ################## -->
     <!-- Release 67:BA:EF:23:0F:CA:87:24:23:0B:51:20:13:2C:C2:83 -->
     <!-- <string name="map_apiKey">0y6tr0VPcaTbOfp-tmd-cOq2NLpewl6dzMA9IuA</string> -->
     <!-- Home -->
@@ -20,7 +22,6 @@
     <!-- Mac 95:A3:F6:38:01:EB:76:C8:9D:BE:9B:43:D7:8A:31:7D -->
     <string name="map_apiKey">0NYLmB1F2IOBAfo9XuRdZUfaLNsuyvp0aSAhauA</string>
     <!-- Job 77:1C:8F:04:AA:5A:94:B9:E6:54:AC:E2:15:B9:1E:35 -->
-<!--     <string name="map_apiKey">0NYLmB1F2IOBrANcWAodyGo86CktsPoN6FgKSzw</string> -->
-  
- 	
+    <!-- <string name="map_apiKey">0NYLmB1F2IOBrANcWAodyGo86CktsPoN6FgKSzw</string> -->
+
 </resources>

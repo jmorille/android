@@ -11,8 +11,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.analytics.tracking.android.EasyTracker;
 
-import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
@@ -84,6 +84,15 @@ public class PairingEditActivity extends SherlockFragmentActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         // Intents
         handleIntent(getIntent());
+        // Tracker
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Tracker
+        EasyTracker.getInstance().activityStop(this);
     }
 
     @Override
@@ -139,16 +148,9 @@ public class PairingEditActivity extends SherlockFragmentActivity {
             Bundle fragArgs = new Bundle();
             fragArgs.putString(Intents.EXTRA_PERSON_ID, entityUri.toString());
             editFragment.setArguments(fragArgs);
-
-            // Tracker
-            if (Intent.ACTION_DELETE.equals(action)) {
-                GeoPingApplication.getInstance().tracker().trackPageView("/Pairing/delete");
-            } else {
-                GeoPingApplication.getInstance().tracker().trackPageView("/Pairing/edit");
-            }
+ 
         } else if (Intent.ACTION_INSERT.equals(action)) {
-            mViewPager.setCurrentItem(SectionsPagerAdapter.PAIRING);
-            GeoPingApplication.getInstance().tracker().trackPageView("/Pairing/insert");
+            mViewPager.setCurrentItem(SectionsPagerAdapter.PAIRING); 
         }
 
     }

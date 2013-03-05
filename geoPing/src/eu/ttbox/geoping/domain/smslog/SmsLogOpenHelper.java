@@ -5,7 +5,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
-
+/**
+ * <ul>
+ * <li>Db version 7 : Geoping 0.1.5 (37)</li>
+ * <li>Db version 8 : Geoping 0.1.6 (39)</li>
+ * </ul>
+ *  
+ *
+ */
 public class SmsLogOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "SmsLogOpenHelper";

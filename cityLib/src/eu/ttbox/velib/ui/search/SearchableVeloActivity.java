@@ -4,21 +4,18 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MenuItem.OnActionExpandListener;
-import android.widget.SearchView;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Tracker;
 
-import eu.ttbox.velib.AndroLibApplication;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.core.Intents;
@@ -40,7 +37,7 @@ import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
  * @see http://mobile.tutsplus.com/tutorials/android/android-sdk_loading-
  *      data_cursorloader/
  */
-public class SearchableVeloActivity extends FragmentActivity {
+public class SearchableVeloActivity extends SherlockFragmentActivity {
 
     private static final String TAG = "SearchableVeloActivity";
 
@@ -58,7 +55,17 @@ public class SearchableVeloActivity extends FragmentActivity {
         setContentView(R.layout.search_station_activity);
         // handle Intent
         handleIntent(getIntent());
+        // Tracker
+        EasyTracker.getInstance().activityStart(this);
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Tracker
+        EasyTracker.getInstance().activityStop(this);
+    }
+
 
     @Override
     public void onAttachFragment(Fragment fragment) {
@@ -81,7 +88,8 @@ public class SearchableVeloActivity extends FragmentActivity {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "handleIntent for action : " + intent.getAction());
         }
-
+       Tracker tracker = EasyTracker.getTracker();
+     
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             setTitle(R.string.menu_search);
             // handles a search query
@@ -94,9 +102,8 @@ public class SearchableVeloActivity extends FragmentActivity {
             // Log.d(TAG,
             // "---------------------------------------------------------");
             searchFragment.doSearch(query);
-            // Tracker
-            GoogleAnalyticsTracker tracker = ((AndroLibApplication)getApplication()).getTracker();
-            tracker.trackPageView("/Search/"+query);
+            // Tracker 
+            tracker.sendView("/Search/"+query);
 
         } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             setTitle(R.string.menu_search);
@@ -114,9 +121,8 @@ public class SearchableVeloActivity extends FragmentActivity {
             setTitle(R.string.menu_favorite);
             Integer velibProvider = intent.getIntExtra(Intents.EXTRA_VELIB_PROVIDER, -1);
             searchFragment.doSearchFavorite(velibProvider);
-            // Tracker
-            GoogleAnalyticsTracker tracker = ((AndroLibApplication)getApplication()).getTracker();
-            tracker.trackPageView("/Search/Favorite");
+            // Tracker 
+            tracker.sendView("/Search/Favorite");
             
         } else {
             Log.w(TAG, "Not Handle Intent for for Action : " + intent.getAction());
@@ -132,7 +138,7 @@ public class SearchableVeloActivity extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Création d'un MenuInflater qui va permettre d'instancier un Menu XML
         // en un objet Menu
-        MenuInflater inflater = getMenuInflater();
+        MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.menu, menu);
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

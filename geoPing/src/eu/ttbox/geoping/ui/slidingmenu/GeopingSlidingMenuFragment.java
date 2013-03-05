@@ -12,6 +12,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.slidingmenu.lib.app.SlidingActivityBase;
+
 import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -37,7 +40,7 @@ public class GeopingSlidingMenuFragment extends ListFragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        SampleAdapter adapter = new SampleAdapter(getActivity());
+        SlidingMenuAdapter adapter = new SlidingMenuAdapter(getActivity());
         adapter.add(new SlindingMenuItem(R.id.menuMap, R.string.menu_map, R.drawable.ic_location_web_site)); 
         adapter.add(new SlindingMenuItem(R.id.menu_track_person, R.string.menu_person, R.drawable.ic_action_user));
         adapter.add(new SlindingMenuItem(R.id.menu_pairing, R.string.menu_pairing, R.drawable.ic_device_access_secure));
@@ -50,7 +53,10 @@ public class GeopingSlidingMenuFragment extends ListFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SlindingMenuItem menu = (SlindingMenuItem) parent.getItemAtPosition(position);
-                onSlidingMenuSelectItem(menu);
+               boolean isSlide = onSlidingMenuSelectItem(menu);
+               if (isSlide) {
+                   switchFragment( );
+               }
             }
         });
     }
@@ -96,6 +102,18 @@ public class GeopingSlidingMenuFragment extends ListFragment {
         return false;
     }
     
+ // the meat of switching the above fragment
+    private void switchFragment( ) {
+        if (getActivity() == null)
+            return;
+        
+        if (getActivity() instanceof SlidingActivityBase) {
+            SlidingActivityBase fca = (SlidingActivityBase) getActivity();
+            fca.showContent( );
+        }  
+    }
+
+    
     private class SlindingMenuItem {
         public int itemId;
         public String tag;
@@ -108,9 +126,9 @@ public class GeopingSlidingMenuFragment extends ListFragment {
         }
     }
 
-    public class SampleAdapter extends ArrayAdapter<SlindingMenuItem> {
+    public class SlidingMenuAdapter extends ArrayAdapter<SlindingMenuItem> {
 
-        public SampleAdapter(Context context) {
+        public SlidingMenuAdapter(Context context) {
             super(context, 0);
         }
 

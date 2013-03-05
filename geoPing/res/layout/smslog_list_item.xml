@@ -28,7 +28,9 @@
         style="@style/entity_list_item"
         android:layout_alignBaseline="@id/smslog_list_item_time"
         android:layout_toRightOf="@id/smslog_list_item_time"
-        android:text="ACTION_GEO_LOC" />
+        android:singleLine="true"
+        android:text="ACTION_GEO_LOC"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/smslog_list_item_phone"
@@ -36,6 +38,9 @@
         android:layout_alignBottom="@id/smslog_list_item_time"
         android:layout_alignLeft="@id/smslog_list_item_action"
         android:layout_below="@id/smslog_list_item_action"
-        android:text="+33601020304" />
+        android:singleLine="true"
+         android:ellipsize="marquee"
+        android:text="+33601020304"
+        android:textSize="14sp" />
 
 </RelativeLayout>
