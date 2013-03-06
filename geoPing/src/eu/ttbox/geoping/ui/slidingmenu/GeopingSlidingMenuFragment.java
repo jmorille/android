@@ -13,6 +13,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -62,6 +63,24 @@ public class GeopingSlidingMenuFragment extends Fragment {
         View v = inflater.inflate(R.layout.slidingmenu_list, null);
         menuListView = (ListView) v.findViewById(android.R.id.list);
         personListView = (ListView) v.findViewById(R.id.person_list);
+        // Register Menu Item
+        int[] menuIds = new int[] { R.id.menuMap, R.id.menu_track_person, R.id.menu_pairing, R.id.menu_smslog, R.id.menu_settings, R.id.menu_extra_feature };
+        OnClickListener menuItemOnClickListener = new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+               int itemId = v.getId();
+               onSlidingMenuSelectItem(itemId);
+            }
+
+        };
+        // Register listener
+        for (int menuId : menuIds) {
+            SlindingMenuItemView menuItem = (SlindingMenuItemView) v.findViewById(menuId);
+            if (menuItem!=null) {
+                menuItem.setOnClickListener(menuItemOnClickListener);
+            }
+        }
         return v;
     }
 
@@ -82,7 +101,7 @@ public class GeopingSlidingMenuFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SlindingMenuItem menu = (SlindingMenuItem) parent.getItemAtPosition(position);
-                boolean isSlide = onSlidingMenuSelectItem(menu);
+                boolean isSlide = onSlidingMenuSelectItem(menu.itemId);
                 if (isSlide) {
                     switchFragment();
                 }
@@ -98,9 +117,9 @@ public class GeopingSlidingMenuFragment extends Fragment {
     // Sliding Menu Select Item
     // ===========================================================
 
-    private boolean onSlidingMenuSelectItem(SlindingMenuItem cursor) {
+    private boolean onSlidingMenuSelectItem(int itemId) {
         Context context = getActivity();
-        switch (cursor.itemId) {
+        switch ( itemId) {
         case R.id.menu_settings:
         case R.id.menuGeotracker:
         case R.id.menuMap:
@@ -108,7 +127,7 @@ public class GeopingSlidingMenuFragment extends Fragment {
         case R.id.menu_track_person:
         case R.id.menu_smslog:
         case R.id.menu_extra_feature:
-            Class<? extends Activity> intentClass = getActivityClassByItemId(cursor.itemId);
+            Class<? extends Activity> intentClass = getActivityClassByItemId(itemId);
             if (intentClass != null) {
                 Intent intentOption = new Intent(context, intentClass);
                 context.startActivity(intentOption);

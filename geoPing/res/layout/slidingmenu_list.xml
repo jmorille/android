@@ -1,22 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+ 
+        <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView
+            android:id="@+id/menuMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            geoping:src="@drawable/ic_location_web_site"
+            android:background="@android:drawable/list_selector_background"
+            geoping:text="@string/menu_map" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:orientation="vertical" >
+<!--         <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView -->
+<!--             android:id="@+id/menu_track_person" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             geoping:src="@drawable/ic_action_user" -->
+<!--             geoping:text="@string/menu_person" /> -->
 
+<!--         <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView -->
+<!--             android:id="@+id/menu_pairing" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             geoping:src="@drawable/ic_device_access_secure" -->
+<!--             geoping:text="@string/menu_pairing" /> -->
+
+<!--         <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView -->
+<!--             android:id="@+id/menu_smslog" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             geoping:src="@drawable/ic_collections_go_to_today" -->
+<!--             geoping:text="@string/menu_smslog" /> -->
+
+        
+<!--         <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView -->
+<!--             android:id="@+id/menu_settings" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             geoping:src="@android:drawable/ic_menu_preferences" -->
+<!--             geoping:text="@string/menu_settings" /> -->
+         
+<!--         <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView -->
+<!--             android:id="@+id/menu_extra_feature" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             geoping:src="@android:drawable/ic_menu_more" -->
+<!--             geoping:text="@string/menu_extra_feature" /> -->
+         
+        
+        
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:paddingLeft="@dimen/list_padding"
             android:paddingRight="@dimen/list_padding" />
-    </LinearLayout>
-
+ 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
