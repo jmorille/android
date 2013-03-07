@@ -69,7 +69,7 @@ public class GeopingSlidingMenuFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-               int itemId = v.getId();
+               int itemId = v.getId(); 
                onSlidingMenuSelectItem(itemId);
             }
 
