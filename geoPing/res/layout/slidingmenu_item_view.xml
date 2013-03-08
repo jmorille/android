@@ -39,6 +39,6 @@
 
     <View
         style="@style/Divider"
-        android:layout_alignBottom="@id/slidingmenu_item_selector_icon" />
+        android:layout_alignBottom="@id/slidingmenu_item_icon" />
 
 </RelativeLayout>
