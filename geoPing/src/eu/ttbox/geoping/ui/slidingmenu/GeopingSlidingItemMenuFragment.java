@@ -131,13 +131,15 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
             Class<? extends Activity> intentClass = getActivityClassByItemId(itemId);
             if (intentClass != null) {
                 Intent intentOption = new Intent(context, intentClass);
+                switchFragment() ;
                 context.startActivity(intentOption);
                 return true;
             }
             return false;
 
         case R.id.menuAppComment:
-            Intents.startActivityAppMarket(context);
+            switchFragment() ;
+             Intents.startActivityAppMarket(context);
             return true;
 
             // case R.id.menuAppShare:
