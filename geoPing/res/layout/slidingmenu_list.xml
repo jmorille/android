@@ -11,7 +11,7 @@
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="400dp"
             android:isScrollContainer="false"
             android:paddingLeft="@dimen/list_padding"
             android:paddingRight="@dimen/list_padding" />
@@ -30,7 +30,7 @@
             android:id="@+id/person_list"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:isScrollContainer="false"
+            android:isScrollContainer="true"
             android:paddingLeft="@dimen/list_padding"
             android:paddingRight="@dimen/list_padding" />
     </LinearLayout>
