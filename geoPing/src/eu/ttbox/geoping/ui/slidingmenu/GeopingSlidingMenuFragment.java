@@ -13,13 +13,13 @@ import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.slidingmenu.lib.app.SlidingActivityBase;
@@ -47,6 +47,7 @@ public class GeopingSlidingMenuFragment extends Fragment {
     private static final int SLIDINGMENU_PERSON_LIST_LOADER = R.id.config_id_slidingmenu_person_list_loader;
     private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.COL_NAME, PersonColumns.COL_PHONE);
 
+    private ScrollView slidingmenuContainer;
     private ListView menuListView;
     private ListView personListView;
     private SlidingPersonListAdapter personAdpater;
@@ -60,14 +61,29 @@ public class GeopingSlidingMenuFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "--- ---------------------------------- ----");
+        Log.d(TAG, "--- SlidingMenuFragment - onCreateView ----");
+        Log.d(TAG, "--- ---------------------------------- ----");
         View v = inflater.inflate(R.layout.slidingmenu_list, null);
         menuListView = (ListView) v.findViewById(android.R.id.list);
-        personListView = (ListView) v.findViewById(R.id.person_list); 
+        personListView = (ListView) v.findViewById(R.id.person_list);
+        slidingmenuContainer = (ScrollView)v.findViewById(R.id.slidingmenu_container); 
+        // Ugly way to display always the top
+        slidingmenuContainer.post(new Runnable() { 
+            public void run() { 
+                slidingmenuContainer.fullScroll(ScrollView.FOCUS_UP); 
+//                slidingmenuContainer.scrollTo(0, 0);
+            } 
+        }); 
         return v;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "--- --------------------------------------- ----");
+        Log.d(TAG, "--- SlidingMenuFragment - onActivityCreated ----");
+        Log.d(TAG, "--- --------------------------------------- ----");
+        
         SlidingMenuAdapter adapter = new SlidingMenuAdapter(getActivity());
         adapter.add(new SlindingMenuItem(R.id.menuMap, R.string.menu_map, R.drawable.ic_location_web_site));
         adapter.add(new SlindingMenuItem(R.id.menu_track_person, R.string.menu_person, R.drawable.ic_action_user));
@@ -192,9 +208,9 @@ public class GeopingSlidingMenuFragment extends Fragment {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.slidingmenu_row, null);
                 // Then populate the ViewHolder
                 holder = new ViewHolder();
-                holder.icon = (ImageView) convertView.findViewById(R.id.row_icon);
-                holder.title = (TextView) convertView.findViewById(R.id.row_title);
-                holder.selector = (ImageView) convertView.findViewById(R.id.row_selector_icon);
+                holder.icon = (ImageView) convertView.findViewById(R.id.slidingmenu_item_icon);
+                holder.title = (TextView) convertView.findViewById(R.id.slidingmenu_item_title);
+                holder.selector = (ImageView) convertView.findViewById(R.id.slidingmenu_item_selector_icon);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();

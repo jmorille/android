@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.slidingmenu.lib.app.SlidingActivityBase;
 
@@ -44,6 +45,7 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
     private static final int SLIDINGMENU_PERSON_LIST_LOADER = R.id.config_id_slidingmenu_person_list_loader;
     private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.COL_NAME, PersonColumns.COL_PHONE);
 
+    private ScrollView slidingmenuContainer;
     private ListView personListView;
     private SlidingPersonListAdapter personAdpater;
 
@@ -81,6 +83,15 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
             }
         }
         this.menuItems = menuItems;
+        
+        // Ugly way to display always the top
+        slidingmenuContainer = (ScrollView)v.findViewById(R.id.slidingmenu_container); 
+        slidingmenuContainer.post(new Runnable() { 
+            public void run() { 
+//                slidingmenuContainer.fullScroll(ScrollView.FOCUS_UP); 
+                slidingmenuContainer.scrollTo(0, 0);
+            } 
+        }); 
         return v;
     }
 

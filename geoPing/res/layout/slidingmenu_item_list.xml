@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:geoping="http://schemas.android.com/apk/res/eu.ttbox.geoping"
+    android:id="@+id/slidingmenu_container"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fillViewport="true" >
@@ -54,16 +55,15 @@
             android:background="@android:drawable/list_selector_background"
             geoping:src="@android:drawable/ic_menu_more"
             geoping:text="@string/menu_extra_feature" />
- 
 
         <TextView
             android:id="@+id/person_list_item_phone"
             style="@style/entity_list_item"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:paddingTop="10dp"
             android:singleLine="true"
             android:text="Familly"
-            android:paddingTop="10dp"
             android:textIsSelectable="false" />
 
         <ListView
@@ -73,7 +73,6 @@
             android:isScrollContainer="false"
             android:paddingLeft="@dimen/list_padding"
             android:paddingRight="@dimen/list_padding" />
-        
     </LinearLayout>
 
 </ScrollView>

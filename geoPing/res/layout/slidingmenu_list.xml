@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/slidingmenu_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"  >
+    android:layout_height="match_parent"
+    android:fillViewport="true" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,7 +13,7 @@
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="wrap_content"
             android:isScrollContainer="false"
             android:paddingLeft="@dimen/list_padding"
             android:paddingRight="@dimen/list_padding" />
@@ -29,8 +31,8 @@
         <ListView
             android:id="@+id/person_list"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:isScrollContainer="true"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="false"
             android:paddingLeft="@dimen/list_padding"
             android:paddingRight="@dimen/list_padding" />
     </LinearLayout>

@@ -6,16 +6,13 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
-import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 
 public class PairingListActivity extends GeoPingSlidingMenuFragmentActivity {
 

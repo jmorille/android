@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;

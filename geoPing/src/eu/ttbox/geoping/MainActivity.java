@@ -19,7 +19,6 @@ import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;
 import eu.ttbox.geoping.ui.pairing.PairingListFragment;
 import eu.ttbox.geoping.ui.person.PersonListFragment;
-import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 /**

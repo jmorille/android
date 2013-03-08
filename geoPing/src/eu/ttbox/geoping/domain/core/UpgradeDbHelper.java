@@ -15,8 +15,6 @@ import android.util.Log;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-import eu.ttbox.geoping.domain.pairing.PairingDatabase;
-
 public class UpgradeDbHelper {
 
     private static final String TAG = "UpgradeDbHelper";

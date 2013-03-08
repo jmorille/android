@@ -19,7 +19,7 @@ import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.VersionUtils;
-import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity; 
+import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 
 /**
  * @see http://mobiforge.com/developing/story/using-google-maps-android

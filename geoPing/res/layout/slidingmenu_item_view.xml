@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:drawable/list_selector_background"
+    android:orientation="horizontal"
     android:paddingLeft="@dimen/list_padding"
-            android:paddingRight="@dimen/list_padding"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    android:orientation="horizontal" >
+    android:paddingRight="@dimen/list_padding" >
 
     <ImageView
         android:id="@+id/slidingmenu_item_icon"
@@ -33,7 +32,8 @@
         android:layout_toLeftOf="@id/slidingmenu_item_selector_icon"
         android:layout_toRightOf="@id/slidingmenu_item_icon"
         android:gravity="center_vertical"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="Medium Text"
         android:textAppearance="@android:style/TextAppearance.Medium" />
 

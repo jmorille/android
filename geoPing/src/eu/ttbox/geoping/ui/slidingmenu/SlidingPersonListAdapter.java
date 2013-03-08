@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
