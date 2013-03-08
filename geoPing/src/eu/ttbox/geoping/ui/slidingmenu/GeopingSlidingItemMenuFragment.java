@@ -6,21 +6,18 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.slidingmenu.lib.app.SlidingActivityBase;
 
@@ -40,59 +37,70 @@ import eu.ttbox.geoping.ui.smslog.SmsLogListActivity;
  * @see SampleListFragment
  * 
  */
-public class GeopingSlidingMenuFragment extends Fragment {
+public class GeopingSlidingItemMenuFragment extends Fragment {
 
     private static final String TAG = "GeopingSlidingMenuFragment";
 
     private static final int SLIDINGMENU_PERSON_LIST_LOADER = R.id.config_id_slidingmenu_person_list_loader;
     private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.COL_NAME, PersonColumns.COL_PHONE);
 
-    private ListView menuListView;
     private ListView personListView;
     private SlidingPersonListAdapter personAdpater;
+
+    private SparseArray<SlindingMenuItemView> menuItems;
+    private static int[] menuIds = new int[] { R.id.menuMap, R.id.menu_track_person, R.id.menu_pairing, R.id.menu_smslog, R.id.menu_settings, R.id.menu_extra_feature };
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    public GeopingSlidingMenuFragment() {
+    public GeopingSlidingItemMenuFragment() {
         super();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.slidingmenu_list, null);
-        menuListView = (ListView) v.findViewById(android.R.id.list);
-        personListView = (ListView) v.findViewById(R.id.person_list); 
+        View v = inflater.inflate(R.layout.slidingmenu_item_list, null);
+        personListView = (ListView) v.findViewById(R.id.person_list);
+        // Register Menu Item
+        OnClickListener menuItemOnClickListener = new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                int itemId = v.getId();
+                onSlidingMenuSelectItem(itemId);
+            }
+
+        };
+        // Register listener
+        SparseArray<SlindingMenuItemView> menuItems = new SparseArray<SlindingMenuItemView>();
+        for (int menuId : menuIds) {
+            SlindingMenuItemView menuItem = (SlindingMenuItemView) v.findViewById(menuId);
+            menuItems.put(menuId, menuItem);
+            if (menuItem != null) {
+                menuItem.setOnClickListener(menuItemOnClickListener);
+            }
+        }
+        this.menuItems = menuItems;
         return v;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        SlidingMenuAdapter adapter = new SlidingMenuAdapter(getActivity());
-        adapter.add(new SlindingMenuItem(R.id.menuMap, R.string.menu_map, R.drawable.ic_location_web_site));
-        adapter.add(new SlindingMenuItem(R.id.menu_track_person, R.string.menu_person, R.drawable.ic_action_user));
-        adapter.add(new SlindingMenuItem(R.id.menu_pairing, R.string.menu_pairing, R.drawable.ic_device_access_secure));
-        adapter.add(new SlindingMenuItem(R.id.menu_smslog, R.string.menu_smslog, R.drawable.ic_collections_go_to_today));
-        adapter.add(new SlindingMenuItem(R.id.menu_settings, R.string.menu_settings, android.R.drawable.ic_menu_preferences));
-        adapter.add(new SlindingMenuItem(R.id.menu_extra_feature, R.string.menu_extra_feature, android.R.drawable.ic_menu_more));
 
         // Binding Menu
-        menuListView.setAdapter(adapter);
-        menuListView.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SlindingMenuItem menu = (SlindingMenuItem) parent.getItemAtPosition(position);
-                boolean isSlide = onSlidingMenuSelectItem(menu.itemId);
-                if (isSlide) {
-                    switchFragment();
-                }
+        FragmentActivity activity = getActivity();
+        Class<? extends Activity> activityClass = (Class<? extends Activity>) activity.getClass();
+        for (int menuId : menuIds) {
+            Class<? extends Activity> menuItemClass = getActivityClassByItemId(menuId);
+            if (menuItemClass != null && activityClass.isAssignableFrom(menuItemClass)) {
+                SlindingMenuItemView menuItem = menuItems.get(menuId);
+                menuItem.setSlidingMenuSelected(true);
             }
-        });
+        }
         // Binding Person
         personAdpater = new SlidingPersonListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         personListView.setAdapter(personAdpater);
-        getActivity().getSupportLoaderManager().initLoader(SLIDINGMENU_PERSON_LIST_LOADER, null, slidingmenuPersonLoaderCallback);
+        activity.getSupportLoaderManager().initLoader(SLIDINGMENU_PERSON_LIST_LOADER, null, slidingmenuPersonLoaderCallback);
     }
 
     // ===========================================================
@@ -101,7 +109,7 @@ public class GeopingSlidingMenuFragment extends Fragment {
 
     private boolean onSlidingMenuSelectItem(int itemId) {
         Context context = getActivity();
-        switch ( itemId) {
+        switch (itemId) {
         case R.id.menu_settings:
         case R.id.menuGeotracker:
         case R.id.menuMap:
@@ -161,64 +169,6 @@ public class GeopingSlidingMenuFragment extends Fragment {
             SlidingActivityBase fca = (SlidingActivityBase) getActivity();
             fca.showContent();
         }
-    }
-
-    // ===========================================================
-    // Slinding Menu Item
-    // ===========================================================
-
-    private class SlindingMenuItem {
-        public int itemId;
-        public String tag;
-        public int iconRes;
-
-        public SlindingMenuItem(int menuId, int tagId, int iconRes) {
-            this.tag = getResources().getString(tagId);
-            this.iconRes = iconRes;
-            this.itemId = menuId;
-        }
-    }
-
-    public class SlidingMenuAdapter extends ArrayAdapter<SlindingMenuItem> {
-
-        public SlidingMenuAdapter(Context context) {
-            super(context, 0);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.slidingmenu_row, null);
-                // Then populate the ViewHolder
-                holder = new ViewHolder();
-                holder.icon = (ImageView) convertView.findViewById(R.id.row_icon);
-                holder.title = (TextView) convertView.findViewById(R.id.row_title);
-                holder.selector = (ImageView) convertView.findViewById(R.id.row_selector_icon);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            SlindingMenuItem lineItem = getItem(position);
-            holder.icon.setImageResource(lineItem.iconRes);
-            holder.title.setText(lineItem.tag);
-            // TODO Test Selector
-            Class<? extends Activity> expectedClass = getActivityClassByItemId(lineItem.itemId);
-            if (expectedClass.isAssignableFrom(getActivity().getClass())) {
-                holder.selector.setVisibility(View.VISIBLE);
-            } else {
-                holder.selector.setVisibility(View.GONE);
-            }
-
-            return convertView;
-        }
-
-    }
-
-    static class ViewHolder {
-        ImageView icon;
-        TextView title;
-        ImageView selector;
     }
 
     // ===========================================================

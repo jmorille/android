@@ -33,12 +33,12 @@ public class SlindingMenuItemView extends RelativeLayout {
         super(context, attrs, defStyle);
         // Layout
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.slidingmenu_row, this, true);
+        View v = inflater.inflate(R.layout.slidingmenu_item_view, this, true);
         
         // Binding
-        ImageView icon = (ImageView) v.findViewById(R.id.row_icon);
-        TextView title = (TextView) v.findViewById(R.id.row_title);
-        selector = (ImageView) v.findViewById(R.id.row_selector_icon);
+        ImageView icon = (ImageView) v.findViewById(R.id.slidingmenu_item_icon);
+        TextView title = (TextView) v.findViewById(R.id.slidingmenu_item_title);
+        selector = (ImageView) v.findViewById(R.id.slidingmenu_item_selector_icon);
 
         // Attribute
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SlindingMenuItemView, 0, 0);

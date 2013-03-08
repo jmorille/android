@@ -3,9 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
       android:minHeight="?android:attr/listPreferredItemHeight"
-     style="?android:listViewStyle"
-    android:divider="@android:drawable/divider_horizontal_dark"
-    android:dividerPadding="3dp"
+     style="?android:listViewStyle"  
     android:orientation="horizontal" >
 
     <ImageView
@@ -28,8 +26,8 @@
     <ImageView
         android:id="@+id/row_selector_icon"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:padding="10dp"
+        android:layout_height="wrap_content" 
+         android:gravity="center_vertical"
         android:src="@drawable/slidingmenu_selector"
         android:visibility="gone" />
 
