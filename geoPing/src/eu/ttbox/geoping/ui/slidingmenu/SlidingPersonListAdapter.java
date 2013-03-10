@@ -14,6 +14,8 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
 import eu.ttbox.geoping.ui.person.PhotoEditorView;
+import eu.ttbox.geoping.ui.person.PersonListAdapter.PersonListItemListener;
+import eu.ttbox.geoping.ui.person.PhotoEditorView.EditorListener;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 
@@ -29,7 +31,9 @@ public class SlidingPersonListAdapter extends android.support.v4.widget.Resource
     // Cache
     private PhotoThumbmailCache photoCache;
     
-      
+    // Listeners
+    private SlidingMenuPersonListItemListener personListItemListener;
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -79,7 +83,15 @@ public class SlidingPersonListAdapter extends android.support.v4.widget.Resource
         // view.setBackground(stld);
         // } else
         holder.pingButton.setBackgroundDrawable(stld);
-
+     // Button
+        holder.pingButton.setEditorListener(new EditorListener() {
+            @Override
+            public void onRequest(View v, int request) { 
+                if (personListItemListener != null) {
+                    personListItemListener.onClickPing(v, personId, phoneNumber);
+                }
+            }
+        });
         // Photo
         if (!TextUtils.isEmpty(contactId)) {
             Bitmap cachedResult = photoCache.get(contactId);
@@ -154,4 +166,26 @@ public class SlidingPersonListAdapter extends android.support.v4.widget.Resource
             }
         }
     }
+    
+    // ===========================================================
+    // Listeners
+    // ===========================================================
+
+    public void setPersonListItemListener(SlidingMenuPersonListItemListener personListItemListener) {
+        this.personListItemListener = personListItemListener;
+    }
+
+    public interface SlidingMenuPersonListItemListener {
+        
+//        public void onClickMap(View v,  long personId, String phoneNumber);
+        public void onClickPing(View v,  long personId, String phoneNumber);
+
+         
+    }
+
+    
+    // ===========================================================
+    // Others
+    // ===========================================================
+
 }

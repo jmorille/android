@@ -4,7 +4,7 @@
     android:id="@+id/slidingmenu_container"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fillViewport="true" >
+    android:fillViewport="false" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,15 +61,15 @@
             style="@style/entity_list_item"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:paddingTop="10dp"
+            android:paddingTop="15dp"
             android:singleLine="true"
             android:text="Familly"
             android:textIsSelectable="false" />
 
         <ListView
             android:id="@+id/person_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent" 
+            android:layout_height="300dp"
             android:isScrollContainer="false"
             android:paddingLeft="@dimen/list_padding"
             android:paddingRight="@dimen/list_padding" />

@@ -59,7 +59,7 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
    
     public SlidingMenu customizeSlidingMenu() {
         SlidingMenu slidingMenu = super.customizeSlidingMenu();
-        slidingMenu.setTouchModeAbove( SlidingMenu.TOUCHMODE_NONE);
+        slidingMenu.setTouchModeAbove( SlidingMenu.TOUCHMODE_MARGIN);
         return slidingMenu;
     }
     

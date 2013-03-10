@@ -56,12 +56,14 @@ public class SlindingMenuItemView extends RelativeLayout {
     // Accessors
     // ===========================================================
 
-    public void setSlidingMenuSelected(boolean isSelected) {
+    public void setSlidingMenuSelectedVisible(boolean isSelected) {
         if (isSelected) {
             selector.setVisibility(View.VISIBLE);
         } else {
             selector.setVisibility(View.GONE);
         }
     }
-
+    public boolean isSlidingMenuSelectedVisible( ) {
+        return selector.getVisibility() == View.VISIBLE;
+    }
 }
