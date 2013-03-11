@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.ui.slidingmenu;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import com.slidingmenu.lib.app.SlidingActivityBase;
 import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
@@ -157,21 +159,36 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
     // Sliding Menu Select Item
     // ===========================================================
 
+    @SuppressLint("InlinedApi")
+    private void clearActivityHistoryStack(Intent intentOption, boolean isRootActivity) {
+        if (isRootActivity) {
+            if (VersionUtils.isHc11) {
+                intentOption.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Log.d(TAG, "Clear ActivityHistoryStack for Intent : " + intentOption);
+            }
+        }
+    }
+
     private boolean onSlidingMenuSelectItem(int itemId) {
         Context context = getActivity();
+        boolean isRootActivity = false;
         switch (itemId) {
         case R.id.menu_settings:
-        case R.id.menuGeotracker:
-        case R.id.menuMap:
         case R.id.menu_pairing:
         case R.id.menu_track_person:
         case R.id.menu_smslog:
+            isRootActivity = true;
         case R.id.menu_extra_feature:
+        case R.id.menuGeotracker:
+        case R.id.menuMap:
             Class<? extends Activity> intentClass = getActivityClassByItemId(itemId);
             if (intentClass != null) {
                 Intent intentOption = new Intent(context, intentClass);
                 switchFragment();
+                // Activity
+                clearActivityHistoryStack(intentOption, isRootActivity);
                 context.startActivity(intentOption);
+
                 return true;
             }
             return false;

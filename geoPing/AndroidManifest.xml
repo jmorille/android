@@ -73,7 +73,7 @@
         <activity android:name=".ui.prefs.GeoPingPrefActivity"/>
 
         <!-- Map -->
-        <activity android:label="@string/empty_string" android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">
+        <activity android:label="@string/menu_map" android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">
             <intent-filter>
                 <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED"/> 
             </intent-filter>
@@ -104,7 +104,7 @@
          
         
         <!-- Billing Service -->
-        <activity android:name=".ui.billing.PayFeaturesActivity">
+        <activity  android:label="@string/menu_extra_feature" android:name=".ui.billing.PayFeaturesActivity">
         </activity>
        <service android:name=".service.billing.BillingService"/>
 

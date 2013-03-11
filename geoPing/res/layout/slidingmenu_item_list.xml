@@ -35,24 +35,21 @@
         <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView
             android:id="@+id/menu_smslog"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/list_selector_background"
+            android:layout_height="wrap_content" 
             geoping:src="@drawable/ic_collections_go_to_today"
             geoping:text="@string/menu_smslog" />
 
         <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView
             android:id="@+id/menu_settings"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/list_selector_background"
+            android:layout_height="wrap_content" 
             geoping:src="@android:drawable/ic_menu_preferences"
             geoping:text="@string/menu_settings" />
 
         <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView
             android:id="@+id/menu_extra_feature"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/list_selector_background"
+            android:layout_height="wrap_content" 
             geoping:src="@android:drawable/ic_menu_more"
             geoping:text="@string/menu_extra_feature" />
 
