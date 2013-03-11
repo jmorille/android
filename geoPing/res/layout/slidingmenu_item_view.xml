@@ -3,7 +3,7 @@
     style="?android:listViewStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:drawable/list_selector_background"
+    android:background="@drawable/item_background_holo_dark"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/list_padding"
     android:paddingRight="@dimen/list_padding" >
