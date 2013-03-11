@@ -80,14 +80,17 @@
         </activity>
 
         <!-- Sms Log -->
-        <activity android:label="@string/menu_smslog" android:name=".ui.smslog.SmsLogListActivity"/>
+        <activity android:label="@string/menu_smslog" android:name=".ui.smslog.SmsLogListActivity"
+            android:launchMode="singleTask" />
         <!-- Person -->
-        <activity android:label="@string/menu_person" android:name=".ui.person.PersonListActivity"/>
+        <activity android:label="@string/menu_person" android:name=".ui.person.PersonListActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.person.PersonEditActivity"/>
 
         
          <!-- Pairing -->
-        <activity android:label="@string/menu_pairing" android:name=".ui.pairing.PairingListActivity">
+        <activity android:label="@string/menu_pairing" android:name=".ui.pairing.PairingListActivity"
+            android:launchMode="singleTask" >
 <!--              <intent-filter> -->
 <!--                   <action android:name="android.intent.action.SEND"/> -->
 <!-- 			      <data android:scheme="geoPing"  android:path="pairing" android:mimeType="text/plain"  /> -->
