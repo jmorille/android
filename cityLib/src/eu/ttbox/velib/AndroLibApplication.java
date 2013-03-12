@@ -1,5 +1,7 @@
 package eu.ttbox.velib;
 
+import com.google.analytics.tracking.android.GAServiceManager;
+
 import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,6 +53,7 @@ public class AndroLibApplication extends Application {
 
 	@Override
 	public void onTerminate() { 
+	    GAServiceManager.getInstance().dispatch(); 
 		super.onTerminate();
 	}
 

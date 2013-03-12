@@ -1,5 +1,7 @@
 package eu.ttbox.geoping;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -13,8 +15,8 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.analytics.tracking.android.ExceptionReporter;
 import com.google.analytics.tracking.android.GAServiceManager;
-import com.google.analytics.tracking.android.GoogleAnalytics;
 
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.VersionUtils;
@@ -27,7 +29,7 @@ public class GeoPingApplication extends Application {
     /* define your web property ID obtained after profile creation for the app */
 
     /* Analytics tracker instance */
-    private GoogleAnalytics tracker;
+//    private GoogleAnalytics tracker;
 
     private static GeoPingApplication APP_INSTANCE;
 
@@ -62,6 +64,7 @@ public class GeoPingApplication extends Application {
         @Override
         protected Void doInBackground(Void... params) {
             final Context context = GeoPingApplication.this;
+           
             // Increment Counter Laught
             int laugthCount = incrementApplicationLaunchCounter(context);
             Log.i(TAG, "Laugth count " + laugthCount);
@@ -116,10 +119,8 @@ public class GeoPingApplication extends Application {
     }
 
     @Override
-    public void onTerminate() {
-        if (tracker != null) {
-            GAServiceManager.getInstance().dispatch();
-        }
+    public void onTerminate() { 
+        GAServiceManager.getInstance().dispatch(); 
         super.onTerminate();
     }
 
