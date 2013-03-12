@@ -51,7 +51,7 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
 //        slidingMenu = SlidingMenuHelper.newInstanceForMap(this);
 //        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+ 
         // Tracker
         EasyTracker.getInstance().activityStart(this);
     }
@@ -181,12 +181,16 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
     // ===========================================================
 
     protected void onNewIntent(Intent intent) {
+        Log.d(TAG, "onNewIntent Intent : " + intent);
         handleIntent(intent);
     }
 
     private void handleIntent(Intent intent) {
         if (intent == null) {
             return;
+        }
+        if (mapFragment !=null) {
+            mapFragment.handleIntent(intent);
         }
         // mapFragment.handleIntent(intent);
         //

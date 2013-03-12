@@ -93,8 +93,7 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
             }
         }
         this.menuItems = menuItems;
-
-        // Ugly way to display always the top
+ 
 
         return v;
     }
@@ -131,7 +130,12 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
                 Log.w(TAG, "OnItemClickListener on Item at Position=" + position + " with id=" + id);
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
                 PersonHelper helper = new PersonHelper().initWrapper(cursor);
-                String entityId = helper.getPersonIdAsString(cursor);
+                long personId = helper.getPersonId(cursor);
+                String phoneNumber = helper.getPersonPhone(cursor);
+                // Close Menu
+                switchFragment();
+                // Start Activity
+                Intents.startActivityShowOnMapPerson(v, getActivity(), personId, phoneNumber);
                 // onEditEntityClick(entityId);
             }
         };

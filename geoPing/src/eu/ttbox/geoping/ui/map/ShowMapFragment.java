@@ -111,6 +111,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         // Config
         geocodingAuto = sharedPreferences.getBoolean(AppConstants.PREFS_GEOPOINT_GEOCODING_AUTO, true);
 
+        
         // Osm
         // ----------
         this.mResourceProxy = new DefaultResourceProxyImpl(getActivity().getApplicationContext());
@@ -140,14 +141,16 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         rangeTimelineValue = new RangeTimelineValue(rangeTimelineBar.getAbsoluteMinValue(), rangeTimelineBar.getAbsoluteMaxValue());
         rangeTimelineBar.setOnRangeTimelineChangeListener(onRangeTimelineValuesChangeListener);
 
-        // Query
-        getActivity().getSupportLoaderManager().initLoader(GEOTRACK_PERSON_LOADER, null, geoTrackPersonLoaderCallback);
+       
         return v;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // Query
+        getActivity().getSupportLoaderManager().initLoader(GEOTRACK_PERSON_LOADER, null, geoTrackPersonLoaderCallback);
+        // Handle Intents
         handleIntent(getActivity().getIntent());
     }
 
@@ -155,6 +158,155 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     public void onSaveInstanceState(Bundle outState) {
         // outState.putInt(key, value)I
         super.onSaveInstanceState(outState);
+    }
+
+
+    // ===========================================================
+    // Life Cycle
+    // ===========================================================
+    public void handleIntent(Intent intent) {
+        Log.d(TAG, "handleIntent : " + intent);
+        if (intent == null) {
+            return;
+        }
+        String action = intent.getAction();
+        Log.d(TAG, String.format("Handle Intent for action %s : %s", action, intent));
+        if (Intent.ACTION_VIEW.equals(action)) {
+            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+            Bundle bundle = intent.getExtras();
+            if (bundle.containsKey(GeoTrackColumns.COL_LATITUDE_E6) && bundle.containsKey(GeoTrackColumns.COL_LONGITUDE_E6)) {
+                int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
+                int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
+                Log.w(TAG, String.format("Show on Map Phone [%s] (%s, %s) ", phone, latE6, lngE6));
+                if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
+                    centerOnPersonPhone(phone, latE6, lngE6);
+                }
+            } else {
+                centerOnPersonPhone(phone);
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (Log.isLoggable(TAG, Log.INFO)) {
+            Log.i(TAG, "### ### ### ### ### onDestroy call ### ### ### ### ###");
+        }
+        myLocation.disableCompass();
+        myLocation.disableMyLocation();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
+    }
+
+    private boolean onResumeCenterOnLastPosition() {
+        boolean isDone = false;
+        // Zoon 1 is world view
+        mapController.setZoom(privateSharedPreferences.getInt(MapConstants.PREFS_ZOOM_LEVEL, 17));
+        // Center
+        int scrollX = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X, Integer.MIN_VALUE);
+        int scrollY = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, Integer.MIN_VALUE);
+        if (Integer.MIN_VALUE != scrollX && Integer.MIN_VALUE != scrollY) {
+            Log.d(TAG, "CenterMap onResumeCenterOnLastPosition : " + scrollX + ";" + scrollY);
+            mapView.scrollTo(scrollX, scrollY);
+            isDone = true;
+        } else {
+            GeoPoint geoPoint = myLocation.getLastKnownLocationAsGeoPoint();
+            if (geoPoint != null) {
+                Log.d(TAG, "CenterMap on LastKnownLocation : " + geoPoint);
+                mapController.setCenter(geoPoint);
+                isDone = true;
+            }
+        }
+        return isDone;
+    }
+
+    @Override
+    public void onResume() {
+        if (Log.isLoggable(TAG, Log.INFO)) {
+            Log.i(TAG, "### ### ### ### ### onResume call ### ### ### ### ###");
+        }
+        super.onResume();
+
+        // read preference
+        ITileSource tileSource = getPreferenceMapViewTileSource();
+        mapView.setTileSource(tileSource);
+
+        // Zoon 1 is world view
+        // MapController mc = mapView.getController();
+        // mc.setZoom(privateSharedPreferences.getInt(MapConstants.PREFS_ZOOM_LEVEL,
+        // 17));
+        // mapView.setC
+        // Center
+        // int scrollX =
+        // privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X,
+        // Integer.MIN_VALUE);
+        // int scrollY =
+        // privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y,
+        // Integer.MIN_VALUE);
+        // if (Integer.MIN_VALUE != scrollX && Integer.MIN_VALUE != scrollY) {
+        // mapView.scrollTo(scrollX, scrollY);
+        // }
+        // Options
+        boolean enableMyLocation = privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, true);
+        this.myLocation.enableMyLocation(enableMyLocation);
+
+        if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false)) {
+            this.myLocation.enableCompass(true);
+        }
+
+        // Service
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intents.ACTION_NEW_GEOTRACK_INSERTED);
+        getActivity().registerReceiver(mStatusReceiver, filter);
+
+        // Overlay MyLocation
+        if (myLocation != null) {
+            myLocation.onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (Log.isLoggable(TAG, Log.INFO)) {
+            Log.i(TAG, "### ### ### ### ### onPause call ### ### ### ### ###");
+        }
+        // save Preference
+        // final SharedPreferences.Editor edit = sharedPreferences.edit();
+        // edit.putString(AppConstants.PREFS__KEY_TILE_SOURCE,
+        // mapView.getTileProvider().getTileSource().name());
+        // edit.commit();
+        // MapController mc = mapView.getController();
+
+        // Priavte Preference
+        final SharedPreferences.Editor localEdit = privateSharedPreferences.edit();
+        localEdit.putString(MapConstants.PREFS_TILE_SOURCE, mapView.getTileProvider().getTileSource().name());
+        localEdit.putInt(MapConstants.PREFS_SCROLL_X, mapView.getScrollX());
+        localEdit.putInt(MapConstants.PREFS_SCROLL_Y, mapView.getScrollY());
+        localEdit.putInt(MapConstants.PREFS_ZOOM_LEVEL, mapView.getZoomLevel());
+        localEdit.putBoolean(MapConstants.PREFS_SHOW_LOCATION, myLocation.isMyLocationEnabled());
+        localEdit.putBoolean(MapConstants.PREFS_SHOW_COMPASS, myLocation.isCompassEnabled());
+        localEdit.commit();
+
+        // Service
+        getActivity().unregisterReceiver(mStatusReceiver);
+
+        // Overlay May Location
+        if (myLocation != null) {
+            myLocation.onPause();
+        }
+
+        // Overlay GeoTrack
+        // if (!geoTrackOverlayByUser.isEmpty()) {
+        // for (Map.Entry<String, GeoTrackOverlay> entry :
+        // geoTrackOverlayByUser.entrySet()) {
+        // String key = entry.getKey();
+        // GeoTrackOverlay geoTrackOverlay = entry.getValue();
+        // geoTrackOverlay.onPause();
+        // }
+        // }
+
+        super.onPause();
+        // timer.cancel();
     }
 
     // ===========================================================
@@ -315,154 +467,6 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         }
 
     };
-
-    // ===========================================================
-    // Life Cycle
-    // ===========================================================
-    public void handleIntent(Intent intent) {
-        Log.d(TAG, "handleIntent : " + intent);
-        if (intent == null) {
-            return;
-        }
-        String action = intent.getAction();
-        Log.d(TAG, String.format("Handle Intent for action %s : %s", action, intent));
-        if (Intent.ACTION_VIEW.equals(action)) {
-            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-            Bundle bundle = intent.getExtras();
-            if (bundle.containsKey(GeoTrackColumns.COL_LATITUDE_E6) && bundle.containsKey(GeoTrackColumns.COL_LONGITUDE_E6)) {
-                int latE6 = intent.getIntExtra(GeoTrackColumns.COL_LATITUDE_E6, Integer.MIN_VALUE);
-                int lngE6 = intent.getIntExtra(GeoTrackColumns.COL_LONGITUDE_E6, Integer.MIN_VALUE);
-                Log.w(TAG, String.format("Show on Map Phone [%s] (%s, %s) ", phone, latE6, lngE6));
-                if (Integer.MIN_VALUE != latE6 && Integer.MIN_VALUE != lngE6) {
-                    centerOnPersonPhone(phone, latE6, lngE6);
-                }
-            } else {
-                centerOnPersonPhone(phone);
-            }
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### onDestroy call ### ### ### ### ###");
-        }
-        myLocation.disableCompass();
-        myLocation.disableMyLocation();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        super.onDestroy();
-    }
-
-    private boolean onResumeCenterOnLastPosition() {
-        boolean isDone = false;
-        // Zoon 1 is world view
-        mapController.setZoom(privateSharedPreferences.getInt(MapConstants.PREFS_ZOOM_LEVEL, 17));
-        // Center
-        int scrollX = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X, Integer.MIN_VALUE);
-        int scrollY = privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y, Integer.MIN_VALUE);
-        if (Integer.MIN_VALUE != scrollX && Integer.MIN_VALUE != scrollY) {
-            Log.d(TAG, "CenterMap onResumeCenterOnLastPosition : " + scrollX + ";" + scrollY);
-            mapView.scrollTo(scrollX, scrollY);
-            isDone = true;
-        } else {
-            GeoPoint geoPoint = myLocation.getLastKnownLocationAsGeoPoint();
-            if (geoPoint != null) {
-                Log.d(TAG, "CenterMap on LastKnownLocation : " + geoPoint);
-                mapController.setCenter(geoPoint);
-                isDone = true;
-            }
-        }
-        return isDone;
-    }
-
-    @Override
-    public void onResume() {
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### onResume call ### ### ### ### ###");
-        }
-        super.onResume();
-
-        // read preference
-        ITileSource tileSource = getPreferenceMapViewTileSource();
-        mapView.setTileSource(tileSource);
-
-        // Zoon 1 is world view
-        // MapController mc = mapView.getController();
-        // mc.setZoom(privateSharedPreferences.getInt(MapConstants.PREFS_ZOOM_LEVEL,
-        // 17));
-        // mapView.setC
-        // Center
-        // int scrollX =
-        // privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_X,
-        // Integer.MIN_VALUE);
-        // int scrollY =
-        // privateSharedPreferences.getInt(MapConstants.PREFS_SCROLL_Y,
-        // Integer.MIN_VALUE);
-        // if (Integer.MIN_VALUE != scrollX && Integer.MIN_VALUE != scrollY) {
-        // mapView.scrollTo(scrollX, scrollY);
-        // }
-        // Options
-        boolean enableMyLocation = privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, true);
-        this.myLocation.enableMyLocation(enableMyLocation);
-
-        if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false)) {
-            this.myLocation.enableCompass(true);
-        }
-
-        // Service
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intents.ACTION_NEW_GEOTRACK_INSERTED);
-        getActivity().registerReceiver(mStatusReceiver, filter);
-
-        // Overlay MyLocation
-        if (myLocation != null) {
-            myLocation.onResume();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.i(TAG, "### ### ### ### ### onPause call ### ### ### ### ###");
-        }
-        // save Preference
-        // final SharedPreferences.Editor edit = sharedPreferences.edit();
-        // edit.putString(AppConstants.PREFS__KEY_TILE_SOURCE,
-        // mapView.getTileProvider().getTileSource().name());
-        // edit.commit();
-        // MapController mc = mapView.getController();
-
-        // Priavte Preference
-        final SharedPreferences.Editor localEdit = privateSharedPreferences.edit();
-        localEdit.putString(MapConstants.PREFS_TILE_SOURCE, mapView.getTileProvider().getTileSource().name());
-        localEdit.putInt(MapConstants.PREFS_SCROLL_X, mapView.getScrollX());
-        localEdit.putInt(MapConstants.PREFS_SCROLL_Y, mapView.getScrollY());
-        localEdit.putInt(MapConstants.PREFS_ZOOM_LEVEL, mapView.getZoomLevel());
-        localEdit.putBoolean(MapConstants.PREFS_SHOW_LOCATION, myLocation.isMyLocationEnabled());
-        localEdit.putBoolean(MapConstants.PREFS_SHOW_COMPASS, myLocation.isCompassEnabled());
-        localEdit.commit();
-
-        // Service
-        getActivity().unregisterReceiver(mStatusReceiver);
-
-        // Overlay May Location
-        if (myLocation != null) {
-            myLocation.onPause();
-        }
-
-        // Overlay GeoTrack
-        // if (!geoTrackOverlayByUser.isEmpty()) {
-        // for (Map.Entry<String, GeoTrackOverlay> entry :
-        // geoTrackOverlayByUser.entrySet()) {
-        // String key = entry.getKey();
-        // GeoTrackOverlay geoTrackOverlay = entry.getValue();
-        // geoTrackOverlay.onPause();
-        // }
-        // }
-
-        super.onPause();
-        // timer.cancel();
-    }
 
     // ===========================================================
     // Map Tile
