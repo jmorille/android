@@ -16,7 +16,7 @@
 
 
     <!-- Share -->
-    <string name="app_share_title">Share GeoPing</string>
+    <string name="menu_share_app">Share GeoPing</string>
     <string name="share_app_subject">Let me recommend you GeoPing application</string>
     
     <string name="app_comment_title">Rate and Comment</string>

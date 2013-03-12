@@ -125,7 +125,7 @@ public class MainActivity extends GeoPingSlidingMenuFragmentActivity { //
         // Share
         MenuItem itemShare = menu.findItem(R.id.menuAppShare);
         mShareActionProvider = (com.actionbarsherlock.widget.ShareActionProvider) itemShare.getActionProvider();
-        // Share Inten
+        // Share Intent
 
         mShareActionProvider.setShareIntent(createShareIntent(this));
         return true;
@@ -137,7 +137,8 @@ public class MainActivity extends GeoPingSlidingMenuFragmentActivity { //
         shareAppIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.share_app_subject));
         // shareAppIntent.putExtra(Intent.EXTRA_TEXT,
         // "geoPing://pairing?id=eu.ttbox.geoping");
-        shareAppIntent.putExtra(Intent.EXTRA_TEXT, "market://details?id=eu.ttbox.geoping");
+        shareAppIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=eu.ttbox.geoping");
+//      shareAppIntent.putExtra(Intent.EXTRA_TEXT, "market://details?id=eu.ttbox.geoping");
         return shareAppIntent;
     }
 

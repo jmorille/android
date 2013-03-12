@@ -17,7 +17,7 @@
 
     <!-- Share -->
     <string name="menu_share_app">Partager GeoPing</string>
-    <string name="share_app_subject">Let me recommend you GeoPing application</string>
+    <string name="share_app_subject">"Je te recommande l'application GeoPing"</string>
   
     <string name="app_comment_title">Voter et Commenter</string>
     <string name="app_comment_summary">Merci de nous laisser vos commentaires.</string>
