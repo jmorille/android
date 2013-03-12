@@ -1,7 +1,5 @@
 package eu.ttbox.geoping;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -15,7 +13,6 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.google.analytics.tracking.android.ExceptionReporter;
 import com.google.analytics.tracking.android.GAServiceManager;
 
 import eu.ttbox.geoping.core.AppConstants;
@@ -46,7 +43,7 @@ public class GeoPingApplication extends Application {
     @Override
     public void onCreate() {
         // Strict Mode
-        initStrictMode();
+//        initStrictMode();
         // Create Application
         super.onCreate();
         APP_INSTANCE = this;
