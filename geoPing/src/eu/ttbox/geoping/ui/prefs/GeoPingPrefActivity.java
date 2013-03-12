@@ -11,23 +11,29 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceActivity.Header;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Tracker;
+import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.ui.prefs.comp.version.AppVersionPreference;
+import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 
 /**
  * http://www.blackmoonit.com/2012/07/all_api_prefsactivity/
+ * 
  */
-public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class GeoPingPrefActivity extends PreferenceActivity //SlidingPreferenceActivity
+implements OnSharedPreferenceChangeListener {
 
     private static final String TAG = "GeoPingPrefActivity";
 
@@ -47,6 +53,8 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
         developmentPreferences = getSharedPreferences(AppVersionPreference.PREFS_DEV_MODE, Context.MODE_PRIVATE);
         super.onCreate(aSavedState);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+// TODO       customizeSlidingMenu();
+        // Compatibity
         if (!VersionUtils.isHc11) {
             final boolean showDev = developmentPreferences.getBoolean(AppVersionPreference.PREF_SHOW_DEVMODE, false);
             // addPreferencesFromResource(R.xml.prefs);
@@ -136,9 +144,39 @@ public class GeoPingPrefActivity extends PreferenceActivity implements OnSharedP
     }
 
     // ===========================================================
-    // Listener
+    // Sliding Menu
     // ===========================================================
 
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//        case android.R.id.home:
+//            toggle();
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+//    
+//    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+//    public SlidingMenu customizeSlidingMenu() {
+//        setBehindContentView(R.layout.slidingmenu_frame);
+//        SlidingMenu slidingMenu = getSlidingMenu();
+//        SlidingMenuHelper.customizeSlidingInstance(this, slidingMenu, SlidingMenu.TOUCHMODE_FULLSCREEN);
+//        // Add selector
+//        customizeSlidingMenuActionBar(); 
+//        return slidingMenu;
+//    }
+   
+
+    
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void customizeSlidingMenuActionBar() {
+        if (VersionUtils.isHc11) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+    
+    
     // ===========================================================
     // Generic Fragment
     // ===========================================================
