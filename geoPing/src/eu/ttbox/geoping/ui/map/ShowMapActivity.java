@@ -47,11 +47,7 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.map_activity);
-        // SlidingMenu
-//        slidingMenu = SlidingMenuHelper.newInstanceForMap(this);
-//        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
- 
+      
         // Tracker
         EasyTracker.getInstance().activityStart(this);
     }

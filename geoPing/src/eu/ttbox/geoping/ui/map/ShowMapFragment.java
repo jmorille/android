@@ -249,6 +249,10 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         // Options
         boolean enableMyLocation = privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, true);
         this.myLocation.enableMyLocation(enableMyLocation);
+        Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
+        Log.d(TAG, "--- --- Read isMyLocationEnabled : " + enableMyLocation);
+        Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
+        
 
         if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false)) {
             this.myLocation.enableCompass(true);
@@ -287,6 +291,11 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         localEdit.putBoolean(MapConstants.PREFS_SHOW_COMPASS, myLocation.isCompassEnabled());
         localEdit.commit();
 
+        Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
+        Log.d(TAG, "--- --- Write isMyLocationEnabled : " + myLocation.isMyLocationEnabled());
+        Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
+        
+        
         // Service
         getActivity().unregisterReceiver(mStatusReceiver);
 

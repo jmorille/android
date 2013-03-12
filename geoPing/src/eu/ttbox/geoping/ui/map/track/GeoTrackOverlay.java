@@ -707,7 +707,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		@Override
 		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 			int resultCount = cursor.getCount();
-			Log.w(TAG, String.format("### Found %s Geotracks for %s", resultCount, person));
+			Log.d(TAG, String.format("### Found %s Geotracks for %s", resultCount, person));
 			ArrayList<GeoTrack> points = new ArrayList<GeoTrack>(resultCount);
 			if (cursor.moveToFirst()) {
 				GeoTrackHelper helper = new GeoTrackHelper().initWrapper(cursor);
@@ -727,11 +727,11 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 				if (isRangeChange) {
 					notifyChangeOnRangeGeoTrackValuesChangeListener();
 				}
-				Log.w(TAG, "------------------------------------------");
-                Log.w(TAG, "------------------------------------------");
-				Log.w(TAG, "------- Added last Geopoint : " + geoTrack  + " // with LastAddedListener "  + (geotrackLastAddedListener != null));
-                Log.w(TAG, "------------------------------------------");
-                Log.w(TAG, "------------------------------------------");
+				Log.d(TAG, "------------------------------------------");
+                Log.d(TAG, "------------------------------------------");
+				Log.d(TAG, "------- Added last Geopoint : " + geoTrack  + " // with LastAddedListener "  + (geotrackLastAddedListener != null));
+                Log.d(TAG, "------------------------------------------");
+                Log.d(TAG, "------------------------------------------");
 				if (geoTrack != null && geotrackLastAddedListener != null) { 
 					geotrackLastAddedListener.addedLastGeoTrack(geoTrack);
 				}

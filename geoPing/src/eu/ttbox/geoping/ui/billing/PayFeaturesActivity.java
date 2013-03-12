@@ -1,636 +1,414 @@
 package eu.ttbox.geoping.ui.billing;
 
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Html;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ImageView;
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.service.billing.BillingService;
-import eu.ttbox.geoping.service.billing.BillingService.RequestPurchase;
-import eu.ttbox.geoping.service.billing.BillingService.RestoreTransactions;
-import eu.ttbox.geoping.service.billing.Consts;
-import eu.ttbox.geoping.service.billing.Consts.PurchaseState;
-import eu.ttbox.geoping.service.billing.Consts.ResponseCode;
-import eu.ttbox.geoping.service.billing.PurchaseDatabase;
-import eu.ttbox.geoping.service.billing.PurchaseObserver;
-import eu.ttbox.geoping.service.billing.ResponseHandler;
+import eu.ttbox.geoping.service.billing.util.IabHelper;
+import eu.ttbox.geoping.service.billing.util.IabResult;
+import eu.ttbox.geoping.service.billing.util.Inventory;
+import eu.ttbox.geoping.service.billing.util.Purchase;
 import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 
 /**
  * A sample application that demonstrates in-app billing.
  */
-public class PayFeaturesActivity extends GeoPingSlidingMenuFragmentActivity implements OnClickListener,
-        OnItemSelectedListener {
-    private static final String TAG = "Dungeons";
+public class PayFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   {
+    
+    // Debug tag, for logging
+    static final String TAG = "PayFeaturesActivity";
 
-    /**
-     * Used for storing the log text.
-     */
-    private static final String LOG_TEXT_KEY = "DUNGEONS_LOG_TEXT";
+    // Does the user have the premium upgrade?
+    boolean mIsPremium = false;
+    
+    // Does the user have an active subscription to the infinite gas plan?
+    boolean mSubscribedToInfiniteGas = false;
 
-    /**
-     * The SharedPreferences key for recording whether we initialized the
-     * database.  If false, then we perform a RestoreTransactions request
-     * to get all the purchases for this user.
-     */
-    private static final String DB_INITIALIZED = "db_initialized";
+    // SKUs for our products: the premium upgrade (non-consumable) and gas (consumable)
+    static final String SKU_PREMIUM = "premium";
+    static final String SKU_GAS = "gas";
+    
+    // SKU for our subscription (infinite gas)
+    static final String SKU_INFINITE_GAS = "infinite_gas";
 
-    private DungeonsPurchaseObserver mDungeonsPurchaseObserver;
-    private Handler mHandler;
+    // (arbitrary) request code for the purchase flow
+    static final int RC_REQUEST = 10001;
 
-    private BillingService mBillingService;
-    private Button mBuyButton;
-    private Button mEditPayloadButton;
-    private Button mEditSubscriptionsButton;
-    private TextView mLogTextView;
-    private Spinner mSelectItemSpinner;
-    private ListView mOwnedItemsTable;
-    private SimpleCursorAdapter mOwnedItemsAdapter;
-    private PurchaseDatabase mPurchaseDatabase;
-    private Cursor mOwnedItemsCursor;
-    private Set<String> mOwnedItems = new HashSet<String>();
+    // Graphics for the gas gauge
+    static int[] TANK_RES_IDS = { R.drawable.billing_sample_gas0, R.drawable.billing_sample_gas1, R.drawable.billing_sample_gas2,
+                                   R.drawable.billing_sample_gas3, R.drawable.billing_sample_gas4 };
 
-    /**
-     * The developer payload that is sent with subsequent
-     * purchase requests.
-     */
-    private String mPayloadContents = null;
+    // How many units (1/4 tank is our unit) fill in the tank.
+    static final int TANK_MAX = 4;
 
-    private static final int DIALOG_CANNOT_CONNECT_ID = 1;
-    private static final int DIALOG_BILLING_NOT_SUPPORTED_ID = 2;
-    private static final int DIALOG_SUBSCRIPTIONS_NOT_SUPPORTED_ID = 3;
+    // Current amount of gas in tank, in units
+    int mTank;
 
-    /**
-     * Each product in the catalog can be MANAGED, UNMANAGED, or SUBSCRIPTION.  MANAGED
-     * means that the product can be purchased only once per user (such as a new
-     * level in a game). The purchase is remembered by Android Market and
-     * can be restored if this application is uninstalled and then
-     * re-installed. UNMANAGED is used for products that can be used up and
-     * purchased multiple times (such as poker chips). It is up to the
-     * application to keep track of UNMANAGED products for the user.
-     * SUBSCRIPTION is just like MANAGED except that the user gets charged monthly
-     * or yearly.
-     */
-    private enum Managed { MANAGED, UNMANAGED, SUBSCRIPTION }
+    // The helper object
+    IabHelper mHelper;
 
-    /**
-     * A {@link PurchaseObserver} is used to get callbacks when Android Market sends
-     * messages to this application so that we can update the UI.
-     */
-    private class DungeonsPurchaseObserver extends PurchaseObserver {
-        public DungeonsPurchaseObserver(Handler handler) {
-            super(PayFeaturesActivity.this, handler);
-        }
-
-        @Override
-        public void onBillingSupported(boolean supported, String type) {
-            if (Consts.DEBUG) {
-                Log.i(TAG, "supported: " + supported);
-            }
-            if (type == null || type.equals(Consts.ITEM_TYPE_INAPP)) {
-                if (supported) {
-                    restoreDatabase();
-                    mBuyButton.setEnabled(true);
-                    mEditPayloadButton.setEnabled(true);
-                } else {
-                    showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
-                }
-            } else if (type.equals(Consts.ITEM_TYPE_SUBSCRIPTION)) {
-                mCatalogAdapter.setSubscriptionsSupported(supported);
-            } else {
-                showDialog(DIALOG_SUBSCRIPTIONS_NOT_SUPPORTED_ID);
-            }
-        }
-
-        @Override
-        public void onPurchaseStateChange(PurchaseState purchaseState, String itemId,
-                int quantity, long purchaseTime, String developerPayload) {
-            if (Consts.DEBUG) {
-                Log.i(TAG, "onPurchaseStateChange() itemId: " + itemId + " " + purchaseState);
-            }
-
-            if (developerPayload == null) {
-                logProductActivity(itemId, purchaseState.toString());
-            } else {
-                logProductActivity(itemId, purchaseState + "\n\t" + developerPayload);
-            }
-            
-            if (purchaseState == PurchaseState.PURCHASED) {
-                mOwnedItems.add(itemId);
-                
-                // If this is a subscription, then enable the "Edit
-                // Subscriptions" button.
-                for (CatalogEntry e : CATALOG) {
-                    if (e.sku.equals(itemId) &&
-                            e.managed.equals(Managed.SUBSCRIPTION)) {
-                        mEditSubscriptionsButton.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-            mCatalogAdapter.setOwnedItems(mOwnedItems);
-            mOwnedItemsCursor.requery();
-        }
-
-        @Override
-        public void onRequestPurchaseResponse(RequestPurchase request,
-                ResponseCode responseCode) {
-            if (Consts.DEBUG) {
-                Log.d(TAG, request.mProductId + ": " + responseCode);
-            }
-            if (responseCode == ResponseCode.RESULT_OK) {
-                if (Consts.DEBUG) {
-                    Log.i(TAG, "purchase was successfully sent to server");
-                }
-                logProductActivity(request.mProductId, "sending purchase request");
-            } else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
-                if (Consts.DEBUG) {
-                    Log.i(TAG, "user canceled purchase");
-                }
-                logProductActivity(request.mProductId, "dismissed purchase dialog");
-            } else {
-                if (Consts.DEBUG) {
-                    Log.i(TAG, "purchase failed");
-                }
-                logProductActivity(request.mProductId, "request purchase returned " + responseCode);
-            }
-        }
-
-        @Override
-        public void onRestoreTransactionsResponse(RestoreTransactions request,
-                ResponseCode responseCode) {
-            if (responseCode == ResponseCode.RESULT_OK) {
-                if (Consts.DEBUG) {
-                    Log.d(TAG, "completed RestoreTransactions request");
-                }
-                // Update the shared preferences so that we don't perform
-                // a RestoreTransactions again.
-                SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit = prefs.edit();
-                edit.putBoolean(DB_INITIALIZED, true);
-                edit.commit();
-            } else {
-                if (Consts.DEBUG) {
-                    Log.d(TAG, "RestoreTransactions error: " + responseCode);
-                }
-            }
-        }
-    }
-
-    private static class CatalogEntry {
-        public String sku;
-        public int nameId;
-        public Managed managed;
-
-        public CatalogEntry(String sku, int nameId, Managed managed) {
-            this.sku = sku;
-            this.nameId = nameId;
-            this.managed = managed;
-        }
-    }
-
-    /** An array of product list entries for the products that can be purchased. */
-    private static final CatalogEntry[] CATALOG = new CatalogEntry[] {
-        new CatalogEntry("sword_001", R.string.two_handed_sword, Managed.MANAGED),
-        new CatalogEntry("potion_001", R.string.potions, Managed.UNMANAGED),
-        new CatalogEntry("subscription_monthly", R.string.subscription_monthly,
-                Managed.SUBSCRIPTION),
-        new CatalogEntry("subscription_yearly", R.string.subscription_yearly,
-                Managed.SUBSCRIPTION),
-        new CatalogEntry("android.test.purchased", R.string.android_test_purchased,
-                Managed.UNMANAGED),
-        new CatalogEntry("android.test.canceled", R.string.android_test_canceled,
-                Managed.UNMANAGED),
-        new CatalogEntry("android.test.refunded", R.string.android_test_refunded,
-                Managed.UNMANAGED),
-        new CatalogEntry("android.test.item_unavailable", R.string.android_test_item_unavailable,
-                Managed.UNMANAGED),
-    };
-
-    private String mItemName;
-    private String mSku;
-    private Managed mManagedType;
-    private CatalogAdapter mCatalogAdapter;
-
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.billing_main);
 
-        mHandler = new Handler();
-        mDungeonsPurchaseObserver = new DungeonsPurchaseObserver(mHandler);
-        mBillingService = new BillingService();
-        mBillingService.setContext(this);
+        // load game data
+        loadData();
 
-        mPurchaseDatabase = new PurchaseDatabase(this);
-        setupWidgets();
-
-        // Check if billing is supported.
-        ResponseHandler.register(mDungeonsPurchaseObserver);
-        if (!mBillingService.checkBillingSupported()) {
-            showDialog(DIALOG_CANNOT_CONNECT_ID);
+        /* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
+         * (that you got from the Google Play developer console). This is not your
+         * developer public key, it's the *app-specific* public key.
+         *
+         * Instead of just storing the entire literal string here embedded in the
+         * program,  construct the key at runtime from pieces or
+         * use bit manipulation (for example, XOR with some other string) to hide
+         * the actual key.  The key itself is not secret information, but we don't
+         * want to make it easy for an attacker to replace the public key with one
+         * of their own and then fake messages from the server.
+         */
+        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg6EIpPnbaQ73nK3psbyxspmlEBK4cE9MpDUIS492zPg0h++6tgx7bvSKNK8COrxtDCIUE3A4XxJkLoqxGupdpYBPWdwsNGP67VMDgjLaC2TP8EQRFEHEEZFUuIaY8LPKXsP5QhfEKKFTZxHs/fav0olvVDhZ1MnB+SO6ZbRw/GmZE4ILQMIURn5bypX248OMTwDwrESqVwWKH4165SzM9VeI8/iVAsxnDDG1VfQ8Gnfi4QjyZKG5U9jRyt0iIMnV3LOhkk549Zjv3oLS7R02kcjIfigBztB4P6+MXwZ/5DlN7CKmxn+5IiTACSb4LEoPrekw0DNG+bHaxdpz/fEimQIDAQAB";
+        
+        // Some sanity checks to see if the developer (that's you!) really followed the
+        // instructions to run this sample (don't put these checks on your app!)
+        if (base64EncodedPublicKey.contains("CONSTRUCT_YOUR")) {
+            throw new RuntimeException("Please put your app's public key in MainActivity.java. See README.");
+        }
+        if (getPackageName().startsWith("com.example")) {
+            throw new RuntimeException("Please change the sample's package name! See README.");
         }
         
-        if (!mBillingService.checkBillingSupported(Consts.ITEM_TYPE_SUBSCRIPTION)) {
-            showDialog(DIALOG_SUBSCRIPTIONS_NOT_SUPPORTED_ID);
-        }
-    }
+        // Create the helper, passing it our context and the public key to verify signatures with
+        Log.d(TAG, "Creating IAB helper.");
+        mHelper = new IabHelper(this, base64EncodedPublicKey);
+        
+        // enable debug logging (for a production application, you should set this to false).
+        mHelper.enableDebugLogging(true);
 
-    /**
-     * Called when this activity becomes visible.
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        ResponseHandler.register(mDungeonsPurchaseObserver);
-        initializeOwnedItems();
-    }
+        // Start setup. This is asynchronous and the specified listener
+        // will be called once setup completes.
+        Log.d(TAG, "Starting setup.");
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result) {
+                Log.d(TAG, "Setup finished.");
 
-    /**
-     * Called when this activity is no longer visible.
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
-        ResponseHandler.unregister(mDungeonsPurchaseObserver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPurchaseDatabase.close();
-        mBillingService.unbind();
-    }
-
-    /**
-     * Save the context of the log so simple things like rotation will not
-     * result in the log being cleared.
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(LOG_TEXT_KEY, Html.toHtml((Spanned) mLogTextView.getText()));
-    }
-
-    /**
-     * Restore the contents of the log if it has previously been saved.
-     */
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null) {
-            mLogTextView.setText(Html.fromHtml(savedInstanceState.getString(LOG_TEXT_KEY)));
-        }
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-        case DIALOG_CANNOT_CONNECT_ID:
-            return createDialog(R.string.cannot_connect_title,
-                    R.string.cannot_connect_message);
-        case DIALOG_BILLING_NOT_SUPPORTED_ID:
-            return createDialog(R.string.billing_not_supported_title,
-                    R.string.billing_not_supported_message);
-            case DIALOG_SUBSCRIPTIONS_NOT_SUPPORTED_ID:
-                return createDialog(R.string.subscriptions_not_supported_title,
-                        R.string.subscriptions_not_supported_message);
-        default:
-            return null;
-        }
-    }
-
-    private Dialog createDialog(int titleId, int messageId) {
-        String helpUrl = replaceLanguageAndRegion(getString(R.string.help_url));
-        if (Consts.DEBUG) {
-            Log.i(TAG, helpUrl);
-        }
-        final Uri helpUri = Uri.parse(helpUrl);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(titleId)
-            .setIcon(android.R.drawable.stat_sys_warning)
-            .setMessage(messageId)
-            .setCancelable(false)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(R.string.learn_more, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, helpUri);
-                    startActivity(intent);
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    complain("Problem setting up in-app billing: " + result);
+                    return;
                 }
-            });
-        return builder.create();
-    }
 
-    /**
-     * Replaces the language and/or country of the device into the given string.
-     * The pattern "%lang%" will be replaced by the device's language code and
-     * the pattern "%region%" will be replaced with the device's country code.
-     *
-     * @param str the string to replace the language/country within
-     * @return a string containing the local language and region codes
-     */
-    private String replaceLanguageAndRegion(String str) {
-        // Substitute language and or region if present in string
-        if (str.contains("%lang%") || str.contains("%region%")) {
-            Locale locale = Locale.getDefault();
-            str = str.replace("%lang%", locale.getLanguage().toLowerCase());
-            str = str.replace("%region%", locale.getCountry().toLowerCase());
-        }
-        return str;
-    }
-
-    /**
-     * Sets up the UI.
-     */
-    private void setupWidgets() {
-        mLogTextView = (TextView) findViewById(R.id.log);
-
-        mBuyButton = (Button) findViewById(R.id.buy_button);
-        mBuyButton.setEnabled(false);
-        mBuyButton.setOnClickListener(this);
-
-        mEditPayloadButton = (Button) findViewById(R.id.payload_edit_button);
-        mEditPayloadButton.setEnabled(false);
-        mEditPayloadButton.setOnClickListener(this);
-
-        mEditSubscriptionsButton = (Button) findViewById(R.id.subscriptions_edit_button);
-        mEditSubscriptionsButton.setVisibility(View.INVISIBLE);
-        mEditSubscriptionsButton.setOnClickListener(this);
-
-        mSelectItemSpinner = (Spinner) findViewById(R.id.item_choices);
-        mCatalogAdapter = new CatalogAdapter(this, CATALOG);
-        mSelectItemSpinner.setAdapter(mCatalogAdapter);
-        mSelectItemSpinner.setOnItemSelectedListener(this);
-
-        mOwnedItemsCursor = mPurchaseDatabase.queryAllPurchasedItems();
-        startManagingCursor(mOwnedItemsCursor);
-        String[] from = new String[] { PurchaseDatabase.PURCHASED_PRODUCT_ID_COL,
-                PurchaseDatabase.PURCHASED_QUANTITY_COL
-        };
-        int[] to = new int[] { R.id.item_name, R.id.item_quantity };
-        mOwnedItemsAdapter = new SimpleCursorAdapter(this, R.layout.billing_item_row,
-                mOwnedItemsCursor, from, to);
-        mOwnedItemsTable = (ListView) findViewById(R.id.owned_items);
-        mOwnedItemsTable.setAdapter(mOwnedItemsAdapter);
-    }
-
-    private void prependLogEntry(CharSequence cs) {
-        SpannableStringBuilder contents = new SpannableStringBuilder(cs);
-        contents.append('\n');
-        contents.append(mLogTextView.getText());
-        mLogTextView.setText(contents);
-    }
-
-    private void logProductActivity(String product, String activity) {
-        SpannableStringBuilder contents = new SpannableStringBuilder();
-        contents.append(Html.fromHtml("<b>" + product + "</b>: "));
-        contents.append(activity);
-        prependLogEntry(contents);
-    }
-
-    /**
-     * If the database has not been initialized, we send a
-     * RESTORE_TRANSACTIONS request to Android Market to get the list of purchased items
-     * for this user. This happens if the application has just been installed
-     * or the user wiped data. We do not want to do this on every startup, rather, we want to do
-     * only when the database needs to be initialized.
-     */
-    private void restoreDatabase() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        boolean initialized = prefs.getBoolean(DB_INITIALIZED, false);
-        if (!initialized) {
-            mBillingService.restoreTransactions();
-            Toast.makeText(this, R.string.restoring_transactions, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    /**
-     * Creates a background thread that reads the database and initializes the
-     * set of owned items.
-     */
-    private void initializeOwnedItems() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                doInitializeOwnedItems();
+                // Hooray, IAB is fully set up. Now, let's get an inventory of stuff we own.
+                Log.d(TAG, "Setup successful. Querying inventory.");
+                mHelper.queryInventoryAsync(mGotInventoryListener);
             }
-        }).start();
+        });
     }
 
-    /**
-     * Reads the set of purchased items from the database in a background thread
-     * and then adds those items to the set of owned items in the main UI
-     * thread.
-     */
-    private void doInitializeOwnedItems() {
-        Cursor cursor = mPurchaseDatabase.queryAllPurchasedItems();
-        if (cursor == null) {
+    // Listener that's called when we finish querying the items and subscriptions we own
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+            Log.d(TAG, "Query inventory finished.");
+            if (result.isFailure()) {
+                complain("Failed to query inventory: " + result);
+                return;
+            }
+
+            Log.d(TAG, "Query inventory was successful.");
+            
+            /*
+             * Check for items we own. Notice that for each purchase, we check
+             * the developer payload to see if it's correct! See
+             * verifyDeveloperPayload().
+             */
+            
+            // Do we have the premium upgrade?
+            Purchase premiumPurchase = inventory.getPurchase(SKU_PREMIUM);
+            mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
+            Log.d(TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
+            
+            // Do we have the infinite gas plan?
+            Purchase infiniteGasPurchase = inventory.getPurchase(SKU_INFINITE_GAS);
+            mSubscribedToInfiniteGas = (infiniteGasPurchase != null && 
+                    verifyDeveloperPayload(infiniteGasPurchase));
+            Log.d(TAG, "User " + (mSubscribedToInfiniteGas ? "HAS" : "DOES NOT HAVE") 
+                        + " infinite gas subscription.");
+            if (mSubscribedToInfiniteGas) mTank = TANK_MAX;
+
+            // Check for gas delivery -- if we own gas, we should fill up the tank immediately
+            Purchase gasPurchase = inventory.getPurchase(SKU_GAS);
+            if (gasPurchase != null && verifyDeveloperPayload(gasPurchase)) {
+                Log.d(TAG, "We have gas. Consuming it.");
+                mHelper.consumeAsync(inventory.getPurchase(SKU_GAS), mConsumeFinishedListener);
+                return;
+            }
+
+            updateUi();
+            setWaitScreen(false);
+            Log.d(TAG, "Initial inventory query finished; enabling main UI.");
+        }
+    };
+
+    // User clicked the "Buy Gas" button
+    public void onBuyGasButtonClicked(View arg0) {
+        Log.d(TAG, "Buy gas button clicked.");
+
+        if (mSubscribedToInfiniteGas) {
+            complain("No need! You're subscribed to infinite gas. Isn't that awesome?");
+            return;
+        }
+        
+        if (mTank >= TANK_MAX) {
+            complain("Your tank is full. Drive around a bit!");
             return;
         }
 
-        final Set<String> ownedItems = new HashSet<String>();
-        try {
-            int productIdCol = cursor.getColumnIndexOrThrow(
-                    PurchaseDatabase.PURCHASED_PRODUCT_ID_COL);
-            while (cursor.moveToNext()) {
-                String productId = cursor.getString(productIdCol);
-                ownedItems.add(productId);
-            }
-        } finally {
-            cursor.close();
-        }
-
-        // We will add the set of owned items in a new Runnable that runs on
-        // the UI thread so that we don't need to synchronize access to
-        // mOwnedItems.
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mOwnedItems.addAll(ownedItems);
-                mCatalogAdapter.setOwnedItems(mOwnedItems);
-            }
-        });
+        // launch the gas purchase UI flow.
+        // We will be notified of completion via mPurchaseFinishedListener
+        setWaitScreen(true);
+        Log.d(TAG, "Launching purchase flow for gas.");
+        
+        /* TODO: for security, generate your payload here for verification. See the comments on 
+         *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use 
+         *        an empty string, but on a production app you should carefully generate this. */
+        String payload = ""; 
+        
+        mHelper.launchPurchaseFlow(this, SKU_GAS, RC_REQUEST, 
+                mPurchaseFinishedListener, payload);
     }
 
-    /**
-     * Called when a button is pressed.
-     */
+    // User clicked the "Upgrade to Premium" button.
+    public void onUpgradeAppButtonClicked(View arg0) {
+        Log.d(TAG, "Upgrade button clicked; launching purchase flow for upgrade.");
+        setWaitScreen(true);
+        
+        /* TODO: for security, generate your payload here for verification. See the comments on 
+         *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use 
+         *        an empty string, but on a production app you should carefully generate this. */
+        String payload = ""; 
+
+        mHelper.launchPurchaseFlow(this, SKU_PREMIUM, RC_REQUEST, 
+                mPurchaseFinishedListener, payload);
+    }
+    
+    // "Subscribe to infinite gas" button clicked. Explain to user, then start purchase
+    // flow for subscription.
+    public void onInfiniteGasButtonClicked(View arg0) {
+        if (!mHelper.subscriptionsSupported()) {
+            complain("Subscriptions not supported on your device yet. Sorry!");
+            return;
+        }
+        
+        /* TODO: for security, generate your payload here for verification. See the comments on 
+         *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use 
+         *        an empty string, but on a production app you should carefully generate this. */
+        String payload = ""; 
+        
+        setWaitScreen(true);
+        Log.d(TAG, "Launching purchase flow for infinite gas subscription.");
+        mHelper.launchPurchaseFlow(this,
+                SKU_INFINITE_GAS, IabHelper.ITEM_TYPE_SUBS, 
+                RC_REQUEST, mPurchaseFinishedListener, payload);        
+    }
+    
     @Override
-    public void onClick(View v) {
-        if (v == mBuyButton) {
-            if (Consts.DEBUG) {
-                Log.d(TAG, "buying: " + mItemName + " sku: " + mSku);
-            }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
 
-            if (mManagedType != Managed.SUBSCRIPTION &&
-                    !mBillingService.requestPurchase(mSku, Consts.ITEM_TYPE_INAPP, mPayloadContents)) {
-                showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
-            } else if (!mBillingService.requestPurchase(mSku, Consts.ITEM_TYPE_SUBSCRIPTION, mPayloadContents)) {
-                // Note: mManagedType == Managed.SUBSCRIPTION
-                showDialog(DIALOG_SUBSCRIPTIONS_NOT_SUPPORTED_ID);
-            }
-        } else if (v == mEditPayloadButton) {
-            showPayloadEditDialog();
-        } else if (v == mEditSubscriptionsButton) {
-            editSubscriptions();
+        // Pass on the activity result to the helper for handling
+        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            Log.d(TAG, "onActivityResult handled by IABUtil.");
         }
     }
-
-    /** List subscriptions for this package in Google Play
-     *
-     * This allows users to unsubscribe from this apps subscriptions.
-     *
-     * Subscriptions are listed on the Google Play app detail page, so this
-     * should only be called if subscriptions are known to be present.
-     */
-    private void editSubscriptions() {
-        // Get current package name
-        String packageName = getPackageName();
-        // Open app detail in Google Play
-        Intent i = new Intent(Intent.ACTION_VIEW,
-                             Uri.parse("market://details?id=" + packageName));
-        startActivity(i);
+    
+    /** Verifies the developer payload of a purchase. */
+    boolean verifyDeveloperPayload(Purchase p) {
+        String payload = p.getDeveloperPayload();
+        
+        /*
+         * TODO: verify that the developer payload of the purchase is correct. It will be
+         * the same one that you sent when initiating the purchase.
+         * 
+         * WARNING: Locally generating a random string when starting a purchase and 
+         * verifying it here might seem like a good approach, but this will fail in the 
+         * case where the user purchases an item on one device and then uses your app on 
+         * a different device, because on the other device you will not have access to the
+         * random string you originally generated.
+         *
+         * So a good developer payload has these characteristics:
+         * 
+         * 1. If two different users purchase an item, the payload is different between them,
+         *    so that one user's purchase can't be replayed to another user.
+         * 
+         * 2. The payload must be such that you can verify it even when the app wasn't the
+         *    one who initiated the purchase flow (so that items purchased by the user on 
+         *    one device work on other devices owned by the user).
+         * 
+         * Using your own server to store and verify developer payloads across app
+         * installations is recommended.
+         */
+        
+        return true;
     }
 
-    /**
-     * Displays the dialog used to edit the payload dialog.
-     */
-    private void showPayloadEditDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        final View view = View.inflate(this, R.layout.billing_edit_payload, null);
-        final TextView payloadText = (TextView) view.findViewById(R.id.payload_text);
-        if (mPayloadContents != null) {
-            payloadText.setText(mPayloadContents);
-        }
-
-        dialog.setView(view);
-        dialog.setPositiveButton(
-                R.string.edit_payload_accept,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mPayloadContents = payloadText.getText().toString();
-                    }
-                });
-        dialog.setNegativeButton(
-                R.string.edit_payload_clear,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (dialog != null) {
-                            mPayloadContents = null;
-                            dialog.cancel();
-                        }
-                    }
-                });
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if (dialog != null) {
-                    dialog.cancel();
-                }
+    // Callback for when a purchase is finished
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+            Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
+            if (result.isFailure()) {
+                complain("Error purchasing: " + result);
+                setWaitScreen(false);
+                return;
             }
-        });
-        dialog.show();
-    }
+            if (!verifyDeveloperPayload(purchase)) {
+                complain("Error purchasing. Authenticity verification failed.");
+                setWaitScreen(false);
+                return;
+            }
 
-    /**
-     * Called when an item in the spinner is selected.
-     */
+            Log.d(TAG, "Purchase successful.");
+
+            if (purchase.getSku().equals(SKU_GAS)) {
+                // bought 1/4 tank of gas. So consume it.
+                Log.d(TAG, "Purchase is gas. Starting gas consumption.");
+                mHelper.consumeAsync(purchase, mConsumeFinishedListener);
+            }
+            else if (purchase.getSku().equals(SKU_PREMIUM)) {
+                // bought the premium upgrade!
+                Log.d(TAG, "Purchase is premium upgrade. Congratulating user.");
+                alert("Thank you for upgrading to premium!");
+                mIsPremium = true;
+                updateUi();
+                setWaitScreen(false);
+            }
+            else if (purchase.getSku().equals(SKU_INFINITE_GAS)) {
+                // bought the infinite gas subscription
+                Log.d(TAG, "Infinite gas subscription purchased.");
+                alert("Thank you for subscribing to infinite gas!");
+                mSubscribedToInfiniteGas = true;
+                mTank = TANK_MAX;
+                updateUi();
+                setWaitScreen(false);
+            }
+        }
+    };
+
+    // Called when consumption is complete
+    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
+        public void onConsumeFinished(Purchase purchase, IabResult result) {
+            Log.d(TAG, "Consumption finished. Purchase: " + purchase + ", result: " + result);
+
+            // We know this is the "gas" sku because it's the only one we consume,
+            // so we don't check which sku was consumed. If you have more than one
+            // sku, you probably should check...
+            if (result.isSuccess()) {
+                // successfully consumed, so we apply the effects of the item in our
+                // game world's logic, which in our case means filling the gas tank a bit
+                Log.d(TAG, "Consumption successful. Provisioning.");
+                mTank = mTank == TANK_MAX ? TANK_MAX : mTank + 1;
+                saveData();
+                alert("You filled 1/4 tank. Your tank is now " + String.valueOf(mTank) + "/4 full!");
+            }
+            else {
+                complain("Error while consuming: " + result);
+            }
+            updateUi();
+            setWaitScreen(false);
+            Log.d(TAG, "End consumption flow.");
+        }
+    };
+
+    // Drive button clicked. Burn gas!
+    public void onDriveButtonClicked(View arg0) {
+        Log.d(TAG, "Drive button clicked.");
+        if (!mSubscribedToInfiniteGas && mTank <= 0) alert("Oh, no! You are out of gas! Try buying some!");
+        else {
+            if (!mSubscribedToInfiniteGas) --mTank;
+            saveData();
+            alert("Vroooom, you drove a few miles.");
+            updateUi();
+            Log.d(TAG, "Vrooom. Tank is now " + mTank);
+        }
+    }
+    
+    // We're being destroyed. It's important to dispose of the helper here!
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mItemName = getString(CATALOG[position].nameId);
-        mSku = CATALOG[position].sku;
-        mManagedType = CATALOG[position].managed;
+    public void onDestroy() {
+        super.onDestroy();
+        
+        // very important:
+        Log.d(TAG, "Destroying helper.");
+        if (mHelper != null) mHelper.dispose();
+        mHelper = null;
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> arg0) {
+    // updates UI to reflect model
+    public void updateUi() {
+        // update the car color to reflect premium status or lack thereof
+        ((ImageView)findViewById(R.id.free_or_premium)).setImageResource(mIsPremium ? R.drawable.billing_sample_premium : R.drawable.billing_sample_free);
+
+        // "Upgrade" button is only visible if the user is not premium
+        findViewById(R.id.upgrade_button).setVisibility(mIsPremium ? View.GONE : View.VISIBLE);
+
+        // "Get infinite gas" button is only visible if the user is not subscribed yet
+        findViewById(R.id.infinite_gas_button).setVisibility(mSubscribedToInfiniteGas ? 
+                View.GONE : View.VISIBLE);
+
+        // update gas gauge to reflect tank status
+        if (mSubscribedToInfiniteGas) {
+            ((ImageView)findViewById(R.id.gas_gauge)).setImageResource(R.drawable.billing_sample_gas_inf);
+        }
+        else {
+            int index = mTank >= TANK_RES_IDS.length ? TANK_RES_IDS.length - 1 : mTank;
+            ((ImageView)findViewById(R.id.gas_gauge)).setImageResource(TANK_RES_IDS[index]);
+        }        
     }
 
-    /**
-     * An adapter used for displaying a catalog of products.  If a product is
-     * managed by Android Market and already purchased, then it will be "grayed-out" in
-     * the list and not selectable.
-     */
-    private static class CatalogAdapter extends ArrayAdapter<String> {
-        private CatalogEntry[] mCatalog;
-        private Set<String> mOwnedItems = new HashSet<String>();
-        private boolean mIsSubscriptionsSupported = false;
+    // Enables or disables the "please wait" screen.
+    void setWaitScreen(boolean set) {
+        findViewById(R.id.screen_main).setVisibility(set ? View.GONE : View.VISIBLE);
+        findViewById(R.id.screen_wait).setVisibility(set ? View.VISIBLE : View.GONE);
+    }
 
-        public CatalogAdapter(Context context, CatalogEntry[] catalog) {
-            super(context, android.R.layout.simple_spinner_item);
-            mCatalog = catalog;
-            for (CatalogEntry element : catalog) {
-                add(context.getString(element.nameId));
-            }
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        }
+    void complain(String message) {
+        Log.e(TAG, "**** TrivialDrive Error: " + message);
+        alert("Error: " + message);
+    }
 
-        public void setOwnedItems(Set<String> ownedItems) {
-            mOwnedItems = ownedItems;
-            notifyDataSetChanged();
-        }
+    void alert(String message) {
+        AlertDialog.Builder bld = new AlertDialog.Builder(this);
+        bld.setMessage(message);
+        bld.setNeutralButton("OK", null);
+        Log.d(TAG, "Showing alert dialog: " + message);
+        bld.create().show();
+    }
 
-        public void setSubscriptionsSupported(boolean supported) {
-            mIsSubscriptionsSupported = supported;
-        }
+    void saveData() {
+        
+        /*
+         * WARNING: on a real application, we recommend you save data in a secure way to
+         * prevent tampering. For simplicity in this sample, we simply store the data using a
+         * SharedPreferences.
+         */
+        
+        SharedPreferences.Editor spe = getPreferences(MODE_PRIVATE).edit();
+        spe.putInt("tank", mTank);
+        spe.commit();
+        Log.d(TAG, "Saved data: tank = " + String.valueOf(mTank));
+    }
 
-        @Override
-        public boolean areAllItemsEnabled() {
-            // Return false to have the adapter call isEnabled()
-            return false;
-        }
-
-        @Override
-        public boolean isEnabled(int position) {
-            // If the item at the given list position is not purchasable,
-            // then prevent the list item from being selected.
-            CatalogEntry entry = mCatalog[position];
-            if (entry.managed == Managed.MANAGED && mOwnedItems.contains(entry.sku)) {
-                return false;
-            }
-            if (entry.managed == Managed.SUBSCRIPTION && !mIsSubscriptionsSupported) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            // If the item at the given list position is not purchasable, then
-            // "gray out" the list item.
-            View view = super.getDropDownView(position, convertView, parent);
-            view.setEnabled(isEnabled(position));
-            return view;
-        }
+    void loadData() {
+        SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        mTank = sp.getInt("tank", 2);
+        Log.d(TAG, "Loaded data: tank = " + String.valueOf(mTank));
     }
 }
