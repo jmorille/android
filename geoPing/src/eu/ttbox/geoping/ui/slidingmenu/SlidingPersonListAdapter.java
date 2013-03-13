@@ -14,7 +14,6 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
 import eu.ttbox.geoping.ui.person.PhotoEditorView;
-import eu.ttbox.geoping.ui.person.PersonListAdapter.PersonListItemListener;
 import eu.ttbox.geoping.ui.person.PhotoEditorView.EditorListener;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 

@@ -11,22 +11,18 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceActivity.Header;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Tracker;
-import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.ui.prefs.comp.version.AppVersionPreference;
-import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;
 
 /**
  * http://www.blackmoonit.com/2012/07/all_api_prefsactivity/

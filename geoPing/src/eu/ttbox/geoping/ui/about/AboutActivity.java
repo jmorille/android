@@ -1,96 +1,48 @@
 package eu.ttbox.geoping.ui.about;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.TextView;
-import eu.ttbox.geoping.GeoPingApplication;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import eu.ttbox.geoping.R;
 
 /**
  * @see http://developer.android.com/guide/webapps/webview.html
- * @see http://www.monocube.com/2011/02/08/android-tutorial-html-file-in-webview/ URIl @see
- *      http://androidbook.blogspot.fr/2009/08/referring-to-android-resources-using.html
+ * @see http
+ *      ://www.monocube.com/2011/02/08/android-tutorial-html-file-in-webview/
+ *      URIl @see
+ *      http://androidbook.blogspot.fr/2009/08/referring-to-android-resources
+ *      -using.html
  */
-public class AboutActivity extends Activity {
+public class AboutActivity extends FragmentActivity {
 
-	private WebView webView;
+    private AboutFragment aboutFragment;
 
-	public static final String ACTION_VIEW_HTML  = Intent.ACTION_VIEW;
-	public static final String ACTION_VIEW_ABOUT = "eu.ttbox.geoping.ui.about.ACTION_VIEW_ABOUT";
-	public static final String ACTION_VIEW_RELEASE_NOTES = "eu.ttbox.geoping.ui.about.ACTION_VIEW_RELEASE_NOTES";
-	public static final String ACTION_VIEW_LICENCE = "eu.ttbox.geoping.ui.about.ACTION_VIEW_LICENCE";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about);
+    // ===========================================================
+    // Constructor
+    // ===========================================================
 
-		webView = (WebView) findViewById(R.id.html_view);
-		webView.setWebViewClient(new WebViewClient());
-		// Uri path = Uri.parse("android.resource://eu.ttbox.velib/raw/credits.html");
-		// Uri path = Uri.parse("android.resource://com.androidbook.samplevideo/raw/credits.html");
-		// htmlView.loadUrl("file:///android_asset/credits.html");
-		// htmlView.loadUrl(path.getPath());
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState); 
+        setContentView(R.layout.about_activity); 
+    }
 
-		final TextView versionView = (TextView) findViewById(R.id.version_view);
-		versionView.setText(versionName());
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if (fragment instanceof AboutFragment) {
+            aboutFragment = (AboutFragment) fragment;
+        }
+    }
 
-	}
+    // ===========================================================
+    // Other
+    // ===========================================================
 
-	@Override
-	protected void onNewIntent(Intent intent) {
-		handleIntenet(intent);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		handleIntenet(getIntent());
-	}
-
-	protected void handleIntenet(Intent intent) {
-		if (intent != null) {
-			if (ACTION_VIEW_HTML.equals(  intent.getAction())) {
-				webView.loadUrl(intent.getData().getPath());
-			} else if (ACTION_VIEW_RELEASE_NOTES.equals(  intent.getAction())) {
-				webView.loadData(readTextFromResource(R.raw.release_notes), "text/html", "utf-8");
-				setTitle(R.string.prefs_relasenotes);
-			} else if (ACTION_VIEW_ABOUT.equals(  intent.getAction())) {
-				webView.loadData(readTextFromResource(R.raw.credits), "text/html", "utf-8");
-				setTitle(R.string.prefs_about);
- 			} else if (ACTION_VIEW_LICENCE.equals(  intent.getAction())) {
-				webView.loadData(readTextFromResource(R.raw.licence), "text/html", "utf-8");
-				setTitle(R.string.prefs_license_activity_title);
- 			}
-		}
-	}
-
-	private String versionName() {
-		return ((GeoPingApplication) getApplication()).version();
-	}
-
-	private String readTextFromResource(int resourceID) {
-		InputStream raw = getResources().openRawResource(resourceID); 
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		int i;
-		try {
-			i = raw.read();
-			while (i != -1) {
-				stream.write(i);
-				i = raw.read();
-			}
-			raw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return stream.toString();
-	}
+    @Override
+    protected void onNewIntent(Intent intent) {
+        aboutFragment.handleIntent(intent);
+    }
 
 }

@@ -50,6 +50,10 @@ public class PairingListFragment extends Fragment {
 		}
 	};
 
+    // ===========================================================
+    // Constructor
+    // ===========================================================
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");

@@ -102,6 +102,7 @@ public class GeoPingMasterService extends IntentService {
         this.appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         this.notifyGeoPingResponse = appPreferences.getBoolean(AppConstants.PREFS_SHOW_GEOPING_NOTIFICATION, false);
         // Google Analytics
+        EasyTracker.getInstance().setContext(this);
         tracker = EasyTracker.getTracker();
 
         Log.d(TAG, "#################################");

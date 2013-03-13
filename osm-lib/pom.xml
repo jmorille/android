@@ -11,7 +11,7 @@
 
    <groupId>eu.ttbox.android.osm</groupId>
    <artifactId>osm-lib</artifactId>
-    <version>{osm-lib.version}</version>
+    <version>0.1.2</version>
    <packaging>apklib</packaging>
 
    <name>OSM Libs</name>

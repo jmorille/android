@@ -34,14 +34,21 @@ public class SlidingMenuHelper {
         slidingMenu.setSelectorEnabled(true);
         slidingMenu.setSelectorDrawable(R.drawable.slidingmenu_selector);
 
-        CanvasTransformer smTransformer = new CanvasTransformer() {
-            @Override
-            public void transformCanvas(Canvas canvas, float percentOpen) {
-                float scale = (float) (percentOpen * 0.25 + 0.75);
-                canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
-            }
-        };
+
         slidingMenu.setBehindCanvasTransformer(smTransformer);
         return slidingMenu;
     }
+    
+    // ===========================================================
+    // Sliding Annimation
+    // ===========================================================
+    
+    private static  CanvasTransformer smTransformer = new CanvasTransformer() {
+        @Override
+        public void transformCanvas(Canvas canvas, float percentOpen) {
+            float scale = (float) (percentOpen * 0.25 + 0.75);
+            canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
+        }
+    };
+    
 }

@@ -20,7 +20,7 @@ import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 public class PayFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   {
     
     // Debug tag, for logging
-    static final String TAG = "PayFeaturesActivity";
+    private static final String TAG = "PayFeaturesActivity";
 
     // Does the user have the premium upgrade?
     boolean mIsPremium = false;

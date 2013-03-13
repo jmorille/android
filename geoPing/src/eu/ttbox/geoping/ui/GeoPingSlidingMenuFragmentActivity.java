@@ -28,8 +28,25 @@ public class GeoPingSlidingMenuFragmentActivity extends SherlockFragmentActivity
         mHelper = new SlidingActivityHelper(this);
         mHelper.onCreate(savedInstanceState);
         // customize the SlidingMenu
-        customizeSlidingMenu();
-        
+     
+        if (findViewById(R.id.menu_frame) == null) { 
+            setBehindContentView(R.layout.slidingmenu_frame);
+            SlidingMenu slidingMenu = customizeSlidingMenu();
+            // Add selector
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            // TODO Switch the comment  
+            setBehindContentView(R.layout.slidingmenu_frame);
+            SlidingMenu slidingMenu = customizeSlidingMenu();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+         // TODO add a dummy view
+//            View v = new View(this);
+//            setBehindContentView(v);
+//            SlidingMenu slidingMenu = customizeSlidingMenu();
+//           slidingMenu.setSlidingEnabled(false);
+//           slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+        }   
+      
     }
     
 
@@ -127,12 +144,10 @@ public class GeoPingSlidingMenuFragmentActivity extends SherlockFragmentActivity
     }
 
 
-    public SlidingMenu customizeSlidingMenu() {
-        setBehindContentView(R.layout.slidingmenu_frame);
+    public SlidingMenu customizeSlidingMenu() { 
+      
         SlidingMenu slidingMenu = getSlidingMenu();
-        SlidingMenuHelper.customizeSlidingInstance(this, slidingMenu, SlidingMenu.TOUCHMODE_FULLSCREEN);
-        // Add selector
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        SlidingMenuHelper.customizeSlidingInstance(this, slidingMenu, SlidingMenu.TOUCHMODE_FULLSCREEN); 
         return slidingMenu;
     }
 }
