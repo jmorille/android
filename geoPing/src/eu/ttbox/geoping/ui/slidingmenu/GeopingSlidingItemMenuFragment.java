@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.slidingmenu.lib.app.SlidingActivityBase;
 
@@ -51,6 +52,7 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
     private static final String PERSON_SORT_DEFAULT = String.format("%s DESC, %s DESC", PersonColumns.COL_NAME, PersonColumns.COL_PHONE);
 
     private ScrollView slidingmenuContainer;
+    private TextView personListTitleTextView;
     private ListView personListView;
     private SlidingPersonListAdapter personAdpater;
 
@@ -68,7 +70,8 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.slidingmenu_item_list, null);
         slidingmenuContainer = (ScrollView) v.findViewById(R.id.slidingmenu_container);
-        personListView = (ListView) v.findViewById(R.id.person_list);
+        personListTitleTextView = (TextView) v.findViewById(R.id.slidingmenu_person_list_title);
+        personListView = (ListView) v.findViewById(R.id.slidingmenu_person_list);
         // Register Menu Item
         OnClickListener menuItemOnClickListener = new OnClickListener() {
 
@@ -93,7 +96,6 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
             }
         }
         this.menuItems = menuItems;
- 
 
         return v;
     }
@@ -275,6 +277,10 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
             }
             Log.d(TAG, "onLoadFinished with result count : " + count);
             if (count > 0) {
+                if (View.VISIBLE != personListTitleTextView.getVisibility()) {
+                    personListTitleTextView.setVisibility(View.VISIBLE);
+                }
+                // Scale it
                 ViewGroup.LayoutParams personlayoutParams = personListView.getLayoutParams();
                 float scale = getResources().getDisplayMetrics().density;
                 Log.d(TAG, "personListView LayoutParams Before: " + personlayoutParams.height);
@@ -282,6 +288,11 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
                 personlayoutParams.height = (int) (count * scale * personItemHeight);
                 personListView.setLayoutParams(personlayoutParams);
                 Log.d(TAG, "personListView LayoutParams Before: " + personlayoutParams.height);
+            } else { 
+                if (View.GONE != personListTitleTextView.getVisibility()) {
+                    personListTitleTextView.setVisibility(View.GONE);
+                }
+
             }
 
             // Display List
