@@ -31,7 +31,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="26dp"
             layout="@layout/item_photo_editor"
-               geoping:geopingType="request"
+              
             android:maxHeight="80dp"
             android:maxWidth="80dp" />
 
@@ -61,7 +61,7 @@
             android:id="@+id/person_pairing_button"
             style="@style/entity_edit"
             android:layout_below="@id/person_color_picker_button"
-            android:text="@string/menu_pairing"
+            android:text="@string/person_geoping_pairing_action"
             android:visibility="gone" />
     </RelativeLayout>
 

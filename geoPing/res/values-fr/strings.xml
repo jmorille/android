@@ -72,10 +72,12 @@
     <string name="menu_person">Personnes</string>
     <string name="menu_pairing">Vie privée</string>
     <string name="menu_smslog">Log Sms</string>
-     <string name="menu_extra_feature">Extra Features</string>
+    <string name="menu_extra_feature">Extra Features</string>
     
-     <string name="menu_pairing_notification">Notification</string>
+    <string name="menu_pairing_notification">Notification</string>
     
+    <string name="person_geoping_pairing_action">Association</string>
+     
     <!-- Menu Map-->
     <string name="menu_map_mypositon_hide">Masquer ma position</string>
     <string name="menu_map_track_timeline">Time Line</string>

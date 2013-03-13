@@ -74,13 +74,15 @@
      <string name="menu_extra_feature">Extra Features</string>
     
     <string name="menu_pairing_notification">Notification</string>
+    <string name="person_geoping_pairing_action">Pairing</string>
     
     
      <!-- Menu Map-->
     <string name="menu_map_mypositon_hide">Hide my position</string>
     <string name="menu_map_track_timeline">Time Line</string>
        
-     
+         
+    
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>
     

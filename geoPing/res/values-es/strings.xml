@@ -75,6 +75,7 @@
     <string name="menu_extra_feature">Extra Features</string>
     
     <string name="menu_pairing_notification">Notificacion</string>
+    <string name="person_geoping_pairing_action">Asociacion</string>
     
      <!-- Menu Map-->
     <string name="menu_map_mypositon_hide">Ocultar mi posicion</string>
