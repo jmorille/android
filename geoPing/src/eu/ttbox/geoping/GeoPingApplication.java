@@ -30,7 +30,7 @@ public class GeoPingApplication extends Application {
 
     private static GeoPingApplication APP_INSTANCE;
 
-    private static final boolean DEVELOPPER_MODE = true;
+    private static final boolean DEVELOPPER_MODE = BuildConfig.DEBUG;
 
     // Cache
 

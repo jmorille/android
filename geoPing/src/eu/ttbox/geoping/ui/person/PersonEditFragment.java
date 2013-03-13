@@ -135,12 +135,16 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
                 onSelectContactClick(v);
             }
         });
-        // Menu
-        // Load Data
-        loadEntity(getArguments());
-        return v;
+         return v;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Load Data
+        loadEntity(getArguments());
+    }
+    
     // ===========================================================
     // Menu
     // ===========================================================

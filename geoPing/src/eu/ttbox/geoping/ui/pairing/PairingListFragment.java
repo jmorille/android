@@ -86,6 +86,7 @@ public class PairingListFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.d(TAG, "onActivityCreated");
+		// Load data
 		getActivity().getSupportLoaderManager().initLoader(PAIRING_LIST_LOADER, null, pairingLoaderCallback);
 	}
 
