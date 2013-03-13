@@ -46,7 +46,7 @@
             geoping:src="@android:drawable/ic_menu_preferences"
             geoping:text="@string/menu_settings" />
 
-        <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView android:visibility="gone"
+        <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView  
             android:id="@+id/menu_extra_feature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" 
