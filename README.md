@@ -16,6 +16,12 @@ mvn install:install-file -DgroupId=org.mapsforge -DartifactId=mapsforge-map -Dve
 Quick Contact badge
 http://mobile.tutsplus.com/tutorials/android/android-sdk_contact-badge/
 
+
+## Multi Windows
+############################
+http://www.modaco.com/topic/358471-developers-add-support-for-samsung-multi-window-to-your-apps/
+http://developer.samsung.com/s-pen-sdk/technical-docs-09
+
 ### The fly-in app menu 
 ##################
 Présentation

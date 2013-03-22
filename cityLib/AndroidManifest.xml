@@ -24,7 +24,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
     <!-- android:backupAgent=".service.backup.MyBackupAgent" -->
-    <application android:debuggable="true" android:icon="@drawable/panneau_obligation_cycles" android:label="@string/app_name" android:name="AndroLibApplication" android:theme="@style/MyTheme">
+    <application android:debuggable="true" android:icon="@drawable/panneau_obligation_cycles" 
+        android:label="@string/app_name" android:name="AndroLibApplication" android:theme="@style/MyTheme">
 
         <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
         <meta-data android:name="CLOUDMADE_KEY" android:value="bf761f5e98524bf88ac465bce90002b6"/>
@@ -32,7 +33,13 @@
         <!-- Bing Key https://www.bingmapsportal.com -->
         <meta-data android:name="BING_KEY" android:value="AuBpNxDvcuq-mDB2oX-eT7NaiaRFBzsuR4R6DHqi30at_y2L6ACFt_MfnCR8qs7K"/>
 
-        <!-- <uses-library android:name="com.google.android.maps" android:required="true"/> -->
+        <!-- Multi Windows -->
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_multiwindows_defaultSize_w" />
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_multiwindows_defaultSize_h" />
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:resource="@dimen/app_multiwindows_minSize_w" />
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:resource="@dimen/app_multiwindows_minSize_h" />
+        
 
 
         <!-- Service -->
@@ -108,6 +115,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/> 
                 <category android:name="android.intent.category.LAUNCHER"/>
+                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
 
 <!--             <meta-data -->
