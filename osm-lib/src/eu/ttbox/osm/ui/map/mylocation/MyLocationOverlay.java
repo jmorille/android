@@ -340,10 +340,13 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // ===========================================================
     // Blink
     // ===========================================================
-   
 
     private void doBlink() {
-        runOnFirstFixExecutor.schedule(blinkCallable, 1l, TimeUnit.SECONDS);
+         if (runOnFirstFixExecutor != null) {
+            runOnFirstFixExecutor.schedule(blinkCallable, 1l, TimeUnit.SECONDS);
+        } else {
+            Log.w(TAG, "runOnFirstFixExecutor is null : Could not run doBlink()");
+        }
     }
 
     private final Callable<Void> blinkCallable = new Callable<Void>() {
@@ -351,7 +354,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         @Override
         public Void call() throws Exception {
             DIRECTION_ARROW_SELECTED = DIRECTION_ARROW_ON;
-            if (isMyLocationEnabled()) {
+            if (isMyLocationEnabled() && (runOnFirstFixExecutor != null) ) {
                 runOnFirstFixExecutor.schedule(blinkCallableOff, 1l, TimeUnit.SECONDS);
             }
             return null;
@@ -362,7 +365,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         @Override
         public Void call() throws Exception {
             DIRECTION_ARROW_SELECTED = DIRECTION_ARROW;
-            if (isMyLocationEnabled()) {
+            if (isMyLocationEnabled() && (runOnFirstFixExecutor != null)) {
                 doBlink();
             }
             return null;
@@ -518,7 +521,11 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // @Override
     public boolean runOnFirstFix(final Runnable runnable) {
         if (mLocationListener != null && mLocationListener.isFixLocation()) {
-            runOnFirstFixExecutor.execute(runnable);
+            if (runOnFirstFixExecutor != null) {
+                runOnFirstFixExecutor.execute(runnable);
+            } else {
+                Log.w(TAG, "runOnFirstFixExecutor is null : Could not run runOnFirstFix()");
+            }
             return true;
         } else {
             runOnFirstFix.addLast(runnable);
@@ -762,7 +769,12 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 
                 }
             };
-            runOnFirstFixExecutor.execute(geocoderTask);
+
+            if (runOnFirstFixExecutor != null) {
+                runOnFirstFixExecutor.execute(geocoderTask);
+            } else {
+                Log.w(TAG, "runOnFirstFixExecutor is null : Could not run setBubbleData()");
+            }
         }
     }
 
