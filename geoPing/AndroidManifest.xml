@@ -45,7 +45,11 @@
     <uses-feature android:name="android.hardware.telephony" android:required="false"/>
     
 <!--   -->
-    <application android:debuggable="true" android:backupAgent=".service.backup.GeoPingBackupAgent" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="GeoPingApplication" android:restoreAnyVersion="true" android:theme="@style/AppTheme">
+    <application android:debuggable="true" android:backupAgent=".service.backup.GeoPingBackupAgent" 
+        android:icon="@drawable/ic_launcher" android:label="@string/app_name" 
+        android:name="GeoPingApplication" android:restoreAnyVersion="true" 
+        android:installLocation="auto"
+        android:theme="@style/AppTheme">
  	    <meta-data android:name="com.google.android.backup.api_key" android:value="@string/backup_api_key"/>
 	    
         <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
@@ -53,10 +57,20 @@
         <!-- Bing Key https://www.bingmapsportal.com -->
         <meta-data android:name="BING_KEY" android:value="Ao79Q93fhgMvZfbRgKd5xG708MsP2yhnRFedFeWVeFrjMgBOY36-HkQIYc4cQ-Ai"/>
         
+        <!-- Multi Windows -->
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_multiwindows_defaultSize_w" />
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_multiwindows_defaultSize_h" />
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:resource="@dimen/app_multiwindows_minSize_w" />
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:resource="@dimen/app_multiwindows_minSize_h" />
+        
+        <uses-library android:required="false" android:name="com.sec.android.app.multiwindow"/> 
+            
         <activity android:label="@string/app_name" android:launchMode="singleTask" android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/> 
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO"/>

@@ -1,0 +1,8 @@
+<resources>
+
+    <dimen name="app_multiwindows_defaultSize_w">632.0dip</dimen>
+    <dimen name="app_multiwindows_defaultSize_h">598.0dip</dimen>
+    <dimen name="app_multiwindows_minSize_w">632.0dip</dimen>
+    <dimen name="app_multiwindows_minSize_h">598.0dip</dimen>
+
+</resources>
