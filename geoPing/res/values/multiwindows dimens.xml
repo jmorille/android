@@ -2,7 +2,7 @@
 
     <dimen name="app_multiwindows_defaultSize_w">640dip</dimen>
     <dimen name="app_multiwindows_defaultSize_h">400dip</dimen>
-    <dimen name="app_multiwindows_minSize_w">400dip</dimen>
-    <dimen name="app_multiwindows_minSize_h">200dip</dimen>
+    <dimen name="app_multiwindows_minSize_w">100dip</dimen>
+    <dimen name="app_multiwindows_minSize_h">100dip</dimen>
 
 </resources>
