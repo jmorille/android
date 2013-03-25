@@ -153,7 +153,7 @@ public class SelectGeoTrackDialog extends AlertDialog {
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             int resultCount = cursor.getCount();
             Log.d(TAG, String.format("onLoadFinished with %s results", resultCount));
-            listAdapter.swapCursor(cursor); 
+            listAdapter.changeCursor(cursor); 
             cursor.setNotificationUri(getContext().getContentResolver(), PersonProvider.Constants.CONTENT_URI);
             // check
             if (resultCount<1) {
@@ -163,7 +163,7 @@ public class SelectGeoTrackDialog extends AlertDialog {
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-            listAdapter.swapCursor(null);
+            listAdapter.changeCursor(null);
         }
 
     };

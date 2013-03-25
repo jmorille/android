@@ -260,7 +260,7 @@ public class SearchableVeloFragment extends Fragment {
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             Log.d(TAG, "onLoadFinished");
             // Display List
-            listAdapter.swapCursor(cursor);
+            listAdapter.changeCursor(cursor);
             cursor.setNotificationUri(getActivity().getContentResolver(), VeloContentProvider.Constants.CONTENT_URI);
             // Display Counter
             int count = 0;
@@ -278,7 +278,7 @@ public class SearchableVeloFragment extends Fragment {
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-            listAdapter.swapCursor(null);
+            listAdapter.changeCursor(null);
         }
 
     };

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/eu.ttbox.velib"
+    android:id="@+id/slidingmenu_container"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="false" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <eu.ttbox.velib.ui.slidingmenu.SlindingMenuItemView
+            android:id="@+id/menuMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:src="@android:drawable/ic_dialog_map"
+            app:text="@string/menu_map" />
+
+        <eu.ttbox.velib.ui.slidingmenu.SlindingMenuItemView
+            android:id="@+id/menuMap_favorite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:src="@drawable/ic_action_star"
+            app:text="@string/menu_favorite" />
+
+        <eu.ttbox.velib.ui.slidingmenu.SlindingMenuItemView
+            android:id="@+id/menuOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:src="@android:drawable/ic_menu_preferences"
+            app:text="@string/menu_options" />
+
+        <eu.ttbox.velib.ui.slidingmenu.SlindingMenuItemView
+            android:id="@+id/menuHelp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:src="@drawable/ic_action_help"
+            app:text="@string/prefs_help" />
+        
+        
+    </LinearLayout>
+
+</ScrollView>

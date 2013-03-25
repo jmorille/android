@@ -263,7 +263,7 @@ public class GeopingSlidingMenuFragment extends Fragment {
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
             // Display List
-            personAdpater.swapCursor(cursor);
+            personAdpater.changeCursor(cursor);
             cursor.setNotificationUri(getActivity().getContentResolver(), PersonProvider.Constants.CONTENT_URI);
             // Display Counter
             int count = 0;
@@ -276,7 +276,7 @@ public class GeopingSlidingMenuFragment extends Fragment {
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-            personAdpater.swapCursor(null);
+            personAdpater.changeCursor(null);
         }
 
     };

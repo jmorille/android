@@ -296,7 +296,7 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
             }
 
             // Display List
-            personAdpater.swapCursor(cursor);
+            personAdpater.changeCursor(cursor);
             cursor.setNotificationUri(getActivity().getContentResolver(), PersonProvider.Constants.CONTENT_URI);
             // Ugly way to display always the top
             showScrollViewOnTop();
@@ -304,7 +304,7 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-            personAdpater.swapCursor(null);
+            personAdpater.changeCursor(null);
         }
 
     };

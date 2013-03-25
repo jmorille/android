@@ -51,6 +51,11 @@
          <artifactId>actionbarsherlock</artifactId>
          <type>apklib</type>
       </dependency>
+      <dependency>
+         <groupId>com.slidingmenu</groupId>
+         <artifactId>slidingmenu</artifactId>
+         <type>apklib</type>
+      </dependency>
       
       <!--Android Api -->
       <!-- <dependency> -->

@@ -184,7 +184,7 @@ public class SmsLogListFragment extends Fragment {
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
             // Display List
-            listAdapter.swapCursor(cursor);
+            listAdapter.changeCursor(cursor);
             cursor.setNotificationUri(getActivity().getContentResolver(), SmsLogProvider.Constants.CONTENT_URI);
             // Display Counter
             int count = 0;
@@ -196,7 +196,7 @@ public class SmsLogListFragment extends Fragment {
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-            listAdapter.swapCursor(null);
+            listAdapter.changeCursor(null);
 
         }
 

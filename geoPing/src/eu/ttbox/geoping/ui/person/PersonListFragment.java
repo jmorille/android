@@ -180,7 +180,7 @@ public class PersonListFragment extends SherlockFragment {
 		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
 			// Display List
-			listAdapter.swapCursor(cursor);
+			listAdapter.changeCursor(cursor);
 			cursor.setNotificationUri(getActivity().getContentResolver(), PersonProvider.Constants.CONTENT_URI);
 			// Display Counter
 			int count = 0;
@@ -193,7 +193,7 @@ public class PersonListFragment extends SherlockFragment {
 
 		@Override
 		public void onLoaderReset(Loader<Cursor> loader) {
-			listAdapter.swapCursor(null);
+			listAdapter.changeCursor(null);
 		}
 
 	};

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?android:listViewStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/slidingmenu_item_background_holo_dark"
+    
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/slidingmenu_list_padding"
+    android:paddingRight="@dimen/slidingmenu_list_padding" >
+
+    <ImageView
+        android:id="@+id/slidingmenu_item_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:src="@drawable/panneau_obligation_cycles" />
+
+<!--       -->
+    <ImageView
+        android:id="@+id/slidingmenu_item_selector_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+       android:src="@drawable/slidingmenu_item_selected" 
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/slidingmenu_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/slidingmenu_item_selector_icon"
+        android:layout_toRightOf="@id/slidingmenu_item_icon"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Medium Text"
+        android:textAppearance="@android:style/TextAppearance.Medium" />
+
+    <View
+        style="@style/Divider"
+        android:layout_alignBottom="@id/slidingmenu_item_icon" />
+
+</RelativeLayout>
