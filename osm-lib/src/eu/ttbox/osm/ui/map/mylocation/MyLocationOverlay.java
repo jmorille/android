@@ -198,7 +198,9 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         Drawable onDrawable = r.getDrawable(R.drawable.vm_chevron_obscured_on);
         Drawable offDrawable = r.getDrawable(R.drawable.vm_chevron_obscured_off);
         blinkDrawable = new BlinkingDrawable(onDrawable, offDrawable);
+//        blinkDrawable.doBlinkDrawable();
         // blinkBitmapDrawable = new BitmapDrawable(r, blinkDrawable);
+        
         // Init sensor
         mLocationListener = new MyLocationListenerProxy(locationManager);
         mOrientationListener = new OrientationSensorEventListenerProxy(mSensorManager);
@@ -675,6 +677,9 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         directionRotater.postTranslate(mMapCoords.x, mMapCoords.y);
         canvas.drawBitmap(DIRECTION_ARROW_SELECTED, directionRotater, mPaint);
 
+        //TODO    blinkDrawable.draw(canvas);
+       
+        
         // Debug
         if (DEBUGMODE) {
             canvas.drawCircle(mMapCoords.x, mMapCoords.y, 5, mPaint);
@@ -706,6 +711,8 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 
         canvas.drawBitmap(mCompassRose, mCompassMatrix, mPaint);
 
+        
+        
         // Debug
         if (DEBUGMODE) {
             Rect hitTestRecr = new Rect();
@@ -743,6 +750,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
                     isRecycled = false;
                     // Todo add click listener
                 }
+//              TODO   showCallout();  
                 boolean balloonViewNotVisible = (View.VISIBLE != balloonView.getVisibility());
                 if (balloonViewNotVisible) {
                     // Compute Offset
@@ -758,6 +766,8 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
                     balloonView.setVisibility(View.VISIBLE);
                     // balloonView.setData(lastFix);
                     setBubbleData(lastFix);
+                    
+                   
                     return true;
                 } else {
                     return hideBubble();
@@ -811,7 +821,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 
     private boolean isTapOnFixLocation(final MotionEvent event, final MapView mapView, final GeoPoint lastFixAsGeoPoint) {
         if (lastFixAsGeoPoint != null) {
-            // Test for hit point in MyLocation
+            // Test for hit point in MyLocation 
             Projection pj = mapView.getProjection();
             // LastFix Location to Screen Coords
             pj.toMapPixels(lastFixAsGeoPoint, tapPointScreenCoords);
@@ -891,7 +901,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         return getMapCallout(mMapCalloutIndex);
     }
 
-    public void showCallout(int position) {
+    public void showCallout() {
         final Location lastFix = mLocationListener.getLastFix();
         if (lastFix != null) {
             GeoPoint lastFixAsGeoPoint = mLocationListener.getLastKnownLocationAsGeoPoint();
