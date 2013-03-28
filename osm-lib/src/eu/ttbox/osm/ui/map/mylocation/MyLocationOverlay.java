@@ -20,9 +20,11 @@ import org.osmdroid.views.MapController.AnimationType;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.Overlay;
+ 
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -32,6 +34,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -53,7 +56,10 @@ import android.view.View;
 import android.view.WindowManager;
 import eu.ttbox.osm.R;
 import eu.ttbox.osm.core.AppConstants;
+import eu.ttbox.osm.ui.map.mylocation.bubble.MapCalloutView;
+import eu.ttbox.osm.ui.map.mylocation.bubble.MapCalloutView.OnDoubleTapListener;
 import eu.ttbox.osm.ui.map.mylocation.bubble.MyLocationBubble;
+import eu.ttbox.osm.ui.map.mylocation.drawable.BlinkingDrawable;
 import eu.ttbox.osm.ui.map.mylocation.sensor.MyLocationListenerProxy;
 import eu.ttbox.osm.ui.map.mylocation.sensor.OrientationSensorEventListenerProxy;
 
@@ -138,6 +144,9 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     private final Point tapPointScreenCoords = new Point();
     private final Rect tapPointHitTestRect = new Rect();
 
+    private final BlinkingDrawable blinkDrawable;
+    // private final BitmapDrawable blinkBitmapDrawable;
+
     // Message Handler
     protected static final int UI_MSG_SET_ADDRESS = 0;
 
@@ -184,6 +193,12 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         }
         // Draw
         initDirectionPaint();
+        // blink cheveron
+        Resources r = context.getResources();
+        Drawable onDrawable = r.getDrawable(R.drawable.vm_chevron_obscured_on);
+        Drawable offDrawable = r.getDrawable(R.drawable.vm_chevron_obscured_off);
+        blinkDrawable = new BlinkingDrawable(onDrawable, offDrawable);
+        // blinkBitmapDrawable = new BitmapDrawable(r, blinkDrawable);
         // Init sensor
         mLocationListener = new MyLocationListenerProxy(locationManager);
         mOrientationListener = new OrientationSensorEventListenerProxy(mSensorManager);
@@ -342,7 +357,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // ===========================================================
 
     private void doBlink() {
-         if (runOnFirstFixExecutor != null) {
+        if (runOnFirstFixExecutor != null) {
             runOnFirstFixExecutor.schedule(blinkCallable, 1l, TimeUnit.SECONDS);
         } else {
             Log.w(TAG, "runOnFirstFixExecutor is null : Could not run doBlink()");
@@ -354,7 +369,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         @Override
         public Void call() throws Exception {
             DIRECTION_ARROW_SELECTED = DIRECTION_ARROW_ON;
-            if (isMyLocationEnabled() && (runOnFirstFixExecutor != null) ) {
+            if (isMyLocationEnabled() && (runOnFirstFixExecutor != null)) {
                 runOnFirstFixExecutor.schedule(blinkCallableOff, 1l, TimeUnit.SECONDS);
             }
             return null;
@@ -448,11 +463,18 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 
             @Override
             public void run() {
+                Resources r = context.getResources();
+                // TODO Remove is Working
                 DIRECTION_ARROW = BitmapFactory.decodeResource(context.getResources(), R.drawable.vm_chevron_off);
                 DIRECTION_ARROW_CENTER_X = DIRECTION_ARROW.getWidth() / 2;
                 DIRECTION_ARROW_CENTER_Y = DIRECTION_ARROW.getHeight() / 2;
                 // For Blink bitmap
                 DIRECTION_ARROW_ON = BitmapFactory.decodeResource(context.getResources(), R.drawable.vm_chevron_on);
+
+                // Switch Drawable
+                Drawable onDrawable = r.getDrawable(R.drawable.vm_chevron_on);
+                Drawable offDrawable = r.getDrawable(R.drawable.vm_chevron_off);
+                blinkDrawable.setChangeBlinkDrawable(onDrawable, offDrawable);
             }
         });
         // Blink
@@ -805,4 +827,103 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         return false;
     }
 
+    // ===========================================================
+    // Motion Event Management
+    // ===========================================================
+    // https://github.com/cyrilmottier/Polaris/blob/master/library/src/com/cyrilmottier/polaris/PolarisMapView.java
+    
+    private static final int INDEX_FIRST = 0;
+    private static final int INDEX_SECOND = 1;
+
+    private MapCalloutView mMapCallouts[] = new MapCalloutView[2];
+    private int mMapCalloutIndex;
+
+//    private OnAnnotationSelectionChangedListener mOnAnnotationSelectionChangedListener;
+//    
+//    private final OnClickListener mOnClickListener = new OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            if (mOnAnnotationSelectionChangedListener != null) {
+//                final int annotationPosition = getSelectedAnnotationPosition();
+//                final Annotation annotation = getSelectedAnnotation();
+//                if (annotation != null && annotationPosition != INVALID_POSITION) {
+//                    // @formatter:off
+//                    mOnAnnotationSelectionChangedListener.onAnnotationClicked(context, (MapCalloutView) v, annotationPosition, annotation);
+//                    // @formatter:on
+//                }
+//            }
+//        }
+//    };
+
+    private final OnDoubleTapListener mOnDoubleTapListener = new OnDoubleTapListener() {
+        @Override
+        public void onDoubleTap(View v) {
+            // final Annotation annotation = getSelectedAnnotation();
+            final Location lastFix = mLocationListener.getLastFix(); 
+            GeoPoint lastFixAsGeoPoint = mLocationListener.getLastKnownLocationAsGeoPoint();
+            if (lastFixAsGeoPoint != null) {
+                mMapController.zoomToSpan(1, 1);
+                mMapController.setCenter(lastFixAsGeoPoint);
+            }
+        }
+    };
+
+    private MapCalloutView getMapCallout(int index) {
+        if (mMapCallouts[index] == null) {
+            mMapCallouts[index] = new MapCalloutView(context);
+            mMapCallouts[index].setVisibility(View.GONE);
+//            mMapCallouts[index].setOnClickListener(mOnClickListener);
+            mMapCallouts[index].setOnDoubleTapListener(mOnDoubleTapListener);
+        }
+        return mMapCallouts[index];
+    }
+
+    private MapCalloutView getCurrentMapCallout() {
+        return getMapCallout(mMapCalloutIndex);
+    }
+
+    private MapCalloutView getNextMapCallout() {
+        if (mMapCalloutIndex == INDEX_FIRST) {
+            mMapCalloutIndex = INDEX_SECOND;
+        } else {
+            mMapCalloutIndex = INDEX_FIRST;
+        }
+        return getMapCallout(mMapCalloutIndex);
+    }
+
+    public void showCallout(int position) {
+        final Location lastFix = mLocationListener.getLastFix();
+        if (lastFix != null) {
+            GeoPoint lastFixAsGeoPoint = mLocationListener.getLastKnownLocationAsGeoPoint();
+            final MapCalloutView mapCalloutView = getNextMapCallout();
+            int markerHeight = 20; // marker.getBounds().height();
+            mapCalloutView.setMarkerHeight(markerHeight);
+          // TODO Set Data
+//            mapCalloutView.setData(lastFix);
+            mapCalloutView.setTitle(getLoacationAsDataTitle(lastFix));
+            mapCalloutView.setSubtitle(getLoacationAsDataSubtitle(lastFix));
+            if (mapCalloutView.hasDisplayableContent()) {
+                mapCalloutView.show(mMapView, lastFixAsGeoPoint, true);
+            }
+            
+        }
+    }
+    
+   private String getLoacationAsDataTitle( Location lastFix ) {
+        return lastFix.getProvider();
+    }
+   
+    private String getLoacationAsDataSubtitle( Location location ) {
+        StringBuilder sb = new StringBuilder(128);
+        // Location
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        String coordString = String.format(Locale.US, "(%.6f, %.6f)", lat, lng);
+        sb.append(coordString);
+        sb.append("\n");
+        // Accuracy
+        String accuracy = String.format("%s m", (int) location.getAccuracy());
+        sb.append(accuracy);
+        return sb.toString();
+    }
 }
