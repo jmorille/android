@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import microsoft.mappoint.TileSystem;
 
@@ -98,7 +99,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     protected boolean mFollow = true; // follow location updates
     protected boolean mDrawAccuracyEnabled = true;
     protected boolean mDrawCompassEnabled = false;
-    protected boolean mDrawMyLocationEnabled = true;
+    protected AtomicBoolean mDrawMyLocationEnabled = new AtomicBoolean( true);
 
     // Compass Config
     private final int mCompassCenterX = 35;
@@ -188,7 +189,8 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         mLocationListener = new MyLocationListenerProxy(locationManager);
         mOrientationListener = new OrientationSensorEventListenerProxy(mSensorManager);
         // Threads Executor ?? Executors.newSingleThreadScheduledExecutor( ); ??
-        runOnFirstFixExecutor = new ScheduledThreadPoolExecutor(1, new ConfigurablePriorityThreadFactory(Thread.NORM_PRIORITY, "mylocationThread"));
+        enableThreadExecutors();
+//        runOnFirstFixExecutor = new ScheduledThreadPoolExecutor(1, new ConfigurablePriorityThreadFactory(Thread.NORM_PRIORITY, "mylocationThread"));
 
     }
 
@@ -342,7 +344,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // ===========================================================
 
     private void doBlink() {
-         if (runOnFirstFixExecutor != null) {
+        if (isMyLocationEnabled() &&  runOnFirstFixExecutor != null) {
             runOnFirstFixExecutor.schedule(blinkCallable, 1l, TimeUnit.SECONDS);
         } else {
             Log.w(TAG, "runOnFirstFixExecutor is null : Could not run doBlink()");
@@ -354,7 +356,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         @Override
         public Void call() throws Exception {
             DIRECTION_ARROW_SELECTED = DIRECTION_ARROW_ON;
-            if (isMyLocationEnabled() && (runOnFirstFixExecutor != null) ) {
+            if (isMyLocationEnabled() && (runOnFirstFixExecutor != null)) {
                 runOnFirstFixExecutor.schedule(blinkCallableOff, 1l, TimeUnit.SECONDS);
             }
             return null;
@@ -385,8 +387,9 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     }
 
     public synchronized void enableThreadExecutors() {
-        if (runOnFirstFixExecutor == null) {
-            runOnFirstFixExecutor = new ScheduledThreadPoolExecutor(1);
+        if (runOnFirstFixExecutor == null) { 
+         // Threads Executor ?? Executors.newSingleThreadScheduledExecutor( ); ??
+            runOnFirstFixExecutor = new ScheduledThreadPoolExecutor(1, new ConfigurablePriorityThreadFactory(Thread.NORM_PRIORITY, "mylocationThread"));
             // doBlink();
         }
     }
@@ -416,6 +419,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         mOrientationListener.stopListening();
     }
 
+    // TODO Bug In null pointer in MyLocationOverlay.java:347
     public boolean enableMyLocation(boolean isEnable) {
         if (isEnable) {
             return enableMyLocation();
@@ -427,8 +431,12 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
 
     // @Override
     public boolean enableMyLocation() {
+        if (mDrawMyLocationEnabled.get()) {
+            // Is already enabled
+            return true;
+        }
         boolean result = true;
-        this.mDrawMyLocationEnabled = true;
+        this.mDrawMyLocationEnabled.set( true);
         result = mLocationListener.startListening(this);
         enableCompass();
 
@@ -468,9 +476,12 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
      */
     // @Override
     public void disableMyLocation() {
+//        if (!mDrawMyLocationEnabled.get()) { 
+//            return  ;
+//        }
         disableCompass();
         mLocationListener.stopListening();
-        this.mDrawMyLocationEnabled = false;
+        this.mDrawMyLocationEnabled.set(  false);
         // Cancel Blink
 
         // Invalidate
@@ -482,7 +493,10 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     // ===========================================================
 
     public boolean isMyLocationEnabled() {
-        return mLocationListener.isMyLocationEnabled();
+        if (mLocationListener != null) {
+            return mLocationListener.isMyLocationEnabled();
+        }
+        return false;
     }
 
     /**
@@ -606,7 +620,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
             return;
         }
         Location location = mLocationListener.getLastFix();
-        if (mDrawMyLocationEnabled && location != null) {
+        if (mDrawMyLocationEnabled.get() && location != null) {
             drawMyLocation(canvas, mapView, location, mLocationListener.getLastFixAsGeoPoint());
         }
         //
@@ -727,7 +741,8 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
                     int offsetX = 0; // 150
                     int offsetY = -20; // -20
                     // Position Layout
-                    balloonViewLayoutParams = new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT, MapView.LayoutParams.WRAP_CONTENT, lastFixAsGeoPoint, MapView.LayoutParams.BOTTOM_CENTER, offsetX, offsetY);
+                    balloonViewLayoutParams = new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT, MapView.LayoutParams.WRAP_CONTENT, lastFixAsGeoPoint, MapView.LayoutParams.BOTTOM_CENTER,
+                            offsetX, offsetY);
                     if (isRecycled) {
                         balloonView.setLayoutParams(balloonViewLayoutParams);
                     } else {
