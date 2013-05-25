@@ -50,6 +50,7 @@
         android:icon="@drawable/ic_launcher" 
         android:label="@string/app_name" 
         android:name="GeoPingApplication" 
+        android:hardwareAccelerated="true" 
         android:restoreAnyVersion="true" 
         android:installLocation="auto"
         android:theme="@style/AppTheme"> 

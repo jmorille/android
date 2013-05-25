@@ -1,13 +1,20 @@
 package eu.ttbox.geoping.ui.map.geoping;
 
+import org.osmdroid.DefaultResourceProxyImpl;
+import org.osmdroid.ResourceProxy;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Overlay;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.support.v4.app.LoaderManager;
 import android.view.View;
+import eu.ttbox.geoping.domain.model.Person;
+import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay.GeotrackLastAddedListener;
 import eu.ttbox.osm.ui.map.mylocation.bubble.MapCalloutView;
 
-public class GeoPingOverlay {
+public class GeoPingOverlay extends Overlay {
 
     private static final String TAG = "GeoPingOverlay";
     
@@ -26,7 +33,31 @@ public class GeoPingOverlay {
     // ===========================================================
     // Constructor
     // ===========================================================
+ 
+    public GeoPingOverlay(final Context ctx, final MapView mapView, LoaderManager loaderManager, Person userId, long timeDay, GeotrackLastAddedListener geotrackLastAddedListener) {
+        this(ctx, mapView, new DefaultResourceProxyImpl(ctx), loaderManager, userId, timeDay,   geotrackLastAddedListener);
+    }
+    
+    public GeoPingOverlay(final Context ctx, final MapView mapView, final ResourceProxy pResourceProxy, LoaderManager loaderManager, Person person, long timeInMs, GeotrackLastAddedListener geotrackLastAddedListener) {
+        super(pResourceProxy);
+        // Inititalise
+        this.context = ctx;
+//        this.person = person;
+//        this.loaderManager = loaderManager;
+        this.mapView = mapView;
+        this.mMapController = mapView.getController();
+        //
+    }
 
+    // ===========================================================
+    // Map Drawable 
+    // ===========================================================
+
+    @Override
+    protected void draw(Canvas c, MapView osmv, boolean shadow) {
+        // TODO Auto-generated method stub
+        
+    }
     
     // ===========================================================
     // Show Bubble
@@ -62,5 +93,7 @@ public class GeoPingOverlay {
         }
         return getMapCallout(mMapCalloutIndex);
     }
+
+
     
 }

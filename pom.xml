@@ -41,12 +41,12 @@
 
 		<!-- Google Api -->
 		<gcm.version>3</gcm.version>
-		<admob.version>6.3.1-r10</admob.version> <!--6.2.1-r8 -->
-		<analytics.version>2</analytics.version>
-		<google-play-services.version>5</google-play-services.version>
+		<admob.version>6.4.1-r11</admob.version> <!--6.2.1-r8 -->
+		<analytics.version>3</analytics.version>
+		<google-play-services.version>7</google-play-services.version>
 
 		<!-- Compatibility Api -->
-		<compatibility-v13.version>12</compatibility-v13.version>
+		<compatibility-v13.version>13</compatibility-v13.version>
 		<actionbarsherlock.version>4.2.0</actionbarsherlock.version>
 		<slidingmenu.version>1.2</slidingmenu.version>
 
@@ -57,7 +57,7 @@
 		<!-- Utils -->
 		<jackson.version>2.1.4</jackson.version>
 		<!-- Release -->
-		<android-maven-plugin.version>3.5.1</android-maven-plugin.version> <!-- 3.5.1 -->
+		<android-maven-plugin.version>3.6.0</android-maven-plugin.version> <!-- 3.5.1 -->
 		<android.sdk.platform>17</android.sdk.platform>
 		<sign.alias>android</sign.alias>
 	</properties>

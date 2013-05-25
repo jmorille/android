@@ -1,152 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    
     <string name="add_track_person">Add GeoPing Person</string>
     <string name="add_pairing">Add GeoPing pairing</string>
-    
     <string name="geoping">GeoPing</string>
     <string name="menu_select_contact">Contacts</string>
     <string name="menu_save">Save</string>
     <string name="menu_delete">Delete</string>
     <string name="menu_cancel">Cancel</string>
-     
-    <!-- Billing -->
-
 
     <!-- Share -->
     <string name="menu_share_app">Share GeoPing</string>
     <string name="share_app_subject">Let me recommend you GeoPing application</string>
-    
     <string name="app_comment_title">Rate and Comment</string>
     <string name="app_comment_summary">Thank for yours comments</string>
-   
-   
+
     <!-- GeoTrack Notification -->
     <string name="notif_click_to_accept">(Click to accept)</string>
     <string name="notif_geoping">GeoPing</string>
     <string name="notif_geoping_response">I am here</string>
     <string name="notif_geoping_request">Where are you ?</string>
-    <string name="notif_geoping_request_blocked">GeoPing blocked</string> 
+    <string name="notif_geoping_request_blocked">GeoPing blocked</string>
     <string name="notif_pairing">Click to accept GeoPing pairing</string>
     <string name="notif_pairing_always">Always</string>
-    <string name="notif_pairing_never">Blocked</string> 
+    <string name="notif_pairing_never">Blocked</string>
     <string name="notif_confirm_request_eachtime">On demand</string>
-    
     <string name="toast_notif_sended_geoping_smsError">Error during the sending of message to %s</string>
     <string name="toast_notif_sended_geoping_pairing">GeoPing pairing request sent : %s</string>
     <string name="toast_notif_sended_geoping_request">Where are you ?: %s</string>
     <string name="toast_notif_sended_geoping_response">I am here: %s</string>
     <string name="toast_notif_backup_restored">Backup restored</string>
-    
-      <!-- Widget -->
+
+    <!-- Widget -->
     <string name="widget_geoping_person_title">Where are you ?</string>
     <string name="widget_geoping_pairing_title">I am here</string>
-    
-    
+
     <!-- Sms Action -->
     <string name="sms_action_geoping_request">GeoPing request</string>
     <string name="sms_action_geoping_response">GeoPing answer</string>
     <string name="sms_action_geoping_declaration">GeoPing declaration</string>
     <string name="sms_action_pairing_request">Pairing request</string>
     <string name="sms_action_pairing_response">Pairing answer</string>
-
     <string name="sms_action_spyevt_shutdown">Event Shutdown</string>
     <string name="sms_action_spyevt_boot">Event Boot</string>
     <string name="sms_action_spyevt_low_battery">Event Low Battery</string>
     <string name="sms_action_spyevt_phone_call">Event Phone Call</string>
     <string name="sms_action_spyevt_sim_change">Event Sim Change</string>
-    
 
     <!-- Menu -->
     <string name="menu_map_mypositioncenter">My position</string>
     <string name="map_mode">Map Type</string>
     <string name="menu.geoTracker">GeoTracker</string>
     <string name="menu_geoping">GeoPing</string>
-
     <string name="menu_settings">Settings</string>
     <string name="menu_map">Map</string>
     <string name="menu_quit">Quit</string>
     <string name="menu_person">Person</string>
     <string name="menu_pairing">Privacy</string>
     <string name="menu_smslog">Log Sms</string>
-     <string name="menu_extra_feature">Extra Features</string>
-    
+    <string name="menu_extra_feature">Extra Features</string>
     <string name="menu_pairing_notification">Notification</string>
     <string name="person_geoping_pairing_action">Pairing</string>
-    
-    
-     <!-- Menu Map-->
+
+    <!-- Menu Map -->
     <string name="menu_map_mypositon_hide">Hide my position</string>
     <string name="menu_map_track_timeline">Time Line</string>
-       
-         
-    
+
     <!-- Prefs -->
     <string name="prefs_sms_category">Monitoring Sms</string>
-    
-    <string name="prefs_geoping_request">GeoPing Request</string> 
+    <string name="prefs_geoping_request">GeoPing Request</string>
     <string name="prefs_block_geoping_pairing">Pairing</string>
     <string name="prefs_block_geoping_pairing_summaryOff">Block new GeoPing pairing</string>
     <string name="prefs_block_geoping_pairing_summaryOn">Authorize new GeoPing pairing</string>
-    
     <string name="prefs_show_geoping_notification">Show a notification</string>
-    <string name="prefs_show_geoping_notification_summary">For new pairing</string> 
+    <string name="prefs_show_geoping_notification_summary">For new pairing</string>
     <string name="prefs_geoping_localSave">Save in a local database</string>
     <string name="prefs_geoping_localSave_summaryOn">Keep a record in a local DB</string>
     <string name="prefs_geoping_localSave_summaryOff">Desactivated</string>
-
     <string name="prefs_myLocation">My position</string>
     <string name="prefs_myLocation_display_LatLng">Show the coordinates</string>
-
     <string name="prefs_geoping_geoPoint_category">GeoPoint</string>
     <string name="prefs_geoPoint_geocoding_auto">Automatic Geocoding</string>
-   
     <string name="prefs_developement">Development</string>
     <string name="prefs_sms_delete_onMessage">Deleting SMS</string>
     <string name="prefs_sms_delete_onMessage_summaryOn">SMS GeoPing are invisible</string>
     <string name="prefs_sms_delete_onMessage_summaryOff">SMS GeoPing are saved</string>
-    
-    
     <string name="prefs_info">Information</string>
     <string name="prefs_version">Version</string>
     <string name="prefs_help">Help</string>
     <string name="prefs_licence">Licence</string>
     <string name="prefs_about">Credit</string>
-    <string name="prefs_relasenotes">What \'\s up ?</string> 
+    <string name="prefs_relasenotes">What \'\s up ?</string>
     <string name="prefs_count_laught">Counter of launching</string>
     <string name="prefs_count_laught_summary">Number of launching the application</string>
-    
-    <!-- Prefs Dev-->
+
+    <!-- Prefs Dev -->
     <string name="show_dev_countdown">You are now <xliff:g id="step_count">%1$d</xliff:g> steps away from enabling development settings.</string>
     <string name="show_dev_on">You have enabled development settings!</string>
     <string name="show_dev_already">No need, you have already enabled development settings.</string>
-    
     <string name="prefs_spynotif_title">Spy Notification</string>
     <string name="prefs_spynotif_shutdown_sleep_in_ms">Shutdown Sleep In Ms</string>
     <string name="prefs_spynotif_changed_phonenumber">SIM Phone Number</string>
     <string name="prefs_add_blocked">Add Blocked</string>
-  
+
     <!-- Prefs Infos Legale -->
     <string name="legal_information">Legal information</string>
     <string name="prefs_license_activity_title">Open source licenses</string>
-    
-    
+
     <!-- Dialog -->
     <string name="color_picker">Pick a color</string>
- 
+
     <!-- GeoTrack -->
     <string name="geotrack_time_dateformat">%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS</string>
-       <!-- Map My Location Dialog -->
+    <!-- Map My Location Dialog -->
     <string name="accuracy_separator">+/-</string> <!-- +/- &#8723; -->
     <string name="altitude">Altitude</string>
-    
+
     <!-- Person model -->
     <string name="person_name">Name</string>
     <string name="person_phone">Phone number</string>
     <string name="description_contact_photo">Picture of the contact</string>
- 
+
     <!-- Pairing model -->
     <string name="pairing_name">Name</string>
     <string name="pairing_phone">Phone number</string>
@@ -155,40 +129,24 @@
     <string name="pairing_authorize_type:never">Blocked</string>
     <string name="pairing_authorize_type:ask">On validation</string>
     <string name="pairing_authorize_type:always">Always</string>
-    
     <string name="pairing_notification_shutdown">Allumage/Extinction du téléphone</string>
     <string name="pairing_notification_battery_low">Batterie faible</string>
     <string name="pairing_notification_sim_change">Changement de carte SIM</string>
     <string name="pairing_notification_phone_call">Appel Téléphonique Emis</string>
     <string name="pairing_notification_phone_receive">Appel Téléphonique Recut</string>
-    
-    
+
     <!-- SmsLog Model -->
-	<string name="smslog_delete_all">Delete everything</string>
+    <string name="smslog_delete_all">Delete everything</string>
 
     <!-- Help -->
-  <string name="person_help"> List of persons for whom you can request a GeoPing. \n \n
-         Various steps to associate a person: \n
-         <b> 1 - </b> Add a new person by dialing the phone number (or select it from the list of contacts) \n
-         <b> 2 - </b> Install the application GeoPing on the second phone (for which you want to get its position) \n
-         <b> 3 - </b> Send a pairing request to allow only your phone number \n
-         <b> 4 - </b> Wait for the receipt of an SMS on the second phone to accept the pairing in the notification bar \n
-         <b> 5 - </b> Optional: you can block any new pairing in the menu \ <i> options </i> \n
-          \n You can now get the position of the second phone \n
-     </string>
-     <string name="pairing_help">
-         The list of associations is the list of persons associated for which you agree (or not) to send your GeoPing. \n
+    <string name="person_help"> List of persons for whom you can request a GeoPing. \n \n
+         Various steps to associate a person: \n<b> 1 - </b> Add a new person by dialing the phone number (or select it from the list of contacts) \n<b> 2 - </b> Install the application GeoPing on the second phone (for which you want to get its position) \n<b> 3 - </b> Send a pairing request to allow only your phone number \n<b> 4 - </b> Wait for the receipt of an SMS on the second phone to accept the pairing in the notification bar \n<b> 5 - </b> Optional: you can block any new pairing in the menu \ <i> options </i> \n
+          \n You can now get the position of the second phone \n</string>
+    <string name="pairing_help">         The list of associations is the list of persons associated for which you agree (or not) to send your GeoPing. \n
          Your position is getting by using GPS or other sensor in your phone. \n \n
-         3 options of association are available: \n
-           <b>  * Block:</b> Prevents any GeoPing request \n
-           <b>  * Always : </b> Accepts systematically Geoping request. \n
-           <b>  * On validation: </b> A notification will ask you systematically your agreement for GeoPing request \ 
+         3 options of association are available: \n<b>  * Block:</b> Prevents any GeoPing request \n<b>  * Always : </b> Accepts systematically Geoping request. \n<b>  * On validation: </b> A notification will ask you systematically your agreement for GeoPing request \ 
           \n
-          A notification can be configured to warn you.
-         </string>
-     <string name="smslog_help"> List of messages sent or received by the GeoPing application. </string>    
-</resources>
+          A notification can be configured to warn you.</string>
+    <string name="smslog_help"> List of messages sent or received by the GeoPing application. </string>
 
-    
-    
-    
+</resources>

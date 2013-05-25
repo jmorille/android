@@ -88,7 +88,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
                     clearAnimation();
                     startAnimation(animationOut);
                     mListener.onRequest(v, EditorListener.REQUEST_PICK_PHOTO);
-                }
+                } 
             }
         });
     }
