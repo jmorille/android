@@ -38,6 +38,11 @@ public interface HelperWrapper<T> {
 
     int getInt(String key);
 
+    // Float
+    void putFloat(String key, float value);
+
+    float getFloat(String key);
+
     // int getInt(String key, int defaultValue);
 
 }

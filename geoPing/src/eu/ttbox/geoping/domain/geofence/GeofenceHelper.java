@@ -111,7 +111,7 @@ public class GeofenceHelper {
 		initialValues.putLong(CircleGeofenceColumns.COL_EXPIRATION, geoTrack.getExpirationDuration());
 		initialValues.putInt(CircleGeofenceColumns.COL_LATITUDE_E6, geoTrack.getLatitudeE6());
 		initialValues.putInt(CircleGeofenceColumns.COL_LONGITUDE_E6, geoTrack.getLongitudeE6());
-		initialValues.putInt(CircleGeofenceColumns.COL_RADIUS, geoTrack.getRadius());
+		initialValues.putFloat(CircleGeofenceColumns.COL_RADIUS, geoTrack.getRadius());
 		initialValues.putInt(CircleGeofenceColumns.COL_TRANSITION, geoTrack.getTransitionType());
 		 
 		return initialValues;
@@ -160,7 +160,7 @@ public class GeofenceHelper {
 		}
 
 		if (initialValues.containsKey(CircleGeofenceColumns.COL_RADIUS)) {
-		    radius = initialValues.getInt(CircleGeofenceColumns.COL_RADIUS);
+		    radius = initialValues.getFloat(CircleGeofenceColumns.COL_RADIUS);
 		} 
 		if (initialValues.containsKey(CircleGeofenceColumns.COL_TRANSITION)) {
 		    transition = initialValues.getInt(CircleGeofenceColumns.COL_TRANSITION);

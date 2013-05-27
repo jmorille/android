@@ -94,4 +94,13 @@ public class ContentValuesWrapper implements HelperWrapper<ContentValues> {
         return contentValues.getAsInteger(key);
     }
 
+ // Float
+    public void putFloat(String key, float value){
+        contentValues.put(key, value);
+
+    }
+
+    public float getFloat(String key){
+        return contentValues.getAsFloat(key);
+    }
 }
