@@ -73,6 +73,12 @@
          <version>${analytics.version}</version>
       </dependency>
 
+      <dependency>
+         <groupId>com.google.android.gms</groupId>
+         <artifactId>google-play-services</artifactId> 
+      </dependency>
+      
+            
       <!-- Jackson -->
       <dependency>
          <groupId>com.fasterxml.jackson.core</groupId>
