@@ -150,9 +150,7 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
         case R.id.menuMap_geofence_add: {
             mapFragment.addGenceOverlayEditor();
             return true;
-        }
-        
-        
+        }  
         default: {
             // Map click
             final int menuId = item.getItemId() - MENU_LAST_ID;

@@ -1,6 +1,6 @@
 package eu.ttbox.geoping.ui.map.geofence;
 
- import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
@@ -12,17 +12,19 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.location.Location;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import eu.ttbox.geoping.service.geofence.GeofenceUtils;
+import eu.ttbox.osm.core.AppConstants;
 
 public class GeofenceEditOverlay extends Overlay {
 
     private static final String TAG = "GeofenceEditOverlay";
 
     public static final int MOTION_CIRCLE_STOP = 100;
-    private IGeoPoint point;
+    private IGeoPoint centerGeofence;
 
     private float radiusInPixels;
     private int radiusInMeters = 500;
@@ -45,25 +47,24 @@ public class GeofenceEditOverlay extends Overlay {
     Paint paintCenter;
     Paint paintText;
     Paint paintArrow;
-    
+
     // Cache
     private Path tPath = new Path();
 
     private Point touchPoint = new Point();
 
-    public GeofenceEditOverlay(Context context, IGeoPoint center, Handler handler) {
+    public GeofenceEditOverlay(Context context, IGeoPoint center, int radiusInMeters, Handler handler) {
         super(context);
-        point = center;
+        this.centerGeofence = center;
+        this.radiusInMeters = radiusInMeters;
         this.handler = handler;
         initPaint();
     }
 
-  
-    
     private void initPaint() {
         // Circle Border
         paintBorder = new Paint();
-//        paintBorder.setARGB(100, 147, 186, 228);
+        // paintBorder.setARGB(100, 147, 186, 228);
         paintBorder.setARGB(100, 228, 0, 147);
         paintBorder.setStrokeWidth(2);
         paintBorder.setAntiAlias(true);
@@ -79,7 +80,7 @@ public class GeofenceEditOverlay extends Overlay {
         paintText.setTextAlign(Paint.Align.CENTER);
         // Arrow
         paintArrow = new Paint();
-//        paintArrow.setARGB(255, 147, 186, 228);
+        // paintArrow.setARGB(255, 147, 186, 228);
         paintArrow.setARGB(255, 228, 0, 147);
         paintArrow.setStrokeWidth(2);
         paintArrow.setAntiAlias(true);
@@ -88,7 +89,7 @@ public class GeofenceEditOverlay extends Overlay {
     }
 
     public void moveCenter(IGeoPoint point) {
-        this.point = point;
+        this.centerGeofence = point;
     }
 
     public void setRadius(int meters) {
@@ -100,16 +101,15 @@ public class GeofenceEditOverlay extends Overlay {
     }
 
     public IGeoPoint getPoint() {
-        return this.point;
+        return this.centerGeofence;
     }
-
 
     @Override
     protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
         try {
             Projection astral = mapView.getProjection();
-            Point screenPixels = astral.toPixels(this.point, null);
-            this.radiusInPixels = astral.metersToEquatorPixels(this.radiusInMeters);
+            Point screenPixels = astral.toPixels(this.centerGeofence, null);
+            this.radiusInPixels = astral.metersToEquatorPixels(this.radiusInMeters); // TODO Compute the true distance
             this.centerXInPixels = screenPixels.x;
             this.centerYInPixels = screenPixels.y;
 
@@ -131,7 +131,7 @@ public class GeofenceEditOverlay extends Overlay {
             float y = (float) (this.centerYInPixels + this.radiusInPixels * Math.sin(Math.PI));
 
             // lol
-          
+
             tPath.rewind();
             tPath.moveTo(x, y + this.radiusInPixels / 3);
             tPath.lineTo(x + this.radiusInPixels * 2, y + this.radiusInPixels / 3);
@@ -140,13 +140,13 @@ public class GeofenceEditOverlay extends Overlay {
 
             drawArrow(canvas, screenPixels, this.radiusInPixels, angle);
         } catch (Exception e) {
-
+            Log.e(TAG, "Eror in Draw : " + e.getMessage(), e);
         }
         // super.draw(canvas, mapView, shadow);
     }
 
     public void drawArrow(Canvas canvas, Point sPC, float length, double angle) {
-        
+
         float x = (float) (sPC.x + length * Math.cos(angle));
         float y = (float) (sPC.y + length * Math.sin(angle));
         canvas.drawLine(sPC.x, sPC.y, x, y, paintArrow);
@@ -163,33 +163,34 @@ public class GeofenceEditOverlay extends Overlay {
     }
 
     @Override
-    public boolean onLongPress(final MotionEvent e, final MapView mapView) { 
+    public boolean onLongPress(final MotionEvent e, final MapView mapView) {
         Projection pj = mapView.getProjection();
-        IGeoPoint center =  pj.fromPixels((int) e.getX(), (int) e.getY() );
-        Log.d(TAG, "onDoubleTapEvent : center=" + center );
+        IGeoPoint center = pj.fromPixels((int) e.getX(), (int) e.getY());
+        Log.d(TAG, "onDoubleTapEvent : center=" + center);
         moveCenter(center);
-        handler.sendEmptyMessage(MOTION_CIRCLE_STOP); 
+        handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
         return true;
     }
-    
+
     @Override
-    public boolean onTouchEvent(MotionEvent e, MapView mapView) { 
+    public boolean onTouchEvent(MotionEvent e, MapView mapView) {
         Projection pj = mapView.getProjection();
-        Point p = pj.fromMapPixels((int) e.getX(), (int) e.getY(), touchPoint);
-
-        float x = p.x;
-        float y = p.y;
-
         int action = e.getAction();
 
-        boolean onCircle = GeofenceUtils.isOnCircle(x, y, this.smallCircleX, this.smallCircleY, this.smallCircleRadius + 20);
-        boolean onCenter = false;
-        if (!onCircle) {
-            onCenter =   GeofenceUtils.isOnCircle(x, y, this.centerXInPixels, this.centerYInPixels, this.smallCircleRadius + 20);
-            Log.d(TAG, "onTouchEvent : onCenter = " + onCenter);
-        }
         switch (action) {
-        case MotionEvent.ACTION_DOWN:
+        case MotionEvent.ACTION_DOWN: {
+            // Click Point
+            Point p = pj.fromMapPixels((int) e.getX(), (int) e.getY(), touchPoint);
+            float x = p.x;
+            float y = p.y;
+            // Compute Point Click
+            boolean onCircle = GeofenceUtils.isOnCircle(x, y, this.smallCircleX, this.smallCircleY, this.smallCircleRadius + 20);
+            boolean onCenter = false;
+            if (!onCircle) {
+                onCenter = GeofenceUtils.isOnCircle(x, y, this.centerXInPixels, this.centerYInPixels, this.smallCircleRadius + 20);
+                Log.d(TAG, "onTouchEvent : onCenter = " + onCenter);
+            }
+            // Manage Status
             if (onCircle) {
                 this.status = 1;
             } else if (onCenter) {
@@ -197,26 +198,41 @@ public class GeofenceEditOverlay extends Overlay {
             } else
                 this.status = 0;
             Log.d(TAG, "MotionEvent.ACTION_DOWN : status = " + status);
+        }
             break;
         case MotionEvent.ACTION_UP:
             if (this.status > 0) {
                 this.status = 0;
                 handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
-            } 
+            }
             break;
         case MotionEvent.ACTION_MOVE:
             if (this.status == 1) {
+                // Click Point
+                Point p = pj.fromMapPixels((int) e.getX(), (int) e.getY(), touchPoint);
+                float x = p.x;
+                float y = p.y;
+
                 Log.d(TAG, "MotionEvent.ACTION_MOVE circle : status = " + status);
                 double dist = Math.sqrt(Math.pow(Math.abs(this.centerXInPixels - x), 2) + Math.pow(Math.abs(this.centerYInPixels - y), 2));
                 this.radiusInMeters = (int) ((int) (dist * this.radiusInMeters) / this.radiusInPixels);
                 Log.d(TAG, "MotionEvent.ACTION_MOVE : radiusInMeters = " + radiusInMeters);
+
+                // Second calcul of distance
+//                IGeoPoint circle = pj.fromPixels((int) e.getX(), (int) e.getY());
+//                float[] results = new float[3];
+//                Location.distanceBetween(centerGeofence.getLatitudeE6() / AppConstants.E6, centerGeofence.getLongitudeE6() / AppConstants.E6, //
+//                        circle.getLatitudeE6() / AppConstants.E6, circle.getLongitudeE6() / AppConstants.E6, //
+//                        results);
+//                this.radiusInMeters = Math.round(results[0]);
+//                Log.d(TAG, "MotionEvent.ACTION_MOVE : radiusInMeters V2 = " + results[0]);
+
                 // Recalculate angle
                 float opp = this.centerYInPixels - y;
                 float adj = this.centerXInPixels - x;
                 float tan = Math.abs(opp) / Math.abs(adj);
                 this.angle = (float) Math.atan(tan);
                 if (opp > 0) {
-
                     if (adj > 0) {
                         this.angle += Math.PI;
                     } else {
@@ -230,14 +246,14 @@ public class GeofenceEditOverlay extends Overlay {
                     }
                 }
                 mapView.postInvalidate();
-//                handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
-            } else  if (this.status == 2) {
+                // handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
+            } else if (this.status == 2) {
                 Log.d(TAG, "MotionEvent.ACTION_MOVE center : status = " + status);
-                IGeoPoint center =  pj.fromPixels((int) e.getX(), (int) e.getY() );
-                Log.d(TAG, "MotionEvent.ACTION_MOVE center : center=" + center );
+                IGeoPoint center = pj.fromPixels((int) e.getX(), (int) e.getY());
+                Log.d(TAG, "MotionEvent.ACTION_MOVE center : center=" + center);
                 moveCenter(center);
                 mapView.postInvalidate();
-//                handler.sendEmptyMessage(MOTION_CIRCLE_STOP); 
+                // handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
             }
             break;
         }
