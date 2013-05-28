@@ -73,6 +73,7 @@
     <string name="menu_pairing">Vida privada</string>
     <string name="menu_smslog">Log Sms</string>
     <string name="menu_extra_feature">Extra Features</string>
+    <string name="menu_map_geofence_add">Add Geofence</string>
     
     <string name="menu_pairing_notification">Notificacion</string>
     <string name="person_geoping_pairing_action">Asociacion</string>

@@ -73,6 +73,7 @@
     <string name="menu_pairing">Vie privée</string>
     <string name="menu_smslog">Log Sms</string>
     <string name="menu_extra_feature">Extra Features</string>
+    <string name="menu_map_geofence_add">Add Geofence</string>
     
     <string name="menu_pairing_notification">Notification</string>
     

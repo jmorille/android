@@ -6,12 +6,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
- 
-
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -112,6 +112,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
          public void handleMessage(Message msg) {
            if (msg.what == GeofenceEditOverlay.MOTION_CIRCLE_STOP){
                Log.i(TAG,"MOTION CIRCLE STOP");
+               mapView.postInvalidate();
            }
         }
     };
@@ -725,9 +726,13 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     // ===========================================================
 
     public void addGenceOverlayEditor() {
-        GeoPoint center = myLocation.getLastKnownLocationAsGeoPoint();
+        Log.d(TAG, "addGenceOverlayEditor");
+        IGeoPoint center = mapView.getMapCenter();
+//        BoundingBoxE6 boundyBox =  mapView.getBoundingBox();
         GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity(), center, handler);
         mapView.getOverlays().add(geofencekOverlay);
+        // 
+        mapView.postInvalidate();
     }
     
     // ===========================================================

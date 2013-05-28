@@ -147,6 +147,12 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
             mapFragment.swichRangeTimelineBarVisibility();
             return true;
         }
+        case R.id.menuMap_geofence_add: {
+            mapFragment.addGenceOverlayEditor();
+            return true;
+        }
+        
+        
         default: {
             // Map click
             final int menuId = item.getItemId() - MENU_LAST_ID;

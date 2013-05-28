@@ -30,4 +30,9 @@
         android:showAsAction="ifRoom"
         android:title="@string/menu_map_mypositon_hide"/>
 
+        <item
+        android:id="@+id/menuMap_geofence_add"
+        android:icon="@drawable/ic_device_access_location_searching"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_map_geofence_add"/>
 </menu>

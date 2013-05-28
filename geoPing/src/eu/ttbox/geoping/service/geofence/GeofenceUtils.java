@@ -16,6 +16,9 @@
 
 package eu.ttbox.geoping.service.geofence;
 
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.util.GeoPoint;
+
 /**
  * This class defines constants used by location sample apps.
  */
@@ -121,4 +124,17 @@ public final class GeofenceUtils {
 
     public static final CharSequence GEOFENCE_ID_DELIMITER = ",";
 
+    
+    public static final boolean isOnCircle(float x, float y, float centerX,
+            float centerY, double radius) {
+        double square_dist = Math.pow(centerX - x, 2)
+                + Math.pow(centerY - y, 2);
+        return square_dist <= Math.pow(radius, 2);
+    }
+
+    public static final boolean isOnCircle(IGeoPoint obj, IGeoPoint center,
+            float radius) {
+        return isOnCircle(obj.getLatitudeE6(), obj.getLongitudeE6(), center
+                .getLatitudeE6(), center.getLongitudeE6(), radius * 8.3);
+    }
 }
