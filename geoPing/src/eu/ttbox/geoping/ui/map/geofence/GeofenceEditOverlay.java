@@ -47,6 +47,8 @@ public class GeofenceEditOverlay extends Overlay {
     Paint paintArrow;
     
     // Cache
+    private Path tPath = new Path();
+
     private Point touchPoint = new Point();
 
     public GeofenceEditOverlay(Context context, IGeoPoint center, Handler handler) {
@@ -130,7 +132,7 @@ public class GeofenceEditOverlay extends Overlay {
 
             // lol
           
-            Path tPath = new Path();
+            tPath.rewind();
             tPath.moveTo(x, y + this.radiusInPixels / 3);
             tPath.lineTo(x + this.radiusInPixels * 2, y + this.radiusInPixels / 3);
             canvas.drawTextOnPath(text, tPath, 0, 0, paintText);
@@ -161,19 +163,17 @@ public class GeofenceEditOverlay extends Overlay {
     }
 
     @Override
-    public boolean onDoubleTapEvent(final MotionEvent e, final MapView mapView) { 
+    public boolean onLongPress(final MotionEvent e, final MapView mapView) { 
         Projection pj = mapView.getProjection();
         IGeoPoint center =  pj.fromPixels((int) e.getX(), (int) e.getY() );
         Log.d(TAG, "onDoubleTapEvent : center=" + center );
         moveCenter(center);
-        handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
+        handler.sendEmptyMessage(MOTION_CIRCLE_STOP); 
         return true;
     }
     
     @Override
-    public boolean onTouchEvent(MotionEvent e, MapView mapView) {
-        // float x = e.getX();
-        // float y = e.getY();
+    public boolean onTouchEvent(MotionEvent e, MapView mapView) { 
         Projection pj = mapView.getProjection();
         Point p = pj.fromMapPixels((int) e.getX(), (int) e.getY(), touchPoint);
 
@@ -183,26 +183,30 @@ public class GeofenceEditOverlay extends Overlay {
         int action = e.getAction();
 
         boolean onCircle = GeofenceUtils.isOnCircle(x, y, this.smallCircleX, this.smallCircleY, this.smallCircleRadius + 20);
-        Log.d(TAG, "onCircle = " + onCircle + " : x=" + x + ", y=" + y + ", smallCircleX=" + smallCircleX + ", smallCircleY=" + smallCircleY);
-
+        boolean onCenter = false;
+        if (!onCircle) {
+            onCenter =   GeofenceUtils.isOnCircle(x, y, this.centerXInPixels, this.centerYInPixels, this.smallCircleRadius + 20);
+            Log.d(TAG, "onTouchEvent : onCenter = " + onCenter);
+        }
         switch (action) {
         case MotionEvent.ACTION_DOWN:
             if (onCircle) {
                 this.status = 1;
+            } else if (onCenter) {
+                this.status = 2;
             } else
                 this.status = 0;
             Log.d(TAG, "MotionEvent.ACTION_DOWN : status = " + status);
             break;
         case MotionEvent.ACTION_UP:
-            if (this.status == 1) {
+            if (this.status > 0) {
                 this.status = 0;
                 handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
-            }
-            Log.d(TAG, "MotionEvent.ACTION_UP : status = " + status);
+            } 
             break;
         case MotionEvent.ACTION_MOVE:
             if (this.status == 1) {
-                Log.d(TAG, "MotionEvent.ACTION_MOVE : status = " + status);
+                Log.d(TAG, "MotionEvent.ACTION_MOVE circle : status = " + status);
                 double dist = Math.sqrt(Math.pow(Math.abs(this.centerXInPixels - x), 2) + Math.pow(Math.abs(this.centerYInPixels - y), 2));
                 this.radiusInMeters = (int) ((int) (dist * this.radiusInMeters) / this.radiusInPixels);
                 Log.d(TAG, "MotionEvent.ACTION_MOVE : radiusInMeters = " + radiusInMeters);
@@ -225,12 +229,19 @@ public class GeofenceEditOverlay extends Overlay {
                         // Okay
                     }
                 }
-
-                handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
+                mapView.postInvalidate();
+//                handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
+            } else  if (this.status == 2) {
+                Log.d(TAG, "MotionEvent.ACTION_MOVE center : status = " + status);
+                IGeoPoint center =  pj.fromPixels((int) e.getX(), (int) e.getY() );
+                Log.d(TAG, "MotionEvent.ACTION_MOVE center : center=" + center );
+                moveCenter(center);
+                mapView.postInvalidate();
+//                handler.sendEmptyMessage(MOTION_CIRCLE_STOP); 
             }
             break;
         }
-        return this.status == 1 ? true : super.onTouchEvent(e, mapView);
+        return this.status > 0 ? true : super.onTouchEvent(e, mapView);
     }
 
 }
