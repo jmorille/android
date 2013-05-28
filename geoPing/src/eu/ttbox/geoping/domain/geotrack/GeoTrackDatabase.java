@@ -232,11 +232,9 @@ public class GeoTrackDatabase {
 		if (c.getCount() == 0)
 			return points;
 
-		if (c.moveToFirst()) {
-			;
+		if (c.moveToFirst()) { 
 			GeoTrackHelper helper = new GeoTrackHelper().initWrapper(c);
-			while (c.moveToNext()) {
-				// On cr�� un livre
+			while (c.moveToNext()) { 
 				GeoTrack point = helper.getEntity(c);
 				points.add(point);
 			}

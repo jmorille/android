@@ -158,10 +158,13 @@
                 <action android:name="eu.ttbox.geoping.ACTION_DELIVERY_ACK"/> 
                 <data android:mimeType="vnd.android.cursor.item/ttbox.geoping.smsLog"/>
             </intent-filter> 
-            </receiver>
+       </receiver>
         
+        <!-- Geofending -->
+        <service android:name="eu.ttbox.geoping.service.geofence.ReceiveTransitionsIntentService" android:exported="false"></service>
         
-          <!-- Spy Notification Receiver -->
+               
+        <!-- Spy Notification Receiver -->
         <receiver android:enabled="false" android:name=".service.slave.eventspy.ShutdownReceiver">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>

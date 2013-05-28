@@ -107,4 +107,13 @@ public class BundleWrapper implements HelperWrapper<Bundle> {
     // return bundle.getInt(key, defaultValue);
     // }
 
+    // Float
+    public void putFloat(String key, float value){
+        bundle.putFloat(key, value);
+
+    }
+
+    public float getFloat(String key){
+        return bundle.getFloat(key);
+    }
 }
