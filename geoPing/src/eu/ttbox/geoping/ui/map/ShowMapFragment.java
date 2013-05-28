@@ -727,9 +727,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
     public void addGenceOverlayEditor() {
         Log.d(TAG, "addGenceOverlayEditor");
-        IGeoPoint center = mapView.getMapCenter();
-//        BoundingBoxE6 boundyBox =  mapView.getBoundingBox();
-        int radiusInMeters = 500;
+        BoundingBoxE6 boundyBox =  mapView.getBoundingBox(); 
+        IGeoPoint center = boundyBox.getCenter();
+        int radiusInMeters = boundyBox.getDiagonalLengthInMeters() / 4; 
         GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(), center, radiusInMeters, handler);
         mapView.getOverlays().add(geofencekOverlay);
         // 
