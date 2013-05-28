@@ -8,3 +8,6 @@ gen
 .checkstyle
 lint.xml
 .cache
+gen-external-apklibs
+.idea
+geoPing.iml

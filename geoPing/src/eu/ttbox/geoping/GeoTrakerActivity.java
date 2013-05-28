@@ -220,9 +220,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
     }
 
     /**
-     * @see http 
-     *      ://developer.android.com/guide/topics/location/obtaining-user-location
-     *      .html
+     *  http://developer.android.com/guide/topics/location/obtaining-user-location.html
      */
     private void obtenirPosition() {
         // on démarre le cercle de chargement
