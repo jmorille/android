@@ -17,6 +17,9 @@ public class CircleGeofence {
     public long mExpirationDuration = Geofence.NEVER_EXPIRE;
     public int mTransitionType;
 
+    public CircleGeofence() {
+        super();
+    }
     /**
      * @param geofenceId The Geofence's request ID
      * @param latitudeE6 Latitude of the Geofence's center. The value is not checked for validity.
@@ -75,6 +78,25 @@ public class CircleGeofence {
     }
 
 
+    public void setRequestId(String mRequestId) {
+        this.mRequestId = mRequestId;
+    }
+    public void setLatitudeE6(int mLatitudeE6) {
+        this.mLatitudeE6 = mLatitudeE6;
+    }
+    public void setLongitudeE6(int mLongitudeE6) {
+        this.mLongitudeE6 = mLongitudeE6;
+    }
+    public void setRadius(float mRadius) {
+        this.mRadius = mRadius;
+    }
+    public void setExpirationDuration(long mExpirationDuration) {
+        this.mExpirationDuration = mExpirationDuration;
+    }
+    public void setTransitionType(int mTransitionType) {
+        this.mTransitionType = mTransitionType;
+    }
+    
     /**
      * Get the geofence latitude
      * @return A latitude value

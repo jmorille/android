@@ -128,53 +128,44 @@ public class GeofenceHelper {
 		if (initialValues == null || initialValues.isEmpty()) {
 			return null;
 		}
-		String geofenceId ;
-        int latitudeE6  ;
-        int longitudeE6 ;
-        float radius  ;
-        long expiration ;
-        int transition; 
+		   CircleGeofence geofence = new CircleGeofence(  );
+		   
 		if (initialValues.containsKey(CircleGeofenceColumns.COL_REQUEST_ID)) {
-		    geofenceId= initialValues.getString(CircleGeofenceColumns.COL_REQUEST_ID);
+		    geofence.setRequestId( initialValues.getString(CircleGeofenceColumns.COL_REQUEST_ID));
 		} 
 		if (initialValues.containsKey(CircleGeofenceColumns.COL_EXPIRATION)) {
-		    expiration=initialValues.getLong(CircleGeofenceColumns.COL_EXPIRATION);
+		    geofence.setExpirationDuration(   initialValues.getLong(CircleGeofenceColumns.COL_EXPIRATION));
 		}
 		// Geo
 		if (initialValues.containsKey(Intents.EXTRA_GEO_E6)) {
 			int[] geoLatLng = initialValues.getIntArray(Intents.EXTRA_GEO_E6);
 			int geoLatLngSize = geoLatLng.length;
 			if (geoLatLngSize >= 2) {
-			    latitudeE6 =  geoLatLng[0];
-			    longitudeE6 = geoLatLng[1];
+			    geofence.setLatitudeE6(   geoLatLng[0]);
+			    geofence.setLongitudeE6( geoLatLng[1]);
 			}
 			if (geoLatLngSize >= 3) {
-			    radius = geoLatLng[3];
+			    geofence.setRadius(  geoLatLng[3]);
 			}
 		}
 		if (initialValues.containsKey(CircleGeofenceColumns.COL_LATITUDE_E6)) {
-		    latitudeE6 = initialValues.getInt(CircleGeofenceColumns.COL_LATITUDE_E6);
+		    geofence.setLatitudeE6(  initialValues.getInt(CircleGeofenceColumns.COL_LATITUDE_E6));
 		}
 		if (initialValues.containsKey(CircleGeofenceColumns.COL_LONGITUDE_E6)) {
-		    longitudeE6 = initialValues.getInt(CircleGeofenceColumns.COL_LONGITUDE_E6);
+		    geofence.setLongitudeE6(initialValues.getInt(CircleGeofenceColumns.COL_LONGITUDE_E6));
 		}
 
 		if (initialValues.containsKey(CircleGeofenceColumns.COL_RADIUS)) {
-		    radius = initialValues.getFloat(CircleGeofenceColumns.COL_RADIUS);
+		    geofence.setRadius(  initialValues.getFloat(CircleGeofenceColumns.COL_RADIUS));
 		} 
 		if (initialValues.containsKey(CircleGeofenceColumns.COL_TRANSITION)) {
-		    transition = initialValues.getInt(CircleGeofenceColumns.COL_TRANSITION);
+		    geofence.setTransitionType( initialValues.getInt(CircleGeofenceColumns.COL_TRANSITION));
 		} 
-		   CircleGeofence geoTrack = new CircleGeofence(  geofenceId,
-	                  latitudeE6,
-	                  longitudeE6,
-	                  radius,
-	                  expiration,
-	                  transition);
+		
 		if (initialValues.containsKey(CircleGeofenceColumns.COL_ID)) {
-            geoTrack.setId(initialValues.getLong(CircleGeofenceColumns.COL_ID));
+		    geofence.setId(initialValues.getLong(CircleGeofenceColumns.COL_ID));
         }
-		return geoTrack;
+		return geofence;
 	}
 
 	 
