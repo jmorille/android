@@ -20,11 +20,14 @@ import org.osmdroid.views.overlay.Overlay;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -44,10 +47,12 @@ import android.view.animation.AnimationUtils;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.GeoFenceProvider;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.model.Person;
+import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
@@ -735,23 +740,32 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         //
         mapView.postInvalidate();
     }
-    
+
     public void editGeofenceOverlayEditor(CircleGeofence circleGeofence) {
-        //Move map to geofence 
+        // Move map to geofence
         mapController.setCenter(circleGeofence.getCenterAsGeoPoint());
         // Add to view
         GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(), circleGeofence, handler);
         mapView.getOverlays().add(geofencekOverlay);
         //
         mapView.postInvalidate();
-        
+
     }
 
     public void saveGeofenceOverlayEditor() {
         List<GeofenceEditOverlay> extractOverlays = getExtractGeofenceEditOverlay(mapView.getOverlays());
         if (!extractOverlays.isEmpty()) {
             for (GeofenceEditOverlay overlay : extractOverlays) {
-                // TODO Save 
+                // Save Geofence
+                CircleGeofence geofence = overlay.getCircleGeofence();
+                ContentValues values = GeoFenceHelper.getContentValues(geofence);
+                ContentResolver cr = getActivity().getContentResolver();
+                if (geofence.id == -1) {
+                    cr.insert(GeoFenceProvider.Constants.CONTENT_URI, values);
+                } else {
+                    Uri entityUri = Uri.withAppendedPath(GeoFenceProvider.Constants.CONTENT_URI, "/" + geofence.id);
+                    cr.update(entityUri, values, null, null);
+                }
             }
         }
     }
@@ -760,7 +774,12 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         List<GeofenceEditOverlay> extractOverlays = getExtractGeofenceEditOverlay(mapView.getOverlays());
         if (!extractOverlays.isEmpty()) {
             for (GeofenceEditOverlay overlay : extractOverlays) {
-                // TODO Delete
+                CircleGeofence geofence = overlay.getCircleGeofence();
+                if (geofence.id != -1) {
+                    ContentResolver cr = getActivity().getContentResolver();
+                    Uri entityUri = Uri.withAppendedPath(GeoFenceProvider.Constants.CONTENT_URI, "/" + geofence.id);
+                    cr.delete(entityUri, null, null);
+                }
             }
         }
     }
@@ -778,7 +797,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         List<GeofenceEditOverlay> deleteOverlays = new ArrayList<GeofenceEditOverlay>();
         for (Overlay overlay : overlays) {
             if (overlay instanceof GeofenceEditOverlay) {
-                deleteOverlays.add((GeofenceEditOverlay)overlay);
+                deleteOverlays.add((GeofenceEditOverlay) overlay);
             }
         }
         return deleteOverlays;
@@ -842,7 +861,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             Log.e(TAG, "########################################");
-            Log.e(TAG, "ShwoMap StatusReceiver onReceive  action : " + action);
+            Log.e(TAG, "ShowMap StatusReceiver onReceive  action : " + action);
             if (Intents.ACTION_NEW_GEOTRACK_INSERTED.equals(action)) {
             }
         }

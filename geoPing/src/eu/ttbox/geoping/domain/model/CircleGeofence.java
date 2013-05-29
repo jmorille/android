@@ -26,6 +26,18 @@ public class CircleGeofence {
         super();
     }
 
+    public CircleGeofence(CircleGeofence other) {
+        super();
+        this.id = other.id;
+        this.name = other.name;
+        this.mRequestId = other.mRequestId; 
+        this.mLatitudeE6 = other.mLatitudeE6;  
+        this.mLongitudeE6 = other.mLongitudeE6;  
+        this.mRadius = other.mRadius;  
+        this.mExpirationDuration = other.mExpirationDuration;
+        this.mTransitionType = other.mTransitionType;
+    }
+
     /**
      * @param geofenceId
      *            The Geofence's request ID
@@ -96,36 +108,49 @@ public class CircleGeofence {
         return center;
     }
 
-    public void setRequestId(String mRequestId) {
+    public CircleGeofence setCenter(IGeoPoint center) {
+        setLatitudeE6(center.getLatitudeE6());
+        setLongitudeE6(center.getLongitudeE6());
+        return this;
+    }
+
+    public CircleGeofence setRequestId(String mRequestId) {
         this.mRequestId = mRequestId;
+        return this;
     }
 
-    public void setLatitudeE6(int mLatitudeE6) {
+    public CircleGeofence setLatitudeE6(int mLatitudeE6) {
         this.mLatitudeE6 = mLatitudeE6;
+        return this;
     }
 
-    public void setLongitudeE6(int mLongitudeE6) {
+    public CircleGeofence setLongitudeE6(int mLongitudeE6) {
         this.mLongitudeE6 = mLongitudeE6;
+        return this;
     }
 
-    public void setRadius(int mRadius) {
+    public CircleGeofence setRadius(int mRadius) {
         this.mRadius = mRadius;
+        return this;
     }
 
-    public void setExpirationDuration(long mExpirationDuration) {
+    public CircleGeofence setExpirationDuration(long mExpirationDuration) {
         this.mExpirationDuration = mExpirationDuration;
+        return this;
     }
 
-    public void setTransitionType(int mTransitionType) {
+    public CircleGeofence setTransitionType(int mTransitionType) {
         this.mTransitionType = mTransitionType;
-    }    
-    
+        return this;
+    }
+
+    public CircleGeofence setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**

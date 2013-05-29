@@ -244,12 +244,12 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
             Log.d(TAG, "Click onActionItemClicked itemId : " + item.getItemId() + ", " + item);
             switch (item.getItemId()) {
             case R.id.menu_save:
-                Toast.makeText(ShowMapActivity.this, "Save menu", Toast.LENGTH_LONG).show();
+//                Toast.makeText(ShowMapActivity.this, "Save menu", Toast.LENGTH_LONG).show();
                 mapFragment.saveGeofenceOverlayEditor();
                 mode.finish(); // Action picked, so close the CAB
                 return true;
             case R.id.menu_delete:
-                Toast.makeText(ShowMapActivity.this, "Deleted menu", Toast.LENGTH_LONG).show();
+//                Toast.makeText(ShowMapActivity.this, "Deleted menu", Toast.LENGTH_LONG).show();
                 mapFragment.deleteGeofenceOverlayEditor();
                 mode.finish(); // Action picked, so close the CAB
                 return true;

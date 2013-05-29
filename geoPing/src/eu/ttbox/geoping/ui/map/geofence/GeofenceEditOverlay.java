@@ -48,7 +48,6 @@ public class GeofenceEditOverlay extends Overlay {
     private IGeoPoint centerGeofence;
     private int radiusInMeters = 500;
 
-    
     // Color
     Paint paintBorder;
     Paint paintCenter;
@@ -60,7 +59,6 @@ public class GeofenceEditOverlay extends Overlay {
 
     private Point touchPoint = new Point();
 
-    
     public GeofenceEditOverlay(Context context, CircleGeofence geofence, Handler handler) {
         this(context, geofence.getCenterAsGeoPoint(), geofence.getRadius(), handler);
         this.geofence = geofence;
@@ -99,6 +97,13 @@ public class GeofenceEditOverlay extends Overlay {
         paintArrow.setAntiAlias(true);
         paintArrow.setStrokeCap(Cap.ROUND);
         paintArrow.setStyle(Paint.Style.FILL);
+    }
+
+    public CircleGeofence getCircleGeofence() {
+        CircleGeofence circleGeofence = geofence != null ? new CircleGeofence(geofence) : new CircleGeofence();
+        // Copy valid
+        circleGeofence.setCenter(centerGeofence).setRadius(radiusInMeters);
+        return circleGeofence;
     }
 
     public void moveCenter(IGeoPoint point) {

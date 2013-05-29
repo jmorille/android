@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import android.app.SearchManager;
 import android.content.ContentValues;
@@ -83,6 +84,7 @@ public class GeoFenceDatabase {
     public long insertEntity(ContentValues values) throws SQLException {
         long result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+        fillRequestId(values);
         try {
             db.beginTransaction();
             try {
@@ -98,6 +100,14 @@ public class GeoFenceDatabase {
         return result;
     }
 
+    public void fillRequestId(ContentValues values) {
+        if (values.containsKey(GeoFenceColumns.COL_REQUEST_ID)) {
+            throw new RuntimeException("Key GeoFenceColumns.COL_REQUEST_ID already exits in ContentValues");
+        }
+        String value = UUID.randomUUID().toString();
+        values.put(GeoFenceColumns.COL_REQUEST_ID, value);
+    }
+    
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
