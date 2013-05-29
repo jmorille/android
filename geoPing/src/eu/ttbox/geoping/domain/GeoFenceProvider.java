@@ -24,13 +24,7 @@ public class GeoFenceProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.GeoFenceProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/geofence");
-
-        public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");
-        
-        public static final Uri getUriPhoneFilter(String phoneNumber) {
-        	Uri uri = Uri.withAppendedPath( CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
-        	return uri;
-        }
+ 
     }
 
     private GeoFenceDatabase geofenceDatabase;
@@ -75,13 +69,7 @@ public class GeoFenceProvider extends ContentProvider {
         switch (sURIMatcher.match(uri)) {
         
         case GEOFENCES:
-            return search(projection, selection, selectionArgs, sortOrder);
-            // if (selectionArgs == null) {
-            // throw new
-            // IllegalArgumentException("selectionArgs must be provided for the Uri: "
-            // + uri);
-            // }
-            // return search(selectionArgs[0]);
+            return search(projection, selection, selectionArgs, sortOrder); 
         case GEOFENCE_ID:
             return getGeoFence(uri); 
         default:

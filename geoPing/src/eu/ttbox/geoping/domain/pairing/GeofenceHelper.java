@@ -14,7 +14,7 @@ import eu.ttbox.geoping.domain.core.wrapper.HelperWrapper;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase.GeoFenceColumns;
 
-public class GeofenceHelper {
+public class GeoFenceHelper {
 
 	boolean isNotInit = true;
 
@@ -33,7 +33,7 @@ public class GeofenceHelper {
 	 
 	// public int titreIdx = -1;
 
-	public GeofenceHelper initWrapper(Cursor cursor) {
+	public GeoFenceHelper initWrapper(Cursor cursor) {
 		idIdx = cursor.getColumnIndex(GeoFenceColumns.COL_ID); 
 		nameIdx = cursor.getColumnIndex(GeoFenceColumns.COL_NAME); 
 		geofenceIdIdx = cursor.getColumnIndex(GeoFenceColumns.COL_REQUEST_ID);
@@ -75,12 +75,12 @@ public class GeofenceHelper {
 		return geoTrack;
 	}
 
-	private GeofenceHelper setTextWithIdx(TextView view, Cursor cursor, int idx) {
+	private GeoFenceHelper setTextWithIdx(TextView view, Cursor cursor, int idx) {
 		view.setText(cursor.getString(idx));
 		return this;
 	}
 
-	public GeofenceHelper setTextId(TextView view, Cursor cursor) {
+	public GeoFenceHelper setTextId(TextView view, Cursor cursor) {
 		return setTextWithIdx(view, cursor, idIdx);
 	}
 

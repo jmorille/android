@@ -156,7 +156,7 @@ public class GeoFenceDatabase {
             return points;
 
         if (c.moveToFirst()) {
-            GeofenceHelper helper = new GeofenceHelper().initWrapper(c);
+            GeoFenceHelper helper = new GeoFenceHelper().initWrapper(c);
             while (c.moveToNext()) {
                 CircleGeofence point = helper.getEntity(c);
                 points.add(point);
