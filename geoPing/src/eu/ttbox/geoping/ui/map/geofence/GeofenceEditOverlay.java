@@ -56,9 +56,14 @@ public class GeofenceEditOverlay extends Overlay {
 
     // Cache
     private Path tPath = new Path();
-
+    private Point drawPoint = new Point(); 
     private Point touchPoint = new Point();
 
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    
     public GeofenceEditOverlay(Context context, CircleGeofence geofence, Handler handler) {
         this(context, geofence.getCenterAsGeoPoint(), geofence.getRadius(), handler);
         this.geofence = geofence;
@@ -99,12 +104,21 @@ public class GeofenceEditOverlay extends Overlay {
         paintArrow.setStyle(Paint.Style.FILL);
     }
 
+    // ===========================================================
+    // Result Accessors
+    // ===========================================================
+
+    
     public CircleGeofence getCircleGeofence() {
         CircleGeofence circleGeofence = geofence != null ? new CircleGeofence(geofence) : new CircleGeofence();
         // Copy valid
         circleGeofence.setCenter(centerGeofence).setRadius(radiusInMeters);
         return circleGeofence;
     }
+
+    // ===========================================================
+    // Other
+    // ===========================================================
 
     public void moveCenter(IGeoPoint point) {
         this.centerGeofence = point;
@@ -126,8 +140,8 @@ public class GeofenceEditOverlay extends Overlay {
         return this.centerGeofence;
     }
 
-    private float metersToLatitudePixels(final float meters, double latitude, int zoomLevel) {
-        float radiusInPixelsV2 = (float) (this.radiusInMeters / TileSystem.GroundResolution(latitude, zoomLevel));
+    private float metersToLatitudePixels(final float radiusInMeters, double latitude, int zoomLevel) {
+        float radiusInPixelsV2 = (float) ( radiusInMeters / TileSystem.GroundResolution(latitude, zoomLevel));
         return radiusInPixelsV2;
     }
 
@@ -135,24 +149,16 @@ public class GeofenceEditOverlay extends Overlay {
     protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
         try {
             Projection astral = mapView.getProjection();
-            Point screenPixels = astral.toPixels(this.centerGeofence, null);
-            this.radiusInPixels = astral.metersToEquatorPixels(this.radiusInMeters); // TODO
-                                                                                     // Compute
-                                                                                     // the
-                                                                                     // true
-                                                                                     // distance
-
-            float radiusInPixelsV2 = metersToLatitudePixels(this.radiusInMeters, centerGeofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
-            // Log.w(TAG, "radiusInPixels = " + radiusInPixels +
-            // ",  radiusInPixelsV2 = " + radiusInPixelsV2);
-            this.radiusInPixels = radiusInPixelsV2;
-
+ //            this.radiusInPixels = astral.metersToEquatorPixels(this.radiusInMeters);  
+           this.radiusInPixels = metersToLatitudePixels(this.radiusInMeters, centerGeofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
+ 
+            Point screenPixels = astral.toPixels(this.centerGeofence, drawPoint);
             this.centerXInPixels = screenPixels.x;
             this.centerYInPixels = screenPixels.y;
 
-            canvas.drawCircle(screenPixels.x, screenPixels.y, this.radiusInPixels, paintBorder);
-
-            canvas.drawCircle(screenPixels.x, screenPixels.y, this.radiusInPixels, paintCenter);
+            canvas.drawCircle(centerXInPixels, centerYInPixels, this.radiusInPixels, paintBorder);
+            canvas.drawCircle(centerXInPixels, centerYInPixels, this.radiusInPixels, paintCenter);
+            
             // Recompute Text Size
             paintText.setTextSize(this.radiusInPixels / 4);
             String text;
