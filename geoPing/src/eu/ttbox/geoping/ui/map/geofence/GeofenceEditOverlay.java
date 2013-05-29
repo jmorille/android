@@ -18,6 +18,7 @@ import android.location.Location;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
+import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.service.geofence.GeofenceUtils;
 import eu.ttbox.osm.core.AppConstants;
 
@@ -26,10 +27,8 @@ public class GeofenceEditOverlay extends Overlay {
     private static final String TAG = "GeofenceEditOverlay";
 
     public static final int MOTION_CIRCLE_STOP = 100;
-    private IGeoPoint centerGeofence;
 
     private float radiusInPixels;
-    private int radiusInMeters = 500;
 
     private float centerXInPixels;
     private float centerYInPixels;
@@ -44,6 +43,12 @@ public class GeofenceEditOverlay extends Overlay {
 
     private Handler handler;
 
+    // Instance
+    private CircleGeofence geofence;
+    private IGeoPoint centerGeofence;
+    private int radiusInMeters = 500;
+
+    
     // Color
     Paint paintBorder;
     Paint paintCenter;
@@ -54,6 +59,12 @@ public class GeofenceEditOverlay extends Overlay {
     private Path tPath = new Path();
 
     private Point touchPoint = new Point();
+
+    
+    public GeofenceEditOverlay(Context context, CircleGeofence geofence, Handler handler) {
+        this(context, geofence.getCenterAsGeoPoint(), geofence.getRadius(), handler);
+        this.geofence = geofence;
+    }
 
     public GeofenceEditOverlay(Context context, IGeoPoint center, int radiusInMeters, Handler handler) {
         super(context);
@@ -92,8 +103,10 @@ public class GeofenceEditOverlay extends Overlay {
 
     public void moveCenter(IGeoPoint point) {
         this.centerGeofence = point;
-//    TODO    this.radiusInPixels  = (float) TileSystem.GroundResolution( centerGeofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
-       
+        // TODO this.radiusInPixels = (float) TileSystem.GroundResolution(
+        // centerGeofence.getLatitudeE6() / AppConstants.E6,
+        // mapView.getZoomLevel());
+
     }
 
     public void setRadius(int meters) {
@@ -109,20 +122,25 @@ public class GeofenceEditOverlay extends Overlay {
     }
 
     private float metersToLatitudePixels(final float meters, double latitude, int zoomLevel) {
-        float radiusInPixelsV2  = (float) (this.radiusInMeters / TileSystem.GroundResolution( latitude ,zoomLevel));
+        float radiusInPixelsV2 = (float) (this.radiusInMeters / TileSystem.GroundResolution(latitude, zoomLevel));
         return radiusInPixelsV2;
     }
-    
+
     @Override
     protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
         try {
             Projection astral = mapView.getProjection();
             Point screenPixels = astral.toPixels(this.centerGeofence, null);
-            this.radiusInPixels = astral.metersToEquatorPixels(this.radiusInMeters); // TODO Compute the true distance
-           
-            float radiusInPixelsV2  = metersToLatitudePixels (this.radiusInMeters, centerGeofence.getLatitudeE6() / AppConstants.E6,  mapView.getZoomLevel() );
-//Log.w(TAG, "radiusInPixels = " + radiusInPixels + ",  radiusInPixelsV2 = " + radiusInPixelsV2);
-this.radiusInPixels =radiusInPixelsV2;
+            this.radiusInPixels = astral.metersToEquatorPixels(this.radiusInMeters); // TODO
+                                                                                     // Compute
+                                                                                     // the
+                                                                                     // true
+                                                                                     // distance
+
+            float radiusInPixelsV2 = metersToLatitudePixels(this.radiusInMeters, centerGeofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
+            // Log.w(TAG, "radiusInPixels = " + radiusInPixels +
+            // ",  radiusInPixelsV2 = " + radiusInPixelsV2);
+            this.radiusInPixels = radiusInPixelsV2;
 
             this.centerXInPixels = screenPixels.x;
             this.centerYInPixels = screenPixels.y;
@@ -229,17 +247,22 @@ this.radiusInPixels =radiusInPixelsV2;
 
                 Log.d(TAG, "MotionEvent.ACTION_MOVE circle : status = " + status);
                 double dist = Math.sqrt(Math.pow(Math.abs(this.centerXInPixels - x), 2) + Math.pow(Math.abs(this.centerYInPixels - y), 2));
-                this.radiusInMeters  =  (int) Math.round( (dist * this.radiusInMeters) / this.radiusInPixels);
+                this.radiusInMeters = (int) Math.round((dist * this.radiusInMeters) / this.radiusInPixels);
                 Log.d(TAG, "MotionEvent.ACTION_MOVE : radiusInMeters = " + radiusInMeters);
 
                 // Second calcul of distance
-//                IGeoPoint circle = pj.fromPixels((int) e.getX(), (int) e.getY());
-//                float[] results = new float[3];
-//                Location.distanceBetween(centerGeofence.getLatitudeE6() / AppConstants.E6, centerGeofence.getLongitudeE6() / AppConstants.E6, //
-//                        circle.getLatitudeE6() / AppConstants.E6, circle.getLongitudeE6() / AppConstants.E6, //
-//                        results);
-//                Log.d(TAG, "MotionEvent.ACTION_MOVE : radiusInMeters V2 = " + results[0]);
-//                this.radiusInMeters = Math.round(results[0]);
+                // IGeoPoint circle = pj.fromPixels((int) e.getX(), (int)
+                // e.getY());
+                // float[] results = new float[3];
+                // Location.distanceBetween(centerGeofence.getLatitudeE6() /
+                // AppConstants.E6, centerGeofence.getLongitudeE6() /
+                // AppConstants.E6, //
+                // circle.getLatitudeE6() / AppConstants.E6,
+                // circle.getLongitudeE6() / AppConstants.E6, //
+                // results);
+                // Log.d(TAG, "MotionEvent.ACTION_MOVE : radiusInMeters V2 = " +
+                // results[0]);
+                // this.radiusInMeters = Math.round(results[0]);
 
                 // Recalculate angle
                 float opp = this.centerYInPixels - y;
@@ -262,9 +285,11 @@ this.radiusInPixels =radiusInPixelsV2;
                 mapView.postInvalidate();
                 // handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
             } else if (this.status == 2) {
-//                Log.d(TAG, "MotionEvent.ACTION_MOVE center : status = " + status);
+                // Log.d(TAG, "MotionEvent.ACTION_MOVE center : status = " +
+                // status);
                 IGeoPoint center = pj.fromPixels((int) e.getX(), (int) e.getY());
-//                Log.d(TAG, "MotionEvent.ACTION_MOVE center : center=" + center);
+                // Log.d(TAG, "MotionEvent.ACTION_MOVE center : center=" +
+                // center);
                 moveCenter(center);
                 mapView.postInvalidate();
                 // handler.sendEmptyMessage(MOTION_CIRCLE_STOP);

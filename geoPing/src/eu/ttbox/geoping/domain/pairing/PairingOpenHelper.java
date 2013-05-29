@@ -10,12 +10,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import eu.ttbox.geoping.domain.core.UpgradeDbHelper;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase.GeoFenceColumns;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 /**
  * <ul>
  * <li>Db version 5 : Geoping 0.1.5 (37)</li>
  * <li>Db version 6 : Geoping 0.1.6 (39)</li>
+ * <li>Db version 7 : Geoping 0.2.0 (??)</li>
  * </ul>
  *  
  *
@@ -25,7 +28,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "PairingOpenHelper";
 
     public static final String DATABASE_NAME = "pairing.db";
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
 
     // ===========================================================
     // Table
@@ -68,6 +71,20 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 
     private static final String FTS_TABLE_CREATE_PAIRING = FTS_TABLE_CREATE_PAIRING_V6;
 
+    // GeoFence
+    private static final String CREATE_GEOFENCE_TABLE = "CREATE TABLE " + GeoFenceDatabase.TABLE_GEOFENCE //
+            + "( " + GeoFenceColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT " // 
+            + ", " + GeoFenceColumns.COL_REQUEST_ID + " TEXT NOT NULL " //   
+            + ", " + GeoFenceColumns.COL_NAME + " TEXT " //   
+            // Location
+            + ", " + GeoFenceColumns.COL_LATITUDE_E6 + " INTEGER NOT NULL " //
+            + ", " + GeoFenceColumns.COL_LONGITUDE_E6 + " INTEGER NOT NULL " //
+            + ", " + GeoFenceColumns.COL_RADIUS + " INTEGER NOT NULL " //  
+            // Config
+            + ", " + GeoFenceColumns.COL_TRANSITION + " INTEGER NOT NULL " // 
+            + ", " + GeoFenceColumns.COL_EXPIRATION + " INTEGER NOT NULL " //  
+            + " );";
+
     // ===========================================================
     // Index
     // ===========================================================
@@ -76,6 +93,14 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
     private static final String CREATE_INDEX_PAIRING_PHONE_AK = "CREATE UNIQUE INDEX IF NOT EXISTS " + INDEX_PAIRING_PHONE_AK + " on " + PairingDatabase.TABLE_PAIRING_FTS + "(" //
             + PairingColumns.COL_PHONE_MIN_MATCH + ");";
 
+    // GeoFence
+    private static final String INDEX_GEOFENCE_REQUEST_ID = "IDX_GEOFENCE_REQUEST_ID";
+    private static final String CREATE_INDEX_GEOFENCE_REQUEST_ID = "CREATE UNIQUE INDEX IF NOT EXISTS " + INDEX_GEOFENCE_REQUEST_ID + " on " + GeoFenceDatabase.TABLE_GEOFENCE + "(" //
+            + GeoFenceColumns.COL_REQUEST_ID  
+            + ");";
+     
+
+    
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -91,14 +116,22 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         mDatabase = db;
+        // Table
         mDatabase.execSQL(FTS_TABLE_CREATE_PAIRING);
+        db.execSQL(CREATE_GEOFENCE_TABLE);
+        // Index
         mDatabase.execSQL(CREATE_INDEX_PAIRING_PHONE_AK);
+        db.execSQL(CREATE_INDEX_GEOFENCE_REQUEST_ID);
         // new PairingDbBootstrap(mHelperContext, mDatabase).loadDictionary();
     }
 
     private void onLocalDrop(SQLiteDatabase db) {
+        // Index
         db.execSQL("DROP INDEX IF EXISTS " + INDEX_PAIRING_PHONE_AK);
+        db.execSQL("DROP INDEX IF EXISTS " + INDEX_GEOFENCE_REQUEST_ID + ";");
+        // Table
         db.execSQL("DROP TABLE IF EXISTS " + PairingDatabase.TABLE_PAIRING_FTS);
+        db.execSQL("DROP TABLE IF EXISTS " + GeoFenceDatabase.TABLE_GEOFENCE  + ";");
     }
 
     @Override
@@ -106,7 +139,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
         // Read previous values
         // ----------------------
-        ArrayList<ContentValues> oldRows = null;
+        ArrayList<ContentValues> oldPairingRows = null;
         if (oldVersion <= 5) {
             String[] stringColums = new String[] { //
             PairingColumns.COL_NAME, PairingColumns.COL_PHONE, PairingColumns.COL_PHONE_NORMALIZED, PairingColumns.COL_PHONE_MIN_MATCH //
@@ -115,10 +148,12 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
             PairingColumns.COL_AUTHORIZE_TYPE, PairingColumns.COL_SHOW_NOTIF // init
             };
             String[] longColums = new String[] { PairingColumns.COL_PAIRING_TIME };
-            oldRows = UpgradeDbHelper.copyTable(db, "pairingFTS", stringColums, intColums, longColums);
+            oldPairingRows = UpgradeDbHelper.copyTable(db, "pairingFTS", stringColums, intColums, longColums);
             // Drop All Table
             db.execSQL("DROP TABLE IF EXISTS pairingFTS");
-        }
+        } else {
+            oldPairingRows = UpgradeDbHelper.copyTable(db, PairingDatabase.TABLE_PAIRING_FTS, PairingColumns.ALL_COLS, new String[0], new String[0]);
+         }
         // Create the new Table
         // ----------------------
         onLocalDrop(db);
@@ -127,9 +162,9 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
 
         // Insert data in new table
         // ----------------------
-        if (oldRows != null) {
+        if (oldPairingRows != null && !oldPairingRows.isEmpty()) {
             List<String> validColumns = Arrays.asList(PairingColumns.ALL_COLS);
-            UpgradeDbHelper.insertOldRowInNewTable(db, oldRows, PairingDatabase.TABLE_PAIRING_FTS, validColumns);
+            UpgradeDbHelper.insertOldRowInNewTable(db, oldPairingRows, PairingDatabase.TABLE_PAIRING_FTS, validColumns);
         }
     }
 

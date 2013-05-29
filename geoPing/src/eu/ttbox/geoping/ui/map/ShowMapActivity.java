@@ -10,8 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.google.analytics.tracking.android.EasyTracker;
@@ -35,9 +38,11 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
      */
     private int MENU_LAST_ID = 3;
 
-//    private SlidingMenu slidingMenu;
+    // private SlidingMenu slidingMenu;
     // Map
     private ShowMapFragment mapFragment;
+
+    private ActionMode mActionMode;
 
     // ===========================================================
     // Constructors
@@ -47,19 +52,17 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.map_activity);
-      
+
         // Tracker
         EasyTracker.getInstance().activityStart(this);
     }
 
-   
     public SlidingMenu customizeSlidingMenu() {
         SlidingMenu slidingMenu = super.customizeSlidingMenu();
-        slidingMenu.setTouchModeAbove( SlidingMenu.TOUCHMODE_MARGIN);
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         return slidingMenu;
     }
-    
-    
+
     @Override
     public void onStop() {
         super.onStop();
@@ -130,7 +133,7 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-         
+
         case R.id.menuMap_mypositoncenter: {
             mapFragment.centerOnMyPosition();
             return true;
@@ -148,9 +151,10 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
             return true;
         }
         case R.id.menuMap_geofence_add: {
-            mapFragment.addGenceOverlayEditor();
+            mapFragment.addGeofenceOverlayEditor();
+            mActionMode = startActionMode(mActionModeCallbackAddGeofence);
             return true;
-        }  
+        }
         default: {
             // Map click
             final int menuId = item.getItemId() - MENU_LAST_ID;
@@ -189,7 +193,7 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
         if (intent == null) {
             return;
         }
-        if (mapFragment !=null) {
+        if (mapFragment != null) {
             mapFragment.handleIntent(intent);
         }
         // mapFragment.handleIntent(intent);
@@ -216,6 +220,53 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
         // }
         // }
     }
+
+    // ===========================================================
+    // Contextual Menu ActionMode
+    // ===========================================================
+
+    private ActionMode.Callback mActionModeCallbackAddGeofence = new ActionMode.Callback() {
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.geofence_edit_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            Log.d(TAG, "Click onActionItemClicked itemId : " + item.getItemId() + ", " + item);
+            switch (item.getItemId()) {
+            case R.id.menu_save:
+                Toast.makeText(ShowMapActivity.this, "Save menu", Toast.LENGTH_LONG).show();
+                mapFragment.saveGeofenceOverlayEditor();
+                mode.finish(); // Action picked, so close the CAB
+                return true;
+            case R.id.menu_delete:
+                Toast.makeText(ShowMapActivity.this, "Deleted menu", Toast.LENGTH_LONG).show();
+                mapFragment.deleteGeofenceOverlayEditor();
+                mode.finish(); // Action picked, so close the CAB
+                return true;
+            default:
+                Log.w(TAG, "Ignore onActionItemClicked itemId : " + item.getItemId() + ", " + item);
+                return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
+            mapFragment.closeGeofenceOverlayEditor();
+        }
+
+    };
+
     // ===========================================================
     // Others
     // ===========================================================
