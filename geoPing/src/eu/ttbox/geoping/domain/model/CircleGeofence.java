@@ -15,12 +15,12 @@ public class CircleGeofence {
     // Instance variables
     public long id = -1;
     public String name;
-    public String mRequestId; // Mandatory
-    public int mLatitudeE6; // Mandatory
-    public int mLongitudeE6; // Mandatory
-    public int mRadius; // Mandatory
-    public long mExpirationDuration = Geofence.NEVER_EXPIRE;
-    public int mTransitionType = Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT;
+    public String requestId; // Mandatory
+    public int latitudeE6; // Mandatory
+    public int longitudeE6; // Mandatory
+    public int radius; // Mandatory
+    public long expirationDuration = Geofence.NEVER_EXPIRE;
+    public int transitionType = Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT;
 
     public CircleGeofence() {
         super();
@@ -30,12 +30,12 @@ public class CircleGeofence {
         super();
         this.id = other.id;
         this.name = other.name;
-        this.mRequestId = other.mRequestId; 
-        this.mLatitudeE6 = other.mLatitudeE6;  
-        this.mLongitudeE6 = other.mLongitudeE6;  
-        this.mRadius = other.mRadius;  
-        this.mExpirationDuration = other.mExpirationDuration;
-        this.mTransitionType = other.mTransitionType;
+        this.requestId = other.requestId; 
+        this.latitudeE6 = other.latitudeE6;  
+        this.longitudeE6 = other.longitudeE6;  
+        this.radius = other.radius;  
+        this.expirationDuration = other.expirationDuration;
+        this.transitionType = other.transitionType;
     }
 
     /**
@@ -61,20 +61,20 @@ public class CircleGeofence {
         // Set the instance fields from the constructor
 
         // An identifier for the geofence
-        this.mRequestId = geofenceId;
+        this.requestId = geofenceId;
 
         // Center of the geofence
-        this.mLatitudeE6 = latitudeE6;
-        this.mLongitudeE6 = longitudeE6;
+        this.latitudeE6 = latitudeE6;
+        this.longitudeE6 = longitudeE6;
 
         // Radius of the geofence, in meters
-        this.mRadius = radius;
+        this.radius = radius;
 
         // Expiration time in milliseconds
-        this.mExpirationDuration = expiration;
+        this.expirationDuration = expiration;
 
         // Transition type
-        this.mTransitionType = transition;
+        this.transitionType = transition;
     }
 
     // Instance field getters
@@ -92,19 +92,19 @@ public class CircleGeofence {
      * @return A SimpleGeofence ID
      */
     public String getRequestId() {
-        return mRequestId;
+        return requestId;
     }
 
     public int getLatitudeE6() {
-        return mLatitudeE6;
+        return latitudeE6;
     }
 
     public int getLongitudeE6() {
-        return mLongitudeE6;
+        return longitudeE6;
     }
 
     public IGeoPoint getCenterAsGeoPoint() {
-        GeoPoint center = new GeoPoint(mLatitudeE6, mLongitudeE6, 0);
+        GeoPoint center = new GeoPoint(latitudeE6, longitudeE6, 0);
         return center;
     }
 
@@ -115,32 +115,32 @@ public class CircleGeofence {
     }
 
     public CircleGeofence setRequestId(String mRequestId) {
-        this.mRequestId = mRequestId;
+        this.requestId = mRequestId;
         return this;
     }
 
     public CircleGeofence setLatitudeE6(int mLatitudeE6) {
-        this.mLatitudeE6 = mLatitudeE6;
+        this.latitudeE6 = mLatitudeE6;
         return this;
     }
 
     public CircleGeofence setLongitudeE6(int mLongitudeE6) {
-        this.mLongitudeE6 = mLongitudeE6;
+        this.longitudeE6 = mLongitudeE6;
         return this;
     }
 
     public CircleGeofence setRadius(int mRadius) {
-        this.mRadius = mRadius;
+        this.radius = mRadius;
         return this;
     }
 
     public CircleGeofence setExpirationDuration(long mExpirationDuration) {
-        this.mExpirationDuration = mExpirationDuration;
+        this.expirationDuration = mExpirationDuration;
         return this;
     }
 
     public CircleGeofence setTransitionType(int mTransitionType) {
-        this.mTransitionType = mTransitionType;
+        this.transitionType = mTransitionType;
         return this;
     }
 
@@ -159,7 +159,7 @@ public class CircleGeofence {
      * @return A latitude value
      */
     public double getLatitude() {
-        return mLatitudeE6 / AppConstants.E6;
+        return latitudeE6 / AppConstants.E6;
     }
 
     /**
@@ -168,7 +168,7 @@ public class CircleGeofence {
      * @return A longitude value
      */
     public double getLongitude() {
-        return mLongitudeE6 / AppConstants.E6;
+        return longitudeE6 / AppConstants.E6;
     }
 
     /**
@@ -177,7 +177,7 @@ public class CircleGeofence {
      * @return A radius value
      */
     public int getRadius() {
-        return mRadius;
+        return radius;
     }
 
     /**
@@ -186,7 +186,7 @@ public class CircleGeofence {
      * @return Expiration duration in milliseconds
      */
     public long getExpirationDuration() {
-        return mExpirationDuration;
+        return expirationDuration;
     }
 
     /**
@@ -195,7 +195,7 @@ public class CircleGeofence {
      * @return Transition type (see Geofence)
      */
     public int getTransitionType() {
-        return mTransitionType;
+        return transitionType;
     }
 
     /**
@@ -205,6 +205,6 @@ public class CircleGeofence {
      */
     public Geofence toGeofence() {
         // Build a new Geofence object
-        return new Geofence.Builder().setRequestId(getRequestId()).setTransitionTypes(mTransitionType).setCircularRegion(getLatitude(), getLongitude(), getRadius()).setExpirationDuration(mExpirationDuration).build();
+        return new Geofence.Builder().setRequestId(getRequestId()).setTransitionTypes(transitionType).setCircularRegion(getLatitude(), getLongitude(), getRadius()).setExpirationDuration(expirationDuration).build();
     }
 }

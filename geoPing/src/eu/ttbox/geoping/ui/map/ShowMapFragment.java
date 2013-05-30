@@ -57,6 +57,7 @@ import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
 import eu.ttbox.geoping.ui.map.geofence.GeofenceEditOverlay;
+import eu.ttbox.geoping.ui.map.geofence.GeofenceListOverlay;
 import eu.ttbox.geoping.ui.map.timeline.RangeTimelineValue;
 import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView;
 import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView.OnRangeTimelineValuesChangeListener;
@@ -95,6 +96,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     // private GeoTrackOverlay geoTrackOverlay;
     private ConcurrentHashMap<String, GeoTrackOverlay> geoTrackOverlayByUser = new ConcurrentHashMap<String, GeoTrackOverlay>();
 
+    private GeofenceListOverlay geofenceListOverlay;
+
+    
     // View
     private RangeTimelineView rangeTimelineBar;
     // Listener
@@ -727,6 +731,26 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     // ===========================================================
     // Geofence Overlay
     // ===========================================================
+
+  
+    public void addGeofenceListOverlays() {
+        if (geofenceListOverlay == null) {
+            LoaderManager loaderManager = getActivity().getSupportLoaderManager();
+            this.geofenceListOverlay = new GeofenceListOverlay(getActivity().getApplicationContext(), loaderManager, handler);
+            mapView.getOverlays().add(geofenceListOverlay);
+        } else if (!mapView.getOverlays().contains(geofenceListOverlay)) {
+            mapView.getOverlays().add(geofenceListOverlay);
+        }
+        //
+        mapView.postInvalidate();
+    }
+
+    public void removeGeofenceListOverlays() {
+        if (geofenceListOverlay != null) {
+            mapView.getOverlays().remove(geofenceListOverlay);
+            this.geofenceListOverlay = null;
+        }
+    }
 
     public void addGeofenceOverlayEditor() {
         Log.d(TAG, "addGenceOverlayEditor");

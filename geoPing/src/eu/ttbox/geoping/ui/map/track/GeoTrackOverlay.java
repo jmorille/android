@@ -194,7 +194,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	// ===========================================================
 
 	private void onResume() {
-		Log.d(TAG, "##### onResume #### " + person);
+ 		Log.d(TAG, "##### onResume #### " + person);
 		// context.getContentResolver().registerContentObserver(GeoTrackerProvider.Constants.CONTENT_URI,
 		// true, new MyContentObserver(uiHandler));
 		// Prefs
@@ -531,7 +531,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 
 	private GeoTrack getHitMapLocation(MapView mapView, IGeoPoint tapPoint) {
 		// Track which MapLocation was hit...if any
-		GeoTrack hitMapLocation = null;
+		GeoTrack result = null;
 		RectF tapPointHitTestRect = new RectF();
 		Point tapPointTestScreenCoords = new Point();
 		int zoonLevel = mapView.getZoomLevel();
@@ -556,12 +556,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 				// location clicked by the user
 				pj.toPixels(tapPoint, tapPointTestScreenCoords);
 				if (tapPointHitTestRect.contains(tapPointTestScreenCoords.x, tapPointTestScreenCoords.y)) {
-					hitMapLocation = testLocation;
+					result = testLocation;
 					// break;
 				}
 			}
 		}
-		return hitMapLocation;
+		return result;
 	}
 
 	// ===========================================================

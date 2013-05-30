@@ -55,15 +55,14 @@ public class GeofenceEditOverlay extends Overlay {
     Paint paintArrow;
 
     // Cache
-    private Path tPath = new Path();
-    private Point drawPoint = new Point(); 
+    private Path distanceTextPath = new Path();
+    private Point drawPoint = new Point();
     private Point touchPoint = new Point();
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    
     public GeofenceEditOverlay(Context context, CircleGeofence geofence, Handler handler) {
         this(context, geofence.getCenterAsGeoPoint(), geofence.getRadius(), handler);
         this.geofence = geofence;
@@ -108,7 +107,6 @@ public class GeofenceEditOverlay extends Overlay {
     // Result Accessors
     // ===========================================================
 
-    
     public CircleGeofence getCircleGeofence() {
         CircleGeofence circleGeofence = geofence != null ? new CircleGeofence(geofence) : new CircleGeofence();
         // Copy valid
@@ -141,51 +139,52 @@ public class GeofenceEditOverlay extends Overlay {
     }
 
     private float metersToLatitudePixels(final float radiusInMeters, double latitude, int zoomLevel) {
-        float radiusInPixelsV2 = (float) ( radiusInMeters / TileSystem.GroundResolution(latitude, zoomLevel));
+        float radiusInPixelsV2 = (float) (radiusInMeters / TileSystem.GroundResolution(latitude, zoomLevel));
         return radiusInPixelsV2;
     }
 
     @Override
     protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
-        try {
-            Projection astral = mapView.getProjection();
- //            this.radiusInPixels = astral.metersToEquatorPixels(this.radiusInMeters);  
-           this.radiusInPixels = metersToLatitudePixels(this.radiusInMeters, centerGeofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
- 
-            Point screenPixels = astral.toPixels(this.centerGeofence, drawPoint);
-            this.centerXInPixels = screenPixels.x;
-            this.centerYInPixels = screenPixels.y;
+        // try {
+        Projection astral = mapView.getProjection();
+        // Draw Geofence Circle
+        // astral.metersToEquatorPixels(this.radiusInMeters);
+        this.radiusInPixels = metersToLatitudePixels(this.radiusInMeters, centerGeofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
 
-            canvas.drawCircle(centerXInPixels, centerYInPixels, this.radiusInPixels, paintBorder);
-            canvas.drawCircle(centerXInPixels, centerYInPixels, this.radiusInPixels, paintCenter);
-            
-            // Recompute Text Size
-            paintText.setTextSize(this.radiusInPixels / 4);
-            String text;
-            if (this.radiusInMeters > 1000) {
-                int km = this.radiusInMeters / 1000;
-                int m = this.radiusInMeters % 1000;
-                text = Integer.toString(km) + " km, " + Integer.toString(m) + " m";
-            } else {
-                text = Integer.toString(this.radiusInMeters) + " m";
-            }
+        Point screenPixels = astral.toPixels(this.centerGeofence, drawPoint);
+        this.centerXInPixels = screenPixels.x;
+        this.centerYInPixels = screenPixels.y;
 
-            float x = (float) (this.centerXInPixels + this.radiusInPixels * Math.cos(Math.PI));
-            float y = (float) (this.centerYInPixels + this.radiusInPixels * Math.sin(Math.PI));
+        canvas.drawCircle(centerXInPixels, centerYInPixels, this.radiusInPixels, paintBorder);
+        canvas.drawCircle(centerXInPixels, centerYInPixels, this.radiusInPixels, paintCenter);
 
-            // lol
-
-            tPath.rewind();
-            tPath.moveTo(x, y + this.radiusInPixels / 3);
-            tPath.lineTo(x + this.radiusInPixels * 2, y + this.radiusInPixels / 3);
-            canvas.drawTextOnPath(text, tPath, 0, 0, paintText);
-            canvas.drawPath(tPath, paintText);
-
-            drawArrow(canvas, screenPixels, this.radiusInPixels, angle);
-        } catch (Exception e) {
-            Log.e(TAG, "Eror in Draw : " + e.getMessage(), e);
+        // Recompute Text Size
+        paintText.setTextSize(this.radiusInPixels / 4);
+        String distanceText;
+        if (this.radiusInMeters > 1000) {
+            int km = this.radiusInMeters / 1000;
+            int m = this.radiusInMeters % 1000;
+            distanceText = Integer.toString(km) + " km, " + Integer.toString(m) + " m";
+        } else {
+            distanceText = Integer.toString(this.radiusInMeters) + " m";
         }
-        // super.draw(canvas, mapView, shadow);
+
+        float x = (float) (this.centerXInPixels + this.radiusInPixels * Math.cos(Math.PI));
+        float y = (float) (this.centerYInPixels + this.radiusInPixels * Math.sin(Math.PI));
+
+        // Draw Distance text
+        distanceTextPath.rewind();
+        distanceTextPath.moveTo(x, y + this.radiusInPixels / 3);
+        distanceTextPath.lineTo(x + this.radiusInPixels * 2, y + this.radiusInPixels / 3);
+        canvas.drawTextOnPath(distanceText, distanceTextPath, 0, 0, paintText);
+        canvas.drawPath(distanceTextPath, paintText);
+
+        // Draw Name text
+        if (geofence!=null && geofence.name != null) {
+            
+        }
+        // Draw Arrow
+        drawArrow(canvas, screenPixels, this.radiusInPixels, angle);
     }
 
     public void drawArrow(Canvas canvas, Point sPC, float length, double angle) {

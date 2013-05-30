@@ -89,31 +89,33 @@ public class GeoFenceHelper {
     }
 
     public static ContentValues getContentValues(CircleGeofence user) {
-        ContentValuesWrapper wrapper = (ContentValuesWrapper) getWrapperValues(user, new ContentValuesWrapper(GeoFenceColumns.ALL_COLS.length), true);
+        ContentValuesWrapper wrapper = (ContentValuesWrapper) getWrapperValues(user, new ContentValuesWrapper(GeoFenceColumns.ALL_COLS.length), false);
         ContentValues initialValues = wrapper.getWrappedValue();
         return initialValues;
     }
 
-    public static Bundle getBundleValues(CircleGeofence geoTrack) {
-        BundleWrapper wrapper = (BundleWrapper) getWrapperValues(geoTrack, new BundleWrapper(GeoFenceColumns.ALL_COLS.length), false);
+    public static Bundle getBundleValues(CircleGeofence geoFence) {
+        BundleWrapper wrapper = (BundleWrapper) getWrapperValues(geoFence, new BundleWrapper(GeoFenceColumns.ALL_COLS.length), false);
         Bundle bundle = wrapper.getWrappedValue();
         return bundle;
     }
 
-    private static HelperWrapper<?> getWrapperValues(CircleGeofence geoTrack, HelperWrapper<?> initialValues, boolean noHasCheck) {
-        if (geoTrack.id > -1) {
-            initialValues.putLong(GeoFenceColumns.COL_ID, Long.valueOf(geoTrack.id));
+    private static HelperWrapper<?> getWrapperValues(CircleGeofence geoFence, HelperWrapper<?> initialValues, boolean noHasCheck) {
+        if (geoFence.id > -1) {
+            initialValues.putLong(GeoFenceColumns.COL_ID, Long.valueOf(geoFence.id));
         }
-
-        initialValues.putString(GeoFenceColumns.COL_REQUEST_ID, geoTrack.getRequestId());
-        initialValues.putString(GeoFenceColumns.COL_NAME, geoTrack.getName());
-
+        if (noHasCheck || geoFence.requestId != null ) {
+           initialValues.putString(GeoFenceColumns.COL_REQUEST_ID, geoFence.getRequestId());
+        }
+        if (noHasCheck || geoFence.name != null ) {
+          initialValues.putString(GeoFenceColumns.COL_NAME, geoFence.getName());
+        }
         // Location
-        initialValues.putLong(GeoFenceColumns.COL_EXPIRATION, geoTrack.getExpirationDuration());
-        initialValues.putInt(GeoFenceColumns.COL_LATITUDE_E6, geoTrack.getLatitudeE6());
-        initialValues.putInt(GeoFenceColumns.COL_LONGITUDE_E6, geoTrack.getLongitudeE6());
-        initialValues.putFloat(GeoFenceColumns.COL_RADIUS, geoTrack.getRadius());
-        initialValues.putInt(GeoFenceColumns.COL_TRANSITION, geoTrack.getTransitionType());
+        initialValues.putInt(GeoFenceColumns.COL_LATITUDE_E6, geoFence.getLatitudeE6());
+        initialValues.putInt(GeoFenceColumns.COL_LONGITUDE_E6, geoFence.getLongitudeE6());
+        initialValues.putFloat(GeoFenceColumns.COL_RADIUS, geoFence.getRadius());
+        initialValues.putInt(GeoFenceColumns.COL_TRANSITION, geoFence.getTransitionType());
+        initialValues.putLong(GeoFenceColumns.COL_EXPIRATION, geoFence.getExpirationDuration());
 
         return initialValues;
     }
