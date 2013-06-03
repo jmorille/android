@@ -10,4 +10,6 @@ lint.xml
 .cache
 gen-external-apklibs
 .idea
-geoPing.iml
+*.iml
+classes
+out

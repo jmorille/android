@@ -21,7 +21,7 @@
 
         <eu.ttbox.geoping.ui.prefs.comp.version.DisplayIntPreference
             android:defaultValue="0"
-            android:key="APP_COUNT_LAUGHT"
+            android:key="APP_LAUGHT_COUNT"
             android:summary="@string/prefs_count_laught_summary"
             android:title="@string/prefs_count_laught" />
 

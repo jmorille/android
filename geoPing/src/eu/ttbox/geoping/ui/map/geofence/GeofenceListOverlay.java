@@ -144,6 +144,7 @@ public class GeofenceListOverlay extends Overlay {
                 points.add(fence);
             }
             geofences = new CopyOnWriteArrayList<CircleGeofence>(points);
+           //  cursor.registerDataSet\
         }
 
         @Override
@@ -170,6 +171,7 @@ public class GeofenceListOverlay extends Overlay {
         Log.d(TAG, String.format("--- onLongPress geoPoint x=%s,\t  y=%s", geoPoint.getLatitudeE6(), geoPoint.getLongitudeE6()));
         Log.d(TAG, String.format("--- onLongPress geoPoint x=%s,\t  y=%s", point.x, point.y));
         Log.d(TAG, "--- ----------------------------------------------");
+
 
         return false;
     }
