@@ -3,7 +3,6 @@ package eu.ttbox.geoping.ui.map.geofence;
 import microsoft.mappoint.TileSystem;
 
 import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.Overlay;
@@ -14,7 +13,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.location.Location;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -148,7 +146,6 @@ public class GeofenceEditOverlay extends Overlay {
         // try {
         Projection astral = mapView.getProjection();
         // Draw Geofence Circle
-        // astral.metersToEquatorPixels(this.radiusInMeters);
         this.radiusInPixels = metersToLatitudePixels(this.radiusInMeters, centerGeofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
 
         Point screenPixels = astral.toPixels(this.centerGeofence, drawPoint);
@@ -160,17 +157,12 @@ public class GeofenceEditOverlay extends Overlay {
 
         // Recompute Text Size
         paintText.setTextSize(this.radiusInPixels / 4);
-        String distanceText;
-        if (this.radiusInMeters > 1000) {
-            int km = this.radiusInMeters / 1000;
-            int m = this.radiusInMeters % 1000;
-            distanceText = Integer.toString(km) + " km, " + Integer.toString(m) + " m";
-        } else {
-            distanceText = Integer.toString(this.radiusInMeters) + " m";
-        }
+        String distanceText = getDistanceText(this.radiusInMeters);
 
-        float x = (float) (this.centerXInPixels + this.radiusInPixels * Math.cos(Math.PI));
-        float y = (float) (this.centerYInPixels + this.radiusInPixels * Math.sin(Math.PI));
+//        float x = (float) (this.centerXInPixels + this.radiusInPixels * Math.cos(Math.PI));
+//        float y = (float) (this.centerYInPixels + this.radiusInPixels * Math.sin(Math.PI));
+        float x = (float) (this.centerXInPixels - this.radiusInPixels  );
+        float y = (float) (this.centerYInPixels );
 
         // Draw Distance text
         distanceTextPath.rewind();
@@ -180,11 +172,23 @@ public class GeofenceEditOverlay extends Overlay {
         canvas.drawPath(distanceTextPath, paintText);
 
         // Draw Name text
-        if (geofence!=null && geofence.name != null) {
-            
+        if (geofence != null && geofence.name != null) {
+
         }
         // Draw Arrow
         drawArrow(canvas, screenPixels, this.radiusInPixels, angle);
+    }
+
+    private String getDistanceText(int radiusInMeters) {
+        String distanceText;
+        if (radiusInMeters > 1000) {
+            int km = radiusInMeters / 1000;
+            int m = radiusInMeters % 1000;
+            distanceText = Integer.toString(km) + " km, " + Integer.toString(m) + " m";
+        } else {
+            distanceText = Integer.toString(radiusInMeters) + " m";
+        }
+        return distanceText;
     }
 
     public void drawArrow(Canvas canvas, Point sPC, float length, double angle) {

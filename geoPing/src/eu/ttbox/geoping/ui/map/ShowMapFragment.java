@@ -736,7 +736,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     public void addGeofenceListOverlays() {
         if (geofenceListOverlay == null) {
             LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-            this.geofenceListOverlay = new GeofenceListOverlay(getActivity().getApplicationContext(), loaderManager, handler);
+            this.geofenceListOverlay = new GeofenceListOverlay(getActivity().getApplicationContext(),mapView, loaderManager, handler);
             mapView.getOverlays().add(geofenceListOverlay);
         } else if (!mapView.getOverlays().contains(geofenceListOverlay)) {
             mapView.getOverlays().add(geofenceListOverlay);

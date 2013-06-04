@@ -13,10 +13,12 @@ import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.Overlay;
 
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -26,9 +28,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.GeoFenceProvider;
+import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
+import eu.ttbox.geoping.service.geofence.GeofenceUtils;
 import eu.ttbox.osm.core.AppConstants;
 
 public class GeofenceListOverlay extends Overlay {
@@ -38,7 +42,7 @@ public class GeofenceListOverlay extends Overlay {
 
     // Context
     private Context context;
-
+    private MapView mapView;
     // Instance
     private CopyOnWriteArrayList<CircleGeofence> geofences = new CopyOnWriteArrayList<CircleGeofence>();
 
@@ -52,21 +56,45 @@ public class GeofenceListOverlay extends Overlay {
 
     // Service
     private final LoaderManager loaderManager;
+    private Handler handler;
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    public GeofenceListOverlay(Context context, LoaderManager loaderManager, Handler handler) {
+    public GeofenceListOverlay(Context context, MapView mapView, LoaderManager loaderManager, Handler handler) {
         super(context);
         this.context = context;
+        this.mapView = mapView;
+        this.handler = handler;
         initPaint();
 
         // Service
         this.loaderManager = loaderManager;
 
+        onResume();
+    }
+
+    public void onResume() {
         // Load Data
         this.loaderManager.initLoader(GEOFENCE_LIST_LOADER, null, geofencesLoaderCallback);
+        // Observer
+        if (geofencesContentObserver == null) {
+            this.geofencesContentObserver = new MyContentObserver(handler);
+            context.getContentResolver().registerContentObserver(GeoFenceProvider.Constants.CONTENT_URI, true, geofencesContentObserver);
+        }
+    }
+
+    public void onPause() {
+        if (geofencesContentObserver != null) {
+            context.getContentResolver().unregisterContentObserver(geofencesContentObserver);
+            geofencesContentObserver = null;
+        }
+    }
+
+    public void onDetach(final MapView mapView) {
+        onPause();
+        super.onDetach(mapView);
     }
 
     private void initPaint() {
@@ -118,6 +146,28 @@ public class GeofenceListOverlay extends Overlay {
     // Data Loader
     // ===========================================================
 
+    private MyContentObserver geofencesContentObserver;
+
+    private class MyContentObserver extends ContentObserver {
+
+        public MyContentObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public boolean deliverSelfNotifications() {
+            return false;
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            Log.e(TAG, "########################################");
+            Log.e(TAG, "### ContentObserver Notify Change for URI : " + uri);
+            loaderManager.restartLoader(GEOFENCE_LIST_LOADER, null, geofencesLoaderCallback);
+            super.onChange(selfChange);
+        }
+    }
+
     private final LoaderManager.LoaderCallbacks<Cursor> geofencesLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
@@ -144,7 +194,11 @@ public class GeofenceListOverlay extends Overlay {
                 points.add(fence);
             }
             geofences = new CopyOnWriteArrayList<CircleGeofence>(points);
-           //  cursor.registerDataSet\
+            mapView.postInvalidate();
+            // cursor.registerDataSet\
+            // Listener
+            // cursor.setNotificationUri(context.getContentResolver(),
+            // GeoFenceProvider.Constants.CONTENT_URI);
         }
 
         @Override
@@ -162,28 +216,34 @@ public class GeofenceListOverlay extends Overlay {
         Projection pj = mapView.getProjection();
 
         // Convert
-        IGeoPoint geoPoint = pj.fromPixels(event.getX(), event.getY());
-        Point point = pj.fromMapPixels((int) event.getX(), (int) event.getY(), null);
+        IGeoPoint tapPoint = pj.fromPixels(event.getX(), event.getY());
+        CircleGeofence hitPoint = getHitMapLocation(mapView, tapPoint);
+        // Point point = pj.fromMapPixels((int) event.getX(), (int)
+        // event.getY(), null);
 
         // Get Hit Points
         Log.d(TAG, "--- ----------------------------------------------");
-        Log.d(TAG, String.format("--- onLongPress Event    x=%s,\t  y=%s", event.getX(), event.getY()));
-        Log.d(TAG, String.format("--- onLongPress geoPoint x=%s,\t  y=%s", geoPoint.getLatitudeE6(), geoPoint.getLongitudeE6()));
-        Log.d(TAG, String.format("--- onLongPress geoPoint x=%s,\t  y=%s", point.x, point.y));
+        // Log.d(TAG, String.format("--- onLongPress Event    x=%s,\t  y=%s",
+        // event.getX(), event.getY()));
+        // Log.d(TAG, String.format("--- onLongPress geoPoint x=%s,\t  y=%s",
+        // tapPoint.getLatitudeE6(), tapPoint.getLongitudeE6()));
+        // Log.d(TAG, String.format("--- onLongPress geoPoint x=%s,\t  y=%s",
+        // point.x, point.y));
+        Log.d(TAG, String.format("--- onLongPress hitPoint  %s ", hitPoint));
         Log.d(TAG, "--- ----------------------------------------------");
 
-
-        return false;
+        return hitPoint != null;
     }
 
     private CircleGeofence getHitMapLocation(MapView mapView, IGeoPoint tapPoint) {
-        CircleGeofence result = null;
-        Projection pj = mapView.getProjection();
         for (CircleGeofence testLocation : geofences) {
-
+            boolean isOncircle = GeofenceUtils.isOnCircle(tapPoint, testLocation.getCenterAsGeoPoint(), testLocation.getRadius());
+            if (isOncircle) {
+                return testLocation;
+            }
         }
 
-        return result;
+        return null;
     }
 
 }
