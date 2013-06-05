@@ -39,6 +39,8 @@ public class GeofenceListOverlay extends Overlay {
     // Context
     private Context context;
     private MapView mapView;
+    private Projection astral;
+    
     // Instance
     private CopyOnWriteArrayList<CircleGeofence> geofences = new CopyOnWriteArrayList<CircleGeofence>();
 
@@ -62,6 +64,7 @@ public class GeofenceListOverlay extends Overlay {
         super(context);
         this.context = context;
         this.mapView = mapView;
+        this.astral = mapView.getProjection();
         this.handler = handler;
         initPaint();
 
@@ -138,6 +141,18 @@ public class GeofenceListOverlay extends Overlay {
         }
     }
 
+    private void drawGeofenceCircle(Canvas canvas,  MapView mapView,  CircleGeofence fence) {
+        IGeoPoint centerGeofence = fence.getCenterAsGeoPoint();
+        float radiusInPixels = metersToLatitudePixels(fence.getRadiusInMeters(), fence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
+
+        Point screenPixels = astral.toPixels(centerGeofence, drawPoint);
+        int centerXInPixels = screenPixels.x;
+        int centerYInPixels = screenPixels.y;
+
+        canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintBorder);
+        canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintCenter);
+    }
+    
     // ===========================================================
     // Data Loader
     // ===========================================================

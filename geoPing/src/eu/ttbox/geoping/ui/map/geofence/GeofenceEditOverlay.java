@@ -32,6 +32,7 @@ public class GeofenceEditOverlay extends Overlay {
 
     // Context
     private MapView mapView;
+    private Projection astral;
     private Handler handler;
 
     // Instance
@@ -72,8 +73,8 @@ public class GeofenceEditOverlay extends Overlay {
     public GeofenceEditOverlay(Context context, MapView mapView, CircleGeofence geofence, Handler handler) {
         super(context);
         this.geofence = geofence;
-        Log.d(TAG, "GeofenceEditOverlay : " + geofence);
         this.mapView = mapView;
+        this.astral = mapView.getProjection();
         this.handler = handler;
         initPaint();
     }
@@ -159,8 +160,7 @@ public class GeofenceEditOverlay extends Overlay {
 
     @Override
     protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
-        // try {
-        Projection astral = mapView.getProjection();
+       
         // Draw Geofence Circle
         this.radiusInPixels = metersToLatitudePixels(this.geofence.radiusInMeters, geofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
 
