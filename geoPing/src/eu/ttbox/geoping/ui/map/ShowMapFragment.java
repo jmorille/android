@@ -122,10 +122,10 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == GeofenceEditOverlay.MOTION_CIRCLE_STOP) {
-                Log.i(TAG, "MOTION CIRCLE STOP");
-                mapView.postInvalidate();
-            }
+//            if (msg.what == GeofenceEditOverlay.MOTION_CIRCLE_STOP) {
+//                Log.i(TAG, "MOTION CIRCLE STOP");
+//                mapView.postInvalidate();
+//            }
         }
     };
 
@@ -759,7 +759,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         IGeoPoint center = boundyBox.getCenter();
         int radiusInMeters = boundyBox.getDiagonalLengthInMeters() / 8;
         // Add to view
-        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(), center, radiusInMeters, handler);
+        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, center, radiusInMeters, handler);
         mapView.getOverlays().add(geofencekOverlay);
         //
         mapView.postInvalidate();
@@ -769,7 +769,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         // Move map to geofence
         mapController.setCenter(circleGeofence.getCenterAsGeoPoint());
         // Add to view
-        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(), circleGeofence, handler);
+        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, circleGeofence, handler);
         mapView.getOverlays().add(geofencekOverlay);
         //
         mapView.postInvalidate();

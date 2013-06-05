@@ -24,28 +24,30 @@ public class GeofenceEditOverlay extends Overlay {
 
     private static final String TAG = "GeofenceEditOverlay";
 
-    public static final int MOTION_CIRCLE_STOP = 100;
+    // Constant
+//    public static final int MOTION_CIRCLE_STOP = 100;
+   
+    private float smallCircleRadius = 10;
 
+    // Context
+    private MapView mapView;
+    private Handler handler;
+
+    // Instance
+    private CircleGeofence geofence; 
+
+    // Edit Map Instance
+    private int status = 0;
     private float radiusInPixels;
 
     private float centerXInPixels;
     private float centerYInPixels;
 
-    private int status = 0;
-
     private float smallCircleX;
     private float smallCircleY;
-    private float smallCircleRadius = 10;
-
+    
     private float angle = 0;
-
-    private Handler handler;
-
-    // Instance
-    private CircleGeofence geofence;
-    private IGeoPoint centerGeofence;
-    private int radiusInMeters = 500;
-
+    
     // Color
     Paint paintBorder;
     Paint paintCenter;
@@ -54,6 +56,7 @@ public class GeofenceEditOverlay extends Overlay {
 
     // Cache
     private Path distanceTextPath = new Path();
+    private Path nameTextPath = new Path();
     private Point drawPoint = new Point();
     private Point touchPoint = new Point();
 
@@ -61,15 +64,14 @@ public class GeofenceEditOverlay extends Overlay {
     // Constructors
     // ===========================================================
 
-    public GeofenceEditOverlay(Context context, CircleGeofence geofence, Handler handler) {
-        this(context, geofence.getCenterAsGeoPoint(), geofence.getRadius(), handler);
-        this.geofence = geofence;
+    public GeofenceEditOverlay(Context context, MapView mapView, IGeoPoint center, int radiusInMeters, Handler handler) {
+        this(context, mapView, new CircleGeofence(center, radiusInMeters), handler);
     }
 
-    public GeofenceEditOverlay(Context context, IGeoPoint center, int radiusInMeters, Handler handler) {
+    public GeofenceEditOverlay(Context context, MapView mapView, CircleGeofence geofence, Handler handler) {
         super(context);
-        this.centerGeofence = center;
-        this.radiusInMeters = radiusInMeters;
+        this.geofence = geofence;
+        this.mapView = mapView;
         this.handler = handler;
         initPaint();
     }
@@ -106,10 +108,12 @@ public class GeofenceEditOverlay extends Overlay {
     // ===========================================================
 
     public CircleGeofence getCircleGeofence() {
-        CircleGeofence circleGeofence = geofence != null ? new CircleGeofence(geofence) : new CircleGeofence();
+        // CircleGeofence circleGeofence = geofence != null ? new
+        // CircleGeofence(geofence) : new CircleGeofence();
         // Copy valid
-        circleGeofence.setCenter(centerGeofence).setRadius(radiusInMeters);
-        return circleGeofence;
+        // circleGeofence.setCenter(centerGeofence).setRadiusInMeters(radiusInMeters);
+        // return circleGeofence;
+        return geofence;
     }
 
     // ===========================================================
@@ -117,23 +121,23 @@ public class GeofenceEditOverlay extends Overlay {
     // ===========================================================
 
     public void moveCenter(IGeoPoint point) {
-        this.centerGeofence = point;
+        this.geofence.setCenter(point);
+        mapView.postInvalidate();
         // TODO this.radiusInPixels = (float) TileSystem.GroundResolution(
         // centerGeofence.getLatitudeE6() / AppConstants.E6,
         // mapView.getZoomLevel());
-
     }
 
     public void setRadius(int meters) {
-        this.radiusInMeters = meters;
+        this.geofence.setRadiusInMeters(meters);
     }
 
     public int getRadius() {
-        return this.radiusInMeters;
+        return this.geofence.radiusInMeters;
     }
 
     public IGeoPoint getPoint() {
-        return this.centerGeofence;
+        return this.geofence.getCenterAsGeoPoint();
     }
 
     private float metersToLatitudePixels(final float radiusInMeters, double latitude, int zoomLevel) {
@@ -146,23 +150,22 @@ public class GeofenceEditOverlay extends Overlay {
         // try {
         Projection astral = mapView.getProjection();
         // Draw Geofence Circle
-        this.radiusInPixels = metersToLatitudePixels(this.radiusInMeters, centerGeofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
+        this.radiusInPixels = metersToLatitudePixels(this.geofence.radiusInMeters, geofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
 
-        Point screenPixels = astral.toPixels(this.centerGeofence, drawPoint);
+        Point screenPixels = astral.toPixels(this.geofence.getCenterAsGeoPoint(), drawPoint);
         this.centerXInPixels = screenPixels.x;
         this.centerYInPixels = screenPixels.y;
 
         canvas.drawCircle(centerXInPixels, centerYInPixels, this.radiusInPixels, paintBorder);
         canvas.drawCircle(centerXInPixels, centerYInPixels, this.radiusInPixels, paintCenter);
 
+        
         // Recompute Text Size
         paintText.setTextSize(this.radiusInPixels / 4);
-        String distanceText = getDistanceText(this.radiusInMeters);
+        String distanceText = getDistanceText(this.geofence.radiusInMeters);
 
-//        float x = (float) (this.centerXInPixels + this.radiusInPixels * Math.cos(Math.PI));
-//        float y = (float) (this.centerYInPixels + this.radiusInPixels * Math.sin(Math.PI));
-        float x = (float) (this.centerXInPixels - this.radiusInPixels  );
-        float y = (float) (this.centerYInPixels );
+        float x = (float) (this.centerXInPixels - this.radiusInPixels);
+        float y = (float) (this.centerYInPixels);
 
         // Draw Distance text
         distanceTextPath.rewind();
@@ -173,9 +176,13 @@ public class GeofenceEditOverlay extends Overlay {
 
         // Draw Name text
         if (geofence != null && geofence.name != null) {
-
+            nameTextPath.rewind();
+            nameTextPath.moveTo(x, y - this.radiusInPixels / 3);
+            nameTextPath.lineTo(x + this.radiusInPixels * 2, y - this.radiusInPixels / 3);
+            canvas.drawTextOnPath(geofence.name, nameTextPath, 0, 0, paintText);
+            canvas.drawPath(nameTextPath, paintText);
         }
-        // Draw Arrow
+         // Draw Arrow
         drawArrow(canvas, screenPixels, this.radiusInPixels, angle);
     }
 
@@ -213,8 +220,7 @@ public class GeofenceEditOverlay extends Overlay {
         Projection pj = mapView.getProjection();
         IGeoPoint center = pj.fromPixels((int) e.getX(), (int) e.getY());
         Log.d(TAG, "onDoubleTapEvent : center=" + center);
-        moveCenter(center);
-        handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
+        moveCenter(center); 
         return true;
     }
 
@@ -249,7 +255,7 @@ public class GeofenceEditOverlay extends Overlay {
         case MotionEvent.ACTION_UP:
             if (this.status > 0) {
                 this.status = 0;
-                handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
+                mapView.postInvalidate();
             }
             break;
         case MotionEvent.ACTION_MOVE:
@@ -261,23 +267,9 @@ public class GeofenceEditOverlay extends Overlay {
 
                 Log.d(TAG, "MotionEvent.ACTION_MOVE circle : status = " + status);
                 double dist = Math.sqrt(Math.pow(Math.abs(this.centerXInPixels - x), 2) + Math.pow(Math.abs(this.centerYInPixels - y), 2));
-                this.radiusInMeters = (int) Math.round((dist * this.radiusInMeters) / this.radiusInPixels);
-                Log.d(TAG, "MotionEvent.ACTION_MOVE : radiusInMeters = " + radiusInMeters);
-
-                // Second calcul of distance
-                // IGeoPoint circle = pj.fromPixels((int) e.getX(), (int)
-                // e.getY());
-                // float[] results = new float[3];
-                // Location.distanceBetween(centerGeofence.getLatitudeE6() /
-                // AppConstants.E6, centerGeofence.getLongitudeE6() /
-                // AppConstants.E6, //
-                // circle.getLatitudeE6() / AppConstants.E6,
-                // circle.getLongitudeE6() / AppConstants.E6, //
-                // results);
-                // Log.d(TAG, "MotionEvent.ACTION_MOVE : radiusInMeters V2 = " +
-                // results[0]);
-                // this.radiusInMeters = Math.round(results[0]);
-
+                this.geofence.radiusInMeters = (int) Math.round((dist * this.geofence.radiusInMeters) / this.radiusInPixels);
+                Log.d(TAG, "MotionEvent.ACTION_MOVE : radiusInMeters = " + geofence.radiusInMeters);
+ 
                 // Recalculate angle
                 float opp = this.centerYInPixels - y;
                 float adj = this.centerXInPixels - x;
@@ -298,15 +290,10 @@ public class GeofenceEditOverlay extends Overlay {
                 }
                 mapView.postInvalidate();
                 // handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
-            } else if (this.status == 2) {
-                // Log.d(TAG, "MotionEvent.ACTION_MOVE center : status = " +
-                // status);
-                IGeoPoint center = pj.fromPixels((int) e.getX(), (int) e.getY());
-                // Log.d(TAG, "MotionEvent.ACTION_MOVE center : center=" +
-                // center);
+            } else if (this.status == 2) { 
+                IGeoPoint center = pj.fromPixels((int) e.getX(), (int) e.getY()); 
                 moveCenter(center);
-                mapView.postInvalidate();
-                // handler.sendEmptyMessage(MOTION_CIRCLE_STOP);
+                mapView.postInvalidate(); 
             }
             break;
         }

@@ -1,8 +1,6 @@
 package eu.ttbox.geoping.ui.map.geofence;
 
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import microsoft.mappoint.TileSystem;
@@ -28,9 +26,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.GeoFenceProvider;
-import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
-import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.service.geofence.GeofenceUtils;
 import eu.ttbox.osm.core.AppConstants;
@@ -130,7 +126,7 @@ public class GeofenceListOverlay extends Overlay {
         Projection astral = mapView.getProjection();
         for (CircleGeofence fence : geofences) {
             IGeoPoint centerGeofence = fence.getCenterAsGeoPoint();
-            float radiusInPixels = metersToLatitudePixels(fence.getRadius(), fence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
+            float radiusInPixels = metersToLatitudePixels(fence.getRadiusInMeters(), fence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
 
             Point screenPixels = astral.toPixels(centerGeofence, drawPoint);
             int centerXInPixels = screenPixels.x;
@@ -237,7 +233,7 @@ public class GeofenceListOverlay extends Overlay {
 
     private CircleGeofence getHitMapLocation(MapView mapView, IGeoPoint tapPoint) {
         for (CircleGeofence testLocation : geofences) {
-            boolean isOncircle = GeofenceUtils.isOnCircle(tapPoint, testLocation.getCenterAsGeoPoint(), testLocation.getRadius());
+            boolean isOncircle = GeofenceUtils.isOnCircle(tapPoint, testLocation.getCenterAsGeoPoint(), testLocation.getRadiusInMeters());
             if (isOncircle) {
                 return testLocation;
             }

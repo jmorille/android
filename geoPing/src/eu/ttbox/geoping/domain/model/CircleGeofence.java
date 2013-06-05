@@ -18,7 +18,7 @@ public class CircleGeofence {
     public String requestId; // Mandatory
     private int latitudeE6; // Mandatory
     private int longitudeE6; // Mandatory
-    public int radius; // Mandatory
+    public int radiusInMeters; // Mandatory
     public long expirationDuration = Geofence.NEVER_EXPIRE;
     public int transitionType = Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT;
 
@@ -28,6 +28,12 @@ public class CircleGeofence {
         super();
     }
 
+    public CircleGeofence(IGeoPoint center, int radiusInMeters) {
+        super();
+        this.radiusInMeters = radiusInMeters;
+        setCenter(center);
+    }
+
     public CircleGeofence(CircleGeofence other) {
         super();
         this.id = other.id;
@@ -35,7 +41,7 @@ public class CircleGeofence {
         this.requestId = other.requestId;
         this.latitudeE6 = other.latitudeE6;
         this.longitudeE6 = other.longitudeE6;
-        this.radius = other.radius;
+        this.radiusInMeters = other.radiusInMeters;
         this.expirationDuration = other.expirationDuration;
         this.transitionType = other.transitionType;
     }
@@ -70,7 +76,7 @@ public class CircleGeofence {
         this.longitudeE6 = longitudeE6;
 
         // Radius of the geofence, in meters
-        this.radius = radius;
+        this.radiusInMeters = radius;
 
         // Expiration time in milliseconds
         this.expirationDuration = expiration;
@@ -117,7 +123,7 @@ public class CircleGeofence {
     public CircleGeofence setCenter(IGeoPoint center) {
         this.latitudeE6 = center.getLatitudeE6();
         this.longitudeE6 = center.getLongitudeE6();
-        this.cachedGeoPoint = null;
+        this.cachedGeoPoint = center;
         return this;
     }
 
@@ -138,8 +144,8 @@ public class CircleGeofence {
         return this;
     }
 
-    public CircleGeofence setRadius(int mRadius) {
-        this.radius = mRadius;
+    public CircleGeofence setRadiusInMeters(int mRadius) {
+        this.radiusInMeters = mRadius;
         return this;
     }
 
@@ -185,8 +191,8 @@ public class CircleGeofence {
      * 
      * @return A radius value
      */
-    public int getRadius() {
-        return radius;
+    public int getRadiusInMeters() {
+        return radiusInMeters;
     }
 
     /**
@@ -214,13 +220,23 @@ public class CircleGeofence {
      */
     public Geofence toGeofence() {
         // Build a new Geofence object
-        return new Geofence.Builder().setRequestId(getRequestId()).setTransitionTypes(transitionType).setCircularRegion(getLatitude(), getLongitude(), getRadius()).setExpirationDuration(expirationDuration).build();
+        return new Geofence.Builder().setRequestId(requestId)//
+                .setCircularRegion(getLatitude(), getLongitude(), getRadiusInMeters())//
+                .setTransitionTypes(transitionType)//
+                .setExpirationDuration(expirationDuration)//
+                .build();
     }
 
     @Override
     public String toString() {
-        return "CircleGeofence [id=" + id + ", name=" + name + ", latitudeE6=" + latitudeE6 + ", longitudeE6=" + longitudeE6 + ", radius=" + radius + ", requestId=" + requestId + ", transitionType=" + transitionType + ", expirationDuration="
-                + expirationDuration + "]";
+        return "CircleGeofence [id=" + id //
+                + ", name=" + name //
+                + ", latitudeE6=" + latitudeE6 + ", longitudeE6=" + longitudeE6 //
+                + ", radius=" + radiusInMeters //
+                + ", requestId=" + requestId //
+                + ", transitionType=" + transitionType //
+                + ", expirationDuration=" + expirationDuration //
+                + "]";
     }
 
 }
