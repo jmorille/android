@@ -3,6 +3,7 @@ package eu.ttbox.geoping.ui.map.geofence;
 import microsoft.mappoint.TileSystem;
 
 import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.Overlay;
@@ -71,6 +72,7 @@ public class GeofenceEditOverlay extends Overlay {
     public GeofenceEditOverlay(Context context, MapView mapView, CircleGeofence geofence, Handler handler) {
         super(context);
         this.geofence = geofence;
+        Log.d(TAG, "GeofenceEditOverlay : " + geofence);
         this.mapView = mapView;
         this.handler = handler;
         initPaint();
@@ -116,6 +118,16 @@ public class GeofenceEditOverlay extends Overlay {
         return geofence;
     }
 
+    public void addCircleGeofence() {
+        Log.d(TAG, "addGenceOverlayEditor");
+        // Compute the default fence Size
+        BoundingBoxE6 boundyBox = mapView.getBoundingBox();
+        IGeoPoint center = boundyBox.getCenter();
+        int radiusInMeters = boundyBox.getDiagonalLengthInMeters() / 8;
+        // Edit
+        geofence = new CircleGeofence(center, radiusInMeters);
+    }
+    
     // ===========================================================
     // Other
     // ===========================================================
@@ -166,19 +178,20 @@ public class GeofenceEditOverlay extends Overlay {
 
         float x = (float) (this.centerXInPixels - this.radiusInPixels);
         float y = (float) (this.centerYInPixels);
-
+        float radiusInPixelsThird = this.radiusInPixels / 3;
+        
         // Draw Distance text
         distanceTextPath.rewind();
-        distanceTextPath.moveTo(x, y + this.radiusInPixels / 3);
-        distanceTextPath.lineTo(x + this.radiusInPixels * 2, y + this.radiusInPixels / 3);
+        distanceTextPath.moveTo(x, y + radiusInPixelsThird);
+        distanceTextPath.lineTo(x + this.radiusInPixels * 2, y +radiusInPixelsThird);
         canvas.drawTextOnPath(distanceText, distanceTextPath, 0, 0, paintText);
         canvas.drawPath(distanceTextPath, paintText);
 
         // Draw Name text
         if (geofence != null && geofence.name != null) {
             nameTextPath.rewind();
-            nameTextPath.moveTo(x, y - this.radiusInPixels / 3);
-            nameTextPath.lineTo(x + this.radiusInPixels * 2, y - this.radiusInPixels / 3);
+            nameTextPath.moveTo(x, y - radiusInPixelsThird);
+            nameTextPath.lineTo(x + this.radiusInPixels * 2, y - radiusInPixelsThird);
             canvas.drawTextOnPath(geofence.name, nameTextPath, 0, 0, paintText);
             canvas.drawPath(nameTextPath, paintText);
         }

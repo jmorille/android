@@ -761,6 +761,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         // Add to view
         GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, center, radiusInMeters, handler);
         mapView.getOverlays().add(geofencekOverlay);
+//        geofencekOverlay.addCircleGeofence();
         //
         mapView.postInvalidate();
     }
