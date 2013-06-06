@@ -13,7 +13,7 @@ import eu.ttbox.osm.core.AppConstants;
  */
 public class CircleGeofence {
     // Instance variables
-    public long id = -1;
+    public long id = -1l;
     public String name;
     public String requestId; // Mandatory
     private int latitudeE6; // Mandatory

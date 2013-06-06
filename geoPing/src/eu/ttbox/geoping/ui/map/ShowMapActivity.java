@@ -25,7 +25,7 @@ import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 
 /**
- * @see http://mobiforge.com/developing/story/using-google-maps-android
+ *  @see <a href="http://mobiforge.com/developing/story/using-google-maps-android">using-google-maps-android</a>
  * 
  */
 public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {

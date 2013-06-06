@@ -9,10 +9,8 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -57,7 +55,6 @@ import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
 import eu.ttbox.geoping.ui.map.geofence.GeofenceEditOverlay;
-import eu.ttbox.geoping.ui.map.geofence.GeofenceListOverlay;
 import eu.ttbox.geoping.ui.map.timeline.RangeTimelineValue;
 import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView;
 import eu.ttbox.geoping.ui.map.timeline.RangeTimelineView.OnRangeTimelineValuesChangeListener;
@@ -69,7 +66,7 @@ import eu.ttbox.osm.ui.map.MapViewFactory;
 import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
 
 /**
- * @see http://mobiforge.com/developing/story/using-google-maps-android
+ * @see <a href="http://mobiforge.com/developing/story/using-google-maps-android">using-google-maps-android</a>
  * 
  */
 public class ShowMapFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -96,7 +93,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     // private GeoTrackOverlay geoTrackOverlay;
     private ConcurrentHashMap<String, GeoTrackOverlay> geoTrackOverlayByUser = new ConcurrentHashMap<String, GeoTrackOverlay>();
 
-    private GeofenceListOverlay geofenceListOverlay;
+    private GeofenceEditOverlay geofenceListOverlay;
 
     
     // View
@@ -736,13 +733,13 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     public void addGeofenceListOverlays() {
         if (geofenceListOverlay == null) {
             LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-            this.geofenceListOverlay = new GeofenceListOverlay(getActivity().getApplicationContext(),mapView, loaderManager, handler);
+            this.geofenceListOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, loaderManager, handler);
             mapView.getOverlays().add(geofenceListOverlay);
+            mapView.postInvalidate();
         } else if (!mapView.getOverlays().contains(geofenceListOverlay)) {
             mapView.getOverlays().add(geofenceListOverlay);
+            mapView.postInvalidate();
         }
-        //
-        mapView.postInvalidate();
     }
 
     public void removeGeofenceListOverlays() {
@@ -755,13 +752,15 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     public void addGeofenceOverlayEditor() {
         Log.d(TAG, "addGenceOverlayEditor");
         // Compute the default fence Size
-        BoundingBoxE6 boundyBox = mapView.getBoundingBox();
-        IGeoPoint center = boundyBox.getCenter();
-        int radiusInMeters = boundyBox.getDiagonalLengthInMeters() / 8;
+//        BoundingBoxE6 boundyBox = mapView.getBoundingBox();
+//        IGeoPoint center = boundyBox.getCenter();
+//        int radiusInMeters = boundyBox.getDiagonalLengthInMeters() / 8;
         // Add to view
-        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, center, radiusInMeters, handler);
-        mapView.getOverlays().add(geofencekOverlay);
-//        geofencekOverlay.addCircleGeofence();
+//        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
+//        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, loaderManager , center, radiusInMeters, handler);
+//        mapView.getOverlays().add(geofencekOverlay);
+        addGeofenceListOverlays();
+        this.geofenceListOverlay.doAddCircleGeofence();
         //
         mapView.postInvalidate();
     }
@@ -770,7 +769,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         // Move map to geofence
         mapController.setCenter(circleGeofence.getCenterAsGeoPoint());
         // Add to view
-        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, circleGeofence, handler);
+        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
+        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, loaderManager, circleGeofence, handler);
         mapView.getOverlays().add(geofencekOverlay);
         //
         mapView.postInvalidate();
