@@ -25,10 +25,14 @@ import org.osmdroid.util.GeoPoint;
 public final class GeofenceUtils {
 
     // Used to track what type of geofence removal request was made.
-    public enum REMOVE_TYPE {INTENT, LIST}
+    public enum REMOVE_TYPE {
+        INTENT, LIST
+    }
 
     // Used to track what type of request is in process
-    public enum REQUEST_TYPE {ADD, REMOVE}
+    public enum REQUEST_TYPE {
+        ADD, REMOVE
+    }
 
     /*
      * A log tag for the application
@@ -37,61 +41,61 @@ public final class GeofenceUtils {
 
     // Intent actions
     public static final String ACTION_CONNECTION_ERROR =
-            "com.example.android.geofence.ACTION_CONNECTION_ERROR";
+            "eu.ttbox.geoping.geofence.ACTION_CONNECTION_ERROR";
 
     public static final String ACTION_CONNECTION_SUCCESS =
-            "com.example.android.geofence.ACTION_CONNECTION_SUCCESS";
+            "eu.ttbox.geoping.geofence.ACTION_CONNECTION_SUCCESS";
 
     public static final String ACTION_GEOFENCES_ADDED =
-            "com.example.android.geofence.ACTION_GEOFENCES_ADDED";
+            "eu.ttbox.geoping.geofence.ACTION_GEOFENCES_ADDED";
 
     public static final String ACTION_GEOFENCES_REMOVED =
-            "com.example.android.geofence.ACTION_GEOFENCES_DELETED";
+            "eu.ttbox.geoping.geofence.ACTION_GEOFENCES_DELETED";
 
     public static final String ACTION_GEOFENCE_ERROR =
-            "com.example.android.geofence.ACTION_GEOFENCES_ERROR";
+            "eu.ttbox.geoping.geofence.ACTION_GEOFENCES_ERROR";
 
     public static final String ACTION_GEOFENCE_TRANSITION =
-            "com.example.android.geofence.ACTION_GEOFENCE_TRANSITION";
+            "eu.ttbox.geoping.geofence.ACTION_GEOFENCE_TRANSITION";
 
     public static final String ACTION_GEOFENCE_TRANSITION_ERROR =
-                    "com.example.android.geofence.ACTION_GEOFENCE_TRANSITION_ERROR";
+            "eu.ttbox.geoping.geofence.ACTION_GEOFENCE_TRANSITION_ERROR";
 
     // The Intent category used by all Location Services sample apps
     public static final String CATEGORY_LOCATION_SERVICES =
-                    "com.example.android.geofence.CATEGORY_LOCATION_SERVICES";
+            "eu.ttbox.geoping.geofence.CATEGORY_LOCATION_SERVICES";
 
     // Keys for extended data in Intents
     public static final String EXTRA_CONNECTION_CODE =
-                    "com.example.android.EXTRA_CONNECTION_CODE";
+            "eu.ttbox.geoping.EXTRA_CONNECTION_CODE";
 
     public static final String EXTRA_CONNECTION_ERROR_CODE =
-            "com.example.android.geofence.EXTRA_CONNECTION_ERROR_CODE";
+            "eu.ttbox.geoping.geofence.EXTRA_CONNECTION_ERROR_CODE";
 
     public static final String EXTRA_CONNECTION_ERROR_MESSAGE =
-            "com.example.android.geofence.EXTRA_CONNECTION_ERROR_MESSAGE";
+            "eu.ttbox.geoping.geofence.EXTRA_CONNECTION_ERROR_MESSAGE";
 
     public static final String EXTRA_GEOFENCE_STATUS =
-            "com.example.android.geofence.EXTRA_GEOFENCE_STATUS";
+            "eu.ttbox.geoping.geofence.EXTRA_GEOFENCE_STATUS";
 
     /*
      * Keys for flattened geofences stored in SharedPreferences
      */
-    public static final String KEY_LATITUDE = "com.example.android.geofence.KEY_LATITUDE";
+    public static final String KEY_LATITUDE = "eu.ttbox.geoping.geofence.KEY_LATITUDE";
 
-    public static final String KEY_LONGITUDE = "com.example.android.geofence.KEY_LONGITUDE";
+    public static final String KEY_LONGITUDE = "eu.ttbox.geoping.geofence.KEY_LONGITUDE";
 
-    public static final String KEY_RADIUS = "com.example.android.geofence.KEY_RADIUS";
+    public static final String KEY_RADIUS = "eu.ttbox.geoping.geofence.KEY_RADIUS";
 
     public static final String KEY_EXPIRATION_DURATION =
-            "com.example.android.geofence.KEY_EXPIRATION_DURATION";
+            "eu.ttbox.geoping.geofence.KEY_EXPIRATION_DURATION";
 
     public static final String KEY_TRANSITION_TYPE =
-            "com.example.android.geofence.KEY_TRANSITION_TYPE";
+            "eu.ttbox.geoping.geofence.KEY_TRANSITION_TYPE";
 
     // The prefix for flattened geofence keys
     public static final String KEY_PREFIX =
-            "com.example.android.geofence.KEY";
+            "eu.ttbox.geoping.geofence.KEY";
 
     // Invalid values, used to test geofence storage when retrieving geofences
     public static final long INVALID_LONG_VALUE = -999l;
@@ -124,16 +128,16 @@ public final class GeofenceUtils {
 
     public static final CharSequence GEOFENCE_ID_DELIMITER = ",";
 
-    
+
     public static final boolean isOnCircle(float x, float y, float centerX,
-            float centerY, double radius) {
+                                           float centerY, double radius) {
         double square_dist = Math.pow(centerX - x, 2)
                 + Math.pow(centerY - y, 2);
         return square_dist <= Math.pow(radius, 2);
     }
 
     public static final boolean isOnCircle(IGeoPoint obj, IGeoPoint center,
-            float radius) {
+                                           float radius) {
         return isOnCircle(obj.getLatitudeE6(), obj.getLongitudeE6(), center
                 .getLatitudeE6(), center.getLongitudeE6(), radius * 8.3);
     }

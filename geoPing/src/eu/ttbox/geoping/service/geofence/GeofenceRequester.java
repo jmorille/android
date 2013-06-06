@@ -1,9 +1,5 @@
 package eu.ttbox.geoping.service.geofence;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -20,6 +16,9 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
 import com.google.android.gms.location.LocationStatusCodes;
+ 
+import java.util.Arrays;
+import java.util.List;
 
 import eu.ttbox.geoping.R;
 
@@ -28,30 +27,25 @@ import eu.ttbox.geoping.R;
  * <b>
  * Note: Clients must ensure that Google Play services is available before requesting geofences.
  * </b> Use GooglePlayServicesUtil.isGooglePlayServicesAvailable() to check.
- *
- *
+ * <p/>
+ * <p/>
  * To use a GeofenceRequester, instantiate it and call AddGeofence(). Everything else is done
  * automatically.
- *
  */
 public class GeofenceRequester
-                implements
-                    OnAddGeofencesResultListener,
-                    ConnectionCallbacks,
-                    OnConnectionFailedListener {
+        implements
+        OnAddGeofencesResultListener,
+        ConnectionCallbacks,
+        OnConnectionFailedListener {
 
     // Storage for a reference to the calling client
     private final Activity mActivity;
-
     // Stores the PendingIntent used to send geofence transitions back to the app
     private PendingIntent mGeofencePendingIntent;
-
     // Stores the current list of geofences
-    private ArrayList<Geofence> mCurrentGeofences;
-
+    private List<Geofence> mCurrentGeofences;
     // Stores the current instantiation of the location client
     private LocationClient mLocationClient;
-
     /*
      * Flag that indicates whether an add or remove request is underway. Check this
      * flag before attempting to start a new request.
@@ -69,6 +63,15 @@ public class GeofenceRequester
     }
 
     /**
+     * Get the current in progress status.
+     *
+     * @return The current value of the in progress flag.
+     */
+    public boolean getInProgressFlag() {
+        return mInProgress;
+    }
+
+    /**
      * Set the "in progress" flag from a caller. This allows callers to re-set a
      * request that failed but was later fixed.
      *
@@ -77,15 +80,6 @@ public class GeofenceRequester
     public void setInProgressFlag(boolean flag) {
         // Set the "In Progress" flag.
         mInProgress = flag;
-    }
-
-    /**
-     * Get the current in progress status.
-     *
-     * @return The current value of the in progress flag.
-     */
-    public boolean getInProgressFlag() {
-        return mInProgress;
     }
 
     /**
@@ -109,7 +103,7 @@ public class GeofenceRequester
          * Save the geofences so that they can be sent to Location Services once the
          * connection is available.
          */
-        mCurrentGeofences = (ArrayList<Geofence>) geofences;
+        mCurrentGeofences =  geofences;
 
         // If a request is not already in progress
         if (!mInProgress) {
@@ -120,7 +114,7 @@ public class GeofenceRequester
             // Request a connection to Location Services
             requestConnection();
 
-        // If a request is in progress
+            // If a request is in progress
         } else {
 
             // Throw an exception and stop the request
@@ -149,6 +143,7 @@ public class GeofenceRequester
         return mLocationClient;
 
     }
+
     /**
      * Once the connection is available, send a request to add the Geofences
      */
@@ -185,9 +180,9 @@ public class GeofenceRequester
 
             // Create an Intent to broadcast to the app
             broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCES_ADDED)
-                           .addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
-                           .putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
-        // If adding the geofences failed
+                    .addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
+                    .putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
+            // If adding the geofences failed
         } else {
 
             /*
@@ -205,8 +200,8 @@ public class GeofenceRequester
 
             // Create an Intent to broadcast to the app
             broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR)
-                           .addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
-                           .putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
+                    .addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
+                    .putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
         }
 
         // Broadcast whichever result occurred
@@ -274,7 +269,7 @@ public class GeofenceRequester
             // Return the existing intent
             return mGeofencePendingIntent;
 
-        // If no PendingIntent exists
+            // If no PendingIntent exists
         } else {
 
             // Create an Intent pointing to the IntentService
@@ -316,7 +311,7 @@ public class GeofenceRequester
             try {
                 // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(mActivity,
-                    GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                        GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
             /*
              * Thrown if Google Play services canceled the original
@@ -337,8 +332,8 @@ public class GeofenceRequester
 
             Intent errorBroadcastIntent = new Intent(GeofenceUtils.ACTION_CONNECTION_ERROR);
             errorBroadcastIntent.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
-                                .putExtra(GeofenceUtils.EXTRA_CONNECTION_ERROR_CODE,
-                                        connectionResult.getErrorCode());
+                    .putExtra(GeofenceUtils.EXTRA_CONNECTION_ERROR_CODE,
+                            connectionResult.getErrorCode());
             LocalBroadcastManager.getInstance(mActivity).sendBroadcast(errorBroadcastIntent);
         }
     }
