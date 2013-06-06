@@ -24,7 +24,13 @@ public class GeoFenceProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.GeoFenceProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/geofence");
- 
+
+        public static Uri getContentUri(long entityId) {
+            Uri entityUri = Uri.withAppendedPath(GeoFenceProvider.Constants.CONTENT_URI, String.format("/%s", entityId));
+            return  entityUri;
+        }
+
+
     }
 
     private GeoFenceDatabase geofenceDatabase;
@@ -116,11 +122,10 @@ public class GeoFenceProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         switch (sURIMatcher.match(uri)) {
         case GEOFENCES:
-
             long geofenceId = geofenceDatabase.insertEntity(values);
             Uri geofenceUri = null;
             if (geofenceId > -1) {
-                geofenceUri = Uri.withAppendedPath(Constants.CONTENT_URI, String.valueOf(geofenceId));
+                geofenceUri = Constants.getContentUri(geofenceId);
                 getContext().getContentResolver().notifyChange(uri, null);
                 Log.i(TAG, String.format("Insert GeoFence %s : %s", geofenceUri, values));
                 // Backup

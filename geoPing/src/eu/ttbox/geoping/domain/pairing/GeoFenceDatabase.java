@@ -14,6 +14,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
+
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 
 public class GeoFenceDatabase {
@@ -32,11 +34,11 @@ public class GeoFenceDatabase {
         public static final String COL_TRANSITION = "TRANSITION";
         public static final String COL_EXPIRATION = "EXPIRATION";
 
-        public static final String[] ALL_COLS = new String[] { COL_ID, COL_REQUEST_ID, COL_NAME//
+        public static final String[] ALL_COLS = new String[]{COL_ID, COL_REQUEST_ID, COL_NAME//
                 , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION // 
         };
         // Where Clause
-        public static final String SELECT_BY_ENTITY_ID =String.format("%s = ?", COL_ID);
+        public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", COL_ID);
 
     }
 
@@ -69,7 +71,7 @@ public class GeoFenceDatabase {
     }
 
     public Cursor getEntityById(String rowId, String[] projection) {
-        String[] selectionArgs = new String[] { rowId };
+        String[] selectionArgs = new String[]{rowId};
         return queryEntities(projection, CRITERIA_BY_ENTITY_ID, selectionArgs, null);
     }
 
@@ -89,6 +91,13 @@ public class GeoFenceDatabase {
             db.beginTransaction();
             try {
                 result = db.insertOrThrow(TABLE_GEOFENCE, null, values);
+                // Check Insert Name
+                if (result>-1 && TextUtils.isEmpty(values.getAsString(GeoFenceColumns.COL_NAME))) {
+                    ContentValues updateName = new ContentValues(1);
+                    // TODO Internationalize Zone xx
+                    updateName.put(GeoFenceColumns.COL_NAME, String.format("Zone %s", result));
+                    long resultUpdateName =  db.update(TABLE_GEOFENCE, updateName, GeoFenceColumns.SELECT_BY_ENTITY_ID , new String[] { String.valueOf(result) });
+                }
                 // commit
                 db.setTransactionSuccessful();
             } finally {
@@ -107,7 +116,7 @@ public class GeoFenceDatabase {
         String value = UUID.randomUUID().toString();
         values.put(GeoFenceColumns.COL_REQUEST_ID, value);
     }
-    
+
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
@@ -151,12 +160,12 @@ public class GeoFenceDatabase {
         calendar.clear(Calendar.MILLISECOND);
         long pointDate = calendar.getTimeInMillis();
         String whereClause = GeoFenceColumns.COL_REQUEST_ID + " = ? and " + GeoFenceColumns.COL_EXPIRATION + '>' + pointDate;
-        Cursor c = bdd.query(TABLE_GEOFENCE, GeoFenceColumns.ALL_COLS, whereClause, new String[] { userId }, null, null, GeoFenceColumns.COL_EXPIRATION);
+        Cursor c = bdd.query(TABLE_GEOFENCE, GeoFenceColumns.ALL_COLS, whereClause, new String[]{userId}, null, null, GeoFenceColumns.COL_EXPIRATION);
         return cursorToLivre(c);
     }
 
     public List<CircleGeofence> getTrakPointWithTitre(String userId) {
-        Cursor c = bdd.query(TABLE_GEOFENCE, GeoFenceColumns.ALL_COLS, CRITERIA_BY_USER_ID, new String[] { userId }, null, null, GeoFenceColumns.COL_EXPIRATION);
+        Cursor c = bdd.query(TABLE_GEOFENCE, GeoFenceColumns.ALL_COLS, CRITERIA_BY_USER_ID, new String[]{userId}, null, null, GeoFenceColumns.COL_EXPIRATION);
         return cursorToLivre(c);
     }
 

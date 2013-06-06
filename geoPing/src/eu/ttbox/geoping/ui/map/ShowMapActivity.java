@@ -156,7 +156,6 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
         }
         case R.id.menuMap_geofence_add: {
             mapFragment.addGeofenceOverlayEditor();
-            mActionMode = startActionMode(mActionModeCallbackAddGeofence);
             return true;
         }
         default: {
@@ -177,49 +176,7 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // ===========================================================
-    // Contextual Menu ActionMode
-    // ===========================================================
 
-    private ActionMode.Callback mActionModeCallbackAddGeofence = new ActionMode.Callback() {
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.geofence_edit_menu, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            Log.d(TAG, "Click onActionItemClicked itemId : " + item.getItemId() + ", " + item);
-            switch (item.getItemId()) {
-            case R.id.menu_save: 
-                mapFragment.saveGeofenceOverlayEditor();
-                mode.finish(); // Action picked, so close the CAB
-                return true;
-            case R.id.menu_delete: 
-                mapFragment.deleteGeofenceOverlayEditor();
-                mode.finish(); // Action picked, so close the CAB
-                return true;
-            default:
-                Log.w(TAG, "Ignore onActionItemClicked itemId : " + item.getItemId() + ", " + item);
-                return false;
-            }
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            mActionMode = null;
-            mapFragment.closeGeofenceOverlayEditor();
-        }
-
-    };
 
     // ===========================================================
     // Compatibility

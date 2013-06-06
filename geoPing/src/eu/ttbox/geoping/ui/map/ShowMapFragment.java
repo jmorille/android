@@ -42,6 +42,10 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ActionMode;
+
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -95,7 +99,6 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
     private GeofenceEditOverlay geofenceListOverlay;
 
-    
     // View
     private RangeTimelineView rangeTimelineBar;
     // Listener
@@ -119,10 +122,11 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
         @Override
         public void handleMessage(Message msg) {
-//            if (msg.what == GeofenceEditOverlay.MOTION_CIRCLE_STOP) {
-//                Log.i(TAG, "MOTION CIRCLE STOP");
-//                mapView.postInvalidate();
-//            }
+            if (msg.what == GeofenceEditOverlay.MENU_CONTEXTUAL_EDIT) {
+                Log.i(TAG, "GeofenceEditOverlay MENU CONTEXTUAL EDIT");
+                ActionMode.Callback actionModeCallBack = geofenceListOverlay.getMenuActionCallback();
+                ActionMode actionMode =  ((SherlockFragmentActivity)getActivity()).startActionMode(actionModeCallBack);
+            }
         }
     };
 
@@ -751,14 +755,6 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
 
     public void addGeofenceOverlayEditor() {
         Log.d(TAG, "addGenceOverlayEditor");
-        // Compute the default fence Size
-//        BoundingBoxE6 boundyBox = mapView.getBoundingBox();
-//        IGeoPoint center = boundyBox.getCenter();
-//        int radiusInMeters = boundyBox.getDiagonalLengthInMeters() / 8;
-        // Add to view
-//        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-//        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, loaderManager , center, radiusInMeters, handler);
-//        mapView.getOverlays().add(geofencekOverlay);
         addGeofenceListOverlays();
         this.geofenceListOverlay.doAddCircleGeofence();
         //
@@ -774,40 +770,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         mapView.getOverlays().add(geofencekOverlay);
         //
         mapView.postInvalidate();
-
     }
 
-    public void saveGeofenceOverlayEditor() {
-        List<GeofenceEditOverlay> extractOverlays = getExtractGeofenceEditOverlay(mapView.getOverlays());
-        if (!extractOverlays.isEmpty()) {
-            for (GeofenceEditOverlay overlay : extractOverlays) {
-                // Save Geofence
-                CircleGeofence geofence = overlay.getCircleGeofence();
-                ContentValues values = GeoFenceHelper.getContentValues(geofence);
-                ContentResolver cr = getActivity().getContentResolver();
-                if (geofence.id == -1) {
-                    cr.insert(GeoFenceProvider.Constants.CONTENT_URI, values);
-                } else {
-                    Uri entityUri = Uri.withAppendedPath(GeoFenceProvider.Constants.CONTENT_URI, "/" + geofence.id);
-                    cr.update(entityUri, values, null, null);
-                }
-            }
-        }
-    }
 
-    public void deleteGeofenceOverlayEditor() {
-        List<GeofenceEditOverlay> extractOverlays = getExtractGeofenceEditOverlay(mapView.getOverlays());
-        if (!extractOverlays.isEmpty()) {
-            for (GeofenceEditOverlay overlay : extractOverlays) {
-                CircleGeofence geofence = overlay.getCircleGeofence();
-                if (geofence.id != -1) {
-                    ContentResolver cr = getActivity().getContentResolver();
-                    Uri entityUri = Uri.withAppendedPath(GeoFenceProvider.Constants.CONTENT_URI, "/" + geofence.id);
-                    cr.delete(entityUri, null, null);
-                }
-            }
-        }
-    }
 
     public void closeGeofenceOverlayEditor() {
         List<Overlay> overlays = mapView.getOverlays();
@@ -891,8 +856,9 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
             }
         }
     };
+
     // ===========================================================
-    // Listener
+    // Other
     // ===========================================================
 
 }

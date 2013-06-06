@@ -40,7 +40,7 @@ public class GeofenceListOverlay extends Overlay {
     private Context context;
     private MapView mapView;
     private Projection astral;
-    
+
     // Instance
     private CopyOnWriteArrayList<CircleGeofence> geofences = new CopyOnWriteArrayList<CircleGeofence>();
 
@@ -137,11 +137,10 @@ public class GeofenceListOverlay extends Overlay {
 
             canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintBorder);
             canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintCenter);
-
         }
     }
 
-    private void drawGeofenceCircle(Canvas canvas,  MapView mapView,  CircleGeofence fence) {
+    private void drawGeofenceCircle(Canvas canvas, MapView mapView, CircleGeofence fence) {
         IGeoPoint centerGeofence = fence.getCenterAsGeoPoint();
         float radiusInPixels = metersToLatitudePixels(fence.getRadiusInMeters(), fence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
 
@@ -152,7 +151,7 @@ public class GeofenceListOverlay extends Overlay {
         canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintBorder);
         canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintCenter);
     }
-    
+
     // ===========================================================
     // Data Loader
     // ===========================================================
