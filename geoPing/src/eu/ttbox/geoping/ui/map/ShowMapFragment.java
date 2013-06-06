@@ -544,6 +544,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     }
 
     public void centerOnMyPosition() {
+        Log.d(TAG, "Ask centerOnMyPosition");
         if (!myLocation.isMyLocationEnabled()) {
             myLocation.enableMyLocation(true);
         }

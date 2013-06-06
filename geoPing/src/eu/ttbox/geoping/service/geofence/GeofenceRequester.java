@@ -16,7 +16,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
 import com.google.android.gms.location.LocationStatusCodes;
- 
+
 import java.util.Arrays;
 import java.util.List;
 

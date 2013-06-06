@@ -1,16 +1,5 @@
 package eu.ttbox.geoping.ui.map.geofence;
 
-import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.domain.GeoFenceProvider;
-import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
-import microsoft.mappoint.TileSystem;
-
-import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.util.BoundingBoxE6;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.MapView.Projection;
-import org.osmdroid.views.overlay.Overlay;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,69 +24,152 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.MapView.Projection;
+import org.osmdroid.views.overlay.Overlay;
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.domain.GeoFenceProvider;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
+import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.service.geofence.GeofenceUtils;
 import eu.ttbox.osm.core.AppConstants;
+import microsoft.mappoint.TileSystem;
 
 public class GeofenceEditOverlay extends Overlay {
 
+    public static final int MENU_CONTEXTUAL_EDIT = 100;
     private static final String TAG = "GeofenceEditOverlay";
-
     // Constant
     private final int GEOFENCE_LIST_LOADER = R.id.config_id_geofence_list_loader;
+    // Service
+    private final LoaderManager loaderManager;
+    private final LoaderManager.LoaderCallbacks<Cursor> geofencesLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
-    public static final int MENU_CONTEXTUAL_EDIT = 100;
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            String selection = null;
+            String[] selectionArgs = null;
+            String sortOrder = null;
+            // Loader
+            CursorLoader cursorLoader = new CursorLoader(context, GeoFenceProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
+            return cursorLoader;
+        }
 
-    // Config
-    private float smallCircleRadius = 10;
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+            int resultCount = cursor.getCount();
+            Log.d(TAG, String.format("Found %s Geofences", resultCount));
+            ArrayList<CircleGeofence> points = new ArrayList<CircleGeofence>();
+            if (resultCount < 1) {
 
-    // Context
-    private Context context;
-    private MapView mapView;
-    private Handler handler;
+            }
+            GeoFenceHelper helper = new GeoFenceHelper().initWrapper(cursor);
+            if (cursor.moveToFirst()) {
+                do {
+                    CircleGeofence fence = helper.getEntity(cursor);
+                    points.add(fence);
+                } while (cursor.moveToNext());
+                geofences = new CopyOnWriteArrayList<CircleGeofence>(points);
+            } else if (geofences != null && !geofences.isEmpty()) {
+                geofences.clear();
+            }
+            mapView.postInvalidate();
+            // cursor.registerDataSet\
+            // Listener
+            // cursor.setNotificationUri(context.getContentResolver(),
+            // GeoFenceProvider.Constants.CONTENT_URI);
+        }
 
-    // Instance
-    private CircleGeofence geofence;
-
-    // Edit Map Instance
-    private int status = 0;
-    private float radiusInPixels;
-
-    private float centerXInPixels;
-    private float centerYInPixels;
-
-    private float smallCircleX;
-    private float smallCircleY;
-
-    private float angle = 0;
-
-    // List Instance
-    private CopyOnWriteArrayList<CircleGeofence> geofences = new CopyOnWriteArrayList<CircleGeofence>();
-    private MyContentObserver geofencesContentObserver;
-
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            geofences = new CopyOnWriteArrayList<CircleGeofence>();
+        }
+    };
     // Color
     Paint paintBorder;
     Paint paintCenter;
     Paint paintText;
     Paint paintArrow;
-
+    // Config
+    private float smallCircleRadius = 10;
+    // Context
+    private Context context;
+    private MapView mapView;
+    private Handler handler;
+    // Instance
+    private CircleGeofence geofence;
+    // Edit Map Instance
+    private int status = 0;
+    private float radiusInPixels;
+    private float centerXInPixels;
+    private float centerYInPixels;
+    private float smallCircleX;
+    private float smallCircleY;
+    private float angle = 0;
+    // List Instance
+    private CopyOnWriteArrayList<CircleGeofence> geofences = new CopyOnWriteArrayList<CircleGeofence>();
+    private MyContentObserver geofencesContentObserver;
     // Cache
     private Path distanceTextPath = new Path();
     private Path nameTextPath = new Path();
     private Point drawPoint = new Point();
     private Point touchPoint = new Point();
 
-    // Service
-    private final LoaderManager loaderManager;
-    private Projection astral;
-
     // ===========================================================
     // Constructors
     // ===========================================================
+    private Projection astral;
+
+
+    // ===========================================================
+    // Life Cycle
+    // ===========================================================
+    private ActionMode.Callback mActionModeCallbackAddGeofence = new ActionMode.Callback() {
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.geofence_edit_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            Log.d(TAG, "Click onActionItemClicked itemId : " + item.getItemId() + ", " + item);
+            switch (item.getItemId()) {
+                case R.id.menu_save:
+                    saveGeofenceOverlayEditor();
+                    mode.finish(); // Action picked, so close the CAB
+                    return true;
+                case R.id.menu_delete:
+                    deleteGeofenceOverlayEditor();
+                    mode.finish(); // Action picked, so close the CAB
+                    return true;
+                default:
+                    Log.w(TAG, "Ignore onActionItemClicked itemId : " + item.getItemId() + ", " + item);
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+//            mActionMode = null;
+            geofence = null;
+            mapView.postInvalidate();
+        }
+
+    };
 
     public GeofenceEditOverlay(Context context, MapView mapView, LoaderManager loaderManager, Handler handler) {
         this(context, mapView, loaderManager, null, handler);
@@ -106,6 +178,10 @@ public class GeofenceEditOverlay extends Overlay {
     public GeofenceEditOverlay(Context context, MapView mapView, LoaderManager loaderManager, IGeoPoint center, int radiusInMeters, Handler handler) {
         this(context, mapView, loaderManager, new CircleGeofence(center, radiusInMeters), handler);
     }
+
+    // ===========================================================
+    // Menu Contextual
+    // ===========================================================
 
     public GeofenceEditOverlay(Context context, MapView mapView, LoaderManager loaderManager, CircleGeofence geofence, Handler handler) {
         super(context);
@@ -120,6 +196,10 @@ public class GeofenceEditOverlay extends Overlay {
         initPaint();
         onResume();
     }
+
+    // ===========================================================
+    // Result Accessors
+    // ===========================================================
 
     private void initPaint() {
         // Circle Border
@@ -148,11 +228,6 @@ public class GeofenceEditOverlay extends Overlay {
         paintArrow.setStyle(Paint.Style.FILL);
     }
 
-
-    // ===========================================================
-    // Life Cycle
-    // ===========================================================
-
     public void onResume() {
         Log.d(TAG, "onResume");
         // Load Data
@@ -177,18 +252,14 @@ public class GeofenceEditOverlay extends Overlay {
         super.onDetach(mapView);
     }
 
-    // ===========================================================
-    // Menu Contextual
-    // ===========================================================
-
     public ActionMode.Callback getMenuActionCallback() {
         return mActionModeCallbackAddGeofence;
     }
 
-    // ===========================================================
-    // Result Accessors
-    // ===========================================================
 
+    // ===========================================================
+    // Map Draw
+    // ===========================================================
 
     public void doEditCircleGeofence(CircleGeofence geofenceEdit) {
         Log.d(TAG, "Change do editMode for hitPoint : " + geofenceEdit);
@@ -247,25 +318,56 @@ public class GeofenceEditOverlay extends Overlay {
         mapView.postInvalidate();
     }
 
+    private static final int CACHE_GROUD_RESOLUTION_LATITUDE_E6_DELTA = 999999;
+    private float cacheGroundResolution;
+    private int cacheGroundResolutionForZoomLevel = Integer.MIN_VALUE;
+    private int cacheGroundResolutionForLatitudeE6 = Integer.MIN_VALUE;
 
-    // ===========================================================
-    // Map Draw
-    // ===========================================================
 
+    private float getGroundResolution(int latitudeE6, int zoomLevel, boolean useCache) {
+        boolean computeResolution = true;
+        if (cacheGroundResolutionForZoomLevel!= zoomLevel) {
+            // Change Zoom => Recompute
+            computeResolution  = true;
+        } else if (useCache) {
+            // TODO Check Exact Lat approximate match
+//            computeResolution = (latitudeE6< (cacheGroundResolutionForLatitudeE6 - CACHE_GROUD_RESOLUTION_LATITUDE_E6_DELTA)) || ;
+            computeResolution =  (cacheGroundResolutionForLatitudeE6 == Integer.MIN_VALUE);
+        } else {
+            // Check Exact Lat match
+            computeResolution = latitudeE6 != cacheGroundResolutionForLatitudeE6;
+        }
+        float groundResolution = cacheGroundResolution;
+        if (computeResolution) {
+            double latitude = latitudeE6 / AppConstants.E6;
+            groundResolution = (float)TileSystem.GroundResolution(latitude, zoomLevel);
+//            groundResolution = (float)TileSystem.GroundResolution(0, zoomLevel);
+            Log.d(TAG, "compute GroundResolution Latitude=" + latitude + " : zoom=" + zoomLevel + " ==> ground Resolution = " + cacheGroundResolution);
+            // Cache Value
+            this.cacheGroundResolution = groundResolution;
+            this.cacheGroundResolutionForZoomLevel = zoomLevel;
+            this.cacheGroundResolutionForLatitudeE6 = latitudeE6;
+        }
+        return  groundResolution;
+    }
 
-    private float metersToLatitudePixels(final float radiusInMeters, double latitude, int zoomLevel) {
-        float radiusInPixelsV2 = (float) (radiusInMeters / TileSystem.GroundResolution(latitude, zoomLevel));
+    private float metersToLatitudePixels(final float radiusInMeters, int latitudeE6, int zoomLevel, boolean useCache) {
+        float groundResolution = getGroundResolution(latitudeE6, zoomLevel, useCache);
+        float radiusInPixelsV2 = (float) (radiusInMeters / groundResolution);
+//        radiusInPixelsV2 = astral.metersToEquatorPixels(radiusInMeters);
         return radiusInPixelsV2;
     }
 
     @Override
     protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
-
+        if (shadow) {
+            return;
+        }
         // Draw the List
         long fenceEditingId = geofence != null ? geofence.id : -1l;
         for (CircleGeofence fence : geofences) {
             if (fenceEditingId != fence.id) {
-                float radiusInPixels = metersToLatitudePixels(fence.getRadiusInMeters(), fence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
+                float radiusInPixels = metersToLatitudePixels(fence.getRadiusInMeters(), fence.getLatitudeE6() , mapView.getZoomLevel(), true);
                 Point centerScreenPixels = drawGeofenceCircle(canvas, mapView, fence, radiusInPixels);
                 // Draw Name text
                 drawText(canvas, fence, centerScreenPixels, radiusInPixels, false);
@@ -278,7 +380,7 @@ public class GeofenceEditOverlay extends Overlay {
             this.centerXInPixels = 0;
             this.centerYInPixels = 0;
         } else {
-            this.radiusInPixels = metersToLatitudePixels(this.geofence.radiusInMeters, geofence.getLatitudeE6() / AppConstants.E6, mapView.getZoomLevel());
+            this.radiusInPixels = metersToLatitudePixels(this.geofence.radiusInMeters, geofence.getLatitudeE6() , mapView.getZoomLevel(), false);
 
             Point centerScreenPixels = drawGeofenceCircle(canvas, mapView, this.geofence, radiusInPixels);
             this.centerXInPixels = centerScreenPixels.x;
@@ -292,12 +394,11 @@ public class GeofenceEditOverlay extends Overlay {
         }
     }
 
-
     private void drawText(Canvas canvas, CircleGeofence geofence, Point centerScreenPixels, float radiusInPixels, boolean drawDistance) {
         // Recompute Text Size
         paintText.setTextSize(radiusInPixels / 4);
 
-        float x = (float) (centerScreenPixels.x -  radiusInPixels);
+        float x = (float) (centerScreenPixels.x - radiusInPixels);
         float y = (float) (centerScreenPixels.y);
         float radiusInPixelsThird = radiusInPixels / 3;
 
@@ -320,7 +421,6 @@ public class GeofenceEditOverlay extends Overlay {
         }
     }
 
-
     private Point drawGeofenceCircle(Canvas canvas, MapView mapView, CircleGeofence fence, float radiusInPixels) {
         IGeoPoint centerGeofence = fence.getCenterAsGeoPoint();
 
@@ -334,6 +434,10 @@ public class GeofenceEditOverlay extends Overlay {
         return screenPixels;
     }
 
+    // ===========================================================
+    // Data Loader
+    // ===========================================================
+
     private String getDistanceText(int radiusInMeters) {
         String distanceText;
         if (radiusInMeters > 1000) {
@@ -345,7 +449,6 @@ public class GeofenceEditOverlay extends Overlay {
         }
         return distanceText;
     }
-
 
     private void drawArrow(Canvas canvas, Point sPC, float length, double angle) {
 
@@ -363,74 +466,6 @@ public class GeofenceEditOverlay extends Overlay {
         canvas.drawCircle(x, y, 8, paintArrow);
 
     }
-
-    // ===========================================================
-    // Data Loader
-    // ===========================================================
-
-
-    private class MyContentObserver extends ContentObserver {
-
-        public MyContentObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public boolean deliverSelfNotifications() {
-            return false;
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            Log.e(TAG, "########################################");
-            Log.e(TAG, "### ContentObserver Notify Change for URI : " + uri);
-            loaderManager.restartLoader(GEOFENCE_LIST_LOADER, null, geofencesLoaderCallback);
-            super.onChange(selfChange);
-        }
-    }
-
-    private final LoaderManager.LoaderCallbacks<Cursor> geofencesLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
-
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            String selection = null;
-            String[] selectionArgs = null;
-            String sortOrder = null;
-            // Loader
-            CursorLoader cursorLoader = new CursorLoader(context, GeoFenceProvider.Constants.CONTENT_URI, null, selection, selectionArgs, sortOrder);
-            return cursorLoader;
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            int resultCount = cursor.getCount();
-            Log.d(TAG, String.format("Found %s Geofences", resultCount));
-            ArrayList<CircleGeofence> points = new ArrayList<CircleGeofence>();
-            if (resultCount < 1) {
-
-            }
-            GeoFenceHelper helper = new GeoFenceHelper().initWrapper(cursor);
-            if (cursor.moveToFirst()) {
-                do {
-                    CircleGeofence fence = helper.getEntity(cursor);
-                    points.add(fence);
-                } while (cursor.moveToNext());
-                geofences = new CopyOnWriteArrayList<CircleGeofence>(points);
-            } else if (geofences != null && !geofences.isEmpty()) {
-                geofences.clear();
-            }
-            mapView.postInvalidate();
-            // cursor.registerDataSet\
-            // Listener
-            // cursor.setNotificationUri(context.getContentResolver(),
-            // GeoFenceProvider.Constants.CONTENT_URI);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            geofences = new CopyOnWriteArrayList<CircleGeofence>();
-        }
-    };
 
     // ===========================================================
     // Touch Event
@@ -553,45 +588,25 @@ public class GeofenceEditOverlay extends Overlay {
 
 //    private ActionMode mActionMode;
 
-    private ActionMode.Callback mActionModeCallbackAddGeofence = new ActionMode.Callback() {
+    private class MyContentObserver extends ContentObserver {
+
+        public MyContentObserver(Handler handler) {
+            super(handler);
+        }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        public boolean deliverSelfNotifications() {
             return false;
         }
 
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.geofence_edit_menu, menu);
-            return true;
+        public void onChange(boolean selfChange, Uri uri) {
+            Log.e(TAG, "########################################");
+            Log.e(TAG, "### ContentObserver Notify Change for URI : " + uri);
+            loaderManager.restartLoader(GEOFENCE_LIST_LOADER, null, geofencesLoaderCallback);
+            super.onChange(selfChange);
         }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            Log.d(TAG, "Click onActionItemClicked itemId : " + item.getItemId() + ", " + item);
-            switch (item.getItemId()) {
-                case R.id.menu_save:
-                    saveGeofenceOverlayEditor();
-                    mode.finish(); // Action picked, so close the CAB
-                    return true;
-                case R.id.menu_delete:
-                    deleteGeofenceOverlayEditor();
-                    mode.finish(); // Action picked, so close the CAB
-                    return true;
-                default:
-                    Log.w(TAG, "Ignore onActionItemClicked itemId : " + item.getItemId() + ", " + item);
-                    return false;
-            }
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-//            mActionMode = null;
-            //          mapFragment.closeGeofenceOverlayEditor();
-        }
-
-    };
+    }
     // ===========================================================
     // Other
     // ===========================================================

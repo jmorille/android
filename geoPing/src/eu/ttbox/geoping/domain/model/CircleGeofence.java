@@ -23,6 +23,8 @@ public class CircleGeofence {
     public int transitionType = Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT;
 
     public IGeoPoint cachedGeoPoint;
+//    private double latitude;
+//    private double longitude;
 
     public CircleGeofence() {
         super();
