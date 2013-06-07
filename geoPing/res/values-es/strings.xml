@@ -74,7 +74,9 @@
     <string name="menu_smslog">Log Sms</string>
     <string name="menu_extra_feature">Extra Features</string>
 
-    <string name="menu_map_geofence_list">Geofences</string>
+
+    <string name="menu_map_geofences_show">Geofences</string>
+    <string name="menu_map_geofences_hide">Hide Geofences</string>
     <string name="menu_map_geofence_add">Add Geofence</string>
     
     <string name="menu_pairing_notification">Notificacion</string>

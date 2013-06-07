@@ -109,7 +109,18 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
 
         // Current Tile Source
         ITileSource currentTileSrc = mapFragment.getMapViewTileSource();
-        // Create Map
+
+        // Menu Geofence
+        MenuItem geofenceMenu = menu.findItem(R.id.menuMap_geofence_list);
+        if (mapFragment.isGeofenceListOverlays()) {
+            geofenceMenu.setTitle(R.string.menu_map_geofences_hide);
+        } else {
+            geofenceMenu.setTitle(R.string.menu_map_geofences_show);
+        }
+
+//        geofenceMenu.setTitle(R.string.menu_map_geofences_show);
+
+        // Create Map Type
         MenuItem mapTypeItem = menu.findItem(R.id.menuMap_mapmode);
         final SubMenu mapTypeMenu = mapTypeItem.getSubMenu();
         mapTypeMenu.clear();
@@ -151,7 +162,11 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
             return true;
         }
         case R.id.menuMap_geofence_list: {
-            mapFragment.addGeofenceListOverlays(); 
+            if (mapFragment.isGeofenceListOverlays()) {
+                mapFragment.removeGeofenceListOverlays();
+            } else {
+                mapFragment.addGeofenceListOverlays();
+            } 
             return true;
         }
         case R.id.menuMap_geofence_add: {

@@ -96,14 +96,18 @@ public class GeofenceEditOverlay extends Overlay {
     Paint paintCenter;
     Paint paintText;
     Paint paintArrow;
+
     // Config
     private float smallCircleRadius = 10;
+
     // Context
     private Context context;
     private MapView mapView;
     private Handler handler;
+
     // Instance
     private CircleGeofence geofence;
+
     // Edit Map Instance
     private int status = 0;
     private float radiusInPixels;
@@ -112,24 +116,24 @@ public class GeofenceEditOverlay extends Overlay {
     private float smallCircleX;
     private float smallCircleY;
     private float angle = 0;
+
     // List Instance
     private CopyOnWriteArrayList<CircleGeofence> geofences = new CopyOnWriteArrayList<CircleGeofence>();
     private MyContentObserver geofencesContentObserver;
+
     // Cache
     private Path distanceTextPath = new Path();
     private Path nameTextPath = new Path();
     private Point drawPoint = new Point();
     private Point touchPoint = new Point();
 
-    // ===========================================================
-    // Constructors
-    // ===========================================================
-    private Projection astral;
 
 
     // ===========================================================
-    // Life Cycle
+    // Menu Contextual
     // ===========================================================
+
+
     private ActionMode.Callback mActionModeCallbackAddGeofence = new ActionMode.Callback() {
 
         @Override
@@ -171,6 +175,11 @@ public class GeofenceEditOverlay extends Overlay {
 
     };
 
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+
     public GeofenceEditOverlay(Context context, MapView mapView, LoaderManager loaderManager, Handler handler) {
         this(context, mapView, loaderManager, null, handler);
     }
@@ -179,16 +188,12 @@ public class GeofenceEditOverlay extends Overlay {
         this(context, mapView, loaderManager, new CircleGeofence(center, radiusInMeters), handler);
     }
 
-    // ===========================================================
-    // Menu Contextual
-    // ===========================================================
 
     public GeofenceEditOverlay(Context context, MapView mapView, LoaderManager loaderManager, CircleGeofence geofence, Handler handler) {
         super(context);
         this.context = context;
         this.geofence = geofence;
         this.mapView = mapView;
-        this.astral = mapView.getProjection();
         this.handler = handler;
         // Service
         this.loaderManager = loaderManager;
@@ -197,9 +202,6 @@ public class GeofenceEditOverlay extends Overlay {
         onResume();
     }
 
-    // ===========================================================
-    // Result Accessors
-    // ===========================================================
 
     private void initPaint() {
         // Circle Border
@@ -227,6 +229,12 @@ public class GeofenceEditOverlay extends Overlay {
         paintArrow.setStrokeCap(Cap.ROUND);
         paintArrow.setStyle(Paint.Style.FILL);
     }
+
+
+
+    // ===========================================================
+    // Life Cycle
+    // ===========================================================
 
     public void onResume() {
         Log.d(TAG, "onResume");
@@ -258,8 +266,9 @@ public class GeofenceEditOverlay extends Overlay {
 
 
     // ===========================================================
-    // Map Draw
+    // Result Accessors
     // ===========================================================
+
 
     public void doEditCircleGeofence(CircleGeofence geofenceEdit) {
         Log.d(TAG, "Change do editMode for hitPoint : " + geofenceEdit);
@@ -318,6 +327,12 @@ public class GeofenceEditOverlay extends Overlay {
         mapView.postInvalidate();
     }
 
+
+    // ===========================================================
+    // Map Draw
+    // ===========================================================
+
+
     private static final int CACHE_GROUD_RESOLUTION_LATITUDE_E6_DELTA = 999999;
     private float cacheGroundResolution;
     private int cacheGroundResolutionForZoomLevel = Integer.MIN_VALUE;
@@ -337,12 +352,12 @@ public class GeofenceEditOverlay extends Overlay {
             // Check Exact Lat match
             computeResolution = latitudeE6 != cacheGroundResolutionForLatitudeE6;
         }
+        // Compute Ground Resolution
         float groundResolution = cacheGroundResolution;
         if (computeResolution) {
             double latitude = latitudeE6 / AppConstants.E6;
             groundResolution = (float)TileSystem.GroundResolution(latitude, zoomLevel);
-//            groundResolution = (float)TileSystem.GroundResolution(0, zoomLevel);
-            Log.d(TAG, "compute GroundResolution Latitude=" + latitude + " : zoom=" + zoomLevel + " ==> ground Resolution = " + cacheGroundResolution);
+            Log.d(TAG, "Compute GroundResolution Latitude=" + latitude + " : zoom=" + zoomLevel + " ==> ground Resolution = " + cacheGroundResolution);
             // Cache Value
             this.cacheGroundResolution = groundResolution;
             this.cacheGroundResolutionForZoomLevel = zoomLevel;
@@ -354,7 +369,7 @@ public class GeofenceEditOverlay extends Overlay {
     private float metersToLatitudePixels(final float radiusInMeters, int latitudeE6, int zoomLevel, boolean useCache) {
         float groundResolution = getGroundResolution(latitudeE6, zoomLevel, useCache);
         float radiusInPixelsV2 = (float) (radiusInMeters / groundResolution);
-//        radiusInPixelsV2 = astral.metersToEquatorPixels(radiusInMeters);
+//        Log.d(TAG, "metersToLatitudePixels " + radiusInMeters + " m ==> Pixels = " + radiusInPixelsV2  + "(GroundResolution " + groundResolution + ")" );
         return radiusInPixelsV2;
     }
 
@@ -394,6 +409,22 @@ public class GeofenceEditOverlay extends Overlay {
         }
     }
 
+
+    private Point drawGeofenceCircle(Canvas canvas, MapView mapView, CircleGeofence fence, float radiusInPixels) {
+        IGeoPoint centerGeofence = fence.getCenterAsGeoPoint();
+
+        Projection astral = mapView.getProjection();
+        Point screenPixels = astral.toPixels(centerGeofence, drawPoint);
+        float centerXInPixels = screenPixels.x;
+        float centerYInPixels = screenPixels.y;
+
+        canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintBorder);
+        canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintCenter);
+
+        return screenPixels;
+    }
+
+
     private void drawText(Canvas canvas, CircleGeofence geofence, Point centerScreenPixels, float radiusInPixels, boolean drawDistance) {
         // Recompute Text Size
         paintText.setTextSize(radiusInPixels / 4);
@@ -420,20 +451,6 @@ public class GeofenceEditOverlay extends Overlay {
             canvas.drawPath(nameTextPath, paintText);
         }
     }
-
-    private Point drawGeofenceCircle(Canvas canvas, MapView mapView, CircleGeofence fence, float radiusInPixels) {
-        IGeoPoint centerGeofence = fence.getCenterAsGeoPoint();
-
-        Point screenPixels = astral.toPixels(centerGeofence, drawPoint);
-        int centerXInPixels = screenPixels.x;
-        int centerYInPixels = screenPixels.y;
-
-        canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintBorder);
-        canvas.drawCircle(centerXInPixels, centerYInPixels, radiusInPixels, paintCenter);
-
-        return screenPixels;
-    }
-
     // ===========================================================
     // Data Loader
     // ===========================================================
@@ -509,7 +526,9 @@ public class GeofenceEditOverlay extends Overlay {
     public boolean onTouchEvent(MotionEvent e, MapView mapView) {
         Projection pj = mapView.getProjection();
         int action = e.getAction();
-
+        if ( this.geofence == null) {
+            status = 0;
+        }
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 // Click Point
