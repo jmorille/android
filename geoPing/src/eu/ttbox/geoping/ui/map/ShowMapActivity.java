@@ -10,14 +10,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.R;
@@ -110,9 +110,30 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
         // Current Tile Source
         ITileSource currentTileSrc = mapFragment.getMapViewTileSource();
 
+        // Show My Location
+        // ---------------
+        MenuItem myLocationHideMenu = menu.findItem(R.id.menuMap_mypositon_hide );
+        if (mapFragment.isMyLocationEnabled()) {
+            myLocationHideMenu.setTitle(R.string.menu_map_mypositon_hide);
+            myLocationHideMenu.setVisible(true);
+//            myLocationHideMenu.setEnabled(true);
+        } else {
+            myLocationHideMenu.setTitle(R.string.menu_map_mypositon_show);
+            myLocationHideMenu.setVisible(false);
+//            myLocationHideMenu.setEnabled(false);
+        }
+
         // Menu Geofence
+        // ---------------
         MenuItem geofenceMenu = menu.findItem(R.id.menuMap_geofence_list);
-        if (mapFragment.isGeofenceListOverlays()) {
+        int  statusGooglePlayServices = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (ConnectionResult.SUCCESS == statusGooglePlayServices || ConnectionResult. SERVICE_VERSION_UPDATE_REQUIRED == statusGooglePlayServices ) {
+            geofenceMenu.setEnabled(true);
+        } else {
+//            SERVICE_MISSING,  SERVICE_DISABLED, SERVICE_INVALID.
+            geofenceMenu.setEnabled(false);
+        }
+        if (mapFragment.isGeofenceOverlays()) {
             geofenceMenu.setTitle(R.string.menu_map_geofences_hide);
         } else {
             geofenceMenu.setTitle(R.string.menu_map_geofences_show);
@@ -121,6 +142,7 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
 //        geofenceMenu.setTitle(R.string.menu_map_geofences_show);
 
         // Create Map Type
+        // ---------------
         MenuItem mapTypeItem = menu.findItem(R.id.menuMap_mapmode);
         final SubMenu mapTypeMenu = mapTypeItem.getSubMenu();
         mapTypeMenu.clear();
@@ -162,10 +184,10 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
             return true;
         }
         case R.id.menuMap_geofence_list: {
-            if (mapFragment.isGeofenceListOverlays()) {
-                mapFragment.removeGeofenceListOverlays();
+            if (mapFragment.isGeofenceOverlays()) {
+                mapFragment.hideGeofenceOverlays();
             } else {
-                mapFragment.addGeofenceListOverlays();
+                mapFragment.showGeofenceOverlays();
             } 
             return true;
         }

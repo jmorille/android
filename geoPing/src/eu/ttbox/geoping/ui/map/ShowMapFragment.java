@@ -18,14 +18,11 @@ import org.osmdroid.views.overlay.Overlay;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -49,12 +46,10 @@ import com.actionbarsherlock.view.ActionMode;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.GeoFenceProvider;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.model.Person;
-import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.map.core.MapConstants;
@@ -280,8 +275,10 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         boolean enableMyLocation = privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_LOCATION, true);
         this.myLocation.enableMyLocation(enableMyLocation);
         Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
-        Log.d(TAG, "--- --- Read isMyLocationEnabled : " + enableMyLocation);
+        Log.d(TAG, "--- --- --- --- onResume    --- Read Config --- --- --- ---");
+        Log.d(TAG, "--- --- isMyLocationEnabled : " + enableMyLocation);
         Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
+
 
         if (privateSharedPreferences.getBoolean(MapConstants.PREFS_SHOW_COMPASS, false)) {
             this.myLocation.enableCompass(true);
@@ -321,7 +318,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         localEdit.commit();
 
         Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
-        Log.d(TAG, "--- --- Write isMyLocationEnabled : " + myLocation.isMyLocationEnabled());
+        Log.d(TAG, "--- --- --- --- onPause     --- Save Config --- --- --- ---");
+        Log.d(TAG, "--- --- isMyLocationEnabled : " + myLocation.isMyLocationEnabled());
         Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
 
         // Service
@@ -539,6 +537,10 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     // Map Action
     // ===========================================================
 
+    public boolean isMyLocationEnabled() {
+        return myLocation==null? false :myLocation.isMyLocationEnabled();
+    }
+
     public void swichDisplayMyPosition() {
         myLocation.enableMyLocation(!myLocation.isMyLocationEnabled());
     }
@@ -547,6 +549,8 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         Log.d(TAG, "Ask centerOnMyPosition");
         if (!myLocation.isMyLocationEnabled()) {
             myLocation.enableMyLocation(true);
+            Log.d(TAG, "Ask centerOnMyPosition = do enableMyLocation");
+            myLocation.animateToLastFix();
         }
         mapView.getScroller().forceFinished(true);
         myLocation.enableFollowLocation();
@@ -734,11 +738,12 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
     // Geofence Overlay
     // ===========================================================
 
-    public boolean isGeofenceListOverlays() {
+    public boolean isGeofenceOverlays() {
        return (geofenceListOverlay !=null &&  mapView.getOverlays().contains(geofenceListOverlay));
     }
 
-    public void addGeofenceListOverlays() {
+    public void showGeofenceOverlays() {
+        Log.d(TAG, "show Geofence Overlay");
         if (geofenceListOverlay == null) {
             LoaderManager loaderManager = getActivity().getSupportLoaderManager();
             this.geofenceListOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, loaderManager, handler);
@@ -750,52 +755,23 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         }
     }
 
-    public void removeGeofenceListOverlays() {
+    public void hideGeofenceOverlays() {
+        Log.d(TAG, "hide Geofence Overlay");
         if (geofenceListOverlay != null) {
             mapView.getOverlays().remove(geofenceListOverlay);
             this.geofenceListOverlay = null;
+            mapView.postInvalidate();
         }
     }
 
     public void addGeofenceOverlayEditor() {
-        Log.d(TAG, "addGenceOverlayEditor");
-        addGeofenceListOverlays();
+        Log.d(TAG, "add Geofence Overlay");
+        showGeofenceOverlays();
         this.geofenceListOverlay.doAddCircleGeofence();
         //
         mapView.postInvalidate();
     }
 
-    public void editGeofenceOverlayEditor(CircleGeofence circleGeofence) {
-        // Move map to geofence
-        mapController.setCenter(circleGeofence.getCenterAsGeoPoint());
-        // Add to view
-        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-        GeofenceEditOverlay geofencekOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, loaderManager, circleGeofence, handler);
-        mapView.getOverlays().add(geofencekOverlay);
-        //
-        mapView.postInvalidate();
-    }
-
-
-
-    public void closeGeofenceOverlayEditor() {
-        List<Overlay> overlays = mapView.getOverlays();
-        List<GeofenceEditOverlay> deleteOverlays = getExtractGeofenceEditOverlay(overlays);
-        if (!deleteOverlays.isEmpty()) {
-            overlays.removeAll(deleteOverlays);
-            mapView.postInvalidate();
-        }
-    }
-
-    private List<GeofenceEditOverlay> getExtractGeofenceEditOverlay(List<Overlay> overlays) {
-        List<GeofenceEditOverlay> deleteOverlays = new ArrayList<GeofenceEditOverlay>();
-        for (Overlay overlay : overlays) {
-            if (overlay instanceof GeofenceEditOverlay) {
-                deleteOverlays.add((GeofenceEditOverlay) overlay);
-            }
-        }
-        return deleteOverlays;
-    }
 
     // ===========================================================
     // Loader

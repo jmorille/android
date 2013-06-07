@@ -75,9 +75,9 @@
     <string name="menu_extra_feature">Extra Features</string>
 
 
-    <string name="menu_map_geofences_show">Geofences</string>
-    <string name="menu_map_geofences_hide">Hide Geofences</string>
-    <string name="menu_map_geofence_add">Add Geofence</string>
+    <string name="menu_map_geofences_show">Barrières</string>
+    <string name="menu_map_geofences_hide">Masquer les Barrières</string>
+    <string name="menu_map_geofence_add">Ajouter une Barrière</string>
     
     <string name="menu_pairing_notification">Notification</string>
     
@@ -85,6 +85,8 @@
      
     <!-- Menu Map-->
     <string name="menu_map_mypositon_hide">Masquer ma position</string>
+    <string name="menu_map_mypositon_show">Aficher ma position</string>
+
     <string name="menu_map_track_timeline">Time Line</string>
        
     

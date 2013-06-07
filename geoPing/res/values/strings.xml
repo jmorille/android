@@ -69,6 +69,7 @@
 
     <!-- Menu Map -->
     <string name="menu_map_mypositon_hide">Hide my position</string>
+    <string name="menu_map_mypositon_show">Show my position</string>
     <string name="menu_map_track_timeline">Time Line</string>
 
     <!-- Prefs -->
