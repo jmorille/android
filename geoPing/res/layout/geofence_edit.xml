@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Geofence Name"
+            android:id="@+id/labelGeofenceEditName" />
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Geofence Name"
+            android:ems="10"
+            android:id="@+id/geofenceEditName"
+            android:layout_below="@id/labelGeofenceEditName"
+            android:layout_toLeftOf="@id/labelGeofenceEditName"/>
+
+</RelativeLayout>

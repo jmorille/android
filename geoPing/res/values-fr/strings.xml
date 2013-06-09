@@ -75,9 +75,9 @@
     <string name="menu_extra_feature">Extra Features</string>
 
 
-    <string name="menu_map_geofences_show">Barrières</string>
-    <string name="menu_map_geofences_hide">Masquer les Barrières</string>
-    <string name="menu_map_geofence_add">Ajouter une Barrière</string>
+    <string name="menu_map_geofences_show">Géo Barrières</string>
+    <string name="menu_map_geofences_hide">Masquer les Géo Barrières</string>
+    <string name="menu_map_geofence_add">Ajouter une Géo    Barrière</string>
     
     <string name="menu_pairing_notification">Notification</string>
     

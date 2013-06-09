@@ -40,6 +40,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 
@@ -68,7 +69,7 @@ import eu.ttbox.osm.ui.map.mylocation.MyLocationOverlay;
  * @see <a href="http://mobiforge.com/developing/story/using-google-maps-android">using-google-maps-android</a>
  * 
  */
-public class ShowMapFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class ShowMapFragment extends SherlockFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "ShowMapFragment";
 
@@ -276,7 +277,7 @@ public class ShowMapFragment extends Fragment implements SharedPreferences.OnSha
         this.myLocation.enableMyLocation(enableMyLocation);
         Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
         Log.d(TAG, "--- --- --- --- onResume    --- Read Config --- --- --- ---");
-        Log.d(TAG, "--- --- isMyLocationEnabled : " + enableMyLocation);
+        Log.d(TAG, "--- --- isMyLocationEnabled : " + enableMyLocation );
         Log.d(TAG, "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---");
 
 
