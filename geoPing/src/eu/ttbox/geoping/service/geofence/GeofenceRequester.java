@@ -1,7 +1,9 @@
 package eu.ttbox.geoping.service.geofence;
 
+
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;

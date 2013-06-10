@@ -15,10 +15,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Log;
 
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 
 public class GeoFenceDatabase {
+
+    public static final String TAG = "GeoFenceDatabase";
 
     public static final String TABLE_GEOFENCE = "geofence";
 
@@ -110,16 +113,18 @@ public class GeoFenceDatabase {
     }
 
     public void fillRequestId(ContentValues values) {
-        if (values.containsKey(GeoFenceColumns.COL_REQUEST_ID)) {
-            throw new RuntimeException("Key GeoFenceColumns.COL_REQUEST_ID already exits in ContentValues");
+        String requestId = values.getAsString(GeoFenceColumns.COL_REQUEST_ID);
+        if (TextUtils.isEmpty(requestId)) {
+            String value = UUID.randomUUID().toString();
+            values.put(GeoFenceColumns.COL_REQUEST_ID, value);
+            Log.d(TAG, "Add COL_REQUEST_ID : " + value);
         }
-        String value = UUID.randomUUID().toString();
-        values.put(GeoFenceColumns.COL_REQUEST_ID, value);
     }
 
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+        fillRequestId(values);
         try {
             db.beginTransaction();
             try {

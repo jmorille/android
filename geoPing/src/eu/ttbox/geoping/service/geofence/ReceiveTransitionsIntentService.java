@@ -46,9 +46,12 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
         // Create a local broadcast Intent
         Intent broadcastIntent = new Intent();
-
         // Give it the category for all intents sent by the Intent Service
         broadcastIntent.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES);
+
+        Log.d(TAG, "--- ------------------------------------------------------- ---");
+        Log.d(TAG, "--- Geofence onHandleIntent : " + intent);
+        Log.d(TAG, "--- ------------------------------------------------------- ---");
 
         // First check for errors
         if (LocationClient.hasError(intent)) {

@@ -6,6 +6,7 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,7 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
 
     private static final String TAG = "ShowMapActivity";
 
+    private static final int PLAY_ERROR_REQUEST_CODE = 781498;
     // Constant
     /**
      * This number depend of previous menu
@@ -125,13 +127,26 @@ public class ShowMapActivity extends GeoPingSlidingMenuFragmentActivity {
 
         // Menu Geofence
         // ---------------
+        MenuItem geofenceAddMenu = menu.findItem(R.id.menuMap_geofence_add);
         MenuItem geofenceMenu = menu.findItem(R.id.menuMap_geofence_list);
         int  statusGooglePlayServices = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (ConnectionResult.SUCCESS == statusGooglePlayServices || ConnectionResult. SERVICE_VERSION_UPDATE_REQUIRED == statusGooglePlayServices ) {
+        if (ConnectionResult.SUCCESS == statusGooglePlayServices   ) {
             geofenceMenu.setEnabled(true);
+            geofenceAddMenu.setEnabled(true);
         } else {
 //            SERVICE_MISSING,  SERVICE_DISABLED, SERVICE_INVALID.
             geofenceMenu.setEnabled(false);
+            geofenceAddMenu.setEnabled(false);
+            // TODO Display Dialog
+//            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(statusGooglePlayServices, this, PLAY_ERROR_REQUEST_CODE);
+            // If Google Play services can provide an error dialog
+//            if (errorDialog != null) {
+//                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+                // Set the dialog in the DialogFragment
+//                errorFragment.setDialog(errorDialog);
+                // Show the error dialog in the DialogFragment
+//                errorFragment.show(  getSupportFragmentManager(),  "Geofence Detection");
+//            }
         }
         if (mapFragment.isGeofenceOverlays()) {
             geofenceMenu.setTitle(R.string.menu_map_geofences_hide);
