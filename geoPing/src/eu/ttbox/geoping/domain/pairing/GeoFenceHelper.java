@@ -120,57 +120,52 @@ public class GeoFenceHelper {
         return initialValues;
     }
 
-    public static CircleGeofence getEntityFromIntent(Intent intent) {
-        Bundle initialValues = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-        CircleGeofence geoTrack = getEntityFromBundle(initialValues);
 
-        return geoTrack;
-    }
 
-    public static CircleGeofence getEntityFromBundle(Bundle initialValues) {
-        if (initialValues == null || initialValues.isEmpty()) {
+    public static CircleGeofence getEntityFromContentValue(ContentValues initialValues) {
+        if (initialValues == null || initialValues.size()<1) {
             return null;
         }
         CircleGeofence geofence = new CircleGeofence();
 
         if (initialValues.containsKey(GeoFenceColumns.COL_ID)) {
-            geofence.setId(initialValues.getLong(GeoFenceColumns.COL_ID));
+            geofence.setId(initialValues.getAsLong(GeoFenceColumns.COL_ID));
         }
         if (initialValues.containsKey(GeoFenceColumns.COL_REQUEST_ID)) {
-            geofence.setRequestId(initialValues.getString(GeoFenceColumns.COL_REQUEST_ID));
+            geofence.setRequestId(initialValues.getAsString(GeoFenceColumns.COL_REQUEST_ID));
         }
         if (initialValues.containsKey(GeoFenceColumns.COL_NAME)) {
-            geofence.setName(initialValues.getString(GeoFenceColumns.COL_NAME));
+            geofence.setName(initialValues.getAsString(GeoFenceColumns.COL_NAME));
         }
         
       
         // Geo
-        if (initialValues.containsKey(Intents.EXTRA_GEO_E6)) {
-            int[] geoLatLng = initialValues.getIntArray(Intents.EXTRA_GEO_E6);
-            int geoLatLngSize = geoLatLng.length;
-            if (geoLatLngSize >= 2) {
-                geofence.setLatitudeE6(geoLatLng[0]);
-                geofence.setLongitudeE6(geoLatLng[1]);
-            }
-            if (geoLatLngSize >= 3) {
-                geofence.setRadiusInMeters(geoLatLng[3]);
-            }
-        }
+//        if (initialValues.containsKey(Intents.EXTRA_GEO_E6)) {
+//            int[] geoLatLng = initialValues.getAsIntArray(Intents.EXTRA_GEO_E6);
+//            int geoLatLngSize = geoLatLng.length;
+//            if (geoLatLngSize >= 2) {
+//                geofence.setLatitudeE6(geoLatLng[0]);
+//                geofence.setLongitudeE6(geoLatLng[1]);
+//            }
+//            if (geoLatLngSize >= 3) {
+//                geofence.setRadiusInMeters(geoLatLng[3]);
+//            }
+//        }
         if (initialValues.containsKey(GeoFenceColumns.COL_LATITUDE_E6)) {
-            geofence.setLatitudeE6(initialValues.getInt(GeoFenceColumns.COL_LATITUDE_E6));
+            geofence.setLatitudeE6(initialValues.getAsInteger(GeoFenceColumns.COL_LATITUDE_E6));
         }
         if (initialValues.containsKey(GeoFenceColumns.COL_LONGITUDE_E6)) {
-            geofence.setLongitudeE6(initialValues.getInt(GeoFenceColumns.COL_LONGITUDE_E6));
+            geofence.setLongitudeE6(initialValues.getAsInteger(GeoFenceColumns.COL_LONGITUDE_E6));
         }
 
         if (initialValues.containsKey(GeoFenceColumns.COL_RADIUS)) {
-            geofence.setRadiusInMeters(initialValues.getInt(GeoFenceColumns.COL_RADIUS));
+            geofence.setRadiusInMeters(initialValues.getAsInteger(GeoFenceColumns.COL_RADIUS));
         }
         if (initialValues.containsKey(GeoFenceColumns.COL_TRANSITION)) {
-            geofence.setTransitionType(initialValues.getInt(GeoFenceColumns.COL_TRANSITION));
+            geofence.setTransitionType(initialValues.getAsInteger(GeoFenceColumns.COL_TRANSITION));
         }
         if (initialValues.containsKey(GeoFenceColumns.COL_EXPIRATION)) {
-            geofence.setExpirationDuration(initialValues.getLong(GeoFenceColumns.COL_EXPIRATION));
+            geofence.setExpirationDuration(initialValues.getAsLong(GeoFenceColumns.COL_EXPIRATION));
         }
         return geofence;
     }

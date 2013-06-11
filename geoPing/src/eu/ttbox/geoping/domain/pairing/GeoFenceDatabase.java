@@ -17,7 +17,10 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.android.gms.location.Geofence;
+
 import eu.ttbox.geoping.domain.model.CircleGeofence;
+import eu.ttbox.geoping.service.geofence.GeoFenceLocationService;
 
 public class GeoFenceDatabase {
 
@@ -52,10 +55,13 @@ public class GeoFenceDatabase {
 
     private PairingOpenHelper mDatabaseOpenHelper;
 
+    private GeoFenceLocationService mGeoFenceLocationService;
+
     private static final HashMap<String, String> mCircleGeofenceColumnMap = buildCircleGeofenceColumnMap();
 
     public GeoFenceDatabase(Context context) {
         mDatabaseOpenHelper = new PairingOpenHelper(context);
+        mGeoFenceLocationService = new GeoFenceLocationService(context);
     }
 
     private static HashMap<String, String> buildCircleGeofenceColumnMap() {
@@ -88,8 +94,14 @@ public class GeoFenceDatabase {
 
     public long insertEntity(ContentValues values) throws SQLException {
         long result = -1;
-        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+        // Complete Data
         fillRequestId(values);
+        // Register in LocationServices
+        CircleGeofence circleGeofence =  GeoFenceHelper.getEntityFromContentValue(values);
+        Geofence geofence =  circleGeofence.toGeofence();
+        mGeoFenceLocationService.addGeofences(geofence);
+        // Save in Db
+        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
             db.beginTransaction();
             try {
@@ -123,9 +135,15 @@ public class GeoFenceDatabase {
 
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
-        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+        // Complete Data
         fillRequestId(values);
-        try {
+        // Register in LocationServices
+        CircleGeofence circleGeofence =  GeoFenceHelper.getEntityFromContentValue(values);
+        Geofence geofence =  circleGeofence.toGeofence();
+        mGeoFenceLocationService.addGeofences(geofence);
+        // Save in Db
+        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+         try {
             db.beginTransaction();
             try {
                 result = db.update(TABLE_GEOFENCE, values, selection, selectionArgs);
@@ -139,12 +157,35 @@ public class GeoFenceDatabase {
         return result;
     }
 
+    private List<String> getRequestIds(SQLiteDatabase db, String selection, String[] selectionArgs) {
+       ArrayList<String> result = new ArrayList<String>();
+        // Read RequestId
+        String[] projection = new String[] {GeoFenceColumns.COL_REQUEST_ID};
+        Cursor cursor = queryEntities(projection, selection, selectionArgs, null);
+        try {
+            while (cursor.moveToNext()) {
+                String requestId = cursor.getString(0);
+                result.add(requestId);
+            }
+        } finally {
+            if (cursor!=null) {
+                cursor.close();
+            }
+        }
+        return result;
+    }
+
     public int deleteEntity(String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
             db.beginTransaction();
             try {
+                List<String> requestIds = getRequestIds(db, selection, selectionArgs);
+                if (requestIds!=null && !requestIds.isEmpty()) {
+                    mGeoFenceLocationService.removeGeofencesById(requestIds);
+                }
+                // Delete Data
                 result = db.delete(TABLE_GEOFENCE, selection, selectionArgs);
                 db.setTransactionSuccessful();
             } finally {
