@@ -99,7 +99,11 @@
     <string name="prefs_block_geoping_pairing_summaryOn">Autoriser les nouvelles associations</string>
     
     <string name="prefs_show_geoping_notification">Afficher une notification</string>
-    <string name="prefs_show_geoping_notification_summary">Pour les nouvelles associations</string> 
+    <string name="prefs_show_geoping_notification_summary">Pour les nouvelles associations</string>
+
+    <string name="prefs_geoping_request_timeout_ms">Request Time Out in s</string>
+    <string name="prefs_geoping_request_accuracy_expected_m">Request expected accuracy in m</string>
+
     <string name="prefs_geoping_localSave">Sauvegarder en local</string>
     <string name="prefs_geoping_localSave_summaryOn">Historisation en base locale</string>
     <string name="prefs_geoping_localSave_summaryOff">Désactiver</string>
@@ -172,7 +176,7 @@
        \n Vous pouvez maintenant obtenir la position de ce deuxième téléphone \n 
     </string>
     <string name="pairing_help">
-        La liste des associations représente la liste des personnes associées auquelles vous acceptez (ou pas) d\'envoyer votre GeoPing.\n 
+        La liste des associations représente la liste des personnes associées auquelles vous acceptez (ou pas) d\'envoyer votre GeoPing.\n
         Votre position géographique est obtenue grâce au GPS ou tout autre capteur présent sur votre téléphone, comme la triangulation des antennes GSM. \n\n
         3 options d\'association sont disponibles : \n 
          <b>   * Bloquer : </b> Empêche toute demande de GeoPing \n 

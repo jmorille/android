@@ -34,6 +34,7 @@ import eu.ttbox.geoping.R;
  * To use a GeofenceRequester, instantiate it and call AddGeofence(). Everything else is done
  * automatically.
  */
+@Deprecated
 public class GeofenceRequester
         implements
         OnAddGeofencesResultListener,

@@ -97,7 +97,9 @@
     <string name="prefs_block_geoping_pairing_summaryOn">Autorizar nueva asociacion de GeoPing</string>
     
     <string name="prefs_show_geoping_notification">Mostrar una notificacion</string>
-    <string name="prefs_show_geoping_notification_summary">Para las nuevas asociaciones</string> 
+    <string name="prefs_show_geoping_notification_summary">Para las nuevas asociaciones</string>
+    <string name="prefs_geoping_request_timeout_ms">Request Time Out in s</string>
+    <string name="prefs_geoping_request_accuracy_expected_m">Request expected accuracy in m</string>
     <string name="prefs_geoping_localSave">Ahorrar en local</string>
     <string name="prefs_geoping_localSave_summaryOn">Archivado en local</string>
     <string name="prefs_geoping_localSave_summaryOff">Inhabilitado</string>

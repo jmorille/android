@@ -274,9 +274,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     /**
      * Computes the battery level by registering a receiver to the intent
      * triggered by a battery status/level change. <br/>
-     * {@link http
-     * ://developer.android.com/training/monitoring-device-state/battery
-     * -monitoring.html}
+     * <a href="http://developer.android.com/training/monitoring-device-state/battery-monitoring.html">monitoring-device-state</a>
      */
 
     private void batteryLevel() {

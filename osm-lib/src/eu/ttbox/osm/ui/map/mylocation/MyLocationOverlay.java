@@ -767,6 +767,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
                 }
 //              TODO   showCallout();  
                 boolean balloonViewNotVisible = (View.VISIBLE != balloonView.getVisibility());
+                Log.d(TAG, "onSingleTapUp my location balloon is visible : " + balloonViewNotVisible  + " (" + balloonView.getVisibility()  + ")");
                 if (balloonViewNotVisible) {
                     // Compute Offset
                     int offsetX = 0; // 150

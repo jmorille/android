@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -35,6 +36,15 @@ public class ReceiveTransitionsIntentService extends IntentService {
         super("ReceiveTransitionsIntentService");
     }
 
+    private void printExtras(Bundle extras) {
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                Object value = extras.get(key);
+                Log.d(TAG, "--- Geofence extras : " + key + " = " + value);
+            }
+        }
+    }
+
     /**
      * Handles incoming intents
      *
@@ -51,6 +61,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
         Log.d(TAG, "--- ------------------------------------------------------- ---");
         Log.d(TAG, "--- Geofence onHandleIntent : " + intent);
+        printExtras(intent.getExtras());
         Log.d(TAG, "--- ------------------------------------------------------- ---");
 
         // First check for errors
@@ -89,7 +100,9 @@ public class ReceiveTransitionsIntentService extends IntentService {
                 List<Geofence> geofences = LocationClient.getTriggeringGeofences(intent);
                 String[] geofenceIds = new String[geofences.size()];
                 for (int index = 0; index < geofences.size(); index++) {
-                    geofenceIds[index] = geofences.get(index).getRequestId();
+                    Geofence geofence = geofences.get(index);
+                    geofenceIds[index] = geofence.getRequestId();
+                    Log.d(TAG, "--- Geofence offence : " + geofence);
                 }
                 String ids = TextUtils.join(GeofenceUtils.GEOFENCE_ID_DELIMITER, geofenceIds);
                 String transitionType = getTransitionString(transition);

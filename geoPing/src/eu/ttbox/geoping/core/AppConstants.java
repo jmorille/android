@@ -31,7 +31,11 @@ public class AppConstants {
 
     public static final int PER_PERSON_ID_MULTIPLICATOR = 10000;
     public static final String KEY_DB_LOCAL = "local";
-    
+
+    // Request Timeout
+    public static final String PREFS_REQUEST_TIMEOUT_S = "requestTimeoutInS";
+    public static final String PREFS_REQUEST_ACCURACY_M = "requestAccuracyExpectedInM";
+
     // Request Notification
     public static final String PREFS_SMS_DELETE_ON_MESSAGE = "smsDeleteOnMessage";
     public static final String PREFS_SHOW_GEOPING_NOTIFICATION = "showGeopingNotification";

@@ -295,8 +295,9 @@ public class GeoPingMasterService extends IntentService {
     }
 
     private void sendSmsGeoPingRequest(String phone, Bundle params) {
-        boolean isSend = sendSms(phone, SmsMessageActionEnum.GEOPING_REQUEST, params);
-        Log.d(TAG, String.format("Send SMS GeoPing %s : %s", phone, params));
+        Bundle geopingRequest = SmsSenderHelper.completeRequestTimeOutFromPrefs(appPreferences, params);
+        boolean isSend = sendSms(phone, SmsMessageActionEnum.GEOPING_REQUEST, geopingRequest);
+        Log.d(TAG, String.format("Send SMS GeoPing %s : %s", phone, geopingRequest));
         // Display Notif
         if (isSend) {
             Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, getResources().getString(R.string.toast_notif_sended_geoping_request, phone));

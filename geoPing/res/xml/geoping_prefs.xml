@@ -5,6 +5,19 @@
 
 
     <!-- </PreferenceCategory> -->
+    <PreferenceCategory android:title="@string/menu_pairing" >
+        <eu.ttbox.geoping.ui.prefs.comp.IntEditTextPreference
+                android:defaultValue="30"
+                android:key="requestTimeoutInS"
+                android:numeric="integer"
+                android:title="@string/prefs_geoping_request_timeout_ms" />
+        <eu.ttbox.geoping.ui.prefs.comp.IntEditTextPreference
+                android:defaultValue="-1"
+                android:key="requestAccuracyExpectedInM"
+                android:numeric="integer"
+                android:title="@string/prefs_geoping_request_accuracy_expected_m" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/prefs_geoping_request" >
         <CheckBoxPreference
             android:defaultValue="true"

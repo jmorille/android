@@ -22,6 +22,7 @@ import org.osmdroid.util.GeoPoint;
 /**
  * This class defines constants used by location sample apps.
  */
+@Deprecated
 public final class GeofenceUtils {
 
     // Used to track what type of geofence removal request was made.

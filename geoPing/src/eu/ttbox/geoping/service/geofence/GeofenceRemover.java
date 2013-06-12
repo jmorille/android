@@ -33,6 +33,7 @@ import eu.ttbox.geoping.R;
  * RemoveGeofencesByIntent(). Everything else is done automatically.
  *
  */
+@Deprecated
 public class GeofenceRemover implements
             ConnectionCallbacks,
             OnConnectionFailedListener,

@@ -80,6 +80,8 @@
     <string name="prefs_block_geoping_pairing_summaryOn">Authorize new GeoPing pairing</string>
     <string name="prefs_show_geoping_notification">Show a notification</string>
     <string name="prefs_show_geoping_notification_summary">For new pairing</string>
+    <string name="prefs_geoping_request_timeout_ms">Request Time Out in s</string>
+    <string name="prefs_geoping_request_accuracy_expected_m">Request expected accuracy in m</string>
     <string name="prefs_geoping_localSave">Save in a local database</string>
     <string name="prefs_geoping_localSave_summaryOn">Keep a record in a local DB</string>
     <string name="prefs_geoping_localSave_summaryOff">Desactivated</string>

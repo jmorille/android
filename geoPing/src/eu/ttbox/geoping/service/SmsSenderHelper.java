@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -19,12 +20,29 @@ import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.encoder.helper.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.receiver.MessageAcknowledgeReceiver;
 
 public class SmsSenderHelper {
 
     private static final String TAG = "SmsSenderHelper";
+
+    public static Bundle completeRequestTimeOutFromPrefs(SharedPreferences appPreferences, Bundle params) {
+        if (!params.containsKey(SmsMessageLocEnum.TIME_IN_S.dbFieldName)) {
+            int timeOut =  appPreferences.getInt(AppConstants.PREFS_REQUEST_TIMEOUT_S, -1);
+            if (timeOut > -1) {
+                params.putInt(SmsMessageLocEnum.TIME_IN_S.dbFieldName, timeOut);
+            }
+        }
+        if (!params.containsKey(SmsMessageLocEnum.ACCURACY .dbFieldName)) {
+            int accuracy =  appPreferences.getInt(AppConstants.PREFS_REQUEST_ACCURACY_M, -1);
+            if (accuracy > -1) {
+                params.putInt(SmsMessageLocEnum.ACCURACY.dbFieldName, accuracy);
+            }
+        }
+        return params;
+    }
 
     public static Uri sendSmsAndLogIt(Context context, SmsLogSideEnum side, String phone, SmsMessageActionEnum action, Bundle params) {
         Uri isSend = null;
@@ -48,7 +66,7 @@ public class SmsSenderHelper {
             Log.d(TAG, String.format("Send SmsMessage (%s chars, args) : %s", encrypedMsg.length(), encrypedMsg));
         } else {
             // TODO display Too long messsage
-            Log.e(TAG, String.format("Too long SmsMessage (%s chars, args) : %s", encrypedMsg.length(), encrypedMsg));
+             Log.e(TAG, String.format("Too long SmsMessage (%s chars, args) : %s", encrypedMsg.length(), encrypedMsg));
         }
         return isSend;
     }
