@@ -32,7 +32,12 @@ public class Intents {
 	public static final String ACTION_SMS_GEOPING_RESPONSE_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_RESPONSE_HANDLER";
 	public static final String ACTION_SMS_GEOPING_DECLARATION_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOPING_DECLARATION_HANDLER";
 
-	public static final String ACTION_SMS_PAIRING_RESQUEST = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESQUEST";
+    public static final String ACTION_SMS_GEOFENCE_RESPONSE_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOFENCE_RESPONSE_HANDLER";
+    public static final String ACTION_SMS_GEOFENCE_ENTER_RESPONSE_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOFENCE_ENTER_RESPONSE_HANDLER";
+    public static final String ACTION_SMS_GEOFENCE_EXIT_RESPONSE_HANDLER = "eu.ttbox.geoping.ACTION_SMS_GEOFENCE_EXIT_RESPONSE_HANDLER";
+
+
+    public static final String ACTION_SMS_PAIRING_RESQUEST = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESQUEST";
 	public static final String ACTION_SMS_PAIRING_RESPONSE = "eu.ttbox.geoping.ACTION_SMS_PAIRING_RESPONSE";
 
 	   public static final String ACTION_SMS_EVTSPY_SHUTDOWN = "eu.ttbox.geoping.ACTION_SMS_EVTSPY_SHUTDOWN";

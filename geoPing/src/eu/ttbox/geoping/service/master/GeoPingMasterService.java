@@ -186,6 +186,9 @@ public class GeoPingMasterService extends IntentService {
                 case SPY_LOW_BATTERY:
                 case SPY_PHONE_CALL:
                 case LOC_DECLARATION:
+                case GEOFENCE_Unknown_transition:
+                case GEOFENCE_ENTER:
+                case GEOFENCE_EXIT:
                 case LOC:
                     consumeGeoPingResponse(actionEnum, intent.getExtras());
                     break;

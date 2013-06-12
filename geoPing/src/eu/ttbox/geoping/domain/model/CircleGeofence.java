@@ -229,6 +229,10 @@ public class CircleGeofence {
                 .build();
     }
 
+    public boolean isGeofence(Geofence testGeofence) {
+        return testGeofence.getRequestId().equals(requestId);
+    }
+
     @Override
     public String toString() {
         return "CircleGeofence [id=" + id //

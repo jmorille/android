@@ -29,19 +29,20 @@ public class SmsSenderHelper {
     private static final String TAG = "SmsSenderHelper";
 
     public static Bundle completeRequestTimeOutFromPrefs(SharedPreferences appPreferences, Bundle params) {
-        if (!params.containsKey(SmsMessageLocEnum.TIME_IN_S.dbFieldName)) {
+        Bundle result = params ==null ? new Bundle() : params;
+        if (!result.containsKey(SmsMessageLocEnum.TIME_IN_S.dbFieldName)) {
             int timeOut =  appPreferences.getInt(AppConstants.PREFS_REQUEST_TIMEOUT_S, -1);
             if (timeOut > -1) {
-                params.putInt(SmsMessageLocEnum.TIME_IN_S.dbFieldName, timeOut);
+                result.putInt(SmsMessageLocEnum.TIME_IN_S.dbFieldName, timeOut);
             }
         }
-        if (!params.containsKey(SmsMessageLocEnum.ACCURACY .dbFieldName)) {
+        if (!result.containsKey(SmsMessageLocEnum.ACCURACY .dbFieldName)) {
             int accuracy =  appPreferences.getInt(AppConstants.PREFS_REQUEST_ACCURACY_M, -1);
             if (accuracy > -1) {
-                params.putInt(SmsMessageLocEnum.ACCURACY.dbFieldName, accuracy);
+                result.putInt(SmsMessageLocEnum.ACCURACY.dbFieldName, accuracy);
             }
         }
-        return params;
+        return result;
     }
 
     public static Uri sendSmsAndLogIt(Context context, SmsLogSideEnum side, String phone, SmsMessageActionEnum action, Bundle params) {

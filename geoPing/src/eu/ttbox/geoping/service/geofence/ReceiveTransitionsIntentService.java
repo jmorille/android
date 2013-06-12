@@ -3,22 +3,36 @@ package eu.ttbox.geoping.service.geofence;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.domain.GeoFenceProvider;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
+import eu.ttbox.geoping.domain.model.CircleGeofence;
+import eu.ttbox.geoping.domain.model.GeoTrack;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
+import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
+import eu.ttbox.geoping.service.SmsSenderHelper;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
 
 /**
  * This class receives geofence transition events from Location Services, in the
@@ -29,11 +43,16 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
     private static final String TAG = "ReceiveTransitionsIntentService";
 
+    // Service
+    private LocationManager locationManager;
+
     /**
      * Sets an identifier for this class' background thread
      */
     public ReceiveTransitionsIntentService() {
         super("ReceiveTransitionsIntentService");
+        // Service
+        this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
 
     private void printExtras(Bundle extras) {
@@ -66,65 +85,69 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
         // First check for errors
         if (LocationClient.hasError(intent)) {
-
-            // Get the error code
-            int errorCode = LocationClient.getErrorCode(intent);
-
-            // Get the error message
-            String errorMessage = LocationServiceErrorMessages.getErrorString(this, errorCode);
-
-            // Log the error
+             int errorCode = LocationClient.getErrorCode(intent);
+             String errorMessage = LocationServiceErrorMessages.getErrorString(this, errorCode);
+           // Log the error
             Log.e(TAG, getString(R.string.geofence_transition_error_detail, errorMessage));
-
             // Set the action and error message for the broadcast intent
             broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR)
                     .putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, errorMessage);
 
             // Broadcast the error *locally* to other components in this app
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
-
-            // If there's no error, get the transition type and create a notification
         } else {
-
+            // If there's no error, get the transition type and create a notification
             // Get the type of transition (entry or exit)
             int transition = LocationClient.getGeofenceTransition(intent);
 
             // Test that a valid transition was reported
-            if (
-                    (transition == Geofence.GEOFENCE_TRANSITION_ENTER)
-                            ||
-                            (transition == Geofence.GEOFENCE_TRANSITION_EXIT)
-                    ) {
-
-                // Post a notification
+            if ( (transition == Geofence.GEOFENCE_TRANSITION_ENTER) || (transition == Geofence.GEOFENCE_TRANSITION_EXIT)  ) {
+                 // Post a notification
                 List<Geofence> geofences = LocationClient.getTriggeringGeofences(intent);
-                String[] geofenceIds = new String[geofences.size()];
-                for (int index = 0; index < geofences.size(); index++) {
-                    Geofence geofence = geofences.get(index);
-                    geofenceIds[index] = geofence.getRequestId();
-                    Log.d(TAG, "--- Geofence offence : " + geofence);
-                }
-                String ids = TextUtils.join(GeofenceUtils.GEOFENCE_ID_DELIMITER, geofenceIds);
-                String transitionType = getTransitionString(transition);
-
-                sendNotification(transitionType, ids);
-
-                // Log the transition type and a message
-                Log.d(TAG,
-                        getString(
-                                R.string.geofence_transition_notification_title,
-                                transitionType,
-                                ids));
-                Log.d(TAG,
-                        getString(R.string.geofence_transition_notification_text));
-
-                // An invalid transition was reported
+                SmsMessageActionEnum transitionType = getTransitionString(transition);
+                // Send Notification
+                String[] geofenceIds = extractGeofenceRequestsId(geofences);
+                sendNotification(transitionType, geofenceIds);
+                 // Log the transition type and a message
+                Log.d(TAG, "GeoFence Violation : " + transitionType + " for " + geofences.size() + " geofences (like" + geofences.get(0) );
             } else {
+                // An invalid transition was reported
                 // Always log as an error
-                Log.e(TAG,
-                        getString(R.string.geofence_transition_invalid_type, transition));
-            }
+                Log.e(TAG,  "Geofence transition error. Invalid type " +transition+
+                        " in geofences %2$s");
+             }
         }
+    }
+
+    private String[] extractGeofenceRequestsId(List<Geofence> geofences) {
+        String[] geofenceIds = new String[geofences.size()];
+        for (int index = 0; index < geofences.size(); index++) {
+            Geofence geofence = geofences.get(index);
+            geofenceIds[index] = geofence.getRequestId();
+            Log.d(TAG, "--- Geofence offence : " + geofence);
+        }
+        return geofenceIds;
+    }
+
+    private List<CircleGeofence> getCircleGeofenceFromRequestIds(String[] requestIds) {
+        List<CircleGeofence> result = null;
+        ContentResolver cr = getContentResolver();
+        Cursor cursor = cr.query(GeoFenceProvider.Constants.CONTENT_URI_REQUEST_IDS, null, null, requestIds, null);
+        try {
+            int cursorSize = cursor.getCount();
+            if (cursorSize > 0) {
+                result = new ArrayList<CircleGeofence>(cursorSize);
+                GeoFenceHelper helper = new GeoFenceHelper().initWrapper(cursor);
+                while (cursor.moveToNext()) {
+                    CircleGeofence fence = helper.getEntity(cursor);
+                    result.add(fence);
+                }
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return result;
     }
 
     /**
@@ -133,18 +156,19 @@ public class ReceiveTransitionsIntentService extends IntentService {
      *
      * @param transitionType The type of transition that occurred.
      */
-    private void sendNotification(String transitionType, String ids) {
+    private void sendNotification(SmsMessageActionEnum transitionType, String[] geofenceIds ) {
+        String transitionTypeMsg =  getString(transitionType.labelResourceId);
+
+        // Compute afected geoFence
+        List<CircleGeofence> geofences = getCircleGeofenceFromRequestIds(geofenceIds);
 
         // Create an explicit content Intent that starts the main Activity
         Intent notificationIntent =
                 new Intent(getApplicationContext(), MainActivity.class);
-
-        // Construct a task stack
+         // Construct a task stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-
         // Adds the main Activity to the task stack as the parent
         stackBuilder.addParentStack(MainActivity.class);
-
         // Push the content Intent onto the stack
         stackBuilder.addNextIntent(notificationIntent);
 
@@ -156,12 +180,23 @@ public class ReceiveTransitionsIntentService extends IntentService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
         // Set the notification contents
-        builder.setSmallIcon(R.drawable.ic_stat_notif_icon)
-                .setContentTitle(
-                        getString(R.string.geofence_transition_notification_title,
-                                transitionType, ids))
-                .setContentText(getString(R.string.geofence_transition_notification_text))
+        builder.setSmallIcon(R.drawable.ic_stat_notif_icon) //
+                .setWhen(System.currentTimeMillis()) //
+                .setContentTitle(transitionTypeMsg) // Transition Type
+                .setContentText(geofences.get(0).getName()) // Zone Name
                 .setContentIntent(notificationPendingIntent);
+
+        // Message count
+        if (geofences.size()>1) {
+            builder.setNumber(geofences.size());
+            // BigView
+            NotificationCompat.InboxStyle inBoxStyle =  new NotificationCompat.InboxStyle();
+            inBoxStyle.setBigContentTitle(transitionTypeMsg);
+            for (CircleGeofence fence : geofences) {
+                inBoxStyle.addLine(fence.getName());
+            }
+            builder.setStyle(inBoxStyle);
+        }
 
         // Get an instance of the Notification manager
         NotificationManager mNotificationManager =
@@ -177,17 +212,40 @@ public class ReceiveTransitionsIntentService extends IntentService {
      * @param transitionType A transition type constant defined in Geofence
      * @return A String indicating the type of transition
      */
-    private String getTransitionString(int transitionType) {
+    private SmsMessageActionEnum getTransitionString(int transitionType) {
         switch (transitionType) {
-
             case Geofence.GEOFENCE_TRANSITION_ENTER:
-                return getString(R.string.geofence_transition_entered);
-
+                return SmsMessageActionEnum.GEOFENCE_ENTER;
             case Geofence.GEOFENCE_TRANSITION_EXIT:
-                return getString(R.string.geofence_transition_exited);
-
+                return SmsMessageActionEnum.GEOFENCE_EXIT; 
             default:
-                return getString(R.string.geofence_transition_unknown);
+                return SmsMessageActionEnum.GEOFENCE_Unknown_transition;
+        }
+    }
+
+    public  void sendEventSpySmsMessage( String[] phones, SmsMessageActionEnum eventType, Bundle eventParams, Location location) {
+        if (phones != null) {
+            Log.d(TAG, "EventSpy Notification  : " + eventType + " for " + phones.length + " phones destinations");
+            // Send SMS
+            Bundle extrasBundles = eventParams == null ? new Bundle() : eventParams;
+            if (!SmsMessageLocEnum.EVT_DATE.isToBundle(extrasBundles)) {
+                SmsMessageLocEnum.EVT_DATE.writeToBundle(extrasBundles, System.currentTimeMillis());
+            }
+            if (location!=null) {
+                // Converter Location
+                GeoTrack geotrack = new GeoTrack(null, location);
+                Bundle params = GeoTrackHelper.getBundleValues(geotrack);
+                if (extrasBundles!=null && !extrasBundles.isEmpty()) {
+                    params.putAll(extrasBundles);
+                }
+                // Not time to get GeoLoc, send it direct
+                for (String phone : phones) {
+                    SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.SLAVE, phone, eventType, params);
+                }
+                // TODO saveInLocalDb
+            } else {
+                GeoPingSlaveLocationService.runFindLocationAndSendInService(this, eventType, phones, extrasBundles);
+            }
         }
     }
 }

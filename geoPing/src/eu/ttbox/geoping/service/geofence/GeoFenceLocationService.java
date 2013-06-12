@@ -244,6 +244,6 @@ public class GeoFenceLocationService {
             // Disconnect
             locationClient.disconnect();
         }
-    }  
+    }
 
 }

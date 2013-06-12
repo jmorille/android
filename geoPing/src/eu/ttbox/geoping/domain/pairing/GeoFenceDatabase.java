@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.domain.pairing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +85,31 @@ public class GeoFenceDatabase {
         return queryEntities(projection, CRITERIA_BY_ENTITY_ID, selectionArgs, null);
     }
 
-    public Cursor queryEntities(String[] projection, String selection, String[] selectionArgs, String order) {
+    public Cursor getEntityByRequestIds( String[] projection, String[] requestIds, String order) {
+        String selection = makeWhereClause(GeoFenceColumns.COL_REQUEST_ID, requestIds);
+        return queryEntities(projection, selection, requestIds, order);
+    }
+
+    private String makeWhereClause(String colName,String... requestIds) {
+        StringBuilder sb = new StringBuilder();
+        int requestIdSize = requestIds.length;
+        if (requestIdSize== 1) {
+            sb.append(colName).append('=').append('?');
+        } else {
+            sb.append(colName).append( " in (");
+            for (int i = 0 ; i <requestIdSize; i ++) {
+                sb.append('?');
+                if (i != 0) {
+                    sb.append(',');
+                }
+            }
+            sb.append(')');
+        }
+        return sb.toString();
+    }
+
+    public Cursor queryEntities(String[] _projection, String selection, String[] selectionArgs, String order) {
+        String[] projection = _projection == null? GeoFenceColumns.ALL_COLS :_projection;
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_GEOFENCE);
         builder.setProjectionMap(mCircleGeofenceColumnMap);
@@ -175,6 +200,33 @@ public class GeoFenceDatabase {
         return result;
     }
 
+    public int deleteEntityByRequestIds( String[] requestArraysIds) {
+        int result = -1;
+        if (requestArraysIds==null || requestArraysIds.length <1) {
+            Log.w(TAG, "deleteEntityByRequestIds with no requestArraysIds : "  + requestArraysIds);
+            return  result;
+        }
+        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+        try {
+            db.beginTransaction();
+            try {
+                List<String> requestIds = Arrays.asList(requestArraysIds);
+                if (requestIds!=null && !requestIds.isEmpty()) {
+                    mGeoFenceLocationService.removeGeofencesById(requestIds);
+                }
+                // Delete Data
+                String selection = makeWhereClause(GeoFenceColumns.COL_REQUEST_ID, requestArraysIds);
+                result = db.delete(TABLE_GEOFENCE, selection, requestArraysIds);
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        } finally {
+            db.close();
+        }
+        return result;
+
+    }
     public int deleteEntity(String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();

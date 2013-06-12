@@ -4,9 +4,9 @@
     <string name="geofence_transition_error_detail">
         Geofence transition error, code %1$d message %2$s.
     </string>
-    <string name="geofence_transition_invalid_type">
-        Geofence transition error. Invalid type %1$d in geofences %2$s
-    </string>
+    <!--<string name="geofence_transition_invalid_type">-->
+        <!--Geofence transition error. Invalid type %1$d in geofences %2$s-->
+    <!--</string>-->
     <string name="connected">Client connected</string>
     <string name="connection_failed">Connection failed</string>
     <string name="disconnected">Client disconnected</string>
@@ -30,17 +30,17 @@
     </string>
     
     <!-- Message -->
-    <string name="geofence_transition_entered">Entered</string>
-    <string name="geofence_transition_exited">Exited</string>
-    <string name="geofence_transition_unknown">Unknown transition</string>
+    <!--<string name="geofence_transition_entered">Entered</string>-->
+    <!--<string name="geofence_transition_exited">Exited</string>-->
+    <!--<string name="geofence_transition_unknown">Unknown transition</string>-->
     
     <!-- Notif -->
-    <string name="geofence_transition_notification_title">
-        %1$s geofence(s) %2$s
-    </string>
-    <string name="geofence_transition_notification_text">
-        Click notification to return to app
-    </string>
+    <!--<string name="geofence_transition_notification_title">-->
+        <!--%1$s geofence(s) %2$s-->
+    <!--</string>-->
+    <!--<string name="geofence_transition_notification_text">-->
+        <!--Click notification to return to app-->
+    <!--</string>-->
     
     
     <!-- Lib -->

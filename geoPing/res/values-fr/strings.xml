@@ -49,6 +49,10 @@
     <string name="sms_action_geoping_request">Demande de GeoPing</string>
     <string name="sms_action_geoping_response">Envoi de ma position</string>
     <string name="sms_action_geoping_declaration">GeoPing déclaration</string>
+    <string name="sms_action_geofence_transition_unknown">Violation de la Géo Barrière</string>
+    <string name="sms_action_geofence_transition_enter">Entrée dans la Géo Barrière</string>
+    <string name="sms_action_geofence_transition_exit">Sortie de la Géo Barrière</string>
+
     <string name="sms_action_pairing_request">Demande d\'association</string>
     <string name="sms_action_pairing_response">Réponse à l\'association</string>
  

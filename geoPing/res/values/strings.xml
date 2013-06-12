@@ -39,6 +39,9 @@
     <string name="sms_action_geoping_request">GeoPing request</string>
     <string name="sms_action_geoping_response">GeoPing answer</string>
     <string name="sms_action_geoping_declaration">GeoPing declaration</string>
+    <string name="sms_action_geofence_transition_unknown">Offense Geo Fence</string>
+    <string name="sms_action_geofence_transition_enter">Entered Geo Fence</string>
+    <string name="sms_action_geofence_transition_exit">Exited Geo Fence</string>
     <string name="sms_action_pairing_request">Pairing request</string>
     <string name="sms_action_pairing_response">Pairing answer</string>
     <string name="sms_action_spyevt_shutdown">Event Shutdown</string>

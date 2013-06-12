@@ -49,9 +49,12 @@
     <string name="sms_action_geoping_request">GeoPing solicitud</string>
     <string name="sms_action_geoping_response">GeoPing respuesta</string>
     <string name="sms_action_geoping_declaration">GeoPing declaración</string>
+    <string name="sms_action_geofence_transition_unknown">Geo Fence Offense</string>
+    <string name="sms_action_geofence_transition_enter">Entered Geo Fence</string>
+    <string name="sms_action_geofence_transition_exit">Exited Geo Fence</string>
+
     <string name="sms_action_pairing_request">Solicitud de asociacion</string>
     <string name="sms_action_pairing_response">Respuesta de asociacion</string>
-   
     <string name="sms_action_spyevt_shutdown">Event Shutdown</string>
     <string name="sms_action_spyevt_boot">Event Boot</string>
     <string name="sms_action_spyevt_low_battery">Event Low Battery</string>

@@ -395,7 +395,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
             params.putAll(extrasBundles);
         }
         for (String phone : phones) {
-        SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.SLAVE,  phone, smsAction, params);
+            SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.SLAVE,  phone, smsAction, params);
             if (saveInLocalDb) {
                 geotrack.requesterPersonPhone = phone;
                 saveInLocalDb(geotrack);

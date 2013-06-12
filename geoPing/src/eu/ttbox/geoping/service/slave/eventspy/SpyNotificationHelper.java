@@ -19,9 +19,9 @@ public class SpyNotificationHelper {
     private static final String TAG = "SpyNotificationHelper";
 
     public static String searchContactPhonesForNotif(Context context, String notifCol) {
-        Cursor cursor = getCursorForSearchPhoneForNotif(context, notifCol);
         StringBuffer sb = new StringBuffer();
         boolean isNotFirst = false;
+        Cursor cursor = getCursorForSearchPhoneForNotif(context, notifCol);
         try {
             while (cursor.moveToNext()) {
                 if (isNotFirst) {
@@ -83,6 +83,8 @@ public class SpyNotificationHelper {
                 for (String phone : phones) {
                     SmsSenderHelper.sendSmsAndLogIt(context, SmsLogSideEnum.SLAVE, phone, eventType, params);
                 }
+                // TODO saveInLocalDb
+
             } else { 
                 GeoPingSlaveLocationService.runFindLocationAndSendInService(context, eventType, phones, params); 
             }

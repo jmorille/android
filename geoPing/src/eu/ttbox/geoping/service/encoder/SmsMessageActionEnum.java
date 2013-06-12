@@ -19,6 +19,11 @@ public enum SmsMessageActionEnum {
 	LOC("LOC", Intents.ACTION_SMS_GEOPING_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geoping_response), //
 	LOC_DECLARATION("lod", Intents.ACTION_SMS_GEOPING_DECLARATION_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geoping_declaration), //
 	ACTION_GEO_PAIRING_RESPONSE("PAR", Intents.ACTION_SMS_PAIRING_RESPONSE, GeoPingMasterService.class, true, R.string.sms_action_pairing_response), //
+    // Geofence
+    GEOFENCE_Unknown_transition("fen", Intents.ACTION_SMS_GEOFENCE_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geofence_transition_unknown ), //
+    GEOFENCE_ENTER("fei", Intents.ACTION_SMS_GEOFENCE_ENTER_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geofence_transition_enter ), //
+    GEOFENCE_EXIT("feo", Intents.ACTION_SMS_GEOFENCE_EXIT_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geofence_transition_exit ), //
+
 	// Spy Event Notif
 	SPY_SHUTDOWN("esd", Intents.ACTION_SMS_EVTSPY_SHUTDOWN, GeoPingMasterService.class, true, R.string.sms_action_spyevt_shutdown), //
 	SPY_BOOT("esb", Intents.ACTION_SMS_EVTSPY_BOOT, GeoPingMasterService.class, true, R.string.sms_action_spyevt_boot), //
