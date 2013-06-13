@@ -1,10 +1,9 @@
 package eu.ttbox.geoping.ui.person;
 
-import java.util.Random;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -30,17 +29,22 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import java.util.Random;
+
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
+import eu.ttbox.geoping.ui.core.validator.Form;
+import eu.ttbox.geoping.ui.core.validator.validate.ValidateTextView;
+import eu.ttbox.geoping.ui.core.validator.validator.NotEmptyValidator;
 import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
 import eu.ttbox.geoping.ui.person.holocolorpicker.HoloColorPickerDialog;
+import eu.ttbox.geoping.ui.person.validator.ExistPersonPhoneValidator;
 
 public class PersonEditFragment extends SherlockFragment implements ColorPickerDialog.OnColorChangedListener {
 
@@ -64,6 +68,9 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     private Button personPairingButton;
     private Button contactSelectButton;
 
+    //Validator
+    private Form formValidator;
+
     // Image
     private PhotoEditorView photoImageView;
 
@@ -73,6 +80,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
 
     // Listener
     private OnPersonSelectListener onPersonSelectListener;
+
     // Cache
     private PhotoThumbmailCache photoCache;
 
@@ -135,7 +143,9 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
                 onSelectContactClick(v);
             }
         });
-         return v;
+        // Form
+        formValidator = createValidator(getActivity());
+        return v;
     }
 
     @Override
@@ -144,7 +154,31 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         // Load Data
         loadEntity(getArguments());
     }
-    
+
+
+    // ===========================================================
+    // Validator
+    // ===========================================================
+
+    public Form createValidator(Context context) {
+        Form formValidator = new Form();
+        // Name
+        ValidateTextView nameTextField = new ValidateTextView(nameEditText)//
+                .addValidator(new NotEmptyValidator());
+        formValidator.addValidates(nameTextField);
+
+        // Phone
+        ExistPersonPhoneValidator existValidator = new ExistPersonPhoneValidator(getActivity(), null);
+        ValidateTextView phoneTextField = new ValidateTextView(phoneEditText)//
+                .addValidator(new NotEmptyValidator()) //
+                .addValidator(existValidator) //
+                ;
+        formValidator.addValidates(phoneTextField);
+
+        return formValidator;
+    }
+
+
     // ===========================================================
     // Menu
     // ===========================================================
@@ -158,18 +192,18 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.menu_save:
-            onSaveClick();
-            return true;
-        case R.id.menu_delete:
-            onDeleteClick();
-            return true;
-        case R.id.menu_select_contact:
-            onSelectContactClick(null);
-            return true;
-        case R.id.menu_cancel:
-            onCancelClick();
-            return true;
+            case R.id.menu_save:
+                onSaveClick();
+                return true;
+            case R.id.menu_delete:
+                onDeleteClick();
+                return true;
+            case R.id.menu_select_contact:
+                onSelectContactClick(null);
+                return true;
+            case R.id.menu_cancel:
+                onCancelClick();
+                return true;
         }
         return false;
     }
@@ -210,21 +244,22 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
             int deleteCount = getActivity().getContentResolver().delete(entityUri, null, null);
             Log.d(TAG, "Delete %s entity successuf");
             if (deleteCount > 0) {
-                getActivity().setResult(Activity.RESULT_OK); 
+                getActivity().setResult(Activity.RESULT_OK);
             }
             getActivity().finish();
         }
     }
 
     public void onSaveClick() {
+
         String name = nameEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
         Uri uri = doSavePerson(name, phone, contactId);
         if (uri != null) {
-
             getActivity().setResult(Activity.RESULT_OK);
             getActivity().finish();
         }
+
     }
 
     public void onCancelClick() {
@@ -288,7 +323,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     /**
      * {@link http
      * ://www.higherpass.com/Android/Tutorials/Working-With-Android-Contacts/}
-     * 
+     *
      * @param v
      */
     public void onSelectContactClick(View v) {
@@ -307,26 +342,26 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         super.onActivityResult(requestCode, resultCode, result);
 
         switch (requestCode) {
-        case (PICK_CONTACT):
-            if (resultCode == Activity.RESULT_OK) {
-                Log.d(TAG, "PICK_CONTACT : " + result);
-                Uri contactData = result.getData();
-                saveContactData(contactData);
-                // finish();
+            case (PICK_CONTACT):
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d(TAG, "PICK_CONTACT : " + result);
+                    Uri contactData = result.getData();
+                    saveContactData(contactData);
+                    // finish();
+                }
+                break;
+            case (REQUEST_PICK_PHOTO): {
+
+                break;
             }
-            break;
-        case (REQUEST_PICK_PHOTO): {
+            case (REQUEST_CROP_PHOTO): {
 
-            break;
-        }
-        case (REQUEST_CROP_PHOTO): {
-
-            break;
-        }
-        case (PICK_COLOR): {
-            Log.d(TAG, "PICK_COLOR : ");
-            break;
-        }
+                break;
+            }
+            case (PICK_COLOR): {
+                Log.d(TAG, "PICK_COLOR : ");
+                break;
+            }
 
         }
 
@@ -353,7 +388,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     /**
      * {@link http
      * ://developer.android.com/guide/topics/providers/contacts-provider.html}
-     * 
+     *
      * @param contactData
      */
     public void saveContactData(Uri contactData) {
@@ -361,13 +396,13 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         String[] selectionArgs = null;
         Log.d(TAG, "Select contact Uri : " + contactData);
         ContentResolver cr = getActivity().getContentResolver();
-        Cursor c = getActivity().getContentResolver().query(contactData, new String[] { //
+        Cursor c = getActivity().getContentResolver().query(contactData, new String[]{ //
                 // BaseColumns._ID , //
-                        ContactsContract.Data.CONTACT_ID, //
-                        ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, //
-                        ContactsContract.CommonDataKinds.Phone.NUMBER, //
-                        ContactsContract.Contacts.LOOKUP_KEY, //
-                        ContactsContract.CommonDataKinds.Phone.TYPE }, selection, selectionArgs, null);
+                ContactsContract.Data.CONTACT_ID, //
+                ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME, //
+                ContactsContract.CommonDataKinds.Phone.NUMBER, //
+                ContactsContract.Contacts.LOOKUP_KEY, //
+                ContactsContract.CommonDataKinds.Phone.TYPE}, selection, selectionArgs, null);
         // Uri contactLookupUri = ContactsContract.Data.getContactLookupUri(cr,
         // contactData);
 
@@ -402,7 +437,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
 
     private String checkExistEntityId(ContentResolver cr, String phone) {
         Uri checkExistUri = PersonProvider.Constants.getUriPhoneFilter(phone);
-        String[] checkExistProjections = new String[] { PersonColumns.COL_ID };
+        String[] checkExistProjections = new String[]{PersonColumns.COL_ID};
         Cursor checkExistCursor = cr.query(checkExistUri, checkExistProjections, null, null, null);
         String checkExistId = null;
         try {
@@ -449,8 +484,8 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         String phone = cleanPhone(phoneDirty);
         String name = trimToNull(nameDirty);
         setPerson(name, phone, contactId);
-        if (TextUtils.isEmpty(phone)) {
-            NotifToasts.validateMissingPhone(getActivity());
+        // Validate
+        if (!formValidator.validate()) {
             return null;
         }
         // Prepare db insert
@@ -571,7 +606,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
      * <li>com.android.contacts.detail.PhotoSelectionHandler</li>
      * <li>com.android.contacts.editor.ContactEditorFragment.PhotoHandler</li>
      * </ul>
-     * 
+     *
      * @param contactId
      */
     private void loadPhoto(String contactId, final String phone) {

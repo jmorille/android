@@ -3,6 +3,7 @@ package eu.ttbox.geoping.ui.pairing;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -45,6 +46,9 @@ import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
+import eu.ttbox.geoping.ui.core.validator.Form;
+import eu.ttbox.geoping.ui.core.validator.validate.ValidateTextView;
+import eu.ttbox.geoping.ui.core.validator.validator.NotEmptyValidator;
 import eu.ttbox.geoping.ui.person.PhotoEditorView;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
@@ -78,6 +82,10 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
     private RadioButton authorizeTypeAskRadioButton;
     private RadioButton authorizeTypeNeverRadioButton;
     private RadioButton authorizeTypeAlwaysRadioButton;
+
+
+    //Validator
+    private Form formValidator;
 
     // Image
     private PhotoEditorView photoImageView;
@@ -170,7 +178,11 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
                 onSelectContactClick(v);
 
             }
-        }); 
+        });
+
+        // Form
+        formValidator = createValidator(getActivity());
+
         return v;
     }
 
@@ -180,6 +192,27 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         Log.d(TAG, "onActivityCreated");
         // Load Data
         loadEntity(getArguments());
+    }
+
+
+    // ===========================================================
+    // Validator
+    // ===========================================================
+
+    public Form createValidator(Context context) {
+        Form formValidator = new Form();
+        // Name
+        ValidateTextView nameTextField = new ValidateTextView(nameEditText)//
+                .addValidator(new NotEmptyValidator());
+        formValidator.addValidates(nameTextField);
+
+        // Phone
+        ValidateTextView priceTextField = new ValidateTextView(phoneEditText)//
+                .addValidator(new NotEmptyValidator());
+        formValidator.addValidates(priceTextField);
+
+
+        return formValidator;
     }
 
     // ===========================================================
@@ -294,8 +327,10 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
 
         // Do Save
         Uri uri = doSavePairing(name, phone, authType);
-        getActivity().setResult(Activity.RESULT_OK);
-        getActivity().finish();
+        if (uri!=null) {
+            getActivity().setResult(Activity.RESULT_OK);
+            getActivity().finish();
+        }
     }
 
     public void onCancelClick() {
@@ -454,8 +489,8 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         String phone = cleanPhone(phoneDirty);
         String name = trimToNull(nameDirty);
         setPairing(name, phone);
-        if (TextUtils.isEmpty(phone)) {
-            NotifToasts.validateMissingPhone(getActivity());
+        // Validate
+        if (!formValidator.validate()) {
             return null;
         }
         // Prepare db insert

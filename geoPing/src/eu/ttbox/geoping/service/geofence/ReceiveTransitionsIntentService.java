@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -24,15 +25,20 @@ import java.util.List;
 import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.GeoFenceProvider;
+import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.model.GeoTrack;
+import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
+import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
+import eu.ttbox.geoping.service.slave.eventspy.SpyNotificationHelper;
+import eu.ttbox.osm.ui.map.mylocation.sensor.LocationUtils;
 
 /**
  * This class receives geofence transition events from Location Services, in the
@@ -85,9 +91,9 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
         // First check for errors
         if (LocationClient.hasError(intent)) {
-             int errorCode = LocationClient.getErrorCode(intent);
-             String errorMessage = LocationServiceErrorMessages.getErrorString(this, errorCode);
-           // Log the error
+            int errorCode = LocationClient.getErrorCode(intent);
+            String errorMessage = LocationServiceErrorMessages.getErrorString(this, errorCode);
+            // Log the error
             Log.e(TAG, getString(R.string.geofence_transition_error_detail, errorMessage));
             // Set the action and error message for the broadcast intent
             broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR)
@@ -101,21 +107,21 @@ public class ReceiveTransitionsIntentService extends IntentService {
             int transition = LocationClient.getGeofenceTransition(intent);
 
             // Test that a valid transition was reported
-            if ( (transition == Geofence.GEOFENCE_TRANSITION_ENTER) || (transition == Geofence.GEOFENCE_TRANSITION_EXIT)  ) {
-                 // Post a notification
+            if ((transition == Geofence.GEOFENCE_TRANSITION_ENTER) || (transition == Geofence.GEOFENCE_TRANSITION_EXIT)) {
+                // Post a notification
                 List<Geofence> geofences = LocationClient.getTriggeringGeofences(intent);
                 SmsMessageActionEnum transitionType = getTransitionString(transition);
                 // Send Notification
                 String[] geofenceIds = extractGeofenceRequestsId(geofences);
                 sendNotification(transitionType, geofenceIds);
-                 // Log the transition type and a message
-                Log.d(TAG, "GeoFence Violation : " + transitionType + " for " + geofences.size() + " geofences (like" + geofences.get(0) );
+                // Log the transition type and a message
+                Log.d(TAG, "GeoFence Violation : " + transitionType + " for " + geofences.size() + " geofences (like" + geofences.get(0));
             } else {
                 // An invalid transition was reported
                 // Always log as an error
-                Log.e(TAG,  "Geofence transition error. Invalid type " +transition+
+                Log.e(TAG, "Geofence transition error. Invalid type " + transition +
                         " in geofences %2$s");
-             }
+            }
         }
     }
 
@@ -156,16 +162,21 @@ public class ReceiveTransitionsIntentService extends IntentService {
      *
      * @param transitionType The type of transition that occurred.
      */
-    private void sendNotification(SmsMessageActionEnum transitionType, String[] geofenceIds ) {
-        String transitionTypeMsg =  getString(transitionType.labelResourceId);
+    private void sendNotification(SmsMessageActionEnum transitionType, String[] geofenceIds) {
+        String transitionTypeMsg = getString(transitionType.labelResourceId);
 
         // Compute afected geoFence
         List<CircleGeofence> geofences = getCircleGeofenceFromRequestIds(geofenceIds);
+        String[] phones = SpyNotificationHelper.searchListPhonesForGeofenceViolation(this, geofences, transitionType);
+        Location lastLocation =   LocationUtils.getLastKnownLocation(locationManager);
+        sendEventSpySmsMessage(phones,   transitionType,   null,   lastLocation);
+
+
 
         // Create an explicit content Intent that starts the main Activity
         Intent notificationIntent =
                 new Intent(getApplicationContext(), MainActivity.class);
-         // Construct a task stack
+        // Construct a task stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the main Activity to the task stack as the parent
         stackBuilder.addParentStack(MainActivity.class);
@@ -187,10 +198,10 @@ public class ReceiveTransitionsIntentService extends IntentService {
                 .setContentIntent(notificationPendingIntent);
 
         // Message count
-        if (geofences.size()>1) {
+        if (geofences.size() > 1) {
             builder.setNumber(geofences.size());
             // BigView
-            NotificationCompat.InboxStyle inBoxStyle =  new NotificationCompat.InboxStyle();
+            NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
             inBoxStyle.setBigContentTitle(transitionTypeMsg);
             for (CircleGeofence fence : geofences) {
                 inBoxStyle.addLine(fence.getName());
@@ -217,35 +228,40 @@ public class ReceiveTransitionsIntentService extends IntentService {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
                 return SmsMessageActionEnum.GEOFENCE_ENTER;
             case Geofence.GEOFENCE_TRANSITION_EXIT:
-                return SmsMessageActionEnum.GEOFENCE_EXIT; 
+                return SmsMessageActionEnum.GEOFENCE_EXIT;
             default:
                 return SmsMessageActionEnum.GEOFENCE_Unknown_transition;
         }
     }
 
-    public  void sendEventSpySmsMessage( String[] phones, SmsMessageActionEnum eventType, Bundle eventParams, Location location) {
-        if (phones != null) {
-            Log.d(TAG, "EventSpy Notification  : " + eventType + " for " + phones.length + " phones destinations");
-            // Send SMS
-            Bundle extrasBundles = eventParams == null ? new Bundle() : eventParams;
-            if (!SmsMessageLocEnum.EVT_DATE.isToBundle(extrasBundles)) {
-                SmsMessageLocEnum.EVT_DATE.writeToBundle(extrasBundles, System.currentTimeMillis());
-            }
-            if (location!=null) {
-                // Converter Location
-                GeoTrack geotrack = new GeoTrack(null, location);
-                Bundle params = GeoTrackHelper.getBundleValues(geotrack);
-                if (extrasBundles!=null && !extrasBundles.isEmpty()) {
-                    params.putAll(extrasBundles);
-                }
-                // Not time to get GeoLoc, send it direct
-                for (String phone : phones) {
-                    SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.SLAVE, phone, eventType, params);
-                }
-                // TODO saveInLocalDb
-            } else {
-                GeoPingSlaveLocationService.runFindLocationAndSendInService(this, eventType, phones, extrasBundles);
-            }
+
+
+
+    public void sendEventSpySmsMessage(String[] phones, SmsMessageActionEnum eventType, Bundle eventParams, Location location) {
+        if (phones == null || phones.length < 1) {
+            Log.w(TAG, "Geofence violation detected but nobody to warning");
         }
+        Log.d(TAG, "EventSpy Notification  : " + eventType + " for " + phones.length + " phones destinations");
+        // Send SMS
+        Bundle extrasBundles = eventParams == null ? new Bundle() : eventParams;
+        if (!SmsMessageLocEnum.EVT_DATE.isToBundle(extrasBundles)) {
+            SmsMessageLocEnum.EVT_DATE.writeToBundle(extrasBundles, System.currentTimeMillis());
+        }
+        if (location != null) {
+            // Converter Location
+            GeoTrack geotrack = new GeoTrack(null, location);
+            Bundle params = GeoTrackHelper.getBundleValues(geotrack);
+            if (extrasBundles != null && !extrasBundles.isEmpty()) {
+                params.putAll(extrasBundles);
+            }
+            // Not time to get GeoLoc, send it direct
+            for (String phone : phones) {
+                SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.SLAVE, phone, eventType, params);
+            }
+            // TODO saveInLocalDb
+        } else {
+            GeoPingSlaveLocationService.runFindLocationAndSendInService(this, eventType, phones, extrasBundles);
+        }
+
     }
 }

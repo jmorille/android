@@ -21,7 +21,7 @@ public class NotifToasts {
         Toast.makeText(context, R.string.toast_notif_backup_restored, Toast.LENGTH_SHORT).show();
     }
 
-    public static void validateMissingPhone(Context context ) { 
-        Toast.makeText(context, "Missing phone", Toast.LENGTH_SHORT).show();
-    }
+//    public static void validateMissingPhone(Context context ) {
+//        Toast.makeText(context, "Missing phone", Toast.LENGTH_SHORT).show();
+//    }
 }

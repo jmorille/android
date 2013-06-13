@@ -234,7 +234,7 @@ public class GeofenceRequester
     public void onConnected(Bundle arg0) {
         // If debugging, log the connection
 
-        Log.d(GeofenceUtils.APPTAG, mActivity.getString(R.string.connected));
+        Log.d(GeofenceUtils.APPTAG,"Client connected");
 
         // Continue adding the geofences
         continueAddGeofences();

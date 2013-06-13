@@ -323,7 +323,7 @@ public class GeofenceRemover implements
     @Override
     public void onConnected(Bundle arg0) {
         // If debugging, log the connection
-        Log.d(GeofenceUtils.APPTAG, mContext.getString(R.string.connected));
+        Log.d(GeofenceUtils.APPTAG, "Client connected");
 
         // Continue the request to remove the geofences
         continueRemoveGeofences();

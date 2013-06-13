@@ -1,13 +1,17 @@
 package eu.ttbox.geoping.service.slave.eventspy;
 
 import java.util.HashSet;
+import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.domain.PairingProvider;
+import eu.ttbox.geoping.domain.model.CircleGeofence;
+import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
+import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
@@ -17,6 +21,28 @@ import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
 public class SpyNotificationHelper {
 
     private static final String TAG = "SpyNotificationHelper";
+
+
+    public static String[] searchListPhonesForGeofenceViolation(Context context,  List<CircleGeofence> geofences, SmsMessageActionEnum transitionType) {
+        // TODO Use geofences and transitionType to Calculate
+        // Query
+        String[] projection = new String[]{PairingDatabase.PairingColumns.COL_PHONE};
+        String selection = String.format("%s = 1", PairingDatabase.PairingColumns.COL_AUTHORIZE_TYPE);
+        String[] selectionArgs = new String[]{String.valueOf(PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS.getCode())};
+        Cursor cursor = context.getContentResolver().query(PairingProvider.Constants.CONTENT_URI, projection, selection, null, null);
+        // Convert As String
+        String[] phones = convertCursorAsStringArrayWithCloseCursor(cursor, 0);
+        return phones;
+    }
+
+
+    public static  String[] searchListPhonesForNotif(Context context, String notifCol) {
+        Cursor cursor = getCursorForSearchPhoneForNotif(context, notifCol);
+        Log.d(TAG, "Search EventSpy " + notifCol + " : found " + cursor.getCount() + " phones to notify");
+        String[] result = convertCursorAsStringArrayWithCloseCursor(cursor, 0);
+        return result;
+    }
+
 
     public static String searchContactPhonesForNotif(Context context, String notifCol) {
         StringBuffer sb = new StringBuffer();
@@ -42,9 +68,9 @@ public class SpyNotificationHelper {
 
     }
 
-    public static  String[] searchListPhonesForNotif(Context context, String notifCol) {
+
+    private static  String[] convertCursorAsStringArrayWithCloseCursor(Cursor cursor, int colIdx) {
         String[] result = null;
-        Cursor cursor = getCursorForSearchPhoneForNotif(context, notifCol);
         try {
             int resultCount = cursor.getCount();
             if (resultCount > 0) {
@@ -55,7 +81,7 @@ public class SpyNotificationHelper {
                 }
                 result  = phones.toArray(new String[phones.size()]);
             }
-            Log.d(TAG, "Search EventSpy " + notifCol + " : found " + resultCount + " phones to notify");
+            Log.d(TAG, "ConvertCursor As StringArray : found " + resultCount + " String converted from idx " + colIdx);
         } finally {
             cursor.close();
         }

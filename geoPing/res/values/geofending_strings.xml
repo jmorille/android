@@ -7,8 +7,8 @@
     <!--<string name="geofence_transition_invalid_type">-->
         <!--Geofence transition error. Invalid type %1$d in geofences %2$s-->
     <!--</string>-->
-    <string name="connected">Client connected</string>
-    <string name="connection_failed">Connection failed</string>
+    <!--<string name="connected">Client connected</string>-->
+    <!--<string name="connection_failed">Connection failed</string>-->
     <string name="disconnected">Client disconnected</string>
     <string name="add_geofences_result_success">
         Add Geofences: Success GeofenceRequestIds=%1$s
