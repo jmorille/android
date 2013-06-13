@@ -70,6 +70,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
 
     //Validator
     private Form formValidator;
+    private ExistPersonPhoneValidator existValidator;
 
     // Image
     private PhotoEditorView photoImageView;
@@ -168,7 +169,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         formValidator.addValidates(nameTextField);
 
         // Phone
-        ExistPersonPhoneValidator existValidator = new ExistPersonPhoneValidator(getActivity(), null);
+          existValidator = new ExistPersonPhoneValidator(getActivity(), entityId);
         ValidateTextView phoneTextField = new ValidateTextView(phoneEditText)//
                 .addValidator(new NotEmptyValidator()) //
                 .addValidator(existValidator) //
@@ -214,6 +215,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
 
     private void setEntityId(String entityId) {
         this.entityId = entityId;
+        this.existValidator.setEntityId(entityId);
     }
 
     public void setOnPersonSelectListener(OnPersonSelectListener onPersonSelectListener) {
@@ -321,8 +323,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     // ===========================================================
 
     /**
-     * {@link http
-     * ://www.higherpass.com/Android/Tutorials/Working-With-Android-Contacts/}
+     * <a href="http://www.higherpass.com/Android/Tutorials/Working-With-Android-Contacts/">Working-With-Android-Contacts</a>
      *
      * @param v
      */
@@ -386,8 +387,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     // ===========================================================
 
     /**
-     * {@link http
-     * ://developer.android.com/guide/topics/providers/contacts-provider.html}
+     * <a href="http://developer.android.com/guide/topics/providers/contacts-provider.html">contacts-provider</a>
      *
      * @param contactData
      */
@@ -502,7 +502,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         if (entityId == null) {
             uri = getActivity().getContentResolver().insert(PersonProvider.Constants.CONTENT_URI, values);
             if (uri != null) {
-                this.entityId = uri.getLastPathSegment();
+                setEntityId(uri.getLastPathSegment());
                 personPairingButton.setVisibility(View.VISIBLE);
                 getActivity().setResult(Activity.RESULT_OK);
                 isListenerUpdated = true;
@@ -536,7 +536,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     }
 
     public void prepareInsert() {
-        this.entityId = null;
+        setEntityId(null);
         doColorChangeRamdom();
         onSelectContactClick(null);
     }
@@ -568,6 +568,8 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
                 contactId = helper.getContactId(cursor);
                 long personId = helper.getPersonId(cursor);
                 String personPhone = helper.getPersonPhone(cursor);
+                // Validator
+                existValidator.setEntityId(String.valueOf(personId));
                 // Bind Values
                 phoneEditText.setText(personPhone);
                 helper.setTextPersonName(nameEditText, cursor);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="validator_empty">Mandatory</string>
+    <string name="validator_empty">Obligatoire</string>
     <string name="validator_not_number">Not an number</string>
     <string name="validator_email">The e-mail address is not in a valid format.</string>
     <string name="validator_url">The URL entered is incorrect.</string>
@@ -8,7 +8,7 @@
     <string name="validator_alnum">The value has not only alnum characters</string>
     <string name="validator_hex">The value has not only hexadecimal digit characters</string>
     <string name="validator_regexp">The value does not match against pattern.</string>
-
-    <string name="validator_exiting_record">Existing record</string>
+    
+    <string name="validator_exiting_record">Enregistrement existant</string>
 
 </resources>

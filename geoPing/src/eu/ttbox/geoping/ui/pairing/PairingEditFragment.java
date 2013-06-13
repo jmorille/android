@@ -49,6 +49,7 @@ import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.ui.core.validator.Form;
 import eu.ttbox.geoping.ui.core.validator.validate.ValidateTextView;
 import eu.ttbox.geoping.ui.core.validator.validator.NotEmptyValidator;
+import eu.ttbox.geoping.ui.pairing.validator.ExistPairingPhoneValidator;
 import eu.ttbox.geoping.ui.person.PhotoEditorView;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
@@ -86,6 +87,7 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
 
     //Validator
     private Form formValidator;
+    private ExistPairingPhoneValidator  existValidator;
 
     // Image
     private PhotoEditorView photoImageView;
@@ -207,9 +209,11 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         formValidator.addValidates(nameTextField);
 
         // Phone
-        ValidateTextView priceTextField = new ValidateTextView(phoneEditText)//
-                .addValidator(new NotEmptyValidator());
-        formValidator.addValidates(priceTextField);
+        existValidator = new ExistPairingPhoneValidator(getActivity(), entityUri.getLastPathSegment());
+        ValidateTextView phoneTextField = new ValidateTextView(phoneEditText)//
+                .addValidator(new NotEmptyValidator()) //
+                .addValidator(existValidator)  ;
+        formValidator.addValidates(phoneTextField);
 
 
         return formValidator;
@@ -289,6 +293,7 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         // Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI,
         // entityId);
         this.entityUri = entityUri;
+        existValidator.setEntityId(entityUri.getLastPathSegment());
         Bundle bundle = new Bundle();
         bundle.putString(Intents.EXTRA_DATA_URI, entityUri.toString());
         getActivity().getSupportLoaderManager().initLoader(PAIRING_EDIT_LOADER, bundle, pairingLoaderCallback);
@@ -296,6 +301,7 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
 
     private void prepareInsert() {
         this.entityUri = null;
+        existValidator.setEntityId(null);
         showNotificationCheckBox.setChecked(showNotifDefault);
         // Open Selection contact Diallog
         onSelectContactClick(null);
@@ -505,6 +511,7 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         if (entityUri == null) {
             uri = getActivity().getContentResolver().insert(PairingProvider.Constants.CONTENT_URI, values);
             this.entityUri = uri;
+            existValidator.setEntityId( entityUri.getLastPathSegment() );
             getActivity().setResult(Activity.RESULT_OK);
         } else {
             uri = entityUri;
@@ -571,7 +578,7 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
                 String pairingPhone = helper.getPairingPhone(cursor);
                 // Binding
                 phoneEditText.setText(pairingPhone);
-                helper.setTextPairingName(nameEditText, cursor)//
+                       helper.setTextPairingName(nameEditText, cursor)//
                         .setCheckBoxPairingShowNotif(showNotificationCheckBox, cursor);
                 // Pairing
                 PairingAuthorizeTypeEnum authType = helper.getPairingAuthorizeTypeEnum(cursor);
