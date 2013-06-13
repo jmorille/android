@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import eu.ttbox.geoping.MainActivity;
+import eu.ttbox.geoping.domain.GeoFenceProvider;
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
@@ -16,6 +17,7 @@ import eu.ttbox.geoping.service.master.GeoPingMasterService;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
 import eu.ttbox.geoping.service.slave.GeopingNotifSlaveTypeEnum;
 import eu.ttbox.geoping.service.slave.receiver.AuthorizePhoneTypeEnum;
+import eu.ttbox.geoping.ui.geofence.GeofenceEditActivity;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.pairing.PairingEditActivity;
 import eu.ttbox.geoping.ui.person.PersonEditActivity;
@@ -94,7 +96,19 @@ public class Intents {
 		return intent;
 	}
 
-	// ===========================================================
+    public static Intent editGeofence(Context context, String entityId) {
+        Intent intent = new Intent(context, GeofenceEditActivity.class);
+        if (entityId == null) {
+            intent.setAction(Intent.ACTION_INSERT);
+        } else {
+            Uri entityUri = Uri.withAppendedPath(GeoFenceProvider.Constants.CONTENT_URI, String.valueOf(entityId));
+            intent.setAction(Intent.ACTION_EDIT).putExtra(EXTRA_SMS_PHONE, entityId).setData(entityUri);
+        }
+        return intent;
+    }
+
+
+    // ===========================================================
 	// GeoPing Market
 	// ===========================================================
 

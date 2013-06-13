@@ -31,6 +31,7 @@ import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.service.geofence.GeofenceUtils;
 import eu.ttbox.osm.core.AppConstants;
 
+@Deprecated
 public class GeofenceListOverlay extends Overlay {
 
     private static final String TAG = "GeofenceListOverlay";

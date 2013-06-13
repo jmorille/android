@@ -75,6 +75,8 @@
     <string name="menu_quit">Quitter</string>
     <string name="menu_person">Personnes</string>
     <string name="menu_pairing">Vie privée</string>
+    <string name="menu_geofence">Géo Barrière</string>
+
     <string name="menu_smslog">Log Sms</string>
     <string name="menu_extra_feature">Extra Features</string>
 
@@ -164,7 +166,12 @@
     <string name="pairing_authorize_type:never">Bloqué</string>
     <string name="pairing_authorize_type:ask">Sur validation</string>
     <string name="pairing_authorize_type:always">Toujours</string>
-     
+
+    <!-- Geofence model -->
+    <string name="add_geofence">Ajouer une Geo barrière</string>
+    <string name="geofence_help">"Créer une Geo barrière pour obtenir des alertes quand un membre de la famille rentre ou sort."</string>
+
+
     <!-- SmsLog Model -->
 	<string name="smslog_delete_all">Tout supprimer</string>
 

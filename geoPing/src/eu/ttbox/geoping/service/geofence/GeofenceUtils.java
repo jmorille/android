@@ -22,7 +22,6 @@ import org.osmdroid.util.GeoPoint;
 /**
  * This class defines constants used by location sample apps.
  */
-@Deprecated
 public final class GeofenceUtils {
 
     // Used to track what type of geofence removal request was made.
@@ -135,6 +134,19 @@ public final class GeofenceUtils {
         double square_dist = Math.pow(centerX - x, 2)
                 + Math.pow(centerY - y, 2);
         return square_dist <= Math.pow(radius, 2);
+    }
+
+
+    public static String getDistanceText(int radiusInMeters) {
+        String distanceText;
+        if (radiusInMeters > 1000) {
+            int km = radiusInMeters / 1000;
+            int m = radiusInMeters % 1000;
+            distanceText = Integer.toString(km) + " km, " + Integer.toString(m) + " m";
+        } else {
+            distanceText = Integer.toString(radiusInMeters) + " m";
+        }
+        return distanceText;
     }
 
     public static final boolean isOnCircle(IGeoPoint obj, IGeoPoint center,

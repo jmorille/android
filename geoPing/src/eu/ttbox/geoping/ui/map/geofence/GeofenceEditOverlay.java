@@ -435,7 +435,7 @@ public class GeofenceEditOverlay extends Overlay {
         float radiusInPixelsThird = radiusInPixels / 3;
 
         if (drawDistance) {
-            String distanceText = getDistanceText(geofence.radiusInMeters);
+            String distanceText = GeofenceUtils.getDistanceText(geofence.radiusInMeters);
             // Draw Distance text
             distanceTextPath.rewind();
             distanceTextPath.moveTo(x, y + radiusInPixelsThird);
@@ -456,17 +456,7 @@ public class GeofenceEditOverlay extends Overlay {
     // Data Loader
     // ===========================================================
 
-    private String getDistanceText(int radiusInMeters) {
-        String distanceText;
-        if (radiusInMeters > 1000) {
-            int km = radiusInMeters / 1000;
-            int m = radiusInMeters % 1000;
-            distanceText = Integer.toString(km) + " km, " + Integer.toString(m) + " m";
-        } else {
-            distanceText = Integer.toString(radiusInMeters) + " m";
-        }
-        return distanceText;
-    }
+
 
     private void drawArrow(Canvas canvas, Point sPC, float length, double angle) {
 

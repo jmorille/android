@@ -60,6 +60,7 @@
     <string name="menu_quit">Quit</string>
     <string name="menu_person">Person</string>
     <string name="menu_pairing">Privacy</string>
+    <string name="menu_geofence">GeoFence</string>
     <string name="menu_smslog">Log Sms</string>
     <string name="menu_extra_feature">Extra Features</string>
     <string name="menu_pairing_notification">Notification</string>
@@ -146,13 +147,25 @@
     <string name="pairing_notification_phone_call">Appel Téléphonique Emis</string>
     <string name="pairing_notification_phone_receive">Appel Téléphonique Recut</string>
 
+    <!-- Geofence model -->
+    <string name="add_geofence">Add a GeoFence</string>
+    <string name="geofence_help">"Create a GeoFence to get alerts when family members come and go."</string>
+
     <!-- SmsLog Model -->
     <string name="smslog_delete_all">Delete everything</string>
 
     <!-- Help -->
-    <string name="person_help"> List of persons for whom you can request a GeoPing. \n \n
-         Various steps to associate a person: \n<b> 1 - </b> Add a new person by dialing the phone number (or select it from the list of contacts) \n<b> 2 - </b> Install the application GeoPing on the second phone (for which you want to get its position) \n<b> 3 - </b> Send a pairing request to allow only your phone number \n<b> 4 - </b> Wait for the receipt of an SMS on the second phone to accept the pairing in the notification bar \n<b> 5 - </b> Optional: you can block any new pairing in the menu \ <i> options </i> \n
-          \n You can now get the position of the second phone \n</string>
+    <string name="person_help">"List of persons for whom you can request a GeoPing.
+
+Various steps to associate a person:
+<b> 1 - </b> Add a new person by dialing the phone number (or select it from the list of contacts)
+<b> 2 - </b> Install the application GeoPing on the second phone (for which you want to get its position)
+<b> 3 - </b> Send a pairing request to allow only your phone number
+<b> 4 - </b> Wait for the receipt of an SMS on the second phone to accept the pairing in the notification bar
+<b> 5 - </b> Optional: you can block any new pairing in the menu \ <i> options </i>
+
+ You can now get the position of the second phone"</string>
+
     <string name="pairing_help">         The list of associations is the list of persons associated for which you agree (or not) to send your GeoPing. \n
          Your position is getting by using GPS or other sensor in your phone. \n \n
          3 options of association are available: \n<b>  * Block:</b> Prevents any GeoPing request \n<b>  * Always : </b> Accepts systematically Geoping request. \n<b>  * On validation: </b> A notification will ask you systematically your agreement for GeoPing request \ 

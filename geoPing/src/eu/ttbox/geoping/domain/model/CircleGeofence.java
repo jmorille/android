@@ -22,6 +22,8 @@ public class CircleGeofence {
     public long expirationDuration = Geofence.NEVER_EXPIRE;
     public int transitionType = Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT;
 
+    public String address;
+
     public IGeoPoint cachedGeoPoint;
 //    private double latitude;
 //    private double longitude;

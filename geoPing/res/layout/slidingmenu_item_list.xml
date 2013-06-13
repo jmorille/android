@@ -33,6 +33,13 @@
             geoping:text="@string/menu_pairing" />
 
         <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView
+                android:id="@+id/menu_geofence"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                geoping:src="@drawable/ic_device_access_secure"
+                geoping:text="@string/menu_geofence" />
+
+        <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView
             android:id="@+id/menu_smslog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" 

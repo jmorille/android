@@ -114,8 +114,10 @@
         </activity>
         <activity android:name=".ui.pairing.PairingEditActivity">
         </activity>
-        
-          
+
+        <!-- Geofence -->
+        <activity android:label="@string/menu_geofence" android:launchMode="singleTask" android:name=".ui.geofence.GeofenceListActivity">
+        </activity>
 
          
         

@@ -209,7 +209,8 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         formValidator.addValidates(nameTextField);
 
         // Phone
-        existValidator = new ExistPairingPhoneValidator(getActivity(), entityUri.getLastPathSegment());
+        String entityId = entityUri ==null ? null : entityUri.getLastPathSegment();
+        existValidator = new ExistPairingPhoneValidator(getActivity(), entityId);
         ValidateTextView phoneTextField = new ValidateTextView(phoneEditText)//
                 .addValidator(new NotEmptyValidator()) //
                 .addValidator(existValidator)  ;
@@ -293,7 +294,8 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         // Uri.withAppendedPath(PairingProvider.Constants.CONTENT_URI,
         // entityId);
         this.entityUri = entityUri;
-        existValidator.setEntityId(entityUri.getLastPathSegment());
+        String entityId = entityUri ==null ? null : entityUri.getLastPathSegment();
+        existValidator.setEntityId(entityId);
         Bundle bundle = new Bundle();
         bundle.putString(Intents.EXTRA_DATA_URI, entityUri.toString());
         getActivity().getSupportLoaderManager().initLoader(PAIRING_EDIT_LOADER, bundle, pairingLoaderCallback);
@@ -511,7 +513,8 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         if (entityUri == null) {
             uri = getActivity().getContentResolver().insert(PairingProvider.Constants.CONTENT_URI, values);
             this.entityUri = uri;
-            existValidator.setEntityId( entityUri.getLastPathSegment() );
+            String entityId = entityUri ==null ? null : entityUri.getLastPathSegment();
+            existValidator.setEntityId( entityId );
             getActivity().setResult(Activity.RESULT_OK);
         } else {
             uri = entityUri;

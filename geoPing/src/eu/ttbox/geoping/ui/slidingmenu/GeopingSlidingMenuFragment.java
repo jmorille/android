@@ -40,6 +40,7 @@ import eu.ttbox.geoping.ui.smslog.SmsLogListActivity;
  * @see SampleListFragment
  * 
  */
+@Deprecated
 public class GeopingSlidingMenuFragment extends Fragment {
 
     private static final String TAG = "GeopingSlidingMenuFragment";

@@ -37,12 +37,14 @@ public class GeoFenceDatabase {
         // Location
         public static final String COL_LATITUDE_E6 = "LAT_E6";
         public static final String COL_LONGITUDE_E6 = "LNG_E6";
+        public static final String COL_ADDRESS = "ADDRESS";
         public static final String COL_RADIUS = "RADIUS";
         public static final String COL_TRANSITION = "TRANSITION";
         public static final String COL_EXPIRATION = "EXPIRATION";
 
         public static final String[] ALL_COLS = new String[]{COL_ID, COL_REQUEST_ID, COL_NAME//
-                , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION // 
+                , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION //
+                ,COL_ADDRESS //
         };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", COL_ID);

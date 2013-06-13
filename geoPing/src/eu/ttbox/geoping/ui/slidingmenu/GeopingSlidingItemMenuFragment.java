@@ -33,6 +33,7 @@ import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.billing.PayFeaturesActivity;
+import eu.ttbox.geoping.ui.geofence.GeofenceListActivity;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.pairing.PairingListActivity;
 import eu.ttbox.geoping.ui.person.PersonListActivity;
@@ -57,7 +58,10 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
     private SlidingPersonListAdapter personAdpater;
 
     private SparseArray<SlindingMenuItemView> menuItems;
-    private static int[] menuIds = new int[] { R.id.menuMap, R.id.menu_track_person, R.id.menu_pairing, R.id.menu_smslog, R.id.menu_settings, R.id.menu_extra_feature };
+    private static int[] menuIds = new int[] { //
+      R.id.menuMap, R.id.menu_track_person, R.id.menu_pairing,R.id.menu_geofence , R.id.menu_smslog//
+      , R.id.menu_settings, R.id.menu_extra_feature //
+     };
 
     // ===========================================================
     // Constructors
@@ -181,6 +185,7 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
         switch (itemId) {
         case R.id.menu_settings:
         case R.id.menu_pairing:
+        case R.id.menu_geofence:
         case R.id.menu_track_person:
         case R.id.menu_smslog:
             isRootActivity = true;
@@ -224,6 +229,8 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
             return ShowMapActivity.class;
         case R.id.menu_pairing:
             return PairingListActivity.class;
+        case R.id.menu_geofence:
+            return GeofenceListActivity.class;
         case R.id.menu_track_person:
             return PersonListActivity.class;
         case R.id.menu_smslog:
