@@ -16,9 +16,9 @@
     <string name="add_geofences_result_failure">
         Add Geofences: Failure, error code %1$d GeofenceRequestIds=%2$s
     </string>
-    <string name="remove_geofences_intent_success">
-        Removing all geofences succeeded.
-    </string>
+    <!--<string name="remove_geofences_intent_success">-->
+        <!--Removing all geofences succeeded.-->
+    <!--</string>-->
     <string name="remove_geofences_intent_failure">
         Removing all geofences failed: error code %1$d
     </string>

@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.google.android.gms.location.Geofence;
+
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.core.wrapper.BundleWrapper;
 import eu.ttbox.geoping.domain.core.wrapper.ContentValuesWrapper;
@@ -130,6 +132,8 @@ public class GeoFenceHelper {
         isNotInit = false;
         return this;
     }
+
+
 
     public CircleGeofence getEntity(Cursor cursor) {
         if (isNotInit) {

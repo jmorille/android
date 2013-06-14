@@ -209,12 +209,12 @@ public class GeofenceRemover implements
 
             // In debug mode, log the result
             Log.d(GeofenceUtils.APPTAG,
-                    mContext.getString(R.string.remove_geofences_intent_success));
+                    "Removing all geofences succeeded.");
 
             // Set the action and add the result message
             broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCES_REMOVED);
             broadcastIntent.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS,
-                    mContext.getString(R.string.remove_geofences_intent_success));
+                    "Removing all geofences succeeded.");
 
         // If removing the geocodes failed
         } else {

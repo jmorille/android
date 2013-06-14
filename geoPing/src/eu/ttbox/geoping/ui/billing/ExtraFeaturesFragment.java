@@ -1,6 +1,6 @@
 package eu.ttbox.geoping.ui.billing;
 
-import android.content.Context;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,21 +9,62 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import org.json.JSONException;
+
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.service.billing.util.IabHelper;
+import eu.ttbox.geoping.service.billing.util.IabResult;
+import eu.ttbox.geoping.service.billing.util.Inventory;
+import eu.ttbox.geoping.service.billing.util.SkuDetails;
 
 public class ExtraFeaturesFragment extends Fragment {
 
     private static final String TAG = "ExtraFeaturesFragment";
 
+    // binding
     private ListView extraListView;
-    
+
+
+    // The helper object
+    private IabHelper mHelper;
+
+
+    // ===========================================================
+    // Billing Listener
+    // ===========================================================
+
+    // Listener that's called when we finish querying the items and subscriptions we own
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+            Log.d(TAG, "Query inventory finished.");
+            if (result.isFailure()) {
+                complain("Failed to query inventory: " + result);
+                return;
+            }
+
+            Log.d(TAG, "Query inventory was successful.");
+
+        }
+    };
+
     // ===========================================================
     // Constructor
     // ===========================================================
+
+    // We're being destroyed. It's important to dispose of the helper here!
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // very important:
+        Log.d(TAG, "Destroying helper.");
+        if (mHelper != null) mHelper.dispose();
+        mHelper = null;
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,21 +72,16 @@ public class ExtraFeaturesFragment extends Fragment {
         View v = inflater.inflate(R.layout.pairing_list, container, false);
         // Bindings
         extraListView = (ListView) v.findViewById(android.R.id.list);
-        
+
         return v;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         // Create Adapter
-        ExtraFeatureAdapter adapter = new ExtraFeatureAdapter(getActivity());
-        adapter.add(new ExtraFeatureItem(R.id.menuMap, R.string.menu_map, R.drawable.ic_location_web_site));
-        adapter.add(new ExtraFeatureItem(R.id.menu_track_person, R.string.menu_person, R.drawable.ic_action_user));
-        adapter.add(new ExtraFeatureItem(R.id.menu_pairing, R.string.menu_pairing, R.drawable.ic_device_access_secure));
-        adapter.add(new ExtraFeatureItem(R.id.menu_smslog, R.string.menu_smslog, R.drawable.ic_collections_go_to_today));
-        adapter.add(new ExtraFeatureItem(R.id.menu_settings, R.string.menu_settings, android.R.drawable.ic_menu_preferences));
-        adapter.add(new ExtraFeatureItem(R.id.menu_extra_feature, R.string.menu_extra_feature, android.R.drawable.ic_menu_more));
+        SkuDetailsListAdapter adapter = createListItems();
 
         // Binding Menu
         extraListView.setAdapter(adapter);
@@ -53,71 +89,90 @@ public class ExtraFeaturesFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ExtraFeatureItem menu = (ExtraFeatureItem) parent.getItemAtPosition(position);
-                 
+                SkuDetails item = (SkuDetails) parent.getItemAtPosition(position);
+                Log.i(TAG, "Click on SkuDetails : " + item);
+
+            }
+        });
+
+
+        // Create the helper, passing it our context and the public key to verify signatures with
+        // -----------------------------------------------------------------------------------------
+        Log.d(TAG, "Creating IAB helper.");
+        mHelper = new IabHelper(getActivity(), getBase64EncodedPublicKey());
+        // enable debug logging (for a production application, you should set this to false).
+        mHelper.enableDebugLogging(true);
+
+        // Start setup. This is asynchronous and the specified listener
+        // will be called once setup completes.
+        Log.d(TAG, "Starting setup.");
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result) {
+                Log.d(TAG, "Setup finished.");
+
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    complain("Problem setting up in-app billing: " + result);
+                    return;
+                }
+
+                // Hooray, IAB is fully set up. Now, let's get an inventory of stuff we own.
+                Log.d(TAG, "Setup successful. Querying inventory.");
+                mHelper.queryInventoryAsync(mGotInventoryListener);
             }
         });
     }
 
+    private SkuDetailsListAdapter createListItems() {
+        SkuDetailsListAdapter adapter = new SkuDetailsListAdapter(getActivity());
+        try {
+            adapter.add(new SkuDetails("{\"productId\" : \"noAddForOneYear\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in aoo\", \"description\" : \"Suppress all adds during one year\"  }  "));
+        } catch (JSONException e) {
+            Log.e(TAG, "Error Parsing Json : " + e.getMessage(), e);
+        }
+        return adapter;
+
+    }
+
 
     // ===========================================================
-    // Slinding Menu Item
+    // Dialog
     // ===========================================================
 
-    private class ExtraFeatureItem {
-        public int itemId;
-        public String tag;
-        public int iconRes;
-
-        public ExtraFeatureItem(int menuId, int tagId, int iconRes) {
-            this.tag = getResources().getString(tagId);
-            this.iconRes = iconRes;
-            this.itemId = menuId;
-        }
+    void complain(String message) {
+        Log.e(TAG, "**** TrivialDrive Error: " + message);
+        alert("Error: " + message);
     }
 
-    public class ExtraFeatureAdapter extends ArrayAdapter<ExtraFeatureItem> {
-
-        public ExtraFeatureAdapter(Context context) {
-            super(context, 0);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.slidingmenu_row, null);
-                // Then populate the ViewHolder
-                holder = new ViewHolder();
-                holder.icon = (ImageView) convertView.findViewById(R.id.slidingmenu_item_icon);
-                holder.title = (TextView) convertView.findViewById(R.id.slidingmenu_item_title);
-                holder.selector = (ImageView) convertView.findViewById(R.id.slidingmenu_item_selector_icon);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            ExtraFeatureItem lineItem = getItem(position);
-            holder.icon.setImageResource(lineItem.iconRes);
-            holder.title.setText(lineItem.tag);
-            // TODO Test Selector
-//            Class<? extends Activity> expectedClass = getActivityClassByItemId(lineItem.itemId);
-//            if (expectedClass.isAssignableFrom(getActivity().getClass())) {
-//                holder.selector.setVisibility(View.VISIBLE);
-//            } else {
-//                holder.selector.setVisibility(View.GONE);
-//            }
-
-            return convertView;
-        }
-
+    void alert(String message) {
+        AlertDialog.Builder bld = new AlertDialog.Builder(getActivity());
+        bld.setMessage(message);
+        bld.setNeutralButton("OK", null);
+        Log.d(TAG, "Showing alert dialog: " + message);
+        bld.create().show();
     }
 
-    static class ViewHolder {
-        ImageView icon;
-        TextView title;
-        ImageView selector;
-    }
 
+    // ===========================================================
+    // Billing
+    // ===========================================================
+
+    /**
+     * base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
+     * (that you got from the Google Play developer console). This is not your
+     * developer public key, it's the *app-specific* public key.
+     * <p/>
+     * Instead of just storing the entire literal string here embedded in the
+     * program,  construct the key at runtime from pieces or
+     * use bit manipulation (for example, XOR with some other string) to hide
+     * the actual key.  The key itself is not secret information, but we don't
+     * want to make it easy for an attacker to replace the public key with one
+     * of their own and then fake messages from the server.
+     */
+    private String getBase64EncodedPublicKey() {
+        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg6EIpPnbaQ73nK3psbyxspmlEBK4cE9MpDUIS492zPg0h++6tgx7bvSKNK8COrxtDCIUE3A4XxJkLoqxGupdpYBPWdwsNGP67VMDgjLaC2TP8EQRFEHEEZFUuIaY8LPKXsP5QhfEKKFTZxHs/fav0olvVDhZ1MnB+SO6ZbRw/GmZE4ILQMIURn5bypX248OMTwDwrESqVwWKH4165SzM9VeI8/iVAsxnDDG1VfQ8Gnfi4QjyZKG5U9jRyt0iIMnV3LOhkk549Zjv3oLS7R02kcjIfigBztB4P6+MXwZ/5DlN7CKmxn+5IiTACSb4LEoPrekw0DNG+bHaxdpz/fEimQIDAQAB";
+        return base64EncodedPublicKey;
+    }
     // ===========================================================
     // Other
     // ===========================================================

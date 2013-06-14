@@ -47,7 +47,13 @@ public class GeoFenceLocationService {
     // ===========================================================
 
     public void addGeofences(Geofence geofence) {
-        GeopingConnectionCallbacks callbacks = new GeopingConnectionCallbacks(null, geofence);
+        ArrayList<Geofence> geofences = new ArrayList<Geofence>(1);
+        geofences.add(geofence);
+        addGeofences(geofences);
+    }
+
+    public void addGeofences(List<Geofence> geofences) {
+        GeopingConnectionCallbacks callbacks = new GeopingConnectionCallbacks(null, geofences);
         LocationClient mLocationClient = new LocationClient(mContext, callbacks, mOnConnectionFailedListener);
         callbacks.locationClient = mLocationClient;
         // Connect
@@ -131,12 +137,11 @@ public class GeoFenceLocationService {
             if (statusCode == LocationStatusCodes.SUCCESS) {
 
                 // In debug mode, log the result
-                Log.d(GeofenceUtils.APPTAG,
-                        mContext.getString(R.string.remove_geofences_intent_success));
+                Log.d(GeofenceUtils.APPTAG,   "Removing all geofences succeeded.");
             } else {
                 // Always log the error
-                Log.e(GeofenceUtils.APPTAG,
-                        mContext.getString(R.string.remove_geofences_intent_failure, statusCode));
+                Log.e( TAG,
+                        String.format("Removing all geofences failed: error code %1$d", statusCode));
             }
             // Disconnect
             locationClient.disconnect();
@@ -184,11 +189,9 @@ public class GeoFenceLocationService {
         private GeopingConnectionCallbacks() {
         }
 
-        private GeopingConnectionCallbacks(LocationClient locationClient, Geofence geofence) {
+        private GeopingConnectionCallbacks(LocationClient locationClient, java.util.List<Geofence> geofences) {
             this.locationClient = locationClient;
-            ArrayList<Geofence> toAdd = new ArrayList<Geofence>(1);
-            toAdd.add(geofence);
-            this.geofences = toAdd;
+            this.geofences = geofences;
         }
 
         @Override

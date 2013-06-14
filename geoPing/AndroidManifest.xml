@@ -165,24 +165,31 @@
                  android:exported="false">
 
         </service>
-        
-               
+
+        <!-- Geofence Boot Initialiser Receiver -->
+        <receiver android:enabled="false" android:name="eu.ttbox.geoping.service.geofence.receiver.GeofenceBootRegisterReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <category android:name="android.intent.category.HOME"/>
+            </intent-filter>
+        </receiver>
+
         <!-- Spy Notification Receiver -->
-        <receiver android:enabled="false" android:name=".service.slave.eventspy.ShutdownReceiver">
+        <receiver android:enabled="false" android:name="eu.ttbox.geoping.service.slave.eventspy.BootCompleteReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <category android:name="android.intent.category.HOME"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="eu.ttbox.geoping.BootCompleteReceiver.ACTION_SMS_SENT"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:enabled="false" android:name="eu.ttbox.geoping.service.slave.eventspy.ShutdownReceiver">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF"/> 
             </intent-filter>     
 	  </receiver> 
-       <receiver android:enabled="false" android:name=".service.slave.eventspy.BootCompleteReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <category android:name="android.intent.category.HOME"/>
-            </intent-filter>    
-            <intent-filter>
-                <action android:name="eu.ttbox.geoping.BootCompleteReceiver.ACTION_SMS_SENT"/>
-            </intent-filter>  
-         </receiver>
         <receiver android:enabled="false" android:name=".service.slave.eventspy.LowBatteryReceiver">
             <intent-filter>
                  <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>

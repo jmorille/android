@@ -98,9 +98,7 @@ public class PairingListActivity extends GeoPingSlidingMenuFragmentActivity {
         if (intent == null) {
             return;
         }
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "handleIntent for action : " + intent.getAction());
-        }
+        Log.d(TAG, "handleIntent for action : " + intent.getAction());
     }
 
     // ===========================================================
