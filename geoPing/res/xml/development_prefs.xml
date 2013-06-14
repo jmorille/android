@@ -26,4 +26,14 @@
             android:title="@string/prefs_spynotif_changed_phonenumber" />
     </PreferenceCategory>
 
+
+    <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:showDefault="true"
+            android:title="Notification"
+            android:key="notifSound"
+            android:ringtoneType="notification"
+            android:summary="Select the notification Sound"
+            android:dialogTitle="Change Sound"
+            />
 </PreferenceScreen>

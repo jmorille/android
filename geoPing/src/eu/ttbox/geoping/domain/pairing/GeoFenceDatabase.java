@@ -1,12 +1,5 @@
 package eu.ttbox.geoping.domain.pairing;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,6 +12,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.service.geofence.GeoFenceLocationService;
@@ -151,23 +151,37 @@ public class GeoFenceDatabase {
         return result;
     }
 
-    public void fillRequestId(ContentValues values) {
-        String requestId = values.getAsString(GeoFenceColumns.COL_REQUEST_ID);
-        if (TextUtils.isEmpty(requestId)) {
-            String value = UUID.randomUUID().toString();
-            values.put(GeoFenceColumns.COL_REQUEST_ID, value);
+    public boolean fillRequestId(ContentValues values) {
+        boolean isGeofenceValues = false;
+        if (values.containsKey(GeoFenceColumns.COL_LATITUDE_E6)
+                || values.containsKey(GeoFenceColumns.COL_LONGITUDE_E6)
+                || values.containsKey(GeoFenceColumns.COL_RADIUS)
+                || values.containsKey(GeoFenceColumns.COL_TRANSITION)
+                || values.containsKey(GeoFenceColumns.COL_EXPIRATION)
+                ) {
+            isGeofenceValues = true;
+            // So need to add request Id
+            String requestId = values.getAsString(GeoFenceColumns.COL_REQUEST_ID);
+            if (TextUtils.isEmpty(requestId)) {
+                String value = UUID.randomUUID().toString();
+                values.put(GeoFenceColumns.COL_REQUEST_ID, value);
             Log.d(TAG, "Add COL_REQUEST_ID : " + value);
         }
+            isGeofenceValues = true;
+        }
+        return isGeofenceValues;
     }
 
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
         // Complete Data
-        fillRequestId(values);
-        // Register in LocationServices
-        CircleGeofence circleGeofence =  GeoFenceHelper.getEntityFromContentValue(values);
-        Geofence geofence =  circleGeofence.toGeofence();
-        mGeoFenceLocationService.addGeofences(geofence);
+        boolean isGeofenceValues = fillRequestId(values);
+        if (isGeofenceValues) {
+            // Register in LocationServices
+            CircleGeofence circleGeofence =  GeoFenceHelper.getEntityFromContentValue(values);
+            Geofence geofence =  circleGeofence.toGeofence();
+            mGeoFenceLocationService.addGeofences(geofence);
+        }
         // Save in Db
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
          try {

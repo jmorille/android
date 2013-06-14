@@ -46,6 +46,7 @@ import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
+import eu.ttbox.geoping.ui.core.BindingHelper;
 import eu.ttbox.geoping.ui.core.validator.Form;
 import eu.ttbox.geoping.ui.core.validator.validate.ValidateTextView;
 import eu.ttbox.geoping.ui.core.validator.validator.NotEmptyValidator;
@@ -482,20 +483,10 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         return cleanPhone;
     }
 
-    private String trimToNull(String nameDirty) {
-        String name = nameDirty;
-        if (name != null) {
-            name = name.trim();
-            if (name.length() < 1) {
-                name = null;
-            }
-        }
-        return name;
-    }
 
     private Uri doSavePairing(String nameDirty, String phoneDirty, PairingAuthorizeTypeEnum authorizeType) {
         String phone = cleanPhone(phoneDirty);
-        String name = trimToNull(nameDirty);
+        String name = BindingHelper.trimToNull(nameDirty);
         setPairing(name, phone);
         // Validate
         if (!formValidator.validate()) {
@@ -510,15 +501,16 @@ public class PairingEditFragment extends SherlockFragment implements SharedPrefe
         }
         // Content
         Uri uri;
+        ContentResolver cr = getActivity().getContentResolver();
         if (entityUri == null) {
-            uri = getActivity().getContentResolver().insert(PairingProvider.Constants.CONTENT_URI, values);
+            uri = cr.insert(PairingProvider.Constants.CONTENT_URI, values);
             this.entityUri = uri;
             String entityId = entityUri ==null ? null : entityUri.getLastPathSegment();
             existValidator.setEntityId( entityId );
             getActivity().setResult(Activity.RESULT_OK);
         } else {
             uri = entityUri;
-            int count = getActivity().getContentResolver().update(uri, values, null, null);
+            int count =cr.update(uri, values, null, null);
             if (count != 1) {
                 Log.e(TAG, String.format("Error, %s entities was updates for Expected One", count));
             }

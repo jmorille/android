@@ -14,6 +14,7 @@ import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay.GeotrackLastAddedListener;
 import eu.ttbox.osm.ui.map.mylocation.bubble.MapCalloutView;
 
+@Deprecated
 public class GeoPingOverlay extends Overlay {
 
     private static final String TAG = "GeoPingOverlay";

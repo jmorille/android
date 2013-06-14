@@ -10,6 +10,8 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,7 +32,10 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.Overlay;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import eu.ttbox.geoping.R;
@@ -92,10 +97,10 @@ public class GeofenceEditOverlay extends Overlay {
         }
     };
     // Color
-    Paint paintBorder;
-    Paint paintCenter;
-    Paint paintText;
-    Paint paintArrow;
+    private Paint paintBorder;
+    private Paint paintCenter;
+    private Paint paintText;
+    private Paint paintArrow;
 
     // Config
     private float smallCircleRadius = 10;
@@ -127,7 +132,8 @@ public class GeofenceEditOverlay extends Overlay {
     private Point drawPoint = new Point();
     private Point touchPoint = new Point();
 
-
+    // Service
+    private final Geocoder geocoder;
 
     // ===========================================================
     // Menu Contextual
@@ -198,6 +204,12 @@ public class GeofenceEditOverlay extends Overlay {
         this.handler = handler;
         // Service
         this.loaderManager = loaderManager;
+        if (Geocoder.isPresent()) {
+            this.geocoder = new Geocoder(context, Locale.getDefault());
+        } else {
+            this.geocoder = null;
+            Log.w(TAG, "The Geocoder is not Present");
+        }
         // Init
         initPaint();
         onResume();
@@ -218,7 +230,7 @@ public class GeofenceEditOverlay extends Overlay {
         paintCenter.setAlpha(20);
         // Text Color
         paintText = new Paint();
-        paintText.setARGB(255, 255, 255, 255);
+//        paintText.setARGB(255, 255, 255, 255);
         paintText.setAntiAlias(true);
         paintText.setTextAlign(Paint.Align.CENTER);
         // Arrow
@@ -322,10 +334,52 @@ public class GeofenceEditOverlay extends Overlay {
 
     public void moveCenter(IGeoPoint point) {
         this.geofence.setCenter(point);
+        this.geofence.address = null;
         // TODO this.radiusInPixels = (float) TileSystem.GroundResolution(
         // centerGeofence.getLatitudeE6() / AppConstants.E6,
         // mapView.getZoomLevel());
         mapView.postInvalidate();
+        if (geocoder != null) {
+ //            GeocoderTask geocoderTask = new GeocoderTask(point);
+//            geocoderTask.run();
+        }
+    }
+
+    // ===========================================================
+    // Geocoder
+    // ===========================================================
+
+    private class  GeocoderTask implements Runnable {
+        int latitudeE6;
+        int longitudeE6;
+
+        public GeocoderTask(IGeoPoint point) {
+            this(point.getLatitudeE6(), point.getLongitudeE6());
+        }
+        public GeocoderTask(int latE6, int lngE6) {
+            this.latitudeE6 = latE6;
+            this.longitudeE6 = lngE6;
+        }
+
+        @Override
+        public void run() {
+            try {
+                if (geocoder != null) {
+                    double latitude = latitudeE6 / AppConstants.E6;
+                    double longitude = longitudeE6 / AppConstants.E6;
+                    Log.d(TAG, "Ask geocoding (" +  this.latitudeE6 + ", " + this.longitudeE6 + ") as (" +  latitude+ ", " + longitude+ ")");
+                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        final Address addr = addresses.get(0);
+                        String addrString = GeofenceUtils.getAddressAsString(addr);
+                        geofence.address = addrString;
+                    }
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "MyLocation Geocoder Error : " + e.getMessage());
+            }
+        }
+
     }
 
 

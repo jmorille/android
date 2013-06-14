@@ -16,6 +16,8 @@
 
 package eu.ttbox.geoping.service.geofence;
 
+import android.location.Address;
+
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
 
@@ -153,5 +155,24 @@ public final class GeofenceUtils {
                                            float radius) {
         return isOnCircle(obj.getLatitudeE6(), obj.getLongitudeE6(), center
                 .getLatitudeE6(), center.getLongitudeE6(), radius * 8.3);
+    }
+
+    public static String getAddressAsString(Address addr) {
+        String result = null;
+        if (addr != null) {
+            StringBuilder addrBuilder = new StringBuilder();
+            boolean isNotFist = false;
+            for (int i = 0; i < addr.getMaxAddressLineIndex(); i++) {
+                if (isNotFist) {
+                    addrBuilder.append(", ");
+                } else {
+                    isNotFist = true;
+                }
+                String addrLine = addr.getAddressLine(i);
+                addrBuilder.append(addrLine);
+            }
+             result = addrBuilder.toString();
+        }
+        return result;
     }
 }

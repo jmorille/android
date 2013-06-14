@@ -57,6 +57,11 @@ public class ReceiveTransitionsIntentService extends IntentService {
      */
     public ReceiveTransitionsIntentService() {
         super("ReceiveTransitionsIntentService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
         // Service
         this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
@@ -86,7 +91,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
         Log.d(TAG, "--- ------------------------------------------------------- ---");
         Log.d(TAG, "--- Geofence onHandleIntent : " + intent);
-        printExtras(intent.getExtras());
+      //  printExtras(intent.getExtras());
         Log.d(TAG, "--- ------------------------------------------------------- ---");
 
         // First check for errors
