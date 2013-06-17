@@ -14,6 +14,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -49,6 +50,9 @@ implements OnSharedPreferenceChangeListener {
         developmentPreferences = getSharedPreferences(AppVersionPreference.PREFS_DEV_MODE, Context.MODE_PRIVATE);
         super.onCreate(aSavedState);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        // Add selector
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
 // TODO       customizeSlidingMenu();
         // Compatibity
         if (!VersionUtils.isHc11) {
@@ -143,15 +147,15 @@ implements OnSharedPreferenceChangeListener {
     // Sliding Menu
     // ===========================================================
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//        case android.R.id.home:
-//            toggle();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 //    
 //    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 //    public SlidingMenu customizeSlidingMenu() {

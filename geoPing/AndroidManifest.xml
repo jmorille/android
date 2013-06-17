@@ -126,6 +126,10 @@
          
         
         <!-- Billing Service -->
+
+        <activity android:name=".ui.billing.ExtraFeaturesActivity" android:exported="false" android:launchMode="singleTask"
+                  android:label="@string/menu_extra_feature" >
+        </activity>
         <activity android:label="@string/menu_extra_feature" android:name=".ui.billing.PayFeaturesActivity">
         </activity>
 <!--        <service android:name=".service.billing.BillingService"/> -->

@@ -69,7 +69,7 @@ public class ExtraFeaturesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        View v = inflater.inflate(R.layout.pairing_list, container, false);
+        View v = inflater.inflate(R.layout.extra_features_list, container, false);
         // Bindings
         extraListView = (ListView) v.findViewById(android.R.id.list);
 
@@ -126,7 +126,7 @@ public class ExtraFeaturesFragment extends Fragment {
     private SkuDetailsListAdapter createListItems() {
         SkuDetailsListAdapter adapter = new SkuDetailsListAdapter(getActivity());
         try {
-            adapter.add(new SkuDetails("{\"productId\" : \"noAddForOneYear\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in aoo\", \"description\" : \"Suppress all adds during one year\"  }  "));
+            adapter.add(new SkuDetails("{\"productId\" : \"noAddForOneYear\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in app\", \"description\" : \"Suppress all adds during one year\"  }  "));
         } catch (JSONException e) {
             Log.e(TAG, "Error Parsing Json : " + e.getMessage(), e);
         }

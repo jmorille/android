@@ -32,6 +32,7 @@ import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.ui.billing.ExtraFeaturesActivity;
 import eu.ttbox.geoping.ui.billing.PayFeaturesActivity;
 import eu.ttbox.geoping.ui.geofence.GeofenceListActivity;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
@@ -236,7 +237,7 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
         case R.id.menu_smslog:
             return SmsLogListActivity.class;
         case R.id.menu_extra_feature:
-            return PayFeaturesActivity.class;
+            return ExtraFeaturesActivity.class;
         default:
             return null;
         }

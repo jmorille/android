@@ -17,6 +17,7 @@ import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 /**
  * A sample application that demonstrates in-app billing.
  */
+@Deprecated
 public class PayFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   {
     
     // Debug tag, for logging
