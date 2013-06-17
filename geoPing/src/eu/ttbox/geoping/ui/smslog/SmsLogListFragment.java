@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.ui.smslog;
 
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
+import eu.ttbox.geoping.ui.geofence.GeofenceEditActivity;
 
 public class SmsLogListFragment extends Fragment {
 
@@ -30,7 +32,7 @@ public class SmsLogListFragment extends Fragment {
 
     // Constant
 
-    // private static final int EDIT_ENTITY = 0;
+    private static final int EDIT_ENTITY = 0;
 
     // binding
     private ListView listView;
@@ -89,9 +91,7 @@ public class SmsLogListFragment extends Fragment {
     // ===========================================================
 
     /**
-     * {@link https
-     * ://bitbucket.org/craigleehi/google-i-o-2012-app/src/f4fd7504d43b
-     * /android/src/com/google/android/apps/iosched/ui/ExploreFragment.java}
+     * <a href="https://bitbucket.org/craigleehi/google-i-o-2012-app/src/f4fd7504d43b/android/src/com/google/android/apps/iosched/ui/ExploreFragment.java>ExploreFragment</a>
      * 
      */
     private final ContentObserver mObserver = new ContentObserver(new Handler()) {
@@ -113,10 +113,10 @@ public class SmsLogListFragment extends Fragment {
     // ===========================================================
 
     public void onViewEntityClick(String entityId) {
-        // TODO View
-        // Intent intent = Intents.editSmsLog(SmsLogListActivity.this,
-        // entityId);
-        // startActivityForResult(intent, EDIT_ENTITY);
+        Intent intent = new Intent(getActivity(), SmsLogViewActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(SmsLogProvider.Constants.getContentUri(entityId));
+        startActivityForResult(intent, EDIT_ENTITY);
     }
 
     private void deleteAllSmsLog() {

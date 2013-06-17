@@ -10,5 +10,8 @@
     <string name="validator_regexp">The value does not match against pattern.</string>
 
     <string name="validator_exiting_record">Existing record</string>
+    <string name="validator_textSize_min_max">The Size between %1$d and %2$d characters</string>
+    <string name="validator_textSize_min">More than %1$d characters</string>
+    <string name="validator_textSize_max">Less than %1$d characters</string>
 
 </resources>

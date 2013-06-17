@@ -21,7 +21,7 @@ import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class GeofenceEditActivity extends SherlockFragmentActivity {
 
-    private static final String TAG = "GeofenceEditActivity";
+        private static final String TAG = "GeofenceEditActivity";
 
     // Binding
     private GeofenceEditFragment editFragment;
@@ -168,8 +168,7 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         static final int GEOFENCE = 0;
-        // static final int GEOFENCE = 1;
-        static final int LOG = 2;
+         static final int LOG = 1;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);

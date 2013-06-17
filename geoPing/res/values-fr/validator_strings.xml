@@ -10,5 +10,8 @@
     <string name="validator_regexp">The value does not match against pattern.</string>
     
     <string name="validator_exiting_record">Enregistrement existant</string>
+    <string name="validator_textSize_min_max">La taille doit être comprise entre %1$d et %2$d charactères</string>
+    <string name="validator_textSize_min">Moins de %1$d charactères</string>
+    <string name="validator_textSize_max">Plus de %1$d charactères</string>
 
 </resources>

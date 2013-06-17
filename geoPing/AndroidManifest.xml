@@ -100,6 +100,8 @@
 
         <!-- Sms Log -->
         <activity android:label="@string/menu_smslog" android:launchMode="singleTask" android:name=".ui.smslog.SmsLogListActivity"/>
+        <activity android:label="@string/menu_smslog"  android:name=".ui.smslog.SmsLogViewActivity"/>
+
         <!-- Person -->
         <activity android:label="@string/menu_person" android:launchMode="singleTask" android:name=".ui.person.PersonListActivity"/>
         <activity android:name=".ui.person.PersonEditActivity"/>

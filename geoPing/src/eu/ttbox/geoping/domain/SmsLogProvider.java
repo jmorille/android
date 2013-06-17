@@ -21,6 +21,10 @@ public class SmsLogProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.SmsLogProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/smslog");
+        public static final Uri getContentUri(String entityId) {
+            return Uri.withAppendedPath(SmsLogProvider.Constants.CONTENT_URI , entityId);
+        }
+
         // Phone Filter
         public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");
         public static final Uri getContentUriPhoneFilter(String phoneNumber) {

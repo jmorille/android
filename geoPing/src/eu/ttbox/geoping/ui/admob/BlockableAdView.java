@@ -44,11 +44,13 @@ public class BlockableAdView extends AdView implements SharedPreferences.OnShare
 
 	private void init() {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-		isAddBlocked = sharedPreferences.getBoolean(AppConstants.PREFS_ADD_BLOCKED, false);
-		Log.d(TAG, "Add Blocked : " + isAddBlocked);
-		// Register
-		 sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-	}
+        if (sharedPreferences != null) {
+            isAddBlocked = sharedPreferences.getBoolean(AppConstants.PREFS_ADD_BLOCKED, false);
+		    Log.d(TAG, "Add Blocked : " + isAddBlocked);
+		   // Register
+		   //  sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        }
+    }
 
 	// ===========================================================
 	// Preferences
@@ -81,8 +83,8 @@ public class BlockableAdView extends AdView implements SharedPreferences.OnShare
 
 	private boolean isAddBlocked(){
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-		boolean isAddBlocked = sharedPreferences.getBoolean(AppConstants.PREFS_ADD_BLOCKED, false);
-		return isAddBlocked;
+        boolean isAddBlocked = sharedPreferences != null ? sharedPreferences.getBoolean(AppConstants.PREFS_ADD_BLOCKED, false) : false;
+        return isAddBlocked;
 	}
 
 

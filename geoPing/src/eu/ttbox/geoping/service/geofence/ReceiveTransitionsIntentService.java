@@ -185,8 +185,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
 
         // Create an explicit content Intent that starts the main Activity
-        Intent notificationIntent =
-                new Intent(getApplicationContext(), MainActivity.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
         // Construct a task stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the main Activity to the task stack as the parent

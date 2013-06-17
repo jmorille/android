@@ -33,6 +33,7 @@ import eu.ttbox.geoping.ui.core.BindingHelper;
 import eu.ttbox.geoping.ui.core.validator.Form;
 import eu.ttbox.geoping.ui.core.validator.validate.ValidateTextView;
 import eu.ttbox.geoping.ui.core.validator.validator.NotEmptyValidator;
+import eu.ttbox.geoping.ui.core.validator.validator.TextSizeValidator;
 
 public class GeofenceEditFragment extends SherlockFragment {
 
@@ -90,7 +91,7 @@ public class GeofenceEditFragment extends SherlockFragment {
         // Lat Lng
         double lat = geofence.getLatitude();
         double lng = geofence.getLongitude();
-        String coordString = String.format(Locale.US, "(%.6f, %.6f)", lat, lng);
+        String coordString = String.format(Locale.US, "(%.6f, %.6f) +/- %s m", lat, lng, geofence.radiusInMeters);
         this.latLngEditText.setText(coordString);
 
     }
@@ -103,7 +104,8 @@ public class GeofenceEditFragment extends SherlockFragment {
         Form formValidator = new Form();
         // Name
         ValidateTextView nameTextField = new ValidateTextView(nameEditText)//
-                .addValidator(new NotEmptyValidator());
+                .addValidator(new NotEmptyValidator())
+                .addValidator(new TextSizeValidator(null, 10));
         formValidator.addValidates(nameTextField);
 
 
