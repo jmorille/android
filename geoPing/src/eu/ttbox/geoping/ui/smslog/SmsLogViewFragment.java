@@ -53,7 +53,6 @@ public class SmsLogViewFragment  extends SherlockFragment {
         View v = inflater.inflate(R.layout.smslog_view, container, false);
         // Menu on Fragment
         setHasOptionsMenu(true);
-
         // Cache
         photoCache = ((GeoPingApplication) getActivity().getApplicationContext()).getPhotoThumbmailCache();
         // Bindings

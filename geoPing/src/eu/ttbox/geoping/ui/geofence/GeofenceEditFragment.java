@@ -196,7 +196,6 @@ public class GeofenceEditFragment extends SherlockFragment {
 
         // Notify listener
         if (onGeofenceSelectListener != null) {
-            Uri entityUri = null;
             onGeofenceSelectListener.onGeofenceSelect(entityUri, fence);
         }
 

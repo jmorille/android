@@ -168,6 +168,8 @@
     <string name="pairing_authorize_type:always">Toujours</string>
 
     <!-- Geofence model -->
+    <string name="geofence_name">Nom de la Géo Barrière</string>
+
     <string name="add_geofence">Ajouer une Geo barrière</string>
     <string name="geofence_help">"Créer une Geo barrière pour obtenir des alertes quand un membre de la famille rentre ou sort."</string>
 

@@ -8,14 +8,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Geofence Name"
+            android:text="@string/geofence_name"
             android:id="@+id/labelGeofenceEditName" />
 
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:hint="Geofence Name"
+            android:hint="@string/geofence_name"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:ems="10"
             android:id="@+id/geofenceEditName"
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
+            android:text="No zone coordonate"
             android:id="@+id/geofenceEditLatLng"
             android:layout_below="@id/geofenceEditName"
             android:layout_alignRight="@id/geofenceEditName"

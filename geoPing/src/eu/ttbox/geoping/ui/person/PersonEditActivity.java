@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import eu.ttbox.geoping.R;
@@ -71,7 +72,9 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.track_person_edit_activity);
-		// Pagers
+        // Add selector
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Pagers
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		// Fragment
@@ -111,29 +114,18 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 	// Menu
 	// ===========================================================
 
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getSupportMenuInflater().inflate(R.menu.menu_person_edit, menu);
-//		return true;
-//	}
 
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//		case R.id.menu_save:
-//			editFragment.onSaveClick();
-//			finish();
-//			return true;
-//		case R.id.menu_delete:
-//			editFragment.onDeleteClick();
-//			return true;
-//		case R.id.menu_select_contact:
-//			editFragment.onSelectContactClick(null);
-//			return true;
-//		case R.id.menu_cancel:
-//			editFragment.onCancelClick();
-//			return true; 
-//		}
-//		return false;
-//	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 	// ===========================================================
 	// Intent Handler

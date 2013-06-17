@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import eu.ttbox.geoping.R;
@@ -45,15 +46,16 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
 
         @Override
         public void onGeofenceSelect(Uri id, CircleGeofence fence) {
+            Log.d(TAG,"onGeofenceSelectListener : " + fence );
             // Check Update Fence
             if (fence!=null && !TextUtils.isEmpty(fence.requestId)  ) {
-                if (smsLogFragment != null && !fence.requestId.equals(geofenceRequestId)) {
+                if (smsLogFragment != null ) { //&& !fence.requestId.equals(geofenceRequestId)
                     Bundle args = new Bundle();
                     args.putString(SmsLogListFragment.Intents.EXTRA_GEOFENCE_REQUEST_ID, fence.requestId);
 //                    args.putInt(SmsLogListFragment.Intents.EXTRA_SIDE_DBCODE, SmsLogSideEnum.SLAVE.getDbCode());
                     smsLogFragment.refreshLoader(args);
-                    geofenceRequestId=fence.requestId;
                 }
+                geofenceRequestId=fence.requestId;
             }
             geofenceUri = id;
 //            geofencePhone = phone;
@@ -74,6 +76,8 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.geofence_edit_activity);
+        // Add selector
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Pagers
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -90,9 +94,20 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
     }
 
 
+
     // ===========================================================
     // Menu
     // ===========================================================
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
     // ===========================================================
@@ -189,6 +204,7 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
 //                    args.putInt(SmsLogListFragment.Intents.EXTRA_SIDE_DBCODE, SmsLogSideEnum.SLAVE.getDbCode());
                     smsLogFragment = new SmsLogListFragment();
                     smsLogFragment.setArguments(args);
+                    Log.d(TAG,"new smsLogFragment with args : " + args );
                 }
                 fragment = smsLogFragment;
                 break;

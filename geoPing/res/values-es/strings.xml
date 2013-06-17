@@ -162,7 +162,14 @@
     <string name="pairing_authorize_type:never">Nunca</string>
     <string name="pairing_authorize_type:ask">Sobre validacion</string>
     <string name="pairing_authorize_type:always">Siempre</string>
-    
+
+    <!-- Geofence model -->
+    <string name="geofence_name">Geofence Name</string>
+
+    <string name="add_geofence">Add a GeoFence</string>
+    <string name="geofence_help">"Create a GeoFence to get alerts when family members come and go."</string>
+
+
     <!-- SmsLog Model -->
 	<string name="smslog_delete_all">Quitado todo</string>
 

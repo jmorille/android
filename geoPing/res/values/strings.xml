@@ -148,6 +148,8 @@
     <string name="pairing_notification_phone_receive">Appel Téléphonique Recut</string>
 
     <!-- Geofence model -->
+    <string name="geofence_name">Geofence Name</string>
+
     <string name="add_geofence">Add a GeoFence</string>
     <string name="geofence_help">"Create a GeoFence to get alerts when family members come and go."</string>
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 import android.support.v4.app.Fragment;
 
@@ -28,6 +29,8 @@ public class SmsLogViewActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.smslog_view_activity);
+        // Add selector
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Tracker
         EasyTracker.getInstance().activityStart(this);
     }
@@ -46,8 +49,19 @@ public class SmsLogViewActivity extends SherlockFragmentActivity {
         EasyTracker.getInstance().activityStop(this);
 
     }
+    // ===========================================================
+    // Menu
+    // ===========================================================
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     // ===========================================================
     // Intent Handler
