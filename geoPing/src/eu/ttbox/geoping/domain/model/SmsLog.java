@@ -16,9 +16,10 @@ public class SmsLog {
 	public String phone;
 	public String message; 
 	public SmsLogSideEnum side;
-	
-	public SmsLog setId(long id) {
-		this.id = id;
+    public String requestId; // Geofence
+
+    public SmsLog setId(long id) {
+        this.id = id;
 		return this;
 	}
 
@@ -64,7 +65,12 @@ public class SmsLog {
 		return this;
 	}
 
-	@Override
+    public SmsLog setRequestId(String requestId) {
+        this.requestId = requestId;
+        return this;
+    }
+
+    @Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder().append("SmsLog [");
 		sb.append("id=").append(id)//
@@ -74,8 +80,10 @@ public class SmsLog {
 				.append(", message=").append(message)//
 				// .append(", time=").append(time) //
 				.append(", time=").append(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS,%1$tL", time));
-
-		sb.append("]");
+        if (requestId != null) {
+            sb.append(", requestId=").append(requestId);
+        }
+        sb.append("]");
 		return sb.toString();
 	}
 

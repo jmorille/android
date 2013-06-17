@@ -28,9 +28,10 @@ public class SmsLogHelper {
 	public int phoneIdx = -1; 
 	public int phoneMinMatchIdx = -1;
 	public int smsLogTypeIdx = -1; 
-    public int smsLogSideIdx = -1; 
+    public int smsLogSideIdx = -1;
+    public int requestIdIdx = -1;
 
-	public SmsLogHelper initWrapper(Cursor cursor) {
+    public SmsLogHelper initWrapper(Cursor cursor) {
 		idIdx = cursor.getColumnIndex(SmsLogColumns.COL_ID);
 		timeIdx = cursor.getColumnIndex(SmsLogColumns.COL_TIME);
 		actionIdx = cursor.getColumnIndex(SmsLogColumns.COL_ACTION);
@@ -39,6 +40,7 @@ public class SmsLogHelper {
 		smsLogTypeIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMSLOG_TYPE); 
 		messageIdx = cursor.getColumnIndex(SmsLogColumns.COL_MESSAGE);
 		smsLogSideIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMS_SIDE);
+        requestIdIdx =  cursor.getColumnIndex(SmsLogColumns.COL_REQUEST_ID );
 		isNotInit = false;
 		return this;
 	}
@@ -55,6 +57,7 @@ public class SmsLogHelper {
 		user.setSmsLogType(smsLogTypeIdx > -1 ? getSmsLogType(cursor) : null);
 		user.setMessage(messageIdx > -1 ? cursor.getString(messageIdx) : null);
 		user.setSide(smsLogSideIdx > -1 ? getSmsLogSideEnum(cursor) : null);
+        user.setRequestId(requestIdIdx > -1 ? cursor.getString(requestIdIdx) : null);
 		return user;
 	}
 
@@ -137,9 +140,10 @@ public class SmsLogHelper {
 		initialValues.put(SmsLogColumns.COL_ACTION, vo.action.getCode());
 		initialValues.put(SmsLogColumns.COL_MESSAGE, vo.message);
 		initialValues.put(SmsLogColumns.COL_SMSLOG_TYPE, vo.smsLogType.getCode()); 
-        initialValues.put(SmsLogColumns.COL_SMS_SIDE, vo.side.getDbCode());  
-		
-		return initialValues;
+        initialValues.put(SmsLogColumns.COL_SMS_SIDE, vo.side.getDbCode());
+        initialValues.put(SmsLogColumns.COL_REQUEST_ID, vo.requestId );
+
+        return initialValues;
 	}
 
 	public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, GeoPingMessage geoMessage) {

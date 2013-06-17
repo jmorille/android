@@ -36,16 +36,19 @@ public class SmsLogDatabase {
         public static final String COL_SMS_SIDE = "SMS_SIDE";  // @see SmsLogSideEnum
         public static final String COL_TIME = "TIME";
         public static final String COL_PARENT_ID = "PARENT_ID";
-        public static final String COL_SMS_WEIGHT = "SMS_WEIGHT"; 
+        public static final String COL_SMS_WEIGHT = "SMS_WEIGHT";
         // Acknowledge
         public static final String COL_IS_SEND_TIME = "IS_SEND_TIME";
         public static final String COL_IS_DELIVERY_TIME = "IS_DELIVERY_TIME";
+        // Geofence
+        public static final String COL_REQUEST_ID = "REQUEST_ID";
 
         // All Cols
         public static final String[] ALL_COLS = new String[] { //
             COL_ID, COL_TIME, COL_ACTION, COL_PHONE, COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE , COL_MESSAGE_PARAMS  //
             ,COL_SMS_SIDE, COL_SMS_WEIGHT,COL_PARENT_ID //
             , COL_IS_SEND_TIME, COL_IS_DELIVERY_TIME //Acknowledge
+            , COL_REQUEST_ID // Geofence
         };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
