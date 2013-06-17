@@ -42,10 +42,7 @@ import eu.ttbox.geoping.ui.prefs.GeoPingPrefActivity;
 import eu.ttbox.geoping.ui.slidingmenu.SlidingPersonListAdapter.SlidingMenuPersonListItemListener;
 import eu.ttbox.geoping.ui.smslog.SmsLogListActivity;
 
-/**
- * @see SampleListFragment
- * 
- */
+
 public class GeopingSlidingItemMenuFragment extends Fragment {
 
     private static final String TAG = "GeopingSlidingItemMenuFragment";
@@ -195,12 +192,14 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
         case R.id.menuMap:
             Class<? extends Activity> intentClass = getActivityClassByItemId(itemId);
             if (intentClass != null) {
-                Intent intentOption = new Intent(context, intentClass);
                 switchFragment();
                 // Activity
-                clearActivityHistoryStack(intentOption, isRootActivity);
-                context.startActivity(intentOption);
-
+                Class activityClass = getActivity().getClass();
+                if (!activityClass.isAssignableFrom(intentClass)) {
+                    Intent intentOption = new Intent(context, intentClass);
+                    clearActivityHistoryStack(intentOption, isRootActivity);
+                    context.startActivity(intentOption);
+                }
                 return true;
             }
             return false;
