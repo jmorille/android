@@ -42,16 +42,18 @@ public class SmsLogDatabase {
         public static final String COL_IS_DELIVERY_TIME = "IS_DELIVERY_TIME";
         // Geofence
         public static final String COL_REQUEST_ID = "REQUEST_ID";
+        public static final String COL_IS_READ = "IS_READ";
 
         // All Cols
         public static final String[] ALL_COLS = new String[] { //
             COL_ID, COL_TIME, COL_ACTION, COL_PHONE, COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE , COL_MESSAGE_PARAMS  //
             ,COL_SMS_SIDE, COL_SMS_WEIGHT,COL_PARENT_ID //
             , COL_IS_SEND_TIME, COL_IS_DELIVERY_TIME //Acknowledge
-            , COL_REQUEST_ID // Geofence
+            , COL_IS_READ, COL_REQUEST_ID // Notif, Geofence
         };
         // Where Clause
-        public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", "rowid");
+        public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", COL_ID);
+        public static final String SELECT_BY_REQUEST_ID = String.format("%s = ?", COL_REQUEST_ID );
 
     }
 
@@ -65,11 +67,11 @@ public class SmsLogDatabase {
     private static HashMap<String, String> buildUserColumnMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         // Add Identity Column
-        map.put(PersonColumns.COL_ID, "rowid AS " + BaseColumns._ID);
+        //map.put(PersonColumns.COL_ID, "rowid AS " + BaseColumns._ID);
         for (String col : SmsLogColumns.ALL_COLS) {
-            if (!col.equals(SmsLogColumns.COL_ID)) {
+          //  if (!col.equals(SmsLogColumns.COL_ID)) {
                 map.put(col, col);
-            }
+           // }
         }
         // Add Suggest Aliases
         map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, String.format("%s AS %s", SmsLogColumns.COL_ACTION, SearchManager.SUGGEST_COLUMN_TEXT_1));

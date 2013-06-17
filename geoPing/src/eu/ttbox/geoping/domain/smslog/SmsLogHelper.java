@@ -150,6 +150,9 @@ public class SmsLogHelper {
 		return getContentValues(   side, type, geoMessage.phone, geoMessage.action, geoMessage.params);
 	}
 
+    /**
+     * Used for logging sms Message in db
+     */
 	public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params) {
 		ContentValues values = new ContentValues();
 		values.put(SmsLogColumns.COL_TIME, System.currentTimeMillis());
@@ -158,6 +161,11 @@ public class SmsLogHelper {
 		values.put(SmsLogColumns.COL_SMSLOG_TYPE, type.getCode()); 
 		values.put(SmsLogColumns.COL_SMS_SIDE, side.getDbCode()); 
 		if (params != null && !params.isEmpty()) {
+            // Test Values SMS Log values
+            if (params.containsKey(SmsLogColumns.COL_REQUEST_ID)) {
+                String colVal = params.getString(SmsLogColumns.COL_REQUEST_ID) ;
+                values.put(SmsLogColumns.COL_REQUEST_ID, colVal );
+            }
 			String paramString = convertAsJsonString(params);
 			if (paramString != null) {
 				values.put(SmsLogColumns.COL_MESSAGE_PARAMS, paramString);

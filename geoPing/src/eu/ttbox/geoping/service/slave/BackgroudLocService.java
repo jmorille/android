@@ -16,6 +16,7 @@ import android.util.Log;
  * {link http://blog.gregfiumara.com/archives/82}
  * 
  */
+@Deprecated
 public class BackgroudLocService extends Service {
 
 	private static final String TAG = "BackgroudLocService";

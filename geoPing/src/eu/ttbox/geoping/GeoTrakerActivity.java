@@ -37,6 +37,7 @@ import eu.ttbox.geoping.service.master.GsmCidLatHelper;
 import eu.ttbox.geoping.service.slave.BackgroudLocService;
 import eu.ttbox.geoping.ui.AbstractSmsTrackerActivity;
 
+@Deprecated
 public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnClickListener, LocationListener {
 
     private static final String TAG = "GeoTrakerActivity";

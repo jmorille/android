@@ -57,6 +57,8 @@ public class GeoPingMasterService extends IntentService {
 
     private static final int SHOW_ON_NOTIFICATION_ID = AppConstants.PER_PERSON_ID_MULTIPLICATOR * R.id.show_notification_new_geoping_response;
 
+    private static final String ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ = "eu.ttbox.geoping.ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ";
+
     private final IBinder binder = new LocalBinder();
 
     // Service
@@ -166,6 +168,12 @@ public class GeoPingMasterService extends IntentService {
                     "HandleIntent", // Action
                     "SMS_PAIRING_RESPONSE", // Label
                     0l); // Value
+        }else if (ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ.equals(action)) {
+            Log.i(TAG, "****************************************************");
+            Log.i(TAG, "****************************************************");
+            Log.i(TAG, "***** ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ ******");
+            Log.i(TAG, "****************************************************");
+            Log.i(TAG, "****************************************************");
         } else {
             SmsMessageActionEnum actionEnum = SmsMessageActionEnum.getByIntentName(action);
             if (actionEnum != null) {
@@ -401,6 +409,13 @@ public class GeoPingMasterService extends IntentService {
     // Notification
     // ===========================================================
 
+    private Intent createMarkAsReadLogIntent(String phone){
+        Intent intent = new Intent(this, GeoPingMasterService.class);
+        intent.setAction(ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ);
+        intent.putExtra(Intents.EXTRA_SMS_PHONE, phone);
+        return intent;
+    }
+
     @SuppressLint("NewApi")
     private void showNotificationGeoPing(SmsMessageActionEnum actionEnum, Uri geoTrackData, ContentValues values, GeoTrack geoTrack) {
         String phone = values.getAsString(GeoTrackColumns.COL_PHONE);
@@ -431,6 +446,7 @@ public class GeoPingMasterService extends IntentService {
         // Construct a task stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(createMarkAsReadLogIntent(phone));
         stackBuilder.addNextIntent(new Intent(getApplicationContext(), MainActivity.class));
         stackBuilder.addNextIntent(Intents.showOnMap(getApplicationContext(), geoTrackData, values));
 

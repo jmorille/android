@@ -16,9 +16,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
-import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
-import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
-import eu.ttbox.geoping.ui.geofence.GeofenceEditFragment;
+import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class GeofenceEditActivity extends SherlockFragmentActivity {
@@ -33,11 +31,11 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     // Instance
-    private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 1;
+    private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 2;
     private int viewPagerPageCount = 1;
 
     private Uri geofenceUri;
-    private String geofencePhone;
+    private String geofenceRequestId;
 
     // ===========================================================
     // Listener
@@ -47,15 +45,16 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
 
         @Override
         public void onGeofenceSelect(Uri id, CircleGeofence fence) {
-            // Check Update Phone
-//            if (!TextUtils.isEmpty(geofencePhone) && !TextUtils.isEmpty(phone)) {
-//                if (smsLogFragment != null && !geofencePhone.equals(phone)) {
-//                    Bundle args = new Bundle();
-//                    args.putString(SmsLogListFragment.Intents.EXTRA_SMS_PHONE, geofencePhone);
+            // Check Update Fence
+            if (fence!=null && !TextUtils.isEmpty(fence.requestId)  ) {
+                if (smsLogFragment != null && !fence.requestId.equals(geofenceRequestId)) {
+                    Bundle args = new Bundle();
+                    args.putString(SmsLogListFragment.Intents.EXTRA_GEOFENCE_REQUEST_ID, fence.requestId);
 //                    args.putInt(SmsLogListFragment.Intents.EXTRA_SIDE_DBCODE, SmsLogSideEnum.SLAVE.getDbCode());
-//                    smsLogFragment.refreshLoader(args);
-//                }
-//            }
+                    smsLogFragment.refreshLoader(args);
+                    geofenceRequestId=fence.requestId;
+                }
+            }
             geofenceUri = id;
 //            geofencePhone = phone;
             // Update Ui Tabs
@@ -90,6 +89,16 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
         EasyTracker.getInstance().activityStart(this);
     }
 
+
+    // ===========================================================
+    // Menu
+    // ===========================================================
+
+
+    // ===========================================================
+    // Life Cycle
+    // ===========================================================
+
     @Override
     public void onStop() {
         super.onStop();
@@ -101,29 +110,20 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (geofenceUri != null) {
-            outState.putString(PersonColumns.COL_ID, geofenceUri.toString());
-            outState.putString(PersonColumns.COL_PHONE, geofencePhone);
+            outState.putString(GeoFenceDatabase.GeoFenceColumns.COL_ID, geofenceUri.toString());
+            outState.putString(GeoFenceDatabase.GeoFenceColumns.COL_REQUEST_ID, geofenceRequestId);
         }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        String pariringUriString = savedInstanceState.getString(PersonColumns.COL_ID);
+        String pariringUriString = savedInstanceState.getString(GeoFenceDatabase.GeoFenceColumns.COL_ID);
         if (pariringUriString != null) {
             geofenceUri = Uri.parse(pariringUriString);
-            geofencePhone = savedInstanceState.getString(PersonColumns.COL_PHONE);
+            geofenceRequestId = savedInstanceState.getString(GeoFenceDatabase.GeoFenceColumns.COL_REQUEST_ID);
         }
     }
-
-    // ===========================================================
-    // Life Cycle
-    // ===========================================================
-
-    // ===========================================================
-    // Menu
-    // ===========================================================
-
 
 
     // ===========================================================
@@ -186,8 +186,8 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
             case LOG:
                 if (smsLogFragment == null) {
                     Bundle args = new Bundle();
-                    args.putString(SmsLogListFragment.Intents.EXTRA_SMS_PHONE, geofencePhone);
-                    args.putInt(SmsLogListFragment.Intents.EXTRA_SIDE_DBCODE, SmsLogSideEnum.SLAVE.getDbCode());
+                    args.putString(SmsLogListFragment.Intents.EXTRA_GEOFENCE_REQUEST_ID, geofenceRequestId);
+//                    args.putInt(SmsLogListFragment.Intents.EXTRA_SIDE_DBCODE, SmsLogSideEnum.SLAVE.getDbCode());
                     smsLogFragment = new SmsLogListFragment();
                     smsLogFragment.setArguments(args);
                 }

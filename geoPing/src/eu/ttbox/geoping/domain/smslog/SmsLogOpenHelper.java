@@ -9,7 +9,7 @@ import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
  * <ul>
  * <li>Db version 7 : Geoping 0.1.5 (37)</li>
  * <li>Db version 8 : Geoping 0.1.6 (39)</li>
- * <li>Db version 9 : Geoping 0.2.0 (??)</li>
+ * <li>Db version 9 : Geoping 0.2.0 (??) : Add COL_IS_READ & COL_REQUEST_ID</li>
  * </ul>
  *  
  *
@@ -46,6 +46,7 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
             // Acknowledge
             + ", " + SmsLogColumns.COL_IS_SEND_TIME + " INTEGER"//
             + ", " + SmsLogColumns.COL_IS_DELIVERY_TIME + " INTEGER"//  
+            + ", " + SmsLogColumns.COL_IS_READ + " INTEGER"//
             // Geofence
             + ", " + SmsLogColumns.COL_REQUEST_ID  + " TEXT"//
             + ");";

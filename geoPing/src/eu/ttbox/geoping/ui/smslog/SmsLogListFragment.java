@@ -38,6 +38,7 @@ public class SmsLogListFragment extends Fragment {
     // Intents
     public static class Intents {
         public static final String EXTRA_SMS_PHONE = eu.ttbox.geoping.core.Intents.EXTRA_SMS_PHONE;
+        public static final String EXTRA_GEOFENCE_REQUEST_ID = "eu.ttbox.geoping.core.Intents.EXTRA_GEOFENCE_REQUEST_ID";
         public static final String EXTRA_INOUT_GOING_TYPE = "EXTRA_INOUT_GOING_TYPE";
         public static final String EXTRA_SIDE_DBCODE = "EXTRA_SIDE_DBCODE";
     }
@@ -157,8 +158,11 @@ public class SmsLogListFragment extends Fragment {
             if (args != null) {
                 if (args.containsKey(Intents.EXTRA_SMS_PHONE)) {
                     String phoneNumber = args.getString(Intents.EXTRA_SMS_PHONE);
-                    searchUri = Uri.withAppendedPath(SmsLogProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
-                } 
+                    searchUri =  SmsLogProvider.Constants.getContentUriPhoneFilter(phoneNumber);
+                } else if (args.containsKey(Intents.EXTRA_GEOFENCE_REQUEST_ID)) {
+                    String requestId = args.getString(Intents.EXTRA_GEOFENCE_REQUEST_ID);
+                    searchUri =  SmsLogProvider.Constants.getContentUriRequestId(requestId);
+                }
                 if (args.containsKey(Intents.EXTRA_SIDE_DBCODE)) {
                     int isTypeSend = args.getInt(Intents.EXTRA_SIDE_DBCODE, -1);
                     if (isTypeSend > -1) {

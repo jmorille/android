@@ -21,8 +21,17 @@ public class SmsLogProvider extends ContentProvider {
     public static class Constants {
         public static String AUTHORITY = "eu.ttbox.geoping.SmsLogProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/smslog");
-        
+        // Phone Filter
         public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");
+        public static final Uri getContentUriPhoneFilter(String phoneNumber) {
+            return Uri.withAppendedPath(SmsLogProvider.Constants.CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
+        }
+        // Geofence Request
+        public static final Uri CONTENT_URI_REQUEST_ID = Uri.withAppendedPath(CONTENT_URI, "requestId");
+        public static final Uri getContentUriRequestId(String geofenceRequestId) {
+            return Uri.withAppendedPath(Constants.CONTENT_URI_REQUEST_ID, geofenceRequestId);
+        }
+
      }
 
     private SmsLogDatabase smslogDatabase;
@@ -31,6 +40,7 @@ public class SmsLogProvider extends ContentProvider {
     private static final int SMSLOGS = 0;
     private static final int SMSLOG_ID = 1;
     private static final int PHONE_FILTER = 2;
+    private static final int REQUEST_ID_FILTER = 3;
 
     private static final UriMatcher sURIMatcher = buildUriMatcher();
 
@@ -45,6 +55,7 @@ public class SmsLogProvider extends ContentProvider {
         matcher.addURI(Constants.AUTHORITY, "smslog/#", SMSLOG_ID);
         
         matcher.addURI(Constants.AUTHORITY, "smslog/phone_lookup/*", PHONE_FILTER);
+        matcher.addURI(Constants.AUTHORITY, "smslog/requestId/*", REQUEST_ID_FILTER);
         return matcher;
     }
 
@@ -71,10 +82,19 @@ public class SmsLogProvider extends ContentProvider {
             return search(projection, selection, selectionArgs, sortOrder);
         case SMSLOG_ID:
             return getSmsLog(uri);
-        case PHONE_FILTER:
+        case PHONE_FILTER:{
             String phone = uri.getLastPathSegment();
             String phoneDecoder = Uri.decode(phone);
-            return smslogDatabase.searchForPhoneNumber(phoneDecoder, projection, selection,  selectionArgs, sortOrder);            
+            return smslogDatabase.searchForPhoneNumber(phoneDecoder, projection, selection,  selectionArgs, sortOrder);
+       }
+       case REQUEST_ID_FILTER:{
+           if (selection!=null) {
+               throw  new IllegalArgumentException("Not implemented Uri: " + uri + " with selection : ["+selection+ "]");
+           }
+           String requestId = uri.getLastPathSegment();
+           String[] args = new String[] {requestId};
+           return search(projection, SmsLogColumns.SELECT_BY_REQUEST_ID, args, sortOrder);
+        }
         default:
             throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
@@ -102,6 +122,8 @@ public class SmsLogProvider extends ContentProvider {
     public String getType(Uri uri) {
         switch (sURIMatcher.match(uri)) {
         case SMSLOGS:
+            return SMSLOGS_LIST_MIME_TYPE;
+        case REQUEST_ID_FILTER:
             return SMSLOGS_LIST_MIME_TYPE;
         case SMSLOG_ID:
             return SMSLOG_MIME_TYPE;
@@ -132,11 +154,21 @@ public class SmsLogProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int count = 0;
         switch (sURIMatcher.match(uri)) {
-        case SMSLOG_ID:
+        case SMSLOG_ID: {
             String entityId = uri.getLastPathSegment();
             String[] args = new String[] { entityId };
             count = smslogDatabase.deleteEntity(SmsLogColumns.SELECT_BY_ENTITY_ID, args);
+           }
             break;
+         case REQUEST_ID_FILTER: {
+                String requestId = uri.getLastPathSegment();
+                String[] args = new String[] { requestId };
+                 if (selection!=null) {
+                    throw  new IllegalArgumentException("Not implemented Uri: " + uri + " with selection : ["+selection+ "]");
+                 }
+                count = smslogDatabase.deleteEntity(SmsLogColumns.SELECT_BY_REQUEST_ID, args);
+                }
+                break;
         case SMSLOGS:
             count = smslogDatabase.deleteEntity(selection, selectionArgs);
             break;
