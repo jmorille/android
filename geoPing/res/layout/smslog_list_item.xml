@@ -17,14 +17,6 @@
             android:layout_centerVertical="true"
             />
 
-    <ImageView
-            android:id="@+id/smslog_list_item_smsType_imgs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_call_voicemail_holo_dark"
-            android:layout_alignBottom="@+id/smslog_photo_imageView"
-            android:layout_alignLeft="@+id/smslog_list_item_time"/>
-
     <TextView
             android:id="@+id/smslog_list_item_action"
             style="@style/entity_list_item"
@@ -39,7 +31,6 @@
     <TextView
             android:id="@+id/smslog_list_item_phone"
             style="@style/entity_list_item"
-            android:layout_alignBottom="@+id/smslog_list_item_time"
             android:layout_alignLeft="@+id/smslog_list_item_action"
             android:layout_below="@+id/smslog_list_item_action"
             android:text="+33601020304"
@@ -65,12 +56,20 @@
 
 
 
+    <ImageView
+            android:id="@+id/smslog_list_item_smsType_imgs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_call_voicemail_holo_dark"
+            android:layout_alignBottom="@+id/smslog_photo_imageView"
+            android:layout_alignLeft="@+id/smslog_list_item_time"/>
+
     <TextView
+            android:id="@+id/smslog_list_item_time_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Il y a 4 jours"
-            android:id="@+id/smslog_list_item_time_ago"
             android:layout_alignBottom="@+id/smslog_list_item_smsType_imgs"
             android:layout_toRightOf="@+id/smslog_list_item_smsType_imgs"
             />

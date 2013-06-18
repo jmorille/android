@@ -22,11 +22,12 @@ import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 /**
- * @see platform_packages_apps_contacts/res/layout/call_log_list_item.xml
- * @see platform_packages_apps_contacts/res/layout/call_detail_history_item.xml
- * @see com.android.contacts.PhoneCallDetailsHelper#callTypeAndDate
- * @see android.text.format.DateUtils#getRelativeTimeSpanString(long time, long now, long minResolution,  int flags)
- *
+ * <ul>
+ * <li>platform_packages_apps_contacts/res/layout/call_log_list_item.xml</li>
+ * <li> platform_packages_apps_contacts/res/layout/call_detail_history_item.xml</li>
+ * <li>com.android.contacts.PhoneCallDetailsHelper#callTypeAndDate</li>
+ * <li> android.text.format.DateUtils#getRelativeTimeSpanString(long time, long now, long minResolution,  int flags)</li>
+ *</ul>
  */
 public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorAdapter {
 
@@ -81,7 +82,8 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         }
         holder.actionText.setText(actionLabel);
         // Phone
-        helper.setTextSmsLogPhone(holder.phoneText, cursor);
+        String phone = helper.getSmsLogPhone(cursor);
+        holder.phoneText.setText(phone);
         // Time
         long time = helper.getSmsLogTime(cursor);
         String timeFormat = String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", time);
@@ -95,7 +97,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
                         DateUtils.FORMAT_ABBREV_RELATIVE);
         holder.timeAgoText.setText(dateText);
         // Load Photos
-
+        loadPhoto(holder, null, phone);
     }
 
   
@@ -227,7 +229,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         }
         // Set Photo
         if (photo != null) {
-            photoImageView.setImageBitmap(photo);
+            holder.photoImageView.setImageBitmap(photo);
         } else if (isContactId || isContactPhone) {
             // Cancel previous Async
             final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask) holder.photoImageView.getTag();
