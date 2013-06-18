@@ -1,46 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/entity_list_item_container"
-    android:gravity="center"
-    android:orientation="horizontal"
-    android:paddingBottom="10dip"
-    android:paddingRight="10dip"
-    android:paddingTop="10dip" >
+                style="@style/entity_list_item_container"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip">
+
 
     <ImageView
-        android:id="@+id/smslog_list_item_smsType_imgs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/ic_call_voicemail_holo_dark" />
+            android:id="@+id/smslog_photo_imageView"
+            android:layout_width="@dimen/call_log_list_contact_photo_size"
+            android:layout_height="@dimen/call_log_list_contact_photo_size"
+            android:src="@drawable/ic_contact_picture_holo_light"
+
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            />
+
+    <ImageView
+            android:id="@+id/smslog_list_item_smsType_imgs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_call_voicemail_holo_dark"
+            android:layout_alignBottom="@+id/smslog_photo_imageView"
+            android:layout_alignLeft="@+id/smslog_list_item_time"/>
 
     <TextView
-        android:id="@+id/smslog_list_item_time"
-        style="@style/entity_list_item"
-        android:layout_toRightOf="@id/smslog_list_item_smsType_imgs"
-        android:paddingRight="5dp"
-        android:text="10-10-2009 12:55:12"
-        android:width="110dp" />
+            android:id="@+id/smslog_list_item_action"
+            style="@style/entity_list_item"
+            android:text="ACTION_GEO_LOC"
+            android:textColor="@color/call_log_primary_text_color"
+            android:textSize="18sp"
+            android:singleLine="true"
+            android:layout_alignTop="@+id/smslog_photo_imageView"
+            android:layout_toRightOf="@+id/smslog_photo_imageView"
+            android:layout_marginLeft="18dp"/>
 
     <TextView
-        android:id="@+id/smslog_list_item_action"
-        style="@style/entity_list_item"
-        android:layout_alignBaseline="@id/smslog_list_item_time"
-        android:layout_toRightOf="@id/smslog_list_item_time"
-        android:singleLine="true"
-        android:text="ACTION_GEO_LOC"
-        android:textSize="18sp" />
+            android:id="@+id/smslog_list_item_phone"
+            style="@style/entity_list_item"
+            android:layout_alignBottom="@+id/smslog_list_item_time"
+            android:layout_alignLeft="@+id/smslog_list_item_action"
+            android:layout_below="@+id/smslog_list_item_action"
+            android:text="+33601020304"
+            android:textColor="@color/call_log_secondary_text_color"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            />
 
     <TextView
-        android:id="@+id/smslog_list_item_phone"
-        style="@style/entity_list_item"
-        android:layout_alignBottom="@id/smslog_list_item_time"
-        android:layout_alignLeft="@id/smslog_list_item_action"
-        android:layout_below="@id/smslog_list_item_action"
-        android:singleLine="true"
-         android:ellipsize="marquee"
-        android:text="+33601020304"
-        android:textSize="14sp" />
+            android:id="@+id/smslog_list_item_time"
+            style="@style/entity_list_item"
+            android:paddingRight="5dp"
+            android:text="10-10-2009 12:55:12"
+            android:textColor="@color/call_log_secondary_text_color"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/smslog_list_item_phone"
+            android:layout_below="@+id/smslog_list_item_phone"
+            />
+
+
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Il y a 4 jours"
+            android:id="@+id/smslog_list_item_time_ago"
+            android:layout_alignBottom="@+id/smslog_list_item_smsType_imgs"
+            android:layout_toRightOf="@+id/smslog_list_item_smsType_imgs"
+            />
 
 </RelativeLayout>

@@ -12,14 +12,14 @@
 
     <ImageView
             android:id="@+id/smslog_photo_imageView"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/admob"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"
             android:maxWidth="75dp"
              android:src="@drawable/ic_contact_picture_holo_light"
-            />
+             android:layout_alignParentRight="true"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -27,7 +27,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Phone"
             android:id="@+id/smslog_phone"
-            android:layout_below="@id/smslog_photo_imageView"
+            android:layout_below="@+id/smslog_photo_imageView"
+            android:layout_above="@+id/admob"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="13dp"
             android:layout_marginTop="12dp"/>
@@ -39,8 +40,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
             android:id="@+id/smslog_requestId"
-            android:layout_below="@id/smslog_phone"
-            android:layout_alignLeft="@id/smslog_phone"/>
+            android:layout_above="@+id/admob"
+            android:layout_below="@+id/smslog_phone"
+            android:layout_alignLeft="@+id/smslog_phone"/>
 
 
 </RelativeLayout>
