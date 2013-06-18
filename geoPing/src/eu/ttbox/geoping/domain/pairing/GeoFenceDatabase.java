@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import eu.ttbox.geoping.crypto.CryptoUtils;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.service.geofence.GeoFenceLocationService;
 
@@ -100,10 +101,10 @@ public class GeoFenceDatabase {
         } else {
             sb.append(colName).append( " in (");
             for (int i = 0 ; i <requestIdSize; i ++) {
-                sb.append('?');
-                if (i != 0) {
+                if (i > 0) {
                     sb.append(',');
                 }
+                sb.append('?');
             }
             sb.append(')');
         }
@@ -163,7 +164,7 @@ public class GeoFenceDatabase {
             // So need to add request Id
             String requestId = values.getAsString(GeoFenceColumns.COL_REQUEST_ID);
             if (TextUtils.isEmpty(requestId)) {
-                String value = UUID.randomUUID().toString();
+                String value = CryptoUtils.generateUniqueId();
                 values.put(GeoFenceColumns.COL_REQUEST_ID, value);
             Log.d(TAG, "Add COL_REQUEST_ID : " + value);
         }

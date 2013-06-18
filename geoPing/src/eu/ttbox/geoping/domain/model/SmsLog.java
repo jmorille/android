@@ -14,8 +14,9 @@ public class SmsLog {
 	public SmsLogTypeEnum smsLogType;
 	public SmsMessageActionEnum action;
 	public String phone;
-	public String message; 
-	public SmsLogSideEnum side;
+	public String message;
+    public String messageParams;
+    public SmsLogSideEnum side;
     public String requestId; // Geofence
 
     public SmsLog setId(long id) {
@@ -67,6 +68,11 @@ public class SmsLog {
 
     public SmsLog setRequestId(String requestId) {
         this.requestId = requestId;
+        return this;
+    }
+
+    public SmsLog setMessageParams(String essageParams) {
+        this.messageParams = essageParams;
         return this;
     }
 

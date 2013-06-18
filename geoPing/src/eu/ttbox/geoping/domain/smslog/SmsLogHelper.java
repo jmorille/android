@@ -25,7 +25,8 @@ public class SmsLogHelper {
 	public int timeIdx = -1;
 	public int actionIdx = -1;
 	public int messageIdx = -1;
-	public int phoneIdx = -1; 
+    public int messageParamIdx = -1;
+	public int phoneIdx = -1;
 	public int phoneMinMatchIdx = -1;
 	public int smsLogTypeIdx = -1; 
     public int smsLogSideIdx = -1;
@@ -39,6 +40,7 @@ public class SmsLogHelper {
 		phoneMinMatchIdx = cursor.getColumnIndex(SmsLogColumns.COL_PHONE_MIN_MATCH);
 		smsLogTypeIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMSLOG_TYPE); 
 		messageIdx = cursor.getColumnIndex(SmsLogColumns.COL_MESSAGE);
+        messageParamIdx = cursor.getColumnIndex(SmsLogColumns.COL_MESSAGE_PARAMS);
 		smsLogSideIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMS_SIDE);
         requestIdIdx =  cursor.getColumnIndex(SmsLogColumns.COL_REQUEST_ID );
 		isNotInit = false;
@@ -56,6 +58,7 @@ public class SmsLogHelper {
 		user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
 		user.setSmsLogType(smsLogTypeIdx > -1 ? getSmsLogType(cursor) : null);
 		user.setMessage(messageIdx > -1 ? cursor.getString(messageIdx) : null);
+        user.setMessageParams(messageParamIdx > -1 ? cursor.getString(messageParamIdx) : null);
 		user.setSide(smsLogSideIdx > -1 ? getSmsLogSideEnum(cursor) : null);
         user.setRequestId(requestIdIdx > -1 ? cursor.getString(requestIdIdx) : null);
 		return user;
@@ -139,7 +142,8 @@ public class SmsLogHelper {
 		initialValues.put(SmsLogColumns.COL_PHONE, vo.phone);
 		initialValues.put(SmsLogColumns.COL_ACTION, vo.action.getCode());
 		initialValues.put(SmsLogColumns.COL_MESSAGE, vo.message);
-		initialValues.put(SmsLogColumns.COL_SMSLOG_TYPE, vo.smsLogType.getCode()); 
+        initialValues.put(SmsLogColumns.COL_MESSAGE_PARAMS, vo.messageParams);
+		initialValues.put(SmsLogColumns.COL_SMSLOG_TYPE, vo.smsLogType.getCode());
         initialValues.put(SmsLogColumns.COL_SMS_SIDE, vo.side.getDbCode());
         initialValues.put(SmsLogColumns.COL_REQUEST_ID, vo.requestId );
 

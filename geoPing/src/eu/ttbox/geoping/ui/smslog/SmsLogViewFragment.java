@@ -35,8 +35,13 @@ public class SmsLogViewFragment  extends SherlockFragment {
 
     // Binding
     private ImageView photoImageView;
+    private TextView  nameTextView;
     private TextView  phoneTextView;
+    private TextView  actionTextView;
     private TextView  requestIdTextView;
+    private TextView  timeIdTextView;
+    private TextView  messageTextView;
+    private TextView  messageParamTextView;
 
     // Cache
     private PhotoThumbmailCache photoCache;
@@ -57,10 +62,15 @@ public class SmsLogViewFragment  extends SherlockFragment {
         photoCache = ((GeoPingApplication) getActivity().getApplicationContext()).getPhotoThumbmailCache();
         // Bindings
         photoImageView = (ImageView) v.findViewById(R.id.smslog_photo_imageView);
+        nameTextView= (TextView) v.findViewById(R.id.smslog_name );
         phoneTextView= (TextView) v.findViewById(R.id.smslog_phone);
+        actionTextView = (TextView) v.findViewById(R.id.smslog_action );
         requestIdTextView = (TextView) v.findViewById(R.id.smslog_requestId);
-//        this.nameEditText = (EditText) v.findViewById(R.id.geofenceEditName);
-       return v;
+        timeIdTextView = (TextView) v.findViewById(R.id.smslog_time );
+        messageTextView = (TextView) v.findViewById(R.id.smslog_message );
+        messageParamTextView  = (TextView) v.findViewById(R.id.smslog_message_param  );
+
+        return v;
     }
 
     @Override
@@ -112,8 +122,24 @@ public class SmsLogViewFragment  extends SherlockFragment {
 
     public void loadEntity(SmsLog smsLog) {
         Log.d(TAG, "Load entity Datan: " + smsLog);
+        switch ( smsLog.side) {
+            case MASTER:
+                break;
+            case SLAVE:
+                break;
+            default:
+                Log.w(TAG, "Not manage Side : " + smsLog.side);
+        }
+
+//TODO        nameTextView
         phoneTextView.setText(smsLog.phone);
+        actionTextView.setText(getString(smsLog.action.labelResourceId));
+        // TOOD Format date
+        String  dateString = smsLog.getTimeAsDate().toString();
+        timeIdTextView.setText(dateString);
         requestIdTextView.setText(smsLog.requestId);
+        messageTextView.setText(smsLog.message);
+        messageParamTextView.setText(smsLog.messageParams);
         // Photo
         loadPhoto(null, smsLog.phone);
     }

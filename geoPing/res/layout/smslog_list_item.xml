@@ -42,6 +42,7 @@
 
     <TextView
             android:id="@+id/smslog_list_item_time"
+            android:visibility="gone"
             style="@style/entity_list_item"
             android:paddingRight="5dp"
             android:text="10-10-2009 12:55:12"
@@ -49,7 +50,6 @@
             android:textSize="14sp"
             android:singleLine="true"
             android:ellipsize="marquee"
-            android:layout_centerVertical="true"
             android:layout_alignLeft="@+id/smslog_list_item_phone"
             android:layout_below="@+id/smslog_list_item_phone"
             />
@@ -62,7 +62,9 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_call_voicemail_holo_dark"
             android:layout_alignBottom="@+id/smslog_photo_imageView"
-            android:layout_alignLeft="@+id/smslog_list_item_time"/>
+            android:layout_alignLeft="@+id/smslog_list_item_time"
+            android:layout_below="@+id/smslog_list_item_time"
+            />
 
     <TextView
             android:id="@+id/smslog_list_item_time_ago"
@@ -70,8 +72,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Il y a 4 jours"
+            android:paddingLeft="5dp"
             android:layout_alignBottom="@+id/smslog_list_item_smsType_imgs"
             android:layout_toRightOf="@+id/smslog_list_item_smsType_imgs"
+            android:layout_below="@+id/smslog_list_item_time"
             />
 
 </RelativeLayout>

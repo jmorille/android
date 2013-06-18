@@ -3,46 +3,80 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
 
-    <include
-            android:id="@+id/admob"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            layout="@layout/admob"/>
-
     <ImageView
             android:id="@+id/smslog_photo_imageView"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"
-            android:maxWidth="75dp"
-             android:src="@drawable/ic_contact_picture_holo_light"
-             android:layout_alignParentRight="true"/>
-
+            android:src="@drawable/ic_contact_picture_holo_light"
+            />
     <TextView
+            android:id="@+id/smslog_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Phone"
-            android:id="@+id/smslog_phone"
             android:layout_below="@+id/smslog_photo_imageView"
-            android:layout_above="@+id/admob"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="13dp"
-            android:layout_marginTop="12dp"/>
-
-
+            android:text="Name"
+            />
     <TextView
+            android:id="@+id/smslog_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/smslog_requestId"
-            android:layout_above="@+id/admob"
+            android:layout_below="@+id/smslog_name"
+            android:layout_alignParentLeft="true"
+            android:text="Phone"
+            />
+
+    <TextView
+            android:id="@+id/smslog_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_below="@+id/smslog_phone"
-            android:layout_alignLeft="@+id/smslog_phone"/>
+            android:layout_alignParentLeft="true"
+            android:text="Action"
+            />
+
+    <TextView
+            android:id="@+id/smslog_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/smslog_action"
+            android:layout_alignParentLeft="true"
+            android:text="Time"
+            />
+
+    <TextView
+            android:id="@+id/smslog_requestId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/smslog_time"
+            android:text="Request iId"
+            />
+
+    <TextView
+            android:id="@+id/smslog_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/smslog_requestId"
+            android:text="Message"
+            />
+
+    <TextView
+            android:id="@+id/smslog_message_param"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/smslog_message"
+            android:text="Message Params"
+            />
 
 
 </RelativeLayout>
