@@ -19,6 +19,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gms.location.Geofence;
 
 import java.util.Locale;
 
@@ -93,7 +94,9 @@ public class GeofenceEditFragment extends SherlockFragment {
         double lng = geofence.getLongitude();
         String coordString = String.format(Locale.US, "(%.6f, %.6f) +/- %s m", lat, lng, geofence.radiusInMeters);
         this.latLngEditText.setText(coordString);
-
+        // Transition Type
+        boolean isEnter = ( geofence.transitionType & Geofence.GEOFENCE_TRANSITION_ENTER) != 0;
+        boolean isExit = ( geofence.transitionType & Geofence.GEOFENCE_TRANSITION_EXIT) != 0;
     }
 
     // ===========================================================

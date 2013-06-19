@@ -52,7 +52,7 @@ public class SmsSenderHelper {
         if (encrypedMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE_7BITS) {
             // Log It
             ContentResolver cr = context.getContentResolver();
-            Uri logUri = logSmsMessage(cr, side, SmsLogTypeEnum.SEND_REQ, phone, action, params, 1);
+            Uri logUri = logSmsMessage(cr, side, SmsLogTypeEnum.SEND_REQ, phone, action, params, 1, encrypedMsg);
             Log.d(TAG, "SmsMessage Request save Log to : " + logUri);
             // Acknowledge
             PendingIntent sendIntent = PendingIntent.getBroadcast(context, 0, //
@@ -78,12 +78,12 @@ public class SmsSenderHelper {
     // Log Sms message
     // ===========================================================
 
-    public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side, SmsLogTypeEnum type, GeoPingMessage geoMessage, int smsWeight) {
-        return logSmsMessage(cr, side, type, geoMessage.phone, geoMessage.action, geoMessage.params, smsWeight);
+    public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side, SmsLogTypeEnum type, GeoPingMessage geoMessage, int smsWeight, String encrypedMsg) {
+        return logSmsMessage(cr, side, type, geoMessage.phone, geoMessage.action, geoMessage.params, smsWeight, encrypedMsg);
     }
 
-    public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side, SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, int smsWeight) {
-        ContentValues values = SmsLogHelper.getContentValues(side, type, phone, action, params);
+    public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side, SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, int smsWeight, String encrypedMsg) {
+        ContentValues values = SmsLogHelper.getContentValues(side, type, phone, action, params, encrypedMsg);
         values.put(SmsLogColumns.COL_SMS_WEIGHT, smsWeight);
         Uri logUri = cr.insert(SmsLogProvider.Constants.CONTENT_URI, values);
         return logUri;

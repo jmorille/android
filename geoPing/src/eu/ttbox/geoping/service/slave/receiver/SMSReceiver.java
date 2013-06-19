@@ -25,10 +25,9 @@ import eu.ttbox.geoping.service.encoder.helper.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.receiver.MsgReceiverIntentService;
 
 /**
- * @see http://www.tutos-android.com/broadcast-receiver-android {link
- *      http://mobiforge.com/developing/story/sms-messaging-android}
- * @author deostem
- * 
+ *<a href="http://www.tutos-android.com/broadcast-receiver-android">broadcast-receiver-android</a>
+ *<a href="http://mobiforge.com/developing/story/sms-messaging-android">sms-messaging-android</a>
+  *
  */
 public class SMSReceiver extends BroadcastReceiver {
 
@@ -89,7 +88,7 @@ public class SMSReceiver extends BroadcastReceiver {
 		Log.d(TAG, "is Consume SMS (" + isConsume + ") Geo Action : " + phoneNumber + " / " + messageBody);
 		if (isConsume) {
 			// Log It
-			logSmsMessageReceive(context, geoMsg);
+			logSmsMessageReceive(context, geoMsg,    messageBody );
 		}
 		return isConsume;
 	}
@@ -114,11 +113,11 @@ public class SMSReceiver extends BroadcastReceiver {
 	// Log Sms message
 	// ===========================================================
 
-	private void logSmsMessageReceive(Context context,     GeoPingMessage geoMsg) {
+	private void logSmsMessageReceive(Context context,     GeoPingMessage geoMsg,  String messageBody ) {
 		// Save
 		ContentResolver cr = context.getContentResolver(); 
 		SmsLogSideEnum side = geoMsg.action.isMasterConsume ? SmsLogSideEnum.MASTER : SmsLogSideEnum.SLAVE;
-		Uri insertUri = SmsSenderHelper.logSmsMessage( cr,side,   SmsLogTypeEnum.RECEIVE, geoMsg, 1);
+		Uri insertUri = SmsSenderHelper.logSmsMessage( cr,side,   SmsLogTypeEnum.RECEIVE, geoMsg, 1,    messageBody );
 		Log.d(TAG, "Save Log Message : " + insertUri); 
 		// Multi Message
 		if (geoMsg.isMultiMessages()) {

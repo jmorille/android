@@ -2,13 +2,18 @@ package eu.ttbox.geoping.ui.smslog;
 
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +25,14 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.model.SmsLog;
+import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
@@ -32,6 +42,7 @@ public class SmsLogViewFragment  extends SherlockFragment {
 
 
     private static final String TAG = "SmsLogViewFragment";
+
 
     // Binding
     private ImageView photoImageView;
@@ -43,11 +54,19 @@ public class SmsLogViewFragment  extends SherlockFragment {
     private TextView  messageTextView;
     private TextView  messageParamTextView;
 
+    private ImageView smsTypeImageView;
+    private TextView smsTypeTimeTextView;
+
     // Cache
     private PhotoThumbmailCache photoCache;
+    private SmsLogResources mResources;
 
     // Instance
     private Uri entityUri;
+
+    // Context
+    private Context mContext;
+    private  Handler handler = new Handler();
 
     // ===========================================================
     // Constructors
@@ -56,10 +75,12 @@ public class SmsLogViewFragment  extends SherlockFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.smslog_view, container, false);
+        mContext = getActivity();
         // Menu on Fragment
         setHasOptionsMenu(true);
         // Cache
-        photoCache = ((GeoPingApplication) getActivity().getApplicationContext()).getPhotoThumbmailCache();
+        photoCache = ((GeoPingApplication) mContext.getApplicationContext()).getPhotoThumbmailCache();
+        this.mResources = new SmsLogResources(getActivity());
         // Bindings
         photoImageView = (ImageView) v.findViewById(R.id.smslog_photo_imageView);
         nameTextView= (TextView) v.findViewById(R.id.smslog_name );
@@ -70,15 +91,27 @@ public class SmsLogViewFragment  extends SherlockFragment {
         messageTextView = (TextView) v.findViewById(R.id.smslog_message );
         messageParamTextView  = (TextView) v.findViewById(R.id.smslog_message_param  );
 
+        smsTypeImageView = (ImageView) v.findViewById(R.id.smslog_list_item_smsType_imgs);
+        smsTypeTimeTextView  = (TextView) v.findViewById(R.id.smslog_list_item_time_ago  );
+
         return v;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Uri loadUri = null;
+        if (savedInstanceState != null) {
+            Log.d(TAG, "Restore onCreate savedInstanceState: " + savedInstanceState);
+            loadUri = savedInstanceState.getParcelable(Intents.EXTRA_DATA_URI);
+        }
         Log.d(TAG, "onActivityCreated");
         // Load Data
-        loadEntity(getActivity().getIntent());
+        if (loadUri!=null) {
+            loadEntity(loadUri);
+        } else {
+            loadEntity(getActivity().getIntent());
+        }
     }
     // ===========================================================
     // Menu
@@ -87,8 +120,48 @@ public class SmsLogViewFragment  extends SherlockFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
     }
 
+    // ===========================================================
+    // Lyfe Cycle
+    // ===========================================================
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(Intents.EXTRA_DATA_URI, entityUri.toString());
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "Save onSaveInstanceState : " + outState);
+    }
+
+    private void registerContentObserver(Uri entityUri) {
+        if (entityUri!=null) {
+            ContentResolver cr = getActivity().getContentResolver();
+            cr.registerContentObserver(entityUri, false, observer);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerContentObserver(entityUri);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ContentResolver cr = getActivity().getContentResolver();
+        cr.unregisterContentObserver(observer);
+    }
+
+
+    private ContentObserver observer = new ContentObserver(handler) {
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            loadEntity(entityUri);
+            super.onChange(selfChange, uri);
+        }
+    };
     // ===========================================================
     // Load Data
     // ===========================================================
@@ -105,7 +178,7 @@ public class SmsLogViewFragment  extends SherlockFragment {
     public void loadEntity(Uri entityUri) {
         Log.d(TAG, "Load entity Uri : " + entityUri);
         this.entityUri = entityUri;
-        ContentResolver cr = getActivity().getContentResolver();
+        ContentResolver cr = mContext.getContentResolver();
         String selection = null;
         String[] selectionArgs = null;
         Cursor cursor = cr.query(entityUri, SmsLogDatabase.SmsLogColumns.ALL_COLS, selection, selectionArgs, null);
@@ -118,6 +191,8 @@ public class SmsLogViewFragment  extends SherlockFragment {
         } finally {
             cursor.close();
         }
+        // Register Cursor Observer
+        registerContentObserver(entityUri);
     }
 
     public void loadEntity(SmsLog smsLog) {
@@ -135,11 +210,31 @@ public class SmsLogViewFragment  extends SherlockFragment {
         phoneTextView.setText(smsLog.phone);
         actionTextView.setText(getString(smsLog.action.labelResourceId));
         // TOOD Format date
-        String  dateString = smsLog.getTimeAsDate().toString();
-        timeIdTextView.setText(dateString);
+
         requestIdTextView.setText(smsLog.requestId);
         messageTextView.setText(smsLog.message);
         messageParamTextView.setText(smsLog.messageParams);
+        // Bind
+        // Bind Value
+        SmsLogTypeEnum smLogType = smsLog.smsLogType;
+        Drawable iconType = mResources.getCallTypeDrawable(smLogType);
+        smsTypeImageView.setImageDrawable(iconType);
+        // Time
+        String smsTypeTime = DateUtils.formatDateRange(mContext, smsLog.time , smsLog.time,
+                DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE |
+                        DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
+        smsTypeTimeTextView.setText(smsTypeTime);
+        // Other
+        timeIdTextView.setText(smsTypeTime);
+        // Params
+        String msgParams = smsLog.messageParams;
+        try {
+            JSONObject msgParamJson = new JSONObject(msgParams);
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Error parsing JSON " + msgParams+
+                    ": " + e.getMessage(), e);
+        }
         // Photo
         loadPhoto(null, smsLog.phone);
     }

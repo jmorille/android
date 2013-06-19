@@ -7,7 +7,7 @@
     <color name="pairing_authorize_type_always">#4B00FF00</color>
     <color name="pairing_authorize_type_never">#4BFF0000</color>
     <color name="pairing_authorize_type_request">#4BFF00FF</color>
-    
+
 
 
     <color name="call_log_primary_text_color">#FFFFFF</color>

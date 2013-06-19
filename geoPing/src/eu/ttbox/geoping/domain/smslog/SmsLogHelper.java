@@ -151,20 +151,22 @@ public class SmsLogHelper {
 	}
 
 	public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, GeoPingMessage geoMessage) {
-		return getContentValues(   side, type, geoMessage.phone, geoMessage.action, geoMessage.params);
+		return getContentValues(   side, type, geoMessage.phone, geoMessage.action, geoMessage.params, null);
 	}
 
     /**
      * Used for logging sms Message in db
      */
-	public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params) {
+	public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, String messageResult) {
 		ContentValues values = new ContentValues();
 		values.put(SmsLogColumns.COL_TIME, System.currentTimeMillis());
 		values.put(SmsLogColumns.COL_PHONE, phone);
 		values.put(SmsLogColumns.COL_ACTION, action.getDbCode());
 		values.put(SmsLogColumns.COL_SMSLOG_TYPE, type.getCode()); 
-		values.put(SmsLogColumns.COL_SMS_SIDE, side.getDbCode()); 
-		if (params != null && !params.isEmpty()) {
+		values.put(SmsLogColumns.COL_SMS_SIDE, side.getDbCode());
+        values.put(SmsLogColumns.COL_MESSAGE, messageResult);
+
+        if (params != null && !params.isEmpty()) {
             // Test Values SMS Log values
             if (params.containsKey(SmsLogColumns.COL_REQUEST_ID)) {
                 String colVal = params.getString(SmsLogColumns.COL_REQUEST_ID) ;

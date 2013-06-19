@@ -55,7 +55,7 @@
 		<slf4j-android.version>1.6.1-RC1</slf4j-android.version>
 
 		<!-- Utils -->
-		<jackson.version>2.1.4</jackson.version>
+		<jackson.version>2.2.2</jackson.version>
 		<!-- Release -->
 		<android-maven-plugin.version>3.6.0</android-maven-plugin.version> <!-- 3.5.1 -->
 		<android.sdk.platform>17</android.sdk.platform>
