@@ -10,6 +10,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
             android:src="@drawable/ic_contact_picture_holo_light"
             />
     <TextView
@@ -17,8 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_below="@+id/smslog_photo_imageView"
             android:layout_alignParentLeft="true"
+            android:layout_alignBottom="@+id/smslog_photo_imageView"
             android:text="Name"
             />
     <TextView
@@ -28,7 +29,17 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_below="@+id/smslog_name"
             android:layout_alignParentLeft="true"
+            android:layout_alignBottom="@+id/smslog_photo_imageView"
             android:text="Phone"
+            />
+
+    <View
+            android:id="@+id/photo_text_bar"
+            android:layout_width="match_parent"
+            android:layout_height="42dip"
+            android:background="#7F000000"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBottom="@+id/smslog_phone"
             />
 
     <TextView
