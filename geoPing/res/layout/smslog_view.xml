@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true" >
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
 
     <ImageView
             android:id="@+id/smslog_photo_imageView"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
@@ -159,35 +163,12 @@
             android:text="Il y a 4 jours"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="@dimen/call_log_inner_margin"
-            android:layout_alignBottom="@+id/smslog_list_item_smsType_imgs"
+            android:layout_alignBaseline="@+id/smslog_list_item_smsType_imgs"
             android:layout_toRightOf="@+id/smslog_list_item_smsType_imgs"
             android:layout_below="@+id/call_and_sms"
             />
 
 
-    <TextView
-            android:id="@+id/smslog_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/call_log_indent_margin"
-            android:layout_marginRight="@dimen/call_log_inner_margin"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/call_log_secondary_text_color"
-            android:layout_below="@+id/smslog_list_item_time_ago"
-            android:text="Time"
-            />
-
-    <TextView
-            android:id="@+id/smslog_requestId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/call_log_inner_margin"
-            android:layout_marginLeft="@dimen/call_log_indent_margin"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/call_log_secondary_text_color"
-            android:layout_below="@+id/smslog_time"
-            android:text="Request iId"
-            />
 
     <TextView
             android:id="@+id/smslog_message"
@@ -197,29 +178,21 @@
             android:layout_marginLeft="@dimen/call_log_indent_margin"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/call_log_secondary_text_color"
-            android:layout_below="@+id/smslog_requestId"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/smslog_list_item_time_ago"
             android:text="Message"
             />
 
-    <TextView
-            android:id="@+id/smslog_message_param"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/call_log_inner_margin"
-            android:layout_marginLeft="@dimen/call_log_indent_margin"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/call_log_secondary_text_color"
-            android:layout_below="@+id/smslog_message"
-            android:text="Message Params"
-            />
-
-    <ListView
+    <LinearLayout
             android:id="@+id/smslog_message_param_list"
             android:layout_width="match_parent"
+            android:orientation="vertical"
             android:layout_height="wrap_content"
-            android:isScrollContainer="false"
-            android:layout_below="@+id/smslog_message_param"
-            android:paddingLeft="@dimen/list_padding"
-            android:paddingRight="@dimen/list_padding" />
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/smslog_message"
+            android:layout_marginRight="@dimen/call_log_inner_margin"
+            android:layout_marginLeft="@dimen/call_log_indent_margin" />
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>

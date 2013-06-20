@@ -20,7 +20,7 @@ import eu.ttbox.geoping.service.encoder.helper.SmsParamEncoderHelper;
 
 public class SmsLogHelper {
 
-	boolean isNotInit = true;
+    public boolean isNotInit = true;
 	public int idIdx = -1;
 	public int timeIdx = -1;
 	public int actionIdx = -1;
@@ -31,6 +31,9 @@ public class SmsLogHelper {
 	public int smsLogTypeIdx = -1; 
     public int smsLogSideIdx = -1;
     public int requestIdIdx = -1;
+
+    public int sendAckTimeInMsIdx = -1;
+    public int sendDeliveryAckTimeInMsIdx = -1;
 
     public SmsLogHelper initWrapper(Cursor cursor) {
 		idIdx = cursor.getColumnIndex(SmsLogColumns.COL_ID);
@@ -43,6 +46,10 @@ public class SmsLogHelper {
         messageParamIdx = cursor.getColumnIndex(SmsLogColumns.COL_MESSAGE_PARAMS);
 		smsLogSideIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMS_SIDE);
         requestIdIdx =  cursor.getColumnIndex(SmsLogColumns.COL_REQUEST_ID );
+
+        sendAckTimeInMsIdx =  cursor.getColumnIndex(SmsLogColumns.COL_IS_SEND_TIME );
+        sendDeliveryAckTimeInMsIdx =  cursor.getColumnIndex(SmsLogColumns.COL_IS_DELIVERY_TIME );
+
 		isNotInit = false;
 		return this;
 	}
@@ -106,8 +113,25 @@ public class SmsLogHelper {
         int key = cursor.getInt(smsLogSideIdx);
         return SmsLogSideEnum.getByDbCode(key);
     }
-	
-	// ===========================================================
+
+    public long getSendAckTimeInMs(Cursor cursor) {
+        return cursor.getLong(sendAckTimeInMsIdx);
+    }
+
+    public long getSendDeliveryAckTimeInMs(Cursor cursor) {
+        return cursor.getLong(sendDeliveryAckTimeInMsIdx);
+    }
+
+    public String getMessage(Cursor cursor) {
+        return cursor.getString(messageIdx);
+    }
+
+
+    public String getMessageParams(Cursor cursor) {
+        return cursor.getString(messageParamIdx);
+    }
+
+    // ===========================================================
 	// Field Setter
 	// ===========================================================
 
