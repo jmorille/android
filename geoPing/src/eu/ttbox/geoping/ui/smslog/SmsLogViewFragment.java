@@ -227,7 +227,7 @@ public class SmsLogViewFragment extends SherlockFragment {
         // Messages Sizes    helper.getM
         String smsMessage = helper.getMessage(cursor);
         int msgSize = smsMessage==null? 0 : smsMessage.length();
-        String message = String.format( "Message of %1$d characters", msgSize);
+        String message = getString(R.string.smslog_message_size,msgSize );
         messageTextView.setText( message);
 
          // Bind Value

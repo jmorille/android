@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.ui.smslog;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,10 @@ public class SmsLogListFragment extends Fragment {
     // binding
     private ListView listView;
 
+    // Instance
+    private boolean isDisplayContactDetail = true;
+
+
     // Intents
     public static class Intents {
         public static final String EXTRA_SMS_PHONE = eu.ttbox.geoping.core.Intents.EXTRA_SMS_PHONE;
@@ -62,6 +68,24 @@ public class SmsLogListFragment extends Fragment {
     // Constructors
     // ===========================================================
 
+    public SmsLogListFragment() {
+        super();
+    }
+
+    public SmsLogListFragment( boolean isDisplayContactDetail ) {
+        super();
+        this.isDisplayContactDetail = isDisplayContactDetail;
+    }
+
+    @Override
+    public void onInflate(android.app.Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
+        super.onInflate(activity, attrs, savedInstanceState);
+        // Your code here to process the attributes
+        final TypedArray a = getActivity().obtainStyledAttributes(attrs, R.styleable.SmsLogListFragment);
+        this.isDisplayContactDetail =  a.getBoolean(R.styleable.SmsLogListFragment_isDisplayContactDetail, true);
+        a.recycle();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.smslog_list, container, false);
@@ -71,7 +95,7 @@ public class SmsLogListFragment extends Fragment {
         listView.setEmptyView(v.findViewById(android.R.id.empty));
 
         // init
-        listAdapter = new SmsLogListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        listAdapter = new SmsLogListAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER, isDisplayContactDetail);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(mOnClickListener);
         Log.d(TAG, "Binding end");

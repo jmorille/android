@@ -194,7 +194,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 					Bundle args = new Bundle();
 					args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, personPhone);
 					args.putInt(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SIDE_DBCODE, SmsLogSideEnum.MASTER.getDbCode());
-			 		smsLogFragment = new SmsLogListFragment();
+			 		smsLogFragment = new SmsLogListFragment(false);
 					smsLogFragment.setArguments(args);
 				}
 				fragment = smsLogFragment;

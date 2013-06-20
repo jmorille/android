@@ -41,6 +41,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
 
     private android.content.res.Resources resources;
 
+    private boolean isDisplayContactDetail = true;
     // Cache
     private PhotoThumbmailCache photoCache;
 
@@ -48,10 +49,11 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
     // Constructor
     // ===========================================================
 
-    public SmsLogListAdapter(Context context, Cursor c, int flags) {
+    public SmsLogListAdapter(Context context, Cursor c, int flags, boolean isDisplayContactDetail ) {
         super(context, R.layout.smslog_list_item, c, flags);
         this.resources = context.getResources();
         this.mResources = new SmsLogResources(context);
+        this.isDisplayContactDetail = isDisplayContactDetail;
         // Cache
         photoCache = ((GeoPingApplication) context.getApplicationContext()).getPhotoThumbmailCache();
     }
@@ -83,7 +85,12 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         holder.actionText.setText(actionLabel);
         // Phone
         String phone = helper.getSmsLogPhone(cursor);
-        holder.phoneText.setText(phone);
+        if (isDisplayContactDetail) {
+            holder.phoneText.setText(phone);
+            holder.phoneText.setVisibility(View.VISIBLE);
+        } else {
+            holder.phoneText.setVisibility(View.GONE);
+        }
         // Time
         long time = helper.getSmsLogTime(cursor);
         String timeFormat = String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", time);
@@ -97,7 +104,12 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
                         DateUtils.FORMAT_ABBREV_RELATIVE);
         holder.timeAgoText.setText(dateText);
         // Load Photos
-        loadPhoto(holder, null, phone);
+        if (isDisplayContactDetail) {
+           loadPhoto(holder, null, phone);
+            holder.photoImageView.setVisibility(View.VISIBLE);
+        } else {
+            holder.photoImageView.setVisibility(View.GONE);
+        }
     }
 
   

@@ -12,6 +12,9 @@
          <attr name="text" format="string"/>
          <attr name="src" format="reference"/> 
     </declare-styleable>
-    
-    
+
+    <declare-styleable name="SmsLogListFragment">
+        <attr name="isDisplayContactDetail" format="boolean"/>
+    </declare-styleable>
+
 </resources>

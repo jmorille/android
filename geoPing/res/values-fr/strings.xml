@@ -176,6 +176,7 @@
 
     <!-- SmsLog Model -->
 	<string name="smslog_delete_all">Tout supprimer</string>
+    <string name="smslog_message_size">"Message de %1$d charactères"</string>
 
     <!-- Help -->
 <!--     <string name="person_help">Liste des personnes auquelles vous pouvez demander un GeoPing.\n\nLa fonction d\'appariement permet de demander à l\'application Geoping distante quels seront vos droits de demande de GeoPing</string> -->

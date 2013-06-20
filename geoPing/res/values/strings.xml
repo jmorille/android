@@ -155,6 +155,7 @@
 
     <!-- SmsLog Model -->
     <string name="smslog_delete_all">Delete everything</string>
+    <string name="smslog_message_size">"Message of %1$d characters"</string>
 
     <!-- Help -->
     <string name="person_help">"List of persons for whom you can request a GeoPing.

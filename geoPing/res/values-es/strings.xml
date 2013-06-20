@@ -172,6 +172,7 @@
 
     <!-- SmsLog Model -->
 	<string name="smslog_delete_all">Quitado todo</string>
+    <string name="smslog_message_size">"Message of %1$d characters"</string>
 
     <!-- Help -->
    <string name="person_help">Lista de las personas para quienes usted puede pedir un GeoPing.\n  \n

@@ -12,7 +12,6 @@
             android:layout_width="@dimen/call_log_list_contact_photo_size"
             android:layout_height="@dimen/call_log_list_contact_photo_size"
             android:src="@drawable/ic_contact_picture_holo_light"
-
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             />
@@ -74,7 +73,7 @@
             android:textColor="@color/call_log_secondary_text_color"
             android:text="Il y a 4 jours"
             android:layout_marginLeft="5dp"
-            android:layout_alignBottom="@+id/smslog_list_item_smsType_imgs"
+            android:layout_alignBaseline="@+id/smslog_list_item_smsType_imgs"
             android:layout_toRightOf="@+id/smslog_list_item_smsType_imgs"
             android:layout_below="@+id/smslog_list_item_time"
             />
