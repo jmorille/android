@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
@@ -44,6 +45,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
     private boolean isDisplayContactDetail = true;
     // Cache
     private PhotoThumbmailCache photoCache;
+    private SmsLogViewHelper cacheNameFinder;
 
     // ===========================================================
     // Constructor
@@ -55,7 +57,8 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         this.mResources = new SmsLogResources(context);
         this.isDisplayContactDetail = isDisplayContactDetail;
         // Cache
-        photoCache = ((GeoPingApplication) context.getApplicationContext()).getPhotoThumbmailCache();
+        this.photoCache = ((GeoPingApplication) context.getApplicationContext()).getPhotoThumbmailCache();
+        this.cacheNameFinder = new SmsLogViewHelper(mContext);
     }
 
     private void intViewBinding(View view, Context context, Cursor cursor) {
@@ -86,7 +89,8 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         // Phone
         String phone = helper.getSmsLogPhone(cursor);
         if (isDisplayContactDetail) {
-            holder.phoneText.setText(phone);
+            SmsLogSideEnum side = helper.getSmsLogSideEnum(cursor);
+            cacheNameFinder.setTextViewPersonNameByPhone(holder.phoneText, phone, side);
             holder.phoneText.setVisibility(View.VISIBLE);
         } else {
             holder.phoneText.setVisibility(View.GONE);

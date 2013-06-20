@@ -29,14 +29,11 @@ import com.actionbarsherlock.view.MenuInflater;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.model.SmsLog;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
@@ -47,26 +44,19 @@ import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class SmsLogViewFragment extends SherlockFragment {
 
-
     private static final String TAG = "SmsLogViewFragment";
-
     // Binding
     private ImageView photoImageView;
     private TextView nameTextView;
     private TextView phoneTextView;
     private TextView actionTextView;
-   // private TextView requestIdTextView;
-  // private TextView timeIdTextView;
     private TextView messageTextView;
-  //  private TextView messageParamTextView;
     private ImageView smsTypeImageView;
     private TextView smsTypeTimeTextView;
     private LinearLayout paramListView;
-
     // Cache
     private PhotoThumbmailCache photoCache;
     private SmsLogResources mResources;
-
     // Instance
     private Uri entityUri;
 
@@ -74,6 +64,7 @@ public class SmsLogViewFragment extends SherlockFragment {
     private Context mContext;
     private SmsLogHelper helper = new SmsLogHelper();
     private Handler handler = new Handler();
+    private SmsLogViewHelper cacheNameFinder;
 
     // ===========================================================
     // Constructors
@@ -86,7 +77,6 @@ public class SmsLogViewFragment extends SherlockFragment {
         }
     };
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.smslog_view, container, false);
@@ -96,6 +86,8 @@ public class SmsLogViewFragment extends SherlockFragment {
         // Cache
         this.photoCache = ((GeoPingApplication) mContext.getApplicationContext()).getPhotoThumbmailCache();
         this.mResources = new SmsLogResources(getActivity());
+        this.cacheNameFinder = new SmsLogViewHelper(mContext);
+
         // Bindings
         this.photoImageView = (ImageView) v.findViewById(R.id.smslog_photo_imageView);
         this.nameTextView = (TextView) v.findViewById(R.id.smslog_name);
@@ -103,10 +95,6 @@ public class SmsLogViewFragment extends SherlockFragment {
         this.actionTextView = (TextView) v.findViewById(R.id.smslog_action);
         this.messageTextView = (TextView) v.findViewById(R.id.smslog_message);
         this.paramListView = (LinearLayout) v.findViewById(R.id.smslog_message_param_list);
-
-//        this.requestIdTextView = (TextView) v.findViewById(R.id.smslog_requestId);
-//        this.timeIdTextView = (TextView) v.findViewById(R.id.smslog_time);
-//        this.messageParamTextView = (TextView) v.findViewById(R.id.smslog_message_param);
 
         this.smsTypeImageView = (ImageView) v.findViewById(R.id.smslog_list_item_smsType_imgs);
         this.smsTypeTimeTextView = (TextView) v.findViewById(R.id.smslog_list_item_time_ago);
@@ -205,17 +193,7 @@ public class SmsLogViewFragment extends SherlockFragment {
         if (helper.isNotInit ) {
             helper.initWrapper(cursor);
         }
-        SmsLogSideEnum smsLogSide = helper.getSmsLogSideEnum(cursor);
-        switch (smsLogSide) {
-            case MASTER:
-                break;
-            case SLAVE:
-                break;
-            default:
-                Log.w(TAG, "Not manage Side : " + smsLogSide);
-        }
-
-        //TODO Name Person
+        // Phone
         String phone = helper.getSmsLogPhone(cursor);
         phoneTextView.setText(phone);
 
@@ -254,6 +232,11 @@ public class SmsLogViewFragment extends SherlockFragment {
         String msgParams = helper.getMessageParams(cursor);
         bindMessageParams(msgParams);
 
+        //TODO Name Person
+        SmsLogSideEnum smsLogSide = helper.getSmsLogSideEnum(cursor);
+        String name = cacheNameFinder.getPersonNameByPhone( phone, smsLogSide);
+        nameTextView.setText(name);
+
         // Photo
         loadPhoto(null, phone);
     }
@@ -261,7 +244,6 @@ public class SmsLogViewFragment extends SherlockFragment {
     private void bindMessageParams(String msgParams) {
         if (msgParams != null) {
             try {
-                ArrayList<SmsLogParamVO> vos = new ArrayList<SmsLogParamVO>();
                 JSONObject json = new JSONObject(msgParams);
                 Iterator<String> it =  json.keys();
                 paramListView.removeAllViewsInLayout();
