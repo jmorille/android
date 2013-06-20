@@ -213,5 +213,13 @@
             android:text="Message Params"
             />
 
+    <ListView
+            android:id="@+id/smslog_message_param_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="false"
+            android:layout_below="@+id/smslog_message_param"
+            android:paddingLeft="@dimen/list_padding"
+            android:paddingRight="@dimen/list_padding" />
 
 </RelativeLayout>

@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -27,6 +28,10 @@ import com.actionbarsherlock.view.MenuInflater;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
@@ -38,24 +43,23 @@ import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
-public class SmsLogViewFragment  extends SherlockFragment {
+public class SmsLogViewFragment extends SherlockFragment {
 
 
     private static final String TAG = "SmsLogViewFragment";
 
-
     // Binding
     private ImageView photoImageView;
-    private TextView  nameTextView;
-    private TextView  phoneTextView;
-    private TextView  actionTextView;
-    private TextView  requestIdTextView;
-    private TextView  timeIdTextView;
-    private TextView  messageTextView;
-    private TextView  messageParamTextView;
-
+    private TextView nameTextView;
+    private TextView phoneTextView;
+    private TextView actionTextView;
+    private TextView requestIdTextView;
+    private TextView timeIdTextView;
+    private TextView messageTextView;
+    private TextView messageParamTextView;
     private ImageView smsTypeImageView;
     private TextView smsTypeTimeTextView;
+    private ListView paramListView;
 
     // Cache
     private PhotoThumbmailCache photoCache;
@@ -66,11 +70,19 @@ public class SmsLogViewFragment  extends SherlockFragment {
 
     // Context
     private Context mContext;
-    private  Handler handler = new Handler();
+    private Handler handler = new Handler();
+    private SmsLogViewParamAdapater adapter;
 
     // ===========================================================
     // Constructors
     // ===========================================================
+    private ContentObserver observer = new ContentObserver(handler) {
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            loadEntity(entityUri);
+            super.onChange(selfChange, uri);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,23 +91,31 @@ public class SmsLogViewFragment  extends SherlockFragment {
         // Menu on Fragment
         setHasOptionsMenu(true);
         // Cache
-        photoCache = ((GeoPingApplication) mContext.getApplicationContext()).getPhotoThumbmailCache();
+        this.photoCache = ((GeoPingApplication) mContext.getApplicationContext()).getPhotoThumbmailCache();
         this.mResources = new SmsLogResources(getActivity());
         // Bindings
-        photoImageView = (ImageView) v.findViewById(R.id.smslog_photo_imageView);
-        nameTextView= (TextView) v.findViewById(R.id.smslog_name );
-        phoneTextView= (TextView) v.findViewById(R.id.smslog_phone);
-        actionTextView = (TextView) v.findViewById(R.id.smslog_action );
-        requestIdTextView = (TextView) v.findViewById(R.id.smslog_requestId);
-        timeIdTextView = (TextView) v.findViewById(R.id.smslog_time );
-        messageTextView = (TextView) v.findViewById(R.id.smslog_message );
-        messageParamTextView  = (TextView) v.findViewById(R.id.smslog_message_param  );
+        this.photoImageView = (ImageView) v.findViewById(R.id.smslog_photo_imageView);
+        this.nameTextView = (TextView) v.findViewById(R.id.smslog_name);
+        this.phoneTextView = (TextView) v.findViewById(R.id.smslog_phone);
+        this.actionTextView = (TextView) v.findViewById(R.id.smslog_action);
+        this.requestIdTextView = (TextView) v.findViewById(R.id.smslog_requestId);
+        this.timeIdTextView = (TextView) v.findViewById(R.id.smslog_time);
+        this.messageTextView = (TextView) v.findViewById(R.id.smslog_message);
+        this.messageParamTextView = (TextView) v.findViewById(R.id.smslog_message_param);
+        this.paramListView = (ListView) v.findViewById(R.id.smslog_message_param_list);
 
-        smsTypeImageView = (ImageView) v.findViewById(R.id.smslog_list_item_smsType_imgs);
-        smsTypeTimeTextView  = (TextView) v.findViewById(R.id.smslog_list_item_time_ago  );
+        this.smsTypeImageView = (ImageView) v.findViewById(R.id.smslog_list_item_smsType_imgs);
+        this.smsTypeTimeTextView = (TextView) v.findViewById(R.id.smslog_list_item_time_ago);
+
+        // Adpater
+        this.adapter = new SmsLogViewParamAdapater(mContext);
+        this.paramListView.setAdapter(adapter);
 
         return v;
     }
+    // ===========================================================
+    // Menu
+    // ===========================================================
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -107,14 +127,15 @@ public class SmsLogViewFragment  extends SherlockFragment {
         }
         Log.d(TAG, "onActivityCreated");
         // Load Data
-        if (loadUri!=null) {
+        if (loadUri != null) {
             loadEntity(loadUri);
         } else {
             loadEntity(getActivity().getIntent());
         }
     }
+
     // ===========================================================
-    // Menu
+    // Lyfe Cycle
     // ===========================================================
 
     @Override
@@ -122,10 +143,6 @@ public class SmsLogViewFragment  extends SherlockFragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
-
-    // ===========================================================
-    // Lyfe Cycle
-    // ===========================================================
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -135,7 +152,7 @@ public class SmsLogViewFragment  extends SherlockFragment {
     }
 
     private void registerContentObserver(Uri entityUri) {
-        if (entityUri!=null) {
+        if (entityUri != null) {
             ContentResolver cr = getActivity().getContentResolver();
             cr.registerContentObserver(entityUri, false, observer);
         }
@@ -153,15 +170,6 @@ public class SmsLogViewFragment  extends SherlockFragment {
         ContentResolver cr = getActivity().getContentResolver();
         cr.unregisterContentObserver(observer);
     }
-
-
-    private ContentObserver observer = new ContentObserver(handler) {
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            loadEntity(entityUri);
-            super.onChange(selfChange, uri);
-        }
-    };
     // ===========================================================
     // Load Data
     // ===========================================================
@@ -197,7 +205,7 @@ public class SmsLogViewFragment  extends SherlockFragment {
 
     public void loadEntity(SmsLog smsLog) {
         Log.d(TAG, "Load entity Datan: " + smsLog);
-        switch ( smsLog.side) {
+        switch (smsLog.side) {
             case MASTER:
                 break;
             case SLAVE:
@@ -220,7 +228,7 @@ public class SmsLogViewFragment  extends SherlockFragment {
         Drawable iconType = mResources.getCallTypeDrawable(smLogType);
         smsTypeImageView.setImageDrawable(iconType);
         // Time
-        String smsTypeTime = DateUtils.formatDateRange(mContext, smsLog.time , smsLog.time,
+        String smsTypeTime = DateUtils.formatDateRange(mContext, smsLog.time, smsLog.time,
                 DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE |
                         DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
         smsTypeTimeTextView.setText(smsTypeTime);
@@ -228,17 +236,27 @@ public class SmsLogViewFragment  extends SherlockFragment {
         timeIdTextView.setText(smsTypeTime);
         // Params
         String msgParams = smsLog.messageParams;
-        try {
-            JSONObject msgParamJson = new JSONObject(msgParams);
+        if (msgParams != null) {
+            try {
+                ArrayList<SmsLogParamVO> vos = new ArrayList<SmsLogParamVO>();
+                JSONObject json = new JSONObject(msgParams);
+                Iterator<String> it =  json.keys();
+                while (it.hasNext()) {
+                    String key = it.next();
+                    String val = json.getString(key);
+                    Log.d(TAG, "JSONObject key : "  +key + " = " + val);
+                    SmsLogParamVO vo = new SmsLogParamVO(key, val);
+                    vos.add(vo);
+                }
+                adapter.addAll(vos);
 
-        } catch (JSONException e) {
-            Log.e(TAG, "Error parsing JSON " + msgParams+
-                    ": " + e.getMessage(), e);
+            } catch (JSONException e) {
+                Log.e(TAG, "Error parsing JSON " + msgParams + " : " + e.getMessage(), e);
+            }
         }
         // Photo
         loadPhoto(null, smsLog.phone);
     }
-
 
 
     // ===========================================================

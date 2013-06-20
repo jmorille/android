@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                style="@style/entity_list_item_container"
+                android:orientation="horizontal"
+                android:paddingBottom="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip">
+
+
+    <TextView
+            android:id="@+id/smslog_list_item_param_key"
+            style="@style/entity_list_item"
+            android:text="KEY"
+            android:textColor="@color/call_log_secondary_text_color"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"/>
+
+    <TextView
+            android:id="@+id/smslog_list_item_param_value"
+            style="@style/entity_list_item"
+            android:layout_alignBottom="@+id/smslog_list_item_param_key"
+            android:layout_toRightOf="@+id/smslog_list_item_param_key"
+            android:text="VALUE"
+            android:textColor="@color/call_log_secondary_text_color"
+            android:textSize="14sp"
+            android:singleLine="true"
+            />
+
+</RelativeLayout>

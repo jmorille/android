@@ -446,9 +446,9 @@ public class GeoPingMasterService extends IntentService {
         // Construct a task stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(createMarkAsReadLogIntent(phone));
         stackBuilder.addNextIntent(new Intent(getApplicationContext(), MainActivity.class));
         stackBuilder.addNextIntent(Intents.showOnMap(getApplicationContext(), geoTrackData, values));
+//        stackBuilder.addNextIntent(createMarkAsReadLogIntent(phone));
 
         // Get a PendingIntent containing the entire back stack
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
