@@ -23,12 +23,12 @@ public class PairingProvider extends ContentProvider {
     public static final String PAIRINGS_LIST_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/ttbox.geoping.pairing";
     public static final String PAIRING_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/ttbox.geoping.pairing";
 
-    public static class Constants {
+    public static class Constants  {
         public static String AUTHORITY = "eu.ttbox.geoping.PairingProvider";
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/pairing");
 
         public static final Uri CONTENT_URI_PHONE_FILTER = Uri.withAppendedPath(CONTENT_URI, "phone_lookup");
-        
+
         public static final Uri getUriPhoneFilter(String phoneNumber) {
         	Uri uri = Uri.withAppendedPath( CONTENT_URI_PHONE_FILTER, Uri.encode(phoneNumber));
         	return uri;

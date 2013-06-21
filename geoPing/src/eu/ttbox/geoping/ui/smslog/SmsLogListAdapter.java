@@ -45,7 +45,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
     private boolean isDisplayContactDetail = true;
     // Cache
     private PhotoThumbmailCache photoCache;
-    private SmsLogViewHelper cacheNameFinder;
+    private PersonNameFinderHelper cacheNameFinder;
 
     // ===========================================================
     // Constructor
@@ -58,7 +58,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         this.isDisplayContactDetail = isDisplayContactDetail;
         // Cache
         this.photoCache = ((GeoPingApplication) context.getApplicationContext()).getPhotoThumbmailCache();
-        this.cacheNameFinder = new SmsLogViewHelper(mContext);
+        this.cacheNameFinder = new PersonNameFinderHelper(mContext);
     }
 
     private void intViewBinding(View view, Context context, Cursor cursor) {
