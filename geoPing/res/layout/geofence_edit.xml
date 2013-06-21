@@ -4,32 +4,55 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <TextView
-            android:layout_width="wrap_content"
+    <TextView  android:id="@+id/labelGeofenceEditName"
+               android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/geofence_name"
-            android:id="@+id/labelGeofenceEditName" />
+           />
 
-    <EditText
+    <EditText android:id="@+id/geofenceEditName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="text"
             android:hint="@string/geofence_name"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:ems="10"
-            android:id="@+id/geofenceEditName"
-            android:layout_below="@id/labelGeofenceEditName"
-            android:layout_alignLeft="@id/labelGeofenceEditName"/>
+            android:layout_below="@+id/labelGeofenceEditName"
+            android:layout_alignLeft="@+id/labelGeofenceEditName"/>
 
-    <TextView
+    <TextView  android:id="@+id/geofenceEditLatLng"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="No zone coordonate"
-            android:id="@+id/geofenceEditLatLng"
-            android:layout_below="@id/geofenceEditName"
-            android:layout_alignRight="@id/geofenceEditName"
+            android:layout_below="@+id/geofenceEditName"
+            android:layout_alignRight="@+id/geofenceEditName"
             android:layout_marginTop="16dp"/>
+
+
+
+    <TextView  android:id="@+id/geofence_transition_label"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textAppearance="?android:attr/textAppearanceMedium"
+               android:layout_below="@+id/geofenceEditLatLng"
+               android:text="Transition"
+            />
+
+    <CheckBox android:id="@+id/geofence_transition_enter_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/geofence_transition_label"
+            android:text="Enter"/>
+
+    <CheckBox android:id="@+id/geofence_transition_exit_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/geofence_transition_enter_checkBox"
+            android:text="Exit"/>
+
 
 </RelativeLayout>

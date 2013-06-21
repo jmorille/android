@@ -33,6 +33,8 @@
         style="@style/entity_list_item"
         android:layout_alignLeft="@id/person_list_item_name"
         android:layout_below="@id/person_list_item_name"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/call_log_secondary_text_color"
         android:textIsSelectable="false"
         android:singleLine="true"
         android:focusable="false"

@@ -89,38 +89,46 @@
         <activity android:name=".GeoTrakerActivity"/> 
 
         <!-- Pref -->
-        <activity android:name=".ui.prefs.GeoPingPrefActivity"/>
+        <activity android:name=".ui.prefs.GeoPingPrefActivity" android:exported="false"/>
 
         <!-- Map -->
-        <activity android:label="@string/menu_map" android:launchMode="singleTask" android:name=".ui.map.ShowMapActivity" android:theme="@style/MapActionBar">
+        <activity android:name=".ui.map.ShowMapActivity"   android:launchMode="singleTask" android:exported="false"
+                  android:theme="@style/MapActionBar"
+                  android:label="@string/menu_map">
             <intent-filter>
                 <action android:name="eu.ttbox.geoping.ACTION_NEW_GEOTRACK_INSERTED"/> 
             </intent-filter>
         </activity>
 
         <!-- Sms Log -->
-        <activity android:label="@string/menu_smslog" android:launchMode="singleTask" android:name=".ui.smslog.SmsLogListActivity"/>
-        <activity android:label="@string/menu_smslog"  android:name=".ui.smslog.SmsLogViewActivity"/>
+        <activity android:launchMode="singleTask" android:name=".ui.smslog.SmsLogListActivity" android:exported="false"
+                  android:label="@string/menu_smslog" />
+        <activity android:name=".ui.smslog.SmsLogViewActivity"  android:exported="false"
+                  android:label="@string/menu_smslog"/>
 
         <!-- Person -->
-        <activity android:label="@string/menu_person" android:launchMode="singleTask" android:name=".ui.person.PersonListActivity"/>
+        <activity  android:name=".ui.person.PersonListActivity" android:launchMode="singleTask" android:exported="false"
+                   android:label="@string/menu_person"/>
         <activity android:name=".ui.person.PersonEditActivity"/>
 
         
          <!-- Pairing -->
-        <activity android:label="@string/menu_pairing" android:launchMode="singleTask" android:name=".ui.pairing.PairingListActivity">
+        <activity android:name=".ui.pairing.PairingListActivity" android:launchMode="singleTask" android:exported="false"
+                  android:label="@string/menu_pairing" >
 <!--              <intent-filter> -->
 <!--                   <action android:name="android.intent.action.SEND"/> -->
 <!-- 			      <data android:scheme="geoPing"  android:path="pairing" android:mimeType="text/plain"  /> -->
 <!-- 			 </intent-filter> -->
         </activity>
-        <activity android:name=".ui.pairing.PairingEditActivity">
+        <activity android:name=".ui.pairing.PairingEditActivity" android:exported="false">
         </activity>
 
         <!-- Geofence -->
-        <activity android:label="@string/menu_geofence" android:launchMode="singleTask" android:name=".ui.geofence.GeofenceListActivity">
+        <activity android:name=".ui.geofence.GeofenceListActivity" android:launchMode="singleTask" android:exported="false"
+                  android:label="@string/menu_geofence">
         </activity>
-        <activity android:label="@string/menu_geofence"  android:name=".ui.geofence.GeofenceEditActivity">
+        <activity android:name=".ui.geofence.GeofenceEditActivity" android:exported="false"
+                  android:label="@string/menu_geofence" >
         </activity>
 
          
@@ -149,14 +157,14 @@
 
 
         <!-- SMS Receiver -->
-        <receiver android:name=".service.slave.receiver.SMSReceiver">
+        <receiver android:name=".service.slave.receiver.SMSReceiver" >
             <intent-filter android:priority="2147483647">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
 
          <!-- SMS Acknowledge Receiver -->
-        <receiver android:name="eu.ttbox.geoping.service.receiver.MessageAcknowledgeReceiver">
+        <receiver android:name="eu.ttbox.geoping.service.receiver.MessageAcknowledgeReceiver" >
             <intent-filter>
                 <action android:name="eu.ttbox.geoping.ACTION_SEND_ACK"/>  
                 <data android:mimeType="vnd.android.cursor.item/ttbox.geoping.smsLog"/>
@@ -169,20 +177,19 @@
         
         <!-- Geofending -->
         <service android:name="eu.ttbox.geoping.service.geofence.ReceiveTransitionsIntentService"
-                 android:label="@string/app_name"
-                 android:exported="false">
+                 android:label="@string/app_name" >
 
         </service>
 
         <!-- Geofence Boot Initialiser Receiver -->
-        <receiver android:enabled="false" android:name="eu.ttbox.geoping.service.geofence.receiver.GeofenceBootRegisterReceiver">
+        <receiver android:name="eu.ttbox.geoping.service.geofence.receiver.GeofenceBootRegisterReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.HOME"/>
             </intent-filter>
         </receiver>
 
-        <!-- Spy Notification Receiver -->
+        <!-- Spy Notification Receiver : Dynamic Enabled -->
         <receiver android:enabled="false" android:name="eu.ttbox.geoping.service.slave.eventspy.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

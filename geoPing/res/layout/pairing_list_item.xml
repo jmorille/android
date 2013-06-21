@@ -40,6 +40,8 @@
     <TextView
         android:id="@+id/pairing_list_item_phone"
         style="@style/entity_list_item"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/call_log_secondary_text_color"
         android:layout_alignLeft="@id/pairing_list_item_name"
         android:layout_below="@id/pairing_list_item_name"
         android:text="+33011256883" />

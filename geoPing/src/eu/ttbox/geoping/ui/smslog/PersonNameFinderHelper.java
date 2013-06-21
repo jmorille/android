@@ -29,20 +29,30 @@ public class PersonNameFinderHelper {
     private static final String CACHE_PREFIX_SLAVE = "S:";
 
     private static final String VALUE_FOR_NOT_FOUND = "";
+
+    // Config
+    boolean  isNameAndPhone = true;
+
     // Instance
     private Context mContext;
     private LruCache<String, String> cache;
 
-    public PersonNameFinderHelper(Context context) {
-      this(context, 1024*1024);
+
+    public PersonNameFinderHelper(Context context, boolean isDisplayPhoneAndName) {
+      this(context, isDisplayPhoneAndName, 1024*1024);
     }
 
-    public PersonNameFinderHelper(Context context, int cacheSize) {
+    public PersonNameFinderHelper(Context context, boolean isDisplayPhoneAndName, int cacheSize) {
         this.mContext = context;
+        this.isNameAndPhone = isDisplayPhoneAndName;
         this.cache = new LruCache<String, String>(cacheSize);
     }
 
     public void setTextViewPersonNameByPhone(TextView textView, String phone, SmsLogSideEnum smsLogSide) {
+        if (TextUtils.isEmpty(phone)) {
+            return;
+        }
+//        Log.d(TAG, "setTextViewPersonNameByPhone for " + phone + " on " + smsLogSide);
         // Base Uri
         String  cacheKey = null;
         String nameResult = null;
@@ -56,12 +66,14 @@ public class PersonNameFinderHelper {
                 cacheKey = getCacheKey(phone, CACHE_PREFIX_SLAVE);
                 nameResult = cache.get(cacheKey);
             }
+            break;
             default:
                 throw new IllegalArgumentException("No getCacheKey Implementation for SmsLogSideEnum : " + smsLogSide);
         }
-        // Bind name
+        // Bind name (Null for not find / And Empty for Exits)
         if (nameResult!=null) {
-            textView.setText(nameResult);
+             String nameToDefine = getComputeTextNameAndPhone( nameResult, phone);
+             textView.setText(nameToDefine);
         } else {
             // Set Temporary Phone as Name
             textView.setText(phone);
@@ -72,9 +84,24 @@ public class PersonNameFinderHelper {
             }
             PersonNameFinderAsyncTask newTask = new PersonNameFinderAsyncTask(textView, smsLogSide);
             textView.setTag(newTask);
+        //    Log.d(TAG, "PersonNameFinderAsyncTask execute for " + phone + " on cacheKey " + cacheKey);
             newTask.execute(phone, cacheKey);
         }
     }
+
+    private String getComputeTextNameAndPhone(  String nameResult, String phone) {
+        boolean isEmptyNameResult = TextUtils.isEmpty(nameResult);
+        String result = nameResult;
+        if (isEmptyNameResult) {
+            result = phone;
+        } else  if (isNameAndPhone) {
+            StringBuilder sb = new StringBuilder(nameResult.length() +  phone.length() + 1)
+                    .append(nameResult).append(' ').append(phone);
+            result = sb.toString();
+        }
+        return result;
+    }
+
 
     private String getCacheKey(String phone, String cachePrefix) {
         String cacheKey = new StringBuilder()
@@ -104,24 +131,14 @@ public class PersonNameFinderHelper {
 
     private String getPersonNameByPhone(String phone, SmsLogSideEnum smsLogSide) {
         String result = null;
-        switch (smsLogSide) {
+         switch (smsLogSide) {
             case MASTER: {
-                String cacheKey = getCacheKey(CACHE_PREFIX_MASTER, phone);
-                result = cache.get(cacheKey);
-                if (result == null) {
-                    result = queryPersonName(PersonProvider.Constants.getUriPhoneFilter(phone), PersonDatabase.PersonColumns.COL_NAME);
-                    cache.put(cacheKey, result);
-                }
-            }
+                     result = queryPersonName(PersonProvider.Constants.getUriPhoneFilter(phone), PersonDatabase.PersonColumns.COL_NAME);
+             }
             break;
             case SLAVE: {
-                String cacheKey = getCacheKey(CACHE_PREFIX_SLAVE, phone);
-                result = cache.get(cacheKey);
-                if (result == null) {
-                    result = queryPersonName(PairingProvider.Constants.getUriPhoneFilter(phone), PairingDatabase.PairingColumns.COL_NAME);
-                    cache.put(cacheKey, result);
-                }
-            }
+                     result = queryPersonName(PairingProvider.Constants.getUriPhoneFilter(phone), PairingDatabase.PairingColumns.COL_NAME);
+             }
             break;
             default:
                 Log.w(TAG, "Not manage Side : " + smsLogSide);
@@ -150,34 +167,37 @@ public class PersonNameFinderHelper {
         protected String doInBackground(String... params) {
             String phone = params[0];
             String cacheKey = params[1];
-            // Search In Cache
+            Log.d(TAG, "PersonNameFinderAsyncTask doInBackground Search for Phone : " + phone );
+             // Search In Cache
             String result = cache.get(cacheKey);
             // Search In Db
             if (TextUtils.isEmpty(result)) {
-                result = getPersonNameByPhone(phone, smsLogSide);
+                 result = getPersonNameByPhone(phone, smsLogSide);
             }
             // Search In Contact Directory
             if (TextUtils.isEmpty(result)) {
-                ContactVo contact = ContactHelper.searchContactForPhone(mContext,  phone);
+                 ContactVo contact = ContactHelper.searchContactForPhone(mContext,  phone);
                 if (contact!=null) {
                     result = contact.displayName;
                 }
             }
             // Put In Cache
             if (!TextUtils.isEmpty(result)) {
-                cache.put(cacheKey, result);
+                  cache.put(cacheKey, result);
             } else {
                 // Nothing found, so register the Search Criteria
-                cache.put(cacheKey, phone);
+                 cache.put(cacheKey, phone);
 //                cache.put(cacheKey, VALUE_FOR_NOT_FOUND);
             }
+            // Compute Concatenate
+            result = getComputeTextNameAndPhone(result, phone);
             return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
             // Define Result
-            if (TextUtils.isEmpty(result)) {
+            if (!TextUtils.isEmpty(result)) {
                 holder.setText(result);
             }
             // Clear Ref

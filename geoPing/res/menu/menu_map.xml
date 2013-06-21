@@ -39,7 +39,7 @@
        
    <item
         android:id="@+id/menuMap_geofence_add"
-        android:icon="@drawable/ic_action_geofence"
+        android:icon="@drawable/ic_action_geofence_add"
         android:showAsAction="ifRoom"
         android:title="@string/menu_map_geofence_add"/>
 </menu>

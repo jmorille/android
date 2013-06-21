@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -45,6 +47,8 @@ public class GeofenceEditFragment extends SherlockFragment {
     // Binding
     private EditText nameEditText;
     private TextView latLngEditText;
+    private CompoundButton transitionEnterCheckBox;
+    private CompoundButton transitionExitCheckBox;
 
     // Listener
     private OnGeofenceSelectListener onGeofenceSelectListener;
@@ -70,6 +74,9 @@ public class GeofenceEditFragment extends SherlockFragment {
         // Bindings
         this.nameEditText = (EditText) v.findViewById(R.id.geofenceEditName);
         this.latLngEditText = (TextView) v.findViewById(R.id.geofenceEditLatLng);
+
+        this.transitionEnterCheckBox = (CompoundButton) v.findViewById(R.id.geofence_transition_enter_checkBox);
+        this.transitionExitCheckBox = (CompoundButton) v.findViewById(R.id.geofence_transition_exit_checkBox);
         // Form
         formValidator = createValidator(getActivity());
 
@@ -95,8 +102,11 @@ public class GeofenceEditFragment extends SherlockFragment {
         String coordString = String.format(Locale.US, "(%.6f, %.6f) +/- %s m", lat, lng, geofence.radiusInMeters);
         this.latLngEditText.setText(coordString);
         // Transition Type
+        Log.d(TAG, "CircleGeofence transition : " + geofence.transitionType);
         boolean isEnter = ( geofence.transitionType & Geofence.GEOFENCE_TRANSITION_ENTER) != 0;
         boolean isExit = ( geofence.transitionType & Geofence.GEOFENCE_TRANSITION_EXIT) != 0;
+        transitionEnterCheckBox.setChecked(isEnter);
+        transitionExitCheckBox.setChecked(isExit);
     }
 
     // ===========================================================
@@ -244,10 +254,18 @@ public class GeofenceEditFragment extends SherlockFragment {
         if (!formValidator.validate()) {
             return null;
         }
+        // Binding Values
         String name = BindingHelper.getEditTextAsValueTrimToNull(nameEditText);
+         // Transition
+        boolean isEnter = transitionEnterCheckBox.isChecked();
+        boolean isExit =transitionExitCheckBox.isChecked();
+        int transitionType = isEnter ? Geofence.GEOFENCE_TRANSITION_ENTER : 0;
+        transitionType = isExit ? Geofence.GEOFENCE_TRANSITION_EXIT : transitionType;
+
          // Prepare db insert
         ContentValues values = new ContentValues();
         values.put(GeoFenceDatabase.GeoFenceColumns.COL_NAME, name);
+        values.put(GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, transitionType);
 
         // Content
         Uri uri;

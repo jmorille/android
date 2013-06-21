@@ -90,7 +90,7 @@ public class SmsLogViewFragment extends SherlockFragment {
         // Cache
         this.photoCache = ((GeoPingApplication) mContext.getApplicationContext()).getPhotoThumbmailCache();
         this.mResources = new SmsLogResources(getActivity());
-        this.cacheNameFinder = new PersonNameFinderHelper(mContext);
+        this.cacheNameFinder = new PersonNameFinderHelper(mContext, false);
 
         // Bindings
         this.photoImageView = (ImageView) v.findViewById(R.id.smslog_photo_imageView);

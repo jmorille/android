@@ -81,7 +81,7 @@ public class SmsLogListFragment extends Fragment {
     public void onInflate(android.app.Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
         super.onInflate(activity, attrs, savedInstanceState);
         // Your code here to process the attributes
-        final TypedArray a = getActivity().obtainStyledAttributes(attrs, R.styleable.SmsLogListFragment);
+        final TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.SmsLogListFragment);
         this.isDisplayContactDetail =  a.getBoolean(R.styleable.SmsLogListFragment_isDisplayContactDetail, true);
         a.recycle();
     }
