@@ -260,12 +260,20 @@ public class GeofenceEditFragment extends SherlockFragment {
         boolean isEnter = transitionEnterCheckBox.isChecked();
         boolean isExit =transitionExitCheckBox.isChecked();
         int transitionType = isEnter ? Geofence.GEOFENCE_TRANSITION_ENTER : 0;
-        transitionType = isExit ? Geofence.GEOFENCE_TRANSITION_EXIT : transitionType;
+        transitionType = isExit ? transitionType | Geofence.GEOFENCE_TRANSITION_EXIT : transitionType;
 
          // Prepare db insert
         ContentValues values = new ContentValues();
         values.put(GeoFenceDatabase.GeoFenceColumns.COL_NAME, name);
-        values.put(GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, transitionType);
+        if (transitionType != fence.transitionType) {
+            values.put(GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, transitionType);
+            // Complete With full datas
+            values.put(GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6, fence.getLatitudeE6());
+            values.put(GeoFenceDatabase.GeoFenceColumns.COL_LONGITUDE_E6, fence.getLongitudeE6());
+            values.put(GeoFenceDatabase.GeoFenceColumns.COL_RADIUS, fence.radiusInMeters );
+            values.put(GeoFenceDatabase.GeoFenceColumns.COL_EXPIRATION , fence.expirationDuration );
+            values.put(GeoFenceDatabase.GeoFenceColumns.COL_REQUEST_ID , fence.requestId );
+        }
 
         // Content
         Uri uri;
