@@ -747,7 +747,7 @@ public class ShowMapFragment extends SherlockFragment implements SharedPreferenc
         Log.d(TAG, "show Geofence Overlay");
         if (geofenceListOverlay == null) {
             LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-            this.geofenceListOverlay = new GeofenceEditOverlay(getActivity().getApplicationContext(),mapView, loaderManager, handler);
+            this.geofenceListOverlay = new GeofenceEditOverlay(getActivity(),mapView, loaderManager, handler);
             mapView.getOverlays().add(geofenceListOverlay);
             mapView.postInvalidate();
         } else if (!mapView.getOverlays().contains(geofenceListOverlay)) {

@@ -15,6 +15,9 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -43,6 +46,7 @@ import eu.ttbox.geoping.domain.GeoFenceProvider;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.service.geofence.GeofenceUtils;
+import eu.ttbox.geoping.ui.geofence.GeofenceEditFragment;
 import eu.ttbox.osm.core.AppConstants;
 import microsoft.mappoint.TileSystem;
 
@@ -72,7 +76,8 @@ public class GeofenceEditOverlay extends Overlay {
             Log.d(TAG, String.format("Found %s Geofences", resultCount));
             ArrayList<CircleGeofence> points = new ArrayList<CircleGeofence>();
             if (resultCount < 1) {
-
+// FIXME
+// FIXME
             }
             GeoFenceHelper helper = new GeoFenceHelper().initWrapper(cursor);
             if (cursor.moveToFirst()) {
@@ -106,7 +111,7 @@ public class GeofenceEditOverlay extends Overlay {
     private float smallCircleRadius = 10;
 
     // Context
-    private Context context;
+    private FragmentActivity context;
     private MapView mapView;
     private Handler handler;
 
@@ -167,6 +172,12 @@ public class GeofenceEditOverlay extends Overlay {
                     deleteGeofenceOverlayEditor();
                     mode.finish(); // Action picked, so close the CAB
                     return true;
+                case R.id.menu_edit:
+                    // TODO Display
+                    GeofencePropDialogFragment dialog =  GeofencePropDialogFragment.newInstance(geofence);
+                    FragmentManager fm = context.getSupportFragmentManager();
+                    dialog.show(fm, "DaliogEdit");
+                    return true;
                 default:
                     Log.w(TAG, "Ignore onActionItemClicked itemId : " + item.getItemId() + ", " + item);
                     return false;
@@ -187,16 +198,16 @@ public class GeofenceEditOverlay extends Overlay {
     // ===========================================================
 
 
-    public GeofenceEditOverlay(Context context, MapView mapView, LoaderManager loaderManager, Handler handler) {
+    public GeofenceEditOverlay(FragmentActivity context, MapView mapView, LoaderManager loaderManager, Handler handler) {
         this(context, mapView, loaderManager, null, handler);
     }
 
-    public GeofenceEditOverlay(Context context, MapView mapView, LoaderManager loaderManager, IGeoPoint center, int radiusInMeters, Handler handler) {
+    public GeofenceEditOverlay(FragmentActivity context, MapView mapView, LoaderManager loaderManager, IGeoPoint center, int radiusInMeters, Handler handler) {
         this(context, mapView, loaderManager, new CircleGeofence(center, radiusInMeters), handler);
     }
 
 
-    public GeofenceEditOverlay(Context context, MapView mapView, LoaderManager loaderManager, CircleGeofence geofence, Handler handler) {
+    public GeofenceEditOverlay(FragmentActivity context, MapView mapView, LoaderManager loaderManager, CircleGeofence geofence, Handler handler) {
         super(context);
         this.context = context;
         this.geofence = geofence;

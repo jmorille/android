@@ -65,6 +65,12 @@ public class GeofenceEditFragment extends SherlockFragment {
     // Constructors
     // ===========================================================
 
+    public static GeofenceEditFragment newInstance(CircleGeofence fence){
+        GeofenceEditFragment fragment = new GeofenceEditFragment();
+        fragment.loadEntity(fence);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.geofence_edit, container, false);

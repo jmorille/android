@@ -53,6 +53,14 @@
          <groupId>com.slidingmenu</groupId>
          <artifactId>slidingmenu</artifactId>
          <type>apklib</type>
+          <!--
+         <exclusions>
+           <exclusion>
+              <groupId>com.actionbarsherlock</groupId>
+              <artifactId>actionbarsherlock</artifactId>
+           </exclusion>
+         </exclusions>
+         -->
       </dependency>
 
       <!-- Google Service -->

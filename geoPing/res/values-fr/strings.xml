@@ -170,6 +170,7 @@
     <!-- Geofence model -->
     <string name="geofence_name">Nom de la Géo Barrière</string>
 
+    <string name="edit_geofence">Editer la Geo barrière</string>
     <string name="add_geofence">Ajouter une Geo barrière</string>
     <string name="geofence_help">"Créer une Geo barrière pour obtenir des alertes quand un membre de la famille rentre ou sort."</string>
 

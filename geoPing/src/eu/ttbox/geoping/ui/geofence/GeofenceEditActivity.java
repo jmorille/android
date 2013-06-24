@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.ui.geofence;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 
+import eu.ttbox.geoping.LaucherMainActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
@@ -231,5 +233,18 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
     // ===========================================================
     // Listener
     // ===========================================================
+
+    // ===========================================================
+    // Other
+    // ===========================================================
+
+    public void testHideLaucher(android.view.View  v){
+//        TODO
+//        LaucherMainActivity
+        PackageManager pm = getPackageManager();
+        int setting = pm.getComponentEnabledSetting(LaucherMainActivity.class);
+    }
+
+
 
 }

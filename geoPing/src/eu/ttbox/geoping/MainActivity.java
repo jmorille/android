@@ -27,8 +27,7 @@ import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
  * actionbarcompat/ActionBarActivity.java <br>
  * edit ./samples/android-17/ActionBarCompat/src/com/example/android/
  * actionbarcompat/ActionBarHelper.java <br>
- * 
- * @author jmorille
+ *
  * 
  */
 public class MainActivity extends GeoPingSlidingMenuFragmentActivity { //
