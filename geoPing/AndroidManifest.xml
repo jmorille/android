@@ -71,7 +71,7 @@
         
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow"/> 
             
-        <activity android:label="@string/app_name" android:launchMode="singleTask" android:name=".MainActivity">
+        <activity android:label="@string/app_name" android:launchMode="singleTask" android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/> 
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -84,9 +84,10 @@
                   <data android:scheme="smsto"/>
             </intent-filter> 
         </activity>
-          
+
+       
  
-        <activity android:name=".GeoTrakerActivity"/> 
+        <activity android:name=".GeoTrakerActivity" android:exported="false"/>
 
         <!-- Pref -->
         <activity android:name=".ui.prefs.GeoPingPrefActivity" android:exported="false"/>
@@ -176,7 +177,7 @@
        </receiver>
         
         <!-- Geofending -->
-        <service android:name="eu.ttbox.geoping.service.geofence.ReceiveTransitionsIntentService"
+        <service android:name="eu.ttbox.geoping.service.geofence.ReceiveTransitionsIntentService" android:exported="false"
                  android:label="@string/app_name" >
 
         </service>
@@ -236,29 +237,33 @@
           
           
         <!-- Geo Location background service Receiver-->
-        <service android:enabled="false" android:name=".service.slave.BackgroudLocService">
+        <service android:enabled="false" android:name=".service.slave.BackgroudLocService" android:exported="false">
 		 <intent-filter> 
                <action android:name="EVENT_GSM"/> 
            </intent-filter> 
         </service>
        
          <!-- Widget Person -->
-          <receiver android:enabled="@bool/postHoneycomb" android:label="@string/sms_action_geoping_request" android:name=".ui.widget.PersonWidgetProvider"> 
+          <receiver android:name=".ui.widget.PersonWidgetProvider" android:enabled="@bool/postHoneycomb"
+                    android:label="@string/sms_action_geoping_request" >
              <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_person_info"/>
         </receiver>
-        <service android:enabled="@bool/postHoneycomb" android:exported="false" android:name=".ui.widget.PersonWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service android:name=".ui.widget.PersonWidgetService" android:enabled="@bool/postHoneycomb" android:exported="false"
+                 android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <!-- Widget Pairing -->
-          <receiver android:enabled="@bool/postHoneycomb" android:label="@string/sms_action_geoping_response" android:name=".ui.widget.pairing.PairingWidgetProvider">
+          <receiver android:name=".ui.widget.pairing.PairingWidgetProvider" android:enabled="@bool/postHoneycomb"
+                    android:label="@string/sms_action_geoping_response" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter> 
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_pairing_info"/>
         </receiver>
-        <service android:enabled="@bool/postHoneycomb" android:exported="false" android:name=".ui.widget.pairing.PairingWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service android:name=".ui.widget.pairing.PairingWidgetService"  android:enabled="@bool/postHoneycomb" android:exported="false"
+                 android:permission="android.permission.BIND_REMOTEVIEWS"/>
          
         <activity android:label="@string/app_name" android:name=".ui.widget.pairing.PairingWidgetConfig">
           <intent-filter>
@@ -278,17 +283,17 @@
         </activity>
         
         <!-- Sms service -->
-        <service android:name=".service.slave.GeoPingSlaveService">
+        <service android:name=".service.slave.GeoPingSlaveService" android:exported="false">
             	<intent-filter>
             	    <action android:name="eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE"/>
             	    <category android:name="android.intent.category.DEFAULT"/>
             	</intent-filter>
         </service>
-        <service android:name=".service.slave.GeoPingSlaveLocationService"/> 
-        <service android:name=".service.master.GeoPingMasterService"/> 
+        <service android:name=".service.slave.GeoPingSlaveLocationService" android:exported="false"/>
+        <service android:name=".service.master.GeoPingMasterService" android:exported="false"/>
         
           <!-- GCM Messages Activity -->
-        <activity android:name=".ui.gcm.GcmRegisterActivity">
+        <activity android:name=".ui.gcm.GcmRegisterActivity" android:exported="false">
         </activity>
 		<receiver android:name="com.google.android.gcm.GCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
 		  <intent-filter>
@@ -297,7 +302,7 @@
 		    <category android:name="eu.ttbox.geoping"/>
 		  </intent-filter>
 		</receiver>        
-		<service android:name=".service.gcm.GCMIntentService"/>
+		<service android:name=".service.gcm.GCMIntentService" android:exported="false"/>
 		
 		
 		
