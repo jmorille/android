@@ -240,13 +240,7 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
     // Other
     // ===========================================================
 
-    public void testHideLaucher(android.view.View  v){
-//        TODO
-//        LaucherMainActivity
-        PackageManager pm = getPackageManager();
-        ComponentName comp =  new ComponentName(this, LaucherMainActivity.class);
-        int setting = pm.getComponentEnabledSetting(comp);
-    }
+
 
 
 

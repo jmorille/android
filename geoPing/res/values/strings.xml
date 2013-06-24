@@ -6,6 +6,8 @@
     <string name="geoping">GeoPing</string>
     <string name="menu_select_contact">Contacts</string>
     <string name="menu_save">Save</string>
+    <string name="menu_edit">Edit</string>
+
     <string name="menu_delete">Delete</string>
     <string name="menu_cancel">Cancel</string>
 

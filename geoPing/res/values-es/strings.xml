@@ -8,6 +8,8 @@
     <string name="geoping">GeoPing</string>
     <string name="menu_select_contact">Contactos</string>
     <string name="menu_save">Ahorrar</string>
+    <string name="menu_edit">Edit</string>
+
     <string name="menu_delete">Quitar</string>
     <string name="menu_cancel">Cancelar</string> 
     

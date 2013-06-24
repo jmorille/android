@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.ui.map.geofence;
 
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -174,9 +175,8 @@ public class GeofenceEditOverlay extends Overlay {
                     return true;
                 case R.id.menu_edit:
                     // TODO Display
-                    GeofencePropDialogFragment dialog =  GeofencePropDialogFragment.newInstance(geofence);
-                    FragmentManager fm = context.getSupportFragmentManager();
-                    dialog.show(fm, "DaliogEdit");
+                    GeofencePropDialogFragment dialog =  GeofencePropDialogFragment.newInstance(context, geofence);
+                    dialog.show();
                     return true;
                 default:
                     Log.w(TAG, "Ignore onActionItemClicked itemId : " + item.getItemId() + ", " + item);

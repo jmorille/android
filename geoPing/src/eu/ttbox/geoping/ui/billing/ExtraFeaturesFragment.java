@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -91,7 +92,7 @@ public class ExtraFeaturesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SkuDetails item = (SkuDetails) parent.getItemAtPosition(position);
                 Log.i(TAG, "Click on SkuDetails : " + item);
-
+                onClickSkuDetails(item);
             }
         });
 
@@ -127,6 +128,7 @@ public class ExtraFeaturesFragment extends Fragment {
         SkuDetailsListAdapter adapter = new SkuDetailsListAdapter(getActivity());
         try {
             adapter.add(new SkuDetails("{\"productId\" : \"noAddForOneYear\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in app\", \"description\" : \"Suppress all adds during one year\"  }  "));
+            adapter.add(new SkuDetails("{\"productId\" : \"hideLaucher\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No icon app launcher\", \"description\" : \"Hide the GeoPing Application in the System\"  }  "));
         } catch (JSONException e) {
             Log.e(TAG, "Error Parsing Json : " + e.getMessage(), e);
         }
@@ -152,6 +154,19 @@ public class ExtraFeaturesFragment extends Fragment {
         bld.create().show();
     }
 
+
+    public void onClickSkuDetails(SkuDetails skuDetails) {
+        if ("hideLaucher".equals(skuDetails.getSku() )) {
+           boolean hideStatus =  ExtraFeatureHelper.enabledSettingLaucherIcon(getActivity(), null);
+            if (hideStatus) {
+                Toast.makeText(getActivity(), "Show Icon Laucher", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "Hide Icon Laucher", Toast.LENGTH_SHORT).show();
+            }
+        } else  if ("noAddForOneYear".equals(skuDetails.getSku() )) {
+
+        }
+    }
 
     // ===========================================================
     // Billing

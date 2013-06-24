@@ -292,6 +292,7 @@ public class PairingDatabase {
         PackageManager pm = context.getPackageManager();
         int setting = pm.getComponentEnabledSetting(serviceClass[0]);
         switch (setting) {
+        case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
         case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
             if (!wantedState) {
                 // check the global status
@@ -305,7 +306,6 @@ public class PairingDatabase {
             }
             break;
         case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
-        case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
         case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
             if (wantedState) {
                 if (PairingColumns.COL_NOTIF_SIM_CHANGE.equals(notifColumnName)) {
