@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.ui.map.geofence;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -22,9 +23,32 @@ public class GeofencePropDialogFragment extends AlertDialog {
 
     private GeofenceEditFragment editFragment;
 
-    public GeofencePropDialogFragment(FragmentActivity context) {
+    private OnEditGeofenceistener onEditGeofenceistener;
+    // ===========================================================
+    // Interfaces
+    // ===========================================================
+
+    public interface OnEditGeofenceistener {
+        void onResult(int resultCode);
+    }
+
+    // ===========================================================
+    // Contructor
+    // ===========================================================
+
+
+    public void onSaveButton() {
+        CircleGeofence fence =  editFragment.doSaveToCircleGeofence();
+        if (fence !=null) {
+            onEditGeofenceistener.onResult(Activity.RESULT_OK);
+            dismiss();
+        }
+    }
+
+    public GeofencePropDialogFragment(FragmentActivity context, OnEditGeofenceistener onEditGeofenceistener) {
         super(context);
         this.context = context;
+        this.onEditGeofenceistener = onEditGeofenceistener;
 
         setTitle(R.string.menu_geofence);
         setIcon(R.drawable.ic_action_geofence);
@@ -33,7 +57,7 @@ public class GeofencePropDialogFragment extends AlertDialog {
         setButton( DialogInterface.BUTTON_POSITIVE  , context.getString(  R.string.menu_save),  new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                onSaveButton();
             }
         });
 
@@ -50,8 +74,8 @@ public class GeofencePropDialogFragment extends AlertDialog {
      }
 
 
-    public static GeofencePropDialogFragment newInstance(FragmentActivity context, CircleGeofence geofence) {
-        GeofencePropDialogFragment frag = new GeofencePropDialogFragment(context);
+    public static GeofencePropDialogFragment newInstance(FragmentActivity context, CircleGeofence geofence, OnEditGeofenceistener onEditGeofenceistener) {
+        GeofencePropDialogFragment frag = new GeofencePropDialogFragment(context, onEditGeofenceistener);
         frag.editFragment.loadEntity(geofence);
         return frag;
     }

@@ -254,6 +254,30 @@ public class GeofenceEditFragment extends SherlockFragment {
         }
     }
 
+    public CircleGeofence doSaveToCircleGeofence() {
+        // Validate
+        if (!formValidator.validate()) {
+            return null;
+        }
+        // Name
+        String name = BindingHelper.getEditTextAsValueTrimToNull(nameEditText);
+        fence.setName(name);
+        // Transition
+        int transitionType = readViewTransitionType();
+        fence.setTransitionType(transitionType);
+        // Result
+        return fence;
+    }
+
+    private int readViewTransitionType() {
+        // Transition
+        boolean isEnter = transitionEnterCheckBox.isChecked();
+        boolean isExit =transitionExitCheckBox.isChecked();
+        int transitionType = isEnter ? Geofence.GEOFENCE_TRANSITION_ENTER : 0;
+        transitionType = isExit ? transitionType | Geofence.GEOFENCE_TRANSITION_EXIT : transitionType;
+        return transitionType;
+    }
+
     private Uri doSaveGeofence() {
 
         // Validate
@@ -263,10 +287,7 @@ public class GeofenceEditFragment extends SherlockFragment {
         // Binding Values
         String name = BindingHelper.getEditTextAsValueTrimToNull(nameEditText);
          // Transition
-        boolean isEnter = transitionEnterCheckBox.isChecked();
-        boolean isExit =transitionExitCheckBox.isChecked();
-        int transitionType = isEnter ? Geofence.GEOFENCE_TRANSITION_ENTER : 0;
-        transitionType = isExit ? transitionType | Geofence.GEOFENCE_TRANSITION_EXIT : transitionType;
+        int transitionType = readViewTransitionType();
 
          // Prepare db insert
         ContentValues values = new ContentValues();

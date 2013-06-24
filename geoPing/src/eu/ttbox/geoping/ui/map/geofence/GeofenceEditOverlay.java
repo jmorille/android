@@ -175,7 +175,14 @@ public class GeofenceEditOverlay extends Overlay {
                     return true;
                 case R.id.menu_edit:
                     // TODO Display
-                    GeofencePropDialogFragment dialog =  GeofencePropDialogFragment.newInstance(context, geofence);
+
+                    GeofencePropDialogFragment dialog =  GeofencePropDialogFragment.newInstance(context, geofence,
+                            new GeofencePropDialogFragment.OnEditGeofenceistener() {
+                               public void onResult(int resultCode) {
+                                    mapView.postInvalidate();
+                                }
+
+                    });
                     dialog.show();
                     return true;
                 default:
