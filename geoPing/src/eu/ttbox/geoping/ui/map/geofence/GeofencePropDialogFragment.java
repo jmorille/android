@@ -27,13 +27,9 @@ public class GeofencePropDialogFragment extends AlertDialog {
         this.context = context;
 
         setTitle(R.string.menu_geofence);
+        setIcon(R.drawable.ic_action_geofence);
         // Custom Button
-        setButton( DialogInterface.BUTTON_NEGATIVE , context.getString( android.R.string.cancel), new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
+        setButton( DialogInterface.BUTTON_NEGATIVE , context.getString( android.R.string.cancel),(OnClickListener) null);
         setButton( DialogInterface.BUTTON_POSITIVE  , context.getString(  R.string.menu_save),  new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -53,15 +49,6 @@ public class GeofencePropDialogFragment extends AlertDialog {
                 .findFragmentByTag("fragment_geofence_edit_prop_dialog");
      }
 
-
-    protected void prepare( ) {
-
-
-        //setIcon( getIcon() );
-
-
-
-    }
 
     public static GeofencePropDialogFragment newInstance(FragmentActivity context, CircleGeofence geofence) {
         GeofencePropDialogFragment frag = new GeofencePropDialogFragment(context);
