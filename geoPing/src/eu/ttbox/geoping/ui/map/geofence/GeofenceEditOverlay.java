@@ -157,7 +157,7 @@ public class GeofenceEditOverlay extends Overlay {
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
 //            mode.setTitle("XXXXXXXX");
-            inflater.inflate(R.menu.geofence_edit_menu, menu);
+            inflater.inflate(R.menu.geofence_mapoverlay_edit_menu, menu);
             return true;
         }
 

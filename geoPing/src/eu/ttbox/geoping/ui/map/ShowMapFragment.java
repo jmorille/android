@@ -82,8 +82,8 @@ public class ShowMapFragment extends SherlockFragment implements SharedPreferenc
     private int MENU_LAST_ID = 3;
 
     // Map
-    private MapController mapController;
-    private MapView mapView;
+    public MapController mapController;
+    public MapView mapView;
 
     // Config
     private boolean geocodingAuto = true;
@@ -149,6 +149,7 @@ public class ShowMapFragment extends SherlockFragment implements SharedPreferenc
         mapView = MapViewFactory.createOsmMapView(getActivity().getApplicationContext(), mResourceProxy, tileSource, activityManager);
         ViewGroup mapViewContainer = (ViewGroup) v.findViewById(R.id.mapViewContainer);
         mapViewContainer.addView((View) mapView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
         // Map Controler
         mapController = mapView.getController();
 
@@ -175,6 +176,10 @@ public class ShowMapFragment extends SherlockFragment implements SharedPreferenc
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        loadDefaultDatas();
+    }
+
+    public void loadDefaultDatas() {
         // Query
         getActivity().getSupportLoaderManager().initLoader(GEOTRACK_PERSON_LOADER, null, geoTrackPersonLoaderCallback);
         // Handle Intents
@@ -743,7 +748,7 @@ public class ShowMapFragment extends SherlockFragment implements SharedPreferenc
        return (geofenceListOverlay !=null &&  mapView.getOverlays().contains(geofenceListOverlay));
     }
 
-    public void showGeofenceOverlays() {
+    public GeofenceEditOverlay showGeofenceOverlays() {
         Log.d(TAG, "show Geofence Overlay");
         if (geofenceListOverlay == null) {
             LoaderManager loaderManager = getActivity().getSupportLoaderManager();
@@ -754,6 +759,7 @@ public class ShowMapFragment extends SherlockFragment implements SharedPreferenc
             mapView.getOverlays().add(geofenceListOverlay);
             mapView.postInvalidate();
         }
+        return this.geofenceListOverlay;
     }
 
     public void hideGeofenceOverlays() {

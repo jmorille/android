@@ -171,6 +171,9 @@
 
     <!-- Geofence model -->
     <string name="geofence_name">Nom de la Géo Barrière</string>
+    <string name="geofence_transition">Type de Transition </string>
+    <string name="geofence_transition_enter">Sortie de la Géo Barrière</string>
+    <string name="geofence_transition_exit">Entrée dans la Géo Barrière</string>
 
     <string name="edit_geofence">Editer la Geo barrière</string>
     <string name="add_geofence">Ajouter une Geo barrière</string>

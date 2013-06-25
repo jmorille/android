@@ -2,9 +2,12 @@ package eu.ttbox.geoping.ui.geofence;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
@@ -36,7 +39,16 @@ public class GeofenceListAdapter extends android.support.v4.widget.ResourceCurso
         }
         ViewHolder holder = (ViewHolder) view.getTag();
         // Bind Value
-        helper.setTextAddress(holder.addressText, cursor);
+        String addr = helper.getAddress(cursor);
+        if (TextUtils.isEmpty(addr)) {
+            // Lat Lng
+            double lat = helper.getLatitude(cursor);
+            double lng = helper.getLongitude(cursor);
+            String coordString = String.format(Locale.US, "(%.6f, %.6f) +/- %s m", lat, lng, helper.getRadiusInMeters(cursor));
+            holder.addressText.setText(coordString);
+        } else {
+            holder.addressText.setText(addr);
+        }
         helper.setTextName(holder.nameText, cursor);
     }
 

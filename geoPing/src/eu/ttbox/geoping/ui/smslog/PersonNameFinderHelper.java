@@ -81,6 +81,7 @@ public class PersonNameFinderHelper {
             final PersonNameFinderAsyncTask oldTask = (PersonNameFinderAsyncTask) textView.getTag();
             if (oldTask != null) {
                 oldTask.cancel(false);
+                textView.setTag(null);
             }
             PersonNameFinderAsyncTask newTask = new PersonNameFinderAsyncTask(textView, smsLogSide);
             textView.setTag(newTask);
@@ -158,10 +159,10 @@ public class PersonNameFinderHelper {
             this.smsLogSide = smsLogSid;
         }
 
-        @Override
-        protected void onPreExecute() {
-            holder.setTag(this);
-        }
+//        @Override
+//        protected void onPreExecute() {
+//            holder.setTag(this);
+//        }
 
         @Override
         protected String doInBackground(String... params) {

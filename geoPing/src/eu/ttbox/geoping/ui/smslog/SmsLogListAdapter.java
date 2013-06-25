@@ -82,7 +82,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         SmsMessageActionEnum action = helper.getSmsMessageActionEnum(cursor);
         String actionLabel;
         if (action!=null) {
-        	  actionLabel = getSmsActionLabel(action); 
+        	 actionLabel = getSmsActionLabel(action);
         } else {
         	 actionLabel = helper.getSmsMessageActionString(cursor);
         }
@@ -100,6 +100,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         long time = helper.getSmsLogTime(cursor);
         String timeFormat = String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", time);
         holder.timeText.setText(timeFormat);
+
         // Time relative
         long currentTimeMillis = System.currentTimeMillis();
         CharSequence dateText =
@@ -108,12 +109,37 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
                         DateUtils.MINUTE_IN_MILLIS,
                         DateUtils.FORMAT_ABBREV_RELATIVE);
         holder.timeAgoText.setText(dateText);
+
+        // Backgroud send
+        if (SmsLogTypeEnum.RECEIVE.equals(smLogType)) {
+            view.setBackgroundResource(R.drawable.fleche_verte_g);
+        } else {
+            view.setBackgroundResource(R.drawable.fleche_bleue_d);
+        }
+
         // Load Photos
         if (isDisplayContactDetail) {
-           loadPhoto(holder, null, phone);
+            // Compute The Correct ImageView
+            ImageView imageViewToLoad = holder.photoImageView;
             holder.photoImageView.setVisibility(View.VISIBLE);
+            holder.photoImageViewSend.setVisibility(View.GONE);
+
+//            // V Side
+//            if (SmsLogTypeEnum.RECEIVE.equals(smLogType)) {
+//                imageViewToLoad = holder.photoImageView;
+//                holder.photoImageView.setVisibility(View.VISIBLE);
+//                holder.photoImageViewSend.setVisibility(View.GONE);
+//            } else {
+//                imageViewToLoad = holder.photoImageViewSend;
+//                holder.photoImageView.setVisibility(View.GONE);
+//                holder.photoImageViewSend.setVisibility(View.VISIBLE);
+//            }
+
+            // Load The Phone
+            loadPhoto(imageViewToLoad, null, phone);
         } else {
             holder.photoImageView.setVisibility(View.GONE);
+            holder.photoImageViewSend.setVisibility(View.GONE);
         }
     }
 
@@ -131,6 +157,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         holder.actionText = (TextView) view.findViewById(R.id.smslog_list_item_action);
         holder.smsType = (ImageView) view.findViewById(R.id.smslog_list_item_smsType_imgs);
         holder.photoImageView = (ImageView) view.findViewById(R.id.smslog_photo_imageView);
+        holder.photoImageViewSend = (ImageView) view.findViewById(R.id.smslog_photo_imageView_send);
         // and store it inside the layout.
         view.setTag(holder);
         return view;
@@ -143,6 +170,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         TextView phoneText;
         ImageView smsType;
         ImageView photoImageView;
+        ImageView photoImageViewSend;
     }
 
 
@@ -183,7 +211,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
      *
      * @param contactId
      */
-    private void loadPhoto(ViewHolder holder, String contactId, final String phone) {
+    private void loadPhoto(ImageView photoImageView, String contactId, final String phone) {
         Bitmap photo = null;
         boolean isContactId = !TextUtils.isEmpty(contactId);
         boolean isContactPhone = !TextUtils.isEmpty(phone);
@@ -196,16 +224,16 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         }
         // Set Photo
         if (photo != null) {
-            holder.photoImageView.setImageBitmap(photo);
+           photoImageView.setImageBitmap(photo);
         } else if (isContactId || isContactPhone) {
             // Cancel previous Async
-            final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask) holder.photoImageView.getTag();
+            final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask)  photoImageView.getTag();
             if (oldTask != null) {
                 oldTask.cancel(false);
             }
             // Load photos
-            PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(holder.photoImageView);
-            holder.photoImageView.setTag(newTask);
+            PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask( photoImageView);
+            photoImageView.setTag(newTask);
             newTask.execute(contactId, phone);
         }
         // photoImageView.setEditorListener(new EditorListener() {

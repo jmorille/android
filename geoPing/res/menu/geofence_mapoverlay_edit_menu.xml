@@ -10,6 +10,12 @@
         android:title="@string/menu_save"/>
 
     <item
+            android:id="@+id/menu_edit"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:showAsAction="ifRoom"
+            android:title="@string/menu_edit"/>
+
+    <item
         android:id="@+id/menu_delete"
         android:icon="@drawable/ic_action_discard"
         android:showAsAction="ifRoom"

@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/entity_list_item_container"
     android:layout_width="fill_parent"
-    android:gravity="center"
     android:orientation="horizontal"
     android:padding="10dip" >
 
@@ -22,8 +21,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/call_log_secondary_text_color"
-        android:layout_alignLeft="@id/geofence_list_item_name"
-        android:layout_below="@id/geofence_list_item_name"
+        android:layout_alignLeft="@+id/geofence_list_item_name"
+        android:layout_below="@+id/geofence_list_item_name"
         android:text="3 Address, zipcode city " />
 
 </RelativeLayout>

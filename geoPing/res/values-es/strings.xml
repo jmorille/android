@@ -167,6 +167,9 @@
 
     <!-- Geofence model -->
     <string name="geofence_name">Geofence Name</string>
+    <string name="geofence_transition">Transition Type</string>
+    <string name="geofence_transition_enter">Entered Geo Fence</string>
+    <string name="geofence_transition_exit">Exited Geo Fence</string>
 
     <string name="add_geofence">Add a GeoFence</string>
     <string name="geofence_help">"Create a GeoFence to get alerts when family members come and go."</string>

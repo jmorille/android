@@ -213,6 +213,13 @@ public class GeoFenceHelper {
     public int getLongitudeE6(Cursor cursor) {
         return cursor.getInt(longitudeE6Idx);
     }
+    public double getLatitude(Cursor cursor) {
+        return cursor.getInt(latitudeE6Idx) / AppConstants.E6;
+    }
+
+    public double getLongitude(Cursor cursor) {
+        return cursor.getInt(longitudeE6Idx)/ AppConstants.E6;
+    }
 
     public long getId(Cursor cursor) {
         return cursor.getLong(idIdx);

@@ -37,7 +37,7 @@
                android:layout_height="wrap_content"
                android:textAppearance="?android:attr/textAppearanceMedium"
                android:layout_below="@+id/geofenceEditLatLng"
-               android:text="Transition"
+               android:text="@string/geofence_transition"
             />
 
     <CheckBox android:id="@+id/geofence_transition_enter_checkBox"
@@ -45,14 +45,14 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_below="@+id/geofence_transition_label"
-            android:text="Enter"/>
+            android:text="@string/geofence_transition_enter" />
 
     <CheckBox android:id="@+id/geofence_transition_exit_checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_below="@+id/geofence_transition_enter_checkBox"
-            android:text="Exit"/>
+            android:text="@string/geofence_transition_exit"/>
 
 
 

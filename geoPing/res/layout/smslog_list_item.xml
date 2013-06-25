@@ -14,7 +14,19 @@
             android:src="@drawable/ic_contact_picture_holo_light"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="18dp"
             />
+
+    <ImageView
+            android:id="@+id/smslog_photo_imageView_send"
+            android:layout_width="@dimen/call_log_list_contact_photo_size"
+            android:layout_height="@dimen/call_log_list_contact_photo_size"
+            android:src="@drawable/ic_contact_picture_holo_light"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            />
+
 
     <TextView
             android:id="@+id/smslog_list_item_action"
@@ -25,13 +37,16 @@
             android:singleLine="true"
             android:layout_alignTop="@+id/smslog_photo_imageView"
             android:layout_toRightOf="@+id/smslog_photo_imageView"
-            android:layout_marginLeft="18dp"/>
+            android:layout_toLeftOf="@+id/smslog_photo_imageView_send"
+            />
 
     <TextView
             android:id="@+id/smslog_list_item_phone"
             style="@style/entity_list_item"
             android:layout_alignLeft="@+id/smslog_list_item_action"
             android:layout_below="@+id/smslog_list_item_action"
+            android:layout_toLeftOf="@+id/smslog_photo_imageView_send"
+            android:layout_toRightOf="@+id/smslog_photo_imageView"
             android:text="+33601020304"
             android:textColor="@color/call_log_secondary_text_color"
             android:textSize="14sp"
@@ -75,6 +90,7 @@
             android:layout_marginLeft="5dp"
             android:layout_alignBaseline="@+id/smslog_list_item_smsType_imgs"
             android:layout_toRightOf="@+id/smslog_list_item_smsType_imgs"
+
             android:layout_below="@+id/smslog_list_item_time"
             />
 

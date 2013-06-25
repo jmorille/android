@@ -164,6 +164,7 @@ public class GeofenceEditFragment extends SherlockFragment {
 
         void onGeofenceSelect(Uri id, CircleGeofence fence);
 
+        void onGeofencePrepareInsert(CircleGeofence fence);
     }
 
 
@@ -205,6 +206,11 @@ public class GeofenceEditFragment extends SherlockFragment {
 
     private void prepareInsert() {
         this.entityUri = null;
+        this.fence = new CircleGeofence();
+        // Notify listener
+        if (onGeofenceSelectListener != null) {
+            onGeofenceSelectListener.onGeofencePrepareInsert(fence);
+        }
     }
 
 

@@ -30,14 +30,16 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
 
     // Binding
     private GeofenceEditFragment editFragment;
+    private GeofenceEditMapFragment mapFragment;
     private SmsLogListFragment smsLogFragment;
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+
     // Instance
-    private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 2;
-    private int viewPagerPageCount = 1;
+    private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 3;
+    private int viewPagerPageCount = 2;
 
     private Uri geofenceUri;
     private String geofenceRequestId;
@@ -62,13 +64,19 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
                 geofenceRequestId=fence.requestId;
             }
             geofenceUri = id;
-//            geofencePhone = phone;
+            // Map Geofence
+            mapFragment.onGeofenceSelect(   id,   fence);
             // Update Ui Tabs
             if (viewPagerPageCount != VIEW_PAGER_LOADPERS_PAGE_COUNT) {
                 viewPagerPageCount = VIEW_PAGER_LOADPERS_PAGE_COUNT;
                 mSectionsPagerAdapter.notifyDataSetChanged();
             }
         }
+
+        public void onGeofencePrepareInsert(CircleGeofence fence) {
+            mapFragment.onGeofencePrepareInsert(  fence);
+        }
+
 
     };
 
@@ -88,6 +96,8 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
         // Fragment
         editFragment = new GeofenceEditFragment();
         editFragment.setOnGeofenceSelectListener( onGeofenceSelectListener);
+        // Fragment Map
+        mapFragment = new GeofenceEditMapFragment();
 
         // Analytic
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -187,7 +197,9 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         static final int GEOFENCE = 0;
-         static final int LOG = 1;
+        static final int GEOFENCE_MAP = 1;
+
+         static final int LOG = 2;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -199,6 +211,9 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
             switch (position) {
             case GEOFENCE:
                 fragment = editFragment;
+                break;
+            case GEOFENCE_MAP:
+                fragment = mapFragment;
                 break;
 
             case LOG:
