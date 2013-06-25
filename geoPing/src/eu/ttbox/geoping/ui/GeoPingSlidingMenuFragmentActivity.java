@@ -7,9 +7,9 @@ import android.view.ViewGroup.LayoutParams;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.app.SlidingActivityBase;
-import com.slidingmenu.lib.app.SlidingActivityHelper;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityHelper;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.ui.slidingmenu.SlidingMenuHelper;

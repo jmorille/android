@@ -112,28 +112,30 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
 
         // Backgroud send
         if (SmsLogTypeEnum.RECEIVE.equals(smLogType)) {
-            view.setBackgroundResource(R.drawable.fleche_verte_g);
+           // view.setBackgroundResource(R.drawable.fleche_verte_g);
+            view.setBackground(null);
         } else {
-            view.setBackgroundResource(R.drawable.fleche_bleue_d);
+           // view.setBackgroundResource(R.drawable.fleche_bleue_d);
+            view.setBackgroundResource(R.drawable.dialpad_background);
         }
 
         // Load Photos
         if (isDisplayContactDetail) {
             // Compute The Correct ImageView
             ImageView imageViewToLoad = holder.photoImageView;
-            holder.photoImageView.setVisibility(View.VISIBLE);
-            holder.photoImageViewSend.setVisibility(View.GONE);
+//            holder.photoImageView.setVisibility(View.VISIBLE);
+//            holder.photoImageViewSend.setVisibility(View.GONE);
 
 //            // V Side
-//            if (SmsLogTypeEnum.RECEIVE.equals(smLogType)) {
-//                imageViewToLoad = holder.photoImageView;
-//                holder.photoImageView.setVisibility(View.VISIBLE);
-//                holder.photoImageViewSend.setVisibility(View.GONE);
-//            } else {
-//                imageViewToLoad = holder.photoImageViewSend;
-//                holder.photoImageView.setVisibility(View.GONE);
-//                holder.photoImageViewSend.setVisibility(View.VISIBLE);
-//            }
+            if (SmsLogTypeEnum.RECEIVE.equals(smLogType)) {
+                 imageViewToLoad = holder.photoImageView;
+                 holder.photoImageView.setVisibility(View.VISIBLE);
+                 holder.photoImageViewSend.setVisibility(View.GONE);
+             } else {
+                 imageViewToLoad = holder.photoImageViewSend;
+                 holder.photoImageView.setVisibility(View.GONE);
+                 holder.photoImageViewSend.setVisibility(View.VISIBLE);
+             }
 
             // Load The Phone
             loadPhoto(imageViewToLoad, null, phone);

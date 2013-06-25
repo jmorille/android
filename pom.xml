@@ -48,7 +48,7 @@
 		<!-- Compatibility Api -->
 		<compatibility-v13.version>13</compatibility-v13.version>
 		<actionbarsherlock.version>4.3.1</actionbarsherlock.version>
-		<slidingmenu.version>1.2</slidingmenu.version>
+		<slidingmenu.version>1.2.1</slidingmenu.version>
 
 		<!-- Osm -->
 		<osmdroid.version>3.0.10</osmdroid.version> <!--  3.0.9-20121109, 3.0.10 -->
@@ -104,7 +104,7 @@
 			</dependency>
 			<!-- Sliding Memu -->
 			<dependency>
-				<groupId>com.slidingmenu</groupId>
+				<groupId>com.jeremyfeinstein.slidingmenu</groupId>
 				<artifactId>slidingmenu</artifactId>
 				<version>${slidingmenu.version}</version>
 				<type>apklib</type>

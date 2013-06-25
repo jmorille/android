@@ -42,10 +42,23 @@ public class GeofenceEditMapFragment extends ShowMapFragment {
 
     private  void displayGeofence(CircleGeofence editGeofence) {
         if (mapController !=null) {
+            // Prepare Inser
+            if (editGeofence.id== -1 ) {
+                // Compute the default fence Size
+                BoundingBoxE6 boundyBox = mapView.getBoundingBox();
+                IGeoPoint center = boundyBox.getCenter();
+                int radiusInMeters = boundyBox.getDiagonalLengthInMeters() / 8;
+                radiusInMeters = Math.max(50, radiusInMeters);
+                // Define to default Point
+                editGeofence.setCenter(center);
+                editGeofence.setRadiusInMeters(radiusInMeters);
+                Log.d(TAG, "Prepare Insert for : " + editGeofence);
+            }
+            //Define Center
             mapController.setCenter(editGeofence.getCenterAsGeoPoint() );
             // Do Edit
             GeofenceEditOverlay mapOverlay =  super.showGeofenceOverlays();
-            mapOverlay.doEditCircleGeofence(editGeofence);
+            mapOverlay.doEditCircleGeofenceWithoutMenu(editGeofence);
         }
     }
 
@@ -61,13 +74,6 @@ public class GeofenceEditMapFragment extends ShowMapFragment {
     // ===========================================================
     public void onGeofencePrepareInsert(CircleGeofence fence) {
         Log.d(TAG, "onGeofencePrepareInsert");
-        // Compute the default fence Size
-        BoundingBoxE6 boundyBox = mapView.getBoundingBox();
-        IGeoPoint center = boundyBox.getCenter();
-        int radiusInMeters = boundyBox.getDiagonalLengthInMeters() / 8;
-        // Define to default Point
-        fence.setCenter(center);
-        fence.setRadiusInMeters(radiusInMeters);
         // Do Edit
         this.editGeofence = fence;
         displayGeofence(fence);

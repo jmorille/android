@@ -241,15 +241,15 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
             switch (position) {
             case GEOFENCE:
                 return getString(R.string.menu_geofence).toUpperCase();
+            case GEOFENCE_MAP:
+                return getString(R.string.menu_map).toUpperCase();
             case LOG:
                 return getString(R.string.menu_smslog).toUpperCase();
             }
             return null;
         }
     }
-    // ===========================================================
-    // Listener
-    // ===========================================================
+
 
     // ===========================================================
     // Other

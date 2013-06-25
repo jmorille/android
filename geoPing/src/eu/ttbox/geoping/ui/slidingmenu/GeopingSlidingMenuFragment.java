@@ -22,7 +22,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.slidingmenu.lib.app.SlidingActivityBase;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase;
 
 import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;

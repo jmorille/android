@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,7 +102,8 @@ public class GeofenceEditFragment extends SherlockFragment {
 
     private void bindingView(CircleGeofence geofence) {
         //Binding
-        this.nameEditText.setText(geofence.name);
+        //if (!TextUtils.isEmpty(geofence.name) && )
+         this.nameEditText.setText(geofence.name);
         // Lat Lng
         double lat = geofence.getLatitude();
         double lng = geofence.getLongitude();
@@ -207,6 +209,7 @@ public class GeofenceEditFragment extends SherlockFragment {
     private void prepareInsert() {
         this.entityUri = null;
         this.fence = new CircleGeofence();
+        bindingView(fence);
         // Notify listener
         if (onGeofenceSelectListener != null) {
             onGeofenceSelectListener.onGeofencePrepareInsert(fence);

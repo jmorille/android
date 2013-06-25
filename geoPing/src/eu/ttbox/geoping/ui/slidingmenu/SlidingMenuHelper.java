@@ -3,8 +3,8 @@ package eu.ttbox.geoping.ui.slidingmenu;
 import android.content.Context;
 import android.graphics.Canvas;
 
-import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
 import eu.ttbox.geoping.R;
 

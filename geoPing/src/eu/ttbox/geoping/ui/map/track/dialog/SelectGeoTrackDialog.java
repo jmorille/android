@@ -26,8 +26,7 @@ import eu.ttbox.geoping.ui.map.track.dialog.GeoTrackSelectPersonListAdapter.OnAc
 
 /**
  * 
- * @see http
- *      ://developer.android.com/resources/tutorials/views/hello-gridview.html
+ * <a href="http://developer.android.com/resources/tutorials/views/hello-gridview.html">hello-gridview</a>
  */
 public class SelectGeoTrackDialog extends AlertDialog {
 
@@ -133,8 +132,6 @@ public class SelectGeoTrackDialog extends AlertDialog {
     // ===========================================================
     // Loader
     // ===========================================================
-
-   
 
     private final LoaderManager.LoaderCallbacks<Cursor> geoTrackPersonLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 

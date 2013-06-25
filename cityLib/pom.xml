@@ -57,7 +57,7 @@
          <type>apklib</type>
       </dependency>
       <dependency>
-         <groupId>com.slidingmenu</groupId>
+          <groupId>com.jeremyfeinstein.slidingmenu</groupId>
          <artifactId>slidingmenu</artifactId>
          <type>apklib</type>
       </dependency>

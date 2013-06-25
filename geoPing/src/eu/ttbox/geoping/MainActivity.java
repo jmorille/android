@@ -13,7 +13,7 @@ import android.util.Log;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 import eu.ttbox.geoping.ui.MenuOptionsItemSelectionHelper;

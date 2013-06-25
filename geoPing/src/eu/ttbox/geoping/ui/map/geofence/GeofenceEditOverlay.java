@@ -300,15 +300,19 @@ public class GeofenceEditOverlay extends Overlay {
     // Result Accessors
     // ===========================================================
 
-
-    public void doEditCircleGeofence(CircleGeofence geofenceEdit) {
+    public void doEditCircleGeofenceWithoutMenu(CircleGeofence geofenceEdit) {
         Log.d(TAG, "Change do editMode for hitPoint : " + geofenceEdit);
         this.geofence = geofenceEdit;
+        mapView.postInvalidate();
+    }
+
+    public void doEditCircleGeofence(CircleGeofence geofenceEdit) {
+        doEditCircleGeofenceWithoutMenu(geofenceEdit);
         if (geofenceEdit != null) {
             // Request Contextual Edit Menu
             handler.sendEmptyMessage(MENU_CONTEXTUAL_EDIT);
         }
-        mapView.postInvalidate();
+
     }
 
     public void doAddCircleGeofence() {

@@ -20,6 +20,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import eu.ttbox.geoping.MainActivity;
@@ -173,6 +174,10 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
         // Compute afected geoFence
         List<CircleGeofence> geofences = getCircleGeofenceFromRequestIds(geofenceRequestIds);
+        if (geofences==null || geofences.size()<1) {
+            Log.w(TAG, "No CircleGeofence in Db for request Ids : " +  Arrays.toString(geofenceRequestIds));
+            return;
+        }
         String[] phones = SpyNotificationHelper.searchListPhonesForGeofenceViolation(this, geofences, transitionType);
         if (phones!=null && phones.length>0) {
             Location lastLocation =   LocationUtils.getLastKnownLocation(locationManager);
@@ -183,6 +188,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
             Log.w(TAG, "No Person assoiated to Geofences : " + geofenceRequestIds);
         }
 
+        CircleGeofence firsrGeofence = geofences.get(0);
 
         // Create an explicit content Intent that starts the main Activity
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -204,7 +210,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
         builder.setSmallIcon(R.drawable.ic_stat_notif_icon) //
                 .setWhen(System.currentTimeMillis()) //
                 .setContentTitle(transitionTypeMsg) // Transition Type
-                .setContentText(geofences.get(0).getName()) // Zone Name
+                .setContentText(firsrGeofence.getName()) // Zone Name
                 .setContentIntent(notificationPendingIntent);
 
         // Message count
