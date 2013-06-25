@@ -29,7 +29,7 @@
                android:textAppearance="?android:attr/textAppearanceMedium"
                android:layout_below="@+id/geofenceEditName"
                android:text="@string/geofence_transition"
-               android:layout_marginTop="10dp"
+               android:layout_marginTop="20dp"
             />
 
     <CheckBox android:id="@+id/geofence_transition_enter_checkBox"
