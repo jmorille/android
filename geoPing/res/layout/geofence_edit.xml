@@ -21,23 +21,15 @@
             android:layout_below="@+id/labelGeofenceEditName"
             android:layout_alignLeft="@+id/labelGeofenceEditName"/>
 
-    <TextView  android:id="@+id/geofenceEditLatLng"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="No zone coordonate"
-            android:layout_below="@+id/geofenceEditName"
-            android:layout_alignRight="@+id/geofenceEditName"
-            android:layout_marginTop="16dp"/>
-
 
 
     <TextView  android:id="@+id/geofence_transition_label"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:textAppearance="?android:attr/textAppearanceMedium"
-               android:layout_below="@+id/geofenceEditLatLng"
+               android:layout_below="@+id/geofenceEditName"
                android:text="@string/geofence_transition"
+               android:layout_marginTop="10dp"
             />
 
     <CheckBox android:id="@+id/geofence_transition_enter_checkBox"
