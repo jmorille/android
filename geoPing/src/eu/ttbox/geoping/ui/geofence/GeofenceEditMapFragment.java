@@ -9,10 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.TilesOverlay;
 
+import java.util.ArrayList;
+
+import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.ui.map.ShowMapFragment;
 import eu.ttbox.geoping.ui.map.geofence.GeofenceEditOverlay;
@@ -29,8 +39,41 @@ public class GeofenceEditMapFragment extends ShowMapFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
+        // Menu on Fragment
+        setHasOptionsMenu(true);
+
         return v;
     }
+
+    // ===========================================================
+    // Menu
+    // ===========================================================
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.geofence_edit_map_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.menuMap_mypositoncenter: {
+                centerOnMyPosition();
+                return true;
+            }
+            case R.id.menuMap_mypositon_hide: {
+                 swichDisplayMyPosition();
+                return true;
+            }
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    // ===========================================================
+    // Load data
+    // ===========================================================
 
     @Override
     public void loadDefaultDatas() {

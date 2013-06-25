@@ -105,7 +105,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
     protected boolean mFollow = true; // follow location updates
     protected boolean mDrawAccuracyEnabled = true;
     protected boolean mDrawCompassEnabled = false;
-    protected AtomicBoolean mDrawMyLocationEnabled = new AtomicBoolean( true);
+    protected AtomicBoolean mDrawMyLocationEnabled = new AtomicBoolean( false);
 
     // Compass Config
     private final int mCompassCenterX = 35;
