@@ -47,7 +47,6 @@ public class GeofenceEditFragment extends SherlockFragment {
 
     // Binding
     private EditText nameEditText;
-    private TextView latLngEditText;
     private CompoundButton transitionEnterCheckBox;
     private CompoundButton transitionExitCheckBox;
 
@@ -80,9 +79,7 @@ public class GeofenceEditFragment extends SherlockFragment {
 
         // Bindings
         this.nameEditText = (EditText) v.findViewById(R.id.geofenceEditName);
-        this.latLngEditText = (TextView) v.findViewById(R.id.geofenceEditLatLng);
-
-        this.transitionEnterCheckBox = (CompoundButton) v.findViewById(R.id.geofence_transition_enter_checkBox);
+          this.transitionEnterCheckBox = (CompoundButton) v.findViewById(R.id.geofence_transition_enter_checkBox);
         this.transitionExitCheckBox = (CompoundButton) v.findViewById(R.id.geofence_transition_exit_checkBox);
         // Form
         formValidator = createValidator(getActivity());
@@ -102,14 +99,11 @@ public class GeofenceEditFragment extends SherlockFragment {
 
     private void bindingView(CircleGeofence geofence) {
         //Binding
-        //if (!TextUtils.isEmpty(geofence.name) && )
+        if (!TextUtils.isEmpty(geofence.name)  ) {
          this.nameEditText.setText(geofence.name);
-        // Lat Lng
-        double lat = geofence.getLatitude();
-        double lng = geofence.getLongitude();
-        String coordString = String.format(Locale.US, "(%.6f, %.6f) +/- %s m", lat, lng, geofence.radiusInMeters);
-        this.latLngEditText.setText(coordString);
-        // Transition Type
+        }
+
+          // Transition Type
         Log.d(TAG, "CircleGeofence transition : " + geofence.transitionType);
         boolean isEnter = ( geofence.transitionType & Geofence.GEOFENCE_TRANSITION_ENTER) != 0;
         boolean isExit = ( geofence.transitionType & Geofence.GEOFENCE_TRANSITION_EXIT) != 0;
