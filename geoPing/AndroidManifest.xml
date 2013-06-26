@@ -4,11 +4,12 @@
     
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17"/>
 
-    <permission android:name="eu.ttbox.geoping.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
-    <uses-permission android:name="eu.ttbox.geoping.permission.C2D_MESSAGE"/>
-   
-    <!-- App receives GCM messages. -->
-   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+      <!-- App receives GCM messages. -->
+    <permission android:name="eu.ttbox.geoping.gcm.permission.C2D_MESSAGE"  android:protectionLevel="signature" />
+    <uses-permission android:name="eu.ttbox.geoping.gcm.permission.C2D_MESSAGE" />
+
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
     <!-- GCM requires a Google account. -->
    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
    
@@ -276,24 +277,13 @@
         <service android:exported="false" android:name=".service.master.GeoPingMasterService"/>
         
           <!-- GCM Messages Activity -->
-        <activity android:exported="false" android:name=".ui.gcm.GcmRegisterActivity">
-        </activity>
-		<receiver android:name="com.google.android.gcm.GCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
-		  <intent-filter>
-		    <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-		    <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
-		    <category android:name="eu.ttbox.geoping"/>
-		  </intent-filter>
-		</receiver>        
-		<service android:exported="false" android:name=".service.gcm.GCMIntentService"/>
-		
-		
-		
-<!--        Permission Denial: reading eu.ttbox.geoping.domain.WidgetProvider 
-uri content://eu.ttbox.geoping.WidgetProvider/pairing from pid=2264, uid=10040 requires eu.ttbox.geoping.PERSON_READ
-		  android:readPermission="eu.ttbox.geoping.PERSON_READ"
-		 android:readPermission="eu.ttbox.geoping.PAIRING_READ"  
-		  -->
+
+
+        <!--        Permission Denial: reading eu.ttbox.geoping.domain.WidgetProvider
+        uri content://eu.ttbox.geoping.WidgetProvider/pairing from pid=2264, uid=10040 requires eu.ttbox.geoping.PERSON_READ
+                  android:readPermission="eu.ttbox.geoping.PERSON_READ"
+                 android:readPermission="eu.ttbox.geoping.PAIRING_READ"
+                  -->
 
 <!--         <provider android:authorities="eu.ttbox.geoping.WidgetProvider"     android:name=".domain.WidgetProvider"     -->
 <!--              android:writePermission="eu.ttbox.geoping.WIDGET_WRITE" > -->

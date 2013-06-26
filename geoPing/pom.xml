@@ -53,22 +53,10 @@
           <groupId>com.jeremyfeinstein.slidingmenu</groupId>
           <artifactId>slidingmenu</artifactId>
          <type>apklib</type>
-          <!--
-         <exclusions>
-           <exclusion>
-              <groupId>com.actionbarsherlock</groupId>
-              <artifactId>actionbarsherlock</artifactId>
-           </exclusion>
-         </exclusions>
-         -->
       </dependency>
 
       <!-- Google Service -->
-      <dependency>
-         <groupId>com.google.android.gcm</groupId>
-         <artifactId>gcm-client</artifactId>
-         <version>${gcm.version}</version>
-      </dependency>
+
 
       <dependency>
          <groupId>com.google.android.admob</groupId>
