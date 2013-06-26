@@ -15,10 +15,8 @@ import com.google.android.gms.location.Geofence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import eu.ttbox.geoping.crypto.CryptoUtils;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
@@ -27,41 +25,13 @@ import eu.ttbox.geoping.service.geofence.GeoFenceLocationService;
 public class GeoFenceDatabase {
 
     public static final String TAG = "GeoFenceDatabase";
-
     public static final String TABLE_GEOFENCE = "geofence";
-
-    public static class GeoFenceColumns {
-        public static final String COL_ID = BaseColumns._ID;
-        public static final String COL_NAME = "NAME";
-        // Phone
-        public static final String COL_REQUEST_ID = "REQUEST_ID";
-        // Location
-        public static final String COL_LATITUDE_E6 = "LAT_E6";
-        public static final String COL_LONGITUDE_E6 = "LNG_E6";
-        public static final String COL_ADDRESS = "ADDRESS";
-        public static final String COL_RADIUS = "RADIUS";
-        public static final String COL_TRANSITION = "TRANSITION";
-        public static final String COL_EXPIRATION = "EXPIRATION";
-
-        public static final String[] ALL_COLS = new String[]{COL_ID, COL_REQUEST_ID, COL_NAME//
-                , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION //
-                ,COL_ADDRESS //
-        };
-        // Where Clause
-        public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", COL_ID);
-
-    }
-
     private static final String CRITERIA_BY_ENTITY_ID = String.format("%s = ?", GeoFenceColumns.COL_ID);
     private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoFenceColumns.COL_REQUEST_ID);
-
-    private SQLiteDatabase bdd;
-
-    private PairingOpenHelper mDatabaseOpenHelper;
-
-    private GeoFenceLocationService mGeoFenceLocationService;
-
     private static final HashMap<String, String> mCircleGeofenceColumnMap = buildCircleGeofenceColumnMap();
+    private SQLiteDatabase bdd;
+    private PairingOpenHelper mDatabaseOpenHelper;
+    private GeoFenceLocationService mGeoFenceLocationService;
 
     public GeoFenceDatabase(Context context) {
         mDatabaseOpenHelper = new PairingOpenHelper(context);
@@ -88,19 +58,19 @@ public class GeoFenceDatabase {
         return queryEntities(projection, CRITERIA_BY_ENTITY_ID, selectionArgs, null);
     }
 
-    public Cursor getEntityByRequestIds( String[] projection, String[] requestIds, String order) {
+    public Cursor getEntityByRequestIds(String[] projection, String[] requestIds, String order) {
         String selection = makeWhereClause(GeoFenceColumns.COL_REQUEST_ID, requestIds);
         return queryEntities(projection, selection, requestIds, order);
     }
 
-    private String makeWhereClause(String colName,String... requestIds) {
+    private String makeWhereClause(String colName, String... requestIds) {
         StringBuilder sb = new StringBuilder();
         int requestIdSize = requestIds.length;
-        if (requestIdSize== 1) {
+        if (requestIdSize == 1) {
             sb.append(colName).append('=').append('?');
         } else {
-            sb.append(colName).append( " in (");
-            for (int i = 0 ; i <requestIdSize; i ++) {
+            sb.append(colName).append(" in (");
+            for (int i = 0; i < requestIdSize; i++) {
                 if (i > 0) {
                     sb.append(',');
                 }
@@ -112,7 +82,7 @@ public class GeoFenceDatabase {
     }
 
     public Cursor queryEntities(String[] _projection, String selection, String[] selectionArgs, String order) {
-        String[] projection = _projection == null? GeoFenceColumns.ALL_COLS :_projection;
+        String[] projection = _projection == null ? GeoFenceColumns.ALL_COLS : _projection;
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TABLE_GEOFENCE);
         builder.setProjectionMap(mCircleGeofenceColumnMap);
@@ -125,8 +95,8 @@ public class GeoFenceDatabase {
         // Complete Data
         fillRequestId(values);
         // Register in LocationServices
-        CircleGeofence circleGeofence =  GeoFenceHelper.getEntityFromContentValue(values);
-        Geofence geofence =  circleGeofence.toGeofence();
+        CircleGeofence circleGeofence = GeoFenceHelper.getEntityFromContentValue(values);
+        Geofence geofence = circleGeofence.toGeofence();
         mGeoFenceLocationService.addGeofences(geofence);
         // Save in Db
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
@@ -135,11 +105,11 @@ public class GeoFenceDatabase {
             try {
                 result = db.insertOrThrow(TABLE_GEOFENCE, null, values);
                 // Check Insert Name
-                if (result>-1 && TextUtils.isEmpty(values.getAsString(GeoFenceColumns.COL_NAME))) {
+                if (result > -1 && TextUtils.isEmpty(values.getAsString(GeoFenceColumns.COL_NAME))) {
                     ContentValues updateName = new ContentValues(1);
                     // TODO Internationalize Zone xx
                     updateName.put(GeoFenceColumns.COL_NAME, String.format("Zone %s", result));
-                    long resultUpdateName =  db.update(TABLE_GEOFENCE, updateName, GeoFenceColumns.SELECT_BY_ENTITY_ID , new String[] { String.valueOf(result) });
+                    long resultUpdateName = db.update(TABLE_GEOFENCE, updateName, GeoFenceColumns.SELECT_BY_ENTITY_ID, new String[]{String.valueOf(result)});
                 }
                 // commit
                 db.setTransactionSuccessful();
@@ -166,25 +136,76 @@ public class GeoFenceDatabase {
             if (TextUtils.isEmpty(requestId)) {
                 String value = CryptoUtils.generateUniqueId();
                 values.put(GeoFenceColumns.COL_REQUEST_ID, value);
-            Log.d(TAG, "Add COL_REQUEST_ID : " + value);
-        }
+                Log.d(TAG, "Add COL_REQUEST_ID : " + value);
+            }
             isGeofenceValues = true;
         }
         return isGeofenceValues;
     }
 
+    public Geofence fillForGeofenceRequester(SQLiteDatabase db, ContentValues values, String selection, String[] selectionArgs) {
+        Geofence geofence = null;
+        // Check For Requester Keys
+        boolean isContaintKey = false;
+        boolean isContainAllKey = true;
+        ArrayList<String> missingCOls = new ArrayList<String>(GeoFenceColumns.ALL_GEOFENCE_REQUESTER_COLS.length);
+        for (String col : GeoFenceColumns.ALL_GEOFENCE_REQUESTER_COLS) {
+            if (values.containsKey(col)) {
+                isContaintKey = true;
+            } else {
+                isContainAllKey = false;
+                missingCOls.add(col);
+            }
+        }
+
+        // Complete Datas
+        ContentValues missingValues = null;
+        if (isContaintKey) {
+            if (isContainAllKey) {
+                geofence = GeoFenceHelper.getEntityGeoFenceFromContentValue(values);
+            } else {
+                int missingCOlSize = missingCOls.size();
+                missingValues = new ContentValues(missingCOlSize);
+                Cursor cursor = queryEntities(missingCOls.toArray(new String[missingCOlSize]), selection, selectionArgs, null);
+                try {
+                    if (cursor.getCount() > 1) {
+                        throw new IllegalArgumentException("Found multi request for Selection " + selection + " / Args =  " + Arrays.toString(selectionArgs));
+                    }
+                    if (cursor.moveToNext()) {
+                        for (String col : missingCOls) {
+                            int colIdx = cursor.getColumnIndex(col);
+                            if (GeoFenceColumns.COL_REQUEST_ID.equals(col)) {
+                                String colVal = cursor.getString(colIdx);
+                                missingValues.put(col, colVal);
+                            } else {
+                                int colVal = cursor.getInt(colIdx);
+                                missingValues.put(col, colVal);
+                            }
+                        }
+                    }
+                } finally {
+                    cursor.close();
+                }
+                // Compute result
+                ContentValues result = new ContentValues(missingCOlSize + values.size());
+                result.putAll(values);
+                result.putAll(missingValues);
+                geofence = GeoFenceHelper.getEntityGeoFenceFromContentValue(result);
+
+            }
+        }
+        return geofence;
+    }
+
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
         int result = -1;
-        // Complete Data
-        boolean isGeofenceValues = fillRequestId(values);
-        if (isGeofenceValues) {
+         // Save in Db
+        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+        Geofence geofence = fillForGeofenceRequester(db, values, selection, selectionArgs);
+        if (geofence !=null) {
             // Register in LocationServices
-            CircleGeofence circleGeofence =  GeoFenceHelper.getEntityFromContentValue(values);
-            Geofence geofence =  circleGeofence.toGeofence();
             mGeoFenceLocationService.addGeofences(geofence);
         }
-        // Save in Db
-        SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
          try {
             db.beginTransaction();
             try {
@@ -200,9 +221,9 @@ public class GeoFenceDatabase {
     }
 
     private List<String> getRequestIds(SQLiteDatabase db, String selection, String[] selectionArgs) {
-       ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<String>();
         // Read RequestId
-        String[] projection = new String[] {GeoFenceColumns.COL_REQUEST_ID};
+        String[] projection = new String[]{GeoFenceColumns.COL_REQUEST_ID};
         Cursor cursor = queryEntities(projection, selection, selectionArgs, null);
         try {
             while (cursor.moveToNext()) {
@@ -210,25 +231,25 @@ public class GeoFenceDatabase {
                 result.add(requestId);
             }
         } finally {
-            if (cursor!=null) {
+            if (cursor != null) {
                 cursor.close();
             }
         }
         return result;
     }
 
-    public int deleteEntityByRequestIds( String[] requestArraysIds) {
+    public int deleteEntityByRequestIds(String[] requestArraysIds) {
         int result = -1;
-        if (requestArraysIds==null || requestArraysIds.length <1) {
-            Log.w(TAG, "deleteEntityByRequestIds with no requestArraysIds : "  + requestArraysIds);
-            return  result;
+        if (requestArraysIds == null || requestArraysIds.length < 1) {
+            Log.w(TAG, "deleteEntityByRequestIds with no requestArraysIds : " + requestArraysIds);
+            return result;
         }
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
         try {
             db.beginTransaction();
             try {
                 List<String> requestIds = Arrays.asList(requestArraysIds);
-                if (requestIds!=null && !requestIds.isEmpty()) {
+                if (requestIds != null && !requestIds.isEmpty()) {
                     mGeoFenceLocationService.removeGeofencesById(requestIds);
                 }
                 // Delete Data
@@ -244,6 +265,7 @@ public class GeoFenceDatabase {
         return result;
 
     }
+
     public int deleteEntity(String selection, String[] selectionArgs) {
         int result = -1;
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
@@ -266,24 +288,6 @@ public class GeoFenceDatabase {
         return result;
     }
 
-    public List<CircleGeofence> getTrakPointForToday(String userId) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear(Calendar.HOUR);
-        calendar.clear(Calendar.HOUR_OF_DAY);
-        calendar.clear(Calendar.MINUTE);
-        calendar.clear(Calendar.SECOND);
-        calendar.clear(Calendar.MILLISECOND);
-        long pointDate = calendar.getTimeInMillis();
-        String whereClause = GeoFenceColumns.COL_REQUEST_ID + " = ? and " + GeoFenceColumns.COL_EXPIRATION + '>' + pointDate;
-        Cursor c = bdd.query(TABLE_GEOFENCE, GeoFenceColumns.ALL_COLS, whereClause, new String[]{userId}, null, null, GeoFenceColumns.COL_EXPIRATION);
-        return cursorToLivre(c);
-    }
-
-    public List<CircleGeofence> getTrakPointWithTitre(String userId) {
-        Cursor c = bdd.query(TABLE_GEOFENCE, GeoFenceColumns.ALL_COLS, CRITERIA_BY_USER_ID, new String[]{userId}, null, null, GeoFenceColumns.COL_EXPIRATION);
-        return cursorToLivre(c);
-    }
-
     private List<CircleGeofence> cursorToLivre(Cursor c) {
         List<CircleGeofence> points = new ArrayList<CircleGeofence>(c.getCount());
         if (c.getCount() == 0)
@@ -302,6 +306,30 @@ public class GeoFenceDatabase {
 
         // On retourne le livre
         return points;
+    }
+
+    public static class GeoFenceColumns {
+        public static final String COL_ID = BaseColumns._ID;
+        public static final String COL_NAME = "NAME";
+        // Phone
+        public static final String COL_REQUEST_ID = "REQUEST_ID";
+        // Location
+        public static final String COL_LATITUDE_E6 = "LAT_E6";
+        public static final String COL_LONGITUDE_E6 = "LNG_E6";
+        public static final String COL_ADDRESS = "ADDRESS";
+        public static final String COL_RADIUS = "RADIUS";
+        public static final String COL_TRANSITION = "TRANSITION";
+        public static final String COL_EXPIRATION = "EXPIRATION";
+        public static final String[] ALL_COLS = new String[]{COL_ID, COL_REQUEST_ID, COL_NAME//
+                , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION //
+                , COL_ADDRESS //
+        };
+        public static final String[] ALL_GEOFENCE_REQUESTER_COLS = new String[]{COL_REQUEST_ID//
+                , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION //
+        };
+        // Where Clause
+        public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", COL_ID);
+
     }
 
 }

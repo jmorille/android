@@ -63,6 +63,20 @@ public class GeoFenceHelper {
         return initialValues;
     }
 
+    public static Geofence getEntityGeoFenceFromContentValue(ContentValues initialValues) {
+        String requestId = initialValues.getAsString(GeoFenceColumns.COL_REQUEST_ID);
+        double latitude = initialValues.getAsInteger(GeoFenceColumns.COL_LATITUDE_E6) / AppConstants.E6;
+        double longitude = initialValues.getAsInteger(GeoFenceColumns.COL_LONGITUDE_E6) / AppConstants.E6;
+        int radiusInMeters =initialValues.getAsInteger(GeoFenceColumns.COL_RADIUS);
+        int transitionType =initialValues.getAsInteger(GeoFenceColumns.COL_TRANSITION );
+        int expirationDuration =initialValues.getAsInteger(GeoFenceColumns.COL_EXPIRATION);
+
+        return new Geofence.Builder().setRequestId(requestId)//
+                .setCircularRegion(latitude,longitude, radiusInMeters )//
+                .setTransitionTypes(transitionType)//
+                .setExpirationDuration(expirationDuration)//
+                .build();
+    }
     public static CircleGeofence getEntityFromContentValue(ContentValues initialValues) {
         if (initialValues == null || initialValues.size() < 1) {
             return null;

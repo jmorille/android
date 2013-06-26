@@ -170,25 +170,31 @@ public class ReceiveTransitionsIntentService extends IntentService {
      * @param transitionType The type of transition that occurred.
      */
     private void sendNotification(SmsMessageActionEnum transitionType, String[] geofenceRequestIds) {
-        String transitionTypeMsg = getString(transitionType.labelResourceId);
-
-        // Compute afected geoFence
+         // Compute afected geoFence
         List<CircleGeofence> geofences = getCircleGeofenceFromRequestIds(geofenceRequestIds);
         if (geofences==null || geofences.size()<1) {
             Log.w(TAG, "No CircleGeofence in Db for request Ids : " +  Arrays.toString(geofenceRequestIds));
             return;
         }
+        // Geofence Manage
         String[] phones = SpyNotificationHelper.searchListPhonesForGeofenceViolation(this, geofences, transitionType);
         if (phones!=null && phones.length>0) {
             Location lastLocation =   LocationUtils.getLastKnownLocation(locationManager);
             // TODO Compute Geofence Requests Id per User
-            String geofenceRequestId = geofenceRequestIds[0];
-            sendEventSpySmsMessage(geofenceRequestId,   transitionType, phones,   null,   lastLocation);
+            CircleGeofence geofenceRequest = geofences.get(0);
+            sendEventSpySmsMessage(geofenceRequest,   transitionType, phones,   null,   lastLocation);
         } else {
             Log.w(TAG, "No Person assoiated to Geofences : " + geofenceRequestIds);
         }
 
-        CircleGeofence firsrGeofence = geofences.get(0);
+        // Display Local Notification
+        showNotification(geofences, transitionType);
+
+    }
+
+    private void showNotification( List<CircleGeofence> geofences, SmsMessageActionEnum transitionType  ) {
+        CircleGeofence firstGeofence = geofences.get(0);
+        String transitionTypeMsg = getString(transitionType.labelResourceId);
 
         // Create an explicit content Intent that starts the main Activity
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -210,7 +216,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
         builder.setSmallIcon(R.drawable.ic_stat_notif_icon) //
                 .setWhen(System.currentTimeMillis()) //
                 .setContentTitle(transitionTypeMsg) // Transition Type
-                .setContentText(firsrGeofence.getName()) // Zone Name
+                .setContentText(firstGeofence.getName()) // Zone Name
                 .setContentIntent(notificationPendingIntent);
 
         // Message count
@@ -253,7 +259,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
 
 
-    public void sendEventSpySmsMessage( String geofenceRequestId ,  SmsMessageActionEnum eventType, String[] phones, Bundle eventParams, Location location) {
+    public void sendEventSpySmsMessage(   CircleGeofence geofenceRequest ,  SmsMessageActionEnum eventType, String[] phones, Bundle eventParams, Location location) {
         if (phones == null || phones.length < 1) {
             Log.w(TAG, "Geofence violation detected but nobody to warning");
         }
@@ -264,8 +270,9 @@ public class ReceiveTransitionsIntentService extends IntentService {
             SmsMessageLocEnum.EVT_DATE.writeToBundle(extrasBundles, System.currentTimeMillis());
         }
         if (!extrasBundles.containsKey(SmsLogDatabase.SmsLogColumns.COL_REQUEST_ID)) {
-            extrasBundles.putString(SmsLogDatabase.SmsLogColumns.COL_REQUEST_ID, geofenceRequestId);
+            extrasBundles.putString(SmsLogDatabase.SmsLogColumns.COL_REQUEST_ID, geofenceRequest.requestId);
         }
+        SmsMessageLocEnum.GEOFENCE_NAME.writeToBundle(extrasBundles, geofenceRequest.name);
         if (location != null) {
             // Converter Location
             GeoTrack geotrack = new GeoTrack(null, location);
