@@ -543,6 +543,15 @@ public class ShowMapFragment extends SherlockFragment implements SharedPreferenc
     // Map Action
     // ===========================================================
 
+    public void myLocationFollow(boolean isFollow) {
+       if (isFollow) {
+           myLocation.enableMyLocation();
+       } else {
+           myLocation.disableFollowLocation();
+       }
+    }
+
+
     public boolean isMyLocationEnabled() {
         return myLocation==null? false :myLocation.isMyLocationEnabled();
     }

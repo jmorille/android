@@ -58,7 +58,9 @@ public class GeofenceEditMapFragment extends ShowMapFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case R.id.menu_save:
+                onSaveClick();
+                return true;
             case R.id.menuMap_mypositoncenter: {
                 centerOnMyPosition();
                 return true;
@@ -71,6 +73,13 @@ public class GeofenceEditMapFragment extends ShowMapFragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void onSaveClick() {
+        GeofenceEditActivity activity = (GeofenceEditActivity) getActivity();
+        activity.onSaveClick();
+    }
+
+
     // ===========================================================
     // Load data
     // ===========================================================
@@ -85,7 +94,7 @@ public class GeofenceEditMapFragment extends ShowMapFragment {
 
     private  void displayGeofence(CircleGeofence editGeofence) {
         if (mapController !=null) {
-            // Prepare Inser
+            // Prepare Insert
             if (editGeofence.id== -1 ) {
                 // Compute the default fence Size
                 BoundingBoxE6 boundyBox = mapView.getBoundingBox();
@@ -98,6 +107,7 @@ public class GeofenceEditMapFragment extends ShowMapFragment {
                 Log.d(TAG, "Prepare Insert for : " + editGeofence);
             }
             //Define Center
+            myLocationFollow(false);
             mapController.setCenter(editGeofence.getCenterAsGeoPoint() );
             // Do Edit
             GeofenceEditOverlay mapOverlay =  super.showGeofenceOverlays();

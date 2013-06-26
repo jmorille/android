@@ -17,6 +17,7 @@ public class TextCharacterLimitedValidator implements Validator {
 
     public TextCharacterLimitedValidator(char[] forbidenChar) {
         super();
+        this.forbidenChar = forbidenChar;
     }
 
     @Override

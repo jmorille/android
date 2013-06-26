@@ -80,7 +80,7 @@ public class GeofenceEditFragment extends SherlockFragment {
 
         // Bindings
         this.nameEditText = (EditText) v.findViewById(R.id.geofenceEditName);
-          this.transitionEnterCheckBox = (CompoundButton) v.findViewById(R.id.geofence_transition_enter_checkBox);
+        this.transitionEnterCheckBox = (CompoundButton) v.findViewById(R.id.geofence_transition_enter_checkBox);
         this.transitionExitCheckBox = (CompoundButton) v.findViewById(R.id.geofence_transition_exit_checkBox);
         // Form
         formValidator = createValidator(getActivity());
@@ -161,9 +161,15 @@ public class GeofenceEditFragment extends SherlockFragment {
 
     public interface OnGeofenceSelectListener {
 
+        public final int GEOFENCE_EDIT = 0;
+        public final int GEOFENCE_MAP = 1 ;
+
         void onGeofenceSelect(Uri id, CircleGeofence fence);
 
         void onGeofencePrepareInsert(CircleGeofence fence);
+
+        void onGeofenceRequestFocus(int requestFocusId);
+
     }
 
 
@@ -288,25 +294,24 @@ public class GeofenceEditFragment extends SherlockFragment {
 
         // Validate
         if (!formValidator.validate()) {
+            if (onGeofenceSelectListener!=null) {
+                onGeofenceSelectListener.onGeofenceRequestFocus(OnGeofenceSelectListener.GEOFENCE_EDIT);
+            }
             return null;
         }
+
         // Binding Values
         String name = BindingHelper.getEditTextAsValueTrimToNull(nameEditText);
          // Transition
         int transitionType = readViewTransitionType();
 
+
+
          // Prepare db insert
-        ContentValues values = new ContentValues();
+        ContentValues values = GeoFenceHelper.getContentValues(fence);
         values.put(GeoFenceDatabase.GeoFenceColumns.COL_NAME, name);
-        if (transitionType != fence.transitionType) {
-            values.put(GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, transitionType);
-            // Complete With full datas
-            values.put(GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6, fence.getLatitudeE6());
-            values.put(GeoFenceDatabase.GeoFenceColumns.COL_LONGITUDE_E6, fence.getLongitudeE6());
-            values.put(GeoFenceDatabase.GeoFenceColumns.COL_RADIUS, fence.radiusInMeters );
-            values.put(GeoFenceDatabase.GeoFenceColumns.COL_EXPIRATION , fence.expirationDuration );
-            values.put(GeoFenceDatabase.GeoFenceColumns.COL_REQUEST_ID , fence.requestId );
-        }
+        values.put(GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, transitionType);
+
 
         // Content
         Uri uri;

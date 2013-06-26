@@ -77,8 +77,26 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
             mapFragment.onGeofencePrepareInsert(  fence);
         }
 
+        @Override
+        public void onGeofenceRequestFocus(int requestFocusId) {
+            switch (requestFocusId) {
+                case GeofenceEditFragment.OnGeofenceSelectListener.GEOFENCE_EDIT :
+                    mViewPager.setCurrentItem(SectionsPagerAdapter.GEOFENCE);
+                    break;
+                case GeofenceEditFragment.OnGeofenceSelectListener.GEOFENCE_MAP :
+                    mViewPager.setCurrentItem(SectionsPagerAdapter.GEOFENCE_MAP);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Not implemented onGeofenceRequestFocus Id : " + requestFocusId);
+            }
+        }
+
 
     };
+
+    public void setCurrentItem(int sectionsPagerAdapterId) {
+        mViewPager.setCurrentItem(sectionsPagerAdapterId);
+    }
 
     // ===========================================================
     // Constructors
@@ -181,9 +199,14 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
             editFragment.setArguments(fragArgs);
 
         } else if (Intent.ACTION_INSERT.equals(action)) {
-            mViewPager.setCurrentItem(SectionsPagerAdapter.GEOFENCE);
+            mViewPager.setCurrentItem(SectionsPagerAdapter.GEOFENCE_MAP);
         }
 
+    }
+
+
+    public void onSaveClick() {
+        editFragment.onSaveClick();
     }
 
     // ===========================================================
@@ -198,8 +221,7 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
 
         static final int GEOFENCE = 0;
         static final int GEOFENCE_MAP = 1;
-
-         static final int LOG = 2;
+         static final int GEOFENCE_LOG = 2;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -216,7 +238,7 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
                 fragment = mapFragment;
                 break;
 
-            case LOG:
+            case GEOFENCE_LOG:
                 if (smsLogFragment == null) {
                     Bundle args = new Bundle();
                     args.putString(SmsLogListFragment.Intents.EXTRA_GEOFENCE_REQUEST_ID, geofenceRequestId);
@@ -243,7 +265,7 @@ public class GeofenceEditActivity extends SherlockFragmentActivity {
                 return getString(R.string.menu_geofence).toUpperCase();
             case GEOFENCE_MAP:
                 return getString(R.string.menu_map).toUpperCase();
-            case LOG:
+            case GEOFENCE_LOG:
                 return getString(R.string.menu_smslog).toUpperCase();
             }
             return null;
