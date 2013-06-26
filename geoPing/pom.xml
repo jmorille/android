@@ -57,6 +57,15 @@
 
       <!-- Google Service -->
 
+       <dependency>
+           <groupId>com.google.android.gms</groupId>
+           <artifactId>google-play-services</artifactId>
+       </dependency>
+       <dependency>
+           <groupId>com.google.android.gms</groupId>
+           <artifactId>google-play-services</artifactId>
+           <type>apklib</type>
+       </dependency>
 
       <dependency>
          <groupId>com.google.android.admob</groupId>
@@ -69,11 +78,6 @@
          <version>${analytics.version}</version>
       </dependency>
 
-      <dependency>
-         <groupId>com.google.android.gms</groupId>
-         <artifactId>google-play-services</artifactId> 
-      </dependency>
-      
             
       <!-- Jackson -->
       <dependency>

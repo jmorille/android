@@ -81,6 +81,12 @@
 			<dependency>
 				<groupId>com.google.android.gms</groupId>
 				<artifactId>google-play-services</artifactId>
+				 <type>apklib</type>
+				<version>${google-play-services.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.android.gms</groupId>
+				<artifactId>google-play-services</artifactId>
 				<version>${google-play-services.version}</version>
 			</dependency>
 			<!-- Compatibility -->
