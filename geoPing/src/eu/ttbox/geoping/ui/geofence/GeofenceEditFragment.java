@@ -37,6 +37,7 @@ import eu.ttbox.geoping.ui.core.BindingHelper;
 import eu.ttbox.geoping.ui.core.validator.Form;
 import eu.ttbox.geoping.ui.core.validator.validate.ValidateTextView;
 import eu.ttbox.geoping.ui.core.validator.validator.NotEmptyValidator;
+import eu.ttbox.geoping.ui.core.validator.validator.TextCharacterLimitedValidator;
 import eu.ttbox.geoping.ui.core.validator.validator.TextSizeValidator;
 
 public class GeofenceEditFragment extends SherlockFragment {
@@ -120,7 +121,9 @@ public class GeofenceEditFragment extends SherlockFragment {
         // Name
         ValidateTextView nameTextField = new ValidateTextView(nameEditText)//
                 .addValidator(new NotEmptyValidator())
-                .addValidator(new TextSizeValidator(null, 10));
+                .addValidator(new TextSizeValidator(null, 10))
+                .addValidator(new TextCharacterLimitedValidator(new char[]{'(', ')', ',', ';' } ));
+
         formValidator.addValidates(nameTextField);
 
 

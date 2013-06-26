@@ -14,4 +14,6 @@
     <string name="validator_textSize_min">Moins de %1$d charactères</string>
     <string name="validator_textSize_max">Plus de %1$d charactères</string>
 
+    <string name="validator_textForbidden_notAllowChar">%1$s est non authorisé</string>
+
 </resources>
