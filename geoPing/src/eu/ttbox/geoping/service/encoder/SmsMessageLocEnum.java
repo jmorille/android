@@ -21,7 +21,7 @@ public enum SmsMessageLocEnum {
     TIME_IN_S('s', SmsMessageTypeEnum.INT, "TIME_IN_S"), //
     PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID), //
     // Geo Fence
-    GEOFENCE_NAME('f', SmsMessageTypeEnum.LONG, "GEOFENCE_NAME"), //
+    GEOFENCE_NAME('e', SmsMessageTypeEnum.STRING, "GEOFENCE_NAME"), //
 
     // Spy Event
 //    EVT_SIM_PHONE('i', SmsMessageTypeEnum.STRING, "EVT_SIM_PHONE"),

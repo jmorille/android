@@ -491,7 +491,9 @@ public class GeoPingMasterService extends IntentService {
             inBoxStyle.setBigContentTitle(contentTitle);
             inBoxStyle.addLine(contactDisplayName);
             inBoxStyle.addLine(coordString);
-            inBoxStyle.addLine(String.format("Battery : %s" , geoTrack.batteryLevelInPercent));
+            if (geoTrack.batteryLevelInPercent>-1) {
+                inBoxStyle.addLine(String.format("Battery : %s%%" , geoTrack.batteryLevelInPercent));
+            }
             inBoxStyle.addLine("Time : " + geoTrack.getTimeAsDate() );
 
             builder.setStyle(inBoxStyle);

@@ -25,6 +25,8 @@ import eu.ttbox.geoping.service.geofence.GeoFenceLocationService;
 public class GeoFenceDatabase {
 
     public static final String TAG = "GeoFenceDatabase";
+
+
     public static final String TABLE_GEOFENCE = "geofence";
     private static final String CRITERIA_BY_ENTITY_ID = String.format("%s = ?", GeoFenceColumns.COL_ID);
     private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoFenceColumns.COL_REQUEST_ID);
@@ -143,58 +145,99 @@ public class GeoFenceDatabase {
         return isGeofenceValues;
     }
 
-    public Geofence fillForGeofenceRequester(SQLiteDatabase db, ContentValues values, String selection, String[] selectionArgs) {
-        Geofence geofence = null;
-        // Check For Requester Keys
-        boolean isContaintKey = false;
-        boolean isContainAllKey = true;
-        ArrayList<String> missingCOls = new ArrayList<String>(GeoFenceColumns.ALL_GEOFENCE_REQUESTER_COLS.length);
+    private Geofence fillForGeofenceRequester(SQLiteDatabase db, ContentValues values, String selection, String[] selectionArgs) {
+        ContentValues dbValues = getGeofenceColumnValues(db, values, selection, selectionArgs);
+        Geofence geofence = computeGeofenceChange(dbValues, values);
+        return geofence;
+    }
+
+    private Geofence computeGeofenceChange(ContentValues dbValues, ContentValues requestValues) {
+        ContentValues result = new ContentValues();
+        boolean isDbVal = dbValues ==null ? false: dbValues.size()>0;
+        boolean isChangeVal = false;
+        boolean isMissingData = false;
         for (String col : GeoFenceColumns.ALL_GEOFENCE_REQUESTER_COLS) {
-            if (values.containsKey(col)) {
-                isContaintKey = true;
+            if (col.equals(GeoFenceColumns.COL_REQUEST_ID)) {
+                String dbVal = isDbVal? dbValues.getAsString(col): null;
+                String requestVal = requestValues.getAsString(col);
+                if (requestVal==null) {
+                   // No request Values
+                  if (dbVal !=null ) {
+                      // Requet was in db, so add it
+                      result.put(col, dbVal);
+                  } else {
+                      // Generate new Key
+                      String value = CryptoUtils.generateUniqueId();
+                      result.put(GeoFenceColumns.COL_REQUEST_ID, value);
+                  }
+                } else if (dbVal==null || dbVal.equals(requestVal)) {
+                    // No problem put the request IDs
+                    result.put(col, requestVal);
+                } else  {
+                    // Problem the request Ids change
+                    Log.w(TAG, "The Geofence Request Id change need to be deleted before update");
+                    throw  new IllegalArgumentException( "The Geofence Request Id change need to be deleted before update");
+                }
             } else {
-                isContainAllKey = false;
-                missingCOls.add(col);
+                Integer dbVal = isDbVal?  dbValues.getAsInteger(col) : null;
+                Integer requestVal = requestValues.getAsInteger(col);
+                if (requestVal == null) {
+                    // No request Val, need to find in in DB
+                    if (dbVal!=null) {
+                        result.put(col, dbVal);
+                    } else  {
+                        // Big Problem Missing Data
+                        Log.w(TAG, "The Geofence Data is missing for Column : "+ col);
+                        isMissingData = true;
+                    }
+
+                }  else  if  (!requestVal.equals(dbVal)) {
+                    // Change Data, Register and notifyl
+                    result.put(col, requestVal);
+                    isChangeVal = true;
+                } else {
+                    // Same values, complete the datas with it
+                    result.put(col, requestVal);
+                }
             }
         }
-
-        // Complete Datas
-        ContentValues missingValues = null;
-        if (isContaintKey) {
-            if (isContainAllKey) {
-                geofence = GeoFenceHelper.getEntityGeoFenceFromContentValue(values);
+        Geofence geofence = null;
+        if (isChangeVal) {
+            if (isMissingData) {
+                Log.w(TAG, "The Geofence Data is missing for Request Change : "+ requestValues + " and current Db Values = " + dbValues);
             } else {
-                int missingCOlSize = missingCOls.size();
-                missingValues = new ContentValues(missingCOlSize);
-                Cursor cursor = queryEntities(missingCOls.toArray(new String[missingCOlSize]), selection, selectionArgs, null);
-                try {
-                    if (cursor.getCount() > 1) {
-                        throw new IllegalArgumentException("Found multi request for Selection " + selection + " / Args =  " + Arrays.toString(selectionArgs));
-                    }
-                    if (cursor.moveToNext()) {
-                        for (String col : missingCOls) {
-                            int colIdx = cursor.getColumnIndex(col);
-                            if (GeoFenceColumns.COL_REQUEST_ID.equals(col)) {
-                                String colVal = cursor.getString(colIdx);
-                                missingValues.put(col, colVal);
-                            } else {
-                                int colVal = cursor.getInt(colIdx);
-                                missingValues.put(col, colVal);
-                            }
-                        }
-                    }
-                } finally {
-                    cursor.close();
-                }
-                // Compute result
-                ContentValues result = new ContentValues(missingCOlSize + values.size());
-                result.putAll(values);
-                result.putAll(missingValues);
                 geofence = GeoFenceHelper.getEntityGeoFenceFromContentValue(result);
-
             }
         }
         return geofence;
+    }
+
+    private ContentValues getGeofenceColumnValues(SQLiteDatabase db, ContentValues values, String selection, String[] selectionArgs){
+        Cursor cursor = queryEntities(GeoFenceColumns.ALL_GEOFENCE_REQUESTER_COLS, selection, selectionArgs, null);
+        ContentValues  geofenceValues = null;
+        try {
+            if (cursor.getCount() >  1) {
+                throw new IllegalArgumentException("Found multi request for Selection " + selection + " / Args =  " + Arrays.toString(selectionArgs));
+            } else   if (cursor.getCount() < 1) {
+                return null;
+            }
+            geofenceValues = new ContentValues(GeoFenceColumns.ALL_GEOFENCE_REQUESTER_COLS.length);
+            if (cursor.moveToNext()) {
+                for (String col : GeoFenceColumns.ALL_GEOFENCE_REQUESTER_COLS) {
+                    int colIdx = cursor.getColumnIndex(col);
+                    if (GeoFenceColumns.COL_REQUEST_ID.equals(col)) {
+                        String colVal = cursor.getString(colIdx);
+                        geofenceValues.put(col, colVal);
+                    } else {
+                        int colVal = cursor.getInt(colIdx);
+                        geofenceValues.put(col, colVal);
+                    }
+                }
+            }
+        } finally {
+            cursor.close();
+        }
+        return geofenceValues;
     }
 
     public int updateEntity(ContentValues values, String selection, String[] selectionArgs) {
@@ -204,6 +247,7 @@ public class GeoFenceDatabase {
         Geofence geofence = fillForGeofenceRequester(db, values, selection, selectionArgs);
         if (geofence !=null) {
             // Register in LocationServices
+            Log.i(TAG, " Register in LocationServices : " + geofence );
             mGeoFenceLocationService.addGeofences(geofence);
         }
          try {
@@ -250,6 +294,7 @@ public class GeoFenceDatabase {
             try {
                 List<String> requestIds = Arrays.asList(requestArraysIds);
                 if (requestIds != null && !requestIds.isEmpty()) {
+                    Log.i(TAG, " UnRegister in LocationServices : " + requestIds );
                     mGeoFenceLocationService.removeGeofencesById(requestIds);
                 }
                 // Delete Data
@@ -274,6 +319,7 @@ public class GeoFenceDatabase {
             try {
                 List<String> requestIds = getRequestIds(db, selection, selectionArgs);
                 if (requestIds!=null && !requestIds.isEmpty()) {
+                    Log.i(TAG, " UnRegister in LocationServices : " + requestIds );
                     mGeoFenceLocationService.removeGeofencesById(requestIds);
                 }
                 // Delete Data
