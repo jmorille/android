@@ -182,13 +182,20 @@ public class ReceiveTransitionsIntentService extends IntentService {
             Location lastLocation =   LocationUtils.getLastKnownLocation(locationManager);
             // TODO Compute Geofence Requests Id per User
             CircleGeofence geofenceRequest = geofences.get(0);
+            // Distance
+            Location centerLoc =  geofenceRequest.getCenterAsLocation();
+            int distanceToCenter =  Math.round( centerLoc.distanceTo(lastLocation));
+            if (distanceToCenter<geofenceRequest.radiusInMeters) {
+                Log.w(TAG, "Distance to Center is < to radius : "  + distanceToCenter + "m < " + geofenceRequest.radiusInMeters  +"m");
+            }
+            // Send Sms
             sendEventSpySmsMessage(geofenceRequest,   transitionType, phones,   null,   lastLocation);
         } else {
             Log.w(TAG, "No Person assoiated to Geofences : " + geofenceRequestIds);
         }
 
         // Display Local Notification
-        showNotification(geofences, transitionType);
+       //TODO  showNotification(geofences, transitionType);
 
     }
 

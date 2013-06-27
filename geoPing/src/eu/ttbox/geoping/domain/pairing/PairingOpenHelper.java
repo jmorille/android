@@ -83,8 +83,11 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
             // Config
             + ", " + GeoFenceColumns.COL_TRANSITION + " INTEGER NOT NULL " // 
             + ", " + GeoFenceColumns.COL_EXPIRATION + " INTEGER NOT NULL " //
-            //
+            // Address
             + ", " + GeoFenceColumns.COL_ADDRESS  + " TEXT " //
+            // Tracking Info
+            + ", " + GeoFenceColumns.COL_EXPIRATION_DATE + " INTEGER NOT NULL " //
+            + ", " + GeoFenceColumns.COL_VERSION_UPDATE_DATE + " INTEGER NOT NULL " //
             + " );";
 
     // ===========================================================

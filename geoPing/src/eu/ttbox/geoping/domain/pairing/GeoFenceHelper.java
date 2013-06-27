@@ -26,7 +26,37 @@ public class GeoFenceHelper {
     public int expirationIdx = -1;
     public int transitionIdx = -1;
     public int addressIdx = -1;
+
+    public int expirationDateIdx = -1;
+    public int versionUpdateDateIdx = -1;
+
+
     boolean isNotInit = true;
+
+
+
+    public GeoFenceHelper initWrapper(Cursor cursor) {
+        idIdx = cursor.getColumnIndex(GeoFenceColumns.COL_ID);
+        nameIdx = cursor.getColumnIndex(GeoFenceColumns.COL_NAME);
+        geofenceIdIdx = cursor.getColumnIndex(GeoFenceColumns.COL_REQUEST_ID);
+
+        latitudeE6Idx = cursor.getColumnIndex(GeoFenceColumns.COL_LATITUDE_E6);
+        longitudeE6Idx = cursor.getColumnIndex(GeoFenceColumns.COL_LONGITUDE_E6);
+        radiusIdx = cursor.getColumnIndex(GeoFenceColumns.COL_RADIUS);
+
+        transitionIdx = cursor.getColumnIndex(GeoFenceColumns.COL_TRANSITION);
+        expirationIdx = cursor.getColumnIndex(GeoFenceColumns.COL_EXPIRATION);
+
+        addressIdx = cursor.getColumnIndex(GeoFenceColumns.COL_ADDRESS);
+
+        expirationDateIdx = cursor.getColumnIndex(GeoFenceColumns.COL_EXPIRATION_DATE );
+        versionUpdateDateIdx = cursor.getColumnIndex(GeoFenceColumns.COL_VERSION_UPDATE_DATE );
+
+
+        isNotInit = false;
+        return this;
+    }
+
 
     public static ContentValues getContentValues(CircleGeofence user) {
         ContentValuesWrapper wrapper = (ContentValuesWrapper) getWrapperValues(user, new ContentValuesWrapper(GeoFenceColumns.ALL_COLS.length), false);
@@ -57,6 +87,9 @@ public class GeoFenceHelper {
         initialValues.putInt(GeoFenceColumns.COL_TRANSITION, geoFence.getTransitionType());
         initialValues.putLong(GeoFenceColumns.COL_EXPIRATION, geoFence.getExpirationDuration());
 
+        initialValues.putLong(GeoFenceColumns.COL_EXPIRATION_DATE, geoFence.expirationDate);
+        initialValues.putLong(GeoFenceColumns.COL_VERSION_UPDATE_DATE, geoFence.versionUpdateDate);
+
         if (noHasCheck || geoFence.address != null) {
             initialValues.putString(GeoFenceColumns.COL_ADDRESS, geoFence.address);
         }
@@ -70,6 +103,8 @@ public class GeoFenceHelper {
         int radiusInMeters =initialValues.getAsInteger(GeoFenceColumns.COL_RADIUS);
         int transitionType =initialValues.getAsInteger(GeoFenceColumns.COL_TRANSITION );
         int expirationDuration =initialValues.getAsInteger(GeoFenceColumns.COL_EXPIRATION);
+
+//TODO Compute        long expirationDate  =initialValues.getAsLong(GeoFenceColumns.COL_EXPIRATION_DATE);
 
         return new Geofence.Builder().setRequestId(requestId)//
                 .setCircularRegion(latitude,longitude, radiusInMeters )//
@@ -123,29 +158,19 @@ public class GeoFenceHelper {
             geofence.setExpirationDuration(initialValues.getAsLong(GeoFenceColumns.COL_EXPIRATION));
         }
 
+        if (initialValues.containsKey(GeoFenceColumns.COL_EXPIRATION_DATE)) {
+            geofence.setExpirationDate(initialValues.getAsLong(GeoFenceColumns.COL_EXPIRATION_DATE));
+        }
+        if (initialValues.containsKey(GeoFenceColumns.COL_VERSION_UPDATE_DATE )) {
+            geofence.setVersionUpdateDate(initialValues.getAsLong(GeoFenceColumns.COL_VERSION_UPDATE_DATE));
+        }
+
         if (initialValues.containsKey(GeoFenceColumns.COL_ADDRESS)) {
             geofence.address = initialValues.getAsString(GeoFenceColumns.COL_ADDRESS);
         }
         return geofence;
     }
 
-    public GeoFenceHelper initWrapper(Cursor cursor) {
-        idIdx = cursor.getColumnIndex(GeoFenceColumns.COL_ID);
-        nameIdx = cursor.getColumnIndex(GeoFenceColumns.COL_NAME);
-        geofenceIdIdx = cursor.getColumnIndex(GeoFenceColumns.COL_REQUEST_ID);
-
-        latitudeE6Idx = cursor.getColumnIndex(GeoFenceColumns.COL_LATITUDE_E6);
-        longitudeE6Idx = cursor.getColumnIndex(GeoFenceColumns.COL_LONGITUDE_E6);
-        radiusIdx = cursor.getColumnIndex(GeoFenceColumns.COL_RADIUS);
-
-        transitionIdx = cursor.getColumnIndex(GeoFenceColumns.COL_TRANSITION);
-        expirationIdx = cursor.getColumnIndex(GeoFenceColumns.COL_EXPIRATION);
-
-        addressIdx = cursor.getColumnIndex(GeoFenceColumns.COL_ADDRESS);
-
-        isNotInit = false;
-        return this;
-    }
 
 
 
@@ -163,6 +188,9 @@ public class GeoFenceHelper {
         long expiration = expirationIdx > -1 ? cursor.getLong(expirationIdx) : -1;
         int transition = transitionIdx > -1 ? cursor.getInt(transitionIdx) : -1;
         String address = addressIdx > -1 ? cursor.getString(addressIdx) : null;
+
+        long expirationDate = expirationDateIdx > -1 ? cursor.getLong(expirationDateIdx) : -1;
+        long versionUpdateDate = versionUpdateDateIdx > -1 ? cursor.getLong(versionUpdateDateIdx) : -1;
         //
         geofence.setId(idIdx > -1 ? cursor.getLong(idIdx) : AppConstants.UNSET_ID);
         geofence.setName(name);
@@ -172,6 +200,10 @@ public class GeoFenceHelper {
         geofence.setRadiusInMeters(radius);
         geofence.setExpirationDuration(expiration);
         geofence.setTransitionType(transition);
+
+        geofence.setExpirationDate(expirationDate);
+        geofence.setVersionUpdateDate(versionUpdateDate);
+
         geofence.address = address;
         return geofence;
     }

@@ -1,11 +1,14 @@
 package eu.ttbox.geoping.domain.model;
 
+import android.location.Location;
+
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
 
 import com.google.android.gms.location.Geofence;
 
-import eu.ttbox.osm.core.AppConstants;
+import eu.ttbox.geoping.core.AppConstants;
+
 
 /**
  * A single Geofence object, defined by its center (latitude and longitude
@@ -22,8 +25,14 @@ public class CircleGeofence {
     public long expirationDuration = Geofence.NEVER_EXPIRE;
     public int transitionType = Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT;
 
+
     public String address;
 
+    //TODO Field
+    public long expirationDate;
+    public long versionUpdateDate;
+
+    // Cache
     public IGeoPoint cachedGeoPoint;
 //    private double latitude;
 //    private double longitude;
@@ -124,6 +133,15 @@ public class CircleGeofence {
         return center;
     }
 
+    public Location getCenterAsLocation() {
+        Location loc = new Location("network");
+        loc.setTime(versionUpdateDate);
+        loc.setLatitude(latitudeE6 / AppConstants.E6);
+        loc.setLongitude(longitudeE6 / AppConstants.E6);
+        loc.setAccuracy(radiusInMeters);
+        return loc;
+    }
+
     public CircleGeofence setCenter(IGeoPoint center) {
         this.latitudeE6 = center.getLatitudeE6();
         this.longitudeE6 = center.getLongitudeE6();
@@ -215,6 +233,22 @@ public class CircleGeofence {
      */
     public int getTransitionType() {
         return transitionType;
+    }
+
+
+    public CircleGeofence setAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
+    public CircleGeofence setExpirationDate(long expirationDate) {
+        this.expirationDate = expirationDate;
+        return this;
+    }
+
+    public CircleGeofence setVersionUpdateDate(long versionUpdateDate) {
+        this.versionUpdateDate = versionUpdateDate;
+        return this;
     }
 
     /**

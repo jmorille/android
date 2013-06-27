@@ -34,12 +34,14 @@ import java.util.Iterator;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class SmsLogViewFragment extends SherlockFragment {
@@ -260,8 +262,7 @@ public class SmsLogViewFragment extends SherlockFragment {
                     TextView keyTextView =  (TextView)convertView.findViewById(R.id.smslog_list_item_param_key);
                     TextView valueTextView =  (TextView)convertView.findViewById(R.id.smslog_list_item_param_value );
                     // Set Values
-                    keyTextView.setText(key);
-                    valueTextView.setText(val);
+                     defineParamTextLabel(keyTextView, valueTextView, key, val);
                     paramListView.addView(convertView);
                 }
             } catch (JSONException e) {
@@ -270,6 +271,20 @@ public class SmsLogViewFragment extends SherlockFragment {
         }
     }
 
+    private void defineParamTextLabel( TextView keyTextView, TextView valueTextView ,  String key,  String val ) {
+        SmsMessageLocEnum param = SmsMessageLocEnum.getByEnumName(key);
+        if (param.equals(SmsMessageLocEnum.EVT_DATE) || param.equals(SmsMessageLocEnum.DATE)) {
+            keyTextView.setText(key);
+            valueTextView.setText(val);
+        } else if (param!=null && param.hasLabelValueResourceId() ) {
+            keyTextView.setText(param.getLabelValueResourceId(getActivity(), val));
+            valueTextView.setText(null);
+        } else {
+            keyTextView.setText(key);
+            valueTextView.setText(val);
+        }
+
+    }
 
     // ===========================================================
     // Photo Loader

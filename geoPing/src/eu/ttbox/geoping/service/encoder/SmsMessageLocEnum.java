@@ -3,8 +3,13 @@ package eu.ttbox.geoping.service.encoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.text.format.DateUtils;
+
+import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
+import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 
 public enum SmsMessageLocEnum {
 
@@ -15,13 +20,14 @@ public enum SmsMessageLocEnum {
     ACCURACY('a', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ACCURACY), //
     BEARING('b', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BEARING), //
     SPEAD('c', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED), //
-    BATTERY('w', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BATTERY_LEVEL), //
+    BATTERY('w', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BATTERY_LEVEL, R.string.battery_percent), //
 
     // Person
     TIME_IN_S('s', SmsMessageTypeEnum.INT, "TIME_IN_S"), //
     PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID), //
     // Geo Fence
-    GEOFENCE_NAME('e', SmsMessageTypeEnum.STRING, "GEOFENCE_NAME"), //
+    GEOFENCE_NAME('e', SmsMessageTypeEnum.STRING, "GEOFENCE_NAME" ), //
+//    GEOFENCE('f', SmsMessageTypeEnum.MULTI, "GEOFENCE", new String[] { GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6, GeoFenceDatabase.GeoFenceColumns.COL_LONGITUDE_E6, GeoFenceDatabase.GeoFenceColumns.COL_RADIUS  }), //
 
     // Spy Event
 //    EVT_SIM_PHONE('i', SmsMessageTypeEnum.STRING, "EVT_SIM_PHONE"),
@@ -30,35 +36,47 @@ public enum SmsMessageLocEnum {
     // ===========================================================
     // Constructor
     // ===========================================================
-
     SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName) {
         this(fieldName, type, dbFieldName, null);
+     }
+
+    SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName, int labelValueResourceId) {
+        this(fieldName, type, dbFieldName, null, labelValueResourceId);
     }
 
     SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName, String[] multiFieldName) {
+        this(fieldName, type, dbFieldName, multiFieldName, Integer.MIN_VALUE);
+    }
+    SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName, String[] multiFieldName, int labelValueResourceId) {
         this.smsFieldName = fieldName;
         this.type = type;
         this.dbFieldName = dbFieldName;
         this.multiFieldName = multiFieldName;
+        this.labelValueResourceId = labelValueResourceId;
     }
 
     public final char smsFieldName;
     public final SmsMessageTypeEnum type;
     public final String dbFieldName;
     public final String[] multiFieldName;
+    public final int labelValueResourceId;
     // ===========================================================
     // Conversion Init
     // ===========================================================
 
     static HashMap<Character, SmsMessageLocEnum> bySmsFieldNames;
     static HashMap<String, SmsMessageLocEnum> byDbFieldNames;
+    static HashMap<String, SmsMessageLocEnum> byEnumNames;
     static ArrayList<String> ignoreDbFieldName ;
     static {
         SmsMessageLocEnum[] values = SmsMessageLocEnum.values();
         HashMap<Character, SmsMessageLocEnum> fields = new HashMap<Character, SmsMessageLocEnum>(values.length);
         HashMap<String, SmsMessageLocEnum> dbColNames = new HashMap<String, SmsMessageLocEnum>(values.length);
+        HashMap<String, SmsMessageLocEnum> enumNames = new HashMap<String, SmsMessageLocEnum>(values.length);
         ArrayList<String>   ignoreMultiFieldName = new ArrayList<String>();
         for (SmsMessageLocEnum field : values) {
+            // Enum name
+            enumNames.put(field.name(), field);
             // Sms Code
             char key = field.smsFieldName;
             if (fields.containsKey(key)) {
@@ -84,6 +102,7 @@ public enum SmsMessageLocEnum {
             }
         }
         // Affect
+        byEnumNames = enumNames;
         bySmsFieldNames = fields;
         byDbFieldNames = dbColNames;
         ignoreDbFieldName = ignoreMultiFieldName;
@@ -149,8 +168,51 @@ public enum SmsMessageLocEnum {
     }
 
     // ===========================================================
+    // Label Ressource
+    // ===========================================================
+
+    public boolean hasLabelValueResourceId() {
+        if (this.equals(EVT_DATE) || this.equals(DATE)) {
+            return true;
+        } else {
+            return this.labelValueResourceId != Integer.MIN_VALUE;
+        }
+    }
+
+    public String getLabelValueResourceId(Context context, long value) {
+        if (this.equals(EVT_DATE) || this.equals(DATE)) {
+            String smsTypeTime = DateUtils.formatDateRange(context, value, value,
+                    DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE |
+                            DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
+            return  smsTypeTime;
+        } else   if (hasLabelValueResourceId()) {
+            String labelValue =  context.getString( labelValueResourceId, value);
+            return labelValue;
+        } else {
+            return String.valueOf(value);
+        }
+    }
+    public String getLabelValueResourceId(Context context, String value) {
+        if (this.equals(EVT_DATE) || this.equals(DATE)) {
+            Long longValue = Long.valueOf(value);
+            String smsTypeTime = DateUtils.formatDateRange(context, longValue, longValue,
+                    DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE |
+                            DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
+            return  value;
+        } else   if (hasLabelValueResourceId()) {
+            String labelValue =  context.getString( labelValueResourceId, value);
+            return labelValue;
+        } else {
+            return value;
+        }
+    }
+
+    // ===========================================================
     // Conversion Accessor
     // ===========================================================
+    public static SmsMessageLocEnum getByEnumName(String fieldName) {
+        return byEnumNames.get(fieldName);
+    }
 
     public static SmsMessageLocEnum getBySmsFieldName(char fieldName) {
         return bySmsFieldNames.get(fieldName);
@@ -163,4 +225,6 @@ public enum SmsMessageLocEnum {
     public static boolean isIgnoreMultiField(String fieldName) {
        return ignoreDbFieldName.contains(fieldName);
     }
+
+
 }

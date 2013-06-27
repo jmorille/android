@@ -90,29 +90,20 @@
     </LinearLayout>
 
     
-    <LinearLayout
-        android:id="@+id/map_geotrack_bubbleView_block_battery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-       android:layout_below="@id/map_geotrack_bubbleView_block_speed"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal" > 
-    <TextView 
-        style="@style/map_geotrack_dialog_text" 
-        android:text="Battery" />
 
      <TextView
         android:id="@+id/map_geotrack_bubbleView_battery"
-        style="@style/map_geotrack_dialog_text" 
-        android:paddingLeft="5dip"
-        android:text="100%" /> 
-    </LinearLayout>
+        style="@style/map_geotrack_dialog_text"
+        android:layout_below="@id/map_geotrack_bubbleView_block_speed"
+        android:layout_centerHorizontal="true"
+         android:text="100%" />
+
        
       
     <TextView
         android:id="@+id/map_geotrack_bubbleView_address"
          style="@style/map_geotrack_dialog_text"
-        android:layout_below="@id/map_geotrack_bubbleView_block_battery"
+        android:layout_below="@id/map_geotrack_bubbleView_battery"
         android:layout_centerHorizontal="true"
         android:text="address" />
 

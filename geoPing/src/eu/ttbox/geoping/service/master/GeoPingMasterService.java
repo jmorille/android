@@ -22,6 +22,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -492,9 +493,13 @@ public class GeoPingMasterService extends IntentService {
             inBoxStyle.addLine(contactDisplayName);
             inBoxStyle.addLine(coordString);
             if (geoTrack.batteryLevelInPercent>-1) {
-                inBoxStyle.addLine(String.format("Battery : %s%%" , geoTrack.batteryLevelInPercent));
+                String batteryLabel = SmsMessageLocEnum.BATTERY.getLabelValueResourceId(this, String.valueOf(  geoTrack.batteryLevelInPercent));
+                inBoxStyle.addLine(batteryLabel);
             }
-            inBoxStyle.addLine("Time : " + geoTrack.getTimeAsDate() );
+            if (geoTrack.hasEventTime()) {
+                String smsTypeTime =  SmsMessageLocEnum.EVT_DATE.getLabelValueResourceId(this, geoTrack.eventTime);
+                inBoxStyle.addLine(smsTypeTime );
+            }
 
             builder.setStyle(inBoxStyle);
         }

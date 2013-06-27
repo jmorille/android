@@ -14,6 +14,7 @@ import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
+import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
 import eu.ttbox.osm.core.ExternalIntents;
 import eu.ttbox.osm.ui.map.mylocation.CompassEnum;
@@ -41,7 +42,7 @@ public class GeoTrackBubble extends FrameLayout {
 	private TextView speedTextView;
 	private TextView bearingTextView;
 
-    private View batteryBlock;
+
     private TextView batteryTextView;
 
 	private ImageView navigationImg;
@@ -69,7 +70,7 @@ public class GeoTrackBubble extends FrameLayout {
 		this.speedTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_speed);
 		this.bearingTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_bearing);
 		
-		this.batteryBlock = v.findViewById(R.id.map_geotrack_bubbleView_block_battery);
+
 		this.batteryTextView= (TextView) v.findViewById(R.id.map_geotrack_bubbleView_battery);
 
 		// Button
@@ -214,11 +215,12 @@ public class GeoTrackBubble extends FrameLayout {
 		    bearingTextView.setVisibility(GONE);
 		}
 		if (hasBattery) {
-		    batteryTextView.setText(String.format("%s %%", geoTrack.batteryLevelInPercent ));
-		    batteryBlock.setVisibility(VISIBLE);
+            String batteryLabel =  SmsMessageLocEnum.BATTERY.getLabelValueResourceId(getContext(), geoTrack.batteryLevelInPercent );
+		    batteryTextView.setText(batteryLabel);
+            batteryTextView.setVisibility(VISIBLE);
 		} else {
 		    batteryTextView.setText("");
-            batteryBlock.setVisibility(GONE);
+            batteryTextView.setVisibility(GONE);
 		}
 		// Address
 		if (hasAddress) {

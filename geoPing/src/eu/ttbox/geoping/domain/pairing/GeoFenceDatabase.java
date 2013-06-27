@@ -366,9 +366,14 @@ public class GeoFenceDatabase {
         public static final String COL_RADIUS = "RADIUS";
         public static final String COL_TRANSITION = "TRANSITION";
         public static final String COL_EXPIRATION = "EXPIRATION";
+        public static final String COL_EXPIRATION_DATE = "EXPIRATION_DATE";
+
+        public static final String COL_VERSION_UPDATE_DATE = "VERSION_UPDATE_DATE";
+
         public static final String[] ALL_COLS = new String[]{COL_ID, COL_REQUEST_ID, COL_NAME//
                 , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION //
                 , COL_ADDRESS //
+                ,COL_EXPIRATION_DATE , COL_VERSION_UPDATE_DATE
         };
         public static final String[] ALL_GEOFENCE_REQUESTER_COLS = new String[]{COL_REQUEST_ID//
                 , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION //

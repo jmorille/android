@@ -16,7 +16,7 @@ public class GeoFenceDbBackupHelper  extends AbstractDbBackupHelper {
     @SuppressWarnings("unused")
     private static final String TAG = "GeoFenceDbBackupHelper";
 
-    public static final String BACKUP_KEY_GEOFENCE_DB = "GEOPING_02_GEOFENCE_DB";
+    public static final String BACKUP_KEY_GEOFENCE_DB = "GEOPING_03_GEOFENCE_DB";
 
     private GeoFenceDatabase pairingDatabase;
     private GeoFenceHelper helper;
