@@ -1,14 +1,14 @@
 package eu.ttbox.osm.tiles.chains;
 
-import java.util.ArrayList;
+
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.osmdroid.tileprovider.ExpirableBitmapDrawable;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.tileprovider.MapTile;
+import org.osmdroid.tileprovider.MapTileCache;
 import org.osmdroid.tileprovider.MapTileProviderArray;
 import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.tileprovider.MapTileRequestState;
@@ -31,9 +31,9 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 
 	protected final CopyOnWriteArrayList<MapTileModuleProviderBase> mTileProviderList;
 
-	public final TilesLruCacheTTbox cache;
+    protected final TilesLruCacheTTbox cache;
 
-	// ===========================================================
+ 	// ===========================================================
 	// Cache Helper
 	// ===========================================================
 
@@ -67,10 +67,9 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 	 */
 	public MapTileProviderArrayTTbox(final ITileSource pTileSource, final IRegisterReceiver aRegisterReceiver, final MapTileModuleProviderBase[] pTileProviderArray, int cacheSizeInBytes) {
 		super(pTileSource);
+        cache = new TilesLruCacheTTbox(cacheSizeInBytes);
 
-		mWorking = new ConcurrentHashMap<MapTile, MapTileRequestState>();
-		cache = new TilesLruCacheTTbox(cacheSizeInBytes);
-
+        mWorking = new ConcurrentHashMap<MapTile, MapTileRequestState>();
 		mTileProviderList = new CopyOnWriteArrayList<MapTileModuleProviderBase>();
 		Collections.addAll(mTileProviderList, pTileProviderArray);
 	}
@@ -81,7 +80,6 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 
     @Override
     public void detach() {
-
             for (final MapTileModuleProviderBase tileProvider : mTileProviderList) {
                 tileProvider.detach();
             }
@@ -90,7 +88,11 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 
 	@Override
 	public Drawable getMapTile(final MapTile pTile) {
-		final Drawable tile = mTileCache.getMapTile(pTile);
+
+		Drawable tile = cache.get(pTile) ;
+        if (tile != null) {
+            tile = mTileCache.getMapTile(pTile);
+        }
 		if (tile != null && !ExpirableBitmapDrawable.isDrawableExpired(tile)) {
 			if (DEBUGMODE) {
 				logger.debug("MapTileCache succeeded for: " + pTile);
@@ -135,14 +137,9 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 
 	@Override
 	public void mapTileRequestCompleted(final MapTileRequestState pState, final Drawable pDrawable) {
-		final MapTile tile = pState.getMapTile();
-		// synchronized (mWorking) {
-		mWorking.remove(tile);
-		// }
-		if (pDrawable != null) {
-			mTileCache.putTile(tile, pDrawable);
-		}
-		// NOT ??
+        // 	synchronized (mWorking) {
+        mWorking.remove(pState.getMapTile());
+        //}
 		super.mapTileRequestCompleted(pState, pDrawable);
 	}
 
@@ -248,22 +245,42 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 
 	}
 
-	// ===========================================================
-	// Cache
-	// ===========================================================
+    // ===========================================================
+    // Cache
+    // ===========================================================
 
-	@Override
-	public void ensureCapacity(final int pCapacity) {
-		cache.ensureCapacity(pCapacity);
-		super.ensureCapacity(pCapacity);
-	}
+    @Override
+    protected void putTileIntoCache(MapTileRequestState pState, Drawable pDrawable) {
+        final MapTile tile = pState.getMapTile();
+        if (pDrawable != null) {
+            cache.put(tile, pDrawable);
+        }
+        super.putTileIntoCache(pState, pDrawable);
+    }
 
-	@Override
-	public void clearTileCache() { 
-		int beforeCacheSize = cache.size();
-		cache.evictAll();
-		Log.i(TAG, "Clean All Tiles Cache of Size " + beforeCacheSize);
-		super.clearTileCache();
-	}
+    @Override
+    protected void putExpiredTileIntoCache(MapTileRequestState pState, Drawable pDrawable) {
+        final MapTile tile = pState.getMapTile();
+        if (pDrawable != null && !mTileCache.containsTile(tile)) {
+            cache.put(tile, pDrawable);
+        }
+        super.putExpiredTileIntoCache(pState, pDrawable);
+    }
+
+    @Override
+    public void ensureCapacity(final int pCapacity) {
+        cache.ensureCapacity(pCapacity);
+        super.ensureCapacity(pCapacity);
+    }
+
+    @Override
+    public void clearTileCache() {
+        int beforeCacheSize = cache.size();
+        cache.evictAll();
+        Log.i(TAG, "Clean All Tiles Cache of Size " + beforeCacheSize);
+        super.clearTileCache();
+    }
+
+
 
 }

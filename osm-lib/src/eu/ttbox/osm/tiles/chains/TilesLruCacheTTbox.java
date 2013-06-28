@@ -3,9 +3,10 @@ package eu.ttbox.osm.tiles.chains;
 import org.osmdroid.tileprovider.MapTile;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-public class TilesLruCacheTTbox extends LruCache<MapTile, Bitmap>{
+public class TilesLruCacheTTbox extends LruCache<MapTile, Drawable>{
 
 	private static final String TAG = "TilesLruCacheTTbox";
 
@@ -18,11 +19,13 @@ public class TilesLruCacheTTbox extends LruCache<MapTile, Bitmap>{
 	public TilesLruCacheTTbox(int maxSize) {
 		super(maxSize); 
 		Log.i(TAG, "Init Cache Size " + maxSize + " Bytes");
+
 	}
 
 	@Override
-	protected int sizeOf(MapTile key , Bitmap value) {
-		int valueSize =  value.getRowBytes() * value.getHeight();
+	protected int sizeOf(MapTile key , Drawable value) {
+		//int valueSize =  value.getRowBytes() * value.getHeight();
+        int valueSize =  value.getIntrinsicWidth()  * value.getIntrinsicHeight() * 4;
 		Log.d(TAG, "Cache Bitmap Size " + valueSize + " Bytes");
 		
 		return valueSize;
