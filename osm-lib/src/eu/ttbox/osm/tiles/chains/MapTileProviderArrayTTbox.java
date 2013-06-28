@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.osmdroid.tileprovider.ExpirableBitmapDrawable;
 import org.osmdroid.tileprovider.IRegisterReceiver;
@@ -28,7 +29,7 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 
 	private static final Logger logger = LoggerFactory.getLogger(TAG);
 
-	protected final List<MapTileModuleProviderBase> mTileProviderList;
+	protected final CopyOnWriteArrayList<MapTileModuleProviderBase> mTileProviderList;
 
 	public final TilesLruCacheTTbox cache;
 
@@ -70,7 +71,7 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 		mWorking = new ConcurrentHashMap<MapTile, MapTileRequestState>();
 		cache = new TilesLruCacheTTbox(cacheSizeInBytes);
 
-		mTileProviderList = new ArrayList<MapTileModuleProviderBase>();
+		mTileProviderList = new CopyOnWriteArrayList<MapTileModuleProviderBase>();
 		Collections.addAll(mTileProviderList, pTileProviderArray);
 	}
 
@@ -78,14 +79,14 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 	// List Provider
 	// ===========================================================
 
-	@Override
-	public void detach() {
-		synchronized (mTileProviderList) {
-			for (final MapTileModuleProviderBase tileProvider : mTileProviderList) {
-				tileProvider.detach();
-			}
-		}
-	}
+    @Override
+    public void detach() {
+
+            for (final MapTileModuleProviderBase tileProvider : mTileProviderList) {
+                tileProvider.detach();
+            }
+        mWorking.clear();
+    }
 
 	@Override
 	public Drawable getMapTile(final MapTile pTile) {
@@ -118,7 +119,6 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 				if (alreadyInProgress) {
 					return null;
 				}
-
 				mWorking.put(pTile, state);
 				// }
 
@@ -142,11 +142,6 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 		if (pDrawable != null) {
 			mTileCache.putTile(tile, pDrawable);
 		}
-
-		// tell our caller we've finished and it should update its view
-		if (mTileRequestCompleteHandler != null) {
-			mTileRequestCompleteHandler.sendEmptyMessage(MapTile.MAPTILE_SUCCESS_ID);
-		}
 		// NOT ??
 		super.mapTileRequestCompleted(pState, pDrawable);
 	}
@@ -161,62 +156,85 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 			// synchronized (mWorking) {
 			mWorking.remove(tile);
 			// }
-
-			if (mTileRequestCompleteHandler != null) {
-				mTileRequestCompleteHandler.sendEmptyMessage(MapTile.MAPTILE_FAIL_ID);
-			}
-
-			if (DEBUGMODE) {
-				logger.debug("MapTile request failed: " + tile);
-			}
 			super.mapTileRequestFailed(pState);
 		}
 	}
 
-	/**
-	 * We want to not use a provider that doesn't exist anymore in the chain,
-	 * and we want to not use a provider that requires a data connection when
-	 * one is not available.
-	 */
-	protected MapTileModuleProviderBase findNextAppropriateProvider(final MapTileRequestState aState) {
-		MapTileModuleProviderBase provider = null;
-		// The logic of the while statement is
-		// "Keep looping until you get null, or a provider that still exists and has a data connection if it needs one,"
-		do {
-			provider = aState.getNextProvider();
-		} while ((provider != null) && (!getProviderExists(provider) || (!useDataConnection() && provider.getUsesDataConnection())));
-		return provider;
-	}
+
+
+    @Override
+    public void mapTileRequestExpiredTile(MapTileRequestState aState, Drawable aDrawable) {
+        // Call through to the super first so aState.getCurrentProvider() still contains the proper
+        // provider.
+        super.mapTileRequestExpiredTile(aState, aDrawable);
+
+        // Continue through the provider chain
+        final MapTileModuleProviderBase nextProvider = findNextAppropriateProvider(aState);
+        if (nextProvider != null) {
+            nextProvider.loadMapTileAsync(aState);
+        } else {
+            //synchronized (mWorking) {
+                mWorking.remove(aState.getMapTile());
+            //}
+        }
+    }
+
+    /**
+     * We want to not use a provider that doesn't exist anymore in the chain, and we want to not use
+     * a provider that requires a data connection when one is not available.
+     */
+    protected MapTileModuleProviderBase findNextAppropriateProvider(final MapTileRequestState aState) {
+        MapTileModuleProviderBase provider = null;
+        boolean providerDoesntExist = false, providerCantGetDataConnection = false, providerCantServiceZoomlevel = false;
+        // The logic of the while statement is
+        // "Keep looping until you get null, or a provider that still exists
+        // and has a data connection if it needs one and can service the zoom level,"
+        do {
+            provider = aState.getNextProvider();
+            // Perform some checks to see if we can use this provider
+            // If any of these are true, then that disqualifies the provider for this tile request.
+            if (provider != null) {
+                providerDoesntExist = !this.getProviderExists(provider);
+                providerCantGetDataConnection = !useDataConnection()
+                        && provider.getUsesDataConnection();
+                int zoomLevel = aState.getMapTile().getZoomLevel();
+                providerCantServiceZoomlevel = zoomLevel > provider.getMaximumZoomLevel()
+                        || zoomLevel < provider.getMinimumZoomLevel();
+            }
+        } while ((provider != null)
+                && (providerDoesntExist || providerCantGetDataConnection || providerCantServiceZoomlevel));
+        return provider;
+    }
 
 	public boolean getProviderExists(final MapTileModuleProviderBase provider) {
-		synchronized (mTileProviderList) {
+		//synchronized (mTileProviderList) {
 			return mTileProviderList.contains(provider);
-		}
+		//}
 	}
 
 	@Override
 	public int getMinimumZoomLevel() {
 		int result = MAXIMUM_ZOOMLEVEL;
-		synchronized (mTileProviderList) {
+		//synchronized (mTileProviderList) {
 			for (final MapTileModuleProviderBase tileProvider : mTileProviderList) {
 				if (tileProvider.getMinimumZoomLevel() < result) {
 					result = tileProvider.getMinimumZoomLevel();
 				}
 			}
-		}
+		//}
 		return result;
 	}
 
 	@Override
 	public int getMaximumZoomLevel() {
 		int result = MINIMUM_ZOOMLEVEL;
-		synchronized (mTileProviderList) {
+		//synchronized (mTileProviderList) {
 			for (final MapTileModuleProviderBase tileProvider : mTileProviderList) {
 				if (tileProvider.getMaximumZoomLevel() > result) {
 					result = tileProvider.getMaximumZoomLevel();
 				}
 			}
-		}
+		//}
 		return result;
 	}
 
