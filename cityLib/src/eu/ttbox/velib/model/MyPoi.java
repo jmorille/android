@@ -56,7 +56,7 @@ public class MyPoi implements GeoPointProvider, LatLngE6Provider, LatLngProvider
 	}
 	
 	@Override
-	public double getLatitudeE6() {
+	public int getLatitudeE6() {
 		return latitudeE6;
 	}
 
@@ -66,7 +66,7 @@ public class MyPoi implements GeoPointProvider, LatLngE6Provider, LatLngProvider
 	}
 	
 	@Override
-	public double getLongitudeE6() {
+	public int getLongitudeE6() {
 		return longitudeE6;
 	}
 

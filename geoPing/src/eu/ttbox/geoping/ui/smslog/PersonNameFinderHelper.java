@@ -50,6 +50,7 @@ public class PersonNameFinderHelper {
 
     public void setTextViewPersonNameByPhone(TextView textView, String phone, SmsLogSideEnum smsLogSide) {
         if (TextUtils.isEmpty(phone)) {
+            textView.setText(null);
             return;
         }
 //        Log.d(TAG, "setTextViewPersonNameByPhone for " + phone + " on " + smsLogSide);

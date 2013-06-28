@@ -11,9 +11,9 @@ import android.preference.PreferenceManager;
 import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.ui.help.HelpMainActivity;
 
-public class AndroLibApplication extends Application {
+public class CityLibApplication extends Application {
 
-	private String TAG = "AndroLibApplication";
+	private String TAG = "CityLibApplication";
  
 
 	public void onCreate() {

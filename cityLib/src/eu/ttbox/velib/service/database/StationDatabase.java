@@ -127,6 +127,21 @@ public class StationDatabase {
         bdd.update(TABLE_VELIB, values, whereClause, null);
     }
 
+    public long updateStationnIdentifier(SQLiteDatabase bdd, Station station) {
+        ContentValues values = new ContentValues();
+        values.put(VeloColumns.COL_NUMBER , station.getNumber());
+        values.put(VeloColumns.COL_NAME, station.getName());
+        values.put(VeloColumns.COL_ADDRESS, station.getAddress());
+        values.put(VeloColumns.COL_LATITUDE_E6, station.getLatitudeE6());
+        values.put(VeloColumns.COL_LONGITUDE_E6, station.getLongitudeE6());
+        values.put(VeloColumns.COL_OPEN, station.getOpen());
+        values.put(VeloColumns.COL_BONUS, station.getBonus());
+        // Do Updated
+        String whereClause = new StringBuilder(32).append(VeloColumns.COL_ID).append('=').append(station.getId()).toString();
+        bdd.update(TABLE_VELIB, values, whereClause, null);
+        return station.getId();
+    }
+
     public void updateStationnDispo(SQLiteDatabase bdd, Station station) {
         ContentValues values = new ContentValues();
         values.put(VeloColumns.COL_STATION_TOTAL, station.getVeloTotal());
@@ -299,4 +314,11 @@ public class StationDatabase {
         return result;
     }
 
+    public int deleteByEntityId( SQLiteDatabase db, long entityId) {
+        int result = -1;
+        // Do Updated
+        String whereClause = new StringBuilder(32).append(VeloColumns.COL_ID).append('=').append(entityId).toString();
+        result = db.delete(TABLE_VELIB, whereClause, null);
+        return  result;
+    }
 }

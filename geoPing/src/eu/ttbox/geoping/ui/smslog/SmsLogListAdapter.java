@@ -87,6 +87,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         	 actionLabel = helper.getSmsMessageActionString(cursor);
         }
         holder.actionText.setText(actionLabel);
+
         // Phone
         String phone = helper.getSmsLogPhone(cursor);
         if (isDisplayContactDetail) {
@@ -94,6 +95,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
             cacheNameFinder.setTextViewPersonNameByPhone(holder.phoneText, phone, side);
             holder.phoneText.setVisibility(View.VISIBLE);
         } else {
+            holder.phoneText.setText(null);
             holder.phoneText.setVisibility(View.GONE);
         }
         // Time
@@ -179,22 +181,8 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
 
     
     private String getSmsActionLabel(SmsMessageActionEnum action) {
-//    	Log.d(TAG, "getSmsActionLabel : "  + action); 
+      	Log.d(TAG, "getSmsActionLabel : "  + action);
     	 return action.getLabel(resources);
-    	 	
-    	// FIXME
-//        switch (action) {
-//        case GEOPING_REQUEST:
-//            return mResources.actionGeoPingRequest;
-//        case ACTION_GEO_LOC:
-//            return mResources.actionGeoPingResponse;
-//        case ACTION_GEO_PAIRING:
-//            return mResources.actionPairingRequest;
-//        case ACTION_GEO_PAIRING_RESPONSE:
-//            return mResources.actionPairingResponse;
-//         default:
-//            return action.name();
-//        }
     }
 
 

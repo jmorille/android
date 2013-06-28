@@ -89,6 +89,8 @@
     <string name="prefs_myLocation_display_geoloc">Display GPS Coord</string>
     <string name="prefs_renter">Renter</string>
     <string name="prefs_providerSelect">Selection of the renter</string>
+    <string name="prefs_provider_updateData_DeltaInDay">Refresh renter period in days</string>
+
     <string name="prefs_synchro_dispo">Synchronization (Advanced)</string>
     <string name="prefs_min_mapzoom_station_details">Station Details Min Map Zoom Level</string>
     <string name="prefs_dispo_refresh_period_s">Update of the availibility bike in s</string>
@@ -101,6 +103,7 @@
     <string name="prefs_help">Help</string>
     <string name="prefs_licence">Licence</string>
     <string name="prefs_about">About</string>
+    <string name="prefs_release_notes">Release Notes</string>
     <string name="prefs_relasenotes">What new ?</string>
     <string name="prefs_count_laught">Number of launch</string>
     <string name="prefs_count_laught_summary">Number of usesr of the application</string> 

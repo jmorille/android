@@ -84,7 +84,7 @@ public class Station implements GeoPointProvider, LatLngE6Provider, LatLngProvid
 	}
 
 	@Override
-	public double getLatitudeE6() {
+	public int getLatitudeE6() {
 		return latitudeE6;
 	}
 
@@ -94,7 +94,7 @@ public class Station implements GeoPointProvider, LatLngE6Provider, LatLngProvid
 	}
 
 	@Override
-	public double getLongitudeE6() {
+	public int getLongitudeE6() {
 		return longitudeE6;
 	}
 

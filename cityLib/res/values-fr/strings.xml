@@ -64,6 +64,7 @@
     <string name="prefs_myLocation_display_geoloc">Affichage Coord GPS</string>
     <string name="prefs_renter">Loueur</string>
     <string name="prefs_providerSelect">Sélection du loueur</string>
+    <string name="prefs_provider_updateData_DeltaInDay">Période mise à jour du loueur en Jour</string>
     <string name="prefs_synchro_dispo">Synchronisation (Avancé)</string>
     <string name="prefs_dispo_refresh_period_s">Maj Dispo vélo en s</string>
     <string name="prefs_dispo_bubble_refresh_period_s">Maj Bulle d\'info Velo en s</string>
@@ -76,6 +77,8 @@
     <string name="prefs_help">Aide</string>
     <string name="prefs_licence">Licence</string>
     <string name="prefs_about">Crédit</string>
+    <string name="prefs_release_notes">Release Notes</string>
+
     <string name="prefs_relasenotes">Quoi de neuf ?</string> 
     <string name="prefs_count_laught">Nombre de lancement</string>
     <string name="prefs_count_laught_summary">Nombre d\'utilisation de l\'application</string>

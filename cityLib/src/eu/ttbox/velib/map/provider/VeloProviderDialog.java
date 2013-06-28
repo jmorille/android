@@ -30,7 +30,7 @@ public class VeloProviderDialog extends Dialog {
 		updateButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ArrayList<Station> stations = velibService.updateAllStationsByProvider(velibProvider);
+				ArrayList<Station> stations = velibService.getStationsByProviderWithCheckUpdateDate(velibProvider, true);
 				Toast.makeText(context, "Download Stations size " + stations.size(), Toast.LENGTH_SHORT).show();
 			}
 		});

@@ -49,12 +49,18 @@ public class VeloContentProvider extends ContentProvider //
         public static String AUTHORITY = "eu.ttbox.velib.VeloContentProvider";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+        public static final Uri CONTENT_URI_STATION = Uri.parse("content://" + AUTHORITY + "/station/");
         public static final Uri CONTENT_URI_FAVORITE = Uri.parse("content://" + AUTHORITY + "/" + "stations/favorite/");
         public static final Uri CONTENT_URI_SUGGEST_URI_PATH_QUERY = Uri.parse("content://" + AUTHORITY + "/" + SearchManager.SUGGEST_URI_PATH_QUERY + "/");
 
         // MIME types used for searching words or looking up a single definition
         public static final String COLLECTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ttbox.velib";
         public static final String ITEM_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ttbox.velib";
+
+        public static final Uri getStationUri(long entityId) {
+            return Uri.withAppendedPath(CONTENT_URI_STATION, String.valueOf(entityId));
+        }
+
 
     }
 

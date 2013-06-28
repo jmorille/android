@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
-import eu.ttbox.velib.AndroLibApplication;
+import eu.ttbox.velib.CityLibApplication;
 import eu.ttbox.velib.R;
 
 /**
@@ -69,7 +69,7 @@ public class AboutActivity extends Activity {
 	}
 
 	private String versionName() {
-		return ((AndroLibApplication) getApplication()).version();
+		return ((CityLibApplication) getApplication()).version();
 	}
 
 	private String readTextFromResource(int resourceID) {

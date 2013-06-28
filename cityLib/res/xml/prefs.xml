@@ -18,7 +18,11 @@
             android:key="providerSelect"
             android:negativeButtonText="@string/cancel"
             android:title="@string/prefs_providerSelect" />
-
+        <eu.ttbox.velib.ui.preference.comp.IntEditTextPreference
+                android:defaultValue="100"
+                android:key="PROVIDER_DELTA_UPDATE_IN_DAY"
+                android:numeric="integer"
+                android:title="@string/prefs_provider_updateData_DeltaInDay" />
         <PreferenceScreen android:title="@string/prefs_synchro_dispo" >
             <eu.ttbox.velib.ui.preference.comp.IntEditTextPreference
                 android:defaultValue="15"
@@ -58,7 +62,7 @@
         </eu.ttbox.velib.ui.preference.comp.AppVersionPreference>
 
        <Preference 
-            android:title="@string/prefs_about" >
+            android:title="@string/prefs_relasenotes" >
             <intent
                 android:action="eu.ttbox.velib.ui.about.ACTION_VIEW_ABOUT"
                 android:targetClass="eu.ttbox.velib.ui.about.AboutActivity"

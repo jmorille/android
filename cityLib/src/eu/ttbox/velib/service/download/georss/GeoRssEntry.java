@@ -15,8 +15,8 @@ public class GeoRssEntry implements GeoPointProvider, LatLngE6Provider, LatLngPr
 	private String title;
 	private String link;
 	private String summary;
-	private double latitudeE6;
-	private double longitudeE6;
+	private int latitudeE6;
+	private int longitudeE6;
 	private String category;
 
 	// Cache Value transient
@@ -36,11 +36,11 @@ public class GeoRssEntry implements GeoPointProvider, LatLngE6Provider, LatLngPr
 	}
 
 	public void setLatitude(double lat) {
-		this.latitudeE6 = lat * E6;
+		this.latitudeE6 = (int)(lat * E6);
 		this.cachedGeoPoint = null;
 	}
 
-	public void setLatitudeE6(double latitudeE6) {
+	public void setLatitudeE6(int latitudeE6) {
 		this.latitudeE6 = latitudeE6;
 		this.cachedGeoPoint = null;
 	}
@@ -51,22 +51,22 @@ public class GeoRssEntry implements GeoPointProvider, LatLngE6Provider, LatLngPr
 	}
 
 	public void setLongitude(double lng) {
-		this.longitudeE6 = lng * E6;
+		this.longitudeE6 = (int)(lng * E6);
 		this.cachedGeoPoint = null;
 	}
 
-	public void setLongitudeE6(double longitudeE6) {
+	public void setLongitudeE6(int longitudeE6) {
 		this.longitudeE6 = longitudeE6;
 		this.cachedGeoPoint = null;
 	}
 
 	@Override
-	public double getLatitudeE6() {
+	public int getLatitudeE6() {
 		return this.latitudeE6;
 	}
 
 	@Override
-	public double getLongitudeE6() {
+	public int getLongitudeE6() {
 		return this.longitudeE6;
 	}
 
