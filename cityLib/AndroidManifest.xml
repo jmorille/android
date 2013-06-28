@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" 
-    android:versionCode="28" android:versionName="0.1.8" package="eu.ttbox.velib">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" android:versionCode="29" android:versionName="0.2.0" package="eu.ttbox.velib">
 
     <!-- android:minSdkVersion="9" -->
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="17"/>
@@ -25,8 +24,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
     <!-- android:backupAgent=".service.backup.MyBackupAgent" -->
-    <application android:name=".CityLibApplication" android:debuggable="true"
-                 android:icon="@drawable/panneau_obligation_cycles" android:label="@string/app_name"  android:theme="@style/MyTheme">
+    <application android:debuggable="true" android:icon="@drawable/panneau_obligation_cycles"
+                 android:label="@string/app_name" android:name=".CityLibApplication" android:theme="@style/MyTheme">
 
         <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
         <meta-data android:name="CLOUDMADE_KEY" android:value="bf761f5e98524bf88ac465bce90002b6"/>
@@ -35,11 +34,11 @@
         <meta-data android:name="BING_KEY" android:value="AuBpNxDvcuq-mDB2oX-eT7NaiaRFBzsuR4R6DHqi30at_y2L6ACFt_MfnCR8qs7K"/>
 
         <!-- Multi Windows -->
-        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
-        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_multiwindows_defaultSize_w" />
-        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_multiwindows_defaultSize_h" />
-        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:resource="@dimen/app_multiwindows_minSize_w" />
-        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:resource="@dimen/app_multiwindows_minSize_h" />
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true"/>
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_multiwindows_defaultSize_w"/>
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_multiwindows_defaultSize_h"/>
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:resource="@dimen/app_multiwindows_minSize_w"/>
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:resource="@dimen/app_multiwindows_minSize_h"/>
         
 
 
@@ -116,7 +115,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/> 
                 <category android:name="android.intent.category.LAUNCHER"/>
-                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
             </intent-filter>
 
 <!--             <meta-data -->
@@ -126,8 +125,7 @@
 
           
         <!-- Admob -->
-        <activity android:name="com.google.ads.AdActivity"
-                  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.google.ads.AdActivity"/>
         
         
         <!-- Provides search suggestions for words and their definitions. -->
