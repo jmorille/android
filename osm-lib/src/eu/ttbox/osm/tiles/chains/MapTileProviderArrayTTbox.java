@@ -89,10 +89,10 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
 	@Override
 	public Drawable getMapTile(final MapTile pTile) {
 
-		Drawable tile = cache.get(pTile) ;
-        if (tile != null) {
-            tile = mTileCache.getMapTile(pTile);
-        }
+		Drawable tile =  mTileCache.getMapTile(pTile);
+//        if (tile != null) {
+//            tile = cache.getMapTile(pTile);
+//        }
 		if (tile != null && !ExpirableBitmapDrawable.isDrawableExpired(tile)) {
 			if (DEBUGMODE) {
 				logger.debug("MapTileCache succeeded for: " + pTile);
@@ -249,29 +249,29 @@ public class MapTileProviderArrayTTbox extends MapTileProviderBase {
     // Cache
     // ===========================================================
 
-    @Override
-    protected void putTileIntoCache(MapTileRequestState pState, Drawable pDrawable) {
-        final MapTile tile = pState.getMapTile();
-        if (pDrawable != null) {
-            cache.put(tile, pDrawable);
-        }
-        super.putTileIntoCache(pState, pDrawable);
-    }
+//    @Override
+//    protected void putTileIntoCache(MapTileRequestState pState, Drawable pDrawable) {
+//        final MapTile tile = pState.getMapTile();
+//        if (pDrawable != null) {
+//            cache.put(tile, pDrawable);
+//        }
+//        super.putTileIntoCache(pState, pDrawable);
+//    }
 
-    @Override
-    protected void putExpiredTileIntoCache(MapTileRequestState pState, Drawable pDrawable) {
-        final MapTile tile = pState.getMapTile();
-        if (pDrawable != null && !mTileCache.containsTile(tile)) {
-            cache.put(tile, pDrawable);
-        }
-        super.putExpiredTileIntoCache(pState, pDrawable);
-    }
+//    @Override
+//    protected void putExpiredTileIntoCache(MapTileRequestState pState, Drawable pDrawable) {
+//        final MapTile tile = pState.getMapTile();
+//        if (pDrawable != null && !mTileCache.containsTile(tile)) {
+//            cache.put(tile, pDrawable);
+//        }
+//        super.putExpiredTileIntoCache(pState, pDrawable);
+//    }
 
-    @Override
-    public void ensureCapacity(final int pCapacity) {
-        cache.ensureCapacity(pCapacity);
-        super.ensureCapacity(pCapacity);
-    }
+//    @Override
+//    public void ensureCapacity(final int pCapacity) {
+//        cache.ensureCapacity(pCapacity);
+//        super.ensureCapacity(pCapacity);
+//    }
 
     @Override
     public void clearTileCache() {

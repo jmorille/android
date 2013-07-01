@@ -469,6 +469,12 @@ public class GeoPingMasterService extends IntentService {
 
         // Create Notifiation
         String contentTitle = getString(actionEnum.labelResourceId);
+        if (SmsMessageActionEnum.GEOFENCE_ENTER.equals(actionEnum) || SmsMessageActionEnum.GEOFENCE_EXIT.equals(actionEnum)) {
+            if (SmsMessageLocEnum.GEOFENCE_NAME.isToContentValues(values)) {
+                String geofenceName  =SmsMessageLocEnum.GEOFENCE_NAME.readString(values);
+                contentTitle = String.format(contentTitle, geofenceName);
+            }
+        }
         builder //
                 .setDefaults(Notification.DEFAULT_ALL) //
                 .setSmallIcon(R.drawable.ic_stat_notif_icon) //

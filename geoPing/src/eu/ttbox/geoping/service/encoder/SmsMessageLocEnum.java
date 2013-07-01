@@ -3,6 +3,7 @@ package eu.ttbox.geoping.service.encoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -106,6 +107,24 @@ public enum SmsMessageLocEnum {
         bySmsFieldNames = fields;
         byDbFieldNames = dbColNames;
         ignoreDbFieldName = ignoreMultiFieldName;
+    }
+    // ===========================================================
+    // ContentValue Writer / Reader
+    // ===========================================================
+
+    public boolean isToContentValues(ContentValues extras ) {
+        if (extras==null) {
+            return false;
+        }
+        return extras.containsKey(dbFieldName);
+    }
+
+    public String readString(ContentValues params) {
+        String result = null;
+        if (params != null && params.containsKey(dbFieldName)) {
+            result = params.getAsString(dbFieldName);
+        }
+        return result;
     }
 
     // ===========================================================
