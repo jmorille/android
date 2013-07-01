@@ -61,6 +61,7 @@
     <string name="menu_map">Map</string>
     <string name="menu_quit">Quit</string>
     <string name="menu_person">Person</string>
+    <string name="menu_person_remote_control">Remote control</string>
     <string name="menu_pairing">Privacy</string>
     <string name="menu_geofence">GeoFence</string>
     <string name="menu_smslog">Log Sms</string>

@@ -15,6 +15,8 @@ import eu.ttbox.geoping.core.AppConstants;
  * position) and radius.
  */
 public class CircleGeofence {
+
+    public static final long UNSET_DATE = -1L;
     // Instance variables
     public long id = -1l;
     public String name;
@@ -22,14 +24,13 @@ public class CircleGeofence {
     private int latitudeE6; // Mandatory
     private int longitudeE6; // Mandatory
     public int radiusInMeters; // Mandatory
-    public long expirationDuration = Geofence.NEVER_EXPIRE;
+    public long expirationDate = UNSET_DATE;
     public int transitionType = Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT;
 
 
     public String address;
 
     //TODO Field
-    public long expirationDate;
     public long versionUpdateDate;
 
     // Cache
@@ -55,7 +56,7 @@ public class CircleGeofence {
         this.latitudeE6 = other.latitudeE6;
         this.longitudeE6 = other.longitudeE6;
         this.radiusInMeters = other.radiusInMeters;
-        this.expirationDuration = other.expirationDuration;
+        this.expirationDate  = other.expirationDate;
         this.transitionType = other.transitionType;
     }
 
@@ -71,14 +72,14 @@ public class CircleGeofence {
      * @param radius
      *            Radius of the geofence circle. The value is not checked for
      *            validity
-     * @param expiration
+     * @param expirationDate
      *            Geofence expiration duration in milliseconds The value is not
      *            checked for validity.
      * @param transition
      *            Type of Geofence transition. The value is not checked for
      *            validity.
      */
-    public CircleGeofence(String geofenceId, int latitudeE6, int longitudeE6, int radius, long expiration, int transition) {
+    public CircleGeofence(String geofenceId, int latitudeE6, int longitudeE6, int radius, long expirationDate, int transition) {
         // Set the instance fields from the constructor
 
         // An identifier for the geofence
@@ -92,7 +93,7 @@ public class CircleGeofence {
         this.radiusInMeters = radius;
 
         // Expiration time in milliseconds
-        this.expirationDuration = expiration;
+        this.expirationDate = expirationDate;
 
         // Transition type
         this.transitionType = transition;
@@ -171,10 +172,7 @@ public class CircleGeofence {
         return this;
     }
 
-    public CircleGeofence setExpirationDuration(long mExpirationDuration) {
-        this.expirationDuration = mExpirationDuration;
-        return this;
-    }
+
 
     public CircleGeofence setTransitionType(int mTransitionType) {
         this.transitionType = mTransitionType;
@@ -217,14 +215,6 @@ public class CircleGeofence {
         return radiusInMeters;
     }
 
-    /**
-     * Get the geofence expiration duration
-     * 
-     * @return Expiration duration in milliseconds
-     */
-    public long getExpirationDuration() {
-        return expirationDuration;
-    }
 
     /**
      * Get the geofence transition type
@@ -251,6 +241,16 @@ public class CircleGeofence {
         return this;
     }
 
+
+    public long getExpirationDuration() {
+        if (this.expirationDate == UNSET_DATE) {
+            return Geofence.NEVER_EXPIRE;
+        } else {
+            long expirationDuration =  System.currentTimeMillis() - this.expirationDate;
+            expirationDuration = Math.max(0L, expirationDuration);
+            return expirationDuration;
+        }
+    }
     /**
      * Creates a Location Services Geofence object from a SimpleGeofence.
      * 
@@ -261,7 +261,7 @@ public class CircleGeofence {
         return new Geofence.Builder().setRequestId(requestId)//
                 .setCircularRegion(getLatitude(), getLongitude(), getRadiusInMeters())//
                 .setTransitionTypes(transitionType)//
-                .setExpirationDuration(expirationDuration)//
+                .setExpirationDuration(getExpirationDuration())//
                 .build();
     }
 
@@ -277,7 +277,7 @@ public class CircleGeofence {
                 + ", radius=" + radiusInMeters //
                 + ", requestId=" + requestId //
                 + ", transitionType=" + transitionType //
-                + ", expirationDuration=" + expirationDuration //
+                + ", expirationDate=" + expirationDate //
                 + "]";
     }
 

@@ -76,6 +76,7 @@
     <string name="menu_map">Carte</string>
     <string name="menu_quit">Quitter</string>
     <string name="menu_person">Personnes</string>
+    <string name="menu_person_remote_control">Télécommande</string>
     <string name="menu_pairing">Vie privée</string>
     <string name="menu_geofence">Géo Barrière</string>
 

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
@@ -19,6 +20,8 @@ import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.encoder.helper.SmsParamEncoderHelper;
 
 public class SmsLogHelper {
+
+    public static final String TAG = "SmsLogHelper";
 
     public boolean isNotInit = true;
 	public int idIdx = -1;
@@ -206,7 +209,8 @@ public class SmsLogHelper {
 
 	private static String convertAsJsonString(Bundle extras) {
 		String result = null;
-		try {
+        Log.d(TAG, "convertAsJsonString : " + extras);
+        try {
 			JSONObject object = new JSONObject();
 			for (String key : extras.keySet()) {
 				String valKey = key;
@@ -274,5 +278,7 @@ public class SmsLogHelper {
 		}
 		return val;
 	}
+
+
 
 }

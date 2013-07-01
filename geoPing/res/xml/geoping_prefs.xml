@@ -12,7 +12,7 @@
                 android:numeric="integer"
                 android:title="@string/prefs_geoping_request_timeout_ms" />
         <eu.ttbox.geoping.ui.prefs.comp.IntEditTextPreference
-                android:defaultValue="80"
+                android:defaultValue="60"
                 android:key="requestAccuracyExpectedInM"
                 android:numeric="integer"
                 android:title="@string/prefs_geoping_request_accuracy_expected_m" />

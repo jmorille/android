@@ -18,7 +18,8 @@ import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
  * <ul>
  * <li>Db version 5 : Geoping 0.1.5 (37)</li>
  * <li>Db version 6 : Geoping 0.1.6 (39)</li>
- * <li>Db version 7 : Geoping 0.2.0 (??)</li>
+ * <li>Db version 7 : Geoping 0.2.0 (52)</li>
+ * <li>Db version 8 : Geoping 0.2.2 (??)</li>
  * </ul>
  *  
  *
@@ -28,7 +29,7 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "PairingOpenHelper";
 
     public static final String DATABASE_NAME = "pairing.db";
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
 
     // ===========================================================
     // Table
@@ -82,11 +83,10 @@ public class PairingOpenHelper extends SQLiteOpenHelper {
             + ", " + GeoFenceColumns.COL_RADIUS + " INTEGER NOT NULL " //  
             // Config
             + ", " + GeoFenceColumns.COL_TRANSITION + " INTEGER NOT NULL " // 
-            + ", " + GeoFenceColumns.COL_EXPIRATION + " INTEGER NOT NULL " //
+            + ", " + GeoFenceColumns.COL_EXPIRATION_DATE + " INTEGER NOT NULL " //
             // Address
             + ", " + GeoFenceColumns.COL_ADDRESS  + " TEXT " //
             // Tracking Info
-            + ", " + GeoFenceColumns.COL_EXPIRATION_DATE + " INTEGER NOT NULL " //
             + ", " + GeoFenceColumns.COL_VERSION_UPDATE_DATE + " INTEGER NOT NULL " //
             + " );";
 

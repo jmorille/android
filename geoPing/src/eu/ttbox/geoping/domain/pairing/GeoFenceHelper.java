@@ -23,7 +23,6 @@ public class GeoFenceHelper {
     public int latitudeE6Idx = -1;
     public int longitudeE6Idx = -1;
     public int radiusIdx = -1;
-    public int expirationIdx = -1;
     public int transitionIdx = -1;
     public int addressIdx = -1;
 
@@ -45,7 +44,6 @@ public class GeoFenceHelper {
         radiusIdx = cursor.getColumnIndex(GeoFenceColumns.COL_RADIUS);
 
         transitionIdx = cursor.getColumnIndex(GeoFenceColumns.COL_TRANSITION);
-        expirationIdx = cursor.getColumnIndex(GeoFenceColumns.COL_EXPIRATION);
 
         addressIdx = cursor.getColumnIndex(GeoFenceColumns.COL_ADDRESS);
 
@@ -85,9 +83,8 @@ public class GeoFenceHelper {
         initialValues.putInt(GeoFenceColumns.COL_LONGITUDE_E6, geoFence.getLongitudeE6());
         initialValues.putFloat(GeoFenceColumns.COL_RADIUS, geoFence.getRadiusInMeters());
         initialValues.putInt(GeoFenceColumns.COL_TRANSITION, geoFence.getTransitionType());
-        initialValues.putLong(GeoFenceColumns.COL_EXPIRATION, geoFence.getExpirationDuration());
-
         initialValues.putLong(GeoFenceColumns.COL_EXPIRATION_DATE, geoFence.expirationDate);
+
         initialValues.putLong(GeoFenceColumns.COL_VERSION_UPDATE_DATE, geoFence.versionUpdateDate);
 
         if (noHasCheck || geoFence.address != null) {
@@ -102,10 +99,13 @@ public class GeoFenceHelper {
         double longitude = initialValues.getAsInteger(GeoFenceColumns.COL_LONGITUDE_E6) / AppConstants.E6;
         int radiusInMeters =initialValues.getAsInteger(GeoFenceColumns.COL_RADIUS);
         int transitionType =initialValues.getAsInteger(GeoFenceColumns.COL_TRANSITION );
-        int expirationDuration =initialValues.getAsInteger(GeoFenceColumns.COL_EXPIRATION);
 
-//TODO Compute        long expirationDate  =initialValues.getAsLong(GeoFenceColumns.COL_EXPIRATION_DATE);
-
+       long expirationDate  =initialValues.getAsLong(GeoFenceColumns.COL_EXPIRATION_DATE);
+        long expirationDuration = Geofence.NEVER_EXPIRE;
+        if (expirationDate != CircleGeofence.UNSET_DATE ) {
+            expirationDuration = System.currentTimeMillis() - expirationDate;
+        }
+        expirationDuration = Math.max(0L, expirationDuration);
         return new Geofence.Builder().setRequestId(requestId)//
                 .setCircularRegion(latitude,longitude, radiusInMeters )//
                 .setTransitionTypes(transitionType)//
@@ -154,10 +154,6 @@ public class GeoFenceHelper {
         if (initialValues.containsKey(GeoFenceColumns.COL_TRANSITION)) {
             geofence.setTransitionType(initialValues.getAsInteger(GeoFenceColumns.COL_TRANSITION));
         }
-        if (initialValues.containsKey(GeoFenceColumns.COL_EXPIRATION)) {
-            geofence.setExpirationDuration(initialValues.getAsLong(GeoFenceColumns.COL_EXPIRATION));
-        }
-
         if (initialValues.containsKey(GeoFenceColumns.COL_EXPIRATION_DATE)) {
             geofence.setExpirationDate(initialValues.getAsLong(GeoFenceColumns.COL_EXPIRATION_DATE));
         }
@@ -185,7 +181,6 @@ public class GeoFenceHelper {
         int latitudeE6 = cursor.getInt(latitudeE6Idx);
         int longitudeE6 = cursor.getInt(longitudeE6Idx);
         int radius = radiusIdx > -1 ? cursor.getInt(radiusIdx) : -1;
-        long expiration = expirationIdx > -1 ? cursor.getLong(expirationIdx) : -1;
         int transition = transitionIdx > -1 ? cursor.getInt(transitionIdx) : -1;
         String address = addressIdx > -1 ? cursor.getString(addressIdx) : null;
 
@@ -198,7 +193,6 @@ public class GeoFenceHelper {
         geofence.setLatitudeE6(latitudeE6);
         geofence.setLongitudeE6(longitudeE6);
         geofence.setRadiusInMeters(radius);
-        geofence.setExpirationDuration(expiration);
         geofence.setTransitionType(transition);
 
         geofence.setExpirationDate(expirationDate);

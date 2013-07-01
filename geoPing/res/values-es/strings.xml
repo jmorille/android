@@ -75,6 +75,7 @@
     <string name="menu_map">Mapa</string>
     <string name="menu_quit">Quitar</string>
     <string name="menu_person">Personas</string>
+    <string name="menu_person_remote_control">Remote control</string>
     <string name="menu_pairing">Vida privada</string>
     <string name="menu_geofence">GeoFence</string>
     <string name="menu_smslog">Log Sms</string>

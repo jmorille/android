@@ -28,7 +28,7 @@ public enum SmsMessageLocEnum {
     PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID), //
     // Geo Fence
     GEOFENCE_NAME('e', SmsMessageTypeEnum.STRING, "GEOFENCE_NAME" ), //
-//    GEOFENCE('f', SmsMessageTypeEnum.MULTI, "GEOFENCE", new String[] { GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6, GeoFenceDatabase.GeoFenceColumns.COL_LONGITUDE_E6, GeoFenceDatabase.GeoFenceColumns.COL_RADIUS  }), //
+    GEOFENCE('f', SmsMessageTypeEnum.MULTI, GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6 , new String[] { GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6, GeoFenceDatabase.GeoFenceColumns.COL_LONGITUDE_E6, GeoFenceDatabase.GeoFenceColumns.COL_RADIUS, GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, GeoFenceDatabase.GeoFenceColumns.COL_EXPIRATION_DATE  }), //
 
     // Spy Event
 //    EVT_SIM_PHONE('i', SmsMessageTypeEnum.STRING, "EVT_SIM_PHONE"),
@@ -68,13 +68,14 @@ public enum SmsMessageLocEnum {
     static HashMap<Character, SmsMessageLocEnum> bySmsFieldNames;
     static HashMap<String, SmsMessageLocEnum> byDbFieldNames;
     static HashMap<String, SmsMessageLocEnum> byEnumNames;
-    static ArrayList<String> ignoreDbFieldName ;
+    static  HashMap<String, SmsMessageLocEnum>  byIgnoreDbFieldName ;
+
     static {
         SmsMessageLocEnum[] values = SmsMessageLocEnum.values();
         HashMap<Character, SmsMessageLocEnum> fields = new HashMap<Character, SmsMessageLocEnum>(values.length);
         HashMap<String, SmsMessageLocEnum> dbColNames = new HashMap<String, SmsMessageLocEnum>(values.length);
         HashMap<String, SmsMessageLocEnum> enumNames = new HashMap<String, SmsMessageLocEnum>(values.length);
-        ArrayList<String>   ignoreMultiFieldName = new ArrayList<String>();
+        HashMap<String, SmsMessageLocEnum>   ignoreMultiFieldName = new HashMap<String, SmsMessageLocEnum>();
         for (SmsMessageLocEnum field : values) {
             // Enum name
             enumNames.put(field.name(), field);
@@ -95,10 +96,10 @@ public enum SmsMessageLocEnum {
                 int multiFieldNameSize = field.multiFieldName.length;
                 for (int i =1; i< multiFieldNameSize; i++) {
                     String ignoreMultiCol = field.multiFieldName[i];
-                    if (ignoreMultiFieldName.contains(ignoreMultiCol)) {
+                    if (ignoreMultiFieldName.containsKey(ignoreMultiCol)) {
                         throw new IllegalArgumentException(String.format("Duplicated Ignore Multifield : %s", ignoreMultiCol));
                     }
-                    ignoreMultiFieldName.add(ignoreMultiCol);
+                    ignoreMultiFieldName.put(ignoreMultiCol, field);
                 }
             }
         }
@@ -106,7 +107,7 @@ public enum SmsMessageLocEnum {
         byEnumNames = enumNames;
         bySmsFieldNames = fields;
         byDbFieldNames = dbColNames;
-        ignoreDbFieldName = ignoreMultiFieldName;
+        byIgnoreDbFieldName = ignoreMultiFieldName;
     }
     // ===========================================================
     // ContentValue Writer / Reader
@@ -241,8 +242,12 @@ public enum SmsMessageLocEnum {
         return byDbFieldNames.get(fieldName);
     }
 
+    public static SmsMessageLocEnum getByIgnoreDbFieldName(String fieldName) {
+        return byIgnoreDbFieldName.get(fieldName);
+    }
+
     public static boolean isIgnoreMultiField(String fieldName) {
-       return ignoreDbFieldName.contains(fieldName);
+       return byIgnoreDbFieldName.containsKey(fieldName);
     }
 
 

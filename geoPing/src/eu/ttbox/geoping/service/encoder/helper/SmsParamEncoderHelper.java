@@ -1,5 +1,6 @@
 package eu.ttbox.geoping.service.encoder.helper;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import android.os.Bundle;
@@ -172,6 +173,8 @@ public class SmsParamEncoderHelper {
                     return false;
                 }
                 sb.append(valueEncoded);
+            } else {
+                Log.d(TAG, "writeToMultiInt do not contains column : " + colData + " in arrays " + Arrays.toString(colDatas));
             }
         }
         return isNotFirst;
@@ -377,6 +380,7 @@ public class SmsParamEncoderHelper {
             }
 
         }
+        Log.d(TAG, "Params encoded : [" +sb + "] for bundle : " + extras);
         return sb;
     }
     // public static StringBuilder encodeMessage(GeoTrack geoTrack) {

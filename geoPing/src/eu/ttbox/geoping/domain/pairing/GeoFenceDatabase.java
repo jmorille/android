@@ -130,7 +130,7 @@ public class GeoFenceDatabase {
                 || values.containsKey(GeoFenceColumns.COL_LONGITUDE_E6)
                 || values.containsKey(GeoFenceColumns.COL_RADIUS)
                 || values.containsKey(GeoFenceColumns.COL_TRANSITION)
-                || values.containsKey(GeoFenceColumns.COL_EXPIRATION)
+                || values.containsKey(GeoFenceColumns.COL_EXPIRATION_DATE)
                 ) {
             isGeofenceValues = true;
             // So need to add request Id
@@ -356,30 +356,30 @@ public class GeoFenceDatabase {
 
     public static class GeoFenceColumns {
         public static final String COL_ID = BaseColumns._ID;
-        public static final String COL_NAME = "NAME";
+        public static final String COL_NAME = "GEOFENCE_NAME";
         // Phone
         public static final String COL_REQUEST_ID = "REQUEST_ID";
         // Location
-        public static final String COL_LATITUDE_E6 = "LAT_E6";
-        public static final String COL_LONGITUDE_E6 = "LNG_E6";
+        public static final String COL_LATITUDE_E6 = "GEOFENCE_LAT_E6";
+        public static final String COL_LONGITUDE_E6 = "GEOFENCE_LNG_E6";
         public static final String COL_ADDRESS = "ADDRESS";
-        public static final String COL_RADIUS = "RADIUS";
-        public static final String COL_TRANSITION = "TRANSITION";
-        public static final String COL_EXPIRATION = "EXPIRATION";
-        public static final String COL_EXPIRATION_DATE = "EXPIRATION_DATE";
+        public static final String COL_RADIUS = "GEOFENCE_RADIUS";
+        public static final String COL_TRANSITION = "GEOFENCE_TRANSITION";
+        public static final String COL_EXPIRATION_DATE = "GEOFENCE_EXPIRATION_DATE";
 
         public static final String COL_VERSION_UPDATE_DATE = "VERSION_UPDATE_DATE";
 
         public static final String[] ALL_COLS = new String[]{COL_ID, COL_REQUEST_ID, COL_NAME//
-                , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION //
+                , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION_DATE //
                 , COL_ADDRESS //
-                ,COL_EXPIRATION_DATE , COL_VERSION_UPDATE_DATE
+                , COL_VERSION_UPDATE_DATE //
         };
         public static final String[] ALL_GEOFENCE_REQUESTER_COLS = new String[]{COL_REQUEST_ID//
-                , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION //
+                , COL_LATITUDE_E6, COL_LONGITUDE_E6, COL_RADIUS, COL_TRANSITION, COL_EXPIRATION_DATE //
         };
         // Where Clause
         public static final String SELECT_BY_ENTITY_ID = String.format("%s = ?", COL_ID);
+        public static final String SELECT_BY_VALID_TRANSITION = String.format("%s > 0", COL_TRANSITION);
 
     }
 

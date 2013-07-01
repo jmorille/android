@@ -32,6 +32,7 @@ import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
+import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
@@ -278,6 +279,12 @@ public class ReceiveTransitionsIntentService extends IntentService {
         }
         if (!extrasBundles.containsKey(SmsLogDatabase.SmsLogColumns.COL_REQUEST_ID)) {
             extrasBundles.putString(SmsLogDatabase.SmsLogColumns.COL_REQUEST_ID, geofenceRequest.requestId);
+        }
+        if (geofenceRequest !=null) {
+            extrasBundles.putInt(GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6, geofenceRequest.getLatitudeE6());
+            extrasBundles.putInt(GeoFenceDatabase.GeoFenceColumns.COL_LONGITUDE_E6, geofenceRequest.getLongitudeE6() );
+            extrasBundles.putInt(GeoFenceDatabase.GeoFenceColumns.COL_RADIUS, geofenceRequest.getRadiusInMeters()  );
+            extrasBundles.putInt(GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, geofenceRequest.getTransitionType()  );
         }
         SmsMessageLocEnum.GEOFENCE_NAME.writeToBundle(extrasBundles, geofenceRequest.name);
         if (location != null) {

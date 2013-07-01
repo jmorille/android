@@ -14,6 +14,7 @@ import java.util.List;
 
 import eu.ttbox.geoping.domain.GeoFenceProvider;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
+import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.service.geofence.GeoFenceLocationService;
 
@@ -43,7 +44,7 @@ public class GeofenceBootRegisterReceiver extends BroadcastReceiver {
     private List<Geofence> getAllGeofences(Context context) {
         ArrayList<Geofence> result = null;
         ContentResolver cr = context.getContentResolver();
-        Cursor cursor = cr.query(GeoFenceProvider.Constants.CONTENT_URI, null, null, null, null);
+        Cursor cursor = cr.query(GeoFenceProvider.Constants.CONTENT_URI, null, GeoFenceDatabase.GeoFenceColumns.SELECT_BY_VALID_TRANSITION, null, null);
         try {
             int cursorCount = cursor.getCount();
             if (cursorCount > 0) {

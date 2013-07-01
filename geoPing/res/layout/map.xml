@@ -8,6 +8,7 @@
     <LinearLayout
         android:id="@+id/mapViewContainer"
         android:layout_width="match_parent"
+        android:orientation="horizontal"
         android:layout_height="match_parent" />
 
     <FrameLayout

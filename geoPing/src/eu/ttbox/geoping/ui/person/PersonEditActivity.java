@@ -26,6 +26,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 	// Binding
 	private PersonEditFragment editFragment;
 	private SmsLogListFragment smsLogFragment;
+    private PersonRemoteControlFragment remoteControlFragment;
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
@@ -53,6 +54,10 @@ public class PersonEditActivity extends SherlockFragmentActivity {
   					smsLogFragment.refreshLoader(args); 
 				}
 			}
+            // remote Controle
+            if (remoteControlFragment != null) {
+
+            }
 			personId = id;
 			personPhone = phone;
 			// Update Ui Tabs
@@ -175,7 +180,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		static final int PERSON = 0;
-		// static final int PAIRING = 1;
+		static final int REMOTE_CONTROL = 2;
 		static final int LOG = 1;
 
 		public SectionsPagerAdapter(FragmentManager fm) {
@@ -189,6 +194,14 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 			case PERSON:
 				fragment = editFragment;
 				break;
+           case REMOTE_CONTROL:
+               if (remoteControlFragment == null) {
+                   Bundle args = new Bundle();
+                   // TODO Args for personId
+                   //remoteControlFragment = new PersonRemoteControlFragment();
+                  // remoteControlFragment.setArguments(args);
+               }
+                 break;
 			case LOG:
 				if (smsLogFragment == null) {
 					Bundle args = new Bundle();
@@ -213,8 +226,8 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 			switch (position) {
 			case PERSON:
 				return getString(R.string.menu_person).toUpperCase();
-				// case PAIRING:
-				// return getString(R.string.menu_pairing).toUpperCase();
+			 case REMOTE_CONTROL:
+				 return getString(R.string.menu_person_remote_control).toUpperCase();
 			case LOG:
 				return getString(R.string.menu_smslog).toUpperCase();
 			}

@@ -166,7 +166,7 @@
         <service android:exported="false" android:label="@string/app_name" android:name="eu.ttbox.geoping.service.geofence.ReceiveTransitionsIntentService">
         </service>
         <!-- Activity Geofence Recognition -->
-        <service android:enabled="false" android:exported="false" android:label="@string/app_name" android:name="eu.ttbox.geoping.service.slave.ActivityRecognitionIntentService">
+        <service android:enabled="true" android:exported="false" android:label="@string/app_name" android:name=".service.geofence.ActivityRecognitionIntentService">
         </service>
 
 

@@ -22,7 +22,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -55,41 +54,34 @@ import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 public class GeoPingMasterService extends IntentService {
 
     private static final String TAG = "GeoPingMasterService";
-
     private static final int SHOW_ON_NOTIFICATION_ID = AppConstants.PER_PERSON_ID_MULTIPLICATOR * R.id.show_notification_new_geoping_response;
-
     private static final String ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ = "eu.ttbox.geoping.ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ";
-
+    private static final int UI_MSG_TOAST = 0;
     private final IBinder binder = new LocalBinder();
-
-    // Service
-    private SharedPreferences appPreferences;
-    private  Tracker tracker;
-
     // config
     boolean notifyGeoPingResponse = false;
+    // Service
+    private SharedPreferences appPreferences;
 
     // ===========================================================
     // UI Handler
     // ===========================================================
-
-    private static final int UI_MSG_TOAST = 0;
-
+    private Tracker tracker;
     private Handler uiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case UI_MSG_TOAST:
-                String msgText = (String) msg.obj;
-                Toast.makeText(getApplicationContext(), msgText, Toast.LENGTH_SHORT).show();
-                break;
+                case UI_MSG_TOAST:
+                    String msgText = (String) msg.obj;
+                    Toast.makeText(getApplicationContext(), msgText, Toast.LENGTH_SHORT).show();
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
             }
         }
     };
-     
+
 
     // ===========================================================
     // Constructors
@@ -118,20 +110,10 @@ public class GeoPingMasterService extends IntentService {
     // Binder
     // ===========================================================
 
-    public class LocalBinder extends Binder {
-        public GeoPingMasterService getService() {
-            return GeoPingMasterService.this;
-        }
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
     }
-
-    // ===========================================================
-    // Intent Handler
-    // ===========================================================
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -143,11 +125,11 @@ public class GeoPingMasterService extends IntentService {
             sendSmsGeoPingRequest(phone, params);
             // Tracker
             // tracker.trackPageView("/action/SMS_GEOPING_REQUEST");
-            
+
             tracker.sendEvent("MasterService", // Category
                     "HandleIntent", // Action
                     "SMS_GEOPING_REQUEST", // Label
-                     0l); // Value
+                    0l); // Value
         } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
@@ -169,7 +151,7 @@ public class GeoPingMasterService extends IntentService {
                     "HandleIntent", // Action
                     "SMS_PAIRING_RESPONSE", // Label
                     0l); // Value
-        }else if (ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ.equals(action)) {
+        } else if (ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ.equals(action)) {
             Log.i(TAG, "****************************************************");
             Log.i(TAG, "****************************************************");
             Log.i(TAG, "***** ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ ******");
@@ -179,36 +161,36 @@ public class GeoPingMasterService extends IntentService {
             SmsMessageActionEnum actionEnum = SmsMessageActionEnum.getByIntentName(action);
             if (actionEnum != null) {
                 switch (actionEnum) {
-                case SPY_SHUTDOWN:
-                    // TODO Display Notification
-                    break;
-                case SPY_SIM_CHANGE:
-                    // TODO Add Spy Person in DB for register next Data
-                    // TODO consumeSimChange(bundle);
-                    if (true) {
-                        Bundle bundle = intent.getExtras();
-                        String newPhone = bundle.getString(Intents.EXTRA_SMS_PHONE);
-                        Bundle params = bundle.getBundle(Intents.EXTRA_SMS_PARAMS);
-                        String originalPhone = SmsMessageLocEnum.PHONE_NUMBER.readString(params);
-                        Log.i(TAG, "Sim Change [" + originalPhone + "] to new Phone [" + newPhone + "]");
-                    }
-                case SPY_BOOT:
-                case SPY_LOW_BATTERY:
-                case SPY_PHONE_CALL:
-                case LOC_DECLARATION:
-                case GEOFENCE_Unknown_transition:
-                case GEOFENCE_ENTER:
-                case GEOFENCE_EXIT:
-                case LOC:
-                    consumeGeoPingResponse(actionEnum, intent.getExtras());
-                    break;
-                default:
-                    Log.w(TAG, "--- ------------------------------------ ---");
-                    Log.w(TAG, "--- Not managed EventSpy response : " + action + " ---");
-                    Log.w(TAG, "--- ------------------------------------ ---");
-                    printExtras(intent.getExtras());
-                    Log.w(TAG, "--- ------------------------------------ ---");
-                    break;
+                    case SPY_SHUTDOWN:
+                        // TODO Display Notification
+                        break;
+                    case SPY_SIM_CHANGE:
+                        // TODO Add Spy Person in DB for register next Data
+                        // TODO consumeSimChange(bundle);
+                        if (true) {
+                            Bundle bundle = intent.getExtras();
+                            String newPhone = bundle.getString(Intents.EXTRA_SMS_PHONE);
+                            Bundle params = bundle.getBundle(Intents.EXTRA_SMS_PARAMS);
+                            String originalPhone = SmsMessageLocEnum.PHONE_NUMBER.readString(params);
+                            Log.i(TAG, "Sim Change [" + originalPhone + "] to new Phone [" + newPhone + "]");
+                        }
+                    case SPY_BOOT:
+                    case SPY_LOW_BATTERY:
+                    case SPY_PHONE_CALL:
+                    case LOC_DECLARATION:
+                    case GEOFENCE_Unknown_transition:
+                    case GEOFENCE_ENTER:
+                    case GEOFENCE_EXIT:
+                    case LOC:
+                        consumeGeoPingResponse(actionEnum, intent.getExtras());
+                        break;
+                    default:
+                        Log.w(TAG, "--- ------------------------------------ ---");
+                        Log.w(TAG, "--- Not managed EventSpy response : " + action + " ---");
+                        Log.w(TAG, "--- ------------------------------------ ---");
+                        printExtras(intent.getExtras());
+                        Log.w(TAG, "--- ------------------------------------ ---");
+                        break;
                 }
                 // Tracker
                 tracker.sendEvent("MasterService", // Category
@@ -220,6 +202,10 @@ public class GeoPingMasterService extends IntentService {
 
     }
 
+    // ===========================================================
+    // Intent Handler
+    // ===========================================================
+
     private void printExtras(Bundle extras) {
         if (extras != null && !extras.isEmpty()) {
             for (String key : extras.keySet()) {
@@ -230,10 +216,6 @@ public class GeoPingMasterService extends IntentService {
             Log.d(TAG, "--- Intent extras : NONE");
         }
     }
-
-    // ===========================================================
-    // Search Person
-    // ===========================================================
 
     private Person getPersonByPhone(String phoneNumber) {
         Person result = null;
@@ -256,7 +238,7 @@ public class GeoPingMasterService extends IntentService {
     }
 
     // ===========================================================
-    // Send GeoPing Request
+    // Search Person
     // ===========================================================
 
     private void consumeSmsPairingResponse(String phone, long userId) {
@@ -264,7 +246,7 @@ public class GeoPingMasterService extends IntentService {
             // Search Phone
             String personPhone = null;
             Uri uri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, String.valueOf(userId));
-            String[] cols = new String[] { PersonColumns.COL_PHONE };
+            String[] cols = new String[]{PersonColumns.COL_PHONE};
             Cursor cur = getContentResolver().query(uri, cols, null, null, null);
             try {
                 if (cur != null && cur.moveToFirst()) {
@@ -288,7 +270,7 @@ public class GeoPingMasterService extends IntentService {
     }
 
     // ===========================================================
-    // Sender Sms message
+    // Send GeoPing Request
     // ===========================================================
 
     private void sendSmsPairingRequest(String phone, long userId) {
@@ -306,6 +288,10 @@ public class GeoPingMasterService extends IntentService {
             uiHandler.sendMessage(msg);
         }
     }
+
+    // ===========================================================
+    // Sender Sms message
+    // ===========================================================
 
     private void sendSmsGeoPingRequest(String phone, Bundle params) {
         Bundle geopingRequest = SmsSenderHelper.completeRequestTimeOutFromPrefs(appPreferences, params);
@@ -354,10 +340,6 @@ public class GeoPingMasterService extends IntentService {
         return isConsume;
     }
 
-    // ===========================================================
-    // Consume Localisation
-    // ===========================================================
-
     private boolean consumeGeoPingResponse(SmsMessageActionEnum actionEnum, Bundle bundle) {
         boolean isConsume = false;
         String phone = bundle.getString(Intents.EXTRA_SMS_PHONE);
@@ -381,12 +363,16 @@ public class GeoPingMasterService extends IntentService {
                 Intent intent = Intents.newGeoTrackInserted(uri, values);
                 sendBroadcast(intent);
                 // Display Notification
-                showNotificationGeoPing(actionEnum, uri, values, geoTrack);
+                showNotificationGeoPing(actionEnum, uri, values, geoTrack, params);
             }
             isConsume = true;
         }
         return isConsume;
     }
+
+    // ===========================================================
+    // Consume Localisation
+    // ===========================================================
 
     private Person searchPersonForPhone(String phoneNumber) {
         Person person = null;
@@ -406,19 +392,19 @@ public class GeoPingMasterService extends IntentService {
         return person;
     }
 
-    // ===========================================================
-    // Notification
-    // ===========================================================
-
-    private Intent createMarkAsReadLogIntent(String phone){
+    private Intent createMarkAsReadLogIntent(String phone) {
         Intent intent = new Intent(this, GeoPingMasterService.class);
         intent.setAction(ACTION_MASTER_GEOPING_PHONE_MARK_AS_READ);
         intent.putExtra(Intents.EXTRA_SMS_PHONE, phone);
         return intent;
     }
 
+    // ===========================================================
+    // Notification
+    // ===========================================================
+
     @SuppressLint("NewApi")
-    private void showNotificationGeoPing(SmsMessageActionEnum actionEnum, Uri geoTrackData, ContentValues values, GeoTrack geoTrack) {
+    private void showNotificationGeoPing(SmsMessageActionEnum actionEnum, Uri geoTrackData, ContentValues values, GeoTrack geoTrack,  Bundle params) {
         String phone = values.getAsString(GeoTrackColumns.COL_PHONE);
 
         // Contact Name
@@ -468,11 +454,14 @@ public class GeoPingMasterService extends IntentService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
         // Create Notifiation
+        Log.d(TAG, "----- contentTitle with Bundle : " + params);
         String contentTitle = getString(actionEnum.labelResourceId);
-        if (SmsMessageActionEnum.GEOFENCE_ENTER.equals(actionEnum) || SmsMessageActionEnum.GEOFENCE_EXIT.equals(actionEnum)) {
-            if (SmsMessageLocEnum.GEOFENCE_NAME.isToContentValues(values)) {
-                String geofenceName  =SmsMessageLocEnum.GEOFENCE_NAME.readString(values);
-                contentTitle = String.format(contentTitle, geofenceName);
+        if (SmsMessageLocEnum.GEOFENCE_NAME.isToBundle(params)) {
+            String geofenceName = SmsMessageLocEnum.GEOFENCE_NAME.readString(params);
+            if (SmsMessageActionEnum.GEOFENCE_ENTER.equals(actionEnum)) {
+                contentTitle = String.format("Exit Geofence %s", geofenceName);
+            } else if (SmsMessageActionEnum.GEOFENCE_EXIT.equals(actionEnum)) {
+                contentTitle = String.format("Enter Geofence %s", geofenceName);
             }
         }
         builder //
@@ -482,7 +471,7 @@ public class GeoPingMasterService extends IntentService {
                 .setAutoCancel(true) //
                 .setContentIntent(pendingIntent)//
                 .setContentTitle(contentTitle) //
-                // TODO .setContentTitle(getString(R.string.notif_geoping)) //
+                        // TODO .setContentTitle(getString(R.string.notif_geoping)) //
                 .setContentText(contactDisplayName); //
         if (photo != null) {
             builder.setLargeIcon(photo);
@@ -492,19 +481,19 @@ public class GeoPingMasterService extends IntentService {
         }
 //         builder.setNumber(6);
         // Details
-        String coordString =getLatLngAsString(geoTrack);
-        if (coordString!=null) {
+        String coordString = getLatLngAsString(geoTrack);
+        if (coordString != null) {
             NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
             inBoxStyle.setBigContentTitle(contentTitle);
             inBoxStyle.addLine(contactDisplayName);
             inBoxStyle.addLine(coordString);
-            if (geoTrack.batteryLevelInPercent>-1) {
-                String batteryLabel = SmsMessageLocEnum.BATTERY.getLabelValueResourceId(this, String.valueOf(  geoTrack.batteryLevelInPercent));
+            if (geoTrack.batteryLevelInPercent > -1) {
+                String batteryLabel = SmsMessageLocEnum.BATTERY.getLabelValueResourceId(this, String.valueOf(geoTrack.batteryLevelInPercent));
                 inBoxStyle.addLine(batteryLabel);
             }
             if (geoTrack.hasEventTime()) {
-                String smsTypeTime =  SmsMessageLocEnum.EVT_DATE.getLabelValueResourceId(this, geoTrack.eventTime);
-                inBoxStyle.addLine(smsTypeTime );
+                String smsTypeTime = SmsMessageLocEnum.EVT_DATE.getLabelValueResourceId(this, geoTrack.eventTime);
+                inBoxStyle.addLine(smsTypeTime);
             }
 
             builder.setStyle(inBoxStyle);
@@ -522,23 +511,22 @@ public class GeoPingMasterService extends IntentService {
     private String getLatLngAsString(GeoTrack geoTrack) {
         String coordString = null;
 
-        if (geoTrack.hasLatLng() ) {
-             coordString = String.format(Locale.US, "(%.6f, %.6f) +/- %s m", geoTrack.getLatitude(), geoTrack.getLongitude(), geoTrack.getAccuracy());
+        if (geoTrack.hasLatLng()) {
+            coordString = String.format(Locale.US, "(%.6f, %.6f) +/- %s m", geoTrack.getLatitude(), geoTrack.getLongitude(), geoTrack.getAccuracy());
         }
         return coordString;
+    }
+
+    public class LocalBinder extends Binder {
+        public GeoPingMasterService getService() {
+            return GeoPingMasterService.this;
+        }
     }
 
     // ===========================================================
     // Other
     // ===========================================================
 
-    /**
-     * {link http://www.devx.com/wireless/Article/40524/0/page/2}
-     * 
-     * @param cellID
-     * @param lac
-     * @return
-     * @throws Exception
-     */
+
 
 }
