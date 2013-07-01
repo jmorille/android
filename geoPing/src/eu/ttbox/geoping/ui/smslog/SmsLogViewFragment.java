@@ -248,6 +248,7 @@ public class SmsLogViewFragment extends SherlockFragment {
     }
 
     private void bindMessageParams(String msgParams) {
+        Log.d(TAG, "Read Json Params : " + msgParams);
         if (msgParams != null) {
             try {
                 JSONObject json = new JSONObject(msgParams);
