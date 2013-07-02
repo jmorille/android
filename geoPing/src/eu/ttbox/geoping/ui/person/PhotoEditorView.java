@@ -37,12 +37,17 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
 
     private static final String TAG = "PhotoEditorView";
 
+    // Constant
+    public static  final int GEOPING_TYPE_TRIANGLE = 1;
+    public static  final int GEOPING_TYPE_GEOFENCE = 1;
+
+    // Instance
     private ImageView mPhotoImageView;
     private View mFrameView;
 
     // private ValuesDelta mEntry;
     private EditorListener mListener;
-    private View mTriangleAffordance;
+    private ImageView mTriangleAffordance;
 
     private boolean mHasSetPhoto = false;
     private boolean mReadOnly;
@@ -77,7 +82,7 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        mTriangleAffordance = findViewById(R.id.photo_triangle_affordance);
+        mTriangleAffordance = (ImageView) findViewById(R.id.photo_triangle_affordance);
         mPhotoImageView = (ImageView) findViewById(R.id.photo);
         mFrameView = findViewById(R.id.frame);
         mFrameView.setOnClickListener(new OnClickListener() {
@@ -134,6 +139,21 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
         mHasSetPhoto = false;
         // mEntry.setFromTemplate(true);
     }
+    // ===========================================================
+    // Photo Type
+    // ===========================================================
+
+    public void setGeopingType(int geopingType) {
+        switch (geopingType ) {
+            case GEOPING_TYPE_GEOFENCE:
+                mTriangleAffordance.setImageResource(R.drawable.ic_action_geofence);
+                break;
+            default:
+                mTriangleAffordance.setImageResource(R.drawable.account_spinner_icon);
+                break;
+        }
+    }
+
 
     // ===========================================================
     // Listeners

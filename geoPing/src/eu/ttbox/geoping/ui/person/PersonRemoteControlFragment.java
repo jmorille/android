@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -44,8 +45,8 @@ public class PersonRemoteControlFragment extends SherlockFragment {
         buttonsMap = new SparseArray<Button>(buttonIds.length);
         for (int i : buttonIds) {
             Button localButton = (Button) v.findViewById(R.id.track_person_remote_control_hideButton);
-           // localButton.setOnClickListener(buttonOnClickListener);
-            //buttonsMap.put(i, localButton);
+            localButton.setOnClickListener(buttonOnClickListener);
+            buttonsMap.put(i, localButton);
         }
 
         return v;
@@ -62,12 +63,16 @@ public class PersonRemoteControlFragment extends SherlockFragment {
     // ===========================================================
 
     public void onButtonClick(View v) {
+        Button localButton = buttonsMap.get(v.getId());
         switch (v.getId()) {
             case R.id.track_person_remote_control_pairingButton:
+                Toast.makeText(getActivity(), "Pairing button click", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.track_person_remote_control_openButton:
+                Toast.makeText(getActivity(), "Open App button click", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.track_person_remote_control_hideButton:
+                Toast.makeText(getActivity(), "Hide click", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 throw new IllegalArgumentException("Not Implemented action for Id : " + v.getId());

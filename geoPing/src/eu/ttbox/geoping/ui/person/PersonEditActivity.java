@@ -31,7 +31,7 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 	// Instance
-	private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 2;
+	private static final int VIEW_PAGER_LOADPERS_PAGE_COUNT = 3;
 	private int viewPagerPageCount = 1;
 
 	private String personId;
@@ -45,7 +45,9 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 
 		@Override
 		public void onPersonSelect(String id, String phone) {
-			// Check Update Phone
+            personId = id;
+            personPhone = phone;
+            // Check Update Phone
 			if (!TextUtils.isEmpty(personPhone) && !TextUtils.isEmpty(phone)) {
 				if (smsLogFragment!=null && !personPhone.equals(phone)) {
 					Bundle args = new Bundle();
@@ -56,10 +58,8 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 			}
             // remote Controle
             if (remoteControlFragment != null) {
-
+                Bundle args = new Bundle();
             }
-			personId = id;
-			personPhone = phone;
 			// Update Ui Tabs
 			if (viewPagerPageCount != VIEW_PAGER_LOADPERS_PAGE_COUNT) {
 				viewPagerPageCount = VIEW_PAGER_LOADPERS_PAGE_COUNT;
@@ -180,8 +180,8 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		static final int PERSON = 0;
-		static final int REMOTE_CONTROL = 2;
-		static final int LOG = 1;
+		static final int REMOTE_CONTROL = 1;
+		static final int LOG = 2    ;
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -198,9 +198,10 @@ public class PersonEditActivity extends SherlockFragmentActivity {
                if (remoteControlFragment == null) {
                    Bundle args = new Bundle();
                    // TODO Args for personId
-                   //remoteControlFragment = new PersonRemoteControlFragment();
+                   remoteControlFragment = new PersonRemoteControlFragment();
                   // remoteControlFragment.setArguments(args);
                }
+               fragment = remoteControlFragment;
                  break;
 			case LOG:
 				if (smsLogFragment == null) {
