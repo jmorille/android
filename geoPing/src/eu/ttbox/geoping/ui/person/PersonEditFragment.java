@@ -79,6 +79,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
     private String entityId;
     private String contactId;
 
+
     // Listener
     private OnPersonSelectListener onPersonSelectListener;
 
@@ -256,7 +257,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
 
         String name = nameEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
-        Uri uri = doSavePerson(name, phone, contactId);
+        Uri uri = doSavePerson(name, phone, contactId );
         if (uri != null) {
             getActivity().setResult(Activity.RESULT_OK);
             getActivity().finish();
@@ -412,8 +413,9 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
                 String contactId = c.getString(0);
                 String name = c.getString(1);
                 String phone = c.getString(2);
-                String lookupKey = c.getString(3);
-                // int type = c.getInt(3);
+               // String lookupKey = c.getString(3);
+               // Uri lookupUri =  ContactsContract.Contacts.getLookupUri(Long.valueOf(contactId), lookupKey);
+                // int type = c.getInt(4);
                 Log.d(TAG, "Select contact Uri : " + contactData + " ==> Contact Id : " + contactId);
                 // Log.d(TAG, "Select contact Uri : " + contactData +
                 // " ==> Lookup Uri : " + contactLookupUri);
@@ -421,7 +423,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
                 String checkExistId = checkExistEntityId(cr, phone);
                 // Save The select person
                 if (checkExistId == null) {
-                    Uri uri = doSavePerson(name, phone, contactId);
+                    Uri uri = doSavePerson(name, phone, contactId );
                 } else {
                     Log.i(TAG, "Found existing Entity [" + checkExistId + "] for Phone : " + phone);
                     loadEntity(checkExistId);
@@ -480,10 +482,10 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         return name;
     }
 
-    private Uri doSavePerson(String nameDirty, String phoneDirty, String contactId) {
+    private Uri doSavePerson(String nameDirty, String phoneDirty, String contactId ) {
         String phone = cleanPhone(phoneDirty);
         String name = trimToNull(nameDirty);
-        setPerson(name, phone, contactId);
+        setPerson(name, phone, contactId );
         // Validate
         if (!formValidator.validate()) {
             return null;
@@ -493,7 +495,9 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         values.put(PersonColumns.COL_NAME, name);
         values.put(PersonColumns.COL_PHONE, phone);
         values.put(PersonColumns.COL_COLOR, mPaint.getColor());
-        values.put(PersonColumns.COL_CONTACT_ID, contactId);
+        if (contactId!=null) {
+            values.put(PersonColumns.COL_CONTACT_ID, contactId);
+        }
 
         Log.d(TAG, "Save Person with Contact Id : " + contactId);
         // Content
@@ -523,7 +527,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         return uri;
     }
 
-    private void setPerson(String name, String phone, String contactId) {
+    private void setPerson(String name, String phone, String contactId ) {
         nameEditText.setText(name);
         phoneEditText.setText(phone);
         this.contactId = contactId;

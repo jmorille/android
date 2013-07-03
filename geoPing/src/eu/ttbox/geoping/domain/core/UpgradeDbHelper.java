@@ -7,13 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
+
+import eu.ttbox.geoping.core.VersionUtils;
 
 public class UpgradeDbHelper {
 
@@ -47,6 +51,27 @@ public class UpgradeDbHelper {
         return colIdx;
     }
 
+    public static ArrayList<ContentValues> copyTable(SQLiteDatabase db, String oldTable ) {
+        ArrayList<ContentValues> allRows = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.query(oldTable, null, null, null, null, null, null);
+            allRows = new ArrayList<ContentValues>(cursor.getCount());
+             while (cursor.moveToNext()) {
+                ContentValues values = readCursorToContentValues(cursor );
+                 if (values!=null) {
+                     allRows.add(values);
+                     Log.d(TAG, "Upgrading database " + oldTable + " : memory copy of row values : " + values);
+                 }
+            }
+        } finally {
+            if (cursor!=null) {
+                cursor.close();
+            }
+        }
+        return  allRows;
+    }
+
     public static ArrayList<ContentValues> copyTable(SQLiteDatabase db, String oldTable, String[] stringColums, String[] intColums, String[] longColums) {
         ArrayList<ContentValues> allRows = null;
         Cursor cursor = null;
@@ -77,6 +102,54 @@ public class UpgradeDbHelper {
         }
 
         return allRows;
+    }
+
+    public static ContentValues readCursorToContentValues(Cursor cursor ) {
+        ContentValues values = new ContentValues();
+        String[]  colNames = cursor.getColumnNames();
+        for (String colName : colNames) {
+            if (VersionUtils.isHc11) {
+                readCursorColumnToContentValuesForHoneyComb(cursor, values, colName);
+            } else {
+                readCursorColumnToContentValuesBeforeHoneyComb(cursor, values, colName);
+            }
+        }
+        return values;
+    }
+
+    private static void readCursorColumnToContentValuesBeforeHoneyComb(  Cursor cursor, ContentValues values , String colName) {
+        int colIdx =  cursor.getColumnIndex(colName);
+        String value = cursor.getString(colIdx);
+        values.put(colName, value);
+    }
+
+    private static void readCursorColumnToContentValuesForHoneyComb(  Cursor cursor, ContentValues values , String colName) {
+        int colIdx =  cursor.getColumnIndex(colName);
+        switch (cursor.getType(colIdx)) {
+            case  Cursor.FIELD_TYPE_STRING : {
+                String value = cursor.getString(colIdx);
+                values.put(colName, value);
+            }
+            break;
+            case  Cursor.FIELD_TYPE_NULL: {
+                Float value = cursor.getFloat(colIdx);
+                values.putNull(colName );
+            }
+            break;
+            case  Cursor.FIELD_TYPE_INTEGER: {
+                Integer value = cursor.getInt(colIdx);
+                values.put(colName, value);
+            }
+            break;
+            case  Cursor.FIELD_TYPE_FLOAT: {
+                Float value = cursor.getFloat(colIdx);
+                values.put(colName, value);
+            }
+            break;
+             default:
+                Log.w(TAG, "Not manage type for column Nanme : " + colName);
+             break;
+        }
     }
 
     public static ContentValues readCursorToContentValues(Cursor cursor, String[] stringColums, String[] intColums, String[] longColums) {

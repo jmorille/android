@@ -19,6 +19,7 @@ public class PersonHelper {
     public int phoneIdx = -1;
     public int colorIdx = -1;
     public int contactIdIdx = -1;
+
     public int pairingTimeIdx = -1;
     // Encryption
     public int encryptionPubKeyIdx = -1;
@@ -36,6 +37,7 @@ public class PersonHelper {
         phoneIdx = cursor.getColumnIndex(PersonColumns.COL_PHONE);
         colorIdx = cursor.getColumnIndex(PersonColumns.COL_COLOR);
         contactIdIdx = cursor.getColumnIndex(PersonColumns.COL_CONTACT_ID);
+
         pairingTimeIdx = cursor.getColumnIndex(PersonColumns.COL_PAIRING_TIME);
         // Encryption
         encryptionPubKeyIdx = cursor.getColumnIndex(PersonColumns.COL_ENCRYPTION_PUBKEY);
@@ -61,6 +63,7 @@ public class PersonHelper {
         user.setPhone(phoneIdx > -1 ? cursor.getString(phoneIdx) : null);
         user.setColor(colorIdx > -1 ? cursor.getInt(colorIdx) : 0);
         user.setContactId(contactIdIdx > -1 ? cursor.getString(contactIdIdx) : null);
+
         user.setPairingTime(pairingTimeIdx > -1 ? cursor.getLong(pairingTimeIdx) : AppConstants.UNSET_TIME);
         // Encryption
         user.encryptionPrivKey = encryptionPrivKeyIdx > -1 ? cursor.getString(encryptionPrivKeyIdx) : null;
@@ -95,6 +98,8 @@ public class PersonHelper {
     public String getContactId(Cursor cursor) {
         return cursor.getString(contactIdIdx);
     }
+
+
 
     public PersonHelper setTextPersonName(TextView view, Cursor cursor) {
         return setTextWithIdx(view, cursor, displayNameIdx);

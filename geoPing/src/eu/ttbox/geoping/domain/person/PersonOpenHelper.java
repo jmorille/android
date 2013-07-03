@@ -139,6 +139,8 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
             oldRows = UpgradeDbHelper.copyTable(db, "personFTS", stringColums, intColums, longColums);
             // Drop All Table
             db.execSQL("DROP TABLE IF EXISTS personFTS");
+        } else {
+            oldRows = UpgradeDbHelper.copyTable(db, PersonDatabase.TABLE_PERSON_FTS );
         }
 
         // Create the new Table
@@ -149,7 +151,7 @@ public class PersonOpenHelper extends SQLiteOpenHelper {
 
         // Insert data in new table
         // ----------------------
-        if (oldRows != null) {
+        if (oldRows != null && !oldRows.isEmpty() ) {
             List<String> validColumns = Arrays.asList(PersonColumns.ALL_COLS);
             UpgradeDbHelper.insertOldRowInNewTable(db, oldRows, PersonDatabase.TABLE_PERSON_FTS, validColumns);
         }

@@ -38,7 +38,8 @@ public class PersonDatabase {
         COL_ID, COL_NAME //
                 , COL_EMAIL, COL_PERSON_UUID //
                 , COL_PHONE, COL_PHONE_NORMALIZED, COL_PHONE_MIN_MATCH //
-                , COL_COLOR, COL_CONTACT_ID, COL_PAIRING_TIME //
+                , COL_COLOR, COL_PAIRING_TIME //
+                , COL_CONTACT_ID //
                 , COL_ENCRYPTION_PUBKEY, COL_ENCRYPTION_PRIVKEY, COL_ENCRYPTION_REMOTE_PUBKEY //
         };
         // Where Clause

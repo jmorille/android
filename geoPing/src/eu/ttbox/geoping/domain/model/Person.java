@@ -11,6 +11,7 @@ public class Person {
      // Phone
 	public String phone;
 	public String contactId;
+
 	public long pairingTime;
 	// Config
     public int color;
@@ -57,6 +58,7 @@ public class Person {
 		this.contactId = contactId;
 		return this;
 	}
+
 
 	public Person setPairingTime(long pairingTime) {
 		this.pairingTime = pairingTime;
