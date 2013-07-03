@@ -459,9 +459,9 @@ public class GeoPingMasterService extends IntentService {
         if (SmsMessageLocEnum.GEOFENCE_NAME.isToBundle(params)) {
             String geofenceName = SmsMessageLocEnum.GEOFENCE_NAME.readString(params);
             if (SmsMessageActionEnum.GEOFENCE_ENTER.equals(actionEnum)) {
-                contentTitle = String.format("Exit Geofence %s", geofenceName);
+                contentTitle =  getString(R.string.sms_action_geofence_transition_enter_with_name, geofenceName);
             } else if (SmsMessageActionEnum.GEOFENCE_EXIT.equals(actionEnum)) {
-                contentTitle = String.format("Enter Geofence %s", geofenceName);
+                contentTitle =  getString(R.string.sms_action_geofence_transition_exit_with_name, geofenceName);
             }
         }
         builder //

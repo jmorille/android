@@ -44,6 +44,9 @@
     <string name="sms_action_geofence_transition_unknown">Offense Geo Fence</string>
     <string name="sms_action_geofence_transition_enter">Entered Geo Fence</string>
     <string name="sms_action_geofence_transition_exit">Exited Geo Fence</string>
+    <string name="sms_action_geofence_transition_enter_with_name">Entered at %s</string>
+    <string name="sms_action_geofence_transition_exit_with_name">Exited of %s</string>
+
     <string name="sms_action_pairing_request">Pairing request</string>
     <string name="sms_action_pairing_response">Pairing answer</string>
     <string name="sms_action_spyevt_shutdown">Event Shutdown</string>

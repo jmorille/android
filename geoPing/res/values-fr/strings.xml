@@ -54,6 +54,8 @@
     <string name="sms_action_geofence_transition_unknown">Violation de la Géo Barrière</string>
     <string name="sms_action_geofence_transition_enter">Entrée dans la Géo Barrière</string>
     <string name="sms_action_geofence_transition_exit">Sortie de la Géo Barrière</string>
+    <string name="sms_action_geofence_transition_enter_with_name">Sortie de %s</string>
+    <string name="sms_action_geofence_transition_exit_with_name">Entrée dans of %s</string>
 
     <string name="sms_action_pairing_request">Demande d\'association</string>
     <string name="sms_action_pairing_response">Réponse à l\'association</string>

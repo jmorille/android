@@ -14,8 +14,6 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 
-import eu.ttbox.geoping.R;
-
 
 public class LoginActivity extends AccountAuthenticatorActivity {
 
@@ -29,7 +27,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
 
     static class Constants {
-        public static final String ACCOUNT_TYPE = "eu.ttbox.geoping";
+        public static final String ACCOUNT_TYPE = GeopingSyncContactHelper.Constants.ACCOUNT_TYPE;
         public static final String PARAM_CONFIRM_CREDENTIALS = "confirmCredentials";
     }
 
