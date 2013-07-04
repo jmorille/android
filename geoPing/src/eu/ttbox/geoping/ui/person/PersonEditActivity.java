@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.ui.person;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +16,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
@@ -59,6 +61,8 @@ public class PersonEditActivity extends SherlockFragmentActivity {
             // remote Controle
             if (remoteControlFragment != null) {
                 Bundle args = new Bundle();
+                Uri entityUri = PersonProvider.Constants.getUriEntityId(id);
+                remoteControlFragment.setEntity(entityUri, phone);
             }
 			// Update Ui Tabs
 			if (viewPagerPageCount != VIEW_PAGER_LOADPERS_PAGE_COUNT) {
@@ -199,6 +203,8 @@ public class PersonEditActivity extends SherlockFragmentActivity {
                    Bundle args = new Bundle();
                    // TODO Args for personId
                    remoteControlFragment = new PersonRemoteControlFragment();
+                   Uri entityUri = PersonProvider.Constants.getUriEntityId(personId);
+                   remoteControlFragment.setEntity(entityUri, personPhone);
                   // remoteControlFragment.setArguments(args);
                }
                fragment = remoteControlFragment;

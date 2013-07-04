@@ -34,6 +34,15 @@ public class PersonProvider extends ContentProvider {
         	Log.d(TAG, "PersonProvider phone filter Uri : " + uri);
         	return uri;
         }
+        public static final Uri getUriEntityId(long entityId) {
+            return getUriEntityId(String.valueOf(entityId));
+        }
+        public static final Uri getUriEntityId(String entityId) {
+            Uri uri = Uri.withAppendedPath( CONTENT_URI, entityId);
+            Log.d(TAG, "PersonProvider Entity Uri : " + uri);
+            return uri;
+        }
+
     }
 
     private PersonDatabase personDatabase;
