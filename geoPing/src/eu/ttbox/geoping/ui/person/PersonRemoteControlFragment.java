@@ -20,20 +20,16 @@ import eu.ttbox.geoping.core.Intents;
 public class PersonRemoteControlFragment extends SherlockFragment {
 
     private static final String TAG = "PersonRemoteControlFragment";
-
     // Constant
-    private static final  int[] buttonIds = new int[]{ //
+    private static final int[] buttonIds = new int[]{ //
             R.id.track_person_remote_control_pairingButton //
             , R.id.track_person_remote_control_openButton //
             , R.id.track_person_remote_control_hideButton //
     };
     // Instance
-    private SparseArray<Button>
-            buttonsMap ;
-
+    private SparseArray<Button> buttonsMap;
     private Uri entityUri;
     private String entityPhoneNumber;
-
     // ===========================================================
     // OnClick Listener
     // ===========================================================
@@ -77,15 +73,17 @@ public class PersonRemoteControlFragment extends SherlockFragment {
         if (!TextUtils.isEmpty(phoneNumber)) {
             setButtonsVisibility(true);
         } else {
-            setButtonsVisibility( false);
+            setButtonsVisibility(false);
         }
     }
 
-    private void setButtonsVisibility( boolean isEnable ) {
-        for (int key : buttonIds) {
-            Button localButton = buttonsMap.get(key);
-            if (localButton!=null) {
-                localButton.setEnabled(isEnable);
+    private void setButtonsVisibility(boolean isEnable) {
+        if (buttonsMap != null) {
+            for (int key : buttonIds) {
+                Button localButton = buttonsMap.get(key);
+                if (localButton != null) {
+                    localButton.setEnabled(isEnable);
+                }
             }
         }
     }
@@ -111,11 +109,9 @@ public class PersonRemoteControlFragment extends SherlockFragment {
         }
     }
 
-
-
     public void onPairingClick(View v) {
         String entityId = entityUri.getLastPathSegment();
-        Intent intent = Intents.pairingRequest(getActivity(),entityPhoneNumber , entityId);
+        Intent intent = Intents.pairingRequest(getActivity(), entityPhoneNumber, entityId);
         getActivity().startService(intent);
     }
 

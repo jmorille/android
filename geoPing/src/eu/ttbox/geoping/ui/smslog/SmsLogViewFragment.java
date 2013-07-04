@@ -274,10 +274,13 @@ public class SmsLogViewFragment extends SherlockFragment {
 
     private void defineParamTextLabel( TextView keyTextView, TextView valueTextView ,  String key,  String val ) {
         SmsMessageLocEnum param = SmsMessageLocEnum.getByEnumName(key);
-        if (param.equals(SmsMessageLocEnum.EVT_DATE) || param.equals(SmsMessageLocEnum.DATE)) {
+        if (param ==null) {
             keyTextView.setText(key);
             valueTextView.setText(val);
-        } else if (param!=null && param.hasLabelValueResourceId() ) {
+        } else   if (param.equals(SmsMessageLocEnum.EVT_DATE) || param.equals(SmsMessageLocEnum.DATE)) {
+            keyTextView.setText(key);
+            valueTextView.setText(val);
+        } else if ( param.hasLabelValueResourceId() ) {
             keyTextView.setText(param.getLabelValueResourceId(getActivity(), val));
             valueTextView.setText(null);
         } else {

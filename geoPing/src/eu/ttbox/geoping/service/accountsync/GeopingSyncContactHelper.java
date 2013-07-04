@@ -24,6 +24,7 @@ import java.util.HashMap;
 import javax.sound.midi.Track;
 
 import eu.ttbox.geoping.domain.PersonProvider;
+import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 
 
@@ -77,14 +78,12 @@ public class GeopingSyncContactHelper {
                 Log.d(TAG, "==============================================================");
 
                 while (cperson.moveToNext()) {
-                    Long personId = helper.getPersonId(cperson);
-                    String personName = helper.getPersonDisplayName(cperson);
-                    Long contactId=  Long.valueOf( helper.getContactId(cperson));
+                    Person person=  helper.getEntity(cperson);
 
-                    Log.d(TAG, "Read Local Person DB : personId="+ personId + "  with personName="+personName );
+                    Log.d(TAG, "Read Local Person DB : "+ person );
                    //  personName = "ATATA";
-                    if (!localContacts.containsKey(personName)) {
-                         addContact(context, account,   contactId, personName, personName );
+                    if (!localContacts.containsKey(person.displayName)) {
+                         addContact(context, account,  person, person.displayName );
                     }
                 }
                 Log.d(TAG, "==============================================================");
@@ -104,14 +103,11 @@ public class GeopingSyncContactHelper {
 
     /**
      * <a herf="http://www.grokkingandroid.com/androids-contentprovideroperation-withbackreference-explained/">ContentProviderOperation Withbackreference explained</a>
-     * @param context
-     * @param account
-     * @param contactId
-     * @param name
-     * @param username
+
      */
-    public  static void addContact(Context context,  Account account, Long contactId, String name, String username ) {
-        Log.i(TAG, "Adding contact: " + name);
+    public  static void addContact(Context context,  Account account,   Person person,  String username ) {
+         Log.i(TAG, "Adding contact: " + person);
+
         ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
 
         //Create our RawContact
@@ -119,16 +115,16 @@ public class GeopingSyncContactHelper {
         builder.withValue(ContactsContract.RawContacts.ACCOUNT_NAME, account.name);
         builder.withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, account.type);
         builder.withValue(ContactsContract.RawContacts.SYNC1, username);
-        if ( contactId !=null) {
-            builder.withValue(ContactsContract.RawContacts.CONTACT_ID, contactId);
+        if (  person.contactId !=null) {
+            builder.withValue(ContactsContract.RawContacts.CONTACT_ID,  person.contactId);
         }
         operationList.add(builder.build());
 
         //Create a Data record of common type 'StructuredName' for our RawContact
         builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
-        builder.withValueBackReference(ContactsContract.CommonDataKinds.StructuredName.RAW_CONTACT_ID, 0 );
+        builder.withValueBackReference(ContactsContract.CommonDataKinds.StructuredName.RAW_CONTACT_ID, 0);
         builder.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
-        builder.withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name);
+        builder.withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, username);
 
         operationList.add(builder.build());
 
@@ -136,9 +132,9 @@ public class GeopingSyncContactHelper {
         builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
         builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0);
         builder.withValue(ContactsContract.Data.MIMETYPE, "vnd.android.cursor.item/vnd.eu.ttbox.geoping.person.profile");
-        builder.withValue(ContactsContract.Data.DATA1, username);
+        builder.withValue(ContactsContract.Data.DATA1, person.displayName);
         builder.withValue(ContactsContract.Data.DATA2, "Geoping Profile");
-        builder.withValue(ContactsContract.Data.DATA3, "View profile");
+        builder.withValue(ContactsContract.Data.DATA3, person.phone);
 
         operationList.add(builder.build());
 
