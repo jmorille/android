@@ -1,8 +1,9 @@
 package eu.ttbox.geoping.service.encoder;
 
+import android.content.res.Resources;
+
 import java.util.HashMap;
 
-import android.content.res.Resources;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.service.master.GeoPingMasterService;
@@ -23,7 +24,8 @@ public enum SmsMessageActionEnum {
     GEOFENCE_Unknown_transition("fen", Intents.ACTION_SMS_GEOFENCE_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geofence_transition_unknown ), //
     GEOFENCE_ENTER("fei", Intents.ACTION_SMS_GEOFENCE_ENTER_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geofence_transition_enter ), //
     GEOFENCE_EXIT("feo", Intents.ACTION_SMS_GEOFENCE_EXIT_RESPONSE_HANDLER, GeoPingMasterService.class, true, R.string.sms_action_geofence_transition_exit ), //
-
+    // Remote Controle
+    COMMAND_OPEN_APP ("cop", Intents.ACTION_SMS_COMMAND_OPEN_APP, GeoPingSlaveService.class, false, R.string.sms_action_command_openApp), //
 	// Spy Event Notif
 	SPY_SHUTDOWN("esd", Intents.ACTION_SMS_EVTSPY_SHUTDOWN, GeoPingMasterService.class, true, R.string.sms_action_spyevt_shutdown), //
 	SPY_BOOT("esb", Intents.ACTION_SMS_EVTSPY_BOOT, GeoPingMasterService.class, true, R.string.sms_action_spyevt_boot), //
@@ -57,13 +59,16 @@ public enum SmsMessageActionEnum {
 	static final HashMap<String, SmsMessageActionEnum> bySmsCodeNames;
 	static final HashMap<String, SmsMessageActionEnum> byIntentNames;
 	static final HashMap<String, SmsMessageActionEnum> byDbCodes;
-
+    static HashMap<String, SmsMessageActionEnum> byEnumNames;
 	static {
 		SmsMessageActionEnum[] values = SmsMessageActionEnum.values();
 		HashMap<String, SmsMessageActionEnum> smsCodes = new HashMap<String, SmsMessageActionEnum>(values.length);
 		HashMap<String, SmsMessageActionEnum> intentNames = new HashMap<String, SmsMessageActionEnum>(values.length);
 		HashMap<String, SmsMessageActionEnum> dbCodesNames = new HashMap<String, SmsMessageActionEnum>(values.length);
+        HashMap<String, SmsMessageActionEnum> enumNames = new HashMap<String, SmsMessageActionEnum>(values.length);
 		for (SmsMessageActionEnum field : values) {
+            // Enum name
+            enumNames.put(field.name(), field);
 			// DbCodes
 			dbCodesNames.put(field.name(), field);
 			// Sms Code
@@ -72,6 +77,7 @@ public enum SmsMessageActionEnum {
 			addAndCheckUnique(intentNames, field, field.intentAction, false);
 		}
 		// Affect
+        byEnumNames = enumNames;
 		byDbCodes = dbCodesNames;
 		bySmsCodeNames = smsCodes;
 		byIntentNames = intentNames;
@@ -95,6 +101,9 @@ public enum SmsMessageActionEnum {
 	// ===========================================================
 	// Static Accessor
 	// ===========================================================
+    public static SmsMessageActionEnum getByEnumName(String fieldName) {
+        return byEnumNames.get(fieldName);
+    }
 
 	public static SmsMessageActionEnum getByIntentName(String fieldName) {
 		if (fieldName == null) {

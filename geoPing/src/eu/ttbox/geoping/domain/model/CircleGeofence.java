@@ -257,12 +257,22 @@ public class CircleGeofence {
      * @return A Geofence object
      */
     public Geofence toGeofence() {
+        if (!isToGeofenceValid()) {
+            return null;
+        }
         // Build a new Geofence object
         return new Geofence.Builder().setRequestId(requestId)//
-                .setCircularRegion(getLatitude(), getLongitude(), getRadiusInMeters())//
+                .setCircularRegion(getLatitude(), getLongitude(),radiusInMeters )//
                 .setTransitionTypes(transitionType)//
                 .setExpirationDuration(getExpirationDuration())//
                 .build();
+    }
+
+    public boolean isToGeofenceValid() {
+        if (radiusInMeters<1) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isGeofence(Geofence testGeofence) {

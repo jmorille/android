@@ -50,24 +50,43 @@ public class GeoPingApplication extends Application {
 
         // Perform the initialization that doesn't have to finish immediately.
         // We use an async task here just to avoid creating a new thread.
-        (new DelayedInitializer()).execute();
+        (new DelayedInitializer(2000)).execute();
     }
 
     public static GeoPingApplication getInstance() {
         return APP_INSTANCE;
     }
 
-    private class DelayedInitializer extends AsyncTask<Void, Void, Void> {
+    private class DelayedInitializer extends AsyncTask<Void, Void, Integer> {
+
+        long delayInMs;
+
+        public  DelayedInitializer(long delayInMs) {
+            super();
+            this.delayInMs = delayInMs;
+        }
+
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Integer doInBackground(Void... params) {
             final Context context = GeoPingApplication.this;
-           
+            try {
+                Thread.sleep(delayInMs);
+            } catch (InterruptedException e) {
+                Log.d(TAG, "InterruptedException " + e.getMessage());
+            }
             // Increment Counter Laught
-            int laugthCount = incrementApplicationLaunchCounter(context);
-            Log.i(TAG, "Laugth count " + laugthCount);
-            return null;
+            int launchCount = incrementApplicationLaunchCounter(context);
+            Log.d(TAG, "================ Geoping Launch count = " + launchCount + "  ======================================");
+            return launchCount;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+
         }
     }
+
 
     // ===========================================================
     // Statistic

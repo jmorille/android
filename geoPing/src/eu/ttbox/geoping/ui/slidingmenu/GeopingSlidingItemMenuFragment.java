@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase;
 
 import eu.ttbox.geoping.GeoTrakerActivity;
+import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.VersionUtils;
@@ -198,7 +200,12 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
                 if (!activityClass.isAssignableFrom(intentClass)) {
                     Intent intentOption = new Intent(context, intentClass);
                     clearActivityHistoryStack(intentOption, isRootActivity);
-                    context.startActivity(intentOption);
+                    // Create Stacks
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+                    stackBuilder.addParentStack(MainActivity.class);
+                    stackBuilder.addNextIntent(new Intent(getActivity(), MainActivity.class));
+                    stackBuilder.addNextIntent(intentOption);
+                    stackBuilder.startActivities();
                 }
                 return true;
             }

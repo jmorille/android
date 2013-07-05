@@ -6,6 +6,9 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
+import android.util.Log;
+
 import eu.ttbox.geoping.domain.model.Pairing;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
@@ -59,8 +62,14 @@ public class PairingDbBackupHelper  extends AbstractDbBackupHelper {
     // ===========================================================
 
     @Override
-    public long insertEntity(ContentValues values) { 
-        return   pairingDatabase.insertEntity(values);
+    public long insertEntity(ContentValues values) {
+        long count = 0;
+        try {
+            count = pairingDatabase.insertEntity(values);
+        } catch (   SQLiteConstraintException ce) {
+            Log.e(TAG, "Ignore insert Constraint Exception : " + ce.getMessage() + " for Pairing = " + values, ce);
+        }
+        return count;
     }
 
 

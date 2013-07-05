@@ -3,11 +3,15 @@ package eu.ttbox.velib;
 import com.google.analytics.tracking.android.GAServiceManager;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
 import eu.ttbox.velib.core.AppConstants;
 import eu.ttbox.velib.ui.help.HelpMainActivity;
 
@@ -25,11 +29,45 @@ public class CityLibApplication extends Application {
  
 		
 		// Increment Counter Lauch
-		int laugthCount = incrementApplicationLaunchCounter();
-		if (laugthCount < 3) {
-			startHelpActivity();
-		}
+        // Perform the initialization that doesn't have to finish immediately.
+        // We use an async task here just to avoid creating a new thread.
+        (new DelayedInitializer(1000)).execute();
+
 	}
+
+
+    private class DelayedInitializer extends AsyncTask<Void, Void, Integer> {
+
+        long delayInMs;
+
+        public  DelayedInitializer(long delayInMs) {
+            super();
+            this.delayInMs = delayInMs;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            final Context context = CityLibApplication.this;
+            try {
+                Thread.sleep(delayInMs);
+            } catch (InterruptedException e) {
+                Log.d(TAG, "InterruptedException " + e.getMessage());
+            }
+            // Increment Counter Laught
+            int launchCount = incrementApplicationLaunchCounter(context);
+            Log.d(TAG, "================ CityLib Launch count = " + launchCount + "  ======================================");
+            return launchCount;
+        }
+
+        @Override
+        protected void onPostExecute(Integer launchCount) {
+            if (launchCount < 3) {
+                startHelpActivity();
+            }
+        }
+    }
+
+
 
 	private void startHelpActivity() {
 		Intent intent = new Intent(getBaseContext(), HelpMainActivity.class);
@@ -37,7 +75,7 @@ public class CityLibApplication extends Application {
 		getBaseContext().startActivity(intent);
 	}
 
-	private int incrementApplicationLaunchCounter() {
+	private int incrementApplicationLaunchCounter(Context context) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		// Read previous values
 		int counter = settings.getInt(AppConstants.PREFS_KEY_APP_COUNT_LAUGHT, 0);

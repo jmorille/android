@@ -6,6 +6,9 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
+import android.util.Log;
+
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase.GeoFenceColumns;
@@ -60,7 +63,13 @@ public class GeoFenceDbBackupHelper  extends AbstractDbBackupHelper {
 
     @Override
     public long insertEntity(ContentValues values) { 
-        return   pairingDatabase.insertEntity(values);
+        long count = 0;
+        try {
+            count = pairingDatabase.insertEntity(values);
+        } catch (   SQLiteConstraintException ce) {
+            Log.e(TAG, "Ignore insert Constraint Exception : " + ce.getMessage() + " for Geofence = "+  values, ce);
+        }
+        return count;
     }
 
 

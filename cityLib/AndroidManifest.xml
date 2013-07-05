@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" android:versionCode="30" android:versionName="0.2.1" package="eu.ttbox.velib">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          android:installLocation="auto" android:versionCode="30" android:versionName="0.2.1" package="eu.ttbox.velib">
 
     <!-- android:minSdkVersion="9" -->
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="17"/>
@@ -23,8 +24,10 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
-    <!-- android:backupAgent=".service.backup.MyBackupAgent" -->
-    <application android:debuggable="false" android:icon="@drawable/panneau_obligation_cycles" android:label="@string/app_name" android:name=".CityLibApplication" android:theme="@style/MyTheme">
+    <!-- android:backupAgent=".service.backup.CityLibBackupAgent" -->
+    <application android:debuggable="false" android:icon="@drawable/panneau_obligation_cycles" android:label="@string/app_name"
+                 android:backupAgent=".service.backup.CityLibBackupAgent" android:restoreAnyVersion="false"
+                 android:name=".CityLibApplication" android:theme="@style/MyTheme">
 
         <!-- Cloudmade Key http://developers.cloudmade.com/projects/web-maps-api/examples -->
         <meta-data android:name="CLOUDMADE_KEY" android:value="bf761f5e98524bf88ac465bce90002b6"/>

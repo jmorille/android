@@ -215,7 +215,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	public void onDetach(final MapView mapView) {
 		Log.d(TAG, "##### onDetach #### " + person);
 		onPause();
-		hideBubble();
+		hideBubble(mapView);
 		super.onDetach(mapView);
 	}
 
@@ -510,14 +510,14 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		selectedGeoTrack = getHitMapLocation(mapView, p);
 		if (isRemovePriorPopup && selectedGeoTrack != null && idPriorStation == selectedGeoTrack.getId()) {
 			selectedGeoTrack = null;
-			hideBubble();
+			hideBubble(mapView);
 			onHandleEvent = true;
 		}
 		if (selectedGeoTrack != null) {
 			openBubble(mapView, selectedGeoTrack);
 			onHandleEvent = true;
 		} else if (isRemovePriorPopup) {
-			hideBubble();
+			hideBubble(mapView);
 		}
 		// if (isRemovePriorPopup || selectedGeoTrack != null) {
 		// // TODO hideBubble();
@@ -594,7 +594,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 			setBubbleData(geoTrack);
 			return true;
 		} else {
-			return hideBubble();
+			return hideBubble(mapView);
 		}
 	}
 
@@ -651,10 +651,12 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		}
 	}
 
-	private boolean hideBubble() {
+	private boolean hideBubble(MapView mapView) {
 		boolean isHide = false;
 		if (balloonView != null && View.GONE != balloonView.getVisibility()) {
 			balloonView.setVisibility(View.GONE);
+            mapView.removeView(balloonView);
+            balloonView = null;
 			isHide = true;
 		}
 		return isHide;

@@ -26,7 +26,7 @@ import eu.ttbox.velib.service.database.Velo.VeloColumns;
  *  
  * 
  */
-public class MyBackupAgent extends BackupAgentHelper {
+public class CityLibBackupAgent extends BackupAgentHelper {
 
 	private final String TAG = getClass().getSimpleName();
 
@@ -38,32 +38,50 @@ public class MyBackupAgent extends BackupAgentHelper {
     static final String PREFS = "user_preferences";
 
     // A key to uniquely identify the set of backup data
-    static final String PREFS_BACKUP_KEY = "velib_prefs";
+    static final String BACKUP_KEY_PREFS = "CITYLIB_01_PREFS";
+
+    // Object for intrinsic lock
+    public static final Object[] sDataLock = new Object[0];
+
 
     // Allocate a helper and add it to the backup agent
     @Override
     public void onCreate() {
     	// Add Preference Backup
-        SharedPreferencesBackupHelper helper = new SharedPreferencesBackupHelper(this, PREFS);
-        addHelper(PREFS_BACKUP_KEY, helper);
+        SharedPreferencesBackupHelper helper = new TestSharedPreferencesBackupHelper(this, PREFS);
+        addHelper(BACKUP_KEY_PREFS, helper);
     }
-    
-	@Override
-	public void onBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) throws IOException {
-		super.onBackup(oldState, data, newState);
-		boolean doBackup = (oldState == null);
-		if (!doBackup) {
-			doBackup = compareStateFile(oldState);
-		}
-		if (doBackup) {
-			Log.i(TAG, "----- onBackup Begin Backup data station");
-			saveStationDatas(data);
-			Log.i(TAG, "----- onBackup End Backup data station");
 
-			// data.writeEntityHeader(key, dataSize)
-		}
 
-	}
+    @Override
+    public void onBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) throws IOException {
+        synchronized (CityLibBackupAgent.sDataLock) {
+            Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
+            Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
+            Log.i(TAG, "----- onBackup CityLib Backup --- Begin");
+            super.onBackup(oldState, data, newState);
+            Log.i(TAG, "----- onBackup CityLib   Backup --- End");
+            Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
+            Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
+        }
+    }
+
+
+    @Override
+    public void onRestore(BackupDataInput data, int appVersionCode, ParcelFileDescriptor newState) throws IOException {
+        synchronized (CityLibBackupAgent.sDataLock) {
+            Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
+            Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
+            Log.i(TAG, "----- onRestore CityLib Backup : Version = " + appVersionCode);
+            Log.i(TAG, "----- onRestore CityLib Backup --- Begin");
+            super.onRestore(data, appVersionCode, newState);
+            Log.i(TAG, "----- onRestore CityLib End --- End");
+            Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
+            Log.i(TAG, "----- ----- ----- ----- ----- ----- ----- ----- ----- ");
+        }
+    }
+
+
 
 	private Cursor getDbStationDataCursor() throws IOException {
 		// Database Query
@@ -126,14 +144,6 @@ public class MyBackupAgent extends BackupAgentHelper {
 		}
 	}
 
-	@Override
-	public void onRestore(BackupDataInput data, int appVersionCode, ParcelFileDescriptor newState) throws IOException {
-		Log.i(TAG, "----- onRestore Begin Backup data station"); 
-		super.onRestore(data, appVersionCode, newState);
-		restoreStations(data);
-		writeStateFile(newState);
-		Log.i(TAG, "----- onRestore End Backup data station"); 
- 	}
 
 	private void restoreStations(BackupDataInput data) throws IOException {
 	 	while (data.readNextHeader()) {
@@ -183,10 +193,7 @@ public class MyBackupAgent extends BackupAgentHelper {
 	}
 	
 
-	private boolean compareStateFile(ParcelFileDescriptor oldState) {
-		// TODO Auto-generated method stub
-		return true;
-	}
+
 	
 	 void writeStateFile(ParcelFileDescriptor stateFile) throws IOException {
 		 

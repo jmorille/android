@@ -55,6 +55,8 @@
     <string name="sms_action_spyevt_phone_call">Event Phone Call</string>
     <string name="sms_action_spyevt_sim_change">Event Sim Change</string>
 
+    <string name="sms_action_command_openApp">Open Application</string>
+
     <!-- Menu -->
     <string name="menu_map_mypositioncenter">My position</string>
     <string name="map_mode">Map Type</string>

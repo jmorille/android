@@ -130,6 +130,12 @@ public class GeoPingMasterService extends IntentService {
                     "HandleIntent", // Action
                     "SMS_GEOPING_REQUEST", // Label
                     0l); // Value
+        } else if (Intents.ACTION_SMS_COMMAND_OPEN_APP.equals(action)) {
+            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+            long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
+            // TODO
+            Log.w(TAG, "NOT Implemented " +action);
+            // FIXME
         } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);

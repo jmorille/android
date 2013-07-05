@@ -48,6 +48,9 @@ public class Intents {
 	   public static final String ACTION_SMS_EVTSPY_PHONE_CALL = "eu.ttbox.geoping.ACTION_SMS_EVTSPY_PHONE_CALL";
 	   public static final String ACTION_SMS_EVTSPY_SIM_CHANGE = "eu.ttbox.geoping.ACTION_SMS_EVTSPY_SIM_CHANGE";
 
+
+    public static final String ACTION_SMS_COMMAND_OPEN_APP = "eu.ttbox.geoping.ACTION_SMS_COMMAND_OPEN_APP";
+
 	   
 	public static final String ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE = "eu.ttbox.geoping.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE";
 
@@ -202,7 +205,19 @@ public class Intents {
 				.putExtra(EXTRA_SMS_PHONE, phoneNumber);
 	}
 
-	// ===========================================================
+    // ===========================================================
+    // Remote Controle
+    // ===========================================================
+    public static Intent commandOpenApplication(Context context, String phoneNumber, String userId) {
+        Long entityId = Long.valueOf(userId);
+        return new Intent(context, GeoPingMasterService.class) //
+                .setAction(ACTION_SMS_COMMAND_OPEN_APP)//
+                .putExtra(EXTRA_SMS_USER_ID, entityId)//
+                .putExtra(EXTRA_SMS_PHONE, phoneNumber);
+    }
+
+
+    // ===========================================================
 	// GeoPing Slave
 	// ===========================================================
 

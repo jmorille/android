@@ -27,9 +27,12 @@ public class PersonRemoteControlFragment extends SherlockFragment {
             , R.id.track_person_remote_control_hideButton //
     };
     // Instance
-    private SparseArray<Button> buttonsMap;
     private Uri entityUri;
     private String entityPhoneNumber;
+    // Bindings
+    private SparseArray<Button> buttonsMap;
+    private PhotoHeaderBinderHelper photoHeader;
+
     // ===========================================================
     // OnClick Listener
     // ===========================================================
@@ -54,6 +57,7 @@ public class PersonRemoteControlFragment extends SherlockFragment {
             localButton.setOnClickListener(buttonOnClickListener);
             buttonsMap.put(i, localButton);
         }
+        photoHeader = new PhotoHeaderBinderHelper(v);
 
         return v;
     }
@@ -95,10 +99,15 @@ public class PersonRemoteControlFragment extends SherlockFragment {
         Button localButton = buttonsMap.get(v.getId());
         switch (v.getId()) {
             case R.id.track_person_remote_control_pairingButton:
-                Toast.makeText(getActivity(), "Pairing button click", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(), "Pairing button click", Toast.LENGTH_SHORT).show();
+                onPairingClick(v);
                 break;
-            case R.id.track_person_remote_control_openButton:
-                Toast.makeText(getActivity(), "Open App button click", Toast.LENGTH_SHORT).show();
+            case R.id.track_person_remote_control_openButton: {
+                String entityId = entityUri.getLastPathSegment();
+                Intent intent = Intents.commandOpenApplication(getActivity(), entityPhoneNumber, entityId);
+                getActivity().startService(intent);
+//                Toast.makeText(getActivity(), "Open App button click", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.track_person_remote_control_hideButton:
                 Toast.makeText(getActivity(), "Hide click", Toast.LENGTH_SHORT).show();

@@ -6,6 +6,9 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
+import android.util.Log;
+
 import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.person.PersonDatabase;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
@@ -59,8 +62,14 @@ public class PersonDbBackupHelper  extends AbstractDbBackupHelper {
     // ===========================================================
 
     @Override
-    public long insertEntity(ContentValues values) { 
-        return   personDatabase.insertEntity(values);
+    public long insertEntity(ContentValues values) {
+        long count = 0;
+        try {
+            count = personDatabase.insertEntity(values);
+        } catch (   SQLiteConstraintException ce) {
+            Log.e(TAG, "Ignore insert Constraint Exception : " + ce.getMessage() + " for Person = " + values, ce);
+        }
+        return count;
     }
 
 

@@ -34,7 +34,6 @@ import java.util.Iterator;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
@@ -42,6 +41,7 @@ import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.ui.person.PhotoHeaderBinderHelper;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class SmsLogViewFragment extends SherlockFragment {
@@ -49,10 +49,9 @@ public class SmsLogViewFragment extends SherlockFragment {
     private static final String TAG = "SmsLogViewFragment";
 
     // Binding
-    private ImageView photoImageView;
-    private TextView nameTextView;
-    private TextView phoneTextView;
-    private TextView actionTextView;
+    private PhotoHeaderBinderHelper photoHeader;
+
+
     private TextView messageTextView;
     private ImageView smsTypeImageView;
     private TextView smsTypeTimeTextView;
@@ -95,10 +94,8 @@ public class SmsLogViewFragment extends SherlockFragment {
         this.cacheNameFinder = new PersonNameFinderHelper(mContext, false);
 
         // Bindings
-        this.photoImageView = (ImageView) v.findViewById(R.id.smslog_photo_imageView);
-        this.nameTextView = (TextView) v.findViewById(R.id.smslog_name);
-        this.phoneTextView = (TextView) v.findViewById(R.id.smslog_phone);
-        this.actionTextView = (TextView) v.findViewById(R.id.smslog_action);
+        photoHeader = new PhotoHeaderBinderHelper(v);
+
         this.messageTextView = (TextView) v.findViewById(R.id.smslog_message);
         this.paramListView = (LinearLayout) v.findViewById(R.id.smslog_message_param_list);
 
@@ -202,12 +199,12 @@ public class SmsLogViewFragment extends SherlockFragment {
         }
         // Phone
         String phone = helper.getSmsLogPhone(cursor);
-        phoneTextView.setText(phone);
+        photoHeader.subEltPhoneTextView.setText(phone);
 
         // Action
         SmsMessageActionEnum action =  helper.getSmsMessageActionEnum(cursor);
         String actionLabel =getString(action.labelResourceId);
-        actionTextView.setText(actionLabel);
+        photoHeader.subEltNameTextView.setText(actionLabel);
 
         // Messages Sizes    helper.getM
         String smsMessage = helper.getMessage(cursor);
@@ -241,7 +238,7 @@ public class SmsLogViewFragment extends SherlockFragment {
 
         //TODO Name Person
         SmsLogSideEnum smsLogSide = helper.getSmsLogSideEnum(cursor);
-        cacheNameFinder.setTextViewPersonNameByPhone(nameTextView, phone, smsLogSide);
+        cacheNameFinder.setTextViewPersonNameByPhone(photoHeader.mainActionNameTextView, phone, smsLogSide);
 
         // Photo
         loadPhoto(null, phone);
@@ -318,16 +315,16 @@ public class SmsLogViewFragment extends SherlockFragment {
         }
         // Set Photo
         if (photo != null) {
-            photoImageView.setImageBitmap(photo);
+            photoHeader.photoImageView.setImageBitmap(photo);
         } else if (isContactId || isContactPhone) {
             // Cancel previous Async
-            final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask) photoImageView.getTag();
+            final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask)  photoHeader.photoImageView.getTag();
             if (oldTask != null) {
                 oldTask.cancel(false);
             }
             // Load photos
-            PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(photoImageView);
-            photoImageView.setTag(newTask);
+            PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask( photoHeader.photoImageView);
+            photoHeader.photoImageView.setTag(newTask);
             newTask.execute(contactId, phone);
         }
         // photoImageView.setEditorListener(new EditorListener() {

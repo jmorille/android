@@ -3,7 +3,9 @@ package eu.ttbox.geoping.ui.map.track.bubble;
 import java.util.Locale;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
 import eu.ttbox.osm.core.ExternalIntents;
@@ -32,6 +35,7 @@ public class GeoTrackBubble extends FrameLayout {
 	// Display
 	private LinearLayout layout;
 	private TextView nameTextView;
+    private TextView eventTypeTextView;
 	private TextView providerTextView;
 
 	private TextView timeTextView;
@@ -60,6 +64,7 @@ public class GeoTrackBubble extends FrameLayout {
 
 		// Init fields
 		this.nameTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_name);
+        this.eventTypeTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_eventType );
 		this.providerTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_provider);
 		this.timeTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_time);
 		this.coordTextView = (TextView) v.findViewById(R.id.map_geotrack_bubbleView_coord);
@@ -150,14 +155,25 @@ public class GeoTrackBubble extends FrameLayout {
 		// GeoTrack
 		this.geoTrack = geoTrack;
 		// Bind values
+        Resources r = getResources();
      	if (hasTime) {
 			// Date $Time
-			String dateString = String.format(getResources().getString(R.string.geotrack_time_dateformat), geoTrack.getTimeAsDate());
+			String dateString = String.format(r.getString(R.string.geotrack_time_dateformat), geoTrack.getTimeAsDate());
 			timeTextView.setText(dateString);
 			timeTextView.setVisibility(VISIBLE);
 		} else {
 			timeTextView.setVisibility(GONE);
-		} 
+		}
+        // Event Type
+        SmsMessageActionEnum action =  SmsMessageActionEnum.getByEnumName(geoTrack.eventType);
+        if (action !=null) {
+            String actionLabel = r.getString(action.labelResourceId);
+            eventTypeTextView.setText(actionLabel);
+            eventTypeTextView.setVisibility(View.VISIBLE);
+        } else {
+            eventTypeTextView.setVisibility(View.GONE);
+        }
+        // Provider
 		if (hasProvider) {
 			providerTextView.setText(geoTrack.getProvider());
 			providerTextView.setVisibility(VISIBLE);

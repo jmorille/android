@@ -21,9 +21,17 @@
         android:text="Time" />
 
     <TextView
+            android:id="@+id/map_geotrack_bubbleView_eventType"
+            style="@style/map_geotrack_dialog_text"
+            android:layout_below="@id/map_geotrack_bubbleView_time"
+            android:layout_centerHorizontal="true"
+            android:text="Action" />
+
+
+    <TextView
         android:id="@+id/map_geotrack_bubbleView_provider"
         style="@style/map_geotrack_dialog_text"
-        android:layout_below="@id/map_geotrack_bubbleView_time"
+        android:layout_below="@id/map_geotrack_bubbleView_eventType"
         android:layout_centerHorizontal="true"
         android:text="Provider" />
 

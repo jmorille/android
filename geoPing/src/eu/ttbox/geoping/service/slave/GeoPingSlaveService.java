@@ -19,11 +19,13 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import eu.ttbox.geoping.GeoPingApplication;
+import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
@@ -169,13 +171,27 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
                 String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
                 Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
                 managePairingRequest(phone, params);
-
+            } else if (Intents.ACTION_SMS_COMMAND_OPEN_APP.equals(action)) {
+                // GeoPing Command : Open Application
+                String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+                Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
+                manageCommandOpenApplication(phone, params);
             }
         } finally {
             // synchronized (LOCK) {
             // sWakeLock.release();
             // }
         }
+    }
+
+    // ===========================================================
+    // Commande
+    // ===========================================================
+    private void manageCommandOpenApplication(String phone, Bundle params) {
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(new Intent(getApplicationContext(), MainActivity.class));
+        stackBuilder.startActivities();
     }
 
     // ===========================================================
