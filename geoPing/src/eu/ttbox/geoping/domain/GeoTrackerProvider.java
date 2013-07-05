@@ -8,6 +8,8 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
@@ -71,8 +73,7 @@ public class GeoTrackerProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        database = new GeoTrackDatabase(getContext());
-
+        database = GeoPingApplication.getGeoPingApplication(getContext()).getGeoTrackDatabase();
         return true;
     }
 

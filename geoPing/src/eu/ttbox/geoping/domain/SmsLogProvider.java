@@ -7,6 +7,8 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 
@@ -65,7 +67,7 @@ public class SmsLogProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        smslogDatabase = new SmsLogDatabase(getContext());
+        smslogDatabase = GeoPingApplication.getGeoPingApplication(getContext()).getSmsLogDatabase();
         return true;
     }
 

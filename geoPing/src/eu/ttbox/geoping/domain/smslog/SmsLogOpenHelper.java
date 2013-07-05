@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 /**
+ * <a href="http://www.ragtag.info/2011/feb/1/database-pitfalls/">SQLLiteOpenHelper n’aide pas vraiment</a>
  * <ul>
  * <li>Db version 7 : Geoping 0.1.5 (37)</li>
  * <li>Db version 8 : Geoping 0.1.6 (39)</li>

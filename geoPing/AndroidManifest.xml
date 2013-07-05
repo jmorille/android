@@ -44,14 +44,14 @@
     <!-- Display Contact Photo -->
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
-    <!-- Create Accounts  -->
+    <!-- Create Accounts
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-
+ -->
 
     <!-- Optionnal -->
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
@@ -289,7 +289,7 @@
         <service android:exported="false" android:name=".service.slave.GeoPingSlaveLocationService"/>
         <service android:exported="false" android:name=".service.master.GeoPingMasterService"/>
         
-          <!-- Export contact  -->
+          <!-- Export contact
         <service android:name=".service.accountsync.AccountAuthenticatorService" android:exported="true" android:process=":auth">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -316,6 +316,7 @@
                 <data android:mimeType="vnd.android.cursor.item/vnd.eu.ttbox.geoping.person.profile" />
             </intent-filter>
         </activity>
+ -->
 
         <!--        Permission Denial: reading eu.ttbox.geoping.domain.WidgetProvider
         uri content://eu.ttbox.geoping.WidgetProvider/pairing from pid=2264, uid=10040 requires eu.ttbox.geoping.PERSON_READ

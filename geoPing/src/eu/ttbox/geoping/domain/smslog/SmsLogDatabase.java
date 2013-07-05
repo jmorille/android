@@ -15,6 +15,7 @@ import android.util.Log;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
+
 public class SmsLogDatabase {
  
     private static final String TAG = "SmsLogDatabase";
@@ -177,7 +178,7 @@ public class SmsLogDatabase {
                 db.endTransaction();
             }
         } finally {
-            db.close();
+           // db.close();
         }
         return result;
     }
@@ -200,7 +201,7 @@ public class SmsLogDatabase {
                 db.endTransaction();
             }
         } finally {
-            db.close();
+         //   db.close();
         }
         return result;
     }
@@ -218,7 +219,7 @@ public class SmsLogDatabase {
                 db.endTransaction();
             }
         } finally {
-            db.close();
+         //   db.close();
         }
         return result;
     }

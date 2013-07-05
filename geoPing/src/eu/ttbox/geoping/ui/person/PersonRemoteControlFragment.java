@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 
@@ -33,6 +34,9 @@ public class PersonRemoteControlFragment extends SherlockFragment {
     private SparseArray<Button> buttonsMap;
     private PhotoHeaderBinderHelper photoHeader;
 
+    // Cache
+    private PhotoThumbmailCache photoCache;
+
     // ===========================================================
     // OnClick Listener
     // ===========================================================
@@ -52,12 +56,15 @@ public class PersonRemoteControlFragment extends SherlockFragment {
 
         // Binding
         buttonsMap = new SparseArray<Button>(buttonIds.length);
-        for (int i : buttonIds) {
-            Button localButton = (Button) v.findViewById(R.id.track_person_remote_control_hideButton);
+        for (int buttonId : buttonIds) {
+            Button localButton = (Button) v.findViewById(buttonId);
             localButton.setOnClickListener(buttonOnClickListener);
-            buttonsMap.put(i, localButton);
+            buttonsMap.put(buttonId, localButton);
         }
         photoHeader = new PhotoHeaderBinderHelper(v);
+        photoHeader.setBlockSubElementVisible(false);
+        // Cache
+        photoCache = GeoPingApplication.getInstance().getPhotoThumbmailCache();
 
         return v;
     }
@@ -76,9 +83,14 @@ public class PersonRemoteControlFragment extends SherlockFragment {
         this.entityPhoneNumber = phoneNumber;
         if (!TextUtils.isEmpty(phoneNumber)) {
             setButtonsVisibility(true);
+            // Photo
+            if (photoCache!=null) {
+               photoCache.loadPhoto(getActivity(), photoHeader.photoImageView, null, entityPhoneNumber);
+            }
         } else {
             setButtonsVisibility(false);
         }
+
     }
 
     private void setButtonsVisibility(boolean isEnable) {
@@ -106,7 +118,7 @@ public class PersonRemoteControlFragment extends SherlockFragment {
                 String entityId = entityUri.getLastPathSegment();
                 Intent intent = Intents.commandOpenApplication(getActivity(), entityPhoneNumber, entityId);
                 getActivity().startService(intent);
-//                Toast.makeText(getActivity(), "Open App button click", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Open App button click", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.track_person_remote_control_hideButton:

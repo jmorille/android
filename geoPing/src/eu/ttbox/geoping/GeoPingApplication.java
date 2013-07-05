@@ -17,6 +17,8 @@ import com.google.analytics.tracking.android.GAServiceManager;
 
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.VersionUtils;
+import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class GeoPingApplication extends Application {
@@ -36,6 +38,10 @@ public class GeoPingApplication extends Application {
 
     private PhotoThumbmailCache photoCache;
 
+    // DataBase
+    private SmsLogDatabase smsLogDatabase;
+    private GeoTrackDatabase geoTrackDatabase;
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -47,6 +53,7 @@ public class GeoPingApplication extends Application {
         // Create Application
         super.onCreate();
         APP_INSTANCE = this;
+
 
         // Perform the initialization that doesn't have to finish immediately.
         // We use an async task here just to avoid creating a new thread.
@@ -191,6 +198,25 @@ public class GeoPingApplication extends Application {
     }
 
     // ===========================================================
+    // Database instance
+    // ===========================================================
+
+    public SmsLogDatabase getSmsLogDatabase() {
+        if (smsLogDatabase==null) {
+            smsLogDatabase = new SmsLogDatabase(this);
+        }
+        return smsLogDatabase;
+    }
+
+    public GeoTrackDatabase getGeoTrackDatabase() {
+        if (geoTrackDatabase==null) {
+            geoTrackDatabase = new GeoTrackDatabase(this);
+        }
+        return geoTrackDatabase;
+    }
+
+
+    // ===========================================================
     // Dev
     // ===========================================================
 
@@ -211,5 +237,9 @@ public class GeoPingApplication extends Application {
     // ===========================================================
     // Other
     // ===========================================================
+
+    public static GeoPingApplication getGeoPingApplication(Context context) {
+        return (GeoPingApplication)context.getApplicationContext();
+    }
 
 }

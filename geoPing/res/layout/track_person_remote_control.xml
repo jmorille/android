@@ -25,7 +25,7 @@
                 android:layout_marginLeft="@dimen/call_log_indent_margin"
 
                 android:layout_below="@+id/track_person_remote_control_photo_header"
-                android:text="Pairing"
+                android:text="@string/person_geoping_pairing_action"
                 />
         <Button
                 android:id="@+id/track_person_remote_control_openButton"
@@ -34,7 +34,7 @@
                 android:layout_marginLeft="@dimen/call_log_indent_margin"
                 android:layout_alignLeft="@+id/track_person_remote_control_pairingButton"
                 android:layout_below="@+id/track_person_remote_control_pairingButton"
-                android:text="Open"
+                android:text="@string/sms_action_command_openApp"
                 />
 
         <Button

@@ -531,8 +531,8 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         nameEditText.setText(name);
         phoneEditText.setText(phone);
         this.contactId = contactId;
-        loadPhoto(contactId, phone);
-
+        // Photo
+        photoCache.loadPhoto(getActivity(), photoImageView  ,    contactId, phone);
     }
 
     private Uri getUriEntity() {
@@ -589,7 +589,7 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
                     onPersonSelectListener.onPersonSelect(String.valueOf(personId), personPhone);
                 }
                 // Photo
-                loadPhoto(contactId, personPhone);
+                photoCache.loadPhoto(getActivity(), photoImageView  ,    contactId, personPhone);
             }
         }
 
@@ -600,90 +600,6 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
 
     };
 
-    // ===========================================================
-    // Photo Loader
-    // ===========================================================
-
-    /**
-     * Pour plus de details sur l'intégration dans les contacts consulter
-     * <ul>
-     * <li>item_photo_editor.xml</li>
-     * <li>com.android.contacts.editor.PhotoEditorView</li>
-     * <li>com.android.contacts.detail.PhotoSelectionHandler</li>
-     * <li>com.android.contacts.editor.ContactEditorFragment.PhotoHandler</li>
-     * </ul>
-     *
-     * @param contactId
-     */
-    private void loadPhoto(String contactId, final String phone) {
-        Bitmap photo = null;
-        boolean isContactId = !TextUtils.isEmpty(contactId);
-        boolean isContactPhone = !TextUtils.isEmpty(phone);
-        // Search in cache
-        if (photo == null && isContactId) {
-            photo = photoCache.get(contactId);
-        }
-        if (photo == null && isContactPhone) {
-            photo = photoCache.get(phone);
-        }
-        // Set Photo
-        if (photo != null) {
-            photoImageView.setValues(photo, false);
-        } else if (isContactId || isContactPhone) {
-            // Cancel previous Async
-            final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask) photoImageView.getTag();
-            if (oldTask != null) {
-                oldTask.cancel(false);
-            }
-            // Load photos
-            PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(photoImageView);
-            photoImageView.setTag(newTask);
-            newTask.execute(contactId, phone);
-        }
-        // photoImageView.setEditorListener(new EditorListener() {
-        //
-        // @Override
-        // public void onRequest(int request) {
-        // Toast.makeText(getActivity(), "Click to phone " + phone,
-        // Toast.LENGTH_SHORT).show();
-        // }
-        //
-        // });
-    }
-
-    public class PhotoLoaderAsyncTask extends AsyncTask<String, Void, Bitmap> {
-
-        final PhotoEditorView holder;
-
-        public PhotoLoaderAsyncTask(PhotoEditorView holder) {
-            super();
-            this.holder = holder;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            holder.setTag(this);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            String contactIdSearch = params[0];
-            String phoneSearch = null;
-            if (params.length > 1) {
-                phoneSearch = params[1];
-            }
-            Bitmap result = ContactHelper.openPhotoBitmap(getActivity(), photoCache, contactIdSearch, phoneSearch);
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (holder.getTag() == this) {
-                holder.setValues(result, true);
-                holder.setTag(null);
-            }
-        }
-    }
 
     // ===========================================================
     // Others

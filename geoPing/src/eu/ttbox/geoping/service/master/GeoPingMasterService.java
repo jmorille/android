@@ -130,12 +130,6 @@ public class GeoPingMasterService extends IntentService {
                     "HandleIntent", // Action
                     "SMS_GEOPING_REQUEST", // Label
                     0l); // Value
-        } else if (Intents.ACTION_SMS_COMMAND_OPEN_APP.equals(action)) {
-            String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-            long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
-            // TODO
-            Log.w(TAG, "NOT Implemented " +action);
-            // FIXME
         } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             long userId = intent.getLongExtra(Intents.EXTRA_SMS_USER_ID, -1);
@@ -167,6 +161,12 @@ public class GeoPingMasterService extends IntentService {
             SmsMessageActionEnum actionEnum = SmsMessageActionEnum.getByIntentName(action);
             if (actionEnum != null) {
                 switch (actionEnum) {
+                    case COMMAND_OPEN_APP: {
+                        String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+                        Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
+                        sendSmsCommand(actionEnum, phone, params);
+                    }
+                    break;
                     case SPY_SHUTDOWN:
                         // TODO Display Notification
                         break;
@@ -207,6 +207,7 @@ public class GeoPingMasterService extends IntentService {
         }
 
     }
+
 
     // ===========================================================
     // Intent Handler
@@ -273,6 +274,13 @@ public class GeoPingMasterService extends IntentService {
             Log.w(TAG, "Paring response Canceled for no userId");
         }
 
+    }
+
+    // ===========================================================
+    // Send GeoPing Commande
+    // ===========================================================
+    private void sendSmsCommand(SmsMessageActionEnum actionEnum, String phone, Bundle params) {
+        boolean isSend = sendSms(phone, actionEnum, params);
     }
 
     // ===========================================================

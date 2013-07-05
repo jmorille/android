@@ -22,6 +22,7 @@ import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.ui.person.PhotoEditorView;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache.PhotoLoaderAsyncTask;
 
 /**
  * <ul>
@@ -140,17 +141,17 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
 
 //            // V Side
             if (SmsLogTypeEnum.RECEIVE.equals(smLogType)) {
-                imageViewToLoad = holder.photoImageView;
-                holder.photoImageView.setVisibility(View.VISIBLE);
-                holder.photoImageViewSend.setVisibility(View.GONE);
-            } else {
                 imageViewToLoad = holder.photoImageViewSend;
-                holder.photoImageView.setVisibility(View.GONE);
                 holder.photoImageViewSend.setVisibility(View.VISIBLE);
+                holder.photoImageView.setVisibility(View.GONE);
+            } else {
+                imageViewToLoad = holder.photoImageView;
+                holder.photoImageViewSend.setVisibility(View.GONE);
+                holder.photoImageView.setVisibility(View.VISIBLE);
             }
 
             // Load The Phone
-            loadPhoto(imageViewToLoad, null, phone);
+            photoCache.loadPhoto(mContext ,imageViewToLoad, null, phone);
         } else {
             holder.photoImageView.setVisibility(View.GONE);
             holder.photoImageViewSend.setVisibility(View.GONE);
@@ -175,56 +176,10 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
     }
 
     private String getSmsActionLabel(SmsMessageActionEnum action) {
-        Log.d(TAG, "getSmsActionLabel : " + action);
         return action.getLabel(resources);
     }
 
-    /**
-     * Pour plus de details sur l'intégration dans les contacts consulter
-     * <ul>
-     * <li>item_photo_editor.xml</li>
-     * <li>com.android.contacts.editor.PhotoEditorView</li>
-     * <li>com.android.contacts.detail.PhotoSelectionHandler</li>
-     * <li>com.android.contacts.editor.ContactEditorFragment.PhotoHandler</li>
-     * </ul>
-     *
-     * @param contactId
-     */
-    private void loadPhoto(PhotoEditorView photoImageView, String contactId, final String phone) {
-        Bitmap photo = null;
-        boolean isContactId = !TextUtils.isEmpty(contactId);
-        boolean isContactPhone = !TextUtils.isEmpty(phone);
-        // Search in cache
-        if (photo == null && isContactId) {
-            photo = photoCache.get(contactId);
-        }
-        if (photo == null && isContactPhone) {
-            photo = photoCache.get(phone);
-        }
-        // Set Photo
-        if (photo != null) {
-            photoImageView.setValues(photo, true);
-        } else if (isContactId || isContactPhone) {
-            // Cancel previous Async
-            final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask) photoImageView.getTag();
-            if (oldTask != null) {
-                oldTask.cancel(false);
-            }
-            // Load photos
-            PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask(photoImageView);
-            photoImageView.setTag(newTask);
-            newTask.execute(contactId, phone);
-        }
-        // photoImageView.setEditorListener(new EditorListener() {
-        //
-        // @Override
-        // public void onRequest(int request) {
-        // Toast.makeText(getActivity(), "Click to phone " + phone,
-        // Toast.LENGTH_SHORT).show();
-        // }
-        //
-        // });
-    }
+
 
 
     // ===========================================================
@@ -241,41 +196,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         PhotoEditorView photoImageViewSend;
     }
 
-    public class PhotoLoaderAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
-        final PhotoEditorView holder;
-
-        public PhotoLoaderAsyncTask(PhotoEditorView holder) {
-            super();
-            this.holder = holder;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            holder.setTag(this);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            String contactIdSearch = params[0];
-            String phoneSearch = null;
-            if (params.length > 1) {
-                phoneSearch = params[1];
-            }
-            Bitmap result = ContactHelper.openPhotoBitmap(mContext, photoCache, contactIdSearch, phoneSearch);
-            Log.d(TAG, "PhotoLoaderAsyncTask load photo : " + (result != null));
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (holder.getTag() == this) {
-                holder.setValues(result, true);
-                holder.setTag(null);
-                Log.d(TAG, "PhotoLoaderAsyncTask onPostExecute photo : " + (result != null));
-            }
-        }
-    }
 
     // ===========================================================
     // Others

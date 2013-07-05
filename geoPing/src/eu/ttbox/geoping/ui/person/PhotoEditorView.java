@@ -108,6 +108,10 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
         mFrameView.setEnabled(enabled);
     }
 
+    public void setImageBitmap(Bitmap imageBitmap) {
+        setValues( imageBitmap, true);
+    }
+
     public void setValues(final Bitmap photo, boolean readOnly) {
         if (photo != null) {
             mPhotoImageView.setImageBitmap(photo);
@@ -168,6 +172,8 @@ public class PhotoEditorView extends RelativeLayout // implements Editor
         mTriangleAffordance.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
         mFrameView.setVisibility(isPushable ? View.VISIBLE : View.INVISIBLE);
     }
+
+
 
     public interface EditorListener {
         public void onRequest(View v, int request);

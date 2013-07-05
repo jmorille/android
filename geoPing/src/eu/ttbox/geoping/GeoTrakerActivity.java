@@ -78,7 +78,7 @@ public class GeoTrakerActivity extends AbstractSmsTrackerActivity implements OnC
         // On récupére le service de localisation
         lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         appPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        trackingBDD = new GeoTrackDatabase(this);
+         trackingBDD = GeoPingApplication.getGeoPingApplication(this).getGeoTrackDatabase();
 
         // Services
         mStatusReceiver = new StatusReceiver();

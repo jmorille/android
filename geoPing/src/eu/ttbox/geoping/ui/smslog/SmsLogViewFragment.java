@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -43,6 +42,7 @@ import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.ui.person.PhotoHeaderBinderHelper;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache.PhotoLoaderAsyncTask;
 
 public class SmsLogViewFragment extends SherlockFragment {
 
@@ -241,7 +241,7 @@ public class SmsLogViewFragment extends SherlockFragment {
         cacheNameFinder.setTextViewPersonNameByPhone(photoHeader.mainActionNameTextView, phone, smsLogSide);
 
         // Photo
-        loadPhoto(null, phone);
+         photoCache.loadPhoto(getActivity(), photoHeader.photoImageView, null, phone);
     }
 
     private void bindMessageParams(String msgParams) {
@@ -287,92 +287,7 @@ public class SmsLogViewFragment extends SherlockFragment {
 
     }
 
-    // ===========================================================
-    // Photo Loader
-    // ===========================================================
 
-    /**
-     * Pour plus de details sur l'intégration dans les contacts consulter
-     * <ul>
-     * <li>item_photo_editor.xml</li>
-     * <li>com.android.contacts.editor.PhotoEditorView</li>
-     * <li>com.android.contacts.detail.PhotoSelectionHandler</li>
-     * <li>com.android.contacts.editor.ContactEditorFragment.PhotoHandler</li>
-     * </ul>
-     *
-     * @param contactId
-     */
-    private void loadPhoto(String contactId, final String phone) {
-        Bitmap photo = null;
-        boolean isContactId = !TextUtils.isEmpty(contactId);
-        boolean isContactPhone = !TextUtils.isEmpty(phone);
-        // Search in cache
-        if (photo == null && isContactId) {
-            photo = photoCache.get(contactId);
-        }
-        if (photo == null && isContactPhone) {
-            photo = photoCache.get(phone);
-        }
-        // Set Photo
-        if (photo != null) {
-            photoHeader.photoImageView.setImageBitmap(photo);
-        } else if (isContactId || isContactPhone) {
-            // Cancel previous Async
-            final PhotoLoaderAsyncTask oldTask = (PhotoLoaderAsyncTask)  photoHeader.photoImageView.getTag();
-            if (oldTask != null) {
-                oldTask.cancel(false);
-            }
-            // Load photos
-            PhotoLoaderAsyncTask newTask = new PhotoLoaderAsyncTask( photoHeader.photoImageView);
-            photoHeader.photoImageView.setTag(newTask);
-            newTask.execute(contactId, phone);
-        }
-        // photoImageView.setEditorListener(new EditorListener() {
-        //
-        // @Override
-        // public void onRequest(int request) {
-        // Toast.makeText(getActivity(), "Click to phone " + phone,
-        // Toast.LENGTH_SHORT).show();
-        // }
-        //
-        // });
-    }
-
-    public class PhotoLoaderAsyncTask extends AsyncTask<String, Void, Bitmap> {
-
-        final ImageView holder;
-
-        public PhotoLoaderAsyncTask(ImageView holder) {
-            super();
-            this.holder = holder;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            holder.setTag(this);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            String contactIdSearch = params[0];
-            String phoneSearch = null;
-            if (params.length > 1) {
-                phoneSearch = params[1];
-            }
-            Bitmap result = ContactHelper.openPhotoBitmap(getActivity(), photoCache, contactIdSearch, phoneSearch);
-            Log.d(TAG, "PhotoLoaderAsyncTask load photo : " + (result != null));
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (holder.getTag() == this) {
-                holder.setImageBitmap(result);
-                holder.setTag(null);
-                Log.d(TAG, "PhotoLoaderAsyncTask onPostExecute photo : " + (result != null));
-            }
-        }
-    }
 
     // ===========================================================
     // Others

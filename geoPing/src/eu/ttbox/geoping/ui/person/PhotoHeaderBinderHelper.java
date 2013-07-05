@@ -20,6 +20,9 @@ public class PhotoHeaderBinderHelper {
     public TextView subEltNameTextView;
     public TextView subEltPhoneTextView;
 
+    // Block
+    private View subeltBlock;
+
     public PhotoHeaderBinderHelper( View rootView) {
         // Binding
         this.photoImageView = (ImageView) rootView.findViewById(R.id.header_photo_imageView);
@@ -30,8 +33,17 @@ public class PhotoHeaderBinderHelper {
         this.subEltIcon = (ImageView) rootView.findViewById(R.id.header_photo_subelt_icon);
         this.subEltNameTextView = (TextView) rootView.findViewById(R.id.header_photo_subelt_action);
         this.subEltPhoneTextView = (TextView) rootView.findViewById(R.id.header_photo_subelt_phone);
+
+        // Block
+        this.subeltBlock = rootView.findViewById(R.id.header_photo_subelt);
     }
 
-
+    public void setBlockSubElementVisible(boolean visible) {
+        if (visible) {
+            this.subeltBlock.setVisibility(View.VISIBLE);
+        } else {
+            this.subeltBlock.setVisibility(View.GONE);
+        }
+    }
 
 }
