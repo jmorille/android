@@ -9,6 +9,7 @@ import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
@@ -124,7 +125,7 @@ public class PhotoThumbmailCache extends LruCache<String, Bitmap> {
                 oldTask.cancel(false);
             }
             // Load photos
-            PhotoLoaderAsyncTask newTask = this.getPhotoLoaderAsyncTask(context,   photoImageView);
+            PhotoLoaderAsyncTask newTask = this.getPhotoLoaderAsyncTask(context, photoImageView);
             photoImageView.setTag(newTask);
             newTask.execute(contactId, phone);
         }
@@ -163,7 +164,7 @@ public class PhotoThumbmailCache extends LruCache<String, Bitmap> {
                 oldTask.cancel(false);
             }
             // Load photos
-            PhotoLoaderAsyncTask newTask = this.getPhotoLoaderAsyncTask(context,photoImageView);
+            PhotoLoaderAsyncTask newTask = this.getPhotoLoaderAsyncTask(context, photoImageView);
             photoImageView.setTag(newTask);
             newTask.execute(contactId, phone);
         }
@@ -187,6 +188,9 @@ public class PhotoThumbmailCache extends LruCache<String, Bitmap> {
         private ImageView holder;
         private PhotoEditorView holderEditor;
 
+  //      private RemoteViews holderRemoteView;
+  //      private int holderRemoteViewId;
+
         private final Context mContext;
         private final PhotoThumbmailCache mCache;
 
@@ -204,14 +208,32 @@ public class PhotoThumbmailCache extends LruCache<String, Bitmap> {
             this.mCache = cache;
         }
 
+//        private PhotoLoaderAsyncTask(Context context, PhotoThumbmailCache cache, RemoteViews holder, int holderViewId) {
+//            super();
+//            this.holderRemoteView = holder;
+//            this.holderRemoteViewId = holderViewId;
+//            this.mContext = context;
+//            this.mCache = cache;
+//        }
+
         @Override
         protected void onPreExecute() {
-//             if (holder!=null) {
-//                holder.setTag(this);
-//            }
-//            if (holderEditor!=null) {
-//                holderEditor.setTag(this);
-//            }
+             if (holder!=null) {
+                 Object tag = holder.getTag();
+                 if (tag==null) {
+                    holder.setTag(this);
+                  } else if (tag!=this) {
+                     this.cancel(true);
+                 }
+            }
+             if (holderEditor!=null) {
+                 Object tag = holderEditor.getTag();
+                 if (tag==null) {
+                     holderEditor.setTag(this);
+                 } else if (tag!=this) {
+                     this.cancel(true);
+                 }
+             }
         }
 
         @Override
@@ -238,6 +260,7 @@ public class PhotoThumbmailCache extends LruCache<String, Bitmap> {
                 holderEditor.setTag(null);
                 Log.d(TAG, "PhotoLoaderAsyncTask onPostExecute photo : " + (result != null));
             }
+          //  if (holderRemoteView!=null && holderRemoteView.getT)
         }
     }
 

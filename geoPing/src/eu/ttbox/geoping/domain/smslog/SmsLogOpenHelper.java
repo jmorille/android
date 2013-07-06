@@ -8,9 +8,10 @@ import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 /**
  * <a href="http://www.ragtag.info/2011/feb/1/database-pitfalls/">SQLLiteOpenHelper n’aide pas vraiment</a>
  * <ul>
- * <li>Db version 7 : Geoping 0.1.5 (37)</li>
- * <li>Db version 8 : Geoping 0.1.6 (39)</li>
- * <li>Db version 9 : Geoping 0.2.0 (??) : Add COL_IS_READ & COL_REQUEST_ID</li>
+ * <li>Db version 7  : Geoping 0.1.5 (37)</li>
+ * <li>Db version 8  : Geoping 0.1.6 (39)</li>
+ * <li>Db version 9  : Geoping 0.2.0 (??) : Add COL_IS_READ & COL_REQUEST_ID</li>
+ * <li>Db version 10 : Geoping 0.2.2 (??)</li>
  * </ul>
  *  
  *
@@ -20,7 +21,7 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "SmsLogOpenHelper";
 
     public static final String DATABASE_NAME = "smsLog.db";
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 10;
 
     // ===========================================================
     // Table
@@ -42,11 +43,16 @@ public class SmsLogOpenHelper extends SQLiteOpenHelper {
             + ", " + SmsLogColumns.COL_MESSAGE + " TEXT"//
             + ", " + SmsLogColumns.COL_MESSAGE_PARAMS + " TEXT"//
             + ", " + SmsLogColumns.COL_PARENT_ID  + " INTEGER"// 
-            + ", " + SmsLogColumns.COL_SMS_WEIGHT + " INTEGER"//  
             + ", " + SmsLogColumns.COL_SMS_SIDE  + " INTEGER"//
+            + ", " + SmsLogColumns.COL_MSG_COUNT + " INTEGER"//
             // Acknowledge
-            + ", " + SmsLogColumns.COL_IS_SEND_TIME + " INTEGER"//
-            + ", " + SmsLogColumns.COL_IS_DELIVERY_TIME + " INTEGER"//  
+            + ", " + SmsLogColumns.COL_MSG_ACK_SEND_MSG_COUNT + " INTEGER"//
+            + ", " + SmsLogColumns.COL_MSG_ACK_DELIVERY_MSG_COUNT + " INTEGER"//
+            + ", " + SmsLogColumns.COL_MSG_ACK_SEND_TIME_MS + " INTEGER"//
+            + ", " + SmsLogColumns.COL_MSG_ACK_DELIVERY_TIME_MS + " INTEGER"//
+            + ", " + SmsLogColumns.COL_MSG_ACK_SEND_RESULT_MSG + " TEXT"//
+            + ", " + SmsLogColumns.COL_MSG_ACK_DELIVERY_RESULT_MSG + " TEXT"//
+            // Notif
             + ", " + SmsLogColumns.COL_IS_READ + " INTEGER"//
             // Geofence
             + ", " + SmsLogColumns.COL_REQUEST_ID  + " TEXT"//

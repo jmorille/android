@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.service;
 
-import java.util.Map;
-
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -12,6 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Map;
+
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
@@ -28,18 +30,22 @@ public class SmsSenderHelper {
 
     private static final String TAG = "SmsSenderHelper";
 
+
+    public static final String EXTRA_MSG_PART_COUNT = MessageAcknowledgeReceiver.EXTRA_ACK_MSG_PART_COUNT;
+    public static final String EXTRA_MSG_PART_ID = MessageAcknowledgeReceiver.EXTRA_ACK_MSG_PART_ID;
+
     public static Bundle completeRequestTimeOutFromPrefs(SharedPreferences appPreferences, Bundle params) {
-        Bundle result = params ==null ? new Bundle() : params;
-        if (!result.containsKey(SmsMessageLocEnum.TIME_IN_S.dbFieldName)) {
-            int timeOut =  appPreferences.getInt(AppConstants.PREFS_REQUEST_TIMEOUT_S, -1);
+        Bundle result = params == null ? new Bundle() : params;
+        if (!result.containsKey(SmsMessageLocEnum.TIME_IN_S.type.dbFieldName)) {
+            int timeOut = appPreferences.getInt(AppConstants.PREFS_REQUEST_TIMEOUT_S, -1);
             if (timeOut > -1) {
-                result.putInt(SmsMessageLocEnum.TIME_IN_S.dbFieldName, timeOut);
+                result.putInt(SmsMessageLocEnum.TIME_IN_S.type.dbFieldName, timeOut);
             }
         }
-        if (!result.containsKey(SmsMessageLocEnum.ACCURACY .dbFieldName)) {
-            int accuracy =  appPreferences.getInt(AppConstants.PREFS_REQUEST_ACCURACY_M, -1);
+        if (!result.containsKey(SmsMessageLocEnum.ACCURACY.type.dbFieldName)) {
+            int accuracy = appPreferences.getInt(AppConstants.PREFS_REQUEST_ACCURACY_M, -1);
             if (accuracy > -1) {
-                result.putInt(SmsMessageLocEnum.ACCURACY.dbFieldName, accuracy);
+                result.putInt(SmsMessageLocEnum.ACCURACY.type.dbFieldName, accuracy);
             }
         }
         return result;
@@ -49,30 +55,56 @@ public class SmsSenderHelper {
         Uri isSend = null;
         String encrypedMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
         Log.d(TAG, String.format("Send Request SmsMessage to %s : %s (%s)", phone, action, encrypedMsg));
-        if (encrypedMsg != null && encrypedMsg.length() > 0 && encrypedMsg.length() <= AppConstants.SMS_MAX_SIZE_7BITS) {
+        if (encrypedMsg != null && encrypedMsg.length() > 0) {
+            SmsManager smsManager = SmsManager.getDefault();
+            // Compute Messages
+            ArrayList<String> msgsplit = smsManager.divideMessage(encrypedMsg);
+            int msgSplitCount = msgsplit.size();
             // Log It
             ContentResolver cr = context.getContentResolver();
-            Uri logUri = logSmsMessage(cr, side, SmsLogTypeEnum.SEND_REQ, phone, action, params, 1, encrypedMsg);
-            Log.d(TAG, "SmsMessage Request save Log to : " + logUri);
-            // Acknowledge
-            PendingIntent sendIntent = PendingIntent.getBroadcast(context, 0, //
-                    new Intent(MessageAcknowledgeReceiver.ACTION_SEND_ACK).setData(logUri) //
-                    , 0);
-            PendingIntent deliveryIntent = PendingIntent.getBroadcast(context, 0, //
-                    new Intent(MessageAcknowledgeReceiver.ACTION_DELIVERY_ACK).setData(logUri) //
-                    , 0);
-            // Send Message
-            SmsManager.getDefault().sendTextMessage(phone, null, encrypedMsg, sendIntent, deliveryIntent);
-            isSend = logUri;
-            Log.d(TAG, String.format("Send SmsMessage (%s chars, args) : %s", encrypedMsg.length(), encrypedMsg));
-        } else {
-            // TODO display Too long messsage
-             Log.e(TAG, String.format("Too long SmsMessage (%s chars, args) : %s", encrypedMsg.length(), encrypedMsg));
+            Uri logUri = logSmsMessage(cr, side, SmsLogTypeEnum.SEND_REQ, phone, action, params, msgSplitCount, encrypedMsg);
+
+            // Shot Message Send
+            if (msgSplitCount==1) {
+                // Acknowledge
+                PendingIntent sendIntent = PendingIntent.getBroadcast(context, 0, //
+                        new Intent(MessageAcknowledgeReceiver.ACTION_SEND_ACK).setData(logUri) //
+                                .putExtra(EXTRA_MSG_PART_COUNT, msgSplitCount).putExtra(EXTRA_MSG_PART_ID, 1) //
+                        , 0);
+                PendingIntent deliveryIntent = PendingIntent.getBroadcast(context, 0, //
+                        new Intent(MessageAcknowledgeReceiver.ACTION_DELIVERY_ACK).setData(logUri) //
+                                .putExtra(EXTRA_MSG_PART_COUNT, msgSplitCount).putExtra(EXTRA_MSG_PART_ID, 1) //
+                        , 0);
+                // Send Message
+                smsManager.sendTextMessage(phone, null, encrypedMsg, sendIntent, deliveryIntent);
+                isSend = logUri;
+                Log.d(TAG, String.format("Send SmsMessage (%s chars, args) : %s", encrypedMsg.length(), encrypedMsg));
+            } else {
+                // Acknowledge
+                ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(msgSplitCount);
+                ArrayList<PendingIntent> deliveryIntents = new ArrayList<PendingIntent>(msgSplitCount);
+                for (int msgId = 1; msgId <= msgSplitCount; msgId++) {
+                     // Acknowledge
+                    PendingIntent sendIntent = PendingIntent.getBroadcast(context, 0, //
+                            new Intent(MessageAcknowledgeReceiver.ACTION_SEND_ACK).setData(logUri) //
+                                    .putExtra(EXTRA_MSG_PART_COUNT, msgSplitCount).putExtra(EXTRA_MSG_PART_ID, msgId) //
+                            , 0); //  PendingIntent.FLAG_CANCEL_CURRENT
+                    PendingIntent deliveryIntent = PendingIntent.getBroadcast(context, 0, //
+                            new Intent(MessageAcknowledgeReceiver.ACTION_DELIVERY_ACK).setData(logUri) //
+                                    .putExtra(EXTRA_MSG_PART_COUNT, msgSplitCount).putExtra(EXTRA_MSG_PART_ID, msgId) //
+                            , 0);
+                    sentIntents.add(sendIntent);
+                    deliveryIntents.add(deliveryIntent);
+                }
+                // Send Message
+                smsManager.sendMultipartTextMessage(phone, null, msgsplit, sentIntents, deliveryIntents);
+                isSend = logUri;
+                Log.d(TAG, String.format("Send Long SmsMessage (%s chars) : %s", encrypedMsg.length(), encrypedMsg));
+            }
         }
         return isSend;
     }
 
- 
 
     // ===========================================================
     // Log Sms message
@@ -84,7 +116,7 @@ public class SmsSenderHelper {
 
     public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side, SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, int smsWeight, String encrypedMsg) {
         ContentValues values = SmsLogHelper.getContentValues(side, type, phone, action, params, encrypedMsg);
-        values.put(SmsLogColumns.COL_SMS_WEIGHT, smsWeight);
+        values.put(SmsLogColumns.COL_MSG_COUNT, smsWeight);
         Uri logUri = cr.insert(SmsLogProvider.Constants.CONTENT_URI, values);
         return logUri;
     }

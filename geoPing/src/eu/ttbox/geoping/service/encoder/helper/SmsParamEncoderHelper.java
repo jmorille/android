@@ -12,6 +12,7 @@ import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageTypeEnum;
 import eu.ttbox.geoping.service.encoder.params.IntegerEncoded;
 import eu.ttbox.geoping.service.encoder.params.LongEncoded;
+import eu.ttbox.geoping.service.encoder.params.SmsType;
 
 public class SmsParamEncoderHelper {
 
@@ -64,7 +65,7 @@ public class SmsParamEncoderHelper {
 
     private static StringBuilder writeTo(StringBuilder sb, SmsMessageLocEnum field, String value) {
         sb.append(field.smsFieldName);
-        if (SmsMessageTypeEnum.GPS_PROVIDER == field.type) {
+        if (SmsMessageTypeEnum.GPS_PROVIDER == field.type.wantedWriteType) {
             sb.append(encodeToGpsProvider(value));
         } else {
             sb.append(value);
@@ -72,8 +73,8 @@ public class SmsParamEncoderHelper {
         return sb;
     }
 
-    private static String readToString(SmsMessageLocEnum field, String value) {
-        if (SmsMessageTypeEnum.GPS_PROVIDER == field.type) {
+    private static String readToString(SmsType smsType, String value) {
+        if (SmsMessageTypeEnum.GPS_PROVIDER == smsType.wantedWriteType) {
             return decodeToGpsProvider(value);
         } else {
             return value;
@@ -89,7 +90,7 @@ public class SmsParamEncoderHelper {
         return writeTo(sb, field, preparePhoneNumber);
     }
 
-    private static String readToBase64String(SmsMessageLocEnum field, String value) {
+    private static String readToBase64String(SmsType field, String value) {
         String encodeVal = readToString(field, value);
         if (encodeVal != null) {
             try {
@@ -152,14 +153,14 @@ public class SmsParamEncoderHelper {
         return dateAsLong;
     }
 
-    public static boolean writeToMultiInt(StringBuilder sb, SmsMessageLocEnum field, Bundle values, String[] colDatas, int radix) {
+    public static boolean writeToMultiInt(StringBuilder sb, SmsMessageLocEnum field, Bundle values, SmsType[] colDatas, int radix) {
         boolean isNotFirst = false;
         int colDataSize = colDatas.length;
         for (int i = 0; i < colDataSize; i++) {
-            String colData = colDatas[i];
-            if (values.containsKey(colData)) {
+            SmsType colData = colDatas[i];
+            if (values.containsKey(colData.dbFieldName)) {
                 // Encode
-                int value = values.getInt(colData);
+                int value = values.getInt(colData.dbFieldName);
                 String valueEncoded = IntegerEncoded.toString(value, radix);
                 // Write
                 if (isNotFirst) {
@@ -180,12 +181,12 @@ public class SmsParamEncoderHelper {
         return isNotFirst;
     }
 
-    private static int readToMultiInt(Bundle extras, String value, String[] colDatas, int radix) {
+    private static int readToMultiInt(Bundle extras, String value, SmsType[] colDatas, int radix) {
         int start = 0;
         int colDataSize = colDatas.length;
         boolean isLast = false;
         for (int i = 0; i < colDataSize; i++) {
-            String colData = colDatas[i];
+            SmsType colData = colDatas[i];
             int idx = value.indexOf(FIELD_MULTIDATA_SEP, start);
             if (idx == -1) {
                 idx = value.length();
@@ -197,7 +198,7 @@ public class SmsParamEncoderHelper {
                 // colData, s));
                 if (s != null && s.length() > 0) {
                     int unit = IntegerEncoded.parseInt(s, radix);
-                    extras.putInt(colData, unit);
+                    extras.putInt(colData.dbFieldName, unit);
                 }
                 start = idx + 1;
             }
@@ -288,23 +289,24 @@ public class SmsParamEncoderHelper {
         SmsMessageLocEnum fieldEnum = SmsMessageLocEnum.getBySmsFieldName(key);
         if (fieldEnum != null) {
             String valueEncoded = encoded.substring(startIdx + 1, sepIdx);
-            switch (fieldEnum.type) {
+            SmsType smsType = fieldEnum.type;
+            switch (smsType.wantedWriteType) {
             case GPS_PROVIDER:
                 // Same as String
             case STRING:
-                result.putString(fieldEnum.dbFieldName, readToString(fieldEnum, valueEncoded));
+                result.putString(smsType.dbFieldName, readToString(smsType, valueEncoded));
                 break;
             case STRING_BASE64:
-                result.putString(fieldEnum.dbFieldName, readToBase64String(fieldEnum, valueEncoded));
+                result.putString(smsType.dbFieldName, readToBase64String(smsType, valueEncoded));
                 break;
             case INT:
-                result.putInt(fieldEnum.dbFieldName, readToInt(fieldEnum, valueEncoded, radix));
+                result.putInt(smsType.dbFieldName, readToInt(fieldEnum, valueEncoded, radix));
                 break;
             case DATE:
-                result.putLong(fieldEnum.dbFieldName, readToDate(fieldEnum, valueEncoded, radix));
+                result.putLong(smsType.dbFieldName, readToDate(fieldEnum, valueEncoded, radix));
                 break;
             case LONG:
-                result.putLong(fieldEnum.dbFieldName, readToLong(fieldEnum, valueEncoded, radix));
+                result.putLong(smsType.dbFieldName, readToLong(fieldEnum, valueEncoded, radix));
                 break;
             case MULTI:
                 readToMultiInt(result, valueEncoded, fieldEnum.multiFieldName, radix);
@@ -350,7 +352,8 @@ public class SmsParamEncoderHelper {
                 // Add Separator
                 isNotFirst = addFieldSep(sb, isNotFirst);
                 // Add Field
-                switch (fieldEnum.type) {
+                SmsType smsType = fieldEnum.type;
+                switch (smsType.wantedWriteType ) {
                 case GPS_PROVIDER:
                 case STRING:
                     writeTo(sb, fieldEnum, (String) keyValue);

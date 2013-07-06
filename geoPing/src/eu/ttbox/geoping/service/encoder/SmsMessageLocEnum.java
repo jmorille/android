@@ -1,6 +1,5 @@
 package eu.ttbox.geoping.service.encoder;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.ContentValues;
@@ -11,56 +10,79 @@ import android.text.format.DateUtils;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
+import eu.ttbox.geoping.service.encoder.params.SmsType;
 
 public enum SmsMessageLocEnum {
 
     // Loc
-    PROVIDER('p', SmsMessageTypeEnum.GPS_PROVIDER, GeoTrackColumns.COL_PROVIDER), //
-    DATE('d', SmsMessageTypeEnum.DATE, GeoTrackColumns.COL_TIME), //
-    GEO_E6('g', SmsMessageTypeEnum.MULTI, GeoTrackColumns.COL_LATITUDE_E6, new String[] { GeoTrackColumns.COL_LATITUDE_E6, GeoTrackColumns.COL_LONGITUDE_E6, GeoTrackColumns.COL_ALTITUDE }), //
-    ACCURACY('a', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_ACCURACY), //
-    BEARING('b', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BEARING), //
-    SPEAD('c', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_SPEED), //
-    BATTERY('w', SmsMessageTypeEnum.INT, GeoTrackColumns.COL_BATTERY_LEVEL, R.string.battery_percent), //
+    PROVIDER('p', type(GeoTrackColumns.COL_PROVIDER,  SmsMessageTypeEnum.GPS_PROVIDER)), //
+    DATE('d', type(GeoTrackColumns.COL_TIME, SmsMessageTypeEnum.DATE)), //
+    GEO_E6('g', type( GeoTrackColumns.COL_LATITUDE_E6, SmsMessageTypeEnum.MULTI), //
+            new SmsType[] { //
+                    type(GeoTrackColumns.COL_LATITUDE_E6, SmsMessageTypeEnum.INT), //
+                    type(GeoTrackColumns.COL_LONGITUDE_E6, SmsMessageTypeEnum.INT), //
+                    type(GeoTrackColumns.COL_ALTITUDE, SmsMessageTypeEnum.INT) //
+            }), //
+    ACCURACY('a', type( GeoTrackColumns.COL_ACCURACY,SmsMessageTypeEnum.INT)), //
+    BEARING('b',  type( GeoTrackColumns.COL_BEARING,SmsMessageTypeEnum.INT)), //
+    SPEAD('c',    type( GeoTrackColumns.COL_SPEED,SmsMessageTypeEnum.INT)), //
+    BATTERY('w',  type( GeoTrackColumns.COL_BATTERY_LEVEL,SmsMessageTypeEnum.INT), R.string.battery_percent), //
 
     // Person
-    TIME_IN_S('s', SmsMessageTypeEnum.INT, "TIME_IN_S"), //
-    PERSON_ID('u', SmsMessageTypeEnum.LONG, GeoTrackColumns.COL_PERSON_ID), //
+    TIME_IN_S('s', type( "TIME_IN_S", SmsMessageTypeEnum.INT)), //
+    PERSON_ID('u', type( GeoTrackColumns.COL_PERSON_ID, SmsMessageTypeEnum.LONG)), //
     // Geo Fence
-    GEOFENCE_NAME('e', SmsMessageTypeEnum.STRING, "GEOFENCE_NAME" ), //
-    GEOFENCE('f', SmsMessageTypeEnum.MULTI, GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6 , new String[] { GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6, GeoFenceDatabase.GeoFenceColumns.COL_LONGITUDE_E6, GeoFenceDatabase.GeoFenceColumns.COL_RADIUS, GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, GeoFenceDatabase.GeoFenceColumns.COL_EXPIRATION_DATE  }), //
+    GEOFENCE_NAME('e', type(  "GEOFENCE_NAME", SmsMessageTypeEnum.STRING) ), //
+    GEOFENCE('f',      type( GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6,SmsMessageTypeEnum.MULTI) ,
+            new SmsType[] { //
+                    type(GeoFenceDatabase.GeoFenceColumns.COL_LATITUDE_E6, SmsMessageTypeEnum.INT), //
+                    type(GeoFenceDatabase.GeoFenceColumns.COL_LONGITUDE_E6, SmsMessageTypeEnum.INT), //
+                    type(GeoFenceDatabase.GeoFenceColumns.COL_RADIUS, SmsMessageTypeEnum.INT), //
+                    type(GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, SmsMessageTypeEnum.INT), //
+                    type(GeoFenceDatabase.GeoFenceColumns.COL_EXPIRATION_DATE, SmsMessageTypeEnum.DATE) //
+            }), //
 
     // Spy Event
 //    EVT_SIM_PHONE('i', SmsMessageTypeEnum.STRING, "EVT_SIM_PHONE"),
-    PHONE_NUMBER('n', SmsMessageTypeEnum.STRING_BASE64, "PHONE_NUMBER"), //
-    EVT_DATE('t', SmsMessageTypeEnum.DATE, GeoTrackColumns.COL_EVT_TIME); //
+    PHONE_NUMBER('n', type( "PHONE_NUMBER", SmsMessageTypeEnum.STRING_BASE64)), //
+    EVT_DATE('t',     type( GeoTrackColumns.COL_EVT_TIME, SmsMessageTypeEnum.DATE)); //
+
+    // ===========================================================
+    // Builder
+    // ===========================================================
+
+    private static SmsType type(String dbColumn, SmsMessageTypeEnum wantedWriteType) {
+         return SmsType.multiType(dbColumn, wantedWriteType);
+    }
+
+
     // ===========================================================
     // Constructor
     // ===========================================================
-    SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName) {
-        this(fieldName, type, dbFieldName, null);
+    SmsMessageLocEnum(char fieldName, SmsType type ) {
+        this(fieldName, type,   null);
      }
 
-    SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName, int labelValueResourceId) {
-        this(fieldName, type, dbFieldName, null, labelValueResourceId);
+    SmsMessageLocEnum(char fieldName, SmsType type,   int labelValueResourceId) {
+        this(fieldName, type,   null, labelValueResourceId);
     }
 
-    SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName, String[] multiFieldName) {
-        this(fieldName, type, dbFieldName, multiFieldName, Integer.MIN_VALUE);
+    SmsMessageLocEnum(char fieldName, SmsType type , SmsType[] multiFieldName) {
+        this(fieldName, type,  multiFieldName, Integer.MIN_VALUE);
     }
-    SmsMessageLocEnum(char fieldName, SmsMessageTypeEnum type, String dbFieldName, String[] multiFieldName, int labelValueResourceId) {
+    SmsMessageLocEnum(char fieldName, SmsType type,   SmsType[] multiFieldName, int labelValueResourceId) {
         this.smsFieldName = fieldName;
         this.type = type;
-        this.dbFieldName = dbFieldName;
         this.multiFieldName = multiFieldName;
         this.labelValueResourceId = labelValueResourceId;
     }
 
     public final char smsFieldName;
-    public final SmsMessageTypeEnum type;
-    public final String dbFieldName;
-    public final String[] multiFieldName;
+    public final SmsType type;
+    public final SmsType[] multiFieldName;
     public final int labelValueResourceId;
+
+
     // ===========================================================
     // Conversion Init
     // ===========================================================
@@ -86,7 +108,7 @@ public enum SmsMessageLocEnum {
             }
             fields.put(key, field);
             // Db Col name
-            String colName = field.dbFieldName;
+            String colName = field.type.dbFieldName;
             if (dbColNames.containsKey(colName)) {
                 throw new IllegalArgumentException(String.format("Duplicated DbColName %s", key));
             }
@@ -95,11 +117,11 @@ public enum SmsMessageLocEnum {
             if (SmsMessageTypeEnum.MULTI.equals(field.type)) {
                 int multiFieldNameSize = field.multiFieldName.length;
                 for (int i =1; i< multiFieldNameSize; i++) {
-                    String ignoreMultiCol = field.multiFieldName[i];
+                    SmsType ignoreMultiCol = field.multiFieldName[i];
                     if (ignoreMultiFieldName.containsKey(ignoreMultiCol)) {
                         throw new IllegalArgumentException(String.format("Duplicated Ignore Multifield : %s", ignoreMultiCol));
                     }
-                    ignoreMultiFieldName.put(ignoreMultiCol, field);
+                    ignoreMultiFieldName.put(ignoreMultiCol.dbFieldName, field);
                 }
             }
         }
@@ -117,13 +139,13 @@ public enum SmsMessageLocEnum {
         if (extras==null) {
             return false;
         }
-        return extras.containsKey(dbFieldName);
+        return extras.containsKey(type.dbFieldName);
     }
 
     public String readString(ContentValues params) {
         String result = null;
-        if (params != null && params.containsKey(dbFieldName)) {
-            result = params.getAsString(dbFieldName);
+        if (params != null && params.containsKey(type.dbFieldName)) {
+            result = params.getAsString(type.dbFieldName);
         }
         return result;
     }
@@ -136,53 +158,53 @@ public enum SmsMessageLocEnum {
         if (extras==null) {
             return false;
         }
-        return extras.containsKey(dbFieldName);
+        return extras.containsKey(type.dbFieldName);
     }
     public Bundle writeToBundle(Bundle extras, long value) {
         Bundle params = extras == null ? new Bundle() : extras;
-        params.putLong(dbFieldName, value);
+        params.putLong(type.dbFieldName, value);
         return params;
     }
 
     public Bundle writeToBundle(Bundle extras, int value) {
         Bundle params = extras == null ? new Bundle() : extras;
-        params.putInt(dbFieldName, value);
+        params.putInt(type.dbFieldName, value);
         return params;
     }
 
     public Bundle writeToBundle(Bundle extras, int[] value) {
         Bundle params = extras == null ? new Bundle() : extras;
-        params.putIntArray(dbFieldName, value);
+        params.putIntArray(type.dbFieldName, value);
         return params;
     }
 
     public Bundle writeToBundle(Bundle extras, String value) {
         Bundle params = extras == null ? new Bundle() : extras;
-        params.putString(dbFieldName, value);
+        params.putString(type.dbFieldName, value);
         return params;
     }
      
 
     public long readLong(Bundle params, long defaultValue) {
         long result = defaultValue;
-        if (params != null && params.containsKey(dbFieldName)) {
-            result = params.getLong(dbFieldName, defaultValue);
+        if (params != null && params.containsKey(type.dbFieldName)) {
+            result = params.getLong(type.dbFieldName, defaultValue);
         }
         return result;
     }
 
     public int readInt(Bundle params, int defaultValue) {
         int result = defaultValue;
-        if (params != null && params.containsKey(dbFieldName)) {
-            result = params.getInt(dbFieldName, defaultValue);
+        if (params != null && params.containsKey(type.dbFieldName)) {
+            result = params.getInt(type.dbFieldName, defaultValue);
         }
         return result;
     }
 
     public String readString(Bundle params) {
         String result = null;
-        if (params != null && params.containsKey(dbFieldName)) {
-            result = params.getString(dbFieldName);
+        if (params != null && params.containsKey(type.dbFieldName)) {
+            result = params.getString(type.dbFieldName);
         }
         return result;
     }

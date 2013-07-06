@@ -9,10 +9,13 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
+import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 /**
  * {link http://www.java2s.com/Code/Android/UI/WeatherListWidget.htm}
@@ -63,15 +66,15 @@ public class PersonWidgetService extends RemoteViewsService {
 			if (mCursor.moveToPosition(position)) {
 				displayName = helper.getPersonDisplayName(mCursor);
 				phoneNumber = helper.getPersonPhone(mCursor);
-				if (TextUtils.isEmpty(displayName)) {
+//TODO               PhotoThumbmailCache photoCache = GeoPingApplication.getInstance().getPhotoThumbmailCache();
+ 				if (TextUtils.isEmpty(displayName)) {
 					displayName = phoneNumber;
 				}
 			}
 
 			RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_person_item);
 			rv.setTextViewText(R.id.widget_person_item_displayName, displayName);
-
-			// Set the click intent so that we can handle it and show a toast
+ 			// Set the click intent so that we can handle it and show a toast
 			// message
 			final Intent fillInIntent = new Intent() //
 					.putExtra(Intents.EXTRA_SMS_PHONE, phoneNumber);

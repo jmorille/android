@@ -127,8 +127,8 @@ public class ExtraFeaturesFragment extends Fragment {
     private SkuDetailsListAdapter createListItems() {
         SkuDetailsListAdapter adapter = new SkuDetailsListAdapter(getActivity());
         try {
-            adapter.add(new SkuDetails("{\"productId\" : \"ADD_SUPPRESS_PER_YEAR\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in app\", \"description\" : \"Suppress all adds during one year\"  }  "));
-            adapter.add(new SkuDetails("{\"productId\" : \"SECU_HIDE_LAUNCHER\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No icon app launcher\", \"description\" : \"Hide the GeoPing Application in the System\"  }  "));
+            adapter.add(new SkuDetails("{\"productId\" : \"ADVERT_SUPPRESS_PER_YEAR\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in app\", \"description\" : \"Suppress all adds during one year\"  }  "));
+            adapter.add(new SkuDetails("{\"productId\" : \"SECU_HIDE_LAUNCHER\", \"type\" : \"inapp\", \"price\" : \"Free\" , \"title\" : \"No icon app launcher\", \"description\" : \"Hide the GeoPing Application in the System\"  }  "));
         } catch (JSONException e) {
             Log.e(TAG, "Error Parsing Json : " + e.getMessage(), e);
         }

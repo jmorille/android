@@ -130,7 +130,7 @@ public class SMSReceiver extends BroadcastReceiver {
 			// Add Count for 0 msg
 			for (GeoPingMessage msgOther : geoMsg.multiMessages) {
 				ContentValues valuesOther = SmsLogHelper.getContentValues(side,   SmsLogTypeEnum.RECEIVE, msgOther);
-				valuesOther.put(SmsLogColumns.COL_SMS_WEIGHT, 0);
+				valuesOther.put(SmsLogColumns.COL_MSG_COUNT, 0);
   				if (isParent) {
 					valuesOther.put(SmsLogColumns.COL_PARENT_ID, logParentId);
 				}

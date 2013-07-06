@@ -20,7 +20,7 @@ import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
-import eu.ttbox.geoping.service.encoder.helper.SmsParamEncoderHelper;
+import eu.ttbox.geoping.service.encoder.params.SmsType;
 
 public class SmsLogHelper {
 
@@ -135,7 +135,8 @@ public class SmsLogHelper {
     private static void writeForJsonParamTypeValue(JSONObject destWrite, String key, SmsMessageLocEnum fieldEnum, Bundle extras)
             throws JSONException {
         String valKey = fieldEnum.name();
-        switch (fieldEnum.type) {
+        SmsType smsType = fieldEnum.type;
+        switch (smsType.wantedWriteType) {
             case GPS_PROVIDER:
             case STRING: {
                 String val = extras.getString(key);
@@ -181,8 +182,8 @@ public class SmsLogHelper {
         smsLogSideIdx = cursor.getColumnIndex(SmsLogColumns.COL_SMS_SIDE);
         requestIdIdx = cursor.getColumnIndex(SmsLogColumns.COL_REQUEST_ID);
 
-        sendAckTimeInMsIdx = cursor.getColumnIndex(SmsLogColumns.COL_IS_SEND_TIME);
-        sendDeliveryAckTimeInMsIdx = cursor.getColumnIndex(SmsLogColumns.COL_IS_DELIVERY_TIME);
+        sendAckTimeInMsIdx = cursor.getColumnIndex(SmsLogColumns.COL_MSG_ACK_SEND_TIME_MS);
+        sendDeliveryAckTimeInMsIdx = cursor.getColumnIndex(SmsLogColumns.COL_MSG_ACK_DELIVERY_TIME_MS);
 
         isNotInit = false;
         return this;

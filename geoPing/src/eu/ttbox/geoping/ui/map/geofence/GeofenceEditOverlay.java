@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -77,9 +78,8 @@ public class GeofenceEditOverlay extends Overlay {
             Log.d(TAG, String.format("Found %s Geofences", resultCount));
             ArrayList<CircleGeofence> points = new ArrayList<CircleGeofence>();
             if (resultCount < 1) {
-// FIXME
-// FIXME
-            }
+// TODO
+             }
             GeoFenceHelper helper = new GeoFenceHelper().initWrapper(cursor);
             if (cursor.moveToFirst()) {
                 do {
@@ -174,16 +174,7 @@ public class GeofenceEditOverlay extends Overlay {
                     mode.finish(); // Action picked, so close the CAB
                     return true;
                 case R.id.menu_edit:
-                    // TODO Display
-
-                    GeofencePropDialogFragment dialog =  GeofencePropDialogFragment.newInstance(context, geofence,
-                            new GeofencePropDialogFragment.OnEditGeofenceistener() {
-                               public void onResult(int resultCode) {
-                                    mapView.postInvalidate();
-                                }
-
-                    });
-                    dialog.show();
+                    openEditDialog();
                     return true;
                 default:
                     Log.w(TAG, "Ignore onActionItemClicked itemId : " + item.getItemId() + ", " + item);
@@ -199,6 +190,18 @@ public class GeofenceEditOverlay extends Overlay {
         }
 
     };
+
+    public GeofencePropDialogFragment openEditDialog() {
+        GeofencePropDialogFragment dialog =  GeofencePropDialogFragment.newInstance(context, geofence,
+                new GeofencePropDialogFragment.OnEditGeofenceistener() {
+                    public void onResult(int resultCode) {
+                        mapView.postInvalidate();
+                    }
+
+                });
+        dialog.show();
+        return dialog;
+    }
 
     // ===========================================================
     // Constructors
@@ -329,6 +332,13 @@ public class GeofenceEditOverlay extends Overlay {
         if (geofence != null) {
             ContentValues values = GeoFenceHelper.getContentValues(geofence);
             ContentResolver cr = context.getContentResolver();
+            // TODO validate
+//            if (TextUtils.isEmpty(geofence.name)) {
+//                GeofencePropDialogFragment dialog =  openEditDialog();
+//                dialog.onSaveButton();
+//                return;
+//            }
+            // Save
             if (geofence.id == -1) {
                 Uri geofenceUri = cr.insert(GeoFenceProvider.Constants.CONTENT_URI, values);
                 long geofenceId = Long.valueOf(geofenceUri.getLastPathSegment());

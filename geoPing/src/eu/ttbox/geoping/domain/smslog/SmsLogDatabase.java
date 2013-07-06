@@ -13,7 +13,6 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
-import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 
 
 public class SmsLogDatabase {
@@ -37,10 +36,16 @@ public class SmsLogDatabase {
         public static final String COL_SMS_SIDE = "SMS_SIDE";  // @see SmsLogSideEnum
         public static final String COL_TIME = "TIME";
         public static final String COL_PARENT_ID = "PARENT_ID";
-        public static final String COL_SMS_WEIGHT = "SMS_WEIGHT";
+        public static final String COL_MSG_COUNT = "MSG_COUNT";
         // Acknowledge
-        public static final String COL_IS_SEND_TIME = "IS_SEND_TIME";
-        public static final String COL_IS_DELIVERY_TIME = "IS_DELIVERY_TIME";
+        public static final String COL_MSG_ACK_SEND_MSG_COUNT = "MSG_ACK_SEND_MSG_INCREMENT";
+        public static final String COL_MSG_ACK_SEND_TIME_MS = "MSG_ACK_SEND_TIME_MS";
+        public static final String COL_MSG_ACK_SEND_RESULT_MSG = "MSG_ACK_SEND_RESULT_MSG";
+
+        public static final String COL_MSG_ACK_DELIVERY_MSG_COUNT = "MSG_ACK_DELIVERY_MSG_INCREMENT ";
+        public static final String COL_MSG_ACK_DELIVERY_TIME_MS = "MSG_ACK_DELIVERY_TIME_MS";
+        public static final String COL_MSG_ACK_DELIVERY_RESULT_MSG = "MSG_ACK_DELIVERY_RESULT_MSG";
+
         // Geofence
         public static final String COL_REQUEST_ID = "REQUEST_ID";
         public static final String COL_IS_READ = "IS_READ";
@@ -48,8 +53,10 @@ public class SmsLogDatabase {
         // All Cols
         public static final String[] ALL_COLS = new String[] { //
             COL_ID, COL_TIME, COL_ACTION, COL_PHONE, COL_PHONE_MIN_MATCH,  COL_SMSLOG_TYPE,  COL_MESSAGE , COL_MESSAGE_PARAMS  //
-            ,COL_SMS_SIDE, COL_SMS_WEIGHT,COL_PARENT_ID //
-            , COL_IS_SEND_TIME, COL_IS_DELIVERY_TIME //Acknowledge
+            ,COL_SMS_SIDE,COL_PARENT_ID //
+            , COL_MSG_COUNT, COL_MSG_ACK_SEND_MSG_COUNT, COL_MSG_ACK_DELIVERY_MSG_COUNT //Acknowledge count
+            , COL_MSG_ACK_SEND_TIME_MS, COL_MSG_ACK_DELIVERY_TIME_MS //Acknowledge Time
+            , COL_MSG_ACK_SEND_RESULT_MSG, COL_MSG_ACK_DELIVERY_RESULT_MSG //Acknowledge result Msg
             , COL_IS_READ, COL_REQUEST_ID // Notif, Geofence
         };
         // Where Clause

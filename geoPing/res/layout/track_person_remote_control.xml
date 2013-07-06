@@ -44,7 +44,7 @@
                 android:layout_marginLeft="@dimen/call_log_indent_margin"
                 android:layout_alignLeft="@+id/track_person_remote_control_pairingButton"
                 android:layout_below="@+id/track_person_remote_control_openButton"
-                android:text="Hide"
+                android:text="Test Long Mock SMS"
                 />
 
 

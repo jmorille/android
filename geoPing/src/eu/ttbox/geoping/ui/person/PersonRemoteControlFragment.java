@@ -16,6 +16,12 @@ import com.actionbarsherlock.app.SherlockFragment;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
+import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
+import eu.ttbox.geoping.service.SmsSenderHelper;
+import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.helper.SmsParamEncoderHelper;
 
 
 public class PersonRemoteControlFragment extends SherlockFragment {
@@ -115,25 +121,42 @@ public class PersonRemoteControlFragment extends SherlockFragment {
                 onPairingClick(v);
                 break;
             case R.id.track_person_remote_control_openButton: {
-                String entityId = entityUri.getLastPathSegment();
-                Intent intent = Intents.commandOpenApplication(getActivity(), entityPhoneNumber, entityId);
-                getActivity().startService(intent);
+                onOpenApplicationClick(v);
                 Toast.makeText(getActivity(), "Open App button click", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.track_person_remote_control_hideButton:
-                Toast.makeText(getActivity(), "Hide click", Toast.LENGTH_SHORT).show();
+                onTestLongSmsClick(v);
+                Toast.makeText(getActivity(), "Send Test Long SMS click", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 throw new IllegalArgumentException("Not Implemented action for Id : " + v.getId());
 
         }
     }
+    // ===========================================================
+    // Command
+    // ===========================================================
+    public void onOpenApplicationClick(View v) {
+        String entityId = entityUri.getLastPathSegment();
+        Intent intent = Intents.commandOpenApplication(getActivity(), entityPhoneNumber, entityId);
+        getActivity().startService(intent);
+    }
 
     public void onPairingClick(View v) {
         String entityId = entityUri.getLastPathSegment();
         Intent intent = Intents.pairingRequest(getActivity(), entityPhoneNumber, entityId);
         getActivity().startService(intent);
+    }
+
+    public void onTestLongSmsClick(View v) {
+        Bundle params = new Bundle();
+        StringBuffer sb = new StringBuffer(300);
+        for (int i = 0; i<30; i ++) {
+            sb.append("1234567890");
+        }
+        SmsMessageLocEnum.GEOFENCE_NAME.writeToBundle(params, sb.toString());
+        SmsSenderHelper.sendSmsAndLogIt(getActivity(), SmsLogSideEnum.MASTER, entityPhoneNumber, SmsMessageActionEnum.GEOFENCE_Unknown_transition, params);
     }
 
 }
