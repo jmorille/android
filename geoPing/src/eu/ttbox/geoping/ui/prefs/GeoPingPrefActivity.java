@@ -10,8 +10,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
@@ -50,8 +54,6 @@ implements OnSharedPreferenceChangeListener {
         developmentPreferences = getSharedPreferences(AppVersionPreference.PREFS_DEV_MODE, Context.MODE_PRIVATE);
         super.onCreate(aSavedState);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        // Add selector
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
 // TODO       customizeSlidingMenu();
         // Compatibity
@@ -64,9 +66,49 @@ implements OnSharedPreferenceChangeListener {
                 addPreferencesFromResource(R.xml.development_prefs);
             }
             addPreferencesFromResource(R.xml.info_prefs);
+        } else {
+            // Add selector
+            getActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        // Init Summary
+        initSummaries(this.getPreferenceScreen());
+
         // Tracker
         EasyTracker.getInstance().activityStart(this);
+    }
+
+    /**
+     * Set the summaries of all preferences
+     */
+    private void initSummaries(PreferenceGroup pg) {
+        if (pg==null) {
+            return;
+        }
+        for (int i = 0; i < pg.getPreferenceCount(); ++i) {
+            Preference p = pg.getPreference(i);
+            // Init
+            if (p instanceof PreferenceGroup) {
+                this.initSummaries((PreferenceGroup) p); // recursion
+            } else {
+                this.setSummary(p);
+            }
+        }
+    }
+
+    /**
+     * Set the summaries of the given preference
+     */
+    private void setSummary(Preference pref) {
+        // react on type or key
+        if (pref instanceof EditTextPreference) {
+            EditTextPreference editPref = (EditTextPreference) pref;
+            String prefText = editPref.getText();
+            if (prefText != null && prefText.length() > 0)
+                pref.setSummary(prefText);
+        } else if (pref instanceof ListPreference) {
+            ListPreference listPref = (ListPreference) pref;
+            pref.setSummary(listPref.getEntry());
+        }
     }
 
     @Override

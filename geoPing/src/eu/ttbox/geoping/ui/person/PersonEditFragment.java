@@ -147,8 +147,11 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         });
         // Form
         formValidator = createValidator(getActivity());
+
         return v;
     }
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -218,6 +221,9 @@ public class PersonEditFragment extends SherlockFragment implements ColorPickerD
         this.entityId = entityId;
         this.existValidator.setEntityId(entityId);
     }
+
+
+
 
     public void setOnPersonSelectListener(OnPersonSelectListener onPersonSelectListener) {
         this.onPersonSelectListener = onPersonSelectListener;

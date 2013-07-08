@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true" >
@@ -23,12 +22,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/call_log_indent_margin"
-
                 android:layout_below="@+id/track_person_remote_control_photo_header"
                 android:text="@string/person_geoping_pairing_action"
                 />
         <Button
                 android:id="@+id/track_person_remote_control_openButton"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/call_log_indent_margin"
@@ -39,6 +38,7 @@
 
         <Button
                 android:id="@+id/track_person_remote_control_hideButton"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/call_log_indent_margin"

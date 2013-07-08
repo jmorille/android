@@ -8,7 +8,7 @@
     <color name="pairing_authorize_type_never">#4BFF0000</color>
     <color name="pairing_authorize_type_request">#4BFF00FF</color>
 
-
+    <color name="holo_blue_light">#ff33b5e5</color>
 
     <color name="call_log_primary_text_color">#FFFFFF</color>
     <color name="call_log_secondary_text_color">#888888</color>

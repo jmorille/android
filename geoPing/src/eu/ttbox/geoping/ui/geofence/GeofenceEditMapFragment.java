@@ -76,7 +76,9 @@ public class GeofenceEditMapFragment extends ShowMapFragment {
 
     private void onSaveClick() {
         GeofenceEditActivity activity = (GeofenceEditActivity) getActivity();
-        activity.onSaveClick();
+        if (activity!=null) {
+            activity.onSaveClick();
+        }
     }
 
 

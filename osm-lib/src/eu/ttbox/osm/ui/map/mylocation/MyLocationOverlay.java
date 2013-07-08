@@ -232,7 +232,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         disableMyLocation();
         disableCompass();
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        hideBubble();
+        hideBubble(mapView);
         super.onDetach(mapView);
     }
 
@@ -759,6 +759,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
                 Log.d(TAG, "onSingleTapUp on myLocation Point");
                 boolean isRecycled = true;
                 if (balloonView == null) {
+                    Log.d(TAG, "onSingleTapUp : Create new MyLocationBubble");
                     balloonView = new MyLocationBubble(mapView.getContext());
                     balloonView.setVisibility(View.GONE);
                     balloonView.setDisplayGeoLoc(sharedPreferences.getBoolean(AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, false));
@@ -767,18 +768,22 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
                 }
 //              TODO   showCallout();  
                 boolean balloonViewNotVisible = (View.VISIBLE != balloonView.getVisibility());
-                Log.d(TAG, "onSingleTapUp my location balloon is visible : " + balloonViewNotVisible  + " (" + balloonView.getVisibility()  + ")");
+                Log.d(TAG, "onSingleTapUp my location balloon is NOT visible : " + balloonViewNotVisible  + " (" + balloonView.getVisibility()  + ") on geoPoint " + lastFixAsGeoPoint );
                 if (balloonViewNotVisible) {
                     // Compute Offset
                     int offsetX = 0; // 150
                     int offsetY = -20; // -20
                     // Position Layout
-                    balloonViewLayoutParams = new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT, MapView.LayoutParams.WRAP_CONTENT, lastFixAsGeoPoint, MapView.LayoutParams.BOTTOM_CENTER,
+                    balloonViewLayoutParams = new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT, MapView.LayoutParams.WRAP_CONTENT,
+                            lastFixAsGeoPoint, MapView.LayoutParams.BOTTOM_CENTER,
                             offsetX, offsetY);
                     if (isRecycled) {
                         balloonView.setLayoutParams(balloonViewLayoutParams);
+                        Log.d(TAG, "onSingleTapUp : setLayoutParams " + balloonViewLayoutParams);
+
                     } else {
                         mapView.addView(balloonView, balloonViewLayoutParams);
+                        Log.d(TAG, "onSingleTapUp : addView " + balloonViewLayoutParams);
                     }
                     balloonView.setVisibility(View.VISIBLE);
                     // balloonView.setData(lastFix);
@@ -787,10 +792,10 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
                    
                     return true;
                 } else {
-                    return hideBubble();
+                    return hideBubble(mapView);
                 }
             } else {
-                hideBubble();
+                hideBubble(mapView);
             }
         }
         return false;
@@ -827,11 +832,15 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
         }
     }
 
-    private boolean hideBubble() {
+    private boolean hideBubble(MapView mapView) {
         boolean isHide = false;
         if (balloonView != null && View.GONE != balloonView.getVisibility()) {
             balloonView.setVisibility(View.GONE);
+            //Remove from stack
+            mapView.removeView(balloonView);
+            balloonView = null;
             isHide = true;
+
         }
         return isHide;
     }

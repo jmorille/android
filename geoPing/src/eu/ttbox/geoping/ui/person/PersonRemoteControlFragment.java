@@ -75,6 +75,15 @@ public class PersonRemoteControlFragment extends SherlockFragment {
         return v;
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Load Data
+        loadEntity(getArguments());
+    }
+
+
     // ===========================================================
     // Menu
     // ===========================================================
@@ -84,6 +93,14 @@ public class PersonRemoteControlFragment extends SherlockFragment {
     // Accessor
     // ===========================================================
 
+    public void loadEntity(Bundle agrs) {
+        if (agrs != null && agrs.containsKey(Intents.EXTRA_DATA_URI)) {
+//            String entityId = agrs.getString(Intents.EXTRA_PERSON_ID);
+            String phone = agrs.getString(Intents.EXTRA_SMS_PHONE);
+            Uri entiyUrl = Uri.parse(  agrs.getString(Intents.EXTRA_DATA_URI));
+            setEntity(entiyUrl, phone);
+        }
+    }
     public void setEntity(Uri entityUri, String phoneNumber) {
         this.entityUri = entityUri;
         this.entityPhoneNumber = phoneNumber;

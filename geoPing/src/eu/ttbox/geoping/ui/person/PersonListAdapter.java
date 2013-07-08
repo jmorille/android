@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.person.PhotoEditorView.EditorListener;
 
@@ -73,11 +74,12 @@ public class PersonListAdapter extends android.support.v4.widget.ResourceCursorA
 		holder.nameText.setText(personName);
 		// Color
 		Drawable stld = PersonColorDrawableHelper.getListBackgroundColor(color);
-		//
-		// if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.JELLY_BEAN) {
-		// view.setBackground(stld);
-		// } else
-		view.setBackgroundDrawable(stld);
+
+//		 if (VersionUtils.isJb16 ) {
+//		    view.setBackground(stld);
+//		 } else {
+  		   view.setBackgroundDrawable(stld);
+//         }
 
 		// Photo
 		if (!TextUtils.isEmpty(contactId)) {

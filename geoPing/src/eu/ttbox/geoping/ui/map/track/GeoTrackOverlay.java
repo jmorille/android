@@ -571,23 +571,28 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 	private boolean openBubble(MapView mapView, GeoTrack geoTrack) {
 		boolean isRecycled = true;
 		if (balloonView == null) {
+            Log.d(TAG, "on openBubble Create new GeoTrackBubble");
 			balloonView = new GeoTrackBubble(context);
 			balloonView.setVisibility(View.GONE);
 			balloonView.setDisplayGeoLoc(sharedPreferences.getBoolean(AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, false));
 			isRecycled = false;
 		}
 		boolean balloonViewNotVisible = (View.VISIBLE != balloonView.getVisibility());
-		if (balloonViewNotVisible) {
+        Log.d(TAG, "on openBubble : balloonViewNotVisible = " + balloonViewNotVisible);
+        if (balloonViewNotVisible) {
 			// Compute Offset
 			int offsetX = 0; // 150
 			int offsetY = -20; // -20
 			// Position Layout
-			balloonViewLayoutParams = new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT, MapView.LayoutParams.WRAP_CONTENT, geoTrack.asGeoPoint(), MapView.LayoutParams.BOTTOM_CENTER,
+			balloonViewLayoutParams = new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT, MapView.LayoutParams.WRAP_CONTENT,
+                    geoTrack.asGeoPoint(), MapView.LayoutParams.BOTTOM_CENTER,
 					offsetX, offsetY);
 			if (isRecycled) {
 				balloonView.setLayoutParams(balloonViewLayoutParams);
+                Log.d(TAG, "on openBubble : setLayoutParams = " + balloonViewLayoutParams);
 			} else {
 				mapView.addView(balloonView, balloonViewLayoutParams);
+                Log.d(TAG, "on openBubble : addView = " + balloonViewLayoutParams);
 			}
 			balloonView.setVisibility(View.VISIBLE);
 			// balloonView.setData(lastFix);
@@ -655,6 +660,7 @@ public class GeoTrackOverlay extends Overlay implements SharedPreferences.OnShar
 		boolean isHide = false;
 		if (balloonView != null && View.GONE != balloonView.getVisibility()) {
 			balloonView.setVisibility(View.GONE);
+            // Remove From Stack
             mapView.removeView(balloonView);
             balloonView = null;
 			isHide = true;

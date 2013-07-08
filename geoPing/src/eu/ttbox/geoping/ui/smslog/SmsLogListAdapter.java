@@ -126,7 +126,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         // Backgroud send
         if (SmsLogTypeEnum.RECEIVE.equals(smLogType)) {
             // view.setBackgroundResource(R.drawable.fleche_verte_g);
-            view.setBackground(null);
+            view.setBackgroundResource(android.R.color.transparent);
         } else {
             // view.setBackgroundResource(R.drawable.fleche_bleue_d);
             view.setBackgroundResource(R.drawable.dialpad_background);

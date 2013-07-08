@@ -60,9 +60,13 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 			}
             // remote Controle
             if (remoteControlFragment != null) {
-                Bundle args = new Bundle();
                 Uri entityUri = PersonProvider.Constants.getUriEntityId(id);
-                remoteControlFragment.setEntity(entityUri, phone);
+                Bundle args = new Bundle();
+                args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, personPhone);
+                args.putString(eu.ttbox.geoping.core.Intents.EXTRA_DATA_URI, entityUri.toString());
+                args.putString(eu.ttbox.geoping.core.Intents.EXTRA_PERSON_ID, id);
+                remoteControlFragment.loadEntity(args);
+//                remoteControlFragment.setEntity(entityUri, phone);
             }
 			// Update Ui Tabs
 			if (viewPagerPageCount != VIEW_PAGER_LOADPERS_PAGE_COUNT) {
@@ -200,11 +204,15 @@ public class PersonEditActivity extends SherlockFragmentActivity {
 				break;
            case REMOTE_CONTROL:
                if (remoteControlFragment == null) {
+                   Uri entityUri = PersonProvider.Constants.getUriEntityId(personId);
                    Bundle args = new Bundle();
+                   args.putString(eu.ttbox.geoping.ui.smslog.SmsLogListFragment.Intents.EXTRA_SMS_PHONE, personPhone);
+                   args.putString(eu.ttbox.geoping.core.Intents.EXTRA_DATA_URI, entityUri.toString());
+                   args.putString(eu.ttbox.geoping.core.Intents.EXTRA_PERSON_ID, personId);
                    // TODO Args for personId
                    remoteControlFragment = new PersonRemoteControlFragment();
-                   Uri entityUri = PersonProvider.Constants.getUriEntityId(personId);
-                   remoteControlFragment.setEntity(entityUri, personPhone);
+                   remoteControlFragment.setArguments(args);
+ //                  remoteControlFragment.setEntity(entityUri, personPhone);
                   // remoteControlFragment.setArguments(args);
                }
                fragment = remoteControlFragment;
