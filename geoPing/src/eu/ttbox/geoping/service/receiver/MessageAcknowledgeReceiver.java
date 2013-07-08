@@ -67,7 +67,6 @@ public class MessageAcknowledgeReceiver extends BroadcastReceiver {
                 Log.d(TAG, "Message Acknowledge extras : " + key + " = " + value);
                 if (EXTRA_PDU.equals(key)) {
                     SmsMessage message = SmsMessage.createFromPdu((byte[]) value);
-
                     Log.d(TAG, "Message Acknowledge extras : " + key + " = " + message);
                     Log.d(TAG, "Message Acknowledge extras : " + key + " = MessageBody    : " + message.getMessageBody());
                     Log.d(TAG, "Message Acknowledge extras : " + key + " = Status         : " + message.getStatus());
