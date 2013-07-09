@@ -1,3 +1,7 @@
+ext {
+    jacksonVersion = '2.2.2'
+}
+
 buildscript {
     repositories {
         mavenCentral()
@@ -8,11 +12,12 @@ buildscript {
 }
 apply plugin: 'android'
 
-List jackson = ['com.fasterxml.jackson.core:jackson-core:2.2.2@jar', 'com.fasterxml.jackson.core:jackson-databind:2.2.2@jar']
-
+// Jackson
+List jackson = ['com.fasterxml.jackson.core:jackson-core:$jacksonVersion@jar', 'com.fasterxml.jackson.core:jackson-databind:$jacksonVersion@jar']
+// Google Apis
 List admob = ['com.google.android.admob:admob:6.4.1-r11']
 List googlePlayServices = ['com.google.android.gms:google-play-services:7@jar', 'com.google.android.gms:google-play-services:7@apklib']
-
+// Compatibility
 List actionbarsherlock = ['com.actionbarsherlock:actionbarsherlock:4.3.1@apklib']
 List slidingmenu = ['com.jeremyfeinstein.slidingmenu:slidingmenu:1.2.1@apklib']
 

@@ -1,1 +1,1 @@
-include ':geoPing', ':geoPing-AppEngine'
+include ':osm-lib', ':geoPingProject'
