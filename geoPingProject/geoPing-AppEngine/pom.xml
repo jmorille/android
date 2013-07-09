@@ -2,13 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <modelVersion>4.0.0</modelVersion>
-    <packaging>war</packaging>
+  <parent>
+        <groupId>eu.ttbox.android.geoping</groupId>
+        <artifactId>geoPingProject</artifactId>
+        <version>0.2.3</version> 
+   </parent>
+   
+   
+    <groupId>eu.ttbox.android.geoping</groupId>
+    <artifactId>geoPing-AppEngine</artifactId>
     <version>1.0</version>
 
-    <groupId>eu.ttbox.geoping</groupId>
-    <artifactId>geoPing-AppEngine</artifactId>
+    <packaging>war</packaging>
 
     <properties>
         <appengine.target.version>1.8.1</appengine.target.version>

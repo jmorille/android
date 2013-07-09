@@ -4,9 +4,9 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>eu.ttbox.android</groupId>
-      <artifactId>android-root</artifactId>
-      <version>0.1.2</version>
+        <groupId>eu.ttbox.android.geoping</groupId>
+        <artifactId>geoPingProject</artifactId>
+        <version>0.2.3</version> 
    </parent>
 
    <groupId>eu.ttbox.android.geoping</groupId>
