@@ -8,17 +8,21 @@ buildscript {
 }
 apply plugin: 'android'
 
+List jackson = ['com.fasterxml.jackson.core:jackson-core:2.2.2@jar', 'com.fasterxml.jackson.core:jackson-databind:2.2.2@jar']
+
+List admob = ['com.google.android.admob:admob:6.4.1-r11']
+List googlePlayServices = ['com.google.android.gms:google-play-services:7@jar', 'com.google.android.gms:google-play-services:7@apklib']
+
+List actionbarsherlock = ['com.actionbarsherlock:actionbarsherlock:4.3.1@apklib']
+List slidingmenu = ['com.jeremyfeinstein.slidingmenu:slidingmenu:1.2.1@apklib']
+
 dependencies {
     compile project(':osm-lib')
-    compile ('android.support:compatibility-v13:??')
-    compile ('com.actionbarsherlock:actionbarsherlock:??:apklib')
-    compile com.jeremyfeinstein.slidingmenu:slidingmenu:??:apklib
-    compile com.google.android.gms:google-play-services:??
-    compile com.google.android.gms:google-play-services:??:apklib
-    compile com.google.android.admob:admob:??
-    compile com.google.android.analytics:analytics:??
-    compile com.fasterxml.jackson.core:jackson-core:??
-    compile com.fasterxml.jackson.core:jackson-databind:??
+    compile ('android.support:compatibility-v13:13@jar')
+    compile ('com.google.android.analytics:analytics:3@jar')
+    compile jackson
+    compile googlePlayServices, admob
+    compile actionbarsherlock, slidingmenu
 }
 
 android {

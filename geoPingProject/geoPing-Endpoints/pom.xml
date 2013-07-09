@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>eu.ttbox.android.geoping</groupId>
+        <artifactId>geoPingProject</artifactId>
+        <version>0.2.3</version>
+    </parent>
+
+
+    <groupId>eu.ttbox.android.geoping</groupId>
+    <artifactId>geoPing-Endpoints</artifactId>
+
+
+    <packaging>apklib</packaging>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-jackson</artifactId>
+            <version>1.15.0-rc</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client-android</artifactId>
+            <version>1.15.0-rc</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.android.gms</groupId>
+                    <artifactId>google-play-services</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- TODO gcm
+        <dependency>
+            <groupId>com.google.android.gcm</groupId>
+            <artifactId>gcm-client</artifactId>
+            <version>3</version>
+        </dependency>
+       -->
+
+    </dependencies>
+
+</project>
