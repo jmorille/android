@@ -137,6 +137,7 @@
 	<modules>
 		<module>osm-lib</module>
 		<module>geoPing</module>
+		<module>geoPing-AppEngine</module>
 		<module>cityLib</module>
 	</modules>
 
