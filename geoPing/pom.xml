@@ -191,7 +191,7 @@
                   <inherited>true</inherited>
                   <configuration>
                      <release>true</release>
-                     <nativeLibrariesDirectory>ignored</nativeLibrariesDirectory>
+                     <nativeLibrariesDirectory>ignored</nativeLibrariesDirectory> 
                      <sign>
                         <debug>false</debug>
                      </sign>
