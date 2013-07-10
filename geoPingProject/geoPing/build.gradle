@@ -1,5 +1,6 @@
 ext {
     jacksonVersion = '2.2.2'
+    osmLibVersion = '0.1.2'
 }
 
 buildscript {
@@ -22,7 +23,8 @@ List actionbarsherlock = ['com.actionbarsherlock:actionbarsherlock:4.3.1@apklib'
 List slidingmenu = ['com.jeremyfeinstein.slidingmenu:slidingmenu:1.2.1@apklib']
 
 dependencies {
-    compile project(':osm-lib')
+  //  compile project(':osm-lib')
+    compile ('eu.ttbox.android.osm:osm-lib:$osmLibVersion@apklib')
     compile ('android.support:compatibility-v13:13@jar')
     compile ('com.google.android.analytics:analytics:3@jar')
     compile jackson
