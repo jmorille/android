@@ -7,6 +7,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import eu.ttbox.geoping.core.Intents;
 
+@Deprecated
 public class MsgReceiverIntentService extends IntentService {
 
 	private static final String TAG = "MsgReceiverIntentService";

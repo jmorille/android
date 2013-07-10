@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
@@ -75,6 +78,8 @@ public class SMSReceiver extends BroadcastReceiver {
 	// ===========================================================
 
 	private boolean consumeMessage(Context context, SmsMessage message) {
+
+
 		final String messageBody = message.getMessageBody();
 		final String phoneNumber = message.getDisplayOriginatingAddress();
 		Log.d(TAG, "Consume SMS Geo Action : " + phoneNumber + " / " + messageBody);

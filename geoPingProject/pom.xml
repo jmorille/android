@@ -18,6 +18,7 @@
 	<modules> 
 		<module>geoPing</module>
 		<module>geoPing-AppEngine</module> 
+		<module>geoPing-Endpoints</module> 
 	</modules>
  
 </project>
