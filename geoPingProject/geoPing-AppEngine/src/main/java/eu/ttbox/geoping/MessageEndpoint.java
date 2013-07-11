@@ -53,7 +53,7 @@ public class MessageEndpoint {
      * Google Cloud Messaging from your AppEngine application even if you are
      * using a App Engine's local development server.
      */
-    private static final String API_KEY = "AIzaSyBXjzx_BY31ALvldJAhlvumq0ISOOXYckk";
+    private static final String API_KEY = "AIzaSyCz_DopznOpLUoe5_Lx6cue7vbjTb2Zg3g";
 
     private static final DeviceInfoEndpoint endpoint = new DeviceInfoEndpoint();
 

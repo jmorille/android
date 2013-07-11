@@ -4,17 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
-import eu.ttbox.geoping.ui.pairing.PairingListFragment;
+import eu.ttbox.geoping.ui.gcm.RegisterActivity;
 
 public class ExtraFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   {
     
     // Debug tag, for logging
     private static final String TAG = "ExtraFeaturesActivity";
+
+
+    public static final int REGISTER_ACTIVITY_REQ_CODE = 1;
 
     // binding
     private ExtraFeaturesFragment listFragment;
@@ -36,6 +40,13 @@ public class ExtraFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   
         handleIntent(getIntent());
         // Tracker
         EasyTracker.getInstance().activityStart(this);
+
+        // temp test
+
+
+        Intent registerActivity = new Intent(this, RegisterActivity.class);
+        startActivityForResult(registerActivity, REGISTER_ACTIVITY_REQ_CODE);
+
     }
 
     @Override
@@ -43,6 +54,9 @@ public class ExtraFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   
         super.onStop();
         // Tracker
         EasyTracker.getInstance().activityStop(this);
+
+        // Unregister
+// TODO         GCMIntentService.unregister(this);
     }
 
     @Override
@@ -53,6 +67,21 @@ public class ExtraFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   
         }
     }
 
+
+    // ===========================================================
+    // Result Code
+    // ===========================================================
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toast.makeText(this, requestCode + " " + resultCode + ";", Toast.LENGTH_SHORT).show();
+        if(requestCode == REGISTER_ACTIVITY_REQ_CODE) {
+            if(resultCode != RESULT_OK) {
+                // just end the activity if register fails
+             //   finish();
+            }
+        }
+    }
     // ===========================================================
     // Intent
     // ===========================================================

@@ -5,14 +5,14 @@
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17"/>
 
       <!-- App receives GCM messages. -->
-    <permission android:name="eu.ttbox.geoping.gcm.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
-    <uses-permission android:name="eu.ttbox.geoping.gcm.permission.C2D_MESSAGE"/>
-
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <permission android:name="eu.ttbox.geoping.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="eu.ttbox.geoping.permission.C2D_MESSAGE"/>
 
     <!-- GCM requires a Google account. -->
    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-   
+   <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
    <!-- Billing Service -->
    <uses-permission android:name="com.android.vending.BILLING"/>
      
@@ -174,12 +174,27 @@
                 <data android:mimeType="vnd.android.cursor.item/ttbox.geoping.smsLog"/>
             </intent-filter> 
        </receiver>
-        
+
+        <!-- GCM Message Receiver -->
+        <receiver android:name="eu.ttbox.geoping.service.receiver.GcmMessageReceiver" android:exported="true"
+                  android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="eu.ttbox.geoping" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GCMIntentService" />
+
+        <activity android:name=".ui.gcm.RegisterActivity"  android:launchMode="singleTop" />
+
+
         <!-- Geofending -->
-        <service android:exported="false" android:label="@string/app_name" android:name="eu.ttbox.geoping.service.geofence.ReceiveTransitionsIntentService">
+        <service android:exported="false" android:label="@string/app_name"
+                 android:name="eu.ttbox.geoping.service.geofence.ReceiveTransitionsIntentService">
         </service>
         <!-- Activity Geofence Recognition -->
-        <service android:enabled="true" android:exported="false" android:label="@string/app_name" android:name=".service.geofence.ActivityRecognitionIntentService">
+        <service android:enabled="true" android:exported="false" android:label="@string/app_name"
+                 android:name=".service.geofence.ActivityRecognitionIntentService">
         </service>
 
 

@@ -1,12 +1,10 @@
-package eu.ttbox.geoping.service.gcm;
+package eu.ttbox.geoping;
 
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import eu.ttbox.geoping.deviceinfoendpoint.Deviceinfoendpoint;
-import eu.ttbox.geoping.deviceinfoendpoint.model.DeviceInfo;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -17,34 +15,24 @@ import com.google.api.client.json.jackson.JacksonFactory;
 import java.io.IOException;
 import java.net.URLEncoder;
 
-/**
- * This class is started up as a service of the Android application. It listens
- * for Google Cloud Messaging (GCM) messages directed to this device.
- * <p/>
- * When the device is successfully registered for GCM, a message is sent to the
- * App Engine backend via Cloud Endpoints, indicating that it wants to receive
- * broadcast messages from the it.
- * <p/>
- * Before registering for GCM, you have to create a project in Google's Cloud
- * Console (https://code.google.com/apis/console). In this project, you'll have
- * to enable the "Google Cloud Messaging for Android" Service.
- * <p/>
- * Once you have set up a project and enabled GCM, you'll have to set the
- * PROJECT_NUMBER field to the project number mentioned in the "Overview" page.
- * <p/>
- * See the documentation at
- * http://developers.google.com/eclipse/docs/cloud_endpoints for more
- * information.
- */
+import eu.ttbox.geoping.deviceinfoendpoint.Deviceinfoendpoint;
+import eu.ttbox.geoping.service.gcm.CloudEndpointUtils;
+import eu.ttbox.geoping.ui.gcm.GcmRegisterAsyncTask;
+
+
+import eu.ttbox.geoping.deviceinfoendpoint.model.DeviceInfo;
+import eu.ttbox.geoping.ui.gcm.RegisterActivity;
+
 public class GCMIntentService extends GCMBaseIntentService {
-    private final Deviceinfoendpoint endpoint;
+
+    private final Deviceinfoendpoint  endpoint;
 
     /*
      * TODO: Set this to a valid project number. See
      * http://developers.google.com/eclipse/docs/cloud_endpoint for more
      * information.
      */
-    protected static final String PROJECT_NUMBER = "493878400848";
+    protected static final String PROJECT_NUMBER = GcmRegisterAsyncTask.PROJECT_NUMBER;
 
     /**
      * Register the device for GCM.
