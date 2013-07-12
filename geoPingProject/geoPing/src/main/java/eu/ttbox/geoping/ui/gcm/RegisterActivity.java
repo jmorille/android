@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.gcm;
+package eu.ttbox.geoping.ui.gcm;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import eu.ttbox.geoping.gcm.R;
+import android.view.View;
+
+import eu.ttbox.geoping.R;
 
 /**
  * An activity that communicates with your App Engine backend via Cloud
@@ -37,48 +39,24 @@ import eu.ttbox.geoping.gcm.R;
  */
 public class RegisterActivity extends Activity {
 
+    private static final String TAG = "RegisterActivity";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.gcm_register_activity);
 
+       registerWithBackend();
+    }
+
+    public void onClickRegisterWithBackend(View v) {
         registerWithBackend();
     }
-
     private void registerWithBackend() {
-        if(!checkProjectNumber()) {
-            return;
-        }
-        try {
-            GCMIntentService.register(getApplicationContext());
-        } catch (Exception e) {
-            Log.e(RegisterActivity.class.getName(),
-                    "Exception received when attempting to register for Google Cloud "
-                            + "Messaging. Perhaps you need to set your virtual device's "
-                            + " target to Google APIs? "
-                            + "See https://developers.google.com/eclipse/docs/cloud_endpoints_android"
-                            + " for more information.", e);
-            showDialog("There was a problem when attempting to register for "
-                    + "Google Cloud Messaging. If you're running in the emulator, "
-                    + "is the target of your virtual device set to 'Google APIs?' "
-                    + "See the Android log for more details.", endInFailure);
-        }
+        GcmRegisterAsyncTask task = new GcmRegisterAsyncTask(getApplicationContext(), endInSuccess, endInFailure);
+        task.execute(GcmRegisterAsyncTask.PROJECT_NUMBER);
     }
 
-    private void unregisterWithBackend() {
-        GCMIntentService.unregister(getApplicationContext());
-    }
 
-    private boolean checkProjectNumber() {
-        if (GCMIntentService.PROJECT_NUMBER == null
-                || GCMIntentService.PROJECT_NUMBER.length() == 0) {
-            showDialog("Unable to register for Google Cloud Messaging. "
-                    + "Your application's PROJECT_NUMBER field is unset! You can change "
-                    + "it in GCMIntentService.java", endInFailure);
-            return false;
-        }
-        return true;
-    }
 
     Runnable endInFailure = new Runnable() {
         @Override

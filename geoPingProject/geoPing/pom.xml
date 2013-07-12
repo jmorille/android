@@ -29,8 +29,7 @@
        <dependency>
            <groupId>eu.ttbox.android.geoping</groupId>
            <artifactId>geoPing-Endpoints</artifactId>
-           <version>${project.version}</version>
-           <type>apklib</type>
+           <version>${project.version}</version> 
        </dependency>
 
        <!-- Android -->
@@ -105,7 +104,7 @@
 
    <build>
       <finalName>${project.artifactId}</finalName>
-      <sourceDirectory>src</sourceDirectory>
+      <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
       <!-- <testSourceDirectory>test</testSourceDirectory> -->
       <plugins>
          <plugin>
