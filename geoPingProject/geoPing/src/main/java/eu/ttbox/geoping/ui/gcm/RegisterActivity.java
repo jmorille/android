@@ -5,10 +5,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.service.gcm.GcmRegisterAsyncTask;
 
 /**
  * An activity that communicates with your App Engine backend via Cloud
@@ -54,6 +54,7 @@ public class RegisterActivity extends Activity {
     private void registerWithBackend() {
         GcmRegisterAsyncTask task = new GcmRegisterAsyncTask(getApplicationContext(), endInSuccess, endInFailure);
         task.execute(GcmRegisterAsyncTask.PROJECT_NUMBER);
+//        GCMIntentService.register(getApplicationContext());
     }
 
 

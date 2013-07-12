@@ -182,11 +182,28 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <category android:name="eu.ttbox.geoping" />
             </intent-filter>
+            <intent-filter>
+               <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+               <category android:name="eu.ttbox.geoping"/>
+            </intent-filter>
         </receiver>
-        <service android:name=".GCMIntentService" />
+
+
+        <!--<receiver android:name="com.google.android.gcm.GCMBroadcastReceiver"-->
+                  <!--android:permission="com.google.android.c2dm.permission.SEND">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE"/>-->
+                <!--<category android:name="eu.ttbox.geoping"/>-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.c2dm.intent.REGISTRATION"/>-->
+                <!--<category android:name="eu.ttbox.geoping"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+        <!--<service android:name=".GCMIntentService" />-->
 
         <activity android:name=".ui.gcm.RegisterActivity"  android:launchMode="singleTop" />
-
+        <activity android:name=".ui.gcm.GcmSendMessageActivity" />
 
         <!-- Geofending -->
         <service android:exported="false" android:label="@string/app_name"

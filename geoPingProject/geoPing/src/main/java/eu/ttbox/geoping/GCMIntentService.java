@@ -3,6 +3,7 @@ package eu.ttbox.geoping;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -17,10 +18,11 @@ import java.net.URLEncoder;
 
 import eu.ttbox.geoping.deviceinfoendpoint.Deviceinfoendpoint;
 import eu.ttbox.geoping.service.gcm.CloudEndpointUtils;
-import eu.ttbox.geoping.ui.gcm.GcmRegisterAsyncTask;
+import eu.ttbox.geoping.service.gcm.GcmRegisterAsyncTask;
 
 
 import eu.ttbox.geoping.deviceinfoendpoint.model.DeviceInfo;
+import eu.ttbox.geoping.service.gcm.GcmRegisterHelper;
 import eu.ttbox.geoping.ui.gcm.RegisterActivity;
 
 public class GCMIntentService extends GCMBaseIntentService {
@@ -32,7 +34,7 @@ public class GCMIntentService extends GCMBaseIntentService {
      * http://developers.google.com/eclipse/docs/cloud_endpoint for more
      * information.
      */
-    protected static final String PROJECT_NUMBER = GcmRegisterAsyncTask.PROJECT_NUMBER;
+    protected static final String PROJECT_NUMBER = GcmRegisterHelper.PROJECT_NUMBER;
 
     /**
      * Register the device for GCM.
@@ -94,6 +96,11 @@ public class GCMIntentService extends GCMBaseIntentService {
      */
     @Override
     public void onMessage(Context context, Intent intent) {
+        Log.d(TAG, "#################################");
+        Log.d(TAG, "### GCM onMessage : " + intent);
+        printExtras(intent.getExtras());
+        Log.d(TAG, "#################################");
+
         Intent new_intent = new Intent();
         new_intent.putExtras(intent);
         new_intent.setAction(INTENT_EXTRA_WATCH_UPDATE);
@@ -107,6 +114,15 @@ public class GCMIntentService extends GCMBaseIntentService {
                         + intent.getStringExtra("message"), true, false);*/
     }
 
+
+    private void printExtras(Bundle extras) {
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                Object value = extras.get(key);
+                Log.d(TAG, "### GCM extras : " + key + " = " + value);
+            }
+        }
+    }
 
     /**
      * Called back when a registration token has been received from the Google

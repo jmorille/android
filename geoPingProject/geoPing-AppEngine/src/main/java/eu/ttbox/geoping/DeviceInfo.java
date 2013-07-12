@@ -1,5 +1,7 @@
 package eu.ttbox.geoping;
 
+import com.google.appengine.api.users.User;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -44,6 +46,8 @@ public class DeviceInfo {
      */
     private long timestamp;
 
+    private User user;
+
     public String getDeviceRegistrationID() {
         return deviceRegistrationID;
     }
@@ -67,4 +71,15 @@ public class DeviceInfo {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
+
+
+

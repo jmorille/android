@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import eu.ttbox.geoping.R;
+import eu.ttbox.geoping.service.gcm.GcmUnRegisterAsyncTask;
 import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
 import eu.ttbox.geoping.ui.gcm.RegisterActivity;
 
@@ -18,7 +19,7 @@ public class ExtraFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   
     private static final String TAG = "ExtraFeaturesActivity";
 
 
-    public static final int REGISTER_ACTIVITY_REQ_CODE = 1;
+
 
     // binding
     private ExtraFeaturesFragment listFragment;
@@ -41,11 +42,7 @@ public class ExtraFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   
         // Tracker
         EasyTracker.getInstance().activityStart(this);
 
-        // temp test
 
-
-        Intent registerActivity = new Intent(this, RegisterActivity.class);
-        startActivityForResult(registerActivity, REGISTER_ACTIVITY_REQ_CODE);
 
     }
 
@@ -55,8 +52,7 @@ public class ExtraFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   
         // Tracker
         EasyTracker.getInstance().activityStop(this);
 
-        // Unregister
-// TODO         GCMIntentService.unregister(this);
+
     }
 
     @Override

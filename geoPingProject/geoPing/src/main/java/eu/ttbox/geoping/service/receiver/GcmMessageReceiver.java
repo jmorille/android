@@ -19,6 +19,8 @@ public class GcmMessageReceiver  extends BroadcastReceiver {
         printExtras(intent.getExtras());
         Log.d(TAG, "#################################");
 
+
+//        getMessageType(Intent)
         // Resend As Broadcast
         Intent new_intent = new Intent();
         new_intent.putExtras(intent);

@@ -17,6 +17,8 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.oauth.OAuthRequestException;
+import com.google.appengine.api.users.User;
 import com.google.appengine.datanucleus.query.JPACursorHelper;
 
 
@@ -43,9 +45,14 @@ import com.google.appengine.datanucleus.query.JPACursorHelper;
  * If this app is deployed, anyone can access this endpoint! If you'd like to
  * add authentication, take a look at the documentation.
  */
-@Api(name = "messageEndpoint", namespace = @ApiNamespace(ownerDomain = "ttbox.eu", ownerName = "ttbox.eu", packagePath = "geoping"))
+@Api(name = "messageEndpoint", version="v1"
+        , namespace = @ApiNamespace(ownerDomain = "ttbox.eu", ownerName = "ttbox.eu", packagePath = "geoping")
+
+)
 // NO AUTHENTICATION; OPEN ENDPOINT!
 public class MessageEndpoint {
+
+
 
     /*
      * TODO: Fill this in with the server key that you've obtained from the API
@@ -121,7 +128,10 @@ public class MessageEndpoint {
      */
     @ApiMethod(name = "sendMessage")
     public void sendMessage(@Named("message") String message)
-            throws IOException {
+            throws IOException, OAuthRequestException {
+
+        // OAUTH https://developers.google.com/appengine/docs/java/endpoints/auth
+
         Sender sender = new Sender(API_KEY);
         // create a MessageData entity with a timestamp of when it was
         // received, and persist it

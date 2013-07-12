@@ -7,6 +7,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.users.User;
 import com.google.appengine.datanucleus.query.JPACursorHelper;
 
 import java.util.List;
@@ -18,7 +19,12 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-@Api(name = "deviceinfoendpoint", namespace = @ApiNamespace(ownerDomain = "ttbox.eu", ownerName = "ttbox.eu", packagePath = "geoping"))
+@Api(name = "deviceinfoendpoint"
+        , namespace = @ApiNamespace(ownerDomain = "ttbox.eu", ownerName = "ttbox.eu", packagePath = "geoping")
+        , clientIds = { Ids.WEB_CLIENT_ID, Ids.ANDROID_CLIENT_ID }
+        , audiences = {Ids.ANDROID_AUDIENCE}
+)
+// https://developers.google.com/appengine/docs/java/endpoints/auth
 public class DeviceInfoEndpoint {
 
     /**
@@ -96,12 +102,13 @@ public class DeviceInfoEndpoint {
      * @return The inserted entity.
      */
     @ApiMethod(name = "insertDeviceInfo")
-    public DeviceInfo insertDeviceInfo(DeviceInfo deviceinfo) {
+    public DeviceInfo insertDeviceInfo(DeviceInfo deviceinfo, User user) {
         EntityManager mgr = getEntityManager();
         try {
             if (containsDeviceInfo(deviceinfo)) {
                 throw new EntityExistsException("Object already exists");
             }
+            deviceinfo.setUser(user);
             mgr.persist(deviceinfo);
         } finally {
             mgr.close();

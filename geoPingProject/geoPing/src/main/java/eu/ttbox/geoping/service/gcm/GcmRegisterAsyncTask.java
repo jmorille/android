@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.ui.gcm;
+package eu.ttbox.geoping.service.gcm;
 
 
 import android.app.AlertDialog;
@@ -10,12 +10,17 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+
+import eu.ttbox.geoping.deviceinfoendpoint.Deviceinfoendpoint;
+import eu.ttbox.geoping.deviceinfoendpoint.model.DeviceInfo;
+import eu.ttbox.geoping.ui.gcm.RegisterActivity;
 
 public class GcmRegisterAsyncTask extends AsyncTask<String, Void, String> {
 
-    public static final java.lang.String TAG = "GCMIntentService";
+    public static final java.lang.String TAG = "GcmRegisterAsyncTask";
 
-    public static final String PROJECT_NUMBER = "493878400848";
+
 
     private Context context;
 
@@ -32,13 +37,37 @@ public class GcmRegisterAsyncTask extends AsyncTask<String, Void, String> {
         this.endInSuccess = endInSuccess;
     }
 
+
+
     @Override
     protected String doInBackground(String... params) {
         String registrationId = null;
         try {
             GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
-            registrationId = gcm.register(PROJECT_NUMBER);
-            Log.d(TAG, "register GCM registrationId : " + registrationId);
+            registrationId = gcm.register(GcmRegisterHelper.PROJECT_NUMBER);
+            Log.d(TAG, "************************************************************* ");
+            Log.d(TAG, "*** register GCM registrationId : " + registrationId);
+            Log.d(TAG, "************************************************************* ");
+
+            if (registrationId!=null) {
+
+              //TODO   GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context, );
+
+                Deviceinfoendpoint  endpoint = GcmRegisterHelper.getDeviceinfoendpoint(context);
+
+                DeviceInfo deviceInfo = new DeviceInfo();
+                endpoint.insertDeviceInfo(
+                        deviceInfo
+                                .setDeviceRegistrationID(registrationId)
+                                .setTimestamp(System.currentTimeMillis())
+                                .setDeviceInformation(
+                                        URLEncoder
+                                                .encode(android.os.Build.MANUFACTURER
+                                                        + " "
+                                                        + android.os.Build.PRODUCT,
+                                                        "UTF-8"))).execute();
+            }
+
         } catch (IOException e) {
             Log.e(TAG, "Error register GCM : " + e.getMessage(), e);
             Log.e(RegisterActivity.class.getName(),
@@ -47,13 +76,20 @@ public class GcmRegisterAsyncTask extends AsyncTask<String, Void, String> {
                             + " target to Google APIs? "
                             + "See https://developers.google.com/eclipse/docs/cloud_endpoints_android"
                             + " for more information.", e);
-            showDialog("There was a problem when attempting to register for "
-                    + "Google Cloud Messaging. If you're running in the emulator, "
-                    + "is the target of your virtual device set to 'Google APIs?' "
-                    + "See the Android log for more details.", endInFailure);
+//            showDialog("There was a problem when attempting to register for "
+//                    + "Google Cloud Messaging. If you're running in the emulator, "
+//                    + "is the target of your virtual device set to 'Google APIs?' "
+//                    + "See the Android log for more details.", endInFailure);
 
         }
         return registrationId;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        if (endInSuccess!=null) {
+            endInSuccess.run();
+        }
     }
 
     private void showDialog(String message, final Runnable okAction) {
