@@ -177,7 +177,7 @@ public class MessageEndpoint {
             if (canonicalRegId != null) {
                 endpoint.removeDeviceInfo(deviceInfo.getDeviceRegistrationID());
                 deviceInfo.setDeviceRegistrationID(canonicalRegId);
-                endpoint.insertDeviceInfo(deviceInfo);
+                endpoint.insertDeviceInfo(null, deviceInfo);
             }
         } else {
             String error = result.getErrorCodeName();

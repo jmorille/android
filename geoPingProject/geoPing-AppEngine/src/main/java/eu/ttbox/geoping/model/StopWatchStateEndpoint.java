@@ -139,7 +139,7 @@ public class StopWatchStateEndpoint {
             if (canonicalRegId != null) {
                 endpoint.removeDeviceInfo(deviceInfo.getDeviceRegistrationID());
                 deviceInfo.setDeviceRegistrationID(canonicalRegId);
-                endpoint.insertDeviceInfo(deviceInfo);
+                endpoint.insertDeviceInfo(null, deviceInfo);
             }
         } else {
             String error = result.getErrorCodeName();

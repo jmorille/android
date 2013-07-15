@@ -9,6 +9,7 @@ import android.view.View;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.service.gcm.GcmRegisterAsyncTask;
+import eu.ttbox.geoping.service.gcm.GcmRegisterHelper;
 
 /**
  * An activity that communicates with your App Engine backend via Cloud
@@ -53,7 +54,7 @@ public class RegisterActivity extends Activity {
     }
     private void registerWithBackend() {
         GcmRegisterAsyncTask task = new GcmRegisterAsyncTask(getApplicationContext(), endInSuccess, endInFailure);
-        task.execute(GcmRegisterAsyncTask.PROJECT_NUMBER);
+        task.execute();
 //        GCMIntentService.register(getApplicationContext());
     }
 

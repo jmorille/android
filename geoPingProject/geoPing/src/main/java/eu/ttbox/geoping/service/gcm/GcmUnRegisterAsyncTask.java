@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 import java.io.IOException;
 
@@ -17,11 +18,17 @@ public class GcmUnRegisterAsyncTask extends AsyncTask<String, Void, String> {
 
     private Context context;
 
+    private GoogleAccountCredential credential;
+
     public Runnable endInFailure;
     public Runnable endInSuccess;
 
     public GcmUnRegisterAsyncTask(Context context) {
         this.context = context;
+    }
+    public GcmUnRegisterAsyncTask(Context context, GoogleAccountCredential credential) {
+        this.context = context;
+        this.credential = credential;
     }
 
     @Override
@@ -30,7 +37,7 @@ public class GcmUnRegisterAsyncTask extends AsyncTask<String, Void, String> {
             GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
             gcm.unregister();
 
-            Deviceinfoendpoint endpoint = GcmRegisterHelper.getDeviceinfoendpoint(context);
+            Deviceinfoendpoint endpoint = GcmRegisterHelper.getDeviceinfoendpoint(context, credential);
 
 
 //            try {

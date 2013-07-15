@@ -60,6 +60,15 @@
             geoping:src="@android:drawable/ic_menu_more"
             geoping:text="@string/menu_extra_feature" />
 
+        <eu.ttbox.geoping.ui.slidingmenu.SlindingMenuItemView
+                android:id="@+id/menu_gcm_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                geoping:src="@android:drawable/ic_menu_more"
+                geoping:text="GCM Message" />
+
+
+
         <TextView
             android:id="@+id/slidingmenu_person_list_title"
             style="@style/entity_list_item"
@@ -77,6 +86,8 @@
             android:isScrollContainer="false"
             android:paddingLeft="@dimen/list_padding"
             android:paddingRight="@dimen/list_padding" />
+
+
     </LinearLayout>
 
 </ScrollView>

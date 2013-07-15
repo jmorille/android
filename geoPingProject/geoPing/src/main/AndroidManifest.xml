@@ -202,7 +202,7 @@
         <!--</receiver>-->
         <!--<service android:name=".GCMIntentService" />-->
 
-        <activity android:name=".ui.gcm.RegisterActivity"  android:launchMode="singleTop" />
+        <activity android:name=".ui.gcm.RegisterActivity"  android:launchMode="singleTop"   android:noHistory="true" />
         <activity android:name=".ui.gcm.GcmSendMessageActivity" />
 
         <!-- Geofending -->

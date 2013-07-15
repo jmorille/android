@@ -36,6 +36,7 @@ import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.ui.billing.ExtraFeaturesActivity;
 import eu.ttbox.geoping.ui.billing.PayFeaturesActivity;
+import eu.ttbox.geoping.ui.gcm.GcmSendMessageActivity;
 import eu.ttbox.geoping.ui.geofence.GeofenceListActivity;
 import eu.ttbox.geoping.ui.map.ShowMapActivity;
 import eu.ttbox.geoping.ui.pairing.PairingListActivity;
@@ -61,6 +62,7 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
     private static int[] menuIds = new int[] { //
       R.id.menuMap, R.id.menu_track_person, R.id.menu_pairing,R.id.menu_geofence , R.id.menu_smslog//
       , R.id.menu_settings, R.id.menu_extra_feature //
+      , R.id.menu_gcm_message //
      };
 
     // ===========================================================
@@ -190,6 +192,7 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
         case R.id.menu_smslog:
             isRootActivity = true;
         case R.id.menu_extra_feature:
+        case R.id.menu_gcm_message:
         case R.id.menuGeotracker:
         case R.id.menuMap:
             Class<? extends Activity> intentClass = getActivityClassByItemId(itemId);
@@ -244,6 +247,8 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
             return SmsLogListActivity.class;
         case R.id.menu_extra_feature:
             return ExtraFeaturesActivity.class;
+        case R.id.menu_gcm_message:
+             return GcmSendMessageActivity.class;
         default:
             return null;
         }

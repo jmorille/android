@@ -1,13 +1,16 @@
 package eu.ttbox.geoping.service.gcm;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -22,22 +25,25 @@ public class GcmRegisterAsyncTask extends AsyncTask<String, Void, String> {
 
 
 
-    private Context context;
+    private Activity context;
+    private GoogleAccountCredential credential;
 
     public Runnable endInFailure;
     public  Runnable endInSuccess;
 
-    public GcmRegisterAsyncTask(Context context) {
+    public GcmRegisterAsyncTask(Activity context) {
         this.context = context;
     }
+    public GcmRegisterAsyncTask(Activity context, GoogleAccountCredential credential) {
+        this.context = context;
+        this.credential = credential;
+    }
 
-    public GcmRegisterAsyncTask(Context context, Runnable endInSuccess, Runnable endInFailure) {
+    public GcmRegisterAsyncTask(Activity context, Runnable endInSuccess, Runnable endInFailure) {
         this.context = context;
         this.endInFailure = endInFailure;
         this.endInSuccess = endInSuccess;
     }
-
-
 
     @Override
     protected String doInBackground(String... params) {
@@ -49,11 +55,11 @@ public class GcmRegisterAsyncTask extends AsyncTask<String, Void, String> {
             Log.d(TAG, "*** register GCM registrationId : " + registrationId);
             Log.d(TAG, "************************************************************* ");
 
-            if (registrationId!=null) {
-
+             if (registrationId!=null) {
+                // http://techtej.blogspot.fr/2010/10/android-c2dm-messaging-server-push-for.html
               //TODO   GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context, );
 
-                Deviceinfoendpoint  endpoint = GcmRegisterHelper.getDeviceinfoendpoint(context);
+                Deviceinfoendpoint  endpoint = GcmRegisterHelper.getDeviceinfoendpoint(context, credential);
 
                 DeviceInfo deviceInfo = new DeviceInfo();
                 endpoint.insertDeviceInfo(

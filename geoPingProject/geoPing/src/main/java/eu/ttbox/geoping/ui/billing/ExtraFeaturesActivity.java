@@ -68,16 +68,7 @@ public class ExtraFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   
     // Result Code
     // ===========================================================
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(this, requestCode + " " + resultCode + ";", Toast.LENGTH_SHORT).show();
-        if(requestCode == REGISTER_ACTIVITY_REQ_CODE) {
-            if(resultCode != RESULT_OK) {
-                // just end the activity if register fails
-             //   finish();
-            }
-        }
-    }
+
     // ===========================================================
     // Intent
     // ===========================================================

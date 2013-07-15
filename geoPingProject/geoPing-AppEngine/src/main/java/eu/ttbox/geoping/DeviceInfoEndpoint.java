@@ -102,13 +102,13 @@ public class DeviceInfoEndpoint {
      * @return The inserted entity.
      */
     @ApiMethod(name = "insertDeviceInfo")
-    public DeviceInfo insertDeviceInfo(DeviceInfo deviceinfo, User user) {
+    public DeviceInfo insertDeviceInfo(User user, DeviceInfo deviceinfo) {
         EntityManager mgr = getEntityManager();
         try {
             if (containsDeviceInfo(deviceinfo)) {
                 throw new EntityExistsException("Object already exists");
             }
-            deviceinfo.setUser(user);
+
             mgr.persist(deviceinfo);
         } finally {
             mgr.close();
