@@ -79,6 +79,7 @@ package eu.ttbox.geoping.deviceinfoendpoint;
  *
  * @since 1.12
  */
+@Deprecated
 public class DeviceinfoendpointRequestInitializer extends com.google.api.client.googleapis.services.json.CommonGoogleJsonClientRequestInitializer {
 
   public DeviceinfoendpointRequestInitializer() {

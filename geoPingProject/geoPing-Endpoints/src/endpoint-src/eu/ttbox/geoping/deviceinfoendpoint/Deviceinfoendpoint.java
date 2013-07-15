@@ -39,6 +39,7 @@ package eu.ttbox.geoping.deviceinfoendpoint;
  * @author Google, Inc.
  */
 @SuppressWarnings("javadoc")
+@Deprecated
 public class Deviceinfoendpoint extends com.google.api.client.googleapis.services.json.AbstractGoogleJsonClient {
 
   // Note: Leave this static initializer at the top of the file.

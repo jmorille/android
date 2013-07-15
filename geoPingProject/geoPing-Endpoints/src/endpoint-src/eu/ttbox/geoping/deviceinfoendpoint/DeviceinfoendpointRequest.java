@@ -24,6 +24,8 @@ package eu.ttbox.geoping.deviceinfoendpoint;
  * @since 1.3
  */
 @SuppressWarnings("javadoc")
+@Deprecated
+
 public abstract class DeviceinfoendpointRequest<T> extends com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest<T> {
 
   /**
