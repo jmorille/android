@@ -4,14 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.service.gcm.GcmUnRegisterAsyncTask;
 import eu.ttbox.geoping.ui.GeoPingSlidingMenuFragmentActivity;
-import eu.ttbox.geoping.ui.gcm.RegisterActivity;
 
 public class ExtraFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   {
     

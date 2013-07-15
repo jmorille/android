@@ -12,9 +12,11 @@
     <string name="menu_edit">Editer</string>
 
     <string name="menu_delete">Supprimer</string>
-    <string name="menu_cancel">Annuler</string> 
-    
-     <!-- Billing -->
+    <string name="menu_cancel">Annuler</string>
+
+    <string name="send">Envoyer</string>
+
+    <!-- Billing -->
 
 
     <!-- Share -->

@@ -1,28 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:gravity="center_vertical|center_horizontal|center"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
-
-    <TextView
-            android:id="@+id/msgView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".GuestbookActivity" >
 
     <EditText
-            android:id="@+id/msgToSend"
-            android:layout_width="fill_parent"
+            android:id="@+id/etMessage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/btSend"
+            android:ems="10"
+            android:inputType="text"
+            android:maxLines="1" >
+
+        <requestFocus />
+    </EditText>
 
     <Button
-            android:id="@+id/sendButton"
-            android:layout_width="fill_parent"
+            android:id="@+id/btSend"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:onClick="onClickSendButton"
-            android:text="Send Message"/>
+            android:layout_alignBottom="@+id/etMessage"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:enabled="true"
+            android:onClick="onSendButtonPressed"
+            android:text="@string/send" />
 
-</LinearLayout>
+    <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/etMessage"
+            android:fillViewport="true" >
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+            <TextView
+                    android:id="@+id/tvPosts"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:text=""
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
