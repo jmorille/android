@@ -40,7 +40,7 @@ public class CloudBackendMessaging extends CloudBackendAsync {
    * {@link Context} such as {@link Activity} that will be used to Google Cloud
    * Messaging.
    *
-   * @param application
+   * @param context
    *          {@link Context}
    */
   public CloudBackendMessaging(Context context) {

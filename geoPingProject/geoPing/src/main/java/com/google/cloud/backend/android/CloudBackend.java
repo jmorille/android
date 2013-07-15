@@ -36,8 +36,7 @@ import java.util.List;
  * Base Cloud Backend API class that provides CRUD operation and query operation
  * on the backend. All the methods work synchronously, so they can not be called
  * directly from UI thread of {@link Activity} or {@link Fragment}. (Use
- * {@link CloudBackendAsync} for calling backend from UI thread). See
- * {@link CloudBackendTest} for detailed usage.
+ * {@link CloudBackendAsync} for calling backend from UI thread).
  *
  */
 public class CloudBackend {
