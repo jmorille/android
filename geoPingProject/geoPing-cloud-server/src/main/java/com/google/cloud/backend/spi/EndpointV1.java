@@ -32,9 +32,9 @@ import javax.inject.Named;
  * An endpoint for all CloudBackend requests.
  *
  */
-@Api(name = "mobilebackend", namespace = @ApiNamespace(ownerDomain = "google.com",
-    ownerName = "google.com", packagePath = "cloud.backend.android"),
-    useDatastoreForAdditionalConfig = AnnotationBoolean.TRUE)
+@Api(name = "mobilebackend"
+        , namespace = @ApiNamespace(ownerDomain = "google.com",  ownerName = "google.com", packagePath = "cloud.backend.android")
+        , useDatastoreForAdditionalConfig = AnnotationBoolean.TRUE)
 public class EndpointV1 {
 
     private static final Logger log = Logger.getLogger(EndpointV1.class.getName());

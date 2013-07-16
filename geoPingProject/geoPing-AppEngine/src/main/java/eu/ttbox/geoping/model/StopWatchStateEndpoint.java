@@ -25,7 +25,9 @@ import eu.ttbox.geoping.DeviceInfoEndpoint;
 import eu.ttbox.geoping.DeviceInfo;
 import eu.ttbox.geoping.EMF;
 
-@Api(name = "stopwatchstateendpoint", namespace = @ApiNamespace(ownerDomain = "ttbox.eu", ownerName = "ttbox.eu", packagePath = "geoping.model"))
+@Api(name = "stopwatchstateendpoint"
+        , namespace = @ApiNamespace(ownerDomain = "ttbox.eu", ownerName = "ttbox.eu"
+        , packagePath = "geoping.model"))
 public class StopWatchStateEndpoint {
 
     /**
