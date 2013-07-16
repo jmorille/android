@@ -20,6 +20,7 @@
 
     <properties>
         <google-client.version>1.15.0-rc</google-client.version>
+        
     </properties>
 
 
@@ -156,8 +157,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.2.4</version>
-            <!-- gson  2.1 -->
+            <version>${gson.version}</version>
         </dependency>
 
         <!-- Jackson-core 2.1.3 -->

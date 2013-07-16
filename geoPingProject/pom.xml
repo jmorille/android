@@ -15,6 +15,16 @@
 
 	<name>GeoPing Project</name>
 
+    <properties>
+        <appengine.target.version>1.8.1</appengine.target.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <appengine-maven-plugin.version>1.8.1.1</appengine-maven-plugin.version>
+
+		<!-- Json -->	
+		<gson.version>2.2.4</gson.version>   <!-- gson  2.1 -->
+    </properties>
+    
 	<modules> 
 		<module>geoPing</module>
 		<module>geoPing-AppEngine</module> 
