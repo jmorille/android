@@ -33,60 +33,58 @@ import java.util.List;
  * UI.
  */
 public class CloudEndpointsConfigManager {
-  private final DatastoreService datastoreService;
-  private final MemcacheService memcacheService;
+    /**
+     * Kind name for storing endpoint configuration.
+     */
+    public static final String ENDPOINT_CONFIGURATION_KIND = "GoogleCloudEndpointConfiguration";
+    private static final String AUDIENCES = "audiences";
+    private static final String CLIENT_IDS = "clientIds";
+    private final DatastoreService datastoreService;
+    private final MemcacheService memcacheService;
 
-  /**
-   * Kind name for storing endpoint configuration.
-   */
-  public static final String ENDPOINT_CONFIGURATION_KIND = "GoogleCloudEndpointConfiguration";
-
-  private static final String AUDIENCES = "audiences";
-  private static final String CLIENT_IDS = "clientIds";
-
-  public CloudEndpointsConfigManager() {
-    this(DatastoreServiceFactory.getDatastoreService(),
-        MemcacheServiceFactory.getMemcacheService());
-  }
-
-  public CloudEndpointsConfigManager(DatastoreService datastoreService, 
-      MemcacheService memcacheService) {
-    this.datastoreService = datastoreService;
-    this.memcacheService = memcacheService;
-  }
-
-  /**
-   * Configures the Cloud Endpoints exposed from this backend. Specifically, it
-   * configures {@link EndpointV1} endpoints. This call overwrites any
-   * previously specified settings.
-   * 
-   * @param clientIds
-   *          list of clientIds that will be allowed to make authenticated calls
-   *          to this backend.
-   * @param audiences
-   *          list of audiences that will be allowed to make authenticated calls
-   *          to this backend.
-   */
-  public void setAuthenticationInfo(List<String> clientIds,
-      List<String> audiences) {
-    Entity config = getEndpointEntity(EndpointV1.class);
-    config.setProperty(CLIENT_IDS, clientIds);
-    config.setProperty(AUDIENCES, audiences);
-    datastoreService.put(config);
-
-    // Google Cloud Endpoints infrastructure caches the configuration in Memcache.
-    // In order for the changes to be applied without restart/redeployment
-    // they need to be updated not only in Datastore, but also in Memcache.
-    memcacheService.put(ENDPOINT_CONFIGURATION_KIND + "." + EndpointV1.class.getName(), config);
-  }
-
-  private Entity getEndpointEntity(Class<?> endpointClass) {
-    Key key = KeyFactory.createKey(ENDPOINT_CONFIGURATION_KIND,
-        endpointClass.getSimpleName());
-    try {
-      return datastoreService.get(key);
-    } catch (EntityNotFoundException e) {
-      return new Entity(key);
+    public CloudEndpointsConfigManager() {
+        this(DatastoreServiceFactory.getDatastoreService(),
+                MemcacheServiceFactory.getMemcacheService());
     }
-  }
+
+    public CloudEndpointsConfigManager(DatastoreService datastoreService,
+                                       MemcacheService memcacheService) {
+        this.datastoreService = datastoreService;
+        this.memcacheService = memcacheService;
+    }
+
+    /**
+     * Configures the Cloud Endpoints exposed from this backend. Specifically, it
+     * configures {@link EndpointV1} endpoints. This call overwrites any
+     * previously specified settings.
+     *
+     * @param clientIds list of clientIds that will be allowed to make authenticated calls
+     *                  to this backend.
+     * @param audiences list of audiences that will be allowed to make authenticated calls
+     *                  to this backend.
+     */
+    public void setAuthenticationInfo(List<String> clientIds,
+                                      List<String> audiences) {
+        Entity config = getEndpointEntity(EndpointV1.class);
+        config.setProperty(CLIENT_IDS, clientIds);
+        config.setProperty(AUDIENCES, audiences);
+        datastoreService.put(config);
+
+        // Google Cloud Endpoints infrastructure caches the configuration in Memcache.
+        // In order for the changes to be applied without restart/redeployment
+        // they need to be updated not only in Datastore, but also in Memcache.
+        //String memCacheKey = new StringBuilder().append(ENDPOINT_CONFIGURATION_KIND).append('.').append(EndpointV1.class.getName()).toString();
+        String memCacheKey = ENDPOINT_CONFIGURATION_KIND + "." + EndpointV1.class.getName();
+        memcacheService.put(memCacheKey, config);
+    }
+
+    private Entity getEndpointEntity(Class<?> endpointClass) {
+        Key key = KeyFactory.createKey(ENDPOINT_CONFIGURATION_KIND,
+                endpointClass.getSimpleName());
+        try {
+            return datastoreService.get(key);
+        } catch (EntityNotFoundException e) {
+            return new Entity(key);
+        }
+    }
 }

@@ -31,6 +31,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +43,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @SuppressWarnings("serial")
 public class ConfigurationServlet extends HttpServlet {
+
+    private static final Logger log = Logger.getLogger(ConfigurationServlet.class.getName());
 
   private static BackendConfigManager configMgr = new BackendConfigManager();
 
@@ -174,10 +178,9 @@ public class ConfigurationServlet extends HttpServlet {
     try {
       CrudOperations.getInstance().saveAll(cdl, userService.getCurrentUser());
     } catch (UnauthorizedException e) {
-      e.printStackTrace();
+        log.log(Level.SEVERE,"Error in CrudOperations saveAll : " + e.getMessage(), e);
     }
-    jsonResp.addProperty(JSON_RESP_PROP_MESSAGE, "Broadcast message sent: "
-        + params);
+    jsonResp.addProperty(JSON_RESP_PROP_MESSAGE, "Broadcast message sent: " + params);
   }
 
   private void clearAllSubscriptions(JsonObject jsonResp) {

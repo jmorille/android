@@ -24,6 +24,8 @@ import com.google.cloud.backend.beans.EntityDto;
 import com.google.cloud.backend.beans.EntityListDto;
 import com.google.cloud.backend.beans.QueryDto;
 
+import java.util.logging.Logger;
+
 import javax.inject.Named;
 
 /**
@@ -35,7 +37,9 @@ import javax.inject.Named;
     useDatastoreForAdditionalConfig = AnnotationBoolean.TRUE)
 public class EndpointV1 {
 
-  /**
+    private static final Logger log = Logger.getLogger(EndpointV1.class.getName());
+
+    /**
    * Inserts a CloudEntity on the backend. If it does not have any Id, it
    * creates a new Entity. If it has, find the existing entity and update it.
    *

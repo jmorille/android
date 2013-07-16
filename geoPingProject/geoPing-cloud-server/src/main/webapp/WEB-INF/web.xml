@@ -28,9 +28,7 @@
 
   <servlet>
      <servlet-name>ConfigurationServlet</servlet-name>
-     <servlet-class>
-       com.google.cloud.backend.config.ConfigurationServlet
-     </servlet-class>
+     <servlet-class>com.google.cloud.backend.config.ConfigurationServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>

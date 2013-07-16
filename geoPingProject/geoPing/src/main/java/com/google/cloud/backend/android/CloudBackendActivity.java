@@ -29,7 +29,7 @@ import java.util.List;
  * Messaging. Developer may create a subclass to use these features. If you want
  * to inherit other {@link Activity} subclasses, you may rewrite the superclass
  * name of the class definition below.
- * 
+ *
  */
 public class CloudBackendActivity extends Activity {
 
@@ -46,7 +46,7 @@ public class CloudBackendActivity extends Activity {
 
   /**
    * Returns {@link CloudBackendMessaging} instance for this activity.
-   * 
+   *
    * @return {@link CloudBackendMessaging}
    */
   protected CloudBackendMessaging getCloudBackend() {
@@ -80,8 +80,7 @@ public class CloudBackendActivity extends Activity {
 
     // if auth enabled, get account name from the shared pref
     if (isAuthEnabled()) {
-      String accountName = cloudBackend.getSharedPreferences().getString(PREF_KEY_ACCOUNT_NAME,
-          null);
+      String accountName = cloudBackend.getSharedPreferences().getString(PREF_KEY_ACCOUNT_NAME, null);
       if (accountName == null) {
         // let user pick an account
         super.startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
@@ -123,7 +122,7 @@ public class CloudBackendActivity extends Activity {
   /**
    * Handles broadcast messages from the backend. Subclasses may override this
    * to handle the message accordingly.
-   * 
+   *
    * @param message
    *          {@link CloudEntity} that contains the message values.
    */

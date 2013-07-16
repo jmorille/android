@@ -198,27 +198,27 @@ public class FilterDto {
 
   private String buildQueryForOperatorIN() {
     StringBuilder sb = new StringBuilder();
-    sb.append("(");
+    sb.append('(');
     for (int i = 1; i < this.values.size(); i++) {
       sb.append("(" + this.getPropName() + " : " + getOperandString(i) + " )");
       if (i != this.values.size() - 1) {
         sb.append(" OR ");
       }
     }
-    sb.append(")");
+    sb.append(')');
     return sb.toString();
   }
 
   private String buildQueryForLogicalOperator(String op) {
     StringBuilder sb = new StringBuilder();
-    sb.append("(");
+    sb.append('(');
     for (int i = 0; i < this.subfilters.size(); i++) {
       sb.append(this.subfilters.get(i).buildProsSearchQuery());
       if (i != this.subfilters.size() - 1) {
-        sb.append(" " + op + " ");
+        sb.append(' ').append(op) .append(' ');
       }
     }
-    sb.append(")");
+    sb.append(')');
     return sb.toString();
   }
 
