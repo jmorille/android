@@ -119,7 +119,7 @@ public class SearchableVeloActivity extends SherlockFragmentActivity {
             searchFragment.startMapActivityWithData(data);
         } else if (ACTION_VIEW_FAVORITE.equals((intent.getAction()))) {
             setTitle(R.string.menu_favorite);
-            Integer velibProvider = intent.getIntExtra(Intents.EXTRA_VELIB_PROVIDER, -1);
+            int velibProvider = intent.getIntExtra(Intents.EXTRA_VELIB_PROVIDER, -1);
             searchFragment.doSearchFavorite(velibProvider);
             // Tracker 
             tracker.sendView("/Search/Favorite");

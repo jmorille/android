@@ -132,7 +132,7 @@ public class VelibService extends Service {
         long lastUpdate = prefs.getLong(updateKey, Long.MIN_VALUE);
         long defaultDeltaTimeInMs = AppConstants.ONE_DAY_IN_MS * prefs.getInt(AppConstants.PREFS_KEY_PROVIDER_DELTA_UPDATE_IN_DAY, 100);
         boolean isToOld = System.currentTimeMillis() - lastUpdate > defaultDeltaTimeInMs;
-        return   getStationsByProviderWithCheckUpdateDate(velibProvider, true);
+        return   getStationsByProviderWithCheckUpdateDate(velibProvider, isToOld);
     }
 
     public ArrayList<Station> getStationsByProviderWithCheckUpdateDate(VelibProvider velibProvider, boolean isToOld) {

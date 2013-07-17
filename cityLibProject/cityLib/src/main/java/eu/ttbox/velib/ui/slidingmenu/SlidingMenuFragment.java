@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -14,27 +15,25 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
+
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase;
+
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.ui.help.HelpMainActivity;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
 import eu.ttbox.velib.ui.search.SearchableVeloActivity;
 
-/**
- * @see SampleListFragment
- * 
- */
+
 public class SlidingMenuFragment extends Fragment {
 
     private static final String TAG = "SlidingMenuFragment";
-
-    private ScrollView slidingmenuContainer;
-
-    private SparseArray<SlindingMenuItemView> menuItems;
-    private static int[] menuIds = new int[] { //
-    // R.id.menuMap, R.id.menu_track_person, R.id.menu_pairing,
-    // R.id.menu_smslog, R.id.menu_settings, R.id.menu_extra_feature
+    private static int[] menuIds = new int[]{ //
+            R.id.menuMap, R.id.menuMap_favorite, R.id.menuOptions //
+             , R.id.menuHelp //
     };
+    private ScrollView slidingmenuContainer;
+    private SparseArray<SlindingMenuItemView> menuItems;
 
     // ===========================================================
     // Constructors
@@ -123,29 +122,44 @@ public class SlidingMenuFragment extends Fragment {
         Context context = getActivity();
         boolean isRootActivity = false;
         switch (itemId) {
-        case R.id.menuMap:
-        case R.id.menuMap_favorite:
-        case R.id.menuOptions:
-        case R.id.menuHelp:
-            
-            // case R.id.menu_pairing:
-            // case R.id.menu_track_person:
-            // case R.id.menu_smslog:
-            // isRootActivity = true;
-            // case R.id.menu_extra_feature:
-            // case R.id.menuGeotracker:
-            // case R.id.menuMap:
-            Class<? extends Activity> intentClass = getActivityClassByItemId(itemId);
-            if (intentClass != null) {
-                Intent intentOption = new Intent(context, intentClass);
+            case R.id.menuMap_favorite: {
+                eu.ttbox.velib.model.VelibProvider velibProvider = null;
+                Intent intentOption =  eu.ttbox.velib.core.Intents.searchVelo(this,velibProvider);
                 switchFragment();
-                // Activity
-                clearActivityHistoryStack(intentOption, isRootActivity);
-                context.startActivity(intentOption);
-
-                return true;
+                startActivity(intentOption);
             }
-            // return false;
+                break;
+            case R.id.menuMap:
+            case R.id.menuOptions:
+            case R.id.menuHelp:
+
+                // case R.id.menu_pairing:
+                // case R.id.menu_track_person:
+                // case R.id.menu_smslog:
+                // isRootActivity = true;
+                // case R.id.menu_extra_feature:
+                // case R.id.menuGeotracker:
+                // case R.id.menuMap:
+                Class<? extends Activity> intentClass = getActivityClassByItemId(itemId);
+                if (intentClass != null) {
+                    // Activity
+                    switchFragment();
+                    Class activityClass = getActivity().getClass();
+                    if (!activityClass.isAssignableFrom(intentClass)) {
+                        Intent intentOption = new Intent(context, intentClass);
+                        // Activity
+                        clearActivityHistoryStack(intentOption, isRootActivity);
+
+                        // Create Stacks
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+                        stackBuilder.addParentStack(VelibMapActivity.class);
+                        stackBuilder.addNextIntent(new Intent(getActivity(), VelibMapActivity.class));
+                        stackBuilder.addNextIntent(intentOption);
+                        stackBuilder.startActivities();
+                    }
+                    return true;
+                }
+                // return false;
 
         }
         return false;
@@ -153,14 +167,14 @@ public class SlidingMenuFragment extends Fragment {
 
     private Class<? extends Activity> getActivityClassByItemId(int itemId) {
         switch (itemId) {
-        case R.id.menuMap:
-            return VelibMapActivity.class;
-        case R.id.menuMap_favorite:
-            return SearchableVeloActivity.class;
-        case R.id.menuOptions:
-            return VelibPreferenceActivity.class;
-        case R.id.menuHelp:
-            return HelpMainActivity.class;
+            case R.id.menuMap:
+                return VelibMapActivity.class;
+            case R.id.menuMap_favorite:
+                return SearchableVeloActivity.class;
+            case R.id.menuOptions:
+                return VelibPreferenceActivity.class;
+            case R.id.menuHelp:
+                return HelpMainActivity.class;
             // case R.id.menuGeotracker:
             // return GeoTrakerActivity.class;
             // case R.id.menuMap:
@@ -173,8 +187,8 @@ public class SlidingMenuFragment extends Fragment {
             // return SmsLogListActivity.class;
             // case R.id.menu_extra_feature:
             // return PayFeaturesActivity.class;
-        default:
-            return null;
+            default:
+                return null;
         }
     }
 
@@ -182,11 +196,10 @@ public class SlidingMenuFragment extends Fragment {
     private void switchFragment() {
         if (getActivity() == null)
             return;
-
-        // if (getActivity() instanceof SlidingActivityBase) {
-        // SlidingActivityBase fca = (SlidingActivityBase) getActivity();
-        // fca.showContent();
-        // }
+        if (getActivity() instanceof SlidingActivityBase) {
+            SlidingActivityBase fca = (SlidingActivityBase) getActivity();
+            fca.showContent();
+        }
     }
 
 }

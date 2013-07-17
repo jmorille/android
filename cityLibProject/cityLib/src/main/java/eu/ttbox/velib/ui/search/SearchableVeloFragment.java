@@ -181,10 +181,14 @@ public class SearchableVeloFragment extends Fragment {
 //       loaderManager.initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);
     }
 
-    public void doSearchFavorite(Integer velibProvider) {
+    public void doSearchFavorite(int velibProvider) {
+        if (velibProvider < 0) {
+            // FIXME VelibMapFragment.computeConditionVelibProvider
+            throw  new IllegalArgumentException("/ FIXME VelibMapFragment.computeConditionVelibProvider");
+        }
         Bundle args = new Bundle();
         args.putBoolean(SEARCH_KEY_IS_FAVORITE, true);
-        args.putString(SEARCH_KEY_VELIB_PROVIDER_ORDINAL, velibProvider.toString());
+        args.putString(SEARCH_KEY_VELIB_PROVIDER_ORDINAL, String.valueOf(velibProvider) );
         LoaderManager loaderManager =   getActivity().getSupportLoaderManager();
         loaderManager.restartLoader(PERSON_LIST_LOADER, args,searchLoaderCallback);
 //        loaderManager.initLoader(PERSON_LIST_LOADER, args, searchLoaderCallback);

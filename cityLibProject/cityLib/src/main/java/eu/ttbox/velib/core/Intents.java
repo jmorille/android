@@ -38,8 +38,11 @@ public class Intents {
     
     
     public static Intent searchVelo(Context context, VelibProvider velibProvider) {
-        return  new Intent(context, SearchableVeloActivity.class) //
-         .setAction(SearchableVeloActivity.ACTION_VIEW_FAVORITE) //
-         .putExtra(EXTRA_VELIB_PROVIDER, velibProvider.ordinal());
+        Intent intent =   new Intent(context, SearchableVeloActivity.class) //
+         .setAction(SearchableVeloActivity.ACTION_VIEW_FAVORITE); //
+        if (velibProvider!=null) {
+            intent.putExtra(EXTRA_VELIB_PROVIDER, velibProvider.ordinal());
+        }
+        return intent;
     }
 }

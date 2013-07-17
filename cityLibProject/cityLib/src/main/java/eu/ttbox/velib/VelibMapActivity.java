@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import eu.ttbox.velib.core.Intents;
 import eu.ttbox.velib.model.VelibProvider;
@@ -44,7 +45,7 @@ import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
  * @author deostem
  * 
  */
-public class VelibMapActivity extends SherlockFragmentActivity { // implements
+public class VelibMapActivity extends eu.ttbox.velib.ui.CityLibSlidingMenuFragmentActivity { // implements
                                                          // VelibMapView
 
     private static final String TAG = "VelibMapActivity";
@@ -81,6 +82,12 @@ public class VelibMapActivity extends SherlockFragmentActivity { // implements
         }
         // Tracker
         EasyTracker.getInstance().activityStart(this);
+    }
+
+    public SlidingMenu customizeSlidingMenu() {
+        SlidingMenu slidingMenu = super.customizeSlidingMenu();
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        return slidingMenu;
     }
 
     @Override
@@ -265,7 +272,7 @@ public class VelibMapActivity extends SherlockFragmentActivity { // implements
             // }
             // }
             // return isDo;
-            return false;
+            return super.onOptionsItemSelected(item);
         }
         }
     }
