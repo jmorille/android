@@ -17,6 +17,7 @@ import com.google.analytics.tracking.android.GAServiceManager;
 
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.VersionUtils;
+import eu.ttbox.geoping.domain.crypto.SecureDatabase;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
@@ -41,6 +42,7 @@ public class GeoPingApplication extends Application {
     // DataBase
     private SmsLogDatabase smsLogDatabase;
     private GeoTrackDatabase geoTrackDatabase;
+    private SecureDatabase secureDatabase;
 
     // ===========================================================
     // Constructors
@@ -214,6 +216,16 @@ public class GeoPingApplication extends Application {
         }
         return geoTrackDatabase;
     }
+
+    public SecureDatabase getSecureDatabase() {
+        if (secureDatabase==null) {
+            String password = "ddzsmj,rdzm,rmzkrz";
+            secureDatabase = new SecureDatabase(this, password);
+        }
+        return secureDatabase;
+    }
+
+
 
 
     // ===========================================================

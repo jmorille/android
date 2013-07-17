@@ -56,7 +56,13 @@ public class GeoTrackDatabase {
 	private static final String CRITERIA_BY_ENTITY_ID = String.format("%s = ?", GeoTrackColumns.COL_ID);
 	private static final String CRITERIA_BY_USER_ID = String.format("%s = ?", GeoTrackColumns.COL_PHONE);
 
-	private SQLiteDatabase bdd;
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+
+//    private SQLiteDatabase bdd;
 
 	private GeoTrackOpenHelper mDatabaseOpenHelper;
 
@@ -81,7 +87,13 @@ public class GeoTrackDatabase {
 		return map;
 	}
 
-	public Cursor getEntityById(String rowId, String[] projection) {
+
+    // ===========================================================
+    // Query
+    // ===========================================================
+
+
+    public Cursor getEntityById(String rowId, String[] projection) {
 		String[] selectionArgs = new String[] { rowId };
 		return queryEntities(projection, CRITERIA_BY_ENTITY_ID, selectionArgs, null);
 	}
@@ -208,7 +220,7 @@ public class GeoTrackDatabase {
 		}
 		return result;
 	}
-
+/*
 	public List<GeoTrack> getTrakPointForToday(String userId) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.clear(Calendar.HOUR);
@@ -226,7 +238,7 @@ public class GeoTrackDatabase {
 		Cursor c = bdd.query(TABLE_TRACK_POINT, GeoTrackColumns.ALL_COLS, CRITERIA_BY_USER_ID, new String[] { userId }, null, null, GeoTrackColumns.COL_TIME);
 		return cursorToLivre(c);
 	}
-
+*/
 	private List<GeoTrack> cursorToLivre(Cursor c) {
 		List<GeoTrack> points = new ArrayList<GeoTrack>(c.getCount());
 		if (c.getCount() == 0)

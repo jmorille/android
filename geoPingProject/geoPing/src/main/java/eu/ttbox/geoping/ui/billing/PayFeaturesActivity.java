@@ -122,7 +122,7 @@ public class PayFeaturesActivity extends GeoPingSlidingMenuFragmentActivity   {
             Purchase premiumPurchase = inventory.getPurchase(SKU_PREMIUM);
             mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
             Log.d(TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
-            
+
             // Do we have the infinite gas plan?
             Purchase infiniteGasPurchase = inventory.getPurchase(SKU_INFINITE_GAS);
             mSubscribedToInfiniteGas = (infiniteGasPurchase != null && 

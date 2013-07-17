@@ -14,15 +14,20 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 
+import eu.ttbox.geoping.BuildConfig;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.service.billing.util.IabHelper;
 import eu.ttbox.geoping.service.billing.util.IabResult;
 import eu.ttbox.geoping.service.billing.util.Inventory;
+import eu.ttbox.geoping.service.billing.util.Purchase;
 import eu.ttbox.geoping.service.billing.util.SkuDetails;
 
 public class ExtraFeaturesFragment extends Fragment {
 
     private static final String TAG = "ExtraFeaturesFragment";
+
+    // Product
+    private static final String SKU_ADVERT_SUPPRESS_PER_YEAR = "ADVERT_SUPPRESS_PER_YEAR";
 
     // binding
     private ListView extraListView;
@@ -36,6 +41,8 @@ public class ExtraFeaturesFragment extends Fragment {
     // Billing Listener
     // ===========================================================
 
+    boolean isAdSupressPerYearPurchase = false;
+
     // Listener that's called when we finish querying the items and subscriptions we own
     IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
@@ -47,8 +54,42 @@ public class ExtraFeaturesFragment extends Fragment {
 
             Log.d(TAG, "Query inventory was successful.");
 
+            Purchase adSupressPerYearPurchase = inventory.getPurchase(SKU_ADVERT_SUPPRESS_PER_YEAR);
+            isAdSupressPerYearPurchase = (adSupressPerYearPurchase != null && verifyDeveloperPayload(adSupressPerYearPurchase));
+
         }
     };
+
+
+    /** Verifies the developer payload of a purchase. */
+    boolean verifyDeveloperPayload(Purchase p) {
+        String payload = p.getDeveloperPayload();
+
+        /*
+         * TODO: verify that the developer payload of the purchase is correct. It will be
+         * the same one that you sent when initiating the purchase.
+         *
+         * WARNING: Locally generating a random string when starting a purchase and
+         * verifying it here might seem like a good approach, but this will fail in the
+         * case where the user purchases an item on one device and then uses your app on
+         * a different device, because on the other device you will not have access to the
+         * random string you originally generated.
+         *
+         * So a good developer payload has these characteristics:
+         *
+         * 1. If two different users purchase an item, the payload is different between them,
+         *    so that one user's purchase can't be replayed to another user.
+         *
+         * 2. The payload must be such that you can verify it even when the app wasn't the
+         *    one who initiated the purchase flow (so that items purchased by the user on
+         *    one device work on other devices owned by the user).
+         *
+         * Using your own server to store and verify developer payloads across app
+         * installations is recommended.
+         */
+
+        return true;
+    }
 
     // ===========================================================
     // Constructor
@@ -102,7 +143,9 @@ public class ExtraFeaturesFragment extends Fragment {
         Log.d(TAG, "Creating IAB helper.");
         mHelper = new IabHelper(getActivity(), getBase64EncodedPublicKey());
         // enable debug logging (for a production application, you should set this to false).
-        mHelper.enableDebugLogging(true);
+        if (BuildConfig.DEBUG) {
+            mHelper.enableDebugLogging(true);
+        }
 
         // Start setup. This is asynchronous and the specified listener
         // will be called once setup completes.
@@ -127,7 +170,8 @@ public class ExtraFeaturesFragment extends Fragment {
     private SkuDetailsListAdapter createListItems() {
         SkuDetailsListAdapter adapter = new SkuDetailsListAdapter(getActivity());
         try {
-            adapter.add(new SkuDetails("{\"productId\" : \"ADVERT_SUPPRESS_PER_YEAR\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in app\", \"description\" : \"Suppress all adds during one year\"  }  "));
+            adapter.add(new SkuDetails("{\"productId\" : \"" +SKU_ADVERT_SUPPRESS_PER_YEAR +
+                    "\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in app\", \"description\" : \"Suppress all adds during one year\"  }  "));
             adapter.add(new SkuDetails("{\"productId\" : \"SECU_HIDE_LAUNCHER\", \"type\" : \"inapp\", \"price\" : \"Free\" , \"title\" : \"No icon app launcher\", \"description\" : \"Hide the GeoPing Application in the System\"  }  "));
         } catch (JSONException e) {
             Log.e(TAG, "Error Parsing Json : " + e.getMessage(), e);
