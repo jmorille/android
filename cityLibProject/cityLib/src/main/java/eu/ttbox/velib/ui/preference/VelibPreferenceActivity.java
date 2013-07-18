@@ -1,17 +1,21 @@
 package eu.ttbox.velib.ui.preference;
 
+import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
+import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
 import eu.ttbox.velib.R;
+import eu.ttbox.velib.core.VersionUtils;
 import eu.ttbox.velib.model.VelibProvider;
 
 /**
@@ -28,8 +32,19 @@ public class VelibPreferenceActivity extends PreferenceActivity implements OnSha
 		initSummaries(this.getPreferenceScreen());
 		// Register change listener
 		this.getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        if (!VersionUtils.isHc11) {
+
+        } else {
+            onCreateinitHc11();
+        }
 		  // Tracker
         EasyTracker.getInstance().activityStart(this);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void onCreateinitHc11() {
+        // Add selector
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -94,4 +109,18 @@ public class VelibPreferenceActivity extends PreferenceActivity implements OnSha
 	// setSummary(preference);
 	// return true;
 	// }
+
+    // ===========================================================
+    // Sliding Menu
+    // ===========================================================
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

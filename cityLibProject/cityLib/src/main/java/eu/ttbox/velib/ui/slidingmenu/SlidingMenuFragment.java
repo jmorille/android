@@ -127,7 +127,7 @@ public class SlidingMenuFragment extends Fragment {
                 // Read Activity
                 Class activityClass = getActivity().getClass();
                 eu.ttbox.velib.model.VelibProvider velibProvider = null;
-                if (!activityClass.isAssignableFrom(VelibProviderContainer.class)) {
+                if (activityClass.isAssignableFrom(VelibProviderContainer.class)) {
                     VelibProviderContainer container = (VelibProviderContainer)getActivity();
                     velibProvider = container.getVelibProvider();
                 }

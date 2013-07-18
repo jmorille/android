@@ -27,7 +27,7 @@ public class ExtraFeaturesFragment extends Fragment {
     private static final String TAG = "ExtraFeaturesFragment";
 
     // Product
-    private static final String SKU_ADVERT_SUPPRESS_PER_YEAR = "ADVERT_SUPPRESS_PER_YEAR";
+    private static final String SKU_NO_AD_PER_YEAR = "NO_AD_PER_YEAR";
 
     // binding
     private ListView extraListView;
@@ -54,7 +54,7 @@ public class ExtraFeaturesFragment extends Fragment {
 
             Log.d(TAG, "Query inventory was successful.");
 
-            Purchase adSupressPerYearPurchase = inventory.getPurchase(SKU_ADVERT_SUPPRESS_PER_YEAR);
+            Purchase adSupressPerYearPurchase = inventory.getPurchase(SKU_NO_AD_PER_YEAR);
             isAdSupressPerYearPurchase = (adSupressPerYearPurchase != null && verifyDeveloperPayload(adSupressPerYearPurchase));
 
         }
@@ -170,7 +170,7 @@ public class ExtraFeaturesFragment extends Fragment {
     private SkuDetailsListAdapter createListItems() {
         SkuDetailsListAdapter adapter = new SkuDetailsListAdapter(getActivity());
         try {
-            adapter.add(new SkuDetails("{\"productId\" : \"" +SKU_ADVERT_SUPPRESS_PER_YEAR +
+            adapter.add(new SkuDetails("{\"productId\" : \"" + SKU_NO_AD_PER_YEAR +
                     "\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in app\", \"description\" : \"Suppress all adds during one year\"  }  "));
             adapter.add(new SkuDetails("{\"productId\" : \"SECU_HIDE_LAUNCHER\", \"type\" : \"inapp\", \"price\" : \"Free\" , \"title\" : \"No icon app launcher\", \"description\" : \"Hide the GeoPing Application in the System\"  }  "));
         } catch (JSONException e) {

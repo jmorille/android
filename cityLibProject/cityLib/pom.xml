@@ -10,9 +10,9 @@
    </parent>
 
 
-   <groupId>eu.ttbox.android.cityLib</groupId>
+    
    <artifactId>cityLib</artifactId>
-   <version>0.2.3</version>
+
 
    <packaging>apk</packaging>
 
@@ -30,22 +30,27 @@
          <version>${osm-lib.version}</version>
          <type>apklib</type>
       </dependency>
-
-      <!-- Android -->
       <dependency>
-         <groupId>android</groupId>
-         <artifactId>android</artifactId>
-         <version>${android.version}</version>
-         <scope>provided</scope>
+          <groupId>eu.ttbox.android.cityLib</groupId>
+         <artifactId>endPoints-cityLib</artifactId>
+         <version>${project.version}</version>
       </dependency>
-      <dependency>
-         <groupId>com.google.android.maps</groupId>
-         <artifactId>maps</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      
 
-      <!-- Compatibility -->
+       <!-- Android -->
+       <dependency>
+           <groupId>android</groupId>
+           <artifactId>android</artifactId>
+           <version>${android.version}</version>
+           <scope>provided</scope>
+       </dependency>
+       <dependency>
+           <groupId>com.google.android.maps</groupId>
+           <artifactId>maps</artifactId>
+           <scope>provided</scope>
+       </dependency>
+
+
+       <!-- Compatibility -->
       <dependency>
          <groupId>android.support</groupId>
          <artifactId>compatibility-v13</artifactId>

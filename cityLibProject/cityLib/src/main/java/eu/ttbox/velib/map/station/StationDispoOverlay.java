@@ -464,6 +464,8 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
     private void hideBubble() {
         if (balloonView != null) {
             balloonView.setVisibility(View.GONE);
+            mapView.removeView(balloonView);
+            balloonViewLayoutParams = null;
         }
     }
 
@@ -471,11 +473,10 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
         int balloonBottomOffset = 0;
         if (!shadow) {
             if (selectedStation != null) {
-                boolean isRecycled = true;
+
                 if (balloonView == null) {
                     balloonView = new BubbleOverlayView<Station>(context, velibService, balloonBottomOffset);
                     balloonView.setVisibility(View.GONE);
-                    isRecycled = false;
                     // Todo add click listener
                 }
                 boolean balloonViewNotVisible = balloonView.getVisibility() != View.VISIBLE;
@@ -506,8 +507,7 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
                     // Log.d(TAG, "	mapView.getRight() => " + mapView.getRight()
                     // + "   :::  bublleLimitPoint " + bublleLimitPoint);
                     // Draw Layout
-                    balloonViewLayoutParams = new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT, MapView.LayoutParams.WRAP_CONTENT, point, MapView.LayoutParams.BOTTOM_CENTER, offsetX,
-                            offsetY);
+
                     // balloonViewLayoutParams.alignment =
                     // MapView.LayoutParams.BOTTOM_CENTER;
                     // balloonViewLayoutParams.mode =
@@ -516,6 +516,11 @@ public class StationDispoOverlay extends Overlay implements OnStationDispoUpdate
                     balloonView.setData(selectedStation, nowInMs);
                     balloonView.setVisibility(View.VISIBLE);
 
+                    // Prepare Bubble Layout
+                    boolean isRecycled = balloonViewLayoutParams!=null;
+                    balloonViewLayoutParams = new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT,
+                            MapView.LayoutParams.WRAP_CONTENT, point, MapView.LayoutParams.BOTTOM_CENTER,
+                            offsetX, offsetY);
                     if (isRecycled) {
                         balloonView.setLayoutParams(balloonViewLayoutParams);
                     } else {

@@ -15,9 +15,10 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
+import eu.ttbox.velib.ui.CityLibSlidingMenuFragmentActivity;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
 
-public class HelpMainActivity extends SherlockFragmentActivity {
+public class HelpMainActivity extends CityLibSlidingMenuFragmentActivity {
 
     private static final String TAG = "HelpMainActivity";
 
@@ -104,7 +105,7 @@ public class HelpMainActivity extends SherlockFragmentActivity {
             return true;
         }
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     // ===========================================================

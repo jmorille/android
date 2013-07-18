@@ -757,13 +757,13 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
             GeoPoint lastFixAsGeoPoint = mLocationListener.getLastKnownLocationAsGeoPoint();
             if (isTapOnFixLocation(event, mapView, lastFixAsGeoPoint)) {
                 Log.d(TAG, "onSingleTapUp on myLocation Point");
-                boolean isRecycled = true;
+
                 if (balloonView == null) {
                     Log.d(TAG, "onSingleTapUp : Create new MyLocationBubble");
                     balloonView = new MyLocationBubble(mapView.getContext());
+                    boolean isDisplayGeoLoc = sharedPreferences.getBoolean(AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, false);
+                    balloonView.setDisplayGeoLoc(isDisplayGeoLoc);
                     balloonView.setVisibility(View.GONE);
-                    balloonView.setDisplayGeoLoc(sharedPreferences.getBoolean(AppConstants.PREFS_KEY_MYLOCATION_DISPLAY_GEOLOC, false));
-                    isRecycled = false;
                     // Todo add click listener
                 }
 //              TODO   showCallout();  
@@ -774,6 +774,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
                     int offsetX = 0; // 150
                     int offsetY = -20; // -20
                     // Position Layout
+                    boolean isRecycled = balloonViewLayoutParams!=null;
                     balloonViewLayoutParams = new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT, MapView.LayoutParams.WRAP_CONTENT,
                             lastFixAsGeoPoint, MapView.LayoutParams.BOTTOM_CENTER,
                             offsetX, offsetY);
@@ -838,7 +839,7 @@ public class MyLocationOverlay extends Overlay implements SensorEventListener, L
             balloonView.setVisibility(View.GONE);
             //Remove from stack
             mapView.removeView(balloonView);
-            balloonView = null;
+            balloonViewLayoutParams = null;
             isHide = true;
 
         }

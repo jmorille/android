@@ -48,7 +48,7 @@ public class StationItemCurAdapter extends android.support.v4.widget.ResourceCur
 	// Instance
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
-	ConcurrentLinkedQueue<ViewHolder> viewHolders = new ConcurrentLinkedQueue<StationItemCurAdapter.ViewHolder>();
+    private ConcurrentLinkedQueue<ViewHolder> viewHolders = new ConcurrentLinkedQueue<StationItemCurAdapter.ViewHolder>();
 
 
 	// ===========================================================
