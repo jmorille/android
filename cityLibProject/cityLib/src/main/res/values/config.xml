@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="https://schemas.android.com/tools" tools:ignore="TypographyDashes">
       
     
     <string name="app_name">CityLib</string> 
@@ -8,12 +8,6 @@
     <string name="backup_api_key">AEdPqrEAAAAIyRPxpmKUM1mUzyoCGeNvfAGfQ9iFwwmwauTHaA</string>
     <!-- Money-->
  	<string name="admob_key">a1509be215dd76b</string> 
-     <!-- Analytics http://blog.blundell-apps.com/google-analytics-common-problems-and-fixes/ -->
-    <string name="ga_trackingId">UA-36410991-2</string>
-    <bool name="ga_autoActivityTracking">true</bool>
-    <bool name="ga_reportUncaughtExceptions">true</bool>
-    <integer name="ga_dispatchPeriod">60</integer>
-    <bool name="ga_debug">false</bool>
 
  	<!-- ### Google Map ### -->
     <!-- ################## --> 	

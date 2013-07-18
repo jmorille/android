@@ -8,13 +8,14 @@
     <string name="backup_api_key">AEdPqrEAAAAI-ahoBk8qEhuAhuOd2Kecta_y7N3aCgBOFAHenA</string>
     <!-- Money -->
     <string name="admob_key">a1509acb46a10d6</string>
-    <!-- Analytics --> 
-    <string name="ga_trackingId">UA-36410991-1</string> 
+
+    <!-- Analytics -->
+    <string name="ga_trackingId">UA-36410991-1</string>
     <bool name="ga_autoActivityTracking">true</bool>
     <bool name="ga_reportUncaughtExceptions">true</bool>
     <!-- dispatchPeriodInSeconds : The default dispatch period is 30 minutes . -->
 <!--     <integer name="ga_dispatchPeriod">60</integer> -->
-    
+
     <!-- ### Google Map ### -->
     <!-- ################## -->
     <!-- Release 67:BA:EF:23:0F:CA:87:24:23:0B:51:20:13:2C:C2:83 -->
