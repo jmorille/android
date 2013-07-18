@@ -1,4 +1,4 @@
-lpackage eu.ttbox.velib.ui.search;
+package eu.ttbox.velib.ui.search;
 
 import android.annotation.SuppressLint;
 import android.app.SearchManager;

@@ -1,6 +1,9 @@
 package eu.ttbox.velib;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.ExceptionReporter;
 import com.google.analytics.tracking.android.GAServiceManager;
+import com.google.analytics.tracking.android.Tracker;
 
 import android.app.Application;
 import android.content.Context;
@@ -26,9 +29,13 @@ public class CityLibApplication extends Application {
 
 		// Create Application
 		super.onCreate();
- 
-		
-		// Increment Counter Lauch
+
+		// Init Tacker
+        // Get the tracker object.
+
+
+
+        // Increment Counter Lauch
         // Perform the initialization that doesn't have to finish immediately.
         // We use an async task here just to avoid creating a new thread.
         (new DelayedInitializer(1000)).execute();
@@ -56,6 +63,8 @@ public class CityLibApplication extends Application {
             // Increment Counter Laught
             int launchCount = incrementApplicationLaunchCounter(context);
             Log.d(TAG, "================ CityLib Launch count = " + launchCount + "  ======================================");
+            Tracker tracker = EasyTracker.getTracker();
+            tracker.set("APP_COUNT_LAUGHT", String.valueOf( launchCount));
             return launchCount;
         }
 
