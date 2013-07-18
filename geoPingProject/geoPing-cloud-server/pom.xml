@@ -170,11 +170,11 @@
                 <version>${appengine-maven-plugin.version}</version>
                 <configuration>
                     <enableJarClasses>false</enableJarClasses>
-                    <!-- Proxy Conf  -->
+                    <!-- Proxy Conf  
                     <disableUpdateCheck>true</disableUpdateCheck>
-                    <proxyHost>http://a000cqp:21322314@webcache.groupe.generali.fr:3128</proxyHost>
-                    <proxyHttps>http://a000cqp:21322314@webcache.groupe.generali.fr:3128</proxyHttps>
-                  
+                    <proxyHost>http://webcache.groupe.generali.fr:3128</proxyHost>
+                    <proxyHttps>http://webcache.groupe.generali.fr:3128</proxyHttps>
+                  -->
                 </configuration>
                 <executions>
                     <execution>

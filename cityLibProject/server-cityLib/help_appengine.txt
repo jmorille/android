@@ -1,0 +1,178 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building server-cityLib 0.3.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] >>> appengine-maven-plugin:1.8.1.1:update (default-cli) @ server-cityLib >>>
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ server-cityLib ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ server-cityLib ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- appengine-maven-plugin:1.8.1.1:endpoints_get_discovery_doc (default) @ server-cityLib ---
+[INFO] 
+[INFO] Google App Engine Java SDK - Generate endpoints api config...
+[INFO] Using Class Name:com.google.cloud.backend.spi.EndpointV1
+[INFO] Executing endpoints Command=[gen-api-config, -cp, /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/classes:/Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/server-cityLib-0.3.0/WEB-INF/classes:/Users/jmorille/.m2/repository/net/sf/jsr107cache/jsr107cache/1.1/jsr107cache-1.1.jar:/Users/jmorille/.m2/repository/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.1/geronimo-jpa_2.0_spec-1.1.jar:/Users/jmorille/.m2/repository/org/apache/felix/org.osgi.core/1.4.0/org.osgi.core-1.4.0.jar:/Users/jmorille/.m2/repository/org/apache/felix/org.osgi.compendium/1.2.0/org.osgi.compendium-1.2.0.jar:/Users/jmorille/.m2/repository/com/google/appengine/appengine-api-1.0-sdk/1.8.1/appengine-api-1.0-sdk-1.8.1.jar:/Users/jmorille/.m2/repository/com/google/appengine/appengine-endpoints/1.8.1/appengine-endpoints-1.8.1.jar:/Users/jmorille/.m2/repository/com/google/android/gcm/gcm-server/3/gcm-server-3.jar:/Users/jmorille/.m2/repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar, -o, /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/generated-sources/appengine-endpoints/WEB-INF, -w, /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/generated-sources/appengine-endpoints, com.google.cloud.backend.spi.EndpointV1]
+API configuration written to /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/generated-sources/appengine-endpoints/WEB-INF/mobilebackend-v1.api
+[INFO] Google App Engine Java SDK - Generate endpoints rest discovery doc for apiConfigFile=/Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/generated-sources/appengine-endpoints/WEB-INF/mobilebackend-v1.api
+API Discovery Document written to /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/generated-sources/appengine-endpoints/WEB-INF/mobilebackend-v1-rest.discovery
+[INFO] Endpoint discovery doc generation done.
+[INFO] Google App Engine Java SDK - Generate endpoints rpc discovery doc for apiConfigFile=/Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/generated-sources/appengine-endpoints/WEB-INF/mobilebackend-v1.api
+API Discovery Document written to /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/generated-sources/appengine-endpoints/WEB-INF/mobilebackend-v1-rpc.discovery
+[INFO] Endpoint discovery doc generation done.
+[INFO] Endpoint client lib generation done.
+[INFO] 
+[INFO] --- appengine-maven-plugin:1.8.1.1:enhance (default) @ server-cityLib ---
+[INFO] DataNucleus Enhancer (version 3.2.5) for API "JDO" using JRE "1.6"
+DataNucleus Enhancer : Classpath
+>>  /Users/jmorille/.m2/repository/org/datanucleus/datanucleus-maven-plugin/3.2.0-release/datanucleus-maven-plugin-3.2.0-release.jar
+>>  /Users/jmorille/.m2/repository/org/datanucleus/datanucleus-api-jdo/3.2.0-release/datanucleus-api-jdo-3.2.0-release.jar
+>>  /Users/jmorille/.m2/repository/javax/servlet/javax.servlet-api/3.0.1/javax.servlet-api-3.0.1.jar
+>>  /Users/jmorille/.m2/repository/net/sf/jsr107cache/jsr107cache/1.1/jsr107cache-1.1.jar
+>>  /Users/jmorille/.m2/repository/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.1/geronimo-jpa_2.0_spec-1.1.jar
+>>  /Users/jmorille/.m2/repository/com/google/appengine/appengine-api-1.0-sdk/1.8.1/appengine-api-1.0-sdk-1.8.1.jar
+>>  /Users/jmorille/.m2/repository/com/google/appengine/appengine-endpoints/1.8.1/appengine-endpoints-1.8.1.jar
+>>  /Users/jmorille/.m2/repository/com/google/android/gcm/gcm-server/3/gcm-server-3.jar
+>>  /Users/jmorille/.m2/repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar
+>>  /Users/jmorille/.m2/repository/com/google/appengine/appengine-testing/1.8.1/appengine-testing-1.8.1.jar
+>>  /Users/jmorille/.m2/repository/com/google/appengine/appengine-api-stubs/1.8.1/appengine-api-stubs-1.8.1.jar
+>>  /Users/jmorille/.m2/repository/org/datanucleus/datanucleus-core/3.2.5/datanucleus-core-3.2.5.jar
+>>  /Users/jmorille/.m2/repository/javax/jdo/jdo-api/3.0.1/jdo-api-3.0.1.jar
+>>  /Users/jmorille/.m2/repository/javax/transaction/jta/1.1/jta-1.1.jar
+>>  /Users/jmorille/.m2/repository/org/codehaus/plexus/plexus-utils/3.0.8/plexus-utils-3.0.8.jar
+>>  /Users/jmorille/.m2/repository/org/codehaus/plexus/plexus-component-annotations/1.5.5/plexus-component-annotations-1.5.5.jar
+>>  /Users/jmorille/.m2/repository/org/sonatype/sisu/sisu-inject-bean/2.3.0/sisu-inject-bean-2.3.0.jar
+>>  /Users/jmorille/.m2/repository/org/sonatype/sisu/sisu-guice/3.1.0/sisu-guice-3.1.0-no_aop.jar
+>>  /Users/jmorille/.m2/repository/org/sonatype/sisu/sisu-guava/0.9.9/sisu-guava-0.9.9.jar
+>>  /Users/jmorille/.m2/repository/org/apache/xbean/xbean-reflect/3.4/xbean-reflect-3.4.jar
+>>  /Users/jmorille/.m2/repository/log4j/log4j/1.2.12/log4j-1.2.12.jar
+>>  /Users/jmorille/.m2/repository/commons-logging/commons-logging-api/1.1/commons-logging-api-1.1.jar
+>>  /Users/jmorille/.m2/repository/com/google/collections/google-collections/1.0/google-collections-1.0.jar
+>>  /Users/jmorille/.m2/repository/junit/junit/3.8.2/junit-3.8.2.jar
+>>  /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/server-cityLib-0.3.0/WEB-INF/classes
+DataNucleus Enhancer completed with success for 0 classes. Timings : input=173 ms, enhance=0 ms, total=173 ms. Consult the log for full details
+DataNucleus Enhancer completed and no classes were enhanced. Consult the log for full details
+
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ server-cityLib ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ server-cityLib ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.7.2:test (default-test) @ server-cityLib ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+There are no tests to run.
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-war-plugin:2.4:war (default-war) @ server-cityLib ---
+[INFO] Packaging webapp
+[INFO] Assembling webapp [server-cityLib] in [/Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/server-cityLib-0.3.0]
+[INFO] Processing war project
+[INFO] Copying webapp webResources [/Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/generated-sources/appengine-endpoints] to [/Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/server-cityLib-0.3.0]
+[INFO] Copying webapp resources [/Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/src/main/webapp]
+[INFO] Webapp assembled in [131 msecs]
+[INFO] Building war: /Users/jmorille/javadev/project/android/cityLibProject/server-cityLib/target/server-cityLib-0.3.0.war
+[INFO] 
+[INFO] <<< appengine-maven-plugin:1.8.1.1:update (default-cli) @ server-cityLib <<<
+[INFO] 
+[INFO] --- appengine-maven-plugin:1.8.1.1:update (default-cli) @ server-cityLib ---
+[INFO] 
+[INFO] Google App Engine Java SDK - Updating Application
+[INFO] 
+[INFO] Retrieving Google App Engine Java SDK from Maven
+[INFO] Updating Google App Engine Application
+Bad argument: Unknown option: --proxy
+usage: AppCfg [options] <action> [<app-dir>] [<argument>]
+
+Action must be one of:
+  help: Print help for a specific action.
+  download_app: Download a previously uploaded app version.
+  request_logs: Write request logs in Apache common log format.
+  rollback: Rollback an in-progress update.
+  start: Start the specified server version.
+  stop: Stop the specified server version.
+  update: Create or update an app version.
+  update_indexes: Update application indexes.
+  update_cron: Update application cron jobs.
+  update_queues: Update application task queue definitions.
+  update_dispatch: Update the application dispatch configuration.
+  update_dos: Update application DoS protection configuration.
+  version: Prints version information.
+  set_default_version: Set the default serving version.
+  cron_info: Displays times for the next several runs of each cron job.
+  resource_limits_info: Display resource limits.
+  vacuum_indexes: Delete unused indexes from application.
+  backends list: List the currently configured backends.
+  backends update: Update the specified backend or all backends.
+  backends rollback: Roll back a previously in-progress update.
+  backends start: Start the specified backend.
+  backends stop: Stop the specified backend.
+  backends delete: Delete the specified backend.
+  backends configure: Configure the specified backend.
+Use 'help <action>' for a detailed description.
+
+options:
+  -s SERVER, --server=SERVER
+                        The server to connect to.
+  -e EMAIL, --email=EMAIL
+                        The username to use. Will prompt if omitted.
+  -H HOST, --host=HOST  Overrides the Host header sent with all RPCs.
+  -p PROXYHOST[:PORT], --proxy=PROXYHOST[:PORT]
+                        Proxies requests through the given proxy server.
+                        If --proxy_https is also set, only HTTP will be
+                        proxied here, otherwise both HTTP and HTTPS will.
+  --proxy_https=PROXYHOST[:PORT]
+                        Proxies HTTPS requests through the given proxy server.
+  --no_cookies          Do not save/load access credentials to/from disk.
+  --sdk_root=root       Overrides where the SDK is located.
+  --passin              Always read the login password from stdin.
+  -A APP_ID, --application=APP_ID
+                        Override application id from appengine-web.xml or app.yaml
+  -V VERSION, --version=VERSION
+                        Override (major) version from appengine-web.xml or app.yaml
+  --oauth2              Use OAuth2 instead of password auth.
+  --enable_jar_splitting
+                        Split large jar files (> 10M) into smaller fragments.
+  --jar_splitting_excludes=SUFFIXES
+                        When --enable-jar-splitting is set, files that match
+                        the list of comma separated SUFFIXES will be excluded
+                        from all jars.
+  --disable_jar_jsps
+                        Do not jar the classes generated from JSPs.
+  --enable_jar_classes
+                        Jar the WEB-INF/classes content.
+  --delete_jsps
+                        Delete the JSP source files after compilation.
+  --retain_upload_dir
+                        Do not delete temporary (staging) directory used in
+                        uploading.
+  --compile_encoding
+                        The character encoding to use when compiling JSPs.
+  -n NUM_DAYS, --num_days=NUM_DAYS
+                        Number of days worth of log data to get. The cut-off
+                        point is midnight UTC. Use 0 to get all available
+                        logs. Default is 1.
+  --severity=SEVERITY   Severity of app-level log messages to get. The range
+                        is 0 (DEBUG) through 4 (CRITICAL). If omitted, only
+                        request logs are returned.
+  -a, --append          Append to existing file.
+  -n NUM_RUNS, --num_runs=NUM_RUNS
+                        Number of scheduled execution times to compute
+  -f, --force           Force deletion of indexes without being prompted.
+
