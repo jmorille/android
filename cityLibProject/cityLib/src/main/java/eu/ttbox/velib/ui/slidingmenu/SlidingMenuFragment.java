@@ -21,6 +21,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.ui.help.HelpMainActivity;
+import eu.ttbox.velib.ui.map.VelibProviderContainer;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
 import eu.ttbox.velib.ui.search.SearchableVeloActivity;
 
@@ -123,8 +124,15 @@ public class SlidingMenuFragment extends Fragment {
         boolean isRootActivity = false;
         switch (itemId) {
             case R.id.menuMap_favorite: {
+                // Read Activity
+                Class activityClass = getActivity().getClass();
                 eu.ttbox.velib.model.VelibProvider velibProvider = null;
-                Intent intentOption =  eu.ttbox.velib.core.Intents.searchVelo(this,velibProvider);
+                if (!activityClass.isAssignableFrom(VelibProviderContainer.class)) {
+                    VelibProviderContainer container = (VelibProviderContainer)getActivity();
+                    velibProvider = container.getVelibProvider();
+                }
+                // Open Favorite
+                Intent intentOption =  eu.ttbox.velib.core.Intents.searchVelo(getActivity(),velibProvider);
                 switchFragment();
                 startActivity(intentOption);
             }
@@ -149,7 +157,7 @@ public class SlidingMenuFragment extends Fragment {
                         Intent intentOption = new Intent(context, intentClass);
                         // Activity
                         clearActivityHistoryStack(intentOption, isRootActivity);
-
+                        // TODO http://fr.slideshare.net/RanNachmany/manipulating-android-tasks-and-back-stack
                         // Create Stacks
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
                         stackBuilder.addParentStack(VelibMapActivity.class);

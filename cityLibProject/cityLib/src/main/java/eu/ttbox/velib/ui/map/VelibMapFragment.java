@@ -64,7 +64,7 @@ import eu.ttbox.velib.service.geo.GeoUtils;
  * @author deostem
  * 
  */
-public class VelibMapFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class VelibMapFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener, VelibProviderContainer {
 
 	private static final String TAG = "VelibMapFragment";
 
@@ -236,20 +236,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 	}
 
 	private VelibProvider computeConditionVelibProvider(GeoPoint lastKnownLocationAsGeoPoint) {
-		VelibProvider velibProvider = null;
-		String providerName = sharedPreferences.getString(AppConstants.PREFS_KEY_PROVIDER_SELECT, VelibProvider.FR_PARIS.getProviderName());
-		if (providerName != null) {
-			velibProvider = VelibProvider.getVelibProvider(providerName);
-		} else if (lastKnownLocationAsGeoPoint != null) {
-			ArrayList<VelibProvider> providers = VelibProvider.getVelibProviderInBoundyBox(lastKnownLocationAsGeoPoint);
-			if (providers != null && !providers.isEmpty()) {
-				velibProvider = providers.get(0);
-			}
-		}
-		if (velibProvider == null) {
-			velibProvider = VelibProvider.FR_PARIS;
-		}
-		return velibProvider;
+		return VelibProviderHelper.computeConditionVelibProvider(sharedPreferences, lastKnownLocationAsGeoPoint);
 	}
 
 	private MapView createMapView(ITileSource tileSource, boolean google, String gooleApiKey) {

@@ -3,8 +3,10 @@ package eu.ttbox.velib.ui.search;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,8 +22,9 @@ import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.core.Intents;
 import eu.ttbox.velib.search.StationRecentSearchRecentSuggestionsProvider;
+import eu.ttbox.velib.ui.map.VelibProviderHelper;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
-
+import eu.ttbox.velib.model.VelibProvider;
 /**
  * General configuration of Search Dialog: @see
  * http://developer.android.com/guide/topics/search/search-dialog.html
@@ -44,6 +47,7 @@ public class SearchableVeloActivity extends SherlockFragmentActivity {
     public static final String ACTION_VIEW_FAVORITE = "eu.ttbox.velib.ui.search.ACTION_VIEW_FAVORITE";
 
     private SearchableVeloFragment searchFragment;
+    private SharedPreferences sharedPreferences;
 
     // ===========================================================
     // Constructors
@@ -53,6 +57,8 @@ public class SearchableVeloActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_station_activity);
+        // Service
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // handle Intent
         handleIntent(getIntent());
         // Tracker
@@ -120,6 +126,7 @@ public class SearchableVeloActivity extends SherlockFragmentActivity {
         } else if (ACTION_VIEW_FAVORITE.equals((intent.getAction()))) {
             setTitle(R.string.menu_favorite);
             int velibProvider = intent.getIntExtra(Intents.EXTRA_VELIB_PROVIDER, -1);
+
             searchFragment.doSearchFavorite(velibProvider);
             // Tracker 
             tracker.sendView("/Search/Favorite");

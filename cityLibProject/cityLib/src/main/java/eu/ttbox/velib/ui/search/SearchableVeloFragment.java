@@ -30,12 +30,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+
+import org.osmdroid.util.GeoPoint;
+
 import eu.ttbox.osm.ui.map.mylocation.sensor.LocationUtils;
 import eu.ttbox.velib.R;
 import eu.ttbox.velib.VelibMapActivity;
 import eu.ttbox.velib.VeloContentProvider;
 import eu.ttbox.velib.core.AppConstants;
+import eu.ttbox.velib.model.VelibProvider;
 import eu.ttbox.velib.service.database.Velo.VeloColumns;
+import eu.ttbox.velib.ui.map.VelibProviderHelper;
 import eu.ttbox.velib.ui.search.adapter.StationItemCurAdapter;
 
 public class SearchableVeloFragment extends Fragment {
@@ -183,8 +188,12 @@ public class SearchableVeloFragment extends Fragment {
 
     public void doSearchFavorite(int velibProvider) {
         if (velibProvider < 0) {
-            // FIXME VelibMapFragment.computeConditionVelibProvider
-            throw  new IllegalArgumentException("/ FIXME VelibMapFragment.computeConditionVelibProvider");
+            Location lastLocation =  getLastKnownLocation();
+            GeoPoint lastKnownLocationAsGeoPoint =  new GeoPoint(lastLocation);
+            VelibProvider velibProviderEnum =  VelibProviderHelper.computeConditionVelibProvider(sharedPreferences, lastKnownLocationAsGeoPoint);
+            if (velibProviderEnum!=null) {
+                velibProvider = velibProviderEnum.getProvider();
+            }
         }
         Bundle args = new Bundle();
         args.putBoolean(SEARCH_KEY_IS_FAVORITE, true);

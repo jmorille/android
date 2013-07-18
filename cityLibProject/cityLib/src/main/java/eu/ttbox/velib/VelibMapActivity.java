@@ -1,10 +1,5 @@
 package eu.ttbox.velib;
 
-import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.TilesOverlay;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,7 +11,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -24,34 +18,37 @@ import com.actionbarsherlock.view.SubMenu;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.TilesOverlay;
+
 import eu.ttbox.velib.core.Intents;
 import eu.ttbox.velib.model.VelibProvider;
 import eu.ttbox.velib.service.database.Velo.VeloColumns;
 import eu.ttbox.velib.ui.map.VelibMapFragment;
+import eu.ttbox.velib.ui.map.VelibProviderContainer;
 import eu.ttbox.velib.ui.preference.VelibPreferenceActivity;
 
 /**
- * @see https://github.com/eskerda/CityBikes/tree/openvelib
- * 
- *      Map Api {@link http
- *      ://www.vogella.com/articles/AndroidLocationAPI/article.html#overview}
- * 
- *      Osm Sample {@link http://code.google.com/p/osmdroid/source/browse/trunk/
- *      OpenStreetMapViewer/src/org/osmdroid/MapActivity.java}
- * 
- *      MVP : {@link http
- *      ://stackoverflow.com/questions/4916209/which-design-patterns-are
- *      -used-on-android/6770903#6770903}
  * @author deostem
- * 
+ * @see https://github.com/eskerda/CityBikes/tree/openvelib
+ * <p/>
+ * Map Api {@link http
+ * ://www.vogella.com/articles/AndroidLocationAPI/article.html#overview}
+ * <p/>
+ * Osm Sample {@link http://code.google.com/p/osmdroid/source/browse/trunk/
+ * OpenStreetMapViewer/src/org/osmdroid/MapActivity.java}
+ * <p/>
+ * MVP : {@link http
+ * ://stackoverflow.com/questions/4916209/which-design-patterns-are
+ * -used-on-android/6770903#6770903}
  */
-public class VelibMapActivity extends eu.ttbox.velib.ui.CityLibSlidingMenuFragmentActivity { // implements
-                                                         // VelibMapView
+public class VelibMapActivity extends eu.ttbox.velib.ui.CityLibSlidingMenuFragmentActivity implements VelibProviderContainer {
+    // VelibMapView
 
     private static final String TAG = "VelibMapActivity";
-
     int MENU_LAST_ID = 3;
-
     private VelibMapFragment mapFragment;
 
     // ===========================================================
@@ -62,7 +59,7 @@ public class VelibMapActivity extends eu.ttbox.velib.ui.CityLibSlidingMenuFragme
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.map_activity); // bind the layout to the
-                                               // activity
+        // activity
 
         // Center on my last position Only if is in define Box
         GeoPoint intentGeoPoint = handleIntent(getIntent());
@@ -145,7 +142,7 @@ public class VelibMapActivity extends eu.ttbox.velib.ui.CityLibSlidingMenuFragme
             Log.i(TAG, "----------------------------------------------");
             Log.i(TAG, "----------------------------------------------");
             // }
-            String[] projection = new String[] { VeloColumns.COL_ID, VeloColumns.COL_LATITUDE_E6, VeloColumns.COL_LONGITUDE_E6 };
+            String[] projection = new String[]{VeloColumns.COL_ID, VeloColumns.COL_LATITUDE_E6, VeloColumns.COL_LONGITUDE_E6};
             Cursor cursor = getContentResolver().query(data, projection, null, null, null);
             try {
                 while (cursor.moveToNext()) {
@@ -219,61 +216,61 @@ public class VelibMapActivity extends eu.ttbox.velib.ui.CityLibSlidingMenuFragme
 
         // Now process the menu item selection
         switch (item.getItemId()) {
-        case R.id.menuMap_mypositoncenter: {
-            mapFragment.centerOnMyLocationFix();
-            return true;
-        }
-        case R.id.menu_search: {
-            onSearchRequested();
-
-            return true;
-        }
-        case R.id.menuMap_favorite: {
-            startActivity(Intents.searchVelo(this, mapFragment.getVelibProvider()));
-            return true;
-        }
-        case R.id.menuOptions: {
-            Intent intentOption = new Intent(this, VelibPreferenceActivity.class);
-            startActivity(intentOption);
-            return true;
-        }
-        // case R.id.menuDownloadTiles: {
-        // MapTileProviderBase tileProvider = mapView.getTileProvider();
-        // ITileSource tileSource = tileProvider.getTileSource();
-        // int minZoom = mapView.getZoomLevel(); //
-        // tileSource.getMinimumZoomLevel()
-        // int maxZoom = mapView.getZoomLevel(); //
-        // tileSource.getMaximumZoomLevel()
-        // double[] boundyBox = velibProvider.getBoundyBox();
-        // Log.i(TAG, "startService downloadMapTiles for " + minZoom +
-        // "<=zoom<=" + maxZoom);
-        // startService(Intents.downloadMapTiles(this, tileSource, minZoom,
-        // maxZoom, boundyBox));
-        // return true;
-        // }
-        default: {
-            // Map click
-            final int menuId = item.getItemId() - MENU_LAST_ID;
-            if ((menuId >= TilesOverlay.MENU_TILE_SOURCE_STARTING_ID) && (menuId < TilesOverlay.MENU_TILE_SOURCE_STARTING_ID + TileSourceFactory.getTileSources().size())) {
-                mapFragment.setMapViewTileSource(TileSourceFactory.getTileSources().get(menuId - TilesOverlay.MENU_TILE_SOURCE_STARTING_ID));
-                isHc11InvalidateOptionsMenu();
+            case R.id.menuMap_mypositoncenter: {
+                mapFragment.centerOnMyLocationFix();
                 return true;
             }
-            // We can also respond to events in the overlays here
-            // boolean isDo =
-            // mapView.getOverlayManager().onOptionsItemSelected(item,
-            // MENU_LAST_ID, mapView);
-            // if (isDo) {
-            // final int overlayItemId = item.getItemId() - MENU_LAST_ID;
-            // if (overlayItemId == TilesOverlay.MENU_OFFLINE) {
-            // final int id = mapView.useDataConnection() ?
-            // R.string.set_mode_online : R.string.set_mode_offline;
-            // Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+            case R.id.menu_search: {
+                onSearchRequested();
+
+                return true;
+            }
+            case R.id.menuMap_favorite: {
+                startActivity(Intents.searchVelo(this, mapFragment.getVelibProvider()));
+                return true;
+            }
+            case R.id.menuOptions: {
+                Intent intentOption = new Intent(this, VelibPreferenceActivity.class);
+                startActivity(intentOption);
+                return true;
+            }
+            // case R.id.menuDownloadTiles: {
+            // MapTileProviderBase tileProvider = mapView.getTileProvider();
+            // ITileSource tileSource = tileProvider.getTileSource();
+            // int minZoom = mapView.getZoomLevel(); //
+            // tileSource.getMinimumZoomLevel()
+            // int maxZoom = mapView.getZoomLevel(); //
+            // tileSource.getMaximumZoomLevel()
+            // double[] boundyBox = velibProvider.getBoundyBox();
+            // Log.i(TAG, "startService downloadMapTiles for " + minZoom +
+            // "<=zoom<=" + maxZoom);
+            // startService(Intents.downloadMapTiles(this, tileSource, minZoom,
+            // maxZoom, boundyBox));
+            // return true;
             // }
-            // }
-            // return isDo;
-            return super.onOptionsItemSelected(item);
-        }
+            default: {
+                // Map click
+                final int menuId = item.getItemId() - MENU_LAST_ID;
+                if ((menuId >= TilesOverlay.MENU_TILE_SOURCE_STARTING_ID) && (menuId < TilesOverlay.MENU_TILE_SOURCE_STARTING_ID + TileSourceFactory.getTileSources().size())) {
+                    mapFragment.setMapViewTileSource(TileSourceFactory.getTileSources().get(menuId - TilesOverlay.MENU_TILE_SOURCE_STARTING_ID));
+                    isHc11InvalidateOptionsMenu();
+                    return true;
+                }
+                // We can also respond to events in the overlays here
+                // boolean isDo =
+                // mapView.getOverlayManager().onOptionsItemSelected(item,
+                // MENU_LAST_ID, mapView);
+                // if (isDo) {
+                // final int overlayItemId = item.getItemId() - MENU_LAST_ID;
+                // if (overlayItemId == TilesOverlay.MENU_OFFLINE) {
+                // final int id = mapView.useDataConnection() ?
+                // R.string.set_mode_online : R.string.set_mode_offline;
+                // Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+                // }
+                // }
+                // return isDo;
+                return super.onOptionsItemSelected(item);
+            }
         }
     }
 
@@ -291,8 +288,8 @@ public class VelibMapActivity extends eu.ttbox.velib.ui.CityLibSlidingMenuFragme
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode) {
-        case KeyEvent.KEYCODE_SEARCH:
-            return onSearchRequested();
+            case KeyEvent.KEYCODE_SEARCH:
+                return onSearchRequested();
         }
         return super.onKeyUp(keyCode, event);
     }
@@ -306,6 +303,15 @@ public class VelibMapActivity extends eu.ttbox.velib.ui.CityLibSlidingMenuFragme
         appData.putString(Intents.EXTRA_VELIB_PROVIDER, velibProvider.getProviderName());
         startSearch(null, false, appData, false);
         return true;
+    }
+
+    @Override
+    public VelibProvider getVelibProvider() {
+        VelibProvider result = null;
+        if (mapFragment != null) {
+            result = mapFragment.getVelibProvider();
+        }
+        return result;
     }
 
     // ===========================================================

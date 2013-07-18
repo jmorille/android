@@ -137,7 +137,7 @@
 
    <build>
       <finalName>${project.artifactId}</finalName>
-      <sourceDirectory>src</sourceDirectory>
+      <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
       <!-- <testSourceDirectory>test</testSourceDirectory> -->
       <plugins>
          <plugin>
