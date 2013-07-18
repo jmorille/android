@@ -6,7 +6,7 @@
    <parent>
         <groupId>eu.ttbox.android.cityLib</groupId>
         <artifactId>cityLibProject</artifactId>
-       <version>0.2.3</version>
+        <version>0.3.0</version> 
    </parent>
 
 
@@ -30,12 +30,13 @@
          <version>${osm-lib.version}</version>
          <type>apklib</type>
       </dependency>
+       <!--
       <dependency>
           <groupId>eu.ttbox.android.cityLib</groupId>
          <artifactId>endPoints-cityLib</artifactId>
          <version>${project.version}</version>
       </dependency>
-
+       -->
        <!-- Android -->
        <dependency>
            <groupId>android</groupId>
@@ -106,6 +107,16 @@
          <artifactId>analytics</artifactId>
          <version>${analytics.version}</version>
       </dependency>
+       <!-- Play Services -->
+       <dependency>
+           <groupId>com.google.android.gms</groupId>
+           <artifactId>google-play-services</artifactId>
+           <type>apklib</type>
+       </dependency>
+       <dependency>
+           <groupId>com.google.android.gms</groupId>
+           <artifactId>google-play-services</artifactId>
+       </dependency>
 
       <!-- Svg Android : http://code.google.com/p/svg-android/ -->
       <!-- http://code.google.com/p/svg-android-2/ -->
@@ -203,6 +214,7 @@
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-jarsigner-plugin</artifactId>
+                   <version>${maven-jarsigner-plugin.version}</version>
                   <executions>
                      <execution>
                         <id>signing</id>
@@ -272,7 +284,8 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>build-helper-maven-plugin</artifactId>
-                  <configuration>
+                   <version>${build-helper-maven-plugin.version}</version>
+                   <configuration>
                      <artifacts>
                         <artifact>
                            <file>${project.build.directory}/${project.artifactId}-signed-aligned.apk</file>

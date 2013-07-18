@@ -1,4 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
  <servlet>
   <servlet-name>SystemServiceServlet</servlet-name>
@@ -8,7 +12,6 @@
    <param-value>com.google.cloud.backend.spi.EndpointV1</param-value>
   </init-param>
  </servlet>
-
  <servlet-mapping>
   <servlet-name>SystemServiceServlet</servlet-name>
   <url-pattern>/_ah/spi/*</url-pattern>
@@ -16,11 +19,8 @@
 
  <servlet>
     <servlet-name>ProspectiveSearchServlet</servlet-name>
-    <servlet-class>
-      com.google.cloud.backend.spi.ProspectiveSearchServlet
-    </servlet-class>
+    <servlet-class>com.google.cloud.backend.spi.ProspectiveSearchServlet</servlet-class>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>ProspectiveSearchServlet</servlet-name>
     <url-pattern>/_ah/prospective_search</url-pattern>
@@ -30,11 +30,21 @@
      <servlet-name>ConfigurationServlet</servlet-name>
      <servlet-class>com.google.cloud.backend.config.ConfigurationServlet</servlet-class>
   </servlet>
-
   <servlet-mapping>
      <servlet-name>ConfigurationServlet</servlet-name>
      <url-pattern>/admin/cconf</url-pattern>
   </servlet-mapping>
+
+    <!-- Kml Renderer -->
+    <servlet>
+        <servlet-name>KmlRenderServlet</servlet-name>
+        <servlet-class>eu.ttbox.geoping.web.KmlRenderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>KmlRenderServlet</servlet-name>
+        <url-pattern>/kml</url-pattern>
+    </servlet-mapping>
+
 
     <security-constraint>
         <web-resource-collection>

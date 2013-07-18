@@ -26,6 +26,7 @@
     </properties>
     
 	<modules> 
+		<module>geoPing-encoder</module>
 		<module>geoPing</module>
 		<module>geoPing-AppEngine</module> 
 		<module>geoPing-Endpoints</module>

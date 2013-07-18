@@ -60,6 +60,8 @@
 		<!-- Plugins -->
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<maven-war-plugin.version>2.4</maven-war-plugin.version>
+		<maven-jarsigner-plugin.version>1.2</maven-jarsigner-plugin.version>
+		<build-helper-maven-plugin.version>1.8</build-helper-maven-plugin.version>
 		<!-- Release -->
 		<android-maven-plugin.version>3.6.0</android-maven-plugin.version> <!-- 3.5.1 -->
 		<android.sdk.platform>17</android.sdk.platform>
@@ -192,9 +194,9 @@
 					<artifactId>android-maven-plugin</artifactId>
 					<version>${android-maven-plugin.version}</version>
 					<configuration>
-						<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-						<assetsDirectory>${project.basedir}/assets</assetsDirectory>
-						<resourceDirectory>${project.basedir}/res</resourceDirectory>
+						<androidManifestFile>${project.basedir}/src/main/AndroidManifest.xml</androidManifestFile>
+						<assetsDirectory>${project.basedir}/src/main/assets</assetsDirectory>
+						<resourceDirectory>${project.basedir}/src/main/res</resourceDirectory>
 						<!-- <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory> -->
 						<sdk>
 							<platform>${android.sdk.platform}</platform>
@@ -238,6 +240,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-jarsigner-plugin</artifactId>
+						 <version>${maven-jarsigner-plugin.version}</version>
 						<executions>
 							<execution>
 								<id>signing</id>
@@ -307,6 +310,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>${build-helper-maven-plugin.version}</version> 
 						<configuration>
 							<artifacts>
 								<artifact>
