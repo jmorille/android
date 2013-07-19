@@ -16,5 +16,20 @@
 
     <packaging>jar</packaging>
 
-   
+    <properties>
+        <junit.version>4.11</junit.version>
+    </properties>
+
+   <dependencies>
+
+       <!-- Test -->
+       <dependency>
+           <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+           <version>${junit.version}</version>
+           <scope>test</scope>
+       </dependency>
+
+   </dependencies>
+
 </project>
