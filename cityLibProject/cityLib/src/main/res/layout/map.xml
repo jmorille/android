@@ -15,7 +15,7 @@
         android:layout_gravity="right|bottom"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="55dp"
-        android:background="@drawable/panneau_parking" 
+        android:background="@drawable/panneau_parking_cycle"
         android:textOff=""
         android:textOn="" />
  

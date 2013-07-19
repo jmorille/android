@@ -180,7 +180,7 @@ public class VelibMapFragment extends Fragment implements SharedPreferences.OnSh
 		swtichMode = (ToggleButton) v.findViewById(R.id.map_button_parking_cycle_switch);
 		packing = getResources().getDrawable(R.drawable.panneau_parking);
 		cycle = getResources().getDrawable(R.drawable.panneau_obligation_cycles);
-		all = getResources().getDrawable(R.drawable.marker_velib_circle);
+		all = getResources().getDrawable(R.drawable.panneau_parking_cycle);
 		stationDispoModeSwitch = new StationDispoModeSwitch();
 		if (swtichMode != null) {
 			stationDispoModeSwitch.displayToMode(0);
