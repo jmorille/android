@@ -4,16 +4,11 @@ import android.os.Bundle;
 
 import java.util.Locale;
 
-import eu.ttbox.geoping.core.AppConstants;
-import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
-import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
-
 /**
  * <a href="https://developers.google.com/maps/documentation/ios/urlscheme">Ios Scheme</a>
  */
 public class GoogleMapUriEncoderHelper {
-
+/*
     public static String encodeSmsMessage(SmsMessageActionEnum action, Bundle params) {
         return encodeSmsMessage(action, params, null);
     }
@@ -39,20 +34,7 @@ public class GoogleMapUriEncoderHelper {
         }
         return latLngString;
     }
+*/
 
 
-    public static String getAsKml(Bundle params) {
-        String template = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + //
-                "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n" +
-                "  <Placemark>\n" +
-                "    <name>Camille</name>\n" +
-                "    <description>Position at </description>\n" +
-                "    <Point>\n" +
-                "<coordinates>-122.0822035425683,37.42228990140251,0</coordinates>\n" +
-                "    </Point>\n" +
-                "  </Placemark>\n" +
-                "</kml>";
-
-
-    }
 }

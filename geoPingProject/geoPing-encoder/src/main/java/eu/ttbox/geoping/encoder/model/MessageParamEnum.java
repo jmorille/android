@@ -5,72 +5,57 @@ public enum MessageParamEnum {
 
 
     // Loc
-    PROVIDER('p',  KeyMapName.COL_PROVIDER ), //
-    DATE('d',  KeyMapName.COL_TIME ), //
-    GEO_E6('g', type( KeyMapName.COL_LATITUDE_E6.dbFieldName, MessageParamTypeEncodingEnum.MULTI), //
-    new MessageParamType[] { //
-         KeyMapName.COL_LATITUDE_E6 , //
-         KeyMapName.COL_LONGITUDE_E6 , //
-         KeyMapName.COL_ALTITUDE  //
-    }), //
-    ACCURACY('a', KeyMapName.COL_ACCURACY), //
-    BEARING('b',    KeyMapName.COL_BEARING ), //
-    SPEAD('c',     KeyMapName.COL_SPEED ), //
-    BATTERY('w',   KeyMapName.COL_BATTERY_LEVEL), //
+    PROVIDER('p', MessageParamType.COL_PROVIDER), //
+
+    DATE('d', MessageParamType.COL_TIME), //
+    GEO_E6('g',     MessageParamType.COL_LATITUDE_E6, //
+                    MessageParamType.COL_LONGITUDE_E6, //
+                    MessageParamType.COL_ALTITUDE  //
+            ), //
+    ACCURACY('a', MessageParamType.COL_ACCURACY), //
+    BEARING('b', MessageParamType.COL_BEARING), //
+    SPEAD('c', MessageParamType.COL_SPEED), //
+    BATTERY('w', MessageParamType.COL_BATTERY_LEVEL), //
 
     // Person
-    TIME_IN_S('s', type( "TIME_IN_S", MessageParamTypeEncodingEnum.INT)), //
-    PERSON_ID('u',  KeyMapName.COL_PERSON_ID ), //
+    TIME_IN_S('s', MessageParamType.TIME_IN_S), //
+    PERSON_ID('u', MessageParamType.COL_PERSON_ID), //
     // Geo Fence
-    GEOFENCE_NAME('e', type(  "GEOFENCE_NAME", MessageParamTypeEncodingEnum.STRING) ), //
-    GEOFENCE('f',      type( KeyMapName.GEOFENCE_LATITUDE_E6_.dbFieldName,MessageParamTypeEncodingEnum.MULTI) ,
-    new MessageParamType[] { //
-         KeyMapName.GEOFENCE_LATITUDE_E6_ , //
-         KeyMapName.GEOFENCE_LONGITUDE_E6 , //
-         KeyMapName.GEOFENCE_RADIUS , //
-         KeyMapName.GEOFENCE_TRANSITION, //
-         KeyMapName.GEOFENCE_EXPIRATION_DATE) //
-    }), //
-
+    GEOFENCE_NAME('e', MessageParamType.GEOFENCE_NAME), //
+    GEOFENCE('f',   MessageParamType.GEOFENCE_LATITUDE_E6_, //
+                    MessageParamType.GEOFENCE_LONGITUDE_E6, //
+                    MessageParamType.GEOFENCE_RADIUS, //
+                    MessageParamType.GEOFENCE_TRANSITION, //
+                    MessageParamType.GEOFENCE_EXPIRATION_DATE  //
+           ), //
     // Spy Event
-//    EVT_SIM_PHONE('i', MessageParamTypeEncodingEnum.STRING, "EVT_SIM_PHONE"),
-    PHONE_NUMBER('n', type( "PHONE_NUMBER", MessageParamTypeEncodingEnum.STRING_BASE64)), //
-    EVT_DATE('t',     type( KeyMapName.COL_EVT_TIME, MessageParamTypeEncodingEnum.DATE)); //
-
-    // ===========================================================
-    // Builder
-    // ===========================================================
-
-    private static MessageParamType type(String dbColumn, MessageParamTypeEncodingEnum wantedWriteType) {
-        return MessageParamType.multiType(dbColumn, wantedWriteType);
-    }
-
+    //    EVT_SIM_PHONE('i', MessageParamTypeEncodingEnum.STRING, "EVT_SIM_PHONE"),
+    PHONE_NUMBER('n', MessageParamType.PHONE_NUMBER), //
+    EVT_DATE('t', MessageParamType.COL_EVT_TIME); //
+    public final char smsFieldName;
+    public final MessageParamType type;
+    public final MessageParamType[] multiFieldName;
 
     // ===========================================================
     // Constructor
     // ===========================================================
-    MessageParamEnum(char fieldName, MessageParamType type ) {
-        this(fieldName, type,   null);
+
+    MessageParamEnum(char smsFieldName, MessageParamType... fields) {
+        this.smsFieldName = smsFieldName;
+        this.multiFieldName = fields;
+        if (fields.length == 1) {
+            type = fields[0];
+        } else {
+            type = MessageParamType.multiType(fields);
+        }
     }
 
-    MessageParamEnum(char fieldName, MessageParamType type,   int labelValueResourceId) {
-        this(fieldName, type,   null, labelValueResourceId);
-    }
+    // ===========================================================
+    // Accessor
+    // ===========================================================
 
-    MessageParamEnum(char fieldName, MessageParamType type , MessageParamType[] multiFieldName) {
-        this(fieldName, type,  multiFieldName, Integer.MIN_VALUE);
-    }
-    MessageParamEnum(char fieldName, MessageParamType type,   MessageParamType[] multiFieldName, int labelValueResourceId) {
-        this.smsFieldName = fieldName;
-        this.type = type;
-        this.multiFieldName = multiFieldName;
-        this.labelValueResourceId = labelValueResourceId;
-    }
 
-    public final char smsFieldName;
-    public final MessageParamType type;
-    public final MessageParamType[] multiFieldName;
-    public final int labelValueResourceId;
-
-    
+    public static MessageParamEnum getByDbFieldName(String key) {
+        return null;
+    }
 }
