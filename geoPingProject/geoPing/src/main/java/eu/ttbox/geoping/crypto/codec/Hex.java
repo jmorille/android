@@ -1,7 +1,7 @@
 package eu.ttbox.geoping.crypto.codec;
 
 /**
- * Hex data encoder. Converts byte arrays (such as those obtained from message digests)
+ * Hex data encoding. Converts byte arrays (such as those obtained from message digests)
  * into hexadecimal string representation.
  * <p>
  * For internal use only.

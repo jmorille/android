@@ -7,7 +7,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 
 /**
- * UTF-8 Charset encoder/decoder.
+ * UTF-8 Charset encoding/decoder.
  * <p>
  * For internal use only.
  *

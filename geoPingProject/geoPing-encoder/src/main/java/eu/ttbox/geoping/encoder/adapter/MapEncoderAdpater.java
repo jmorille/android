@@ -1,15 +1,28 @@
 package eu.ttbox.geoping.encoder.adapter;
 
 
+
 import java.util.Map;
 import java.util.Set;
 
-public class MapEncoderAdpater implements EncoderAdapter {
+public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
 
     private Map<String, Object> mMap;
 
+    // ===========================================================
+    //   Constructor
+    // ===========================================================
+
     public MapEncoderAdpater(Map<String, Object> mMap) {
         this.mMap = mMap;
+    }
+
+    // ===========================================================
+    //   Direct Accessor
+    // ===========================================================
+
+    public  Map<String, Object> getMap(){
+        return mMap;
     }
 
     @Override
@@ -17,15 +30,15 @@ public class MapEncoderAdpater implements EncoderAdapter {
         return mMap.containsKey(key);
     }
 
-    @Override
-    public Object get(String key) {
-        return mMap.get(key);
-    }
-
-    @Override
+     @Override
     public Set<String> keySet() {
         return mMap.keySet();
     }
+
+    // ===========================================================
+    //   Error Management
+    // ===========================================================
+
 
     private void typeWarning(String key, Object value, String className,
                              ClassCastException e) {
@@ -53,6 +66,17 @@ public class MapEncoderAdpater implements EncoderAdapter {
         //TODO     Log.w(LOG_TAG, sb.toString());
         // TODO     Log.w(LOG_TAG, "Attempt to cast generated internal exception:", e);
     }
+
+    // ===========================================================
+    //   Encoder Accessor
+    // ===========================================================
+
+
+    @Override
+    public Object get(String key) {
+        return mMap.get(key);
+    }
+
 
     public boolean getBoolean(String key) {
         return getBoolean(key, false);
@@ -122,6 +146,37 @@ public class MapEncoderAdpater implements EncoderAdapter {
             typeWarning(key, o, "String", e);
             return defaultValue;
         }
+    }
+
+
+    // ===========================================================
+    //   Decoder Accessor
+    // ===========================================================
+
+
+    @Override
+    public void putString(String key, String value) {
+        mMap.put(key, value);
+    }
+
+    @Override
+    public void putInt(String key, int value) {
+        mMap.put(key, value);
+    }
+
+    @Override
+    public void putLong(String key, long value) {
+        mMap.put(key, value);
+    }
+
+    @Override
+    public void putFloat(String key, float value){
+        mMap.put(key, Float.valueOf( value));
+    }
+
+    @Override
+    public void putDouble(String key, double value) {
+        mMap.put(key, value);
     }
 
 }

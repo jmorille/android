@@ -1,15 +1,12 @@
 package eu.ttbox.geoping.encoder.params;
 
-import android.os.Bundle;
-
 import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.model.MessageParamEnum;
 
 import eu.ttbox.geoping.encoder.params.helper.IntegerEncoded;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
-import eu.ttbox.geoping.encoder.model.MessageParamType;
 
-public class MessageParamEncoderHelper {
+public class ParamEncoderHelper {
 
     public static final int NUMBER_ENCODER_RADIX = IntegerEncoded.MAX_RADIX;
 
@@ -49,7 +46,7 @@ public class MessageParamEncoderHelper {
             // Specific Field
             MessageParamEnum fieldEnum = MessageParamEnum.getByDbFieldName(key);
             if (fieldEnum != null) {
-                MessageParamType type = fieldEnum.type;
+                MessageParamField type = fieldEnum.type;
                 IParamEncoder typeEncoding = null; //(IParamEncoder)type.wantedWriteType ;
               //  typeEncoding.writeTo(extras, dest, type, keyValue);
 
@@ -62,53 +59,30 @@ public class MessageParamEncoderHelper {
     //   Decoder
     // ===========================================================
 
-    public static Bundle decodeMessageAsMap(String encoded, DecoderAdapter dest, int radix) {
+    public static DecoderAdapter decodeMessageAsMap(DecoderAdapter dest, String encoded ) {
         int encodedSize = encoded.length();
         int startIdx = 0;
         int sepIdx = 0;
         while ((sepIdx = encoded.indexOf(FIELD_SEP, startIdx)) > -1) {
             // Consume param
-            readSmsMessageLocEnum(result, startIdx, sepIdx, encoded, radix);
+            readSmsMessageLocEnum(dest, startIdx, sepIdx, encoded );
             // Next Loop
             startIdx = sepIdx + 1;
         }
         // Last Loop
         sepIdx = encodedSize;
-        readSmsMessageLocEnum(result, startIdx, sepIdx, encoded, radix);
-        return result;
+        readSmsMessageLocEnum(dest, startIdx, sepIdx, encoded );
+        return dest;
     }
 
 
-    private static void readSmsMessageLocEnum(DecoderAdapter result, int startIdx, int sepIdx, String encoded, int radix) {
+    private static void readSmsMessageLocEnum(DecoderAdapter result, int startIdx, int sepIdx, String encoded ) {
         char key = encoded.charAt(startIdx);
-        SmsMessageLocEnum fieldEnum = SmsMessageLocEnum.getBySmsFieldName(key);
+        MessageParamEnum fieldEnum = MessageParamEnum.getBySmsFieldName(key);
         if (fieldEnum != null) {
             String valueEncoded = encoded.substring(startIdx + 1, sepIdx);
-            MessageParamType smsType = fieldEnum.type;
-            switch (smsType.wantedWriteType) {
-                case GPS_PROVIDER:
-                    // Same as String
-                case STRING:
-                    result.putString(smsType.dbFieldName, readToString(smsType, valueEncoded));
-                    break;
-                case STRING_BASE64:
-                    result.putString(smsType.dbFieldName, readToBase64String(smsType, valueEncoded));
-                    break;
-                case INT:
-                    result.putInt(smsType.dbFieldName, readToInt(fieldEnum, valueEncoded, radix));
-                    break;
-                case DATE:
-                    result.putLong(smsType.dbFieldName, readToDate(fieldEnum, valueEncoded, radix));
-                    break;
-                case LONG:
-                    result.putLong(smsType.dbFieldName, readToLong(fieldEnum, valueEncoded, radix));
-                    break;
-                case MULTI:
-                    readToMultiInt(result, valueEncoded, fieldEnum.multiFieldName, radix);
-                    break;
-                default:
-                    break;
-            }
+            MessageParamField field = fieldEnum.type;
+            field.wantedWriteType.readTo(result, valueEncoded, field);
         }
 
     }

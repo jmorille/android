@@ -1,10 +1,11 @@
-package eu.ttbox.geoping.encoder.params.encoder;
+package eu.ttbox.geoping.encoder.params.encoding;
 
 import java.util.HashMap;
 
+import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
+import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.encoder.params.IParamEncoder;
-import eu.ttbox.geoping.encoder.model.MessageParamType;
 
 
 public class GpsProviderParamEncoder implements IParamEncoder {
@@ -40,13 +41,13 @@ public class GpsProviderParamEncoder implements IParamEncoder {
     //  Encoder
     // ===========================================================
     @Override
-    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamType field, char smsFieldName  ) {
+    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamField field, char smsFieldName  ) {
         return writeTo(src, dest, field, smsFieldName, true);
     }
 
 
     @Override
-    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamType field, char smsFieldName, boolean isSmsFieldName ) {
+    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamField field, char smsFieldName, boolean isSmsFieldName ) {
         boolean isWrite = false;
         String value = (String)src.get(field.dbFieldName);
         value = locProviderDecoder.get(value);
@@ -58,6 +59,19 @@ public class GpsProviderParamEncoder implements IParamEncoder {
             isWrite = true;
         }
         return isWrite;
+    }
+
+    // ===========================================================
+    //   Decoder Accessor
+    // ===========================================================
+
+    @Override
+    public int readTo(DecoderAdapter dest, String encoded, MessageParamField field ) {
+        String decodedValue = decodeToGpsProvider(encoded);
+        if (decodedValue!=null) {
+            dest.putString(field.dbFieldName, decodedValue);
+        }
+        return 1;
     }
 
     public String decodeToGpsProvider(String value) {

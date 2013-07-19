@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.encoder.params.encoder;
+package eu.ttbox.geoping.encoder.params.sandbox;
 
 import android.util.Log;
 

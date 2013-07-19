@@ -2,7 +2,7 @@ package eu.ttbox.geoping.crypto.codec;
 
 
 /**
- * Base64 encoder which is a reduced version of Robert Harder's public domain implementation (version 2.3.7).
+ * Base64 encoding which is a reduced version of Robert Harder's public domain implementation (version 2.3.7).
  * See <a href="http://iharder.net/base64">http://iharder.net/base64</a> for more information.
  * <p>
  * For internal use only.

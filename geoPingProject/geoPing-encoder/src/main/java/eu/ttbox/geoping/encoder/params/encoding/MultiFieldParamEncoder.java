@@ -1,8 +1,8 @@
-package eu.ttbox.geoping.encoder.params.encoder;
+package eu.ttbox.geoping.encoder.params.encoding;
 
 import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
-import eu.ttbox.geoping.encoder.model.MessageParamType;
+import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.encoder.params.IParamEncoder;
 
 public class MultiFieldParamEncoder implements IParamEncoder {
@@ -15,26 +15,26 @@ public class MultiFieldParamEncoder implements IParamEncoder {
     // ===========================================================
 
     @Override
-    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamType field, char smsFieldName  ) {
+    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamField field, char smsFieldName  ) {
         return writeTo(src, dest, field, smsFieldName, true);
     }
 
 
     @Override
-    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamType field, char smsFieldName, boolean isSmsFieldName ) {
+    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamField field, char smsFieldName, boolean isSmsFieldName ) {
         boolean isWrite = false;
         // Test first value is Present
         if (src.containsKey(field.dbFieldName)) {
-            MessageParamType[]  multiFields = field.multiFields;
+            MessageParamField[]  multiFields = field.multiFields;
             boolean isLastFieldWrite = true;
             int writeCount = 0;
-            for (MessageParamType multiField : multiFields) {
+            for (MessageParamField multiField : multiFields) {
                 // Write Sep if
                 if (!isLastFieldWrite) {
                     dest.append(MULTI_FIELD_SEP);
                 }
                 // Write the field
-                isLastFieldWrite = multiField.wantedWriteType.writeTo(src, dest, field, MULTI_FIELD_SEP);
+                isLastFieldWrite = multiField.writeTo(src, dest, field, MULTI_FIELD_SEP);
                 if (isLastFieldWrite) {
                     writeCount++;
                 }
@@ -60,25 +60,24 @@ public class MultiFieldParamEncoder implements IParamEncoder {
     // ===========================================================
 
 
-    public  int readTo(DecoderAdapter dest, String value, MessageParamType field ) {
+    public  int readTo(DecoderAdapter dest, String encoded, MessageParamField field ) {
         int start = 0;
-        MessageParamType[] multiFields = field.multiFields;
+        MessageParamField[] multiFields = field.multiFields;
         int colDataSize = multiFields.length;
         boolean isLast = false;
         for (int i = 0; i < colDataSize; i++) {
-            MessageParamType colData = multiFields[i];
-            int idx = value.indexOf(MULTI_FIELD_SEP, start);
+            MessageParamField multiField = multiFields[i];
+            int idx = encoded.indexOf(MULTI_FIELD_SEP, start);
             if (idx == -1) {
-                idx = value.length();
+                idx = encoded.length();
                 isLast = true;
             }
             if (idx != -1) {
-                String s = value.substring(start, idx);
+                String s = encoded.substring(start, idx);
                 // Log.d(TAG, String.format("Read Multi Field(%s) %s : %s", i,
                 // colData, s));
                 if (s != null && s.length() > 0) {
-                    int unit = colData.readTo(dest, s, colData);
-                    extras.putInt(colData.dbFieldName, unit);
+                    multiField.readTo(  dest, s, multiField );
                 }
                 start = idx + 1;
             }

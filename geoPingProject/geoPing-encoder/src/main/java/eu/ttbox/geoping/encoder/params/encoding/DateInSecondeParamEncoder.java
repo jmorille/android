@@ -1,12 +1,14 @@
-package eu.ttbox.geoping.encoder.params.encoder;
+package eu.ttbox.geoping.encoder.params.encoding;
 
 
 import java.util.Calendar;
 
+import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
+import eu.ttbox.geoping.encoder.params.MessageParamField;
+import eu.ttbox.geoping.encoder.params.helper.IntegerEncoded;
 import eu.ttbox.geoping.encoder.params.helper.LongEncoded;
 import eu.ttbox.geoping.encoder.params.IParamEncoder;
-import eu.ttbox.geoping.encoder.model.MessageParamType;
 
 public class DateInSecondeParamEncoder implements IParamEncoder {
 
@@ -26,24 +28,38 @@ public class DateInSecondeParamEncoder implements IParamEncoder {
         long timeAtMidnight = cal.getTimeInMillis();
         return timeAtMidnight;
     }
+    public final int radix;
 
 
     // ===========================================================
-    //   Encoder - Decoder Accessor
+    //   Contructor
+    // ===========================================================
+
+    public DateInSecondeParamEncoder( ) {
+        this( IntegerEncoded.MAX_RADIX);
+    }
+
+
+    public DateInSecondeParamEncoder(int radix) {
+        this.radix = radix;
+    }
+
+    // ===========================================================
+    //   Encoder  Accessor
     // ===========================================================
 
     @Override
-    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamType field, char smsFieldName  ) {
+    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamField field, char smsFieldName  ) {
         return writeTo(src, dest, field, smsFieldName, true);
     }
 
         @Override
-    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamType field, char smsFieldName, boolean isSmsFieldName ) {
+    public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamField field, char smsFieldName, boolean isSmsFieldName ) {
         boolean isWrite = false;
         Long value =  (Long) src.get(field.dbFieldName) ;
         if (value!= null) {
             long dateValue = (value - DATE_ZERO) / 1000;
-            String valueString = LongEncoded.toString(dateValue, LongEncoded.MAX_RADIX);
+            String valueString = LongEncoded.toString(dateValue, radix);
             if (isSmsFieldName) {
                 dest.append( smsFieldName);
             }
@@ -54,13 +70,16 @@ public class DateInSecondeParamEncoder implements IParamEncoder {
     }
 
 
+    // ===========================================================
+    //   Decoder Accessor
+    // ===========================================================
 
-    private  long readToDate(MessageParamType field, String value, int radix) {
-        long result = LongEncoded.parseLong(value, radix);
+    @Override
+    public int readTo(DecoderAdapter dest, String encoded, MessageParamField field ) {
+        long result = LongEncoded.parseLong(encoded, radix);
         long dateAsLong = (result * 1000) + DATE_ZERO;
-        return dateAsLong;
+        dest.putLong(field.dbFieldName, dateAsLong);
+        return 1;
     }
-
-
 
 }
