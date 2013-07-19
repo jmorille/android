@@ -1,6 +1,6 @@
 package eu.ttbox.geoping.encoder.params.sandbox;
 
- 
+
 
 import java.util.ArrayList;
 import java.util.BitSet;

@@ -34,6 +34,8 @@ public enum MessageParamEnum {
     //    EVT_SIM_PHONE('i', ParamTypeEncoding.STRING, "EVT_SIM_PHONE"),
     PHONE_NUMBER('n', MessageParamField.PHONE_NUMBER), //
     EVT_DATE('t', MessageParamField.COL_EVT_TIME); //
+
+    // Instance
     public final char smsFieldName;
     public final MessageParamField type;
     public final MessageParamField[] multiFieldName;
@@ -58,10 +60,12 @@ public enum MessageParamEnum {
 
 
     public static MessageParamEnum getByDbFieldName(String key) {
+        //FIXME
         return null;
     }
 
     public static MessageParamEnum getBySmsFieldName(char key) {
+        //FIXME
         return null;
     }
 }

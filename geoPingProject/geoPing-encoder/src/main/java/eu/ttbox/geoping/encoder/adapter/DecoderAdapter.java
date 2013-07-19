@@ -2,6 +2,8 @@ package eu.ttbox.geoping.encoder.adapter;
 
 public interface DecoderAdapter {
 
+    boolean isEmpty();
+
     boolean containsKey(String key);
 
     void putString(String dbFieldName, String decodedValue);

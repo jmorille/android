@@ -21,12 +21,7 @@ public class ParamEncoderHelper {
     //   Encoder
     // ===========================================================
 
-    public static StringBuilder encodeMessage(EncoderAdapter extras, StringBuilder dest) {
-        return encodeMessage(extras, dest, NUMBER_ENCODER_RADIX);
-    }
-
-
-    public static StringBuilder encodeMessage(EncoderAdapter extras, StringBuilder dest, int radix) {
+    public static StringBuilder encodeMessage(EncoderAdapter extras, StringBuilder dest ) {
         StringBuilder sb = dest != null ? dest : new StringBuilder( SMS_MAX_SIZE_7BITS);
         boolean isNotFirst = false;
         // Single Field

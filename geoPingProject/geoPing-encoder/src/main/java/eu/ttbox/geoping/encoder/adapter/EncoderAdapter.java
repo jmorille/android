@@ -5,6 +5,8 @@ import java.util.Set;
 
 public interface EncoderAdapter {
 
+    boolean isEmpty();
+
     public boolean containsKey(String key);
 
     public Object get(String key);

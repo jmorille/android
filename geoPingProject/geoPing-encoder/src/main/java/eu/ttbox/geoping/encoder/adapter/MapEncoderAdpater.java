@@ -2,6 +2,7 @@ package eu.ttbox.geoping.encoder.adapter;
 
 
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +14,10 @@ public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
     //   Constructor
     // ===========================================================
 
+    public MapEncoderAdpater() {
+        this(new HashMap<String, Object>());
+    }
+
     public MapEncoderAdpater(Map<String, Object> mMap) {
         this.mMap = mMap;
     }
@@ -23,6 +28,10 @@ public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
 
     public  Map<String, Object> getMap(){
         return mMap;
+    }
+
+    public boolean isEmpty() {
+        return mMap.isEmpty();
     }
 
     @Override
