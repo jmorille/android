@@ -5,10 +5,10 @@ import java.util.Calendar;
 
 import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
+import eu.ttbox.geoping.encoder.params.IParamEncoder;
 import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.encoder.params.helper.IntegerEncoded;
 import eu.ttbox.geoping.encoder.params.helper.LongEncoded;
-import eu.ttbox.geoping.encoder.params.IParamEncoder;
 
 public class DateInSecondeParamEncoder implements IParamEncoder {
 

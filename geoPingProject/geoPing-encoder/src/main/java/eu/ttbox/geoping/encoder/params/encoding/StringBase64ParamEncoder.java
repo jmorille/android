@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.encoder.params.encoding;
 
-import android.util.Log;
-
 import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
 import eu.ttbox.geoping.encoder.params.IParamEncoder;

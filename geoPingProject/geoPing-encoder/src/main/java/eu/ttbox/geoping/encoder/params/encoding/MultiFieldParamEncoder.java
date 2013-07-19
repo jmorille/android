@@ -2,8 +2,8 @@ package eu.ttbox.geoping.encoder.params.encoding;
 
 import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
-import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.encoder.params.IParamEncoder;
+import eu.ttbox.geoping.encoder.params.MessageParamField;
 
 public class MultiFieldParamEncoder implements IParamEncoder {
 
@@ -77,7 +77,7 @@ public class MultiFieldParamEncoder implements IParamEncoder {
                 // Log.d(TAG, String.format("Read Multi Field(%s) %s : %s", i,
                 // colData, s));
                 if (s != null && s.length() > 0) {
-                    multiField.readTo(  dest, s, multiField );
+                    multiField.readTo(dest, s, multiField);
                 }
                 start = idx + 1;
             }

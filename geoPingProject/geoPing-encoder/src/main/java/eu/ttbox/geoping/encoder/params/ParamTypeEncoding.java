@@ -1,7 +1,6 @@
 package eu.ttbox.geoping.encoder.params;
 
 
-import eu.ttbox.geoping.encoder.params.IParamEncoder;
 import eu.ttbox.geoping.encoder.params.encoding.DateInSecondeParamEncoder;
 import eu.ttbox.geoping.encoder.params.encoding.GpsProviderParamEncoder;
 import eu.ttbox.geoping.encoder.params.encoding.IntegerParamEncoder;

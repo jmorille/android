@@ -1,9 +1,10 @@
 package eu.ttbox.geoping.encoder.params.sandbox;
 
-import android.util.Log;
+ 
 
 import java.util.ArrayList;
 import java.util.BitSet;
+
 import eu.ttbox.geoping.encoder.params.helper.BitSetHelper;
 
 public class GeoPingLocationProviders {
@@ -78,7 +79,7 @@ public class GeoPingLocationProviders {
 
 		int idxBit = bits.nextSetBit(SPLIT_LIMIT);
 		do {
-			Log.d("GeoPingLocationProviders", "getAvailables  idxBit=" + idxBit);
+			//TODO Log.d("GeoPingLocationProviders", "getAvailables  idxBit=" + idxBit);
 			if (idxBit > -1) {
 				int idxEnum = idxBit - SPLIT_LIMIT;
 				ProviderEnum val =  ProviderEnum.values()[idxEnum];

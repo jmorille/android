@@ -1,10 +1,9 @@
 package eu.ttbox.geoping.encoder.params;
 
 import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
-import eu.ttbox.geoping.encoder.model.MessageParamEnum;
-
-import eu.ttbox.geoping.encoder.params.helper.IntegerEncoded;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
+import eu.ttbox.geoping.encoder.params.helper.IntegerEncoded;
 
 public class ParamEncoderHelper {
 
@@ -16,11 +15,6 @@ public class ParamEncoderHelper {
     public static final int SMS_MAX_SIZE_7BITS = 160;
     public static final int SMS_MAX_SIZE_8BITS = 140;
     public static final int SMS_MAX_BITS_ARRAY_SIZE =  1120;
-
-
-    // ===========================================================
-    //   Decoder
-    // ===========================================================
 
 
     // ===========================================================

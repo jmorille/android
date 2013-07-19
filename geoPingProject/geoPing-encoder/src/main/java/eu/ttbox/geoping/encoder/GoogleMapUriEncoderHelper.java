@@ -1,9 +1,5 @@
 package eu.ttbox.geoping.encoder;
 
-import android.os.Bundle;
-
-import java.util.Locale;
-
 /**
  * <a href="https://developers.google.com/maps/documentation/ios/urlscheme">Ios Scheme</a>
  */

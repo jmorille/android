@@ -2,8 +2,8 @@ package eu.ttbox.geoping.encoder.params.encoding;
 
 import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
-import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.encoder.params.IParamEncoder;
+import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.encoder.params.helper.LongEncoded;
 
 
