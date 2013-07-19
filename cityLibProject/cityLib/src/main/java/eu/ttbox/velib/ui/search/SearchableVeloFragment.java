@@ -189,7 +189,7 @@ public class SearchableVeloFragment extends Fragment {
     public void doSearchFavorite(int velibProvider) {
         if (velibProvider < 0) {
             Location lastLocation =  getLastKnownLocation();
-            GeoPoint lastKnownLocationAsGeoPoint =  new GeoPoint(lastLocation);
+            GeoPoint lastKnownLocationAsGeoPoint = lastLocation!=null ? new GeoPoint(lastLocation) : null;
             VelibProvider velibProviderEnum =  VelibProviderHelper.computeConditionVelibProvider(sharedPreferences, lastKnownLocationAsGeoPoint);
             if (velibProviderEnum!=null) {
                 velibProvider = velibProviderEnum.getProvider();
