@@ -12,6 +12,9 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 import eu.ttbox.geoping.service.encoder.params.SmsType;
 
+/**
+ * @deprecated Use MessageParamEnum
+ */
 public enum SmsMessageLocEnum {
 
     // Loc

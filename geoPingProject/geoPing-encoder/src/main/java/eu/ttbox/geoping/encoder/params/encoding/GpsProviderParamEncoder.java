@@ -50,12 +50,12 @@ public class GpsProviderParamEncoder implements IParamEncoder {
     public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamField field, char smsFieldName, boolean isSmsFieldName ) {
         boolean isWrite = false;
         String value = (String)src.get(field.dbFieldName);
-        value = locProviderDecoder.get(value);
-        if (value!=null && value.length()>0) {
+        String encodedValue = locProviderEncoder.get(value);
+        if (encodedValue!=null && encodedValue.length()>0) {
             if (isSmsFieldName) {
                 dest.append( smsFieldName);
             }
-            dest.append(value);
+            dest.append(encodedValue);
             isWrite = true;
         }
         return isWrite;

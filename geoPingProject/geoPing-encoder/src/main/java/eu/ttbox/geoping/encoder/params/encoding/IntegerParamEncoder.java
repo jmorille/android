@@ -42,7 +42,7 @@ public class IntegerParamEncoder implements IParamEncoder {
             if (isSmsFieldName) {
                 dest.append( smsFieldName);
             }
-            dest.append(value);
+            dest.append(valueString);
             isWrite = true;
         }
         return isWrite;

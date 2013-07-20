@@ -26,6 +26,7 @@ public class ParamEncoderHelper {
         boolean isNotFirst = false;
         // Single Field
         for (String key : extras.keySet()) {
+            System.out.println("encodeMessage key : "  + key);
             // Check Null Values
             Object keyValue = extras.get(key);
             if (keyValue == null) {
@@ -35,13 +36,23 @@ public class ParamEncoderHelper {
             // Specific Field
             MessageParamEnum fieldEnum = MessageParamEnum.getByDbFieldName(key);
             if (fieldEnum != null) {
-                MessageParamField type = fieldEnum.type;
-                IParamEncoder typeEncoding = null; //(IParamEncoder)type.wantedWriteType ;
-              //  typeEncoding.writeTo(extras, dest, type, keyValue);
+                // Add Separator
+                isNotFirst = addFieldSep(sb, isNotFirst);
+                // Write Field
+                fieldEnum.writeTo(extras, dest );
 
             }
         }
         return sb;
+    }
+
+    private static boolean addFieldSep(StringBuilder sb, boolean isNotFirst) {
+        if (isNotFirst) {
+            sb.append(FIELD_SEP);
+        } else {
+            return true;
+        }
+        return isNotFirst;
     }
 
     // ===========================================================

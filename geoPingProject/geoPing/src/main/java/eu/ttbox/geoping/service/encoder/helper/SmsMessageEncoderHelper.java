@@ -7,6 +7,9 @@ import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
+/**
+ * @deprecated Use
+ */
 public class SmsMessageEncoderHelper {
 	public final static String TAG = "SmsMessageEncoderHelper";
 

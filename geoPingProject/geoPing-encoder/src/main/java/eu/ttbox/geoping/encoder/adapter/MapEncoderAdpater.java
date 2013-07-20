@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import eu.ttbox.geoping.encoder.params.MessageParamField;
+
 public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
 
     private Map<String, Object> mMap;
@@ -169,23 +171,46 @@ public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
     }
 
     @Override
+    public void putString(MessageParamField key, String value) {
+        mMap.put(key.dbFieldName, value);
+    }
+
+    @Override
     public void putInt(String key, int value) {
         mMap.put(key, value);
     }
 
     @Override
+    public void putInt(MessageParamField key, int value) {
+        mMap.put(key.dbFieldName, value);
+    }
+
+
+    @Override
     public void putLong(String key, long value) {
         mMap.put(key, value);
+    }
+    @Override
+    public void putLong(MessageParamField key, long value) {
+        mMap.put(key.dbFieldName, value);
     }
 
     @Override
     public void putFloat(String key, float value){
         mMap.put(key, Float.valueOf( value));
     }
+    @Override
+    public void putFloat(MessageParamField key, float value){
+        mMap.put(key.dbFieldName, Float.valueOf( value));
+    }
 
     @Override
     public void putDouble(String key, double value) {
         mMap.put(key, value);
+    }
+    @Override
+    public void putDouble(MessageParamField key, double value) {
+        mMap.put(key.dbFieldName, value);
     }
 
 }

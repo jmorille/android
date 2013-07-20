@@ -28,6 +28,7 @@ public class DateInSecondeParamEncoder implements IParamEncoder {
         long timeAtMidnight = cal.getTimeInMillis();
         return timeAtMidnight;
     }
+
     public final int radix;
 
 

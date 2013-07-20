@@ -1,7 +1,6 @@
 package eu.ttbox.geoping.encoder;
 
 
-import android.os.Bundle;
 
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
 import eu.ttbox.geoping.encoder.crypto.TextEncryptor;
