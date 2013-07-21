@@ -1,11 +1,18 @@
 package eu.ttbox.geoping.encoder.adapter;
 
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.encoder.params.MessageParamField;
 
 public interface DecoderAdapter {
 
-    boolean isEmpty();
+    DecoderAdapter newInstance();
 
+
+    void setAction(MessageActionEnum action);
+    void setPhone(String phone);
+
+
+    boolean isEmpty();
     boolean containsKey(String key);
 
     void putString(String dbFieldName, String decodedValue);

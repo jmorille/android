@@ -26,7 +26,6 @@ public class ParamEncoderHelper {
         boolean isNotFirst = false;
         // Single Field
         for (String key : extras.keySet()) {
-            System.out.println("encodeMessage key : "  + key);
             // Check Null Values
             Object keyValue = extras.get(key);
             if (keyValue == null) {
@@ -82,7 +81,7 @@ public class ParamEncoderHelper {
         if (fieldEnum != null) {
             String valueEncoded = encoded.substring(startIdx + 1, sepIdx);
             MessageParamField field = fieldEnum.type;
-            field.wantedWriteType.readTo(result, valueEncoded, field);
+            field.readTo(result, valueEncoded, field);
         }
 
     }

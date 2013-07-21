@@ -6,11 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.encoder.params.MessageParamField;
 
 public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
 
     private Map<String, Object> mMap;
+
+    private MessageActionEnum action;
+    private String phone;
+
 
     // ===========================================================
     //   Constructor
@@ -24,9 +29,34 @@ public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
         this.mMap = mMap;
     }
 
+    @Override
+    public MapEncoderAdpater newInstance() {
+        return new MapEncoderAdpater();
+    }
+
     // ===========================================================
     //   Direct Accessor
     // ===========================================================
+
+    @Override
+    public MessageActionEnum getAction() {
+        return action;
+    }
+
+    @Override
+    public void setAction(MessageActionEnum action) {
+        this.action = action;
+    }
+
+    @Override
+    public String getPhone() {
+        return phone;
+    }
+
+    @Override
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public  Map<String, Object> getMap(){
         return mMap;
@@ -93,6 +123,7 @@ public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
         return getBoolean(key, false);
     }
 
+
     public boolean getBoolean(String key, boolean defaultValue) {
         Object o = mMap.get(key);
         if (o == null) {
@@ -104,6 +135,11 @@ public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
             typeWarning(key, o, "Boolean", defaultValue, e);
             return defaultValue;
         }
+    }
+
+
+    public int getInt(String key) {
+        return getInt(key, 0);
     }
 
     public int getInt(String key, int defaultValue) {
@@ -118,6 +154,7 @@ public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
             return defaultValue;
         }
     }
+
 
     public long getLong(String key, long defaultValue) {
         Object o = mMap.get(key);
@@ -145,6 +182,7 @@ public class MapEncoderAdpater implements EncoderAdapter, DecoderAdapter {
             return null;
         }
     }
+
 
     public String getString(String key, String defaultValue) {
         Object o = mMap.get(key);
