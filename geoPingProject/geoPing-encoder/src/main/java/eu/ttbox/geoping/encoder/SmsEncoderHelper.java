@@ -63,8 +63,11 @@ public class SmsEncoderHelper {
         return encryped.startsWith(GEOPING_MSGID);
     }
 
-    public static DecoderAdapter[] decodeSmsMessage(DecoderAdapter dest, String phone, String encryped, int radix, TextEncryptor textEncryptor) {
-        DecoderAdapter[] result = null;
+    private static final int NO_MESSAGE_TO_DECODE = -1;
+
+
+    public static <T extends DecoderAdapter>  List<T> decodeSmsMessage(T dest, String phone, String encryped,  TextEncryptor textEncryptor) {
+        List<T> result = null;
         String decodedBody = null;
         // What is my body
         if (isGeoPingEncodedSmsMessageObsuscated(encryped)) {
@@ -78,28 +81,26 @@ public class SmsEncoderHelper {
             int startIdx = 0;
             DecoderAdapter resultLast;
             MessageActionEnum actionLast = null;
-            DecoderAdapter resultUnit = dest;
-            List<DecoderAdapter> multiMessage = new ArrayList<DecoderAdapter>();
+            T resultUnit = dest;
+            List<T> multiMessage = new ArrayList<T>();
            // Log.d(TAG, String.format("Decode SmsMessage : %s", decodedBody));
             while ((startIdx = decodeSmsMessageBody(resultUnit, phone, decodedBody, startIdx, actionLast)) >= 0) {
-                if (resultLast != null) {
-                    startIdx = resultLast.nextStartIdx;
-                    if (result == null) {
-                        result = resultLast;
-                    } else {
-                        // Multi-actions
-                        result.addMultiMessage(resultLast);
-                    }
-                    actionLast = resultLast.action;
+                if (startIdx > NO_MESSAGE_TO_DECODE) {
+                    multiMessage.add(resultUnit);
+                    actionLast = resultUnit.getAction();
+                    // Prepare next It
+                    resultUnit = resultUnit.newInstance();
                 }
             }
+            // Prepare result
+
+            result = multiMessage; //(T[])multiMessage.toArray( ); // new T[multiMessage.size()]
         }
         return result;
     }
 
-    private static final int NO_MESSAGE_TO_DECODE = -1;
 
-    private static int decodeSmsMessageBody(DecoderAdapter dest, final String phone, final String encodedMsg, final int pStartIdx, MessageActionEnum actionLast) {
+    private static <T extends DecoderAdapter> int decodeSmsMessageBody(T dest, final String phone, final String encodedMsg, final int pStartIdx, MessageActionEnum actionLast) {
         int nextStartIdx =  -1;
         int startIdx = pStartIdx;
         //Log.d(TAG, String.format("Decode SmsMessage Body (startIdx=%s) : %s", startIdx, encodedMsg));

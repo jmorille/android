@@ -26,10 +26,14 @@
             <version>${osm-lib.version}</version>
             <type>apklib</type>
         </dependency>
-
         <dependency>
             <groupId>eu.ttbox.android.geoping</groupId>
             <artifactId>geoPing-Endpoints</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.ttbox.android.geoping</groupId>
+            <artifactId>geoPing-encoder</artifactId>
             <version>${project.version}</version>
         </dependency>
 

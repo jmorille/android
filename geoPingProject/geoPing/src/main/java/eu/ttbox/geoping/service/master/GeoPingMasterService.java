@@ -44,6 +44,7 @@ import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
@@ -158,7 +159,7 @@ public class GeoPingMasterService extends IntentService {
             Log.i(TAG, "****************************************************");
             Log.i(TAG, "****************************************************");
         } else {
-            SmsMessageActionEnum actionEnum = SmsMessageActionEnum.getByIntentName(action);
+            MessageActionEnum actionEnum = MessageActionEnum.getByIntentName(action);
             if (actionEnum != null) {
                 switch (actionEnum) {
                     case COMMAND_OPEN_APP: {
@@ -279,7 +280,7 @@ public class GeoPingMasterService extends IntentService {
     // ===========================================================
     // Send GeoPing Commande
     // ===========================================================
-    private void sendSmsCommand(SmsMessageActionEnum actionEnum, String phone, Bundle params) {
+    private void sendSmsCommand(MessageActionEnum actionEnum, String phone, Bundle params) {
         boolean isSend = sendSms(phone, actionEnum, params);
     }
 
@@ -296,7 +297,7 @@ public class GeoPingMasterService extends IntentService {
             // getContentResolver().update(entityUri, values, null, null);
         }
         Bundle params = SmsMessageLocEnum.PERSON_ID.writeToBundle(null, userId);
-        boolean isSend = sendSms(phone, SmsMessageActionEnum.ACTION_GEO_PAIRING, params);
+        boolean isSend = sendSms(phone, MessageActionEnum.ACTION_GEO_PAIRING, params);
         if (isSend) {
             Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, getResources().getString(R.string.toast_notif_sended_geoping_pairing, phone));
             uiHandler.sendMessage(msg);
@@ -309,7 +310,7 @@ public class GeoPingMasterService extends IntentService {
 
     private void sendSmsGeoPingRequest(String phone, Bundle params) {
         Bundle geopingRequest = SmsSenderHelper.completeRequestTimeOutFromPrefs(appPreferences, params);
-        boolean isSend = sendSms(phone, SmsMessageActionEnum.GEOPING_REQUEST, geopingRequest);
+        boolean isSend = sendSms(phone, MessageActionEnum.GEOPING_REQUEST, geopingRequest);
         Log.d(TAG, String.format("Send SMS GeoPing %s : %s", phone, geopingRequest));
         // Display Notif
         if (isSend) {
@@ -323,7 +324,7 @@ public class GeoPingMasterService extends IntentService {
         // Toast.LENGTH_SHORT).show();
     }
 
-    private boolean sendSms(String phone, SmsMessageActionEnum action, Bundle params) {
+    private boolean sendSms(String phone, MessageActionEnum action, Bundle params) {
         boolean isSend = false;
 
         if (phone == null || phone.length() < 1) {
@@ -354,7 +355,7 @@ public class GeoPingMasterService extends IntentService {
         return isConsume;
     }
 
-    private boolean consumeGeoPingResponse(SmsMessageActionEnum actionEnum, Bundle bundle) {
+    private boolean consumeGeoPingResponse(MessageActionEnum actionEnum, Bundle bundle) {
         boolean isConsume = false;
         String phone = bundle.getString(Intents.EXTRA_SMS_PHONE);
         Bundle params = bundle.getBundle(Intents.EXTRA_SMS_PARAMS);
@@ -418,7 +419,7 @@ public class GeoPingMasterService extends IntentService {
     // ===========================================================
 
     @SuppressLint("NewApi")
-    private void showNotificationGeoPing(SmsMessageActionEnum actionEnum, Uri geoTrackData, ContentValues values, GeoTrack geoTrack,  Bundle params) {
+    private void showNotificationGeoPing(MessageActionEnum actionEnum, Uri geoTrackData, ContentValues values, GeoTrack geoTrack,  Bundle params) {
         String phone = values.getAsString(GeoTrackColumns.COL_PHONE);
 
         // Contact Name
@@ -440,7 +441,7 @@ public class GeoPingMasterService extends IntentService {
                 photo = ContactHelper.openPhotoBitmap(this, photoCache, String.valueOf(contactVo.id), phone);
             }
         }
-        // --- Create Notif Intent response ---
+        // --- Create Notif Intent response ---7
         // --- ---------------------------- ---
         // --- Create Parent
         // Create an explicit content Intent that starts the main Activity
@@ -469,7 +470,7 @@ public class GeoPingMasterService extends IntentService {
 
         // Create Notifiation
         Log.d(TAG, "----- contentTitle with Bundle : " + params);
-        String contentTitle = getString(actionEnum.labelResourceId);
+        String contentTitle = MessageActionEnumLabelHelper.getString(getContext(), actionEnum);
         if (SmsMessageLocEnum.GEOFENCE_NAME.isToBundle(params)) {
             String geofenceName = SmsMessageLocEnum.GEOFENCE_NAME.readString(params);
             if (SmsMessageActionEnum.GEOFENCE_ENTER.equals(actionEnum)) {

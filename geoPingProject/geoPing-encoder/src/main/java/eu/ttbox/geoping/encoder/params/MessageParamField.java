@@ -1,5 +1,7 @@
 package eu.ttbox.geoping.encoder.params;
 
+import java.util.Arrays;
+
 import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.adapter.EncoderAdapter;
 
@@ -50,6 +52,15 @@ public class MessageParamField implements IParamEncoder {
         this.multiFields = multiFields;
     }
 
+    @Override
+    public String toString() {
+        return "MessageParamField{" +
+                "dbFieldName='" + dbFieldName + '\'' +
+                ", wantedWriteType=" + wantedWriteType +
+                ", multiFields=" + Arrays.toString(multiFields) +
+                '}';
+    }
+
 
     // ===========================================================
     // Builder
@@ -88,5 +99,7 @@ public class MessageParamField implements IParamEncoder {
     // ===========================================================
     //  Other
     // ===========================================================
+
+
 
 }

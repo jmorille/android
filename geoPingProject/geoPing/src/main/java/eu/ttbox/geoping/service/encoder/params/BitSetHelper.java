@@ -2,6 +2,7 @@ package eu.ttbox.geoping.service.encoder.params;
 
 import java.util.BitSet;
 
+@Deprecated
 public class BitSetHelper {
 
     public static BitSet convert(long value) {

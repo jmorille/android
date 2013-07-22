@@ -5,10 +5,15 @@ import java.util.HashMap;
 
 public enum MessageActionEnum {
 
-    GEOPING_REQUEST("WRY"), //
-    ACTION_GEO_PAIRING("PAQ"), //
+    // --- Is consume Slave
+    // ----------------------
+    GEOPING_REQUEST("WRY", false), //
+    ACTION_GEO_PAIRING("PAQ", false), //
+    // Remote Controle
+    COMMAND_OPEN_APP ("cop", false ), //
 
-    // Master
+    // --- Is consume Master
+    // ----------------------
     LOC("LOC"), //
     LOC_DECLARATION("lod" ), //
     ACTION_GEO_PAIRING_RESPONSE("PAR"  ), //
@@ -16,8 +21,6 @@ public enum MessageActionEnum {
     GEOFENCE_Unknown_transition("fen"   ), //
     GEOFENCE_ENTER("fei" ), //
     GEOFENCE_EXIT("feo"  ), //
-    // Remote Controle
-    COMMAND_OPEN_APP ("cop" ), //
     // Spy Event Notif
     SPY_SHUTDOWN("esd" ), //
     SPY_BOOT("esb" ), //
@@ -29,13 +32,20 @@ public enum MessageActionEnum {
     // Constructor
     // ===========================================================
 
-    private MessageActionEnum(String smsAction ) {
+    private MessageActionEnum(String smsAction  ) {
+        this(smsAction, true);
+    }
+
+    private MessageActionEnum(String smsAction,  boolean isConsumeMaster ) {
         this.smsAction = smsAction;
         this.intentAction = "eu.ttbox.geoping.SMS_ACTION_" + name();
+        this.isConsumeMaster = isConsumeMaster;
     }
 
     public final String smsAction;
     public final String intentAction;
+    public final boolean isConsumeMaster;
+
 
     // ===========================================================
     // Conversion Init
@@ -82,10 +92,21 @@ public enum MessageActionEnum {
             }
         }
     }
+    // ===========================================================
+    // Business Accessor
+    // ===========================================================
+
+    public String getDbCode() {
+        return this.name();
+    }
 
     // ===========================================================
     // Static Accessor
     // ===========================================================
+    public static MessageActionEnum getByDbCode(String dbCode) {
+        return getByEnumName(dbCode);
+    }
+
     public static MessageActionEnum getByEnumName(String fieldName) {
         return byEnumNames.get(fieldName);
     }

@@ -5,6 +5,7 @@ package eu.ttbox.geoping.service.encoder.params;
  * http://javasourcecode.org/html/open-source/jdk/jdk-6u23/java.lang/Long.java
  * .html}  
  */
+@Deprecated
 public class LongEncoded {
 
     private static final long MULTMIN_RADIX_TEN = Long.MIN_VALUE / 10;

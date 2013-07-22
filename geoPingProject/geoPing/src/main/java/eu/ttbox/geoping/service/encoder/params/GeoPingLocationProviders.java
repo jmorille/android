@@ -5,6 +5,7 @@ import java.util.BitSet;
 
 import android.util.Log;
 
+@Deprecated
 public class GeoPingLocationProviders {
 
 	private static final int SPLIT_LIMIT = 4;

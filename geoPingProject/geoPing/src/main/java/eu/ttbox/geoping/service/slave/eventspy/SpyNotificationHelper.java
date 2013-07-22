@@ -13,6 +13,7 @@ import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
@@ -23,7 +24,7 @@ public class SpyNotificationHelper {
     private static final String TAG = "SpyNotificationHelper";
 
 
-    public static String[] searchListPhonesForGeofenceViolation(Context context,  List<CircleGeofence> geofences, SmsMessageActionEnum transitionType) {
+    public static String[] searchListPhonesForGeofenceViolation(Context context,  List<CircleGeofence> geofences, MessageActionEnum transitionType) {
         // TODO Use geofences and transitionType to Calculate
         // Query
         String[] projection = new String[]{PairingDatabase.PairingColumns.COL_PHONE};
@@ -96,7 +97,7 @@ public class SpyNotificationHelper {
         return cursor;
     }
 
-    public static void sendEventSpySmsMessage(Context context,String[] phones, SmsMessageActionEnum eventType, Bundle eventParams) {
+    public static void sendEventSpySmsMessage(Context context,String[] phones, MessageActionEnum eventType, Bundle eventParams) {
         if (phones != null) {
             Log.d(TAG, "EventSpy Notification  : " + eventType + " for " + phones.length + " phones destinations");
             // Send SMS
@@ -104,7 +105,7 @@ public class SpyNotificationHelper {
             if (!SmsMessageLocEnum.EVT_DATE.isToBundle(params)) {
                 SmsMessageLocEnum.EVT_DATE.writeToBundle(params, System.currentTimeMillis());
             }
-            if (SmsMessageActionEnum.SPY_SHUTDOWN.equals(eventType)) {
+            if (MessageActionEnum.SPY_SHUTDOWN.equals(eventType)) {
                 // Not time to get GeoLoc, send it direct
                 for (String phone : phones) {
                     SmsSenderHelper.sendSmsAndLogIt(context, SmsLogSideEnum.SLAVE, phone, eventType, params);

@@ -1,18 +1,17 @@
-package eu.ttbox.geoping.encoder.adapter;
+package eu.ttbox.geoping.service.encoder.adpater;
 
 
+import android.os.Bundle;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
+import eu.ttbox.geoping.encoder.adapter.EncoderDecoderAdapter;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.encoder.params.MessageParamField;
 
-public class MapEncoderAdpater implements EncoderDecoderAdapter {
+public class BundleEncoderAdapter implements EncoderDecoderAdapter {
 
-    private Map<String, Object> mMap;
-
+    private Bundle mMap;
     private MessageActionEnum action;
     private String phone;
 
@@ -20,18 +19,22 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
     // ===========================================================
     //   Constructor
     // ===========================================================
-
-    public MapEncoderAdpater() {
-        this(new HashMap<String, Object>());
+    public BundleEncoderAdapter() {
+        this(null, new Bundle());
     }
 
-    public MapEncoderAdpater(Map<String, Object> mMap) {
+    public BundleEncoderAdapter(MessageActionEnum action) {
+        this(action, new Bundle());
+    }
+
+    public BundleEncoderAdapter(MessageActionEnum action, Bundle mMap) {
+        this.action = action;
         this.mMap = mMap;
     }
 
     @Override
-    public MapEncoderAdpater newInstance() {
-        return new MapEncoderAdpater();
+    public BundleEncoderAdapter newInstance() {
+        return new BundleEncoderAdapter();
     }
 
     // ===========================================================
@@ -58,7 +61,7 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
         this.phone = phone;
     }
 
-    public  Map<String, Object> getMap(){
+    public Bundle getMap() {
         return mMap;
     }
 
@@ -71,47 +74,15 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
         return mMap.containsKey(key);
     }
 
-     @Override
+    @Override
     public Set<String> keySet() {
         return mMap.keySet();
     }
 
-    // ===========================================================
-    //   Error Management
-    // ===========================================================
-
-
-    private void typeWarning(String key, Object value, String className,
-                             ClassCastException e) {
-        typeWarning(key, value, className, "<null>", e);
-    }
-
-    private void typeWarning(String key, Object value, String className,
-                             Object defaultValue, ClassCastException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Key ");
-        sb.append(key);
-        sb.append(" expected ");
-        sb.append(className);
-        sb.append(" but value was a ");
-        sb.append(value.getClass().getName());
-        sb.append(".  The default value ");
-        sb.append(defaultValue);
-        sb.append(" was returned.");
-        // Print Type Warning to Log
-        logTypeWarning(sb, e);
-    }
-
-
-    public void logTypeWarning(StringBuilder typeWarning, ClassCastException e ) {
-        //TODO     Log.w(LOG_TAG, sb.toString());
-        // TODO     Log.w(LOG_TAG, "Attempt to cast generated internal exception:", e);
-    }
 
     // ===========================================================
     //   Encoder Accessor
     // ===========================================================
-
 
     @Override
     public Object get(String key) {
@@ -120,21 +91,12 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
 
 
     public boolean getBoolean(String key) {
-        return getBoolean(key, false);
+        return mMap.getBoolean(key);
     }
 
 
     public boolean getBoolean(String key, boolean defaultValue) {
-        Object o = mMap.get(key);
-        if (o == null) {
-            return defaultValue;
-        }
-        try {
-            return (Boolean) o;
-        } catch (ClassCastException e) {
-            typeWarning(key, o, "Boolean", defaultValue, e);
-            return defaultValue;
-        }
+       return mMap.getBoolean(key, defaultValue);
     }
 
     @Override
@@ -145,25 +107,17 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
     public int getInt(MessageParamField key) {
         return getInt(key.dbFieldName);
     }
+
     @Override
     public int getInt(String key) {
-        return getInt(key, 0);
+        return mMap.getInt(key);
     }
     @Override
     public int getInt(String key, int defaultValue) {
-        Object o = mMap.get(key);
-        if (o == null) {
-            return defaultValue;
-        }
-        try {
-            return (Integer) o;
-        } catch (ClassCastException e) {
-            typeWarning(key, o, "Integer", defaultValue, e);
-            return defaultValue;
-        }
+        return  mMap.getInt(key, defaultValue);
     }
 
-    @Override
+   @Override
     public long getLong(MessageParamField key ) {
         return  getLong(key.dbFieldName);
     }
@@ -173,21 +127,13 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
     }
     @Override
     public long getLong(String key ) {
-        return getLong(key, 0 );
+        return mMap.getLong(key);
     }
     @Override
     public long getLong(String key, long defaultValue) {
-        Object o = mMap.get(key);
-        if (o == null) {
-            return defaultValue;
-        }
-        try {
-            return (Long) o;
-        } catch (ClassCastException e) {
-            typeWarning(key, o, "Long", defaultValue, e);
-            return defaultValue;
-        }
+       return mMap.getLong(key, defaultValue);
     }
+
 
     @Override
     public float getFloat(MessageParamField key ) {
@@ -199,20 +145,11 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
     }
     @Override
     public float getFloat(String key ) {
-        return getFloat(key, 0 );
+        return mMap.getFloat(key);
     }
     @Override
     public float getFloat(String key, float defaultValue) {
-        Object o = mMap.get(key);
-        if (o == null) {
-            return defaultValue;
-        }
-        try {
-            return (Float) o;
-        } catch (ClassCastException e) {
-            typeWarning(key, o, "Float", defaultValue, e);
-            return defaultValue;
-        }
+        return mMap.getFloat(key, defaultValue);
     }
 
 
@@ -220,15 +157,13 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
     public String getString(MessageParamField key) {
         return getString(key.dbFieldName);
     }
-
     @Override
     public String getString(MessageParamField key, String defaultValue) {
         return getString(key.dbFieldName, defaultValue);
     }
-
     @Override
     public String getString(String key) {
-        return  getString(key, null);
+        return mMap.getString(key);
     }
     @Override
     public String getString(String key, String defaultValue) {
@@ -239,7 +174,7 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
         try {
             return (String) o;
         } catch (ClassCastException e) {
-            typeWarning(key, o, "String", e);
+            //TODO   mMap.typeWarning(key, o, "String", e);
             return defaultValue;
         }
     }
@@ -252,61 +187,61 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
 
     @Override
     public void putString(String key, String value) {
-        mMap.put(key, value);
+        mMap.putString(key, value);
     }
 
     @Override
     public void putString(MessageParamField key, String value) {
-        mMap.put(key.dbFieldName, value);
+        mMap.putString(key.dbFieldName, value);
     }
 
     @Override
     public void putInt(String key, int value) {
-        mMap.put(key, value);
+        mMap.putInt(key, value);
     }
 
     @Override
     public void putInt(MessageParamField key, int value) {
-        mMap.put(key.dbFieldName, value);
+        mMap.putInt(key.dbFieldName, value);
     }
 
 
     @Override
     public void putLong(String key, long value) {
-        mMap.put(key, value);
+        mMap.putLong(key, value);
     }
     @Override
     public void putLong(MessageParamField key, long value) {
-        mMap.put(key.dbFieldName, value);
+        mMap.putLong(key.dbFieldName, value);
     }
 
     @Override
     public void putFloat(String key, float value){
-        mMap.put(key, Float.valueOf( value));
+        mMap.putFloat(key, Float.valueOf(value));
     }
     @Override
     public void putFloat(MessageParamField key, float value){
-        mMap.put(key.dbFieldName, Float.valueOf( value));
+        mMap.putFloat(key.dbFieldName, Float.valueOf(value));
     }
 
     @Override
     public void putDouble(String key, double value) {
-        mMap.put(key, value);
+        mMap.putDouble(key, value);
     }
     @Override
     public void putDouble(MessageParamField key, double value) {
-        mMap.put(key.dbFieldName, value);
+        mMap.putDouble(key.dbFieldName, value);
     }
 
 
     // ===========================================================
-    //   Overide
+    // Override
     // ===========================================================
 
 
     @Override
     public String toString() {
-        return "MapEncoderAdpater{" +
+        return "BundleEncoderAdapter{" +
                 "action=" + action +
                 ", phone='" + phone + '\'' +
                 ", mMap=" + mMap +

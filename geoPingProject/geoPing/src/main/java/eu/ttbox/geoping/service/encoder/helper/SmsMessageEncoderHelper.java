@@ -11,7 +11,7 @@ import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
  * @deprecated Use
  */
 public class SmsMessageEncoderHelper {
-	public final static String TAG = "SmsMessageEncoderHelper";
+	public final static String TAG = "MessageEncoderHelper";
 
 	public final static String GEOPING_MSGID = "geoPing?";
 	public final static String GEOPING_ENCRYPT_MSGID = "ge0Ping?";

@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 
- 
+
+@Deprecated
 public class GeoPingMessage {
 
     public String phone;

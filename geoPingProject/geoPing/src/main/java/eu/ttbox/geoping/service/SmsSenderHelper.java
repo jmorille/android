@@ -20,9 +20,12 @@ import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
+import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
 import eu.ttbox.geoping.service.encoder.helper.SmsMessageIntentEncoderHelper;
 import eu.ttbox.geoping.service.receiver.MessageAcknowledgeReceiver;
 
@@ -51,9 +54,9 @@ public class SmsSenderHelper {
         return result;
     }
 
-    public static Uri sendSmsAndLogIt(Context context, SmsLogSideEnum side, String phone, SmsMessageActionEnum action, Bundle params) {
+    public static Uri sendSmsAndLogIt(Context context, SmsLogSideEnum side, String phone, MessageActionEnum action, Bundle params) {
         Uri isSend = null;
-        String encrypedMsg = SmsMessageIntentEncoderHelper.encodeSmsMessage(action, params);
+        String encrypedMsg = MessageEncoderHelper.encodeSmsMessage(action, params);
         Log.d(TAG, String.format("Send Request SmsMessage to %s : %s (%s)", phone, action, encrypedMsg));
         if (encrypedMsg != null && encrypedMsg.length() > 0) {
             SmsManager smsManager = SmsManager.getDefault();
@@ -62,7 +65,7 @@ public class SmsSenderHelper {
             int msgSplitCount = msgsplit.size();
             // Log It
             ContentResolver cr = context.getContentResolver();
-            Uri logUri = logSmsMessage(cr, side, SmsLogTypeEnum.SEND_REQ, phone, action, params, msgSplitCount, encrypedMsg);
+            Uri logUri = logSmsMessage(cr, side, SmsLogTypeEnum.SEND_REQ, phone, action, params, msgSplitCount, encrypedMsg, null);
 
             // Shot Message Send
             if (msgSplitCount==1) {
@@ -110,16 +113,42 @@ public class SmsSenderHelper {
     // Log Sms message
     // ===========================================================
 
+    /*
+    @Deprecated
     public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side, SmsLogTypeEnum type, GeoPingMessage geoMessage, int smsWeight, String encrypedMsg) {
         return logSmsMessage(cr, side, type, geoMessage.phone, geoMessage.action, geoMessage.params, smsWeight, encrypedMsg);
     }
 
+    @Deprecated
     public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side, SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, int smsWeight, String encrypedMsg) {
         ContentValues values = SmsLogHelper.getContentValues(side, type, phone, action, params, encrypedMsg);
         values.put(SmsLogColumns.COL_MSG_COUNT, smsWeight);
         Uri logUri = cr.insert(SmsLogProvider.Constants.CONTENT_URI, values);
         return logUri;
     }
+*/
+
+    public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side, SmsLogTypeEnum type
+            , BundleEncoderAdapter geoMessage
+            , int smsWeight, String encrypedMsg
+            , Uri parentUri) {
+        return logSmsMessage(cr, side, type, geoMessage.getPhone(), geoMessage.getAction(), geoMessage.getMap(), smsWeight, encrypedMsg, parentUri);
+    }
+
+    public static Uri logSmsMessage(ContentResolver cr, SmsLogSideEnum side, SmsLogTypeEnum type, String phone
+            , MessageActionEnum action, Bundle params
+            , int smsWeight, String encrypedMsg
+            , Uri parentUri  ) {
+        ContentValues values = SmsLogHelper.getContentValues(side, type, phone, action, params, encrypedMsg);
+        values.put(SmsLogColumns.COL_MSG_COUNT, smsWeight);
+        if (parentUri!=null) {
+            String logParentId = parentUri.getLastPathSegment();
+            values.put(SmsLogColumns.COL_PARENT_ID, logParentId);
+        }
+        Uri logUri = cr.insert(SmsLogProvider.Constants.CONTENT_URI, values);
+        return logUri;
+    }
+
 
     private void printContentValues(ContentValues values) {
         for (Map.Entry<String, Object> key : values.valueSet()) {

@@ -9,6 +9,7 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.service.master.GeoPingMasterService;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
 
+@Deprecated
 public enum SmsMessageActionEnum {
 
 	// Slave

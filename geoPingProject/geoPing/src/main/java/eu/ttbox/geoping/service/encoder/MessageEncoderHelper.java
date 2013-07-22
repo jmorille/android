@@ -1,0 +1,105 @@
+package eu.ttbox.geoping.service.encoder;
+
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+
+import java.util.Arrays;
+import java.util.List;
+
+import eu.ttbox.geoping.core.Intents;
+import eu.ttbox.geoping.encoder.SmsEncoderHelper;
+import eu.ttbox.geoping.encoder.crypto.TextEncryptor;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
+import eu.ttbox.geoping.service.encoder.helper.SmsMessageEncoderHelper;
+import eu.ttbox.geoping.service.master.GeoPingMasterService;
+import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
+
+public class MessageEncoderHelper {
+
+    public static final String TAG = "MessageEncoderHelper";
+
+    // ===========================================================
+    // Encoder
+    // ===========================================================
+
+    public static String encodeSmsMessage(MessageActionEnum action, Bundle params) {
+        BundleEncoderAdapter src = new BundleEncoderAdapter(action, params);
+        TextEncryptor textEncryptor = null;
+        String encrypedMsg = SmsEncoderHelper.encodeSmsMessage( action, src, textEncryptor);
+        return encrypedMsg;
+    }
+
+
+    // ===========================================================
+    // Decoder
+    // ===========================================================
+
+    public static boolean isGeoPingEncodedSmsMessageEncrypted(String encryped) {
+        return SmsEncoderHelper.isGeoPingEncodedSmsMessageEncrypted(encryped);
+    }
+
+    public static  List<BundleEncoderAdapter> decodeSmsMessage( String phone, String encryped,  TextEncryptor textEncryptor) {
+        BundleEncoderAdapter dest = new BundleEncoderAdapter();
+        List<BundleEncoderAdapter> result =   SmsEncoderHelper.decodeSmsMessage(dest,   phone, encryped, textEncryptor);
+        return result;
+    }
+
+    // ===========================================================
+    // GeoPing Service
+    // ===========================================================
+
+    public static boolean startServiceGeoPingMessageAsIntent(Context context, List<BundleEncoderAdapter> msgs) {
+        boolean isConsume = false;
+        if (msgs == null ||  msgs.isEmpty()  || msgs.get(0).getAction() == null) {
+            Log.w(TAG, String.format("Ignore for No Action the GeoPingMessage : %s",  msgs.get(0) ));
+            return isConsume;
+        }
+        for (BundleEncoderAdapter msg : msgs) {
+            Intent intent = convertSingleGeoPingMessageAsIntent(context, msg);
+            if (intent != null) {
+                isConsume = true;
+                context.startService(intent);
+            }
+        }
+        return isConsume;
+    }
+
+
+    private static Intent convertSingleGeoPingMessageAsIntent(Context context, BundleEncoderAdapter msg) {
+        if (msg == null || msg.getAction() == null) {
+            Log.w(TAG, String.format("Ignore for No Action the GeoPingMessage : %s", msg));
+            return null;
+        }
+        MessageActionEnum action = msg.getAction();
+        Log.d(TAG, String.format("Create Intent from %s", msg));
+        // Create Intent
+        Intent intent = new Intent(context, getServiceClassForSmsAction(action)) //
+                .setAction(action.intentAction);//
+
+        if (!msg.isEmpty()) {
+            intent.putExtra(Intents.EXTRA_SMS_PARAMS, msg.getMap());
+        }
+        intent.putExtra(Intents.EXTRA_SMS_ACTION, action);
+        intent.putExtra(Intents.EXTRA_SMS_PHONE, msg.getPhone()); //
+
+        return intent;
+    }
+
+    private static final List<MessageActionEnum> SLAVE_ACTION = Arrays.asList(
+            MessageActionEnum.LOC, MessageActionEnum.ACTION_GEO_PAIRING, MessageActionEnum.COMMAND_OPEN_APP
+    );
+
+    private static Class getServiceClassForSmsAction(MessageActionEnum action) {
+        if (action.isConsumeMaster) {
+            return GeoPingMasterService.class;
+        } else {
+            return GeoPingSlaveService.class;
+        }
+    }
+
+
+}

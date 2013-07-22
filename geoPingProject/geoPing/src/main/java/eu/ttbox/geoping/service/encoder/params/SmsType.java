@@ -4,7 +4,7 @@ import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageTypeEnum;
 
 
-
+@Deprecated
 public class SmsType {
 
     public final String dbFieldName;

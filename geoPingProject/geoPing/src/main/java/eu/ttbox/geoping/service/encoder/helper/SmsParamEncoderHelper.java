@@ -14,6 +14,7 @@ import eu.ttbox.geoping.service.encoder.params.IntegerEncoded;
 import eu.ttbox.geoping.service.encoder.params.LongEncoded;
 import eu.ttbox.geoping.service.encoder.params.SmsType;
 
+@Deprecated
 public class SmsParamEncoderHelper {
 
     public static final int NUMBER_ENCODER_RADIX = IntegerEncoded.MAX_RADIX;

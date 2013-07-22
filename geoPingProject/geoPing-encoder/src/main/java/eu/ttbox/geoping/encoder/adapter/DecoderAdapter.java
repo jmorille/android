@@ -5,11 +5,14 @@ import eu.ttbox.geoping.encoder.params.MessageParamField;
 
 public interface DecoderAdapter {
 
-    DecoderAdapter newInstance();
+    <T extends DecoderAdapter>  T newInstance();
 
 
     void setAction(MessageActionEnum action);
+    MessageActionEnum getAction();
+
     void setPhone(String phone);
+    String getPhone();
 
 
     boolean isEmpty();

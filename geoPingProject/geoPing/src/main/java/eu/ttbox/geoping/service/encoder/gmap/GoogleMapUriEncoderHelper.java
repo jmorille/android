@@ -53,6 +53,6 @@ public class GoogleMapUriEncoderHelper {
                 "  </Placemark>\n" +
                 "</kml>";
 
-
+        return template;
     }
 }

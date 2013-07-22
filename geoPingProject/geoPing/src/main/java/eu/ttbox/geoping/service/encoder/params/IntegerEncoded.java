@@ -7,6 +7,7 @@ package eu.ttbox.geoping.service.encoder.params;
  * 
  * 
  */
+@Deprecated
 public class IntegerEncoded {
 
     /**

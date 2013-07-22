@@ -17,9 +17,11 @@ import eu.ttbox.geoping.domain.model.SmsLog;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
 import eu.ttbox.geoping.service.encoder.params.SmsType;
 
 public class SmsLogHelper {
@@ -56,14 +58,14 @@ public class SmsLogHelper {
         return initialValues;
     }
 
-    public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, GeoPingMessage geoMessage) {
-        return getContentValues(side, type, geoMessage.phone, geoMessage.action, geoMessage.params, null);
+    public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, BundleEncoderAdapter geoMessage) {
+        return getContentValues(side, type, geoMessage.getPhone(), geoMessage.getAction(), geoMessage.getMap(), null);
     }
 
     /**
      * Used for logging sms Message in db
      */
-    public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, String phone, SmsMessageActionEnum action, Bundle params, String messageResult) {
+    public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, String phone,MessageActionEnum action, Bundle params, String messageResult) {
         ContentValues values = new ContentValues();
         values.put(SmsLogColumns.COL_TIME, System.currentTimeMillis());
         values.put(SmsLogColumns.COL_PHONE, phone);

@@ -34,6 +34,7 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.WorkerService;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
@@ -138,10 +139,10 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     // Intent Handler
     // ===========================================================
 
-    public static void runFindLocationAndSendInService(Context context, SmsMessageActionEnum smsAction , String[] phone, Bundle params) {
+    public static void runFindLocationAndSendInService(Context context, MessageActionEnum smsAction , String[] phone, Bundle params) {
         // PowerManager.WakeLock lock = getLock(context);
         // lock.acquire();
-        if (!smsAction.isMasterConsume) {
+        if (!smsAction.isConsumeMaster ) {
             throw new RuntimeException("It shoud be a Master consumer GeoPing Action Service for : " + smsAction);
         }
         
@@ -163,7 +164,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
             // Action
             // GeoPing Request
             String smsAction = intent.getStringExtra(Intents.EXTRA_SMS_ACTION);
-            SmsMessageActionEnum smsActionMsg = SmsMessageActionEnum.getByIntentName(smsAction);
+            MessageActionEnum smsActionMsg = MessageActionEnum.getByIntentName(smsAction);
             registerGeoPingRequest(smsActionMsg, phone, params);
         }
 
@@ -218,7 +219,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     // Geocoding Request
     // ===========================================================
 
-    public boolean registerGeoPingRequest(SmsMessageActionEnum smsAction ,  String[] phoneNumber, Bundle params) {
+    public boolean registerGeoPingRequest(MessageActionEnum smsAction ,  String[] phoneNumber, Bundle params) {
         boolean locProviderEnabled = false;
         synchronized (multiGeoRequestListener) {
             // Acquire Lock
@@ -297,7 +298,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     }
 
     public class GeoPingRequest implements Callable<Boolean>, LocationListener {
-        private SmsMessageActionEnum smsAction;
+        private MessageActionEnum smsAction;
         private  String[] smsPhoneNumber;
         private Bundle params;
 
@@ -310,7 +311,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
             super();
         }
 
-        public GeoPingRequest(SmsMessageActionEnum smsAction,  String[] phoneNumber, Bundle params) {
+        public GeoPingRequest(MessageActionEnum smsAction,  String[] phoneNumber, Bundle params) {
             super();
             this.smsAction = smsAction;
             this.smsPhoneNumber = phoneNumber;
@@ -386,7 +387,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
     // Sender Sms message
     // ===========================================================
 
-    private void sendSmsLocation(SmsMessageActionEnum smsAction,  String[] phones, Location location, Bundle extrasBundles) {
+    private void sendSmsLocation(MessageActionEnum smsAction,  String[] phones, Location location, Bundle extrasBundles) {
         GeoTrack geotrack = new GeoTrack(null, location);
         geotrack.batteryLevelInPercent = batterLevelInPercent;
         Bundle params = GeoTrackHelper.getBundleValues(geotrack); 

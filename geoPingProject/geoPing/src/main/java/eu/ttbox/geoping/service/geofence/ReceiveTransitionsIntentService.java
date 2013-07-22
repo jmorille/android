@@ -36,6 +36,7 @@ import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
@@ -118,7 +119,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
             if ((transition == Geofence.GEOFENCE_TRANSITION_ENTER) || (transition == Geofence.GEOFENCE_TRANSITION_EXIT)) {
                 // Post a notification
                 List<Geofence> geofences = LocationClient.getTriggeringGeofences(intent);
-                SmsMessageActionEnum transitionType = getTransitionString(transition);
+                MessageActionEnum transitionType = getTransitionString(transition);
                 // Send Notification
                 String[] geofenceIds = extractGeofenceRequestsId(geofences);
                 sendNotification(transitionType, geofenceIds);
@@ -170,7 +171,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
      *
      * @param transitionType The type of transition that occurred.
      */
-    private void sendNotification(SmsMessageActionEnum transitionType, String[] geofenceRequestIds) {
+    private void sendNotification(MessageActionEnum transitionType, String[] geofenceRequestIds) {
          // Compute afected geoFence
         List<CircleGeofence> geofences = getCircleGeofenceFromRequestIds(geofenceRequestIds);
         if (geofences==null || geofences.size()<1) {
@@ -253,21 +254,21 @@ public class ReceiveTransitionsIntentService extends IntentService {
      * @param transitionType A transition type constant defined in Geofence
      * @return A String indicating the type of transition
      */
-    private SmsMessageActionEnum getTransitionString(int transitionType) {
+    private MessageActionEnum getTransitionString(int transitionType) {
         switch (transitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
-                return SmsMessageActionEnum.GEOFENCE_ENTER;
+                return MessageActionEnum.GEOFENCE_ENTER;
             case Geofence.GEOFENCE_TRANSITION_EXIT:
-                return SmsMessageActionEnum.GEOFENCE_EXIT;
+                return MessageActionEnum.GEOFENCE_EXIT;
             default:
-                return SmsMessageActionEnum.GEOFENCE_Unknown_transition;
+                return MessageActionEnum.GEOFENCE_Unknown_transition;
         }
     }
 
 
 
 
-    public void sendEventSpySmsMessage(   CircleGeofence geofenceRequest ,  SmsMessageActionEnum eventType, String[] phones, Bundle eventParams, Location location) {
+    public void sendEventSpySmsMessage(   CircleGeofence geofenceRequest ,  MessageActionEnum eventType, String[] phones, Bundle eventParams, Location location) {
         if (phones == null || phones.length < 1) {
             Log.w(TAG, "Geofence violation detected but nobody to warning");
         }

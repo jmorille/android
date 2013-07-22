@@ -50,7 +50,7 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
         GeoTrack geoTrack = new GeoTrack() //
                 .setProvider(provider)//
                 .setLatitudeE6(43158549)//
-                .setLongitude(25218546)//
+                .setLongitudeE6(25218546)//
                 .setAccuracy(120) //
                 .setTime(1347481830000l);
         if (PROVIDER_GPS.equals(provider)) {
@@ -264,7 +264,7 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
 //            }
 //        }
 //        // Encode
-////        SmsMessageEncoderHelper.en
+////        MessageEncoderHelper.en
 //    }
 
 }

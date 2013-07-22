@@ -51,6 +51,10 @@ public class GpsProviderParamEncoder implements IParamEncoder {
         boolean isWrite = false;
         String value = (String)src.get(field.dbFieldName);
         String encodedValue = locProviderEncoder.get(value);
+        // If not shotcut, then keep it
+        if (encodedValue==null) {
+            encodedValue = value;
+        }
         if (encodedValue!=null && encodedValue.length()>0) {
             if (isSmsFieldName) {
                 dest.append( smsFieldName);

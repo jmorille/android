@@ -59,5 +59,15 @@ public class IntegerParamEncoder implements IParamEncoder {
         return 1;
     }
 
+    // ===========================================================
+    //   Overide
+    // ===========================================================
 
+
+    @Override
+    public String toString() {
+        return "IntegerParamEncoder{" +
+                "radix=" + radix +
+                '}';
+    }
 }

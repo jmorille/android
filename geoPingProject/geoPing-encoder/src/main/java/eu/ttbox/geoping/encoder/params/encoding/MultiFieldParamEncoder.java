@@ -23,18 +23,27 @@ public class MultiFieldParamEncoder implements IParamEncoder {
     @Override
     public boolean writeTo(EncoderAdapter src,  StringBuilder dest, MessageParamField field, char smsFieldName, boolean isSmsFieldName ) {
         boolean isWrite = false;
+
         // Test first value is Present
         if (src.containsKey(field.dbFieldName)) {
+            // Write Field Key
+            if (isSmsFieldName) {
+                dest.append(smsFieldName);
+            }
+            // Write Field Values
             MessageParamField[]  multiFields = field.multiFields;
             boolean isLastFieldWrite = true;
             int writeCount = 0;
+            boolean isNotFirst = false;
             for (MessageParamField multiField : multiFields) {
+               // System.out.println("Multi field write : " +  "  => multiField : " + multiField + " // " + isLastFieldWrite);
                 // Write Sep if
                 if (!isLastFieldWrite) {
                     dest.append(MULTI_FIELD_SEP);
                 }
                 // Write the field
-                isLastFieldWrite = multiField.writeTo(src, dest, field, MULTI_FIELD_SEP);
+                isLastFieldWrite = multiField.writeTo(src, dest, multiField, MULTI_FIELD_SEP, isNotFirst);
+                isNotFirst = true;
                 if (isLastFieldWrite) {
                     writeCount++;
                 }
