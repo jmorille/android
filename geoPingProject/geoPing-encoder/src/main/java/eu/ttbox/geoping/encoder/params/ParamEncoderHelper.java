@@ -45,7 +45,7 @@ public class ParamEncoderHelper {
         return sb;
     }
 
-    private static boolean addFieldSep(StringBuilder sb, boolean isNotFirst) {
+    public static boolean addFieldSep(StringBuilder sb, boolean isNotFirst) {
         if (isNotFirst) {
             sb.append(FIELD_SEP);
         } else {

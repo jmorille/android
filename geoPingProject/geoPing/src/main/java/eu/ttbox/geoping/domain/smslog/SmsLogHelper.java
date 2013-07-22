@@ -20,6 +20,7 @@ import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.encoder.model.MessageParamEnum;
 import eu.ttbox.geoping.encoder.params.MessageParamField;
+import eu.ttbox.geoping.encoder.params.ParamEncoderHelper;
 import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
 
 public class SmsLogHelper {
@@ -91,6 +92,9 @@ public class SmsLogHelper {
         Log.d(TAG, "convertAsJsonString : " + extras);
         try {
             JSONObject object = new JSONObject();
+            BundleEncoderAdapter src = new BundleEncoderAdapter(null, extras);
+            StringBuilder dest = new StringBuilder();
+            boolean isNotFirst = false;
             for (String key : extras.keySet()) {
                 String valKey = key;
                 if (GeoTrackColumns.COL_LATITUDE_E6.equals(key) && extras.containsKey(GeoTrackColumns.COL_LONGITUDE_E6)) {
@@ -110,7 +114,10 @@ public class SmsLogHelper {
                                 // Ignore this Field
                                 break;
                             default:
-                                writeForJsonParamTypeValue(object, key, fieldEnum, extras);
+                                XXXXXXX
+                                isNotFirst = ParamEncoderHelper.addFieldSep(dest, isNotFirst);
+                                fieldEnum.writeTo(src, dest );
+                                 writeForJsonParamTypeValue(object, key, fieldEnum, extras);
                                 break;
                         }
                     } else {
@@ -123,7 +130,8 @@ public class SmsLogHelper {
 
             }
 
-            result = object.toString();
+            result = dest.toString();
+            // result = object.toString();
         } catch (RuntimeException e) {
             result = e.getMessage();
         } catch (JSONException e) {
