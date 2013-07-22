@@ -2,19 +2,14 @@ package eu.ttbox.geoping.test.service.encoder;
 
 import java.util.ArrayList;
 
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
-import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
+
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
-import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
-import eu.ttbox.geoping.service.encoder.helper.SmsMessageEncoderHelper;
-import eu.ttbox.geoping.service.encoder.helper.SmsParamEncoderHelper;
-import eu.ttbox.geoping.service.encoder.params.IntegerEncoded;
 import eu.ttbox.geoping.test.service.encoder.param.PlaceTestHelper;
 import eu.ttbox.geoping.test.service.encoder.param.PlaceTestHelper.WorldGeoPoint;
 
@@ -211,7 +206,7 @@ public class SmsMessageEncoderHelperTest extends AndroidTestCase {
             GeoPingMessage decoded = SmsMessageEncoderHelper.decodeSmsMessage("+33612131415", msg);
             Log.d(TAG, String.format("Extract %s from : %s", decoded, msg));
             // Message 02
-            SmsMessageActionEnum[] expMultiEctions = new SmsMessageActionEnum[] { SmsMessageActionEnum.LOC  };
+            MessageActionEnum[] expMultiEctions = new SmsMessageActionEnum[] { SmsMessageActionEnum.LOC  };
             doValidateMultiMessages(decoded, SmsMessageActionEnum.LOC, expMultiEctions);
         }
     }

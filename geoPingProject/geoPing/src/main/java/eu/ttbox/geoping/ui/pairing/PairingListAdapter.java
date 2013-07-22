@@ -15,6 +15,7 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
 import eu.ttbox.geoping.ui.person.PhotoEditorView;
@@ -86,7 +87,7 @@ public class PairingListAdapter extends android.support.v4.widget.ResourceCursor
 		holder.pingButton.setEditorListener(new EditorListener() {
 			@Override
 			public void onRequest(View v, int request) {
-				 GeoPingSlaveLocationService.runFindLocationAndSendInService(context , SmsMessageActionEnum.LOC_DECLARATION, new String[] { phoneNumber }, null);
+				 GeoPingSlaveLocationService.runFindLocationAndSendInService(context , MessageActionEnum.LOC_DECLARATION, new String[] { phoneNumber }, null);
  				// Notif
 				NotifToasts.showToastSendGeoPingResponse(context, phoneNumber);
 			}

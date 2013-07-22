@@ -19,6 +19,7 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.core.NotifToasts;
 import eu.ttbox.geoping.domain.PairingProvider;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
 
@@ -70,7 +71,7 @@ public class PairingWidgetProvider extends AppWidgetProvider {
             // Send it
 //            Intent intentGeoPing = Intents.sendSmsGeoPingResponse(context, phoneNumber, true);
 //            context.startService(intentGeoPing);
-			 GeoPingSlaveLocationService.runFindLocationAndSendInService(context , SmsMessageActionEnum.LOC_DECLARATION, new String[] { phoneNumber }, null);
+			 GeoPingSlaveLocationService.runFindLocationAndSendInService(context , MessageActionEnum.LOC_DECLARATION, new String[] { phoneNumber }, null);
              // Display Notif
             NotifToasts.showToastSendGeoPingResponse(context, phoneNumber);
          }else if (AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED.equals(action)) {

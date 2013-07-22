@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 /**
@@ -92,7 +93,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 		    Bundle params = new Bundle();
 		    // TODO Manage prefPhone et phoneNumber
 			// Send Sms
-			SpyNotificationHelper.sendEventSpySmsMessage(context, phones, SmsMessageActionEnum.SPY_SIM_CHANGE, params);
+			SpyNotificationHelper.sendEventSpySmsMessage(context, phones, MessageActionEnum.SPY_SIM_CHANGE, params);
 		}
 	}
 

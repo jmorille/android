@@ -3,6 +3,7 @@ package eu.ttbox.geoping.domain.model;
 import java.util.Date;
 
 import eu.ttbox.geoping.core.AppConstants;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class SmsLog {
@@ -12,7 +13,7 @@ public class SmsLog {
 	public long id =  AppConstants.UNSET_ID;
 	public long time = UNSET_TIME;
 	public SmsLogTypeEnum smsLogType;
-	public SmsMessageActionEnum action;
+	public MessageActionEnum action;
 	public String phone;
 	public String message;
     public String messageParams;
@@ -61,7 +62,7 @@ public class SmsLog {
 		return this;
 	}
 
-	public SmsLog setAction(SmsMessageActionEnum action) {
+	public SmsLog setAction(MessageActionEnum action) {
 		this.action = action;
 		return this;
 	}

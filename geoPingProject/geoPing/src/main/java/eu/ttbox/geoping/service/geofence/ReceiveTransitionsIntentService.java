@@ -43,7 +43,7 @@ import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
 import eu.ttbox.geoping.service.slave.eventspy.SpyNotificationHelper;
 import eu.ttbox.osm.ui.map.mylocation.sensor.LocationUtils;
-
+import  eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
 /**
  * This class receives geofence transition events from Location Services, in the
  * form of an Intent containing the transition type and geofence id(s) that triggered
@@ -201,9 +201,10 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
     }
 
-    private void showNotification( List<CircleGeofence> geofences, SmsMessageActionEnum transitionType  ) {
+    private void showNotification( List<CircleGeofence> geofences, MessageActionEnum transitionType  ) {
         CircleGeofence firstGeofence = geofences.get(0);
-        String transitionTypeMsg = getString(transitionType.labelResourceId);
+
+        String transitionTypeMsg = MessageActionEnumLabelHelper.getString(this,transitionType );
 
         // Create an explicit content Intent that starts the main Activity
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);

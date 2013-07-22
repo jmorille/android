@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
-import eu.ttbox.geoping.service.encoder.params.GeoPingLocationProviders;
+
 import eu.ttbox.geoping.service.encoder.params.GeoPingLocationProviders.ProviderEnum;
 
 public class GeoPingLocationProvidersTest extends AndroidTestCase {

@@ -48,9 +48,9 @@ import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
-import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
+import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
 
 public class GeoPingMasterService extends IntentService {
 
@@ -361,7 +361,7 @@ public class GeoPingMasterService extends IntentService {
         Bundle params = bundle.getBundle(Intents.EXTRA_SMS_PARAMS);
         GeoTrack geoTrack = GeoTrackHelper.getEntityFromBundle(params);
         geoTrack.setPhone(phone);
-        if (!SmsMessageActionEnum.LOC.equals(actionEnum)) {
+        if (!MessageActionEnum.LOC.equals(actionEnum)) {
             geoTrack.eventType = actionEnum.name();
         }
         if (geoTrack != null) {
@@ -470,12 +470,12 @@ public class GeoPingMasterService extends IntentService {
 
         // Create Notifiation
         Log.d(TAG, "----- contentTitle with Bundle : " + params);
-        String contentTitle = MessageActionEnumLabelHelper.getString(getContext(), actionEnum);
+        String contentTitle = MessageActionEnumLabelHelper.getString(this, actionEnum);
         if (SmsMessageLocEnum.GEOFENCE_NAME.isToBundle(params)) {
             String geofenceName = SmsMessageLocEnum.GEOFENCE_NAME.readString(params);
-            if (SmsMessageActionEnum.GEOFENCE_ENTER.equals(actionEnum)) {
+            if (MessageActionEnum.GEOFENCE_ENTER.equals(actionEnum)) {
                 contentTitle =  getString(R.string.sms_action_geofence_transition_enter_with_name, geofenceName);
-            } else if (SmsMessageActionEnum.GEOFENCE_EXIT.equals(actionEnum)) {
+            } else if (MessageActionEnum.GEOFENCE_EXIT.equals(actionEnum)) {
                 contentTitle =  getString(R.string.sms_action_geofence_transition_exit_with_name, geofenceName);
             }
         }

@@ -5,8 +5,7 @@ import java.security.PublicKey;
 
 import eu.ttbox.geoping.crypto.encrypt.Base64EncodingTextEncryptor;
 import eu.ttbox.geoping.crypto.encrypt.RsaBytesEncryptor;
-import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
-import android.test.AndroidTestCase;
+
 import android.util.Log;
 
 public class SmsMessageEncryptedTest extends SmsMessageEncoderHelperTest  {

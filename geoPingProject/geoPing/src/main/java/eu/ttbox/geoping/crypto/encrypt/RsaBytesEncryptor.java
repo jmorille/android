@@ -20,7 +20,8 @@ import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
 
 import eu.ttbox.geoping.crypto.codec.Base64;
- 
+import eu.ttbox.geoping.encoder.crypto.TextEncryptor;
+
 
 // http://www.bouncycastle.org/java.html
 public class RsaBytesEncryptor implements BytesEncryptor {

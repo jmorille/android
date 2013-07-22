@@ -98,8 +98,6 @@
         </activity>
 
 
-        <activity android:exported="false" android:name=".GeoTrakerActivity"/>
-
         <!-- Pref -->
         <activity android:exported="false" android:name=".ui.prefs.GeoPingPrefActivity"/>
 

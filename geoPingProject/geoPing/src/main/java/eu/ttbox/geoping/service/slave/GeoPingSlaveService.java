@@ -36,6 +36,7 @@ import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
@@ -146,7 +147,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
                     break;
                 case AUTHORIZE_ALWAYS:
                     Log.i(TAG, "Accept Geoping (always Authorize) request from phone " + phone);
-                    GeoPingSlaveLocationService.runFindLocationAndSendInService(this , SmsMessageActionEnum.LOC, new String[] { phone }, params);
+                    GeoPingSlaveLocationService.runFindLocationAndSendInService(this , MessageActionEnum.LOC, new String[] { phone }, params);
                     // Display Notification GeoPing
                     if (showNotification) {
                         showNotificationGeoPing(pairing, params, true);
@@ -272,7 +273,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
         switch (notifType) {
         case GEOPING_REQUEST_CONFIRM:
             if (positifResponse) {
-                GeoPingSlaveLocationService.runFindLocationAndSendInService(this, SmsMessageActionEnum.LOC , new String[] {  phone } , params);
+                GeoPingSlaveLocationService.runFindLocationAndSendInService(this, MessageActionEnum.LOC , new String[] {  phone } , params);
             }
             break;
         default:
@@ -326,7 +327,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
         if (personId != -1l) {
             params = SmsMessageLocEnum.PERSON_ID.writeToBundle(null, personId);
         }
-        SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.SLAVE, phone, SmsMessageActionEnum.ACTION_GEO_PAIRING_RESPONSE, params);
+        SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.SLAVE, phone, MessageActionEnum.ACTION_GEO_PAIRING_RESPONSE, params);
     }
 
     // ===========================================================

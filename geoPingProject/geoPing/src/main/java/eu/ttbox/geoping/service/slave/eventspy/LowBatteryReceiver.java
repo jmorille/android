@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class LowBatteryReceiver extends BroadcastReceiver {
@@ -22,7 +23,7 @@ public class LowBatteryReceiver extends BroadcastReceiver {
 			if (phones != null) { 
 			    Bundle params = new Bundle(); 
 			    // Send Sms
-                SpyNotificationHelper.sendEventSpySmsMessage(context,phones, SmsMessageActionEnum.SPY_LOW_BATTERY, params);
+                SpyNotificationHelper.sendEventSpySmsMessage(context,phones, MessageActionEnum.SPY_LOW_BATTERY, params);
 			}
 		}  
 

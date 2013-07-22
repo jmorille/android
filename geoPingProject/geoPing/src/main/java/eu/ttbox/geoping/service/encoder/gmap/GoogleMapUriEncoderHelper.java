@@ -5,8 +5,9 @@ import android.os.Bundle;
 import java.util.Locale;
 
 import eu.ttbox.geoping.core.AppConstants;
-import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase;
+import eu.ttbox.geoping.encoder.crypto.TextEncryptor;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 /**
@@ -14,11 +15,11 @@ import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
  */
 public class GoogleMapUriEncoderHelper {
 
-    public static String encodeSmsMessage(SmsMessageActionEnum action, Bundle params) {
+    public static String encodeSmsMessage(MessageActionEnum action, Bundle params) {
         return encodeSmsMessage(action, params, null);
     }
 
-    public static String encodeSmsMessage(SmsMessageActionEnum action, Bundle params, TextEncryptor textEncryptor) {
+    public static String encodeSmsMessage(MessageActionEnum action, Bundle params, TextEncryptor textEncryptor) {
         StringBuilder sb = new StringBuilder(AppConstants.SMS_MAX_SIZE_7BITS);
         sb.append("https://maps.google.fr/maps?");
         String latLngString = getLatLngAsString(params);

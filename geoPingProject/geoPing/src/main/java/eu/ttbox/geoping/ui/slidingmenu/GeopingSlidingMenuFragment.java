@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase;
 
-import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
@@ -120,7 +119,6 @@ public class GeopingSlidingMenuFragment extends Fragment {
         Context context = getActivity();
         switch ( itemId) {
         case R.id.menu_settings:
-        case R.id.menuGeotracker:
         case R.id.menuMap:
         case R.id.menu_pairing:
         case R.id.menu_track_person:
@@ -152,8 +150,6 @@ public class GeopingSlidingMenuFragment extends Fragment {
         switch (itemId) {
         case R.id.menu_settings:
             return GeoPingPrefActivity.class;
-        case R.id.menuGeotracker:
-            return GeoTrakerActivity.class;
         case R.id.menuMap:
             return ShowMapActivity.class;
         case R.id.menu_pairing:

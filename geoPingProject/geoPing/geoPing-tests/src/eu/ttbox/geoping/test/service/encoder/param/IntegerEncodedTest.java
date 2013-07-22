@@ -2,7 +2,6 @@ package eu.ttbox.geoping.test.service.encoder.param;
 
 import android.test.AndroidTestCase;
 import android.util.Log;
-import eu.ttbox.geoping.service.encoder.params.IntegerEncoded;
 
 public class IntegerEncodedTest extends AndroidTestCase {
 

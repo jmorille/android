@@ -18,7 +18,6 @@ import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
-import eu.ttbox.geoping.service.encoder.GeoPingMessage;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
@@ -48,7 +47,7 @@ public class SmsLogHelper {
         }
         initialValues.put(SmsLogColumns.COL_TIME, vo.time);
         initialValues.put(SmsLogColumns.COL_PHONE, vo.phone);
-        initialValues.put(SmsLogColumns.COL_ACTION, vo.action.getCode());
+        initialValues.put(SmsLogColumns.COL_ACTION, vo.action.getDbCode() );
         initialValues.put(SmsLogColumns.COL_MESSAGE, vo.message);
         initialValues.put(SmsLogColumns.COL_MESSAGE_PARAMS, vo.messageParams);
         initialValues.put(SmsLogColumns.COL_SMSLOG_TYPE, vo.smsLogType.getCode());
@@ -233,9 +232,9 @@ public class SmsLogHelper {
         return SmsLogTypeEnum.getByCode(cursor.getInt(smsLogTypeIdx));
     }
 
-    public SmsMessageActionEnum getSmsMessageActionEnum(Cursor cursor) {
+    public MessageActionEnum getSmsMessageActionEnum(Cursor cursor) {
         String actionValue = cursor.getString(actionIdx);
-        return SmsMessageActionEnum.getByDbCode(actionValue);
+        return MessageActionEnum.getByDbCode(actionValue);
     }
 
     public String getSmsMessageActionString(Cursor cursor) {

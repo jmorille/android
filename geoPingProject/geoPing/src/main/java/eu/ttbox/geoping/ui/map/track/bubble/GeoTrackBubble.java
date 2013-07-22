@@ -16,11 +16,12 @@ import android.widget.TextView;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
-import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
 import eu.ttbox.osm.core.ExternalIntents;
 import eu.ttbox.osm.ui.map.mylocation.CompassEnum;
+import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
 
 public class GeoTrackBubble extends FrameLayout {
 
@@ -165,9 +166,9 @@ public class GeoTrackBubble extends FrameLayout {
 			timeTextView.setVisibility(GONE);
 		}
         // Event Type
-        SmsMessageActionEnum action =  SmsMessageActionEnum.getByEnumName(geoTrack.eventType);
+        MessageActionEnum action =  MessageActionEnum.getByEnumName(geoTrack.eventType);
         if (action !=null) {
-            String actionLabel = r.getString(action.labelResourceId);
+            String actionLabel =  MessageActionEnumLabelHelper.getString(getContext(), action);
             eventTypeTextView.setText(actionLabel);
             eventTypeTextView.setVisibility(View.VISIBLE);
         } else {

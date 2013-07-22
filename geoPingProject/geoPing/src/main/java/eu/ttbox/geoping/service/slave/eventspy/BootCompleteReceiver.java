@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class BootCompleteReceiver extends BroadcastReceiver {
@@ -34,7 +35,7 @@ public class BootCompleteReceiver extends BroadcastReceiver {
             if (phones != null) {
                 Bundle params = new Bundle();
                 // Send Sms
-                SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_BOOT, params);
+                SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  MessageActionEnum.SPY_BOOT, params);
             } 
         } 
     }

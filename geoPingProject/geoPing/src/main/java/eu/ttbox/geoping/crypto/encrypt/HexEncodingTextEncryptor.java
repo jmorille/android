@@ -3,6 +3,7 @@ package eu.ttbox.geoping.crypto.encrypt;
 
 import eu.ttbox.geoping.crypto.codec.Hex;
 import eu.ttbox.geoping.crypto.codec.Utf8;
+import eu.ttbox.geoping.encoder.crypto.TextEncryptor;
 
 /**
  * Delegates to an {@link BytesEncryptor} to encrypt text strings.

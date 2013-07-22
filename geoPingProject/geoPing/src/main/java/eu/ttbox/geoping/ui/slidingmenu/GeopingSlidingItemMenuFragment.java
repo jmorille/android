@@ -27,7 +27,6 @@ import android.widget.TextView;
 import com.google.cloud.backend.android.sample.guestbook.GuestbookActivity;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase;
 
-import eu.ttbox.geoping.GeoTrakerActivity;
 import eu.ttbox.geoping.MainActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -192,7 +191,6 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
             isRootActivity = true;
         case R.id.menu_extra_feature:
         case R.id.menu_gcm_message:
-        case R.id.menuGeotracker:
         case R.id.menuMap:
             Class<? extends Activity> intentClass = getActivityClassByItemId(itemId);
             if (intentClass != null) {
@@ -232,8 +230,6 @@ public class GeopingSlidingItemMenuFragment extends Fragment {
         switch (itemId) {
         case R.id.menu_settings:
             return GeoPingPrefActivity.class;
-        case R.id.menuGeotracker:
-            return GeoTrakerActivity.class;
         case R.id.menuMap:
             return ShowMapActivity.class;
         case R.id.menu_pairing:

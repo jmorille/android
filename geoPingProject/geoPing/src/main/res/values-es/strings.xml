@@ -71,7 +71,6 @@
     <!-- Menu -->
     <string name="menu_map_mypositioncenter">Mi posicion</string>
     <string name="map_mode">Typo de mapa</string>
-    <string name="menu.geoTracker">GeoTracker</string>
     <string name="menu_geoping">GeoPing</string>
 
     <string name="menu_settings">Opciones</string>

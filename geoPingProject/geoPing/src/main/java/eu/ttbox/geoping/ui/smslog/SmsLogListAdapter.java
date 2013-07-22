@@ -18,11 +18,13 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.ui.person.PhotoEditorView;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache.PhotoLoaderAsyncTask;
+import  eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
 
 /**
  * <ul>
@@ -76,7 +78,7 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         Drawable iconType = mResources.getCallTypeDrawable(smLogType);
         holder.smsType.setImageDrawable(iconType);
         // Text
-        SmsMessageActionEnum action = helper.getSmsMessageActionEnum(cursor);
+        MessageActionEnum action = helper.getSmsMessageActionEnum(cursor);
         String actionLabel;
         if (action != null) {
             actionLabel = getSmsActionLabel(action);
@@ -175,8 +177,8 @@ public class SmsLogListAdapter extends android.support.v4.widget.ResourceCursorA
         return view;
     }
 
-    private String getSmsActionLabel(SmsMessageActionEnum action) {
-        return action.getLabel(resources);
+    private String getSmsActionLabel( MessageActionEnum action) {
+        return MessageActionEnumLabelHelper.getString(mContext, action );
     }
 
 

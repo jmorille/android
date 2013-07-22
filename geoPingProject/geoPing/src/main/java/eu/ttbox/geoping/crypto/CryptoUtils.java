@@ -2,7 +2,7 @@ package eu.ttbox.geoping.crypto;
 
 import java.util.UUID;
 
-import eu.ttbox.geoping.service.encoder.params.LongEncoded;
+import eu.ttbox.geoping.encoder.params.helper.LongEncoded;
 
 public class CryptoUtils {
 

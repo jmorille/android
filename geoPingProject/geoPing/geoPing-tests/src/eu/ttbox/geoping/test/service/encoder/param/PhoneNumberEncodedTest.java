@@ -7,8 +7,6 @@ import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.service.billing.util.Base64;
 import eu.ttbox.geoping.service.billing.util.Base64DecoderException;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
-import eu.ttbox.geoping.service.encoder.helper.SmsParamEncoderHelper;
-import eu.ttbox.geoping.service.encoder.params.IntegerEncoded;
 
 public class PhoneNumberEncodedTest extends AndroidTestCase {
     public static final String TAG = "PhoneNumberEncodedTest";

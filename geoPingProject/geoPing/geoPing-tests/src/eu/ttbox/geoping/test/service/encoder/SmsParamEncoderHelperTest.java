@@ -8,8 +8,6 @@ import android.util.Log;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
-import eu.ttbox.geoping.service.encoder.helper.SmsParamEncoderHelper;
-import eu.ttbox.geoping.service.encoder.params.IntegerEncoded;
 import eu.ttbox.geoping.test.service.encoder.param.PlaceTestHelper;
 import eu.ttbox.geoping.test.service.encoder.param.PlaceTestHelper.WorldGeoPoint;
 

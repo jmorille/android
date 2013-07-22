@@ -15,6 +15,7 @@ import eu.ttbox.geoping.service.encoder.params.SmsType;
 /**
  * @deprecated Use MessageParamEnum
  */
+@Deprecated
 public enum SmsMessageLocEnum {
 
     // Loc

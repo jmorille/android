@@ -17,11 +17,10 @@ import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
-import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
-import eu.ttbox.geoping.service.encoder.helper.SmsParamEncoderHelper;
 
 
 public class PersonRemoteControlFragment extends SherlockFragment {
@@ -173,7 +172,7 @@ public class PersonRemoteControlFragment extends SherlockFragment {
             sb.append("1234567890");
         }
         SmsMessageLocEnum.GEOFENCE_NAME.writeToBundle(params, sb.toString());
-        SmsSenderHelper.sendSmsAndLogIt(getActivity(), SmsLogSideEnum.MASTER, entityPhoneNumber, SmsMessageActionEnum.GEOFENCE_Unknown_transition, params);
+        SmsSenderHelper.sendSmsAndLogIt(getActivity(), SmsLogSideEnum.MASTER, entityPhoneNumber, MessageActionEnum.GEOFENCE_Unknown_transition, params);
     }
 
 }

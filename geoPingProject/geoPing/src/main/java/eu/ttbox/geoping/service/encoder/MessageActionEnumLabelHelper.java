@@ -1,4 +1,4 @@
-package eu.ttbox.geoping.service.encoder.params;
+package eu.ttbox.geoping.service.encoder;
 
 
 import android.content.Context;
@@ -41,15 +41,13 @@ public class MessageActionEnumLabelHelper {
         byMessageActionEnum = abyMessageActionEnum;
     }
 
-    private static int getLabelRessourceId(MessageActionEnum action) {
-
-    }
 
     public static String getString(Context context, MessageActionEnum action) {
         LabelHoder holder = byMessageActionEnum.get(action);
         if (holder!=null) {
             return context.getString(holder.labelResourceId);
         }
+        return null;
     }
 
     private static LabelHoder b(MessageActionEnum action, int labelResourceId) {

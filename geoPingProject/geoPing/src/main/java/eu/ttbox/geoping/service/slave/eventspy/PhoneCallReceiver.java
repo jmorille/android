@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
+import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 
@@ -144,7 +145,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
             Bundle params = new Bundle();
             SmsMessageLocEnum.PHONE_NUMBER.writeToBundle(params, callPhoneNumber);
             // Send Sms
-            SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  SmsMessageActionEnum.SPY_PHONE_CALL, params);
+            SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  MessageActionEnum.SPY_PHONE_CALL, params);
         }
         return message;
     }

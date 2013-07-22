@@ -9,7 +9,6 @@ import android.util.Log;
 import eu.ttbox.geoping.crypto.encrypt.AesBytesEncryptor;
 import eu.ttbox.geoping.crypto.encrypt.Base64EncodingTextEncryptor;
 import eu.ttbox.geoping.crypto.encrypt.RsaBytesEncryptor;
-import eu.ttbox.geoping.crypto.encrypt.TextEncryptor;
 
 /**
  * {@link http://android-developers.blogspot.fr/2013/02/using-cryptography-to-store-credentials.html} 
