@@ -9,10 +9,10 @@ import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
-import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 /**
  * {@link http

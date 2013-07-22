@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.domain.model;
 
 import android.content.ContentValues;
+
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 
 public enum PairingAuthorizeTypeEnum {

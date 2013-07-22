@@ -1,13 +1,13 @@
 package eu.ttbox.geoping.service.backup;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
+
+import java.util.Arrays;
+import java.util.List;
 
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;

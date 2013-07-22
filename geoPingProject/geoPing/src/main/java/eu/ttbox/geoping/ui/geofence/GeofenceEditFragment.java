@@ -13,10 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -24,15 +22,11 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.location.Geofence;
 
-import java.util.Locale;
-
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.GeoFenceProvider;
-import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
-import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.ui.core.BindingHelper;
 import eu.ttbox.geoping.ui.core.validator.Form;
 import eu.ttbox.geoping.ui.core.validator.validate.ValidateTextView;

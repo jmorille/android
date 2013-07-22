@@ -1,8 +1,8 @@
 package eu.ttbox.geoping.domain.core.wrapper;
 
-import java.util.Set;
-
 import android.os.Bundle;
+
+import java.util.Set;
 
 public class BundleWrapper implements HelperWrapper<Bundle> {
 

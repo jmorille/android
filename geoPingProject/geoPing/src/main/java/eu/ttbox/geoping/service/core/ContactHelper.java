@@ -1,9 +1,5 @@
 package eu.ttbox.geoping.service.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -17,6 +13,11 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 import android.text.TextUtils;
 import android.util.Log;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import eu.ttbox.geoping.core.VersionUtils.AndroidPermissions;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 

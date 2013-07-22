@@ -14,7 +14,6 @@ import android.util.Log;
 import java.util.List;
 
 import eu.ttbox.geoping.core.AppConstants;
-
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.encoder.crypto.TextEncryptor;

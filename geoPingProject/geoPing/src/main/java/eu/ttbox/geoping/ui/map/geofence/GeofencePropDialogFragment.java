@@ -2,7 +2,6 @@ package eu.ttbox.geoping.ui.map.geofence;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;

@@ -8,6 +8,7 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+
 import eu.ttbox.geoping.R;
 
 /**

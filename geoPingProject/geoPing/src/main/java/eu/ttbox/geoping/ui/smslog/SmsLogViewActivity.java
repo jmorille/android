@@ -4,12 +4,12 @@ package eu.ttbox.geoping.ui.smslog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
-import android.support.v4.app.Fragment;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;

@@ -2,6 +2,7 @@ package eu.ttbox.geoping.core;
 
 import android.content.Context;
 import android.widget.Toast;
+
 import eu.ttbox.geoping.R;
 
 public class NotifToasts {

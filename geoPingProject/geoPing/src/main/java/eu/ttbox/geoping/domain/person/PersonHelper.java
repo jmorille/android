@@ -3,6 +3,7 @@ package eu.ttbox.geoping.domain.person;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.widget.TextView;
+
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;

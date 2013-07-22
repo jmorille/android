@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-
 import android.provider.BaseColumns;
 
 import net.sqlcipher.database.SQLiteDatabase;

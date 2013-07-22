@@ -1,13 +1,13 @@
 package eu.ttbox.geoping.service.backup;
 
-import java.io.IOException;
-
 import android.app.backup.BackupAgentHelper;
 import android.app.backup.BackupDataInput;
 import android.app.backup.BackupDataOutput;
 import android.app.backup.SharedPreferencesBackupHelper;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+
+import java.io.IOException;
 
 public class GeoPingBackupAgent extends BackupAgentHelper {
 

@@ -3,6 +3,7 @@ package eu.ttbox.geoping.domain.message;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.widget.TextView;
+
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.message.MessageDatabase.MessageColumns;
 import eu.ttbox.geoping.domain.model.Message;

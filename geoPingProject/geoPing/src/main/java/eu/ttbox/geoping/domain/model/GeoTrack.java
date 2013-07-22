@@ -1,10 +1,11 @@
 package eu.ttbox.geoping.domain.model;
 
-import java.util.Date;
+import android.location.Location;
 
 import org.osmdroid.util.GeoPoint;
 
-import android.location.Location;
+import java.util.Date;
+
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.domain.cache.ZoomLevelComputeCache;
 

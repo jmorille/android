@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
 import eu.ttbox.geoping.R;
 
 public class AbstractSmsTrackerActivity extends FragmentActivity {

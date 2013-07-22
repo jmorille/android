@@ -2,6 +2,7 @@ package eu.ttbox.geoping.domain.model;
 
 import android.content.ContentValues;
 import android.support.v4.util.SparseArrayCompat;
+
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 
 public enum SmsLogTypeEnum {

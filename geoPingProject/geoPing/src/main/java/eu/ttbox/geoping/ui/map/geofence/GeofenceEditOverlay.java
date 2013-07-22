@@ -1,9 +1,7 @@
 package eu.ttbox.geoping.ui.map.geofence;
 
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -16,13 +14,10 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -48,7 +43,6 @@ import eu.ttbox.geoping.domain.GeoFenceProvider;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.service.geofence.GeofenceUtils;
-import eu.ttbox.geoping.ui.geofence.GeofenceEditFragment;
 import eu.ttbox.osm.core.AppConstants;
 import microsoft.mappoint.TileSystem;
 

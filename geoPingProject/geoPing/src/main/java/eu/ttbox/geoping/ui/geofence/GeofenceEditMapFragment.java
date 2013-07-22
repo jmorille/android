@@ -14,15 +14,9 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.util.BoundingBoxE6;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.TilesOverlay;
-
-import java.util.ArrayList;
 
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.core.VersionUtils;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.ui.map.ShowMapFragment;
 import eu.ttbox.geoping.ui.map.geofence.GeofenceEditOverlay;

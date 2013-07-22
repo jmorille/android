@@ -4,7 +4,6 @@ import java.util.Date;
 
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
-import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class SmsLog {
 

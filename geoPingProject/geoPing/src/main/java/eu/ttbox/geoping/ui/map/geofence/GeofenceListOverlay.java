@@ -1,15 +1,5 @@
 package eu.ttbox.geoping.ui.map.geofence;
 
-import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import microsoft.mappoint.TileSystem;
-
-import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.MapView.Projection;
-import org.osmdroid.views.overlay.Overlay;
-
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -24,12 +14,22 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.MotionEvent;
+
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.MapView.Projection;
+import org.osmdroid.views.overlay.Overlay;
+
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.GeoFenceProvider;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.service.geofence.GeofenceUtils;
 import eu.ttbox.osm.core.AppConstants;
+import microsoft.mappoint.TileSystem;
 
 @Deprecated
 public class GeofenceListOverlay extends Overlay {

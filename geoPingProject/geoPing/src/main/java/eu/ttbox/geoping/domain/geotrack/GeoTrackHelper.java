@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.location.Address;
 import android.os.Bundle;
 import android.widget.TextView;
+
 import eu.ttbox.geoping.core.AppConstants;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.core.wrapper.BundleWrapper;

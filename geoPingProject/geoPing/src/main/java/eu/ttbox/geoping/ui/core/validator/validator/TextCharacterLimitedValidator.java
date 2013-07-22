@@ -1,6 +1,6 @@
 package eu.ttbox.geoping.ui.core.validator.validator;
 
-import android.content.Context; 
+import android.content.Context;
 
 import java.util.Arrays;
 

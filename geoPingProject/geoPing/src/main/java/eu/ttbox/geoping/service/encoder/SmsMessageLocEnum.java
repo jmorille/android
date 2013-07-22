@@ -1,11 +1,11 @@
 package eu.ttbox.geoping.service.encoder;
 
-import java.util.HashMap;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+
+import java.util.HashMap;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;

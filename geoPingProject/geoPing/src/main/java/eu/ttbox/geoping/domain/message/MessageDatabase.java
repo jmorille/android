@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.domain.message;
 
-import java.util.HashMap;
-
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +8,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
+
+import java.util.HashMap;
+
 import eu.ttbox.geoping.domain.person.PersonOpenHelper;
 
 public class MessageDatabase {

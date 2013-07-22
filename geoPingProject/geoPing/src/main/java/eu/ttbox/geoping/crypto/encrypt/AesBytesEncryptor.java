@@ -1,13 +1,6 @@
 package eu.ttbox.geoping.crypto.encrypt;
 
 
-import static eu.ttbox.geoping.crypto.encrypt.CipherUtils.doFinal;
-import static eu.ttbox.geoping.crypto.encrypt.CipherUtils.initCipher;
-import static eu.ttbox.geoping.crypto.encrypt.CipherUtils.newCipher;
-import static eu.ttbox.geoping.crypto.encrypt.CipherUtils.newSecretKey;
-import static eu.ttbox.geoping.crypto.util.EncodingUtils.concatenate;
-import static eu.ttbox.geoping.crypto.util.EncodingUtils.subArray;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -16,6 +9,13 @@ import javax.crypto.spec.SecretKeySpec;
 
 import eu.ttbox.geoping.crypto.codec.Hex;
 import eu.ttbox.geoping.crypto.keygen.BytesKeyGenerator;
+
+import static eu.ttbox.geoping.crypto.encrypt.CipherUtils.doFinal;
+import static eu.ttbox.geoping.crypto.encrypt.CipherUtils.initCipher;
+import static eu.ttbox.geoping.crypto.encrypt.CipherUtils.newCipher;
+import static eu.ttbox.geoping.crypto.encrypt.CipherUtils.newSecretKey;
+import static eu.ttbox.geoping.crypto.util.EncodingUtils.concatenate;
+import static eu.ttbox.geoping.crypto.util.EncodingUtils.subArray;
 
 /**
  * Encryptor that uses 256-bit AES encryption.

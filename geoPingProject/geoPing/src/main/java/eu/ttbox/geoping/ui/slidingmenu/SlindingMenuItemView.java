@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import eu.ttbox.geoping.R;
 
 public class SlindingMenuItemView extends RelativeLayout {

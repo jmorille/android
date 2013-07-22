@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 /**
  * <a href="http://www.ragtag.info/2011/feb/1/database-pitfalls/">SQLLiteOpenHelper n’aide pas vraiment</a>

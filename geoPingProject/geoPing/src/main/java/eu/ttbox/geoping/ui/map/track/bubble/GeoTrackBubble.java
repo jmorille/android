@@ -1,11 +1,8 @@
 package eu.ttbox.geoping.ui.map.track.bubble;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +10,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.Locale;
+
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
 import eu.ttbox.osm.core.ExternalIntents;
 import eu.ttbox.osm.ui.map.mylocation.CompassEnum;
-import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
 
 public class GeoTrackBubble extends FrameLayout {
 

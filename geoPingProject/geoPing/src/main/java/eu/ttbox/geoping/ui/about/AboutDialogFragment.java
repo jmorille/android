@@ -1,11 +1,5 @@
 package eu.ttbox.geoping.ui.about;
 
-import eu.ttbox.geoping.GeoPingApplication;
-import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.ui.person.colorpicker.ColorPickerDialog;
-import eu.ttbox.geoping.ui.person.holocolorpicker.ColorPicker;
-import eu.ttbox.geoping.ui.person.holocolorpicker.OpacityBar;
-import eu.ttbox.geoping.ui.person.holocolorpicker.SVBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -17,6 +11,9 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
+
+import eu.ttbox.geoping.GeoPingApplication;
+import eu.ttbox.geoping.R;
 
 public class AboutDialogFragment extends DialogFragment {
 

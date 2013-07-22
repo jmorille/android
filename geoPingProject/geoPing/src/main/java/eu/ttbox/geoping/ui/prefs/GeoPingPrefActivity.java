@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.ui.prefs;
 
-import java.util.List;
-
 import android.annotation.TargetApi;
 import android.app.backup.BackupManager;
 import android.app.backup.RestoreObserver;
@@ -23,6 +21,8 @@ import android.view.View;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Tracker;
+
+import java.util.List;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.NotifToasts;

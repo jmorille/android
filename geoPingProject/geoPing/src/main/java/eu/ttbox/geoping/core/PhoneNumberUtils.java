@@ -1,9 +1,9 @@
 package eu.ttbox.geoping.core;
 
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.util.SparseIntArray;
+
+import java.util.regex.Pattern;
 
 /**
  * Various utilities for dealing with phone number strings.

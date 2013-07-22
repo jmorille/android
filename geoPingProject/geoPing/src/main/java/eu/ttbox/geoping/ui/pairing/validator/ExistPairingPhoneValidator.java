@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import eu.ttbox.geoping.domain.PairingProvider;
-
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.ui.person.validator.AbstractExistRecordValidator;
 

@@ -1,8 +1,6 @@
 package eu.ttbox.geoping.ui.geofence;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,12 +14,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 
-import eu.ttbox.geoping.LaucherMainActivity;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
-import eu.ttbox.geoping.service.slave.eventspy.LowBatteryReceiver;
 import eu.ttbox.geoping.ui.smslog.SmsLogListFragment;
 
 public class GeofenceEditActivity extends SherlockFragmentActivity {

@@ -2,10 +2,10 @@ package eu.ttbox.geoping.domain.model;
 
 import android.location.Location;
 
+import com.google.android.gms.location.Geofence;
+
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
-
-import com.google.android.gms.location.Geofence;
 
 import eu.ttbox.geoping.core.AppConstants;
 

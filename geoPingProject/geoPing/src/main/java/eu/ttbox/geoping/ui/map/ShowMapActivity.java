@@ -1,12 +1,6 @@
 package eu.ttbox.geoping.ui.map;
 
-import java.util.ArrayList;
-
-import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.views.overlay.TilesOverlay;
-
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +14,11 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
+import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.views.overlay.TilesOverlay;
+
+import java.util.ArrayList;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.VersionUtils;

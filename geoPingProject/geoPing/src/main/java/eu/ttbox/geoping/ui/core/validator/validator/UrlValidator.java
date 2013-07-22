@@ -6,7 +6,6 @@ import android.webkit.URLUtil;
 
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.ui.core.validator.Validator;
-import eu.ttbox.geoping.ui.core.validator.ValidatorException;
 
 public class UrlValidator implements Validator {
     private int mErrorMessage = R.string.validator_url;

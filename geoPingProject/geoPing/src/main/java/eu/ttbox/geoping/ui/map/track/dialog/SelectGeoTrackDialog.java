@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.ui.map.track.dialog;
 
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,6 +14,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import java.util.Map;
+
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.model.Person;

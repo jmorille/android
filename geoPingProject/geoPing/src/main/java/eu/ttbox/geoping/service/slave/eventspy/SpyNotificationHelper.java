@@ -1,12 +1,13 @@
 package eu.ttbox.geoping.service.slave.eventspy;
 
-import java.util.HashSet;
-import java.util.List;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+
+import java.util.HashSet;
+import java.util.List;
+
 import eu.ttbox.geoping.domain.PairingProvider;
 import eu.ttbox.geoping.domain.model.CircleGeofence;
 import eu.ttbox.geoping.domain.model.PairingAuthorizeTypeEnum;
@@ -15,7 +16,6 @@ import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
-import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
 

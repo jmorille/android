@@ -21,12 +21,13 @@ import android.widget.TextView;
 import com.google.cloud.backend.android.CloudBackendActivity;
 import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
-import eu.ttbox.geoping.R;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+
+import eu.ttbox.geoping.R;
 
 /**
  * Sample app for CloudMessage API of Mobile Backend Starter. It subscribes to

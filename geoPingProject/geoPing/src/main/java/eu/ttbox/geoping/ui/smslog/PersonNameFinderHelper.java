@@ -3,7 +3,6 @@ package eu.ttbox.geoping.ui.smslog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;

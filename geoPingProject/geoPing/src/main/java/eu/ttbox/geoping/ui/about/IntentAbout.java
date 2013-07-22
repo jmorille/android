@@ -1,14 +1,15 @@
 package eu.ttbox.geoping.ui.about;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.webkit.WebView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import eu.ttbox.geoping.R;
 
 public class IntentAbout {

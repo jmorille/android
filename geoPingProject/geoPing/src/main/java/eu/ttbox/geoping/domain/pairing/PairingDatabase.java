@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.domain.pairing;
 
-import java.util.HashMap;
-
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -14,6 +12,9 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.HashMap;
+
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 import eu.ttbox.geoping.domain.EncryptionColumns;
 import eu.ttbox.geoping.service.slave.eventspy.BootCompleteReceiver;

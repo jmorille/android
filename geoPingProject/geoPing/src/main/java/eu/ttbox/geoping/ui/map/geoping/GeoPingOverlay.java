@@ -1,15 +1,16 @@
 package eu.ttbox.geoping.ui.map.geoping;
 
+import android.content.Context;
+import android.graphics.Canvas;
+import android.support.v4.app.LoaderManager;
+import android.view.View;
+
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.support.v4.app.LoaderManager;
-import android.view.View;
 import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.ui.map.track.GeoTrackOverlay.GeotrackLastAddedListener;
 import eu.ttbox.osm.ui.map.mylocation.bubble.MapCalloutView;

@@ -19,7 +19,6 @@ package eu.ttbox.geoping.service.geofence;
 import android.location.Address;
 
 import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.util.GeoPoint;
 
 /**
  * This class defines constants used by location sample apps.

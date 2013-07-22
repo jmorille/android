@@ -4,21 +4,10 @@ import android.accounts.Account;
 import android.accounts.OperationCanceledException;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BaseColumns;
-import android.provider.ContactsContract;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.sound.midi.Track;
 
 
 public class GeopingSyncAdpater  extends AbstractThreadedSyncAdapter {

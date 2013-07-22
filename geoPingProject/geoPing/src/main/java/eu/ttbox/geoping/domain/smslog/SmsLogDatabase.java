@@ -1,7 +1,5 @@
 package eu.ttbox.geoping.domain.smslog;
 
-import java.util.HashMap;
-
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,6 +10,9 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.HashMap;
+
 import eu.ttbox.geoping.core.PhoneNumberUtils;
 
 

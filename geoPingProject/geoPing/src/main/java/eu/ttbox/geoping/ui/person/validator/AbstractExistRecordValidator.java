@@ -1,14 +1,9 @@
 package eu.ttbox.geoping.ui.person.validator;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import android.text.TextUtils;
 
 import eu.ttbox.geoping.R;
-import eu.ttbox.geoping.domain.PersonProvider;
-import eu.ttbox.geoping.domain.person.PersonDatabase;
 import eu.ttbox.geoping.ui.core.validator.Validator;
 
 

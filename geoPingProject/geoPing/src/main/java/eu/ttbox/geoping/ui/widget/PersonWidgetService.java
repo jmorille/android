@@ -10,12 +10,10 @@ import android.text.TextUtils;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.person.PersonHelper;
-import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 /**
  * {link http://www.java2s.com/Code/Android/UI/WeatherListWidget.htm}

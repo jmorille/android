@@ -7,7 +7,6 @@ import android.accounts.OperationCanceledException;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
@@ -15,13 +14,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.RawContacts.Entity;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.sound.midi.Track;
 
 import eu.ttbox.geoping.domain.PersonProvider;
 import eu.ttbox.geoping.domain.model.Person;

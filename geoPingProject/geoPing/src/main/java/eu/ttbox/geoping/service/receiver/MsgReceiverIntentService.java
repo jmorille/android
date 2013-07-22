@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 import android.util.Log;
+
 import eu.ttbox.geoping.core.Intents;
 
 @Deprecated

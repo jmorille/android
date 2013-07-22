@@ -1,5 +1,10 @@
 package eu.ttbox.geoping.service.master;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,11 +13,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 
 public class GsmCidLatHelper {
 

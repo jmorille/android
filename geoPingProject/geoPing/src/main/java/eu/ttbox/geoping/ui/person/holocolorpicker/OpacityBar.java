@@ -14,6 +14,7 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
 import eu.ttbox.geoping.R;
 
 public class OpacityBar extends View {

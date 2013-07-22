@@ -48,9 +48,9 @@ import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
+import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
-import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
 
 public class GeoPingMasterService extends IntentService {
 

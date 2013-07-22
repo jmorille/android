@@ -1,6 +1,5 @@
 package eu.ttbox.geoping.service.encoder.params;
 
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.encoder.SmsMessageTypeEnum;
 
 
