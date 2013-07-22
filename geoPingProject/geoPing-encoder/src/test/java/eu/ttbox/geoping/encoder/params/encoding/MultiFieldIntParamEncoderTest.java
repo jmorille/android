@@ -20,9 +20,9 @@ public class MultiFieldIntParamEncoderTest {
     public void testEncodeLatLngAlt() {
         // Create Map To encode
         MapEncoderAdpater mapEncode = new MapEncoderAdpater();
-        mapEncode.putInt(MessageParamField.COL_LATITUDE_E6, 43158549);
-        mapEncode.putInt(MessageParamField.COL_LONGITUDE_E6, 25218546);
-        mapEncode.putInt(MessageParamField.COL_ALTITUDE, 120);
+        mapEncode.putInt(MessageParamField.LOC_LATITUDE_E6, 43158549);
+        mapEncode.putInt(MessageParamField.LOC_LONGITUDE_E6, 25218546);
+        mapEncode.putInt(MessageParamField.LOC_ALTITUDE, 120);
 
         // Encode Message
         doEncodeDecode(mapEncode, false);
@@ -32,8 +32,8 @@ public class MultiFieldIntParamEncoderTest {
     public void testEncodeLatLng() {
         // Create Map To encode
         MapEncoderAdpater mapEncode = new MapEncoderAdpater();
-        mapEncode.putInt(MessageParamField.COL_LATITUDE_E6, 43158549);
-        mapEncode.putInt(MessageParamField.COL_LONGITUDE_E6, 25218546);
+        mapEncode.putInt(MessageParamField.LOC_LATITUDE_E6, 43158549);
+        mapEncode.putInt(MessageParamField.LOC_LONGITUDE_E6, 25218546);
 
         // Encode Message
         doEncodeDecode(mapEncode, false);
@@ -43,7 +43,7 @@ public class MultiFieldIntParamEncoderTest {
     public void testEncodeLat() {
         // Create Map To encode
         MapEncoderAdpater mapEncode = new MapEncoderAdpater();
-        mapEncode.putInt(MessageParamField.COL_LATITUDE_E6, 43158549);
+        mapEncode.putInt(MessageParamField.LOC_LATITUDE_E6, 43158549);
 
         // Encode Message
         doEncodeDecode(mapEncode, false);

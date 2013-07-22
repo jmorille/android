@@ -13,6 +13,8 @@ import eu.ttbox.geoping.core.Intents;
 import eu.ttbox.geoping.encoder.SmsEncoderHelper;
 import eu.ttbox.geoping.encoder.crypto.TextEncryptor;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
+import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
 import eu.ttbox.geoping.service.master.GeoPingMasterService;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveService;
@@ -88,9 +90,6 @@ public class MessageEncoderHelper {
         return intent;
     }
 
-    private static final List<MessageActionEnum> SLAVE_ACTION = Arrays.asList(
-            MessageActionEnum.LOC, MessageActionEnum.ACTION_GEO_PAIRING, MessageActionEnum.COMMAND_OPEN_APP
-    );
 
     private static Class getServiceClassForSmsAction(MessageActionEnum action) {
         if (action.isConsumeMaster) {
@@ -98,6 +97,101 @@ public class MessageEncoderHelper {
         } else {
             return GeoPingSlaveService.class;
         }
+    }
+
+
+    // ===========================================================
+    // Writer / Reader
+    // ===========================================================
+
+    public static boolean isToBundle(Bundle extras, MessageParamEnum field ) {
+        return isToBundle( extras, field.type );
+    }
+
+
+    public static boolean isToBundle(Bundle extras, MessageParamField type) {
+        if (extras==null) {
+            return false;
+        }
+        return extras.containsKey(type.dbFieldName);
+    }
+
+    public static Bundle writeToBundle(Bundle extras, MessageParamEnum field, long value) {
+        return writeToBundle( extras, field.type,   value);
+    }
+
+    public static Bundle writeToBundle(Bundle extras, MessageParamField type, long value) {
+        Bundle params = extras == null ? new Bundle() : extras;
+        params.putLong(type.dbFieldName, value);
+        return params;
+    }
+
+    public static Bundle writeToBundle(Bundle extras, MessageParamEnum field, int value) {
+        return writeToBundle( extras, field.type,   value);
+    }
+
+    public static Bundle writeToBundle(Bundle extras, MessageParamField type, int value) {
+        Bundle params = extras == null ? new Bundle() : extras;
+        params.putInt(type.dbFieldName, value);
+        return params;
+    }
+
+    public static Bundle writeToBundle(Bundle extras, MessageParamEnum field, int[] value) {
+        return writeToBundle( extras, field.type,   value);
+    }
+
+    public static Bundle writeToBundle(Bundle extras, MessageParamField type, int[] value) {
+        Bundle params = extras == null ? new Bundle() : extras;
+        params.putIntArray(type.dbFieldName, value);
+        return params;
+    }
+
+    public static Bundle writeToBundle(Bundle extras, MessageParamEnum field, String value) {
+        return writeToBundle( extras, field.type,   value);
+    }
+
+
+    public static Bundle writeToBundle(Bundle extras, MessageParamField type, String value) {
+        Bundle params = extras == null ? new Bundle() : extras;
+        params.putString(type.dbFieldName, value);
+        return params;
+    }
+
+    public static long readLong(Bundle extras, MessageParamEnum field, long value) {
+        return readLong( extras, field.type,   value);
+    }
+
+
+    public static long readLong(Bundle params, MessageParamField type, long defaultValue) {
+        long result = defaultValue;
+        if (params != null && params.containsKey(type.dbFieldName)) {
+            result = params.getLong(type.dbFieldName, defaultValue);
+        }
+        return result;
+    }
+
+    public static int readInt(Bundle extras, MessageParamEnum field, int value) {
+        return readInt( extras, field.type,   value);
+    }
+
+    public static int readInt(Bundle params, MessageParamField type, int defaultValue) {
+        int result = defaultValue;
+        if (params != null && params.containsKey(type.dbFieldName)) {
+            result = params.getInt(type.dbFieldName, defaultValue);
+        }
+        return result;
+    }
+
+    public static String readString(Bundle extras, MessageParamEnum field ) {
+        return readString( extras, field.type);
+    }
+
+    public static String readString(Bundle params, MessageParamField type) {
+        String result = null;
+        if (params != null && params.containsKey(type.dbFieldName)) {
+            result = params.getString(type.dbFieldName);
+        }
+        return result;
     }
 
 

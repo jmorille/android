@@ -45,11 +45,12 @@ import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.person.PersonDatabase.PersonColumns;
 import eu.ttbox.geoping.domain.person.PersonHelper;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class GeoPingMasterService extends IntentService {
@@ -144,7 +145,7 @@ public class GeoPingMasterService extends IntentService {
         } else if (Intents.ACTION_SMS_PAIRING_RESPONSE.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-            long userId = SmsMessageLocEnum.PERSON_ID.readLong(params, -1);
+            long userId =   MessageEncoderHelper.readLong(params, MessageParamEnum.PERSON_ID, -1);
             consumeSmsPairingResponse(phone, userId);
             // Tracker
             // tracker.trackPageView("/action/SMS_PAIRING_RESPONSE");
@@ -178,7 +179,7 @@ public class GeoPingMasterService extends IntentService {
                             Bundle bundle = intent.getExtras();
                             String newPhone = bundle.getString(Intents.EXTRA_SMS_PHONE);
                             Bundle params = bundle.getBundle(Intents.EXTRA_SMS_PARAMS);
-                            String originalPhone = SmsMessageLocEnum.PHONE_NUMBER.readString(params);
+                            String originalPhone = MessageEncoderHelper.readString(params, MessageParamEnum.PHONE_NUMBER);
                             Log.i(TAG, "Sim Change [" + originalPhone + "] to new Phone [" + newPhone + "]");
                         }
                     case SPY_BOOT:
@@ -296,7 +297,7 @@ public class GeoPingMasterService extends IntentService {
             Uri entityUri = Uri.withAppendedPath(PersonProvider.Constants.CONTENT_URI, String.valueOf(person.id));
             // getContentResolver().update(entityUri, values, null, null);
         }
-        Bundle params = SmsMessageLocEnum.PERSON_ID.writeToBundle(null, userId);
+        Bundle params =  MessageEncoderHelper.writeToBundle(null,  MessageParamEnum.PERSON_ID,userId);
         boolean isSend = sendSms(phone, MessageActionEnum.ACTION_GEO_PAIRING, params);
         if (isSend) {
             Message msg = uiHandler.obtainMessage(UI_MSG_TOAST, getResources().getString(R.string.toast_notif_sended_geoping_pairing, phone));
@@ -471,8 +472,8 @@ public class GeoPingMasterService extends IntentService {
         // Create Notifiation
         Log.d(TAG, "----- contentTitle with Bundle : " + params);
         String contentTitle = MessageActionEnumLabelHelper.getString(this, actionEnum);
-        if (SmsMessageLocEnum.GEOFENCE_NAME.isToBundle(params)) {
-            String geofenceName = SmsMessageLocEnum.GEOFENCE_NAME.readString(params);
+        if (MessageEncoderHelper.isToBundle(params, MessageParamEnum.GEOFENCE_NAME)) {
+            String geofenceName = MessageEncoderHelper.readString(params, MessageParamEnum.GEOFENCE_NAME);
             if (MessageActionEnum.GEOFENCE_ENTER.equals(actionEnum)) {
                 contentTitle =  getString(R.string.sms_action_geofence_transition_enter_with_name, geofenceName);
             } else if (MessageActionEnum.GEOFENCE_EXIT.equals(actionEnum)) {
@@ -503,11 +504,11 @@ public class GeoPingMasterService extends IntentService {
             inBoxStyle.addLine(contactDisplayName);
             inBoxStyle.addLine(coordString);
             if (geoTrack.batteryLevelInPercent > -1) {
-                String batteryLabel = SmsMessageLocEnum.BATTERY.getLabelValueResourceId(this, String.valueOf(geoTrack.batteryLevelInPercent));
+                String batteryLabel = MessageParamEnum.BATTERY.getLabelValueResourceId(this, String.valueOf(geoTrack.batteryLevelInPercent));
                 inBoxStyle.addLine(batteryLabel);
             }
             if (geoTrack.hasEventTime()) {
-                String smsTypeTime = SmsMessageLocEnum.EVT_DATE.getLabelValueResourceId(this, geoTrack.eventTime);
+                String smsTypeTime = MessageParamEnum.EVT_DATE.getLabelValueResourceId(this, geoTrack.eventTime);
                 inBoxStyle.addLine(smsTypeTime);
             }
 

@@ -11,7 +11,7 @@ public class GpsProviderParamEncoderTest {
 
     private GpsProviderParamEncoder service = new GpsProviderParamEncoder();
 
-    private final MessageParamField field = MessageParamField.COL_PROVIDER;
+    private final MessageParamField field = MessageParamField.LOC_PROVIDER;
 
 
     @Test

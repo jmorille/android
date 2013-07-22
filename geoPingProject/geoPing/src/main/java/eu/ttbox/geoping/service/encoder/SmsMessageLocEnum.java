@@ -13,7 +13,7 @@ import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 import eu.ttbox.geoping.service.encoder.params.SmsType;
 
 /**
- * @deprecated Use MessageParamEnum
+ * @deprecated Use eu.ttbox.geoping.encoder.model.MessageParamEnum
  */
 @Deprecated
 public enum SmsMessageLocEnum {

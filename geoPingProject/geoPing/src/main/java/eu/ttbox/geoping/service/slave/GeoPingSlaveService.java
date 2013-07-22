@@ -38,10 +38,11 @@ import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.domain.pairing.PairingHelper;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
 import eu.ttbox.geoping.service.slave.receiver.AuthorizePhoneTypeEnum;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
@@ -208,7 +209,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
         if (pairing != null && pairing.authorizeType != null) {
             authorizeType = pairing.authorizeType;
         }
-        long personId = SmsMessageLocEnum.PERSON_ID.readLong(params, -1l);
+        long personId = MessageEncoderHelper.readLong(params,  MessageParamEnum.PERSON_ID, -1l);
         switch (authorizeType) {
         case AUTHORIZE_ALWAYS:// Already pairing, resent the response
             doPairingPhone(pairing, PairingAuthorizeTypeEnum.AUTHORIZE_ALWAYS, personId);
@@ -229,7 +230,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
         // Read Intent
         String phone = extras.getString(Intents.EXTRA_SMS_PHONE);
         Bundle params = extras.getBundle(Intents.EXTRA_SMS_PARAMS);
-        long personId = SmsMessageLocEnum.PERSON_ID.readLong(params, -1l);
+        long personId = MessageEncoderHelper.readLong(params, MessageParamEnum.PERSON_ID, -1l);
         GeopingNotifSlaveTypeEnum notifType = GeopingNotifSlaveTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_NOTIFICATION_TYPE_ENUM_ORDINAL, -1));
         AuthorizePhoneTypeEnum type = AuthorizePhoneTypeEnum.getByOrdinal(extras.getInt(Intents.EXTRA_AUTHORIZE_PHONE_TYPE_ENUM_ORDINAL));
         Log.d(TAG, "******* AuthorizePhoneTypeEnum : " + type);
@@ -325,7 +326,7 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
     private void sendPairingResponse(String phone, long personId, PairingAuthorizeTypeEnum authorizeType) {
         Bundle params = null;
         if (personId != -1l) {
-            params = SmsMessageLocEnum.PERSON_ID.writeToBundle(null, personId);
+            params = MessageEncoderHelper.writeToBundle(null,  MessageParamEnum.PERSON_ID, personId);
         }
         SmsSenderHelper.sendSmsAndLogIt(this, SmsLogSideEnum.SLAVE, phone, MessageActionEnum.ACTION_GEO_PAIRING_RESPONSE, params);
     }

@@ -18,9 +18,9 @@ import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
+import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
-import eu.ttbox.geoping.service.encoder.params.SmsType;
 
 public class SmsLogHelper {
 
@@ -102,7 +102,7 @@ public class SmsLogHelper {
                 } else if (GeoTrackColumns.COL_LONGITUDE_E6.equals(key)) {
                     // Ignore It, It manage before
                 } else {
-                    SmsMessageLocEnum fieldEnum = SmsMessageLocEnum.getByDbFieldName(key);
+                    MessageParamEnum fieldEnum = MessageParamEnum.getByDbFieldName(key);
                     if (fieldEnum != null) {
                         valKey = fieldEnum.name();
                         switch (fieldEnum) {
@@ -132,10 +132,10 @@ public class SmsLogHelper {
         return result;
     }
 
-    private static void writeForJsonParamTypeValue(JSONObject destWrite, String key, SmsMessageLocEnum fieldEnum, Bundle extras)
+    private static void writeForJsonParamTypeValue(JSONObject destWrite, String key, MessageParamEnum fieldEnum, Bundle extras)
             throws JSONException {
         String valKey = fieldEnum.name();
-        SmsType smsType = fieldEnum.type;
+        MessageParamField smsType = fieldEnum.type;
         switch (smsType.wantedWriteType) {
             case GPS_PROVIDER:
             case STRING: {

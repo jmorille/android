@@ -36,9 +36,10 @@ import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.core.WorkerService;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
 import eu.ttbox.osm.ui.map.mylocation.sensor.MyLocationListenerProxy;
 
 public class GeoPingSlaveLocationService extends WorkerService implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -234,7 +235,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
             // TODO Bad for multi request
             locProviderEnabled = myLocation.startListening(multiGeoRequestListener);
             // Schedule it for the time out 
-            int timeOutInSeconde = SmsMessageLocEnum.TIME_IN_S.readInt(params, 30);
+            int timeOutInSeconde =  MessageEncoderHelper.readInt(params, MessageParamEnum.TIME_IN_S, 30);
             ScheduledFuture<Boolean> task = executorService.schedule(request, timeOutInSeconde, TimeUnit.SECONDS);
             request.meTask = task;
         }
@@ -316,7 +317,7 @@ public class GeoPingSlaveLocationService extends WorkerService implements Shared
             this.smsAction = smsAction;
             this.smsPhoneNumber = phoneNumber;
             this.params = params;
-            this.accuracyExpected = SmsMessageLocEnum.ACCURACY.readInt(params, -1);
+            this.accuracyExpected =  MessageEncoderHelper.readInt(params, MessageParamEnum.ACCURACY, -1);
             this.isAccuracyExpectedCheck = accuracyExpected > -1;
             // register Listener for Battery Level
             batteryLevel();

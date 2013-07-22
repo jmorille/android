@@ -40,9 +40,9 @@ public class SmsEncoderHelperTest {
         long dateTest = getTestDate();
         // Create Map To encode
         MapEncoderAdpater mapEncode = new MapEncoderAdpater();
-        mapEncode.putInt(MessageParamField.COL_ACCURACY, 120);
-        mapEncode.putString(MessageParamField.COL_PROVIDER, "gps");
-        mapEncode.putLong(MessageParamField.COL_TIME, dateTest);
+        mapEncode.putInt(MessageParamField.LOC_ACCURACY, 120);
+        mapEncode.putString(MessageParamField.LOC_PROVIDER, "gps");
+        mapEncode.putLong(MessageParamField.LOC_TIME, dateTest);
 
         // Encode Message
         String encoded =  SmsEncoderHelper.encodeSmsMessage(MessageActionEnum.LOC_DECLARATION, mapEncode, null);

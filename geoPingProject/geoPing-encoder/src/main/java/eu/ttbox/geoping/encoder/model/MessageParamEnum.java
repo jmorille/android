@@ -13,17 +13,17 @@ public enum MessageParamEnum implements IParamEncoder {
 
 
     // Loc
-    PROVIDER('p', MessageParamField.COL_PROVIDER), //
+    PROVIDER('p', MessageParamField.LOC_PROVIDER), //
 
-    DATE('d', MessageParamField.COL_TIME), //
-    GEO_E6('g', MessageParamField.COL_LATITUDE_E6, //
-            MessageParamField.COL_LONGITUDE_E6, //
-            MessageParamField.COL_ALTITUDE  //
+    DATE('d', MessageParamField.LOC_TIME), //
+    GEO_E6('g', MessageParamField.LOC_LATITUDE_E6, //
+            MessageParamField.LOC_LONGITUDE_E6, //
+            MessageParamField.LOC_ALTITUDE  //
     ), //
-    ACCURACY('a', MessageParamField.COL_ACCURACY), //
-    BEARING('b', MessageParamField.COL_BEARING), //
-    SPEAD('c', MessageParamField.COL_SPEED), //
-    BATTERY('w', MessageParamField.COL_BATTERY_LEVEL), //
+    ACCURACY('a', MessageParamField.LOC_ACCURACY), //
+    BEARING('b', MessageParamField.LOC_BEARING), //
+    SPEAD('c', MessageParamField.LOC_SPEED), //
+    BATTERY('w', MessageParamField.BATTERY_LEVEL), //
 
     // Person
     TIME_IN_S('s', MessageParamField.TIME_IN_S), //

@@ -10,7 +10,6 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 import eu.ttbox.geoping.domain.geotrack.GeoTrackHelper;
 import eu.ttbox.geoping.domain.model.GeoTrack;
-import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class SmsMessageIntentEncoderHelperTest extends AndroidTestCase {
 

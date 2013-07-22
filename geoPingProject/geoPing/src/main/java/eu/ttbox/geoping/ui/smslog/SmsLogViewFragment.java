@@ -36,8 +36,8 @@ import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
 import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.ui.person.PhotoHeaderBinderHelper;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
@@ -268,11 +268,11 @@ public class SmsLogViewFragment extends SherlockFragment {
     }
 
     private void defineParamTextLabel( TextView keyTextView, TextView valueTextView ,  String key,  String val ) {
-        SmsMessageLocEnum param = SmsMessageLocEnum.getByEnumName(key);
+        MessageParamEnum param = MessageParamEnum.getByEnumName(key);
         if (param ==null) {
             keyTextView.setText(key);
             valueTextView.setText(val);
-        } else   if (param.equals(SmsMessageLocEnum.EVT_DATE) || param.equals(SmsMessageLocEnum.DATE)) {
+        } else   if (param.equals(MessageParamEnum.EVT_DATE) || param.equals(MessageParamEnum.DATE)) {
             keyTextView.setText(key);
             valueTextView.setText(val);
         } else if ( param.hasLabelValueResourceId() ) {

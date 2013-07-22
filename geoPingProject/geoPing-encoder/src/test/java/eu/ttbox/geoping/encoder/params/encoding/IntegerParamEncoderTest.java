@@ -24,8 +24,8 @@ public class IntegerParamEncoderTest {
         for (char c : IntegerEncoded.ALPHABET) {
             String str = String.valueOf(c);
             MapEncoderAdpater dest = new MapEncoderAdpater();
-             service.readTo(dest, str, MessageParamField.COL_ALTITUDE );
-            int decoded = dest.getInt(MessageParamField.COL_ALTITUDE );
+             service.readTo(dest, str, MessageParamField.LOC_ALTITUDE );
+            int decoded = dest.getInt(MessageParamField.LOC_ALTITUDE );
                     Assert.assertEquals(i++, decoded);
         }
     }
@@ -62,7 +62,7 @@ public class IntegerParamEncoderTest {
     private void doEncodeDecodeTest(int i,  IntegerParamEncoder service , boolean printIt) {
 
         int fullSize = String.valueOf(i).length();
-        MessageParamField field = MessageParamField.COL_ALTITUDE;
+        MessageParamField field = MessageParamField.LOC_ALTITUDE;
         // Encode
         MapEncoderAdpater src = new MapEncoderAdpater();
         src.putInt(field, i);

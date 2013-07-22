@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.util.Calendar;
 import java.util.List;
 
-import eu.ttbox.geoping.encoder.adapter.DecoderAdapter;
 import eu.ttbox.geoping.encoder.adapter.MapEncoderAdpater;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.encoder.params.AssertHelper;
@@ -37,11 +36,11 @@ public class SmsEncoderMultiFieldHelperTest {
         long dateTest = getTestDate();
         // Create Map To encode
         MapEncoderAdpater mapEncode = new MapEncoderAdpater();
-        mapEncode.putInt(MessageParamField.COL_LATITUDE_E6, 43158549);
-        mapEncode.putInt(MessageParamField.COL_LONGITUDE_E6, 25218546);
-        mapEncode.putLong(MessageParamField.COL_TIME, dateTest);
-        mapEncode.putInt(MessageParamField.COL_ACCURACY, 120);
-        mapEncode.putString(MessageParamField.COL_PROVIDER, "network");
+        mapEncode.putInt(MessageParamField.LOC_LATITUDE_E6, 43158549);
+        mapEncode.putInt(MessageParamField.LOC_LONGITUDE_E6, 25218546);
+        mapEncode.putLong(MessageParamField.LOC_TIME, dateTest);
+        mapEncode.putInt(MessageParamField.LOC_ACCURACY, 120);
+        mapEncode.putString(MessageParamField.LOC_PROVIDER, "network");
 
         // Encode Message
         doEncodeDecode(mapEncode);
@@ -54,14 +53,14 @@ public class SmsEncoderMultiFieldHelperTest {
         long dateTest = getTestDate();
         // Create Map To encode
         MapEncoderAdpater mapEncode = new MapEncoderAdpater();
-        mapEncode.putInt(MessageParamField.COL_LATITUDE_E6, 43158549);
-        mapEncode.putInt(MessageParamField.COL_LONGITUDE_E6, 25218546);
-        mapEncode.putInt(MessageParamField.COL_ALTITUDE, 120);
-        mapEncode.putLong(MessageParamField.COL_TIME, dateTest);
-        mapEncode.putInt(MessageParamField.COL_ACCURACY, 120);
-        mapEncode.putString(MessageParamField.COL_PROVIDER, "gps");
-        mapEncode.putInt(MessageParamField.COL_SPEED, 83);
-        mapEncode.putInt(MessageParamField.COL_BEARING, 83);
+        mapEncode.putInt(MessageParamField.LOC_LATITUDE_E6, 43158549);
+        mapEncode.putInt(MessageParamField.LOC_LONGITUDE_E6, 25218546);
+        mapEncode.putInt(MessageParamField.LOC_ALTITUDE, 120);
+        mapEncode.putLong(MessageParamField.LOC_TIME, dateTest);
+        mapEncode.putInt(MessageParamField.LOC_ACCURACY, 120);
+        mapEncode.putString(MessageParamField.LOC_PROVIDER, "gps");
+        mapEncode.putInt(MessageParamField.LOC_SPEED, 83);
+        mapEncode.putInt(MessageParamField.LOC_BEARING, 83);
 
         // Encode Message
         doEncodeDecode(mapEncode);

@@ -9,7 +9,6 @@ import eu.ttbox.geoping.domain.SmsLogProvider;
 import eu.ttbox.geoping.domain.model.SmsLog;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
-import eu.ttbox.geoping.service.encoder.SmsMessageActionEnum;
 
 public class SmsLogProviderTest extends ProviderTestCase2<SmsLogProvider> {
 

@@ -33,9 +33,10 @@ import eu.ttbox.geoping.domain.pairing.GeoFenceDatabase;
 import eu.ttbox.geoping.domain.pairing.GeoFenceHelper;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
 import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
 import eu.ttbox.geoping.service.slave.eventspy.SpyNotificationHelper;
 import eu.ttbox.osm.ui.map.mylocation.sensor.LocationUtils;
@@ -271,8 +272,8 @@ public class ReceiveTransitionsIntentService extends IntentService {
         Log.d(TAG, "EventSpy Notification  : " + eventType + " for " + phones.length + " phones destinations");
         // Send SMS
         Bundle extrasBundles = eventParams == null ? new Bundle() : eventParams;
-        if (!SmsMessageLocEnum.EVT_DATE.isToBundle(extrasBundles)) {
-            SmsMessageLocEnum.EVT_DATE.writeToBundle(extrasBundles, System.currentTimeMillis());
+        if (!MessageEncoderHelper.isToBundle(extrasBundles, MessageParamEnum.EVT_DATE)) {
+            MessageEncoderHelper.writeToBundle(extrasBundles, MessageParamEnum.EVT_DATE, System.currentTimeMillis());
         }
         if (!extrasBundles.containsKey(SmsLogDatabase.SmsLogColumns.COL_REQUEST_ID)) {
             extrasBundles.putString(SmsLogDatabase.SmsLogColumns.COL_REQUEST_ID, geofenceRequest.requestId);
@@ -283,7 +284,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
             extrasBundles.putInt(GeoFenceDatabase.GeoFenceColumns.COL_RADIUS, geofenceRequest.getRadiusInMeters()  );
             extrasBundles.putInt(GeoFenceDatabase.GeoFenceColumns.COL_TRANSITION, geofenceRequest.getTransitionType()  );
         }
-        SmsMessageLocEnum.GEOFENCE_NAME.writeToBundle(extrasBundles, geofenceRequest.name);
+        MessageEncoderHelper.writeToBundle(extrasBundles, MessageParamEnum.GEOFENCE_NAME, geofenceRequest.name);
         if (location != null) {
             // Converter Location
             GeoTrack geotrack = new GeoTrack(null, location);

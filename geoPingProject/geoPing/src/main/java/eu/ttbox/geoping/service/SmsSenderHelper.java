@@ -21,8 +21,8 @@ import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
 import eu.ttbox.geoping.service.receiver.MessageAcknowledgeReceiver;
 
@@ -36,16 +36,16 @@ public class SmsSenderHelper {
 
     public static Bundle completeRequestTimeOutFromPrefs(SharedPreferences appPreferences, Bundle params) {
         Bundle result = params == null ? new Bundle() : params;
-        if (!result.containsKey(SmsMessageLocEnum.TIME_IN_S.type.dbFieldName)) {
+        if (!result.containsKey(MessageParamField.TIME_IN_S.dbFieldName)) {
             int timeOut = appPreferences.getInt(AppConstants.PREFS_REQUEST_TIMEOUT_S, -1);
             if (timeOut > -1) {
-                result.putInt(SmsMessageLocEnum.TIME_IN_S.type.dbFieldName, timeOut);
+                result.putInt(MessageParamField.TIME_IN_S.dbFieldName, timeOut);
             }
         }
-        if (!result.containsKey(SmsMessageLocEnum.ACCURACY.type.dbFieldName)) {
+        if (!result.containsKey(MessageParamField.LOC_ACCURACY.dbFieldName)) {
             int accuracy = appPreferences.getInt(AppConstants.PREFS_REQUEST_ACCURACY_M, -1);
             if (accuracy > -1) {
-                result.putInt(SmsMessageLocEnum.ACCURACY.type.dbFieldName, accuracy);
+                result.putInt(MessageParamField.LOC_ACCURACY.dbFieldName, accuracy);
             }
         }
         return result;
