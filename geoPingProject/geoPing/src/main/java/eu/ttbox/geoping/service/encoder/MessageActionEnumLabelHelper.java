@@ -36,7 +36,11 @@ public class MessageActionEnumLabelHelper {
         };
         HashMap<MessageActionEnum, LabelHoder> abyMessageActionEnum = new HashMap<MessageActionEnum, LabelHoder>(holders.length);
         for (LabelHoder holder : holders) {
-            abyMessageActionEnum.put(holder.action,  holder);
+            final MessageActionEnum key = holder.action;
+            if (abyMessageActionEnum.containsKey(key)) {
+                throw new IllegalArgumentException(String.format("Duplicated MessageActionEnumLabelHelper Map Key %s", key));
+            }
+            abyMessageActionEnum.put(key,  holder);
         }
         byMessageActionEnum = abyMessageActionEnum;
     }

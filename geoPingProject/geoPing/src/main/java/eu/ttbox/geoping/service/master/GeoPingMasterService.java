@@ -51,6 +51,7 @@ import eu.ttbox.geoping.service.core.ContactHelper;
 import eu.ttbox.geoping.service.core.ContactVo;
 import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
 import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
+import eu.ttbox.geoping.service.encoder.MessageParamEnumLabelHelper;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
 public class GeoPingMasterService extends IntentService {
@@ -120,7 +121,7 @@ public class GeoPingMasterService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
-        Log.d(TAG, String.format("onHandleIntent for action %s : %s", action, intent));
+        Log.d(TAG, String.format("###  onHandleIntent for action %s : %s", action, intent));
         if (Intents.ACTION_SMS_GEOPING_REQUEST_SENDER.equals(action)) {
             String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
             Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
@@ -162,6 +163,7 @@ public class GeoPingMasterService extends IntentService {
         } else {
             MessageActionEnum actionEnum = MessageActionEnum.getByIntentName(action);
             if (actionEnum != null) {
+                Log.d(TAG, String.format("###  onHandleIntent for actionEnum %s : %s", actionEnum, intent));
                 switch (actionEnum) {
                     case COMMAND_OPEN_APP: {
                         String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
@@ -504,11 +506,11 @@ public class GeoPingMasterService extends IntentService {
             inBoxStyle.addLine(contactDisplayName);
             inBoxStyle.addLine(coordString);
             if (geoTrack.batteryLevelInPercent > -1) {
-                String batteryLabel = MessageParamEnum.BATTERY.getLabelValueResourceId(this, String.valueOf(geoTrack.batteryLevelInPercent));
+                String batteryLabel = MessageParamEnumLabelHelper.getString(this, MessageParamEnum.BATTERY, geoTrack.batteryLevelInPercent);
                 inBoxStyle.addLine(batteryLabel);
             }
             if (geoTrack.hasEventTime()) {
-                String smsTypeTime = MessageParamEnum.EVT_DATE.getLabelValueResourceId(this, geoTrack.eventTime);
+                String smsTypeTime = MessageParamEnumLabelHelper.getLabelHolder(this, MessageParamEnum.EVT_DATE).getString(this, geoTrack.eventTime);
                 inBoxStyle.addLine(smsTypeTime);
             }
 

@@ -17,8 +17,9 @@ import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.domain.model.GeoTrack;
 import eu.ttbox.geoping.domain.model.Person;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
 import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.MessageParamEnumLabelHelper;
 import eu.ttbox.geoping.ui.person.PersonColorDrawableHelper;
 import eu.ttbox.osm.core.ExternalIntents;
 import eu.ttbox.osm.ui.map.mylocation.CompassEnum;
@@ -232,7 +233,7 @@ public class GeoTrackBubble extends FrameLayout {
 		    bearingTextView.setVisibility(GONE);
 		}
 		if (hasBattery) {
-            String batteryLabel =  SmsMessageLocEnum.BATTERY.getLabelValueResourceId(getContext(), geoTrack.batteryLevelInPercent );
+            String batteryLabel =  MessageParamEnumLabelHelper.getString(getContext(), MessageParamEnum.BATTERY, geoTrack.batteryLevelInPercent);
 		    batteryTextView.setText(batteryLabel);
             batteryTextView.setVisibility(VISIBLE);
 		} else {

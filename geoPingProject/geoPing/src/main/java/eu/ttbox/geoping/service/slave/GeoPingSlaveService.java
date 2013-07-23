@@ -126,59 +126,46 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
         try {
             String action = intent.getAction();
             Log.d(TAG, "##################################");
-            Log.d(TAG, String.format("onHandleIntent for action %s : %s", action, intent));
+            Log.d(TAG, String.format("### onHandleIntent for action %s : %s", action, intent));
             Log.d(TAG, "##################################");
-            if (Intents.ACTION_SMS_GEOPING_REQUEST_HANDLER.equals(action)) {
-                // GeoPing Request
-                String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-                Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-
-                // Request
-                // registerGeoPingRequest(phone, params);
-                Pairing pairing = getPairingByPhone(phone);
-                PairingAuthorizeTypeEnum authorizeType = pairing.authorizeType;
-                boolean showNotification = pairing.showNotification; 
-                switch (authorizeType) {
-                case AUTHORIZE_NEVER:
-                    Log.i(TAG, "Ignore Geoping (Never Authorize) request from phone " + phone);
-                    // Show Blocking Notification
-                    if (showNotification) {
-                        showNotificationGeoPing(pairing, params, false);
+            MessageActionEnum msgAction = MessageActionEnum.getByIntentName(action);
+            if (msgAction!=null) {
+                switch (msgAction) {
+                    case GEOPING_REQUEST: {
+                        // GeoPing Request
+                        String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+                        Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
+                        manageGeopingRequest(phone, params);
                     }
                     break;
-                case AUTHORIZE_ALWAYS:
-                    Log.i(TAG, "Accept Geoping (always Authorize) request from phone " + phone);
-                    GeoPingSlaveLocationService.runFindLocationAndSendInService(this , MessageActionEnum.LOC, new String[] { phone }, params);
-                    // Display Notification GeoPing
-                    if (showNotification) {
-                        showNotificationGeoPing(pairing, params, true);
+                    case ACTION_GEO_PAIRING: {
+                        // GeoPing Pairing
+                        String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+                        Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
+                        managePairingRequest(phone, params);
                     }
                     break;
-                case AUTHORIZE_REQUEST:
-                    GeopingNotifSlaveTypeEnum type = GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM;
-                    if (AppConstants.UNSET_ID == pairing.id) {
-                        type = GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM_FIRST;
+                    case COMMAND_OPEN_APP: {
+                        // GeoPing Command : Open Application
+                        String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
+                        Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
+                        manageCommandOpenApplication(phone, params);
                     }
-                    showNotificationNewPingRequestConfirm(pairing, params, type);
                     break;
-                default:
-                    break;
+                    default:
+                        Log.w(TAG, "Not Manage Intent for Enum Action : " + msgAction);
+                        break;
                 }
-
-            } else if (Intents.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE.equals(action)) {
-                // GeoPing Pairing User ressponse
-                manageNotificationAuthorizeIntent(intent.getExtras());
-            } else if (Intents.ACTION_SMS_PAIRING_RESQUEST.equals(action)) {
-                // GeoPing Pairing
-                String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-                Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-                managePairingRequest(phone, params);
-            } else if (Intents.ACTION_SMS_COMMAND_OPEN_APP.equals(action)) {
-                // GeoPing Command : Open Application
-                String phone = intent.getStringExtra(Intents.EXTRA_SMS_PHONE);
-                Bundle params = intent.getBundleExtra(Intents.EXTRA_SMS_PARAMS);
-                manageCommandOpenApplication(phone, params);
+            } else {
+                if (Intents.ACTION_SLAVE_GEOPING_PHONE_AUTHORIZE.equals(action)) {
+                    // GeoPing Pairing User ressponse
+                    manageNotificationAuthorizeIntent(intent.getExtras());
+                } else {
+                    Log.w(TAG, "Not Manage Intent Action (not an MessageActionEnum) : " + action);
+                }
             }
+
+
         } finally {
             // synchronized (LOCK) {
             // sWakeLock.release();
@@ -194,6 +181,43 @@ public class GeoPingSlaveService extends IntentService implements SharedPreferen
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(new Intent(getApplicationContext(), MainActivity.class));
         stackBuilder.startActivities();
+    }
+
+    // ===========================================================
+    // GeoPing Request
+    // ===========================================================
+    private void manageGeopingRequest(String phone, Bundle params) {
+        // Request
+        // registerGeoPingRequest(phone, params);
+        Pairing pairing = getPairingByPhone(phone);
+        PairingAuthorizeTypeEnum authorizeType = pairing.authorizeType;
+        boolean showNotification = pairing.showNotification;
+        switch (authorizeType) {
+            case AUTHORIZE_NEVER:
+                Log.i(TAG, "Ignore Geoping (Never Authorize) request from phone " + phone);
+                // Show Blocking Notification
+                if (showNotification) {
+                    showNotificationGeoPing(pairing, params, false);
+                }
+                break;
+            case AUTHORIZE_ALWAYS:
+                Log.i(TAG, "Accept Geoping (always Authorize) request from phone " + phone);
+                GeoPingSlaveLocationService.runFindLocationAndSendInService(this , MessageActionEnum.LOC, new String[] { phone }, params);
+                // Display Notification GeoPing
+                if (showNotification) {
+                    showNotificationGeoPing(pairing, params, true);
+                }
+                break;
+            case AUTHORIZE_REQUEST:
+                GeopingNotifSlaveTypeEnum type = GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM;
+                if (AppConstants.UNSET_ID == pairing.id) {
+                    type = GeopingNotifSlaveTypeEnum.GEOPING_REQUEST_CONFIRM_FIRST;
+                }
+                showNotificationNewPingRequestConfirm(pairing, params, type);
+                break;
+            default:
+                break;
+        }
     }
 
     // ===========================================================

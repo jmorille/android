@@ -6,20 +6,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Locale;
-
-import eu.ttbox.geoping.core.AppConstants;
-import eu.ttbox.geoping.domain.geotrack.GeoTrackDatabase.GeoTrackColumns;
 import eu.ttbox.geoping.domain.model.SmsLog;
 import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.model.SmsLogTypeEnum;
 import eu.ttbox.geoping.domain.smslog.SmsLogDatabase.SmsLogColumns;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.encoder.model.MessageParamEnum;
-import eu.ttbox.geoping.encoder.params.MessageParamField;
 import eu.ttbox.geoping.encoder.params.ParamEncoderHelper;
 import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
 
@@ -47,7 +39,7 @@ public class SmsLogHelper {
         }
         initialValues.put(SmsLogColumns.COL_TIME, vo.time);
         initialValues.put(SmsLogColumns.COL_PHONE, vo.phone);
-        initialValues.put(SmsLogColumns.COL_ACTION, vo.action.getDbCode() );
+        initialValues.put(SmsLogColumns.COL_ACTION, vo.action.getDbCode());
         initialValues.put(SmsLogColumns.COL_MESSAGE, vo.message);
         initialValues.put(SmsLogColumns.COL_MESSAGE_PARAMS, vo.messageParams);
         initialValues.put(SmsLogColumns.COL_SMSLOG_TYPE, vo.smsLogType.getCode());
@@ -64,7 +56,7 @@ public class SmsLogHelper {
     /**
      * Used for logging sms Message in db
      */
-    public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, String phone,MessageActionEnum action, Bundle params, String messageResult) {
+    public static ContentValues getContentValues(SmsLogSideEnum side, SmsLogTypeEnum type, String phone, MessageActionEnum action, Bundle params, String messageResult) {
         ContentValues values = new ContentValues();
         values.put(SmsLogColumns.COL_TIME, System.currentTimeMillis());
         values.put(SmsLogColumns.COL_PHONE, phone);
@@ -90,89 +82,27 @@ public class SmsLogHelper {
     private static String convertAsJsonString(Bundle extras) {
         String result = null;
         Log.d(TAG, "convertAsJsonString : " + extras);
-        try {
-            JSONObject object = new JSONObject();
-            BundleEncoderAdapter src = new BundleEncoderAdapter(null, extras);
-            StringBuilder dest = new StringBuilder();
-            boolean isNotFirst = false;
-            for (String key : extras.keySet()) {
-                String valKey = key;
-                if (GeoTrackColumns.COL_LATITUDE_E6.equals(key) && extras.containsKey(GeoTrackColumns.COL_LONGITUDE_E6)) {
-                    String  destKey = "WSG84";
-                    double lat =  extras.getInt(GeoTrackColumns.COL_LATITUDE_E6) / AppConstants.E6 ;
-                    double lng =  extras.getInt(GeoTrackColumns.COL_LONGITUDE_E6) / AppConstants.E6 ;
-                    String coordString = String.format(Locale.US, "(%.6f, %.6f)", lat, lng);
-                    object.put(destKey, coordString);
-                } else if (GeoTrackColumns.COL_LONGITUDE_E6.equals(key)) {
-                    // Ignore It, It manage before
-                } else {
-                    MessageParamEnum fieldEnum = MessageParamEnum.getByDbFieldName(key);
-                    if (fieldEnum != null) {
-                        valKey = fieldEnum.name();
-                        switch (fieldEnum) {
-                            case PERSON_ID:
-                                // Ignore this Field
-                                break;
-                            default:
-                                XXXXXXX
-                                isNotFirst = ParamEncoderHelper.addFieldSep(dest, isNotFirst);
-                                fieldEnum.writeTo(src, dest );
-                                 writeForJsonParamTypeValue(object, key, fieldEnum, extras);
-                                break;
-                        }
-                    } else {
-                        // Is a not mange field
-                        Object val = extras.get(key);
-                        object.put(key, val);
-                    }
-
+        BundleEncoderAdapter src = new BundleEncoderAdapter(null, extras);
+        StringBuilder dest = new StringBuilder();
+        boolean isNotFirst = false;
+        for (String key : extras.keySet()) {
+            MessageParamEnum fieldEnum = MessageParamEnum.getByDbFieldName(key);
+            if (fieldEnum != null) {
+                switch (fieldEnum) {
+                    case PERSON_ID:
+                        // Ignore this Field
+                        break;
+                    default:
+                        isNotFirst = ParamEncoderHelper.addFieldSep(dest, isNotFirst);
+                        fieldEnum.writeTo(src, dest);
+                        break;
                 }
-
             }
-
-            result = dest.toString();
-            // result = object.toString();
-        } catch (RuntimeException e) {
-            result = e.getMessage();
-        } catch (JSONException e) {
-            result = e.getMessage();
         }
+        result = dest.toString();
         return result;
     }
 
-    private static void writeForJsonParamTypeValue(JSONObject destWrite, String key, MessageParamEnum fieldEnum, Bundle extras)
-            throws JSONException {
-        String valKey = fieldEnum.name();
-        MessageParamField smsType = fieldEnum.type;
-        switch (smsType.wantedWriteType) {
-            case GPS_PROVIDER:
-            case STRING: {
-                String val = extras.getString(key);
-                destWrite.put(valKey, val);
-            }
-            break;
-            case INT: {
-                int val = extras.getInt(key);
-                destWrite.put(valKey, val);
-            }
-            break;
-            case DATE: {
-                long dateAsLong = extras.getLong(key);
-                String val = String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", dateAsLong);
-                destWrite.put(valKey, val);
-            }
-            break;
-            case LONG: {
-                Long val = Long.valueOf(extras.getLong(key));
-                destWrite.put(valKey, val);
-            }
-            break;
-
-            default:
-                Log.d(TAG, "Ignore SmsMessageLocEnum." + fieldEnum + " for type of " + fieldEnum.type);
-                break;
-        }
-    }
 
     // ===========================================================
     // Data Accessor

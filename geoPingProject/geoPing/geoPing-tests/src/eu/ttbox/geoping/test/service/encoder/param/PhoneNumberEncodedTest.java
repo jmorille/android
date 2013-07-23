@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
 import eu.ttbox.geoping.core.PhoneNumberUtils;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
+import eu.ttbox.geoping.encoder.params.ParamEncoderHelper;
 import eu.ttbox.geoping.service.billing.util.Base64;
 import eu.ttbox.geoping.service.billing.util.Base64DecoderException;
+import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
 import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
 
 public class PhoneNumberEncodedTest extends AndroidTestCase {
@@ -21,14 +24,14 @@ public class PhoneNumberEncodedTest extends AndroidTestCase {
         for (String phoneNumber : phones) {
             String preparePhoneNumber = preparePhoneNumber(phoneNumber);
             // Enocde
-            Bundle extras = SmsMessageLocEnum.PHONE_NUMBER.writeToBundle(null, preparePhoneNumber);
+            Bundle extras = MessageEncoderHelper.writeToBundle(null, MessageParamEnum.PHONE_NUMBER, preparePhoneNumber);
             StringBuilder dest = new StringBuilder();
             SmsParamEncoderHelper.encodeMessage(extras, dest);
             Log.d(TAG, "PhoneNumber Encode  : " + phoneNumber
                     + " ==> " + dest.toString());
             // Decode
-            Bundle decode = SmsParamEncoderHelper.decodeMessageAsMap(dest.toString());
-            String decodedPhone = SmsMessageLocEnum.PHONE_NUMBER.readString(decode);
+            Bundle decode =   ParamEncoderHelper.decodeMessageAsMap(dest.toString());
+            String decodedPhone = MessageEncoderHelper.readString(decode, MessageParamEnum.PHONE_NUMBER);
             String preparedDecodedPhone = new String(Base64.decodeWebSafe(decodedPhone));
             Log.d(TAG, "PhoneNumber Decoded  : " + dest.toString() + " ==> " + preparedDecodedPhone);
             assertEquals(phones[0], preparedDecodedPhone);
@@ -45,13 +48,14 @@ public class PhoneNumberEncodedTest extends AndroidTestCase {
         for (String phoneNumber : phones) {
             String preparePhoneNumber = preparePhoneNumber(phoneNumber);
             // Enocde
-            Bundle extras = SmsMessageLocEnum.PHONE_NUMBER.writeToBundle(null, preparePhoneNumber);
+            Bundle extras = MessageEncoderHelper.writeToBundle(null, MessageParamEnum.PHONE_NUMBER, preparePhoneNumber);
             StringBuilder dest = new StringBuilder();
             SmsParamEncoderHelper.encodeMessage(extras, dest);
             Log.d(TAG, "PhoneNumber Encode  : " + preparePhoneNumber + " ==> " + dest.toString());
             // Decode
+            MessageEncoderHelper.de
             Bundle decode = SmsParamEncoderHelper.decodeMessageAsMap(dest.toString());
-            String decodedPhone = SmsMessageLocEnum.PHONE_NUMBER.readString(decode);
+            String decodedPhone = MessageEncoderHelper.readString(decode, MessageParamEnum.PHONE_NUMBER );
             String preparedDecodedPhone = new String(Base64.decodeWebSafe(decodedPhone));
             Log.d(TAG, "PhoneNumber Decoded  : " + dest.toString() + " ==> " + preparedDecodedPhone);
             assertEquals(phones[0], preparedDecodedPhone);

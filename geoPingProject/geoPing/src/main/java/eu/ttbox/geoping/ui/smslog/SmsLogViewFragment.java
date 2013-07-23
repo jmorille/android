@@ -23,11 +23,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Iterator;
-
 import eu.ttbox.geoping.GeoPingApplication;
 import eu.ttbox.geoping.R;
 import eu.ttbox.geoping.core.Intents;
@@ -37,7 +32,10 @@ import eu.ttbox.geoping.domain.smslog.SmsLogDatabase;
 import eu.ttbox.geoping.domain.smslog.SmsLogHelper;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
 import eu.ttbox.geoping.encoder.model.MessageParamEnum;
+import eu.ttbox.geoping.encoder.params.ParamEncoderHelper;
 import eu.ttbox.geoping.service.encoder.MessageActionEnumLabelHelper;
+import eu.ttbox.geoping.service.encoder.MessageParamEnumLabelHelper;
+import eu.ttbox.geoping.service.encoder.adpater.BundleEncoderAdapter;
 import eu.ttbox.geoping.ui.person.PhotoHeaderBinderHelper;
 import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 
@@ -45,23 +43,17 @@ import eu.ttbox.geoping.ui.person.PhotoThumbmailCache;
 public class SmsLogViewFragment extends SherlockFragment {
 
     private static final String TAG = "SmsLogViewFragment";
-
     // Binding
     private PhotoHeaderBinderHelper photoHeader;
-
-
     private TextView messageTextView;
     private ImageView smsTypeImageView;
     private TextView smsTypeTimeTextView;
     private LinearLayout paramListView;
-
     // Cache
     private PhotoThumbmailCache photoCache;
     private SmsLogResources mResources;
-
     // Instance
     private Uri entityUri;
-
     // Context
     private Context mContext;
     private SmsLogHelper helper = new SmsLogHelper();
@@ -71,7 +63,6 @@ public class SmsLogViewFragment extends SherlockFragment {
     // ===========================================================
     // Constructors
     // ===========================================================
-
     private ContentObserver observer = new ContentObserver(handler) {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
@@ -192,7 +183,7 @@ public class SmsLogViewFragment extends SherlockFragment {
     }
 
     public void loadEntity(Cursor cursor) {
-        if (helper.isNotInit ) {
+        if (helper.isNotInit) {
             helper.initWrapper(cursor);
         }
         // Phone
@@ -200,17 +191,17 @@ public class SmsLogViewFragment extends SherlockFragment {
         photoHeader.subEltPhoneTextView.setText(phone);
 
         // Action
-        MessageActionEnum action =  helper.getSmsMessageActionEnum(cursor);
-        String actionLabel = MessageActionEnumLabelHelper.getString(mContext, action );
+        MessageActionEnum action = helper.getSmsMessageActionEnum(cursor);
+        String actionLabel = MessageActionEnumLabelHelper.getString(mContext, action);
         photoHeader.subEltNameTextView.setText(actionLabel);
 
         // Messages Sizes    helper.getM
         String smsMessage = helper.getMessage(cursor);
-        int msgSize = smsMessage==null? 0 : smsMessage.length();
-        String message = getString(R.string.smslog_message_size,msgSize );
-        messageTextView.setText( message);
+        int msgSize = smsMessage == null ? 0 : smsMessage.length();
+        String message = getString(R.string.smslog_message_size, msgSize);
+        messageTextView.setText(message);
 
-         // Bind Value
+        // Bind Value
         SmsLogTypeEnum smLogType = helper.getSmsLogType(cursor);
         Drawable iconType = mResources.getCallTypeDrawable(smLogType);
         smsTypeImageView.setImageDrawable(iconType);
@@ -218,12 +209,12 @@ public class SmsLogViewFragment extends SherlockFragment {
         long smsLogTime = helper.getSmsLogTime(cursor);
         switch (smLogType) {
             case SEND_ACK:
-                smsLogTime =  helper.getSendAckTimeInMs(cursor);
+                smsLogTime = helper.getSendAckTimeInMs(cursor);
                 break;
             case SEND_DELIVERY_ACK:
-                smsLogTime =  helper.getSendDeliveryAckTimeInMs(cursor);
+                smsLogTime = helper.getSendDeliveryAckTimeInMs(cursor);
                 break;
-         }
+        }
         // Time
         String smsTypeTime = DateUtils.formatDateRange(mContext, smsLogTime, smsLogTime,
                 DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE |
@@ -239,49 +230,51 @@ public class SmsLogViewFragment extends SherlockFragment {
         cacheNameFinder.setTextViewPersonNameByPhone(photoHeader.mainActionNameTextView, phone, smsLogSide);
 
         // Photo
-         photoCache.loadPhoto(getActivity(), photoHeader.photoImageView, null, phone);
+        photoCache.loadPhoto(getActivity(), photoHeader.photoImageView, null, phone);
     }
 
     private void bindMessageParams(String msgParams) {
         Log.d(TAG, "Read Json Params : " + msgParams);
-        if (msgParams != null) {
-            try {
-                JSONObject json = new JSONObject(msgParams);
-                Iterator<String> it =  json.keys();
-                paramListView.removeAllViewsInLayout();
-                LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-                while (it.hasNext()) {
-                    String key = it.next();
-                    String val = json.getString(key);
-                    Log.d(TAG, "JSONObject key : "  +key + " = " + val);
-                    View convertView = layoutInflater.inflate(R.layout.smslog_view_list_param_item, null);
-                    TextView keyTextView =  (TextView)convertView.findViewById(R.id.smslog_list_item_param_key);
-                    TextView valueTextView =  (TextView)convertView.findViewById(R.id.smslog_list_item_param_value );
-                    // Set Values
-                     defineParamTextLabel(keyTextView, valueTextView, key, val);
-                    paramListView.addView(convertView);
+        if (msgParams != null && msgParams.length() > 0) {
+            // Decode Params
+            BundleEncoderAdapter dest = new BundleEncoderAdapter();
+            ParamEncoderHelper.decodeMessageAsMap(dest, msgParams);
+            Bundle bundle = dest.getMap();
+            // Clean of previous Parent
+            paramListView.removeAllViewsInLayout();
+            // Insert Param In View
+            LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+            for (String key : bundle.keySet()) {
+                MessageParamEnum param = MessageParamEnum.getByEnumName(key);
+                if (param == null) {
+                    // No ref of this param
+                    String val = String.valueOf(bundle.get(key));
+                    addParamTextLabel(layoutInflater, key, val);
+                } else {
+                    String label = MessageParamEnumLabelHelper.getString(getActivity(), param, bundle);
+                    if (label != null) {
+                        addParamTextLabel(layoutInflater, key, label);
+                    } else {
+                        // No ref of this param
+                        String val = String.valueOf(bundle.get(key));
+                        addParamTextLabel(layoutInflater, key, val);
+                    }
                 }
-            } catch (JSONException e) {
-                Log.e(TAG, "Error parsing JSON " + msgParams + " : " + e.getMessage(), e);
             }
         }
     }
 
-    private void defineParamTextLabel( TextView keyTextView, TextView valueTextView ,  String key,  String val ) {
-        MessageParamEnum param = MessageParamEnum.getByEnumName(key);
-        if (param ==null) {
-            keyTextView.setText(key);
-            valueTextView.setText(val);
-        } else   if (param.equals(MessageParamEnum.EVT_DATE) || param.equals(MessageParamEnum.DATE)) {
-            keyTextView.setText(key);
-            valueTextView.setText(val);
-        } else if ( param.hasLabelValueResourceId() ) {
-            keyTextView.setText(param.getLabelValueResourceId(getActivity(), val));
-            valueTextView.setText(null);
-        } else {
-            keyTextView.setText(key);
-            valueTextView.setText(val);
-        }
+    private void addParamTextLabel(LayoutInflater layoutInflater, String key, String val) {
+        // Create Layout
+        Log.d(TAG, "JSONObject key : " + key + " = " + val);
+        View convertView = layoutInflater.inflate(R.layout.smslog_view_list_param_item, null);
+        TextView keyTextView = (TextView) convertView.findViewById(R.id.smslog_list_item_param_key);
+        TextView valueTextView = (TextView) convertView.findViewById(R.id.smslog_list_item_param_value);
+        // Define View Values
+        keyTextView.setText(key);
+        valueTextView.setText(val);
+        // Add To Parent View
+        paramListView.addView(convertView);
 
     }
 

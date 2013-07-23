@@ -15,8 +15,9 @@ import eu.ttbox.geoping.domain.model.SmsLogSideEnum;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase;
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
 import eu.ttbox.geoping.service.SmsSenderHelper;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
 import eu.ttbox.geoping.service.slave.GeoPingSlaveLocationService;
 
 public class SpyNotificationHelper {
@@ -102,8 +103,8 @@ public class SpyNotificationHelper {
             Log.d(TAG, "EventSpy Notification  : " + eventType + " for " + phones.length + " phones destinations");
             // Send SMS
             Bundle params = eventParams == null ? new Bundle() : eventParams;
-            if (!SmsMessageLocEnum.EVT_DATE.isToBundle(params)) {
-                SmsMessageLocEnum.EVT_DATE.writeToBundle(params, System.currentTimeMillis());
+            if (! MessageEncoderHelper.isToBundle(params, MessageParamEnum.EVT_DATE)) {
+                MessageEncoderHelper.writeToBundle(params, MessageParamEnum.EVT_DATE, System.currentTimeMillis());
             }
             if (MessageActionEnum.SPY_SHUTDOWN.equals(eventType)) {
                 // Not time to get GeoLoc, send it direct

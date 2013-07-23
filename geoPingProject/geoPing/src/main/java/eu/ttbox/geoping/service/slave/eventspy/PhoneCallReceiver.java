@@ -10,7 +10,8 @@ import android.util.Log;
 
 import eu.ttbox.geoping.domain.pairing.PairingDatabase.PairingColumns;
 import eu.ttbox.geoping.encoder.model.MessageActionEnum;
-import eu.ttbox.geoping.service.encoder.SmsMessageLocEnum;
+import eu.ttbox.geoping.encoder.model.MessageParamEnum;
+import eu.ttbox.geoping.service.encoder.MessageEncoderHelper;
 
 public class PhoneCallReceiver extends BroadcastReceiver {
 
@@ -143,7 +144,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         String[] phones= SpyNotificationHelper.searchListPhonesForNotif(context, PairingColumns.COL_NOTIF_PHONE_CALL);
         if (phones != null) {
             Bundle params = new Bundle();
-            SmsMessageLocEnum.PHONE_NUMBER.writeToBundle(params, callPhoneNumber);
+            MessageEncoderHelper.writeToBundle(params, MessageParamEnum.PHONE_NUMBER, callPhoneNumber);
             // Send Sms
             SpyNotificationHelper.sendEventSpySmsMessage(context,phones,  MessageActionEnum.SPY_PHONE_CALL, params);
         }

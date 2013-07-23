@@ -63,7 +63,7 @@ public class MapEncoderAdpater implements EncoderDecoderAdapter {
     }
 
     public boolean isEmpty() {
-        return mMap.isEmpty();
+        return mMap==null || mMap.isEmpty();
     }
 
     @Override
