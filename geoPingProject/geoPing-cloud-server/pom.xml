@@ -176,7 +176,7 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine-maven-plugin.version}</version>
                 <configuration>
-                    <enableJarClasses>false</enableJarClasses>
+                    <enableJarClasses>true</enableJarClasses>
                     <!-- Proxy Conf  
                     <disableUpdateCheck>true</disableUpdateCheck>
                     <proxyHost>http://webcache.groupe.generali.fr:3128</proxyHost>

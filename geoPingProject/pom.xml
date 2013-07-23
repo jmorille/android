@@ -17,11 +17,11 @@
 
     <properties>
         <!-- Api -->
-        <appengine.target.version>1.8.2</appengine.target.version>
+        <appengine.target.version>1.8.1</appengine.target.version>
 		<!-- Json -->
 		<gson.version>2.2.4</gson.version>   <!-- gson  2.1 -->
         <!-- Plugins -->
-        <appengine-maven-plugin.version>1.8.2</appengine-maven-plugin.version>
+        <appengine-maven-plugin.version>1.8.1.1</appengine-maven-plugin.version>
 
     </properties>
     
