@@ -25,6 +25,13 @@
 
     <dependencies>
 
+        <!-- Internal -->
+        <dependency>
+            <groupId>eu.ttbox.android.geoping</groupId>
+            <artifactId>geoPing-encoder</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Spec -->
         <dependency>
             <groupId>javax.servlet</groupId>

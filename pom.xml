@@ -43,7 +43,7 @@
 		<gcm.version>3</gcm.version>
 		<admob.version>6.4.1-r11</admob.version> <!--6.2.1-r8 -->
 		<analytics.version>3</analytics.version>
-		<google-play-services.version>8</google-play-services.version>
+		<google-play-services.version>9</google-play-services.version>
 
 		<!-- Compatibility Api -->
 		<compatibility-v13.version>13</compatibility-v13.version>
