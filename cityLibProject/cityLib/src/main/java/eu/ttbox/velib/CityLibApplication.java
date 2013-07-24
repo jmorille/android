@@ -63,6 +63,7 @@ public class CityLibApplication extends Application {
             // Increment Counter Laught
             int launchCount = incrementApplicationLaunchCounter(context);
             Log.d(TAG, "================ CityLib Launch count = " + launchCount + "  ======================================");
+            EasyTracker.getInstance().setContext(context);
             Tracker tracker = EasyTracker.getTracker();
             tracker.set("APP_COUNT_LAUGHT", String.valueOf( launchCount));
             return launchCount;

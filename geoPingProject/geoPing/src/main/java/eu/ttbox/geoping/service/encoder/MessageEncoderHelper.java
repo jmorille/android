@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.List;
 
 import eu.ttbox.geoping.core.Intents;
@@ -55,7 +56,7 @@ public class MessageEncoderHelper {
     public static boolean startServiceGeoPingMessageAsIntent(Context context, List<BundleEncoderAdapter> msgs) {
         boolean isConsume = false;
         if (msgs == null ||  msgs.isEmpty()  || msgs.get(0).getAction() == null) {
-            Log.w(TAG, String.format("Ignore for No Action the GeoPingMessage : %s",  msgs.get(0) ));
+            Log.w(TAG, String.format("Ignore for No Action the GeoPingMessage : %s",  msgs ));
             return isConsume;
         }
         for (BundleEncoderAdapter msg : msgs) {
