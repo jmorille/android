@@ -36,7 +36,7 @@
 		<osm-lib.version>0.1.2</osm-lib.version>
 
 		<!-- Android -->
-		<android.version>4.2.2_r2</android.version> <!-- 4.1.2_r3 2.3.3 -->
+		<android.version>4.3_r1</android.version> <!-- 4.2.2_r2, 4.1.2_r3, 2.3.3 -->
 		<google.maps.version>17_r2</google.maps.version>
 
 		<!-- Google Api -->
@@ -46,7 +46,7 @@
 		<google-play-services.version>9</google-play-services.version>
 
 		<!-- Compatibility Api -->
-		<compatibility-v13.version>13</compatibility-v13.version>
+		<compatibility-v13.version>18</compatibility-v13.version>
 		<actionbarsherlock.version>4.3.1</actionbarsherlock.version>
 		<slidingmenu.version>1.2.1</slidingmenu.version>
 
@@ -64,7 +64,7 @@
 		<build-helper-maven-plugin.version>1.8</build-helper-maven-plugin.version>
 		<!-- Release -->
 		<android-maven-plugin.version>3.6.0</android-maven-plugin.version> <!-- 3.5.1 -->
-		<android.sdk.platform>17</android.sdk.platform>
+		<android.sdk.platform>18</android.sdk.platform>
 		<sign.alias>android</sign.alias>
 	</properties>
 

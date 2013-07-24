@@ -1,40 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/header_photo_subelt_main_action"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:background="@drawable/item_background_holo_dark"
+            >
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+        <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/call_log_indent_margin"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                >
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/skuDetails_title_textView"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="35dp"
-            android:layout_marginTop="14dp"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="The SKU Title to display dzkbkzbdzdkbdk d hdz dkbdzkdz "
+                    android:id="@+id/skuDetails_title_textView"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"/>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:minWidth="100dp"
-            android:id="@+id/skuDetails_price_textView"
-            android:layout_alignTop="@+id/skuDetails_title_textView"
-            android:layout_toRightOf="@+id/skuDetails_title_textView"
-            android:layout_marginLeft="32dp"/>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/skuDetails_description_textView"
-            android:layout_below="@+id/skuDetails_title_textView"
-            android:layout_alignLeft="@+id/skuDetails_title_textView"
-            android:layout_marginLeft="17dp"
-            android:layout_marginTop="15dp"/>
-</RelativeLayout>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="The Sku Description with all detail needed to expose"
+                    android:id="@+id/skuDetails_description_textView"
+                    android:layout_below="@+id/skuDetails_title_textView"
+                    android:layout_alignLeft="@+id/skuDetails_title_textView"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginTop="15dp"/>
+        </LinearLayout>
+
+        <View
+                android:id="@+id/header_photo_subelt_divider"
+                android:layout_width="1px"
+                android:layout_height="32dip"
+                android:background="@drawable/ic_divider_dashed_holo_dark"
+                android:layout_gravity="center_vertical"
+                />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="1.00 euro"
+                android:minWidth="100dp"
+                android:id="@+id/skuDetails_price_textView"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/skuDetails_title_textView"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="5dp"/>
+    </LinearLayout>

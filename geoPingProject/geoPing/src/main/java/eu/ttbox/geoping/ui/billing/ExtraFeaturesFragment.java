@@ -1,6 +1,7 @@
 package eu.ttbox.geoping.ui.billing;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,6 +14,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.ttbox.geoping.BuildConfig;
 import eu.ttbox.geoping.R;
@@ -27,11 +31,15 @@ public class ExtraFeaturesFragment extends Fragment {
     private static final String TAG = "ExtraFeaturesFragment";
 
     // Product
-    private static final String SKU_NO_AD_PER_YEAR = "NO_AD_PER_YEAR";
+    private static final String SKU_NO_AD_PER_YEAR = "no_ad_per_year";
+
+
+    // (arbitrary) request code for the purchase flow
+    static final int RC_REQUEST = 10001;
 
     // binding
     private ListView extraListView;
-
+    private   SkuDetailsListAdapter adapter;
 
     // The helper object
     private IabHelper mHelper;
@@ -52,44 +60,48 @@ public class ExtraFeaturesFragment extends Fragment {
                 return;
             }
 
-            Log.d(TAG, "Query inventory was successful.");
+            Log.d(TAG, "--- Query inventory was successful.");
+            Log.d(TAG, "--- -------------------------------");
 
-            Purchase adSupressPerYearPurchase = inventory.getPurchase(SKU_NO_AD_PER_YEAR);
-            isAdSupressPerYearPurchase = (adSupressPerYearPurchase != null && verifyDeveloperPayload(adSupressPerYearPurchase));
+            Purchase noAdPerYearPurchase = inventory.getPurchase(SKU_NO_AD_PER_YEAR);
+            Log.d(TAG, "--- noAdPerYearPurchase = " + noAdPerYearPurchase);
+            Log.d(TAG, "--- SkuDetails = " + inventory.getSkuDetails(SKU_NO_AD_PER_YEAR));
+adapter.add(inventory.getSkuDetails(SKU_NO_AD_PER_YEAR));
+            isAdSupressPerYearPurchase = (noAdPerYearPurchase != null && DeveloperPayloadHelper.verifyDeveloperPayload(noAdPerYearPurchase));
+            Log.d(TAG, "isAdSupressPerYearPurchase : " + isAdSupressPerYearPurchase);
 
+            Log.d(TAG, "Initial inventory query finished; enabling main UI.");
+            updateUi();
         }
     };
 
 
-    /** Verifies the developer payload of a purchase. */
-    boolean verifyDeveloperPayload(Purchase p) {
-        String payload = p.getDeveloperPayload();
+    // Callback for when a purchase is finished
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+            Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
+            if (result.isFailure()) {
+                complain("Error purchasing: " + result);
+             //   setWaitScreen(false);
+                return;
+            }
+            if (!DeveloperPayloadHelper.verifyDeveloperPayload(purchase)) {
+                complain("Error purchasing. Authenticity verification failed.");
+       //        setWaitScreen(false);
+                return;
+            }
 
-        /*
-         * TODO: verify that the developer payload of the purchase is correct. It will be
-         * the same one that you sent when initiating the purchase.
-         *
-         * WARNING: Locally generating a random string when starting a purchase and
-         * verifying it here might seem like a good approach, but this will fail in the
-         * case where the user purchases an item on one device and then uses your app on
-         * a different device, because on the other device you will not have access to the
-         * random string you originally generated.
-         *
-         * So a good developer payload has these characteristics:
-         *
-         * 1. If two different users purchase an item, the payload is different between them,
-         *    so that one user's purchase can't be replayed to another user.
-         *
-         * 2. The payload must be such that you can verify it even when the app wasn't the
-         *    one who initiated the purchase flow (so that items purchased by the user on
-         *    one device work on other devices owned by the user).
-         *
-         * Using your own server to store and verify developer payloads across app
-         * installations is recommended.
-         */
+            if (purchase.getSku().equals(SKU_NO_AD_PER_YEAR)) {
+                Log.d(TAG, "Infinite gas subscription purchased.");
+                alert("Thank you for subscribing to infinite gas!");
+                isAdSupressPerYearPurchase = true;
+                updateUi();
+            }
 
-        return true;
-    }
+            Log.d(TAG, "Purchase successful.");
+        }
+    };
+
 
     // ===========================================================
     // Constructor
@@ -123,7 +135,7 @@ public class ExtraFeaturesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // Create Adapter
-        SkuDetailsListAdapter adapter = createListItems();
+        adapter = createListItems();
 
         // Binding Menu
         extraListView.setAdapter(adapter);
@@ -162,16 +174,20 @@ public class ExtraFeaturesFragment extends Fragment {
 
                 // Hooray, IAB is fully set up. Now, let's get an inventory of stuff we own.
                 Log.d(TAG, "Setup successful. Querying inventory.");
-                mHelper.queryInventoryAsync(mGotInventoryListener);
+                List<String> moreSkus = new ArrayList<String>();
+                moreSkus.add(SKU_NO_AD_PER_YEAR);
+                mHelper.queryInventoryAsync(true, moreSkus, mGotInventoryListener);
             }
         });
+
+
     }
 
     private SkuDetailsListAdapter createListItems() {
         SkuDetailsListAdapter adapter = new SkuDetailsListAdapter(getActivity());
         try {
-            adapter.add(new SkuDetails("{\"productId\" : \"" + SKU_NO_AD_PER_YEAR +
-                    "\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in app\", \"description\" : \"Suppress all adds during one year\"  }  "));
+  //          adapter.add(new SkuDetails("{\"productId\" : \"" + SKU_NO_AD_PER_YEAR +
+   //                 "\", \"type\" : \"inapp\", \"price\" : \"$1.99\" , \"title\" : \"No add in app\", \"description\" : \"Suppress all adds during one year\"  }  "));
             adapter.add(new SkuDetails("{\"productId\" : \"SECU_HIDE_LAUNCHER\", \"type\" : \"inapp\", \"price\" : \"Free\" , \"title\" : \"No icon app launcher\", \"description\" : \"Hide the GeoPing Application in the System\"  }  "));
         } catch (JSONException e) {
             Log.e(TAG, "Error Parsing Json : " + e.getMessage(), e);
@@ -207,8 +223,29 @@ public class ExtraFeaturesFragment extends Fragment {
             } else {
                 Toast.makeText(getActivity(), "Hide Icon Laucher", Toast.LENGTH_SHORT).show();
             }
-        } else  if ("noAddForOneYear".equals(skuDetails.getSku() )) {
+        } else  if (SKU_NO_AD_PER_YEAR.equals(skuDetails.getSku() )) {
+            String payload = DeveloperPayloadHelper.generateDeveloperPayload(SKU_NO_AD_PER_YEAR);
+            Log.d(TAG, "Launching purchase flow for infinite gas subscription.");
+            mHelper.launchPurchaseFlow(getActivity(),
+                    SKU_NO_AD_PER_YEAR, IabHelper.ITEM_TYPE_SUBS,
+                    RC_REQUEST, mPurchaseFinishedListener, payload);
 
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+
+        // Pass on the activity result to the helper for handling
+        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            Log.d(TAG, "onActivityResult handled by IABUtil.");
         }
     }
 
@@ -236,4 +273,9 @@ public class ExtraFeaturesFragment extends Fragment {
     // Other
     // ===========================================================
 
+
+    // updates UI to reflect model
+    public void updateUi() {
+
+    }
 }
